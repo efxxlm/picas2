@@ -1,0 +1,12 @@
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\bin\Debug\netcoreapp3.1\asivamosffie.services.deps.json
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\bin\Debug\netcoreapp3.1\asivamosffie.services.dll
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\bin\Debug\netcoreapp3.1\asivamosffie.services.pdb
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\obj\Debug\netcoreapp3.1\asivamosffie.services.csprojAssemblyReference.cache
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\obj\Debug\netcoreapp3.1\asivamosffie.services.csproj.CoreCompileInputs.cache
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\obj\Debug\netcoreapp3.1\asivamosffie.services.AssemblyInfoInputs.cache
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\obj\Debug\netcoreapp3.1\asivamosffie.services.AssemblyInfo.cs
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\obj\Debug\netcoreapp3.1\asivamosffie.services.dll
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\obj\Debug\netcoreapp3.1\asivamosffie.services.pdb
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\bin\Debug\netcoreapp3.1\asivamosffie.model.dll
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\bin\Debug\netcoreapp3.1\asivamosffie.model.pdb
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.services\obj\Debug\netcoreapp3.1\asivamosffie.services.csproj.CopyComplete

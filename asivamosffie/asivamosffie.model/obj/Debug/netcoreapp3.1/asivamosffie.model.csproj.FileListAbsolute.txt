@@ -1,0 +1,12 @@
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\bin\Debug\netcoreapp3.1\asivamosffie.model.deps.json
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\bin\Debug\netcoreapp3.1\asivamosffie.model.dll
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\obj\Debug\netcoreapp3.1\asivamosffie.model.csprojAssemblyReference.cache
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\obj\Debug\netcoreapp3.1\asivamosffie.model.AssemblyInfoInputs.cache
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\obj\Debug\netcoreapp3.1\asivamosffie.model.AssemblyInfo.cs
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\bin\Debug\netcoreapp3.1\asivamosffie.model.runtimeconfig.json
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\bin\Debug\netcoreapp3.1\asivamosffie.model.runtimeconfig.dev.json
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\bin\Debug\netcoreapp3.1\asivamosffie.model.pdb
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\obj\Debug\netcoreapp3.1\asivamosffie.model.dll
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\obj\Debug\netcoreapp3.1\asivamosffie.model.pdb
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\obj\Debug\netcoreapp3.1\asivamosffie.model.genruntimeconfig.cache
+C:\Repositorios\GIT\AsiVamosFFIE\asivamosffie\asivamosffie.model\obj\Debug\netcoreapp3.1\asivamosffie.model.csproj.CoreCompileInputs.cache
