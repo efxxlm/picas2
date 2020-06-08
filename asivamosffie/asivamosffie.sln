@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asivamosffie.api", "asivamosffie.api\asivamosffie.api.csproj", "{021E5D92-219B-46A8-99E0-B110AE6D6596}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asivamosffie.services", "asivamosffie.services\asivamosffie.services.csproj", "{D16D2CE6-F9C9-452A-A875-C8ECFCF9932C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asivamosffie.model", "asivamosffie.model\asivamosffie.model.csproj", "{E7FAE897-530D-471C-85EE-1C1625BA48C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{021E5D92-219B-46A8-99E0-B110AE6D6596}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{021E5D92-219B-46A8-99E0-B110AE6D6596}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{021E5D92-219B-46A8-99E0-B110AE6D6596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D16D2CE6-F9C9-452A-A875-C8ECFCF9932C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D16D2CE6-F9C9-452A-A875-C8ECFCF9932C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D16D2CE6-F9C9-452A-A875-C8ECFCF9932C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D16D2CE6-F9C9-452A-A875-C8ECFCF9932C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7FAE897-530D-471C-85EE-1C1625BA48C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7FAE897-530D-471C-85EE-1C1625BA48C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7FAE897-530D-471C-85EE-1C1625BA48C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7FAE897-530D-471C-85EE-1C1625BA48C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
