@@ -338,13 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-KITPT.Web/KITPT/package-lock.json
-KITPT.Web/KITPT/src/environments/environment.prod.ts
-KITPT.Web/KITPT/src/environments/environment.prod.ts
-KITPT.Web/KITPT/src/environments/environment.prod.ts
-KITPT.Web/KITPT/src/environments/environment.ts
-KITPT.Web/KITPT/src/environments/environment.ts
-KITPT.Web/KITPT/src/environments/environment.ts
-*.cache
-*.pdb
-*.dll
+
