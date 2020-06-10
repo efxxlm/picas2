@@ -36,20 +36,13 @@ namespace asivamosffie.api
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureDependencyInjection(services);
-            /*services.AddCors(options =>
+            services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200", "https://localhost:4200"
-                                         ).AllowAnyHeader().SetIsOriginAllowed((host) => true)
-                                         .AllowAnyMethod().SetIsOriginAllowed((host) => true)
-                                         .AllowAnyOrigin().SetIsOriginAllowed((host) => true)
-                                         .AllowCredentials().SetIsOriginAllowed((host) => true)
-                                         .SetIsOriginAllowedToAllowWildcardSubdomains().SetIsOriginAllowed((host) => true);
-                    //    .AllowAnyHeader().AllowCredentials().WithMethods("GET, POST, PUT, OPTIONS").SetIsOriginAllowed((host) => true);
-                });
-            });*/
+                builder => builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            });
             services.Configure<FormOptions>(x =>
             {
                 x.ValueLengthLimit = int.MaxValue;
