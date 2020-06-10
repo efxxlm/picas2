@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "asivamosffie"
+    }
+  },
+  "defaultProject": "asivamosffie",
+  "cli": {
+    "analytics": "bd02af48-c261-43b3-a9bb-0fa725008c5f"
+  }
 }
