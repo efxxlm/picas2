@@ -1,0 +1,18 @@
+$mainColor: #174193;
+$secondaryColor: #d21e18;
+$fontColor: #474747;
+$titleColor: $mainColor;
+
+// media query
+/*
+    $breakpoint-tablet: 48em;
+    $breakpoint-desktop: 64em;
+    $breakpoint-desktop-lg: 75em;
+*/
+
+:root {
+    --mainColor: #174193;
+    --secondaryColor: #d21e18;
+    --fontColor: #474747;
+    --titleColor: var(--mainColor);
+}
