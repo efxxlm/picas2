@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-inicio',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioComponent implements OnInit {
 
-  constructor() { }
+  emailField: FormControl;
+  verClave = true;
+
+  constructor() {
+    this.emailField = new FormControl('', [Validators.required, Validators.email]);
+  }
 
   ngOnInit(): void {
+
   }
 
 }

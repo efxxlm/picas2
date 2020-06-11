@@ -4,6 +4,23 @@
         <p>Bienvenido(a) a continuación ingresará al módulo privado de Así Vamos FFIE</p>
     </div>
     <div class="col-md-6 iniciarSesion--form">
-        <div class="box"></div>
+        <mat-card class="iniciarSesion--form--contain">
+            <h1>Iniciar Sesión</h1>
+            <hr>
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Usuario</mat-label>
+                <!-- <input matInput [formControl]="emailField"> -->
+                <input matInput type="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Contraseña</mat-label>
+                <input matInput [type]="verClave ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="verClave = !verClave" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClave" class="ver-contrasena">
+                    <img [src]="verClave ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">
+                </button>
+            </mat-form-field>
+            <button class="btn btn-ingresar" mat-raised-button color="warn">Ingresar</button>
+            <button class="btn btn-recuperar" mat-button color="primary">Recuperar Contraseña</button>
+        </mat-card>
     </div>
 </div>
