@@ -6,10 +6,9 @@ using asivamosffie.model.Models;
 
 namespace asivamosffie.services.Interfaces
 {
-    public interface ICommonService
+    public interface IUser
     {
-        Task<List<Perfil>> GetProfile();
+        Task<Usuario> RecoverPasswordByEmailAsync(string userMail ,string ipClient);
 
-        Task <Template> GetTemplateByTipo(string pTipo);
     }
 }
