@@ -9,8 +9,7 @@
             <hr>
             <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Usuario</mat-label>
-                <!-- <input matInput [formControl]="emailField"> -->
-                <input matInput type="email">
+                <input matInput type="email" minlength="4" maxlength="50" [formControl]="emailField">
             </mat-form-field>
             <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Contraseña</mat-label>
