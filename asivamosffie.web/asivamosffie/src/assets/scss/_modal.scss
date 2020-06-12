@@ -1,0 +1,37 @@
+.cdk-overlay-dark-backdrop {
+    background: rgba(17,17,17,.81);
+}
+
+mat-dialog-container.mat-dialog-container {
+    position: relative;
+    overflow: initial;
+    border-radius: 1.2em;
+    padding: 3em 4em;
+    color: var(--mainColor);
+    text-align: center;
+
+    h1 {
+        font-size: 1.2em;
+        font-weight: 500;
+        margin-bottom: 0em;
+    }
+
+    .modalText {
+        margin-bottom: 0;
+        padding: 0 2em;
+    }
+}
+
+button.modal--btn-cerrar {
+    position: absolute;
+    top: -3em;
+    right: .5em;
+    padding: 0;
+    border-radius: 50%;
+    min-width: auto;
+    line-height: 1;
+
+    img {
+        height: 2em;
+    }
+}
