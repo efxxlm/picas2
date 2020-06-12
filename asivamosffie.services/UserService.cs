@@ -22,7 +22,7 @@ namespace asivamosffie.services
 
         public async Task<Usuario> RecoverPasswordByEmailAsync(string pUserMail, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
-            Usuario usuarioSolicito = await _context.Usuario.Where(r => r.Email.ToUpper().Equals(pUserMail.ToUpper())).FirstOrDefaultAsync();
+            Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUserMail.ToUpper())).FirstOrDefault();
 
             if (usuarioSolicito != null)
             {
@@ -30,8 +30,11 @@ namespace asivamosffie.services
 
                 usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                 usuarioSolicito.Ip = pIpClient;
+                 await UpdatePasswordUser(usuarioSolicito);
 
-                string template = _commonService.GetTemplateByTipo("RecoveryPassword").ToString();
+
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
+                string template = TemplateRecoveryPassword.Contenido;
 
                 string urlDestino = pDominio;
 
@@ -39,11 +42,9 @@ namespace asivamosffie.services
                 template = template.Replace("_Email_", usuarioSolicito.Email);
                 template = template.Replace("_Password_", newPass);
 
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email ,"Recuperar contraseña", template , pSentender, pPassword , pMailServer, pMailPort);
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
 
-                if (blEnvioCorreo) {
-                  await  UpdatePasswordUser(usuarioSolicito);
-                }
+
 
             }
 
@@ -52,15 +53,18 @@ namespace asivamosffie.services
 
         public async Task<Usuario> UpdatePasswordUser(Usuario pUsuario)
         {
-            Usuario usuarioSolicito = await _context.Usuario.Where(r => r.Email.Equals(pUsuario.Email)).FirstOrDefaultAsync();
 
+            Usuario usuarioSolicito =  _context.Usuario.Where(r => r.Email.Equals(pUsuario.Email)).FirstOrDefault();
             usuarioSolicito.Contrasena = pUsuario.Contrasena;
             usuarioSolicito.Ip = pUsuario.Ip;
-            usuarioSolicito.FechaCreacion = DateTime.Now;
-
+            usuarioSolicito.UsuarioId = pUsuario.UsuarioId;
+            usuarioSolicito.FechaModificacion = DateTime.Now;
+            usuarioSolicito.CambiarContrasena = true;
             _context.Usuario.Update(usuarioSolicito);
+            _context.SaveChanges();
 
             return usuarioSolicito;
+
         }
 
 

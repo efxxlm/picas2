@@ -17,9 +17,10 @@ namespace asivamosffie.api.Controllers
         public readonly IUser _user;
         private readonly IOptions<AppSettings> _settings;
 
-        public UserController(IOptions<AppSettings> settings)
-        { 
-            _settings = settings;
+        public UserController(IOptions<AppSettings> settings , IUser user)
+        {
+              _user = user;
+              _settings = settings;
         }
 
 
@@ -36,7 +37,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var usuario =  _user.RecoverPasswordByEmailAsync(userparam.Email, GetIp(),_settings.Value.Dominio , _settings.Value.MailServer , _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password , _settings.Value.Sender );
+                var usuario = _user.RecoverPasswordByEmailAsync(userparam.Email, GetIp(),_settings.Value.Dominio , _settings.Value.MailServer , _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password , _settings.Value.Sender );
                 return Ok(usuario);
             }
             catch (Exception ex)
