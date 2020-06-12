@@ -1,6 +1,8 @@
 ﻿namespace asivamosffie.api
 {
-    internal class AppSettings
+    public class AppSettings
     {
+
+        public string MailServer { get; set; }
     }
 }
