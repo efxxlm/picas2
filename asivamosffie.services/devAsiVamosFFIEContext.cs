@@ -16,9 +16,11 @@ namespace asivamosffie.model.Models
         }
 
         public virtual DbSet<Dominio> Dominio { get; set; }
+        public virtual DbSet<Localizacion> Localizacion { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<MenuPerfil> MenuPerfil { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
+        public virtual DbSet<Template> Template { get; set; }
         public virtual DbSet<TipoDominio> TipoDominio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
@@ -84,6 +86,33 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.TipoDominioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Dominio_TipoDominio");
+            });
+
+            modelBuilder.Entity<Localizacion>(entity =>
+            {
+                entity.Property(e => e.LocalizacionId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasComment("Identificador de la tabla");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(300)
+                    .IsUnicode(false)
+                    .HasComment("Nombre de la localización");
+
+                entity.Property(e => e.IdPadre)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasComment("Identificador LocalizacionId Padre al que pertenece");
+
+                entity.Property(e => e.Nivel)
+                    .HasColumnType("numeric(2, 0)")
+                    .HasComment("Nivel al que pertenece la Localización");
+
+                entity.Property(e => e.Tipo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false)
+                    .HasComment("Tipo de Localización");
             });
 
             modelBuilder.Entity<Menu>(entity =>
@@ -207,6 +236,23 @@ namespace asivamosffie.model.Models
                     .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
             });
 
+            modelBuilder.Entity<Template>(entity =>
+            {
+                entity.Property(e => e.Contenido).IsRequired();
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Tipo)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
+
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
+            });
+
             modelBuilder.Entity<TipoDominio>(entity =>
             {
                 entity.Property(e => e.TipoDominioId).HasComment("Identificador de la tabla");
@@ -316,48 +362,22 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<UsuarioPerfil>(entity =>
             {
-                entity.HasComment("Asociación de perfiles a usuario");
+                entity.HasNoKey();
 
-                entity.Property(e => e.UsuarioPerfilId)
-                    .HasComment("Identificador de la tabla")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Activo).HasComment("Determina si el perfil asignado al usuario esta activo (0)Inactivo (1) Activo");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de Modificación");
-
-                entity.Property(e => e.PerfilId).HasComment("Identificador del perfil");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario de Creación del registro");
-
-                entity.Property(e => e.UsuarioId).HasComment("Identificador del Usuario");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario de modificación del registro");
+                    .IsUnicode(false);
 
-                entity.HasOne(d => d.Perfil)
-                    .WithMany(p => p.UsuarioPerfil)
-                    .HasForeignKey(d => d.PerfilId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UsuarioPerfil_Perfil");
-
-                entity.HasOne(d => d.Usuario)
-                    .WithMany(p => p.UsuarioPerfil)
-                    .HasForeignKey(d => d.UsuarioId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UsuarioPerfil_Usuario");
+                entity.Property(e => e.UsuarioPerfilId).ValueGeneratedOnAdd();
             });
 
             OnModelCreatingPartial(modelBuilder);

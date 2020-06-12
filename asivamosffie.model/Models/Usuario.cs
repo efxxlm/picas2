@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class Usuario
     {
-        public Usuario()
-        {
-            UsuarioPerfil = new HashSet<UsuarioPerfil>();
-        }
-
         public int UsuarioId { get; set; }
         public string Email { get; set; }
         public string Contrasena { get; set; }
@@ -26,7 +21,5 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
-
-        public virtual ICollection<UsuarioPerfil> UsuarioPerfil { get; set; }
     }
 }
