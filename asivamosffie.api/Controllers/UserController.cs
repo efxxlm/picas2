@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
+using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
 {
@@ -13,8 +14,13 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
         public readonly IUser _user;
+        private readonly IOptions<AppSettings> _settings;
+
+        public UserController(IOptions<AppSettings> settings)
+        { 
+            _settings = settings;
+        }
 
 
 
@@ -24,13 +30,13 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("emailRecoverSender")]
+        [Route("emailRecover")]
         [HttpPost]
-        public async Task<ActionResult<Usuario>> recoverPasswordByEmail([FromBody]Usuario userparam)
+        public IActionResult RecoverPasswordByEmail([FromBody]Usuario userparam)
         {
             try
             {
-                var usuario = await _user.RecoverPasswordByEmailAsync(userparam.Email, GetIp());
+                var usuario =  _user.RecoverPasswordByEmailAsync(userparam.Email, GetIp(),_settings.Value.Dominio , _settings.Value.MailServer , _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password , _settings.Value.Sender );
                 return Ok(usuario);
             }
             catch (Exception ex)

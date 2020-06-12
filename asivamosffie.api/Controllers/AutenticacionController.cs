@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
+using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
 {
