@@ -8,6 +8,13 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IAutenticacionService
     {
-        Task<Usuario> IniciarSesion(string pMail, string pContrasena);
+        Task<object> IniciarSesion(Usuario pUsuario);
+        Task<Usuario> GetUserByMail(string pMail);
+
+        Task ResetFailedAttempts(int pUserId);
+
+        Task AddFailedAttempt(int pUserId);
+
+        Task BlockUser(int pUserId);
     }
 }

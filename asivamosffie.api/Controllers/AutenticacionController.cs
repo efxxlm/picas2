@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
+using asivamosffie.api.Models;
 
 namespace asivamosffie.api.Controllers
 {
@@ -22,11 +23,21 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("IniciarSesion")]
-        public IActionResult PostIniciarSesion([FromBody] Usuario usuario)
+        public async Task<IActionResult> PostIniciarSesion([FromBody] Usuario pUsuario)
         {
-            var result = autenticacion.IniciarSesion(usuario.Email, usuario.Contrasena);
+            try
+            {
+                Task<object> result = autenticacion.IniciarSesion(pUsuario);
 
-            return Ok(result);
+                object respuesta = await result;
+                
+                return Ok(respuesta);
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
         
     }
