@@ -11,68 +11,65 @@ namespace asivamosffie.services
 {
     public class UserService : IUser
     {
-        private readonly ICommonService _commonService; 
+        private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
-        public UserService(devAsiVamosFFIEContext context , ICommonService commonService)
+        public UserService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
         }
 
-        public async Task<Usuario> RecoverPasswordByEmailAsync(string userMail, string baseurlOrigin, string urlChange, string token, string urlActivate, string ipClient)
+        public async Task<Usuario> RecoverPasswordByEmailAsync(string pUserMail, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
-            Usuario usuarioSolicito = _context.Usuario.Where(r => r.Email.Equals(userMail)).Single();
+            Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUserMail.ToUpper())).FirstOrDefault();
 
-            if (usuarioSolicito != null) {
+            if (usuarioSolicito != null)
+            {
                 string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
+
                 usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                usuarioSolicito.Ip = pIpClient;
+                 await UpdatePasswordUser(usuarioSolicito);
 
 
-                //armo body
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
+                string template = TemplateRecoveryPassword.Contenido;
 
-                string body;
+                string urlDestino = pDominio;
 
-                var template = _commonService.GetTemplateByTipo("RecoveryPassword");
+                template = template.Replace("_Link_", urlDestino);
+                template = template.Replace("_Email_", usuarioSolicito.Email);
+                template = template.Replace("_Password_", newPass);
+
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
 
 
-                // string urlDestino = baseurlOrigin + "/recover-password-mail?Id=" + Base64Encode(usuarioSolicito.Idusuario.ToString()) + "&Pw=" + Base64Encode(newPass);
-                //body = template.FirstOrDefault().Template.Replace(template.FirstOrDefault().ReplaceTemplate, urlDestino);
-                //body = template.Result("_email_", userMail);
-                //body = body.Replace(template.FirstOrDefault().ReplaceTemplate2, baseurlOrigin);
-                //body = body.Replace(template.FirstOrDefault().ReplaceTemplate3, newPass);
 
-                //string to = usuarioSolicito.Email;
-                const string subject = "Recuperar Contraseña";
-
-                //try
-                //{
-                //    SendEmailDetails emailDetail = new SendEmailDetails()
-                //    {
-                //        Subject = subject,
-                //        ToEmail = usuarioSolicito.Email,
-                //        FromEmail = _config.GetSection("AppSettings:Sender").Value,
-                //        FromName = "Soporte KPT",
-                //        Content = body,
-                //        IsHTML = true
-                //    };
-                //    await _emailService.SendEmailAsync(emailDetail);
-                //}
-                //catch (Exception ex)
-                //{
-                //    usuarioSolicito.NombreMaquina = ex.ToString();
-                //}
-            }    
+            }
 
             return usuarioSolicito;
         }
 
-        public Task<Usuario> RecoverPasswordByEmailAsync(string userMail, string ipClient)
+        public async Task<Usuario> UpdatePasswordUser(Usuario pUsuario)
         {
-            throw new NotImplementedException();
+
+            Usuario usuarioSolicito =  _context.Usuario.Where(r => r.Email.Equals(pUsuario.Email)).FirstOrDefault();
+            usuarioSolicito.Contrasena = pUsuario.Contrasena;
+            usuarioSolicito.Ip = pUsuario.Ip;
+            usuarioSolicito.UsuarioId = pUsuario.UsuarioId;
+            usuarioSolicito.FechaModificacion = DateTime.Now;
+            usuarioSolicito.CambiarContrasena = true;
+            _context.Usuario.Update(usuarioSolicito);
+            _context.SaveChanges();
+
+            return usuarioSolicito;
+
         }
+
+
+
     }
 
 
 }
- 

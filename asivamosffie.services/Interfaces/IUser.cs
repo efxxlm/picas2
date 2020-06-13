@@ -8,7 +8,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IUser
     {
-        Task<Usuario> RecoverPasswordByEmailAsync(string userMail ,string ipClient);
-
+        Task<Usuario> RecoverPasswordByEmailAsync(string pUserMail ,string pIpClient ,string pDominio , string pMailServer ,int pMailPort , bool pEnableSSL, string pPassword, string pSentender );
+ 
     }
 }

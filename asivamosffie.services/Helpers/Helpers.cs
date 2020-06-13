@@ -38,27 +38,21 @@ namespace asivamosffie.services.Helpers
             return sb.ToString().ToUpper();
         } 
 
-        public static bool EnviarCorreo(string destinatario, string asunto, string mensajeHtml)
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort)
         {
             try
-            {
-                string strCorreo = "noreply_ffie@ivolucion";
-                string strClaveCorreo = "Bogota2020";
-                string strSmtpServerV = "mail.ivolucion.com";
-                int intSmtpPort = 26;
-
+            { 
                 MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient(strSmtpServerV);
+                SmtpClient SmtpServer = new SmtpClient(pStrSmtpServerV);
 
-                mail.From = new MailAddress(strCorreo);
-                mail.To.Add(destinatario);
-                mail.Subject = asunto;
+                mail.From = new MailAddress(pCorreoLocal);
+                mail.To.Add(pDestinatario);
+                mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
-       
-                
-                mail.Body = mensajeHtml;
-                SmtpServer.Port = intSmtpPort;
-                SmtpServer.Credentials = new NetworkCredential(strCorreo, strClaveCorreo);
+        
+                mail.Body = pMensajeHtml;
+                SmtpServer.Port = pSmtpPort;
+                SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
             }
