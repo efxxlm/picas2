@@ -66,7 +66,11 @@ namespace asivamosffie.api
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
+
+          //Agregar Interfaces y clases
             services.AddTransient<ICommonService, CommonService>();
+            services.AddTransient<IUser, UserService>();
+            services.AddTransient<IAutenticacionService, AutenticacionService>();
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
