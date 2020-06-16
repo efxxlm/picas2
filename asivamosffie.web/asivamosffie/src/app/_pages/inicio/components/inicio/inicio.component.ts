@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RecoverPasswordComponent } from '../recover-password/recover-password.component';
+import { Router, Routes } from '@angular/router';
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
@@ -10,21 +11,19 @@ import { RecoverPasswordComponent } from '../recover-password/recover-password.c
 })
 export class InicioComponent implements OnInit {
 
-  emailField: FormControl;
+  formLogin: FormGroup;
+
   verClave = true;
 
   modalTitle: string;
   modalText: string;
 
-  constructor(public dialog: MatDialog) {
-    this.emailField =  new FormControl('', [
-      Validators.required,
-      Validators.maxLength(50),
-      Validators.minLength(4),
-      Validators.email,
-      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
-    ]);
-
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    public dialog: MatDialog
+  ) {
+    this.buildForm();
   }
 
   openDialog() {
@@ -43,6 +42,27 @@ export class InicioComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  login(event: Event) {
+    event.preventDefault();
+    if (this.formLogin.valid) {
+      console.log(this.formLogin.value);
+      // this.router.navigate(['/home']); // esto es para que lo redireccione despues de crear el login
+    }
+  }
+
+  private buildForm() {
+    this.formLogin = this.formBuilder.group({
+      emailField: ['', [
+        Validators.required,
+        Validators.maxLength(50),
+        Validators.minLength(4),
+        Validators.email,
+        Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+      ]],
+      passwordField: ['', [Validators.required]],
+    })
   }
 
 }
