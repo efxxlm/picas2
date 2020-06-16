@@ -15,7 +15,7 @@
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Contraseña</mat-label>
                     <input matInput [type]="verClave ? 'password' : 'text'" required formControlName="passwordField">
-                    <button mat-icon-button matSuffix (click)="verClave = !verClave" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClave" class="ver-contrasena">
+                    <button mat-icon-button matSuffix (click)="verClave = !verClave" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClave" class="ver-contrasena" type="button">
                         <img [src]="verClave ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">
                     </button>
                 </mat-form-field>
