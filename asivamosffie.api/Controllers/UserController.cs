@@ -17,10 +17,10 @@ namespace asivamosffie.api.Controllers
         public readonly IUser _user;
         private readonly IOptions<AppSettings> _settings;
 
-        public UserController(IOptions<AppSettings> settings , IUser user)
+        public UserController(IOptions<AppSettings> settings, IUser user)
         {
-              _user = user;
-              _settings = settings;
+            _user = user;
+            _settings = settings;
         }
 
 
@@ -33,12 +33,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("emailRecover")]
         [HttpPost]
-        public IActionResult RecoverPasswordByEmail([FromBody]Usuario userparam)
+        public async Task<IActionResult> RecoverPasswordByEmailAsync([FromBody]Usuario userparam)
         {
             try
             {
-                var usuario = _user.RecoverPasswordByEmailAsync(userparam.Email, GetIp(),_settings.Value.Dominio , _settings.Value.MailServer , _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password , _settings.Value.Sender );
-                return Ok(usuario);
+                Task<object> result = _user.RecoverPasswordByEmailAsync(userparam.Email, GetIp(), _settings.Value.Dominio, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                object respuesta = await result;
+                return Ok(respuesta);
+
             }
             catch (Exception ex)
             {

@@ -20,8 +20,9 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Usuario> RecoverPasswordByEmailAsync(string pUserMail, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Object> RecoverPasswordByEmailAsync(string pUserMail, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
+            Object mensaje = null;
             Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUserMail.ToUpper())).FirstOrDefault();
 
             if (usuarioSolicito != null)
@@ -30,7 +31,7 @@ namespace asivamosffie.services
 
                 usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                 usuarioSolicito.Ip = pIpClient;
-                 await UpdatePasswordUser(usuarioSolicito);
+                await UpdatePasswordUser(usuarioSolicito);
 
 
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
@@ -43,12 +44,17 @@ namespace asivamosffie.services
                 template = template.Replace("_Password_", newPass);
 
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
-
-
+                 
+                mensaje = new { codigo = "200OK", validation = true, validationmessage = (blEnvioCorreo) ? "Cambio de contraseña exitoso" : "Error Envio de correo" };
 
             }
+            else 
+            {
+                mensaje = new { codigo = "200OK", validation = true, validationmessage = "Email no encontrado" };
+            }
 
-            return usuarioSolicito;
+
+            return mensaje;
         }
 
         public async Task<Usuario> UpdatePasswordUser(Usuario pUsuario)
