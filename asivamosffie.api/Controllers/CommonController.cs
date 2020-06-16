@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
+using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
 {
@@ -14,9 +15,11 @@ namespace asivamosffie.api.Controllers
     public class CommonController : ControllerBase
     {
         public readonly ICommonService common;
-        public CommonController(ICommonService prmCommon)
+        private readonly IOptions<AppSettings> _settings;
+        public CommonController(ICommonService prmCommon, IOptions<AppSettings> settings)
         {
             common = prmCommon;
+            _settings = settings;
         }
         [HttpGet]
         [Route("perfiles")]
@@ -28,7 +31,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<ActionResult<string>> GetTest()
         {            
-            return "ok";
+
+            return "ok "+_settings.Value.MailServer;
         }
     }
 }

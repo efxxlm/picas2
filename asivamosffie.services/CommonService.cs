@@ -19,5 +19,10 @@ namespace asivamosffie.services
         {
             return await _context.Perfil.ToListAsync();
         }
+
+        public async Task<Template> GetTemplateByTipo(string tipo)
+        {
+            return await _context.Template.Where(r => r.Tipo.Equals(tipo)).FirstOrDefaultAsync();
+        }
     }
 }
