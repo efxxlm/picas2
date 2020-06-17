@@ -1,0 +1,37 @@
+.navbar {
+    background-color: var(--mainColor);
+    margin-top: -.5em;
+    color: #fff;
+    text-align: center;
+    
+    .mat-button {
+        color: #fff;
+        &.active {
+            color: var(--tertiaryColor);
+            // position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                display: block;
+                height: 1px;
+                width: calc(100% - 5em);
+                left: calc(100% - (100% - 2.5em));
+                bottom: .5em;
+                background-color: var(--tertiaryColor);
+                animation-name: linkActive;
+                animation-duration: .3s;
+            }
+        }
+
+    }
+}
+
+@keyframes linkActive {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
