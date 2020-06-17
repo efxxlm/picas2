@@ -6,17 +6,20 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers;
+using asivamosffie.services.Exceptions;
 
 namespace asivamosffie.services
 {
     public class UserService : IUser
     {
         private readonly ICommonService _commonService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly devAsiVamosFFIEContext _context;
 
-        public UserService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public UserService(devAsiVamosFFIEContext context, ICommonService commonService, IUnitOfWork unitOfWork)
         {
             _commonService = commonService;
+            _unitOfWork = unitOfWork;
             _context = context;
         }
 
@@ -31,7 +34,7 @@ namespace asivamosffie.services
 
                 usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                 usuarioSolicito.Ip = pIpClient;
-                await UpdatePasswordUser(usuarioSolicito);
+                await ChangePasswordUser(usuarioSolicito);
 
 
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
@@ -57,20 +60,33 @@ namespace asivamosffie.services
             return mensaje;
         }
 
-        public async Task<Usuario> UpdatePasswordUser(Usuario pUsuario)
+        public async Task<Usuario> ChangePasswordUser(Usuario pUsuario)
         {
+            var user = await _unitOfWork.UserRepository.GetById(pUsuario.UsuarioId);
+            if (user != null)
+            {
+                if (user.Contrasena != pUsuario.Contrasena)
+                    throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-            Usuario usuarioSolicito =  _context.Usuario.Where(r => r.Email.Equals(pUsuario.Email)).FirstOrDefault();
-            usuarioSolicito.Contrasena = pUsuario.Contrasena;
-            usuarioSolicito.Ip = pUsuario.Ip;
-            usuarioSolicito.UsuarioId = pUsuario.UsuarioId;
-            usuarioSolicito.FechaModificacion = DateTime.Now;
-            usuarioSolicito.CambiarContrasena = true;
-           // _context.Usuario.Update(usuarioSolicito);
-            _context.SaveChanges();
+                if (pUsuario.Contrasena != pUsuario.Contrasena) // Pedt: Recibir contrasena nueva desde from
+                    throw new BusinessException("Lo sentimos, la nueva contraseña y confirmación no coinciden.");
 
-            return usuarioSolicito;
+                user.Contrasena = pUsuario.Contrasena; // Pedt: encriptar  contrasena
+                user.Ip = pUsuario.Ip;
+                user.UsuarioId = pUsuario.UsuarioId;
+                user.FechaModificacion = DateTime.Now;
+                user.CambiarContrasena = true;
 
+                _unitOfWork.UserRepository.Update(user);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else {
+                throw new BusinessException("Usuario no existe");
+            }
+
+
+
+            return user;
         }
 
 
