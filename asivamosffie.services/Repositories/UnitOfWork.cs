@@ -1,10 +1,5 @@
 ﻿using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services.Repositories
