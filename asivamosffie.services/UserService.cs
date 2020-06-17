@@ -6,25 +6,23 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers;
-using asivamosffie.services.Exceptions;
 
 namespace asivamosffie.services
 {
     public class UserService : IUser
     {
         private readonly ICommonService _commonService;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly devAsiVamosFFIEContext _context;
 
-        public UserService(devAsiVamosFFIEContext context, ICommonService commonService, IUnitOfWork unitOfWork)
+        public UserService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
-            _unitOfWork = unitOfWork;
             _context = context;
         }
 
-        public async Task<Usuario> RecoverPasswordByEmailAsync(string pUserMail, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Object> RecoverPasswordByEmailAsync(string pUserMail, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
+            Object mensaje = null;
             Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUserMail.ToUpper())).FirstOrDefault();
 
             if (usuarioSolicito != null)
@@ -33,7 +31,7 @@ namespace asivamosffie.services
 
                 usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                 usuarioSolicito.Ip = pIpClient;
-                //await UpdatePasswordUser(usuarioSolicito);
+                await UpdatePasswordUser(usuarioSolicito);
 
 
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
@@ -46,38 +44,37 @@ namespace asivamosffie.services
                 template = template.Replace("_Password_", newPass);
 
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
+                 
+                mensaje = new { codigo = "200OK", validation = true, validationmessage = (blEnvioCorreo) ? "Cambio de contraseña exitoso" : "Error Envio de correo" };
 
             }
+            else 
+            {
+                mensaje = new { codigo = "200OK", validation = true, validationmessage = "Email no encontrado" };
+            }
+
+
+            return mensaje;
+        }
+
+        public async Task<Usuario> UpdatePasswordUser(Usuario pUsuario)
+        {
+
+            Usuario usuarioSolicito =  _context.Usuario.Where(r => r.Email.Equals(pUsuario.Email)).FirstOrDefault();
+            usuarioSolicito.Contrasena = pUsuario.Contrasena;
+            usuarioSolicito.Ip = pUsuario.Ip;
+            usuarioSolicito.UsuarioId = pUsuario.UsuarioId;
+            usuarioSolicito.FechaModificacion = DateTime.Now;
+            usuarioSolicito.CambiarContrasena = true;
+            _context.Usuario.Update(usuarioSolicito);
+            _context.SaveChanges();
 
             return usuarioSolicito;
+
         }
 
 
-        public async Task<Usuario> ChangePasswordUser(Usuario pUsuario)
-        {
-            var user = await _unitOfWork.UserRepository.GetById(pUsuario.UsuarioId);
-            if (user != null)
-            {
-                if (user.Contrasena != pUsuario.Contrasena)
-                    throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
-                
-                if(pUsuario.Contrasena != pUsuario.Contrasena) // Pedt: Recibir contrasena nueva desde from
-                    throw new BusinessException("Lo sentimos, la nueva contraseña y confirmación no coinciden.");
 
-                user.Contrasena = pUsuario.Contrasena; // Pedt: encriptar  contrasena
-                user.Ip = pUsuario.Ip;
-                user.UsuarioId = pUsuario.UsuarioId;
-                user.FechaModificacion = DateTime.Now;
-                user.CambiarContrasena = true;
-
-                _unitOfWork.UserRepository.Update(user);
-                await _unitOfWork.SaveChangesAsync();
-            }
-
-
-
-            return user;
-        }
     }
 
 

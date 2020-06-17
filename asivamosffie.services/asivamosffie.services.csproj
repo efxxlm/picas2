@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\asivamosffie.authorization\asivamosffie.authorization.csproj" />
     <ProjectReference Include="..\asivamosffie.model\asivamosffie.model.csproj" />
   </ItemGroup>
 

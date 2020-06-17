@@ -25,6 +25,7 @@ namespace asivamosffie.api.Controllers
         [Route("perfiles")]
         public async Task<ActionResult<List<Perfil>>> GetProfile()
         {
+            var userId = HttpContext.User;
             var result = common.GetProfile().Result;
             return result;
         }

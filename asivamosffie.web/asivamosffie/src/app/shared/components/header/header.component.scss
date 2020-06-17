@@ -1,0 +1,25 @@
+.header {
+    border-top: solid 1em var(--mainColor);
+    border-bottom: solid 0.5em var(--mainColor);
+    padding: 1em 12em;
+    display: flex;
+    justify-content: space-around;
+
+    &--logo {
+        height: 2.5em;
+        @media only screen and (min-width: 48em) {
+            height: 3.5em;
+            width: 18em;
+            object-fit: contain;
+        }
+    }
+
+    &--aside{
+        &--usuario {
+
+        }
+        &--rol {
+            
+        }
+    }
+}

@@ -15,6 +15,9 @@
         public string Sender { get; set; }
 
         public string Password { get; set; }
-      
+        public string Secret { get; set; }
+        public string asivamosffieIssuerJwt { get; set; }
+        public string asivamosffieAudienceJwt { get; set; }
+
     }
 }

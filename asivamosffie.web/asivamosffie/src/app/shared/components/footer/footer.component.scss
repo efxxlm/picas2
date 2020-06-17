@@ -1,0 +1,25 @@
+.footer {
+    text-align: center;
+    background-color: var(--secondaryColor);
+    color: #fff;
+    padding: 1em;
+    font-weight: 300;
+    @media only screen and (min-width: 48em) {
+        position: relative;
+    }
+
+    &--aside {
+        @media only screen and (min-width: 48em) {
+            position: absolute;
+            right: 1em;
+            top: 1em;
+        }
+    }
+
+    &--link {
+        display: inline-block;
+        &__img {
+            height: 1em;
+        }
+    }
+}

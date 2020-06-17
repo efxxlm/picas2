@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using lalupa.Authorization.JwtHelpers;
+using asivamosffie.api.Controllers;
+using AuthorizationTest.JwtHelpers;
 
 namespace asivamosffie.services
 {
@@ -16,7 +19,7 @@ namespace asivamosffie.services
             _context = context;            
         }
 
-        public async Task<Object> IniciarSesion(Usuario pUsuario)
+        public async Task<Object> IniciarSesion(Usuario pUsuario, string prmSecret, string prmIssuer, string prmAudience)
         {
             Object mensaje = null;
             Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
@@ -26,30 +29,46 @@ namespace asivamosffie.services
                 // Usuario no existe
                 if (usuario == null)
                 {
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "El usuario no existe en el sistema. Contacte al administrador." };
+                    mensaje = new { codigo = "OK", validation = true, validationmessage = "El usuario no existe en el sistema. Contacte al administrador." };
                 }else if (!(usuario.Activo.HasValue?usuario.Activo.Value:true))
                 {
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "El usuario se encuentra inactivo. Contacte al administrador." };
+                    mensaje = new { codigo = "OK", validation = true, validationmessage = "El usuario se encuentra inactivo. Contacte al administrador." };
                 }else if (usuario.IntentosFallidos >= 3 || usuario.Bloqueado.Value)
                 {
                     this.BlockUser(usuario.UsuarioId);
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "El usuario se encuentra bloqueado, debe remitirse a la opción “Recordar Contraseña”"};
+                    mensaje = new { codigo = "OK", validation = true, validationmessage = "El usuario se encuentra bloqueado, debe remitirse a la opción “Recordar Contraseña”"};
                 }else if (usuario.Contrasena != pUsuario.Contrasena)
                 {
                     this.AddFailedAttempt(usuario.UsuarioId);
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "La contraseña es incorrecta." };
+                    mensaje = new { codigo = "OK", validation = true,validationmessage = "La contraseña es incorrecta." };
                 }else if (usuario.FechaUltimoIngreso == null)
                 {
-                    mensaje = new { codigo = "201OK", validation = true, validationmessage = "PrimeraVez" };
+                    mensaje = new { codigo = "PV", validation = true, validationmessage = "PrimeraVez",token=this.GenerateToken(prmSecret, prmIssuer, prmAudience,usuario) };
                 }else
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
-                    mensaje = new { codigo = "200OK", validation = false, data = usuario };
+                    mensaje = new { codigo = "OK", validation = false, data = usuario, token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
                 }
+
 
                 return mensaje;
         }
 
+        private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser)
+        {
+            var token = new JwtTokenBuilder()
+            .AddSecurityKey(JwtSecurityKey.Create(prmSecret))
+            .AddIssuer(prmIssuer)
+            .AddAudience(prmAudience)
+            .AddExpiry(1)
+            //.AddClaim("Name", result.Primernombre+" "+result.Primerapellido)
+            .AddClaim("User", prmUser.Email)
+            .AddClaim("UserId", prmUser.UsuarioId.ToString())
+            //.AddClaim("Title", result.Cargo)
+            //.AddRole(result.IdrolNavigation.Nombre)
+            .Build();
+            return token;
+        }
         public async Task<Usuario>  GetUserByMail(string pMail)
         {
             try {

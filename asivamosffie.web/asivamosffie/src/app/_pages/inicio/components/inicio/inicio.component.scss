@@ -1,0 +1,101 @@
+%centrar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2em;
+    @media only screen and (min-width: 48em) {
+        height: calc(100vh - 181px);
+        padding: 1em 6em;
+    }
+}
+.iniciarSesion {
+    margin: 0;
+
+    &--logo {
+        @extend %centrar;
+
+        img {
+            width: 25em;
+            max-width: 100%;
+            @media only screen and (min-width: 48em) {
+                margin-bottom: 4em;
+            }
+        }
+
+        p {
+            font-size: 1.5em;
+            line-height: 1.2;
+            font-weight: 300;
+        }
+    }
+
+    &--form {
+        @extend %centrar;
+        background-color: var(--mainColor);
+            @media only screen and (max-width: 1023px) {
+                width: 100%;
+                max-width: calc(100vw - 4em);
+            }
+
+        &--contain {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1.5em;
+            padding: 1em 4em;
+            color: var(--mainColor);
+            width: 24em;
+            max-width: calc(100% - 8em);
+
+            h1 {
+                margin-bottom: 0;
+                font-weight: 500;
+            }
+
+            hr {
+                border: none;
+                width: 100%;
+                height: .3em;
+                background-color: var(--mainColor);
+                border-radius: 1em;
+                margin-top: 0;
+                margin-bottom: 2em;
+            }
+
+            mat-form-field {
+                width: 100%;
+
+                .ver-contrasena {
+                    height: 2.2em;
+                    img {
+                        height: 1.2em;
+                        margin-top: -.8em;
+                    }
+                }
+
+                mat-label {
+                    font-weight: 500;
+                }
+            }
+
+            .mat-form-field-appearance-outline .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-end {
+                color: var(--mainColor);
+            }
+
+            .btn {
+                margin-bottom: .5em;
+
+                &-ingresar {
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding-left: 2em;
+                    padding-right: 2em;
+                }
+            }
+        }
+    }
+}

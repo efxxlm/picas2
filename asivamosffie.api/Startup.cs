@@ -1,18 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
-using asivamosffie.services;
-using asivamosffie.services.Filters;
-using asivamosffie.services.Interfaces;
-using asivamosffie.services.Repositories;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-//using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+//using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using asivamosffie.services;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace asivamosffie.api
 {
@@ -43,6 +52,26 @@ namespace asivamosffie.api
             });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(
+                    options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = appSettings.asivamosffieIssuerJwt,
+                            ValidAudience = appSettings.asivamosffieAudienceJwt,
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.ASCII.GetBytes("asivamosffie@2020application"))
+
+                        };
+                    }
+                );
             services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddMvc().AddJsonOptions(options =>
             {
@@ -53,31 +82,17 @@ namespace asivamosffie.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-
+       
 
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
-            //Agregar Interfaces y clases
+          //Agregar Interfaces y clases
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
-
-            //faber orozco -> Unidad de trabajo
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-
-            //Para registrar el servicio desde Assemblies
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<ValidationFilter>();
-            })
-            .AddFluentValidation(options => {
-                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
-            });
-
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
