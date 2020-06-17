@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RecoverPasswordComponent } from '../recover-password/recover-password.component';
 import { Router, Routes } from '@angular/router';
+import { Usuario, AutenticacionService, Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
@@ -12,27 +13,26 @@ import { Router, Routes } from '@angular/router';
 export class InicioComponent implements OnInit {
 
   formLogin: FormGroup;
-
   verClave = true;
+  dataDialog: {
+    modalTitle: string,
+    modalText: string
+  };
 
-  modalTitle: string;
-  modalText: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private autenticacionService: AutenticacionService
   ) {
     this.buildForm();
   }
 
-  openDialog() {
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data: {
-        modalTitle: `El usuario se encuentra inactivo`,
-        modalText: `Contacte al administrador`
-      }
+      data: { modalTitle, modalText }
     });
   }
 
@@ -47,8 +47,45 @@ export class InicioComponent implements OnInit {
   login(event: Event) {
     event.preventDefault();
     if (this.formLogin.valid) {
-      console.log(this.formLogin.value);
-      // this.router.navigate(['/home']); // esto es para que lo redireccione despues de crear el login
+      this.IniciarSesion();
+    }
+  }
+
+  private IniciarSesion()
+  {
+    
+    const usuario: Usuario = {
+      Email: this.formLogin.value['emailField'],
+      Contrasena: this.formLogin.value['passwordField']
+    };
+
+    this.autenticacionService.IniciarSesion(usuario)
+        .subscribe( respuesta => {
+          this.verificarRespuesta( respuesta );
+         },
+         err => {
+          this.openDialog('Error', err.message);
+         },
+         () => {
+          console.log('terminó');
+         });
+  }
+
+  private verificarRespuesta( respuesta: Respuesta )
+  {
+    if (respuesta.codigo === 'OK') // Respuesta sin errores
+    {
+      if (respuesta.validation === true) // tiene validaciones
+      {
+        this.openDialog('Validacion Inicio Sesion', respuesta.validationmessage);
+      }else // Respuesta esperada
+      {
+        this.router.navigate(['/home']);
+      }
+    }else if ( respuesta.codigo === 'PV' ) // inicio sesion primera vez
+    {
+      this.openDialog('Validacion Inicio Sesion', 'Será direccionado para cambiar su contraseña.');
+      this.router.navigate(['/home']);
     }
   }
 
