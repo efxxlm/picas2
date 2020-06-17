@@ -66,7 +66,7 @@ namespace asivamosffie.services
             usuarioSolicito.UsuarioId = pUsuario.UsuarioId;
             usuarioSolicito.FechaModificacion = DateTime.Now;
             usuarioSolicito.CambiarContrasena = true;
-            _context.Usuario.Update(usuarioSolicito);
+           // _context.Usuario.Update(usuarioSolicito);
             _context.SaveChanges();
 
             return usuarioSolicito;
