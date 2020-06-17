@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\asivamosffie.authorization\asivamosffie.authorization.csproj" />
     <ProjectReference Include="..\asivamosffie.model\asivamosffie.model.csproj" />
   </ItemGroup>
 

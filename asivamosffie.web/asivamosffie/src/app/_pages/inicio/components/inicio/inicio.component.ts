@@ -5,6 +5,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { RecoverPasswordComponent } from '../recover-password/recover-password.component';
 import { Router, Routes } from '@angular/router';
 import { Usuario, AutenticacionService, Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
@@ -41,7 +42,7 @@ export class InicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.autenticacionService.logout();
   }
 
   login(event: Event) {
@@ -59,8 +60,7 @@ export class InicioComponent implements OnInit {
       Contrasena: this.formLogin.value['passwordField']
     };
 
-    this.autenticacionService.IniciarSesion(usuario)
-        .subscribe( respuesta => {
+    this.autenticacionService.IniciarSesion(usuario).pipe(first()).subscribe( respuesta => {
           this.verificarRespuesta( respuesta );
          },
          err => {

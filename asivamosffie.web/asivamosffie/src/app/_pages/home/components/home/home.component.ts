@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AutenticacionService } from 'src/app/core/_services/autenticacion/autenticacion.service';
 
 @Component({
   selector: 'app-home',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  data: any[];
 
-  constructor() { }
+  constructor(private authe: AutenticacionService) {
+    this.actualUser = this.authe.actualUser;
+   }
 
+  actualUser: any;
   ngOnInit(): void {
+    this.authe.actualUser$.subscribe(user => { 
+      this.actualUser = user; 
+
+    });
+  }
+  probarconsumo()
+  {
+    this.authe.consumoePrueba().subscribe(data=>{this.data=data});
   }
 
 }

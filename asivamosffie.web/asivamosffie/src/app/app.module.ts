@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { TestComponent } from './_pages/test/test.component';
 import { LayoutComponent } from './layout/layout.component';
+import { JwtInterceptorInterceptor } from './_helpers/jwt-interceptor.interceptor';
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { LayoutComponent } from './layout/layout.component';
     CoreModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
