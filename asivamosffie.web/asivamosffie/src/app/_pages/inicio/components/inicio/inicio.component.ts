@@ -73,19 +73,22 @@ export class InicioComponent implements OnInit {
 
   private verificarRespuesta( respuesta: Respuesta )
   {
-    if (respuesta.codigo === 'OK') // Respuesta sin errores
+    if (respuesta.IsSuccessful) // Response witout errors
     {
-      if (respuesta.validation === true) // tiene validaciones
+      if (respuesta.IsValidation) // have validations
       {
-        this.openDialog('Validacion Inicio Sesion', respuesta.validationmessage);
+        if (respuesta.Code === 'PV') // first time
+        {
+          this.openDialog('Validacion Inicio Sesion', 'Será direccionado para cambiar su contraseña.');
+          this.router.navigate(['/home']);
+        }else
+        {
+          this.openDialog('Validacion Inicio Sesion', respuesta.Message);
+        }
       }else // Respuesta esperada
       {
         this.router.navigate(['/home']);
       }
-    }else if ( respuesta.codigo === 'PV' ) // inicio sesion primera vez
-    {
-      this.openDialog('Validacion Inicio Sesion', 'Será direccionado para cambiar su contraseña.');
-      this.router.navigate(['/home']);
     }
   }
 

@@ -8,6 +8,7 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
 using lalupa.Authorization.JwtHelpers;
+using asivamosffie.services.Models;
 
 namespace asivamosffie.api.Controllers
 {
@@ -30,9 +31,9 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                Task<object> result = autenticacion.IniciarSesion(pUsuario,_settings.Value.Secret,_settings.Value.asivamosffieIssuerJwt, _settings.Value.asivamosffieAudienceJwt);
+                Task<Respuesta> result = autenticacion.IniciarSesion(pUsuario,_settings.Value.Secret,_settings.Value.asivamosffieIssuerJwt, _settings.Value.asivamosffieAudienceJwt);
 
-                object respuesta = await result;
+                Respuesta respuesta = await result;
                                
                 return Ok(respuesta);
 

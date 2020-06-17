@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.authe.actualUser$.subscribe(user => { 
       this.actualUser = user; 
+      console.log(user);
 
     });
   }
