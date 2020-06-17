@@ -62,7 +62,8 @@ namespace asivamosffie.services
 
         public async Task<Usuario> ChangePasswordUser(Usuario pUsuario)
         {
-            var user = await _unitOfWork.UserRepository.GetById(pUsuario.UsuarioId);
+            //var user = await _unitOfWork.UserRepository.GetById(pUsuario.UsuarioId);
+            var user = _context.Usuario.Find(pUsuario.UsuarioId);
             if (user != null)
             {
                 if (user.Contrasena != pUsuario.Contrasena)
@@ -89,8 +90,32 @@ namespace asivamosffie.services
             return user;
         }
 
+        public async Task<Usuario> ChangePasswordUser2(int pidusuario, string pcontrasenavieja, string pcontrasenanueva)
+        {
+            var user = _context.Usuario.Find(pidusuario);
+            if (user != null)
+            {
+                if (user.Contrasena != pcontrasenavieja)
+                    throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
+                /*if (pcontrasenavieja != pUsuario.Contrasena) // Pedt: Recibir contrasena nueva desde from
+                    throw new BusinessException("Lo sentimos, la nueva contraseña y confirmación no coinciden.");
+                    */
+                user.Contrasena = pcontrasenanueva; // Pedt: encriptar  contrasena
+                /*user.Ip = pUsuario.Ip;
+                user.UsuarioId = pUsuario.UsuarioId;*/
+                user.FechaModificacion = DateTime.Now;
+                user.UsuarioModificacion = user.Email;
+                user.CambiarContrasena = false;                
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new BusinessException("Usuario no existe");
+            }
 
+            return user;
+        }
     }
 
 

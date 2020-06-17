@@ -10,7 +10,6 @@ namespace asivamosffie.services.Interfaces
     {
         Task<object> RecoverPasswordByEmailAsync(string pUserMail ,string pIpClient ,string pDominio , string pMailServer ,int pMailPort , bool pEnableSSL, string pPassword, string pSentender );
         Task<Usuario> ChangePasswordUser(Usuario pUsuario);
-
-
+        Task<Usuario> ChangePasswordUser2(int v, string pcontrasenavieja, string pcontrasenanueva);
     }
 }
