@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
+using asivamosffie.api.Responses;
 
 namespace asivamosffie.api.Controllers
 {
@@ -16,7 +17,6 @@ namespace asivamosffie.api.Controllers
     {
         public readonly IUser _user;
         private readonly IOptions<AppSettings> _settings;
-
         public UserController(IOptions<AppSettings> settings , IUser user)
         {
               _user = user;
@@ -44,6 +44,15 @@ namespace asivamosffie.api.Controllers
             {
                 return BadRequest(ex.ToString());
             }
+        }
+
+        [Route("ChangePasswordUser")]
+        [HttpGet]
+        public async Task<IActionResult> ChangePasswordUser([FromBody] Usuario pUsuario)
+        {
+            var result = await _user.ChangePasswordUser(pUsuario);
+            var response = new ApiResponse<Usuario>(result);
+            return Ok(response);
         }
     }
 }
