@@ -25,12 +25,7 @@ namespace asivamosffie.api.Controllers
         }
 
 
-
-        public string GetIp()
-        {
-            return HttpContext.Connection.RemoteIpAddress.ToString();
-        }
-
+ 
 
         [Route("emailRecover")]
         [HttpPost]
@@ -38,7 +33,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                Task<object> result = _user.RecoverPasswordByEmailAsync(userparam.Email, GetIp(), _settings.Value.Dominio, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                userparam.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
+                Task<object> result = _user.RecoverPasswordByEmailAsync(userparam, _settings.Value.Dominio, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
 
