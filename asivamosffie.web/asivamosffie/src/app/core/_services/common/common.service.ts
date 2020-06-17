@@ -7,12 +7,10 @@ import { environment } from '../../../../environments/environment';
 })
 export class CommonService {
 
-  constructor(private http: HttpClient) { 
-   
-  }
+  constructor(private http: HttpClient) {  }
 
   public loadProfiles() {
-    var retorno = this.http.get<any[]>(`${environment.apiUrl}/common/perfiles`);    
+    let retorno = this.http.get<any[]>(`${environment.apiUrl}/common/perfiles`);
     return retorno;
   }
 }

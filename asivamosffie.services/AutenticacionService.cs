@@ -26,25 +26,25 @@ namespace asivamosffie.services
                 // Usuario no existe
                 if (usuario == null)
                 {
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "El usuario no existe en el sistema. Contacte al administrador." };
+                    mensaje = new { codigo = "OK", validation = true, validationmessage = "El usuario no existe en el sistema. Contacte al administrador." };
                 }else if (!(usuario.Activo.HasValue?usuario.Activo.Value:true))
                 {
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "El usuario se encuentra inactivo. Contacte al administrador." };
+                    mensaje = new { codigo = "OK", validation = true, validationmessage = "El usuario se encuentra inactivo. Contacte al administrador." };
                 }else if (usuario.IntentosFallidos >= 3 || usuario.Bloqueado.Value)
                 {
                     this.BlockUser(usuario.UsuarioId);
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "El usuario se encuentra bloqueado, debe remitirse a la opción “Recordar Contraseña”"};
+                    mensaje = new { codigo = "OK", validation = true, validationmessage = "El usuario se encuentra bloqueado, debe remitirse a la opción “Recordar Contraseña”"};
                 }else if (usuario.Contrasena != pUsuario.Contrasena)
                 {
                     this.AddFailedAttempt(usuario.UsuarioId);
-                    mensaje = new { codigo = "200OK", validation = true, validationmessage = "La contraseña es incorrecta." };
+                    mensaje = new { codigo = "OK", validation = true, validationmessage = "La contraseña es incorrecta." };
                 }else if (usuario.FechaUltimoIngreso == null)
                 {
-                    mensaje = new { codigo = "201OK", validation = true, validationmessage = "PrimeraVez" };
+                    mensaje = new { codigo = "PV", validation = true, validationmessage = "PrimeraVez" };
                 }else
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
-                    mensaje = new { codigo = "200OK", validation = false, data = usuario };
+                    mensaje = new { codigo = "OK", validation = false, data = usuario };
                 }
 
                 return mensaje;
