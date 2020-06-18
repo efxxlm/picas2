@@ -1,0 +1,32 @@
+.form-input {
+    display: block;
+    width: 30em;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.info-error {
+    display: block;
+    margin-top: -1.3em;
+    margin-bottom: 0.8em;
+
+    animation-duration: .6s;
+    animation-name    : animatedDown;
+
+    &::before {
+        content: '';
+        display: inline-block;
+        background-color: var(--secondaryColor);
+        height: 1em;
+        width: 1em;
+        border-radius: 50%;
+        margin-right: .2em;
+        position: relative;
+        top: 2px;
+    }
+}
+
+.btn-cambiar-pass {
+    margin-top: 2em;
+}

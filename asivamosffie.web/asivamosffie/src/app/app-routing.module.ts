@@ -1,3 +1,4 @@
+import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@angular/router';
 
@@ -20,6 +21,10 @@ const routes: Routes = [
       {
         path: 'home',
         loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule)
+      },
+      {
+        path: 'cambiarContrasena',
+        loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
       },
     ]
 

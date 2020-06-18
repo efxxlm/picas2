@@ -1,0 +1,41 @@
+<h1 class="title-menu--h1">
+    Cambiar contraseña
+</h1>
+<hr class="title-menu--hr">
+<div class="container text-center">
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        *Debe tener en cuenta que la contraseña debe contener letras mayúsculas, letras minúsculas, números y caracteres especiales, con un tamaño mínimo de 8 caracterés y máximo 15 caracterés.
+    </div>
+
+    <form [formGroup]="formChangePassword" (ngSubmit)="cambiarContrasena($event)">
+        <mat-form-field appearance="outline" class="form-input">
+            <mat-label>Contraseña Actual</mat-label>
+            <input matInput [type]="verClaveActual ? 'password' : 'text'" required formControlName="currentPassword">
+            <button mat-icon-button matSuffix (click)="verClaveActual = !verClaveActual" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClaveActual" class="ver-contrasena" type="button">
+                <img [src]="verClaveActual ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">
+            </button>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-input">
+            <mat-label>Contraseña Nueva</mat-label>
+            <input matInput [type]="verClaveNueva ? 'password' : 'text'" required formControlName="newPassword">
+            <button mat-icon-button matSuffix (click)="verClaveNueva = !verClaveNueva" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClaveNueva" class="ver-contrasena" type="button">
+                <img [src]="verClaveNueva ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">
+            </button>
+        </mat-form-field>
+        <span class="info-error" *ngIf="formChangePassword.get('newPassword').invalid && formChangePassword.value.newPassword != ''">Lo sentimos, la nueva contraseña no cumple con los estándares de seguridad.</span>
+        <mat-form-field appearance="outline" class="form-input">
+            <mat-label>Confirmar Contraseña</mat-label>
+            <input matInput [type]="verClaveConfirmar ? 'password' : 'text'" required formControlName="confirmPassword">
+            <button mat-icon-button matSuffix (click)="verClaveConfirmar = !verClaveConfirmar" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClaveConfirmar" class="ver-contrasena" type="button">
+                <img [src]="verClaveConfirmar ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">
+            </button>
+        </mat-form-field>
+        <span class="info-error" *ngIf="validarSiSonIguales()">Lo sentimos, la nueva contraseña y confirmación no coinciden.</span>
+        <button mat-raised-button color="accent" type="submit" [disabled]="!formChangePassword.valid" class="btn-cambiar-pass">Cambiar Contraseña</button>
+    </form>
+</div>
