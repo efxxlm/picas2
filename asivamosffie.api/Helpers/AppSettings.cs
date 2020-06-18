@@ -4,6 +4,8 @@
     {
         public string Dominio { get; set; }
 
+        public string DominioFront { get; set; }
+        
         public string MailServer { get; set; }
 
         public int MailPort { get; set; }

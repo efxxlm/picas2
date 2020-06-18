@@ -11,5 +11,9 @@ namespace asivamosffie.services.Interfaces
         Task<List<Perfil>> GetProfile();
 
         Task <Template> GetTemplateByTipo(string pTipo);
+
+        Task<Template> GetTemplateById(int pId);
+
+        Task <List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio);
     }
 }

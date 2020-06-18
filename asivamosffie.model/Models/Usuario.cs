@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class Usuario: BaseEntity
+    public partial class Usuario
     {
         public int UsuarioId { get; set; }
         public string Email { get; set; }

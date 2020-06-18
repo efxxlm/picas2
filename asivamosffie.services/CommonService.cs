@@ -20,9 +20,18 @@ namespace asivamosffie.services
             return await _context.Perfil.ToListAsync();
         }
 
-        public async Task<Template> GetTemplateByTipo(string tipo)
+        public async Task<Template> GetTemplateById(int pId)
         {
-            return await _context.Template.Where(r => r.Tipo.Equals(tipo)).FirstOrDefaultAsync();
+            return await _context.Template.Where(r=> r.TemplateId==pId && (bool)r.Activo).FirstOrDefaultAsync();
+        }
+
+        public async Task<Template> GetTemplateByTipo(string ptipo)
+        {
+            return await _context.Template.Where(r => r.Tipo.Equals(ptipo) && (bool)r.Activo).FirstOrDefaultAsync();
+        }
+        public async Task<List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio)
+        { 
+            return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync(); 
         }
     }
 }

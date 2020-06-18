@@ -8,7 +8,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IUser
     {
-        Task<object> RecoverPasswordByEmailAsync(Usuario pUsuario ,string pDominio , string pMailServer ,int pMailPort , bool pEnableSSL, string pPassword, string pSentender );
+        Task<object> RecoverPasswordByEmailAsync(Usuario pUsuario ,string pDominio, string pDominioFront, string pMailServer ,int pMailPort , bool pEnableSSL, string pPassword, string pSentender );
+        
         Task<Usuario> ChangePasswordUser(Usuario pUsuario);
 
 

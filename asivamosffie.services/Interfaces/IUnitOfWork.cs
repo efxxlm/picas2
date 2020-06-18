@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 namespace asivamosffie.services.Interfaces
 {
     // Implementacion  Unidad de trabajo
-    public interface IUnitOfWork : IDisposable
-    {
-        IRepository<Usuario> UserRepository { get; }
+    //public interface IUnitOfWork : IDisposable
+    //{
+    //    IRepository<Usuario> UserRepository { get; }
 
 
-        void SaveChanges();
+    //    void SaveChanges();
 
 
-        Task SaveChangesAsync();
-    }
+    //    Task SaveChangesAsync();
+    //}
 }

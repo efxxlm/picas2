@@ -6,7 +6,6 @@ namespace asivamosffie.model.Models
 {
     public abstract class BaseEntity
     {
-        //public int Id { get; set; }
-        
+     public int Id { get; set; } 
     }
 }
