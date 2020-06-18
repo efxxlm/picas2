@@ -8,6 +8,7 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
 using asivamosffie.api.Responses;
+using System.Security.Claims;
 
 namespace asivamosffie.api.Controllers
 {
@@ -25,16 +26,17 @@ namespace asivamosffie.api.Controllers
         }
 
 
- 
+
 
         [Route("emailRecover")]
         [HttpPost]
-        public async Task<IActionResult> RecoverPasswordByEmailAsync([FromBody]Usuario userparam)
+        public async Task<IActionResult> RecoverPasswordByEmailAsync([FromBody] Usuario userparam)
         {
             try
             {
                 userparam.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
-                Task<object> result = _user.RecoverPasswordByEmailAsync(userparam, _settings.Value.Dominio, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Task<object> result = _user.RecoverPasswordByEmailAsync(
+                    userparam, _settings.Value.Dominio, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
 
@@ -45,15 +47,17 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
         [Route("ChangePasswordUser")]
         [HttpGet]
-        public async Task<IActionResult> ChangePasswordUser(string pcontrasenavieja, string pcontrasenanueva)
+        public async Task<IActionResult> ChangePasswordUser([FromQuery] string Oldpwd, [FromQuery] string Newpwd)
         {
             var userId = HttpContext.User.FindFirst("UserId").Value;
-            var result = await _user.ChangePasswordUser2(Convert.ToInt32(userId),pcontrasenavieja, pcontrasenanueva);
+            var result = await _user.ChangePasswordUser(Convert.ToInt32(2), Oldpwd, Newpwd);
             var response = new ApiResponse<Usuario>(result);
             return Ok(response);
         }
 
     }
 }
+  

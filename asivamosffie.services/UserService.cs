@@ -13,17 +13,15 @@ namespace asivamosffie.services
     public class UserService : IUser
     {
         private readonly ICommonService _commonService;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly devAsiVamosFFIEContext _context;
 
-        public UserService(devAsiVamosFFIEContext context, ICommonService commonService, IUnitOfWork unitOfWork)
+        public UserService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
-            _unitOfWork = unitOfWork;
             _context = context;
         }
 
-        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             Object mensaje = null;
             Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
@@ -33,8 +31,8 @@ namespace asivamosffie.services
                 string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
 
                 usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
-                usuarioSolicito.Ip = pIpClient;
-                await ChangePasswordUser(usuarioSolicito);
+                usuarioSolicito.Ip = pUsuario.Ip;
+                //await ChangePasswordUser(usuarioSolicito);
 
 
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
@@ -60,54 +58,20 @@ namespace asivamosffie.services
             return mensaje;
         }
 
-        public async Task<Usuario> ChangePasswordUser(Usuario pUsuario)
-        {
-            //var user = await _unitOfWork.UserRepository.GetById(pUsuario.UsuarioId);
-            var user = _context.Usuario.Find(pUsuario.UsuarioId);
-            if (user != null)
-            {
-                if (user.Contrasena != pUsuario.Contrasena)
-                    throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-                if (pUsuario.Contrasena != pUsuario.Contrasena) // Pedt: Recibir contrasena nueva desde from
-                    throw new BusinessException("Lo sentimos, la nueva contraseña y confirmación no coinciden.");
-
-                user.Contrasena = pUsuario.Contrasena; // Pedt: encriptar  contrasena
-                user.Ip = pUsuario.Ip;
-                user.UsuarioId = pUsuario.UsuarioId;
-                user.FechaModificacion = DateTime.Now;
-                user.CambiarContrasena = true;
-
-                _unitOfWork.UserRepository.Update(user);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            else {
-                throw new BusinessException("Usuario no existe");
-            }
-
-
-
-            return user;
-        }
-
-        public async Task<Usuario> ChangePasswordUser2(int pidusuario, string pcontrasenavieja, string pcontrasenanueva)
+        public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
             var user = _context.Usuario.Find(pidusuario);
             if (user != null)
             {
-                if (user.Contrasena != pcontrasenavieja)
+                if (user.Contrasena != Oldpwd)
                     throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-                /*if (pcontrasenavieja != pUsuario.Contrasena) // Pedt: Recibir contrasena nueva desde from
-                    throw new BusinessException("Lo sentimos, la nueva contraseña y confirmación no coinciden.");
-                    */
-                user.Contrasena = pcontrasenanueva; // Pedt: encriptar  contrasena
-                /*user.Ip = pUsuario.Ip;
-                user.UsuarioId = pUsuario.UsuarioId;*/
-                user.FechaModificacion = DateTime.Now;
-                user.UsuarioModificacion = user.Email;
-                user.CambiarContrasena = false;                
-                await _context.SaveChangesAsync();
+                    user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd);
+                    user.FechaModificacion = DateTime.Now;
+                    user.UsuarioModificacion = user.Email;
+                    user.CambiarContrasena = false;                
+                    await _context.SaveChangesAsync();
             }
             else
             {
@@ -116,7 +80,6 @@ namespace asivamosffie.services
 
             return user;
         }
+
     }
-
-
 }

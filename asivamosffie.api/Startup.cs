@@ -22,7 +22,6 @@ using asivamosffie.services;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using asivamosffie.services.Repositories;
 using asivamosffie.services.Filters;
 
 namespace asivamosffie.api
@@ -81,6 +80,7 @@ namespace asivamosffie.api
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 options.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+
             services.AddControllers(options =>
             {
                 options.Filters.Add<GlobalExceptionFilter>();
@@ -93,6 +93,7 @@ namespace asivamosffie.api
            {
                 //options.SuppressModelStateInvalidFilter = true;
             });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -108,8 +109,7 @@ namespace asivamosffie.api
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-            services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
+
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

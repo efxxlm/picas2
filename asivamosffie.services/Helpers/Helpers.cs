@@ -12,8 +12,31 @@ namespace asivamosffie.services.Helpers
    public class Helpers
     {
 
+        public static string passphrase = "D0tabasei+on012020%"; // base para cifrar las contrasenas
+
+        //este algoritmo admite tamaños de bloque de 128, 192 o 256 bits; predeterminado a 128 bits ( compatible con Aes ).
+        public static RijndaelManaged myRijndael = new RijndaelManaged(); // Esta clase implementa el algoritmo Rijndael
+
+        private int iterations;
+        private byte[] salt;
+
+        // Faber Orozco
+        public Helpers()
+        {
+            myRijndael.BlockSize = 128;
+            myRijndael.KeySize = 256;
+            myRijndael.IV = HexStringToByteArray("6eb1c8bd41c450d25fea2437a4266d02");
+            myRijndael.Padding = PaddingMode.PKCS7;
+            myRijndael.Mode = CipherMode.CBC;
+            iterations = 10000;
+            salt = System.Text.Encoding.UTF8.GetBytes("w%gUevZ!VWlt@(w4I(EPyd.3QapdVT&Z");
+            myRijndael.Key = GenerateKey(passphrase);
+        }
+
         public static string encryptSha1(string password)
         {
+
+
             UTF8Encoding enc = new UTF8Encoding();
             byte[] data = enc.GetBytes(password);
             byte[] result;
@@ -121,7 +144,48 @@ namespace asivamosffie.services.Helpers
         }
 
 
+        //Faber Orozco
+        public static string EncryptPSW(string strPlainText)
+        {
+            byte[] strText = new System.Text.UTF8Encoding().GetBytes(strPlainText);
+            ICryptoTransform transform = myRijndael.CreateEncryptor();
+            byte[] cipherText = transform.TransformFinalBlock(strText, 0, strText.Length);
+            return Convert.ToBase64String(cipherText);
+        }
 
+        //Faber Orozco
+        public static string DecryptPSW(string encryptedText)
+        {
+            try
+            {
+                var encryptedBytes = Convert.FromBase64String(encryptedText);
+                ICryptoTransform transform = myRijndael.CreateDecryptor();
+                byte[] cipherText = transform.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
+                return System.Text.Encoding.UTF8.GetString(cipherText);
+            }
+            catch (Exception)
+            {
+                return encryptedText;
+            }
+        }
+
+        //Faber Orozco
+        public static byte[] HexStringToByteArray(string strHex)
+        {
+            dynamic r = new byte[strHex.Length / 2];
+            for (int i = 0; i <= strHex.Length - 1; i += 2)
+            {
+                r[i / 2] = Convert.ToByte(Convert.ToInt32(strHex.Substring(i, 2), 16));
+            }
+            return r;
+        }
+
+        //Faber Orozco
+        private byte[] GenerateKey(string strPassword)
+        {
+            Rfc2898DeriveBytes rfc2898 = new Rfc2898DeriveBytes(System.Text.Encoding.UTF8.GetBytes(strPassword), salt, iterations);
+            return rfc2898.GetBytes(256 / 8);
+        }
 
 
 
