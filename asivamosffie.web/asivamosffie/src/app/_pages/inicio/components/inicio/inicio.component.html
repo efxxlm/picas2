@@ -8,11 +8,11 @@
             <form [formGroup]="formLogin" (ngSubmit)="login($event)">
                 <h1>Iniciar Sesión</h1>
                 <hr>
-                <mat-form-field appearance="outline" class="w-100">
+                <mat-form-field appearance="outline">
                     <mat-label>Usuario</mat-label>
                     <input matInput type="email" minlength="4" maxlength="50" required formControlName="emailField">
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="w-100">
+                <mat-form-field appearance="outline">
                     <mat-label>Contraseña</mat-label>
                     <input matInput [type]="verClave ? 'password' : 'text'" required formControlName="passwordField">
                     <button mat-icon-button matSuffix (click)="verClave = !verClave" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClave" class="ver-contrasena" type="button">
