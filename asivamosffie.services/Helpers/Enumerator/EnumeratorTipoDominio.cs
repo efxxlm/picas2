@@ -29,7 +29,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Usos = 13,
 
-		Opcion_por_contratar = 14
+		Opcion_por_contratar = 14,
+
+		Documento_Acreditacion = 15,
+
+		Fases = 16
+
 
 	}
 }

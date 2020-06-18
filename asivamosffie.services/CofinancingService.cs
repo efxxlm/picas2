@@ -78,5 +78,9 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<List<Cofinanciacion>> GetListCofinancing()
+        {  
+            return await _context.Cofinanciacion.Where(r=> !(bool)r.Eliminado).Include(r => r.CofinanciacionAportante).Include(r => r.CofinanciacionDocumento).ToListAsync();
+        }
     }
 }

@@ -9,5 +9,8 @@ namespace asivamosffie.services.Interfaces
     public interface ICofinancingService
     { 
         Task<object> CreateCofinancing(Cofinanciacion cofinanciacion, List<CofinanciacionAportante> pListCofinanciacionAportante, List<CofinanciacionDocumento> pListconinanciacionDocumentos);
+
+        Task<List<Cofinanciacion>> GetListCofinancing();
+
     }
 }

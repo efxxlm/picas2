@@ -33,5 +33,8 @@ namespace asivamosffie.services
         { 
             return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync(); 
         }
+
+
+        
     }
 }

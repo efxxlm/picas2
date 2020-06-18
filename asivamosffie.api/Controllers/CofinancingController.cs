@@ -12,7 +12,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class CofinancingController : ControllerBase
     {
         private readonly ICofinancingService _Cofinancing;
@@ -23,9 +23,9 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("createCofinancing")]
+        [Route("CreateCofinancing")]
         [HttpPost]
-        public async Task<IActionResult> GetCreateCofinancing([FromBody] Cofinanciacion pCofinanciacion)
+        public async Task<IActionResult> CreateCofinancing([FromBody] Cofinanciacion pCofinanciacion)
         {
             try
             {
@@ -42,6 +42,15 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             } 
         }
+
+        [Route("GetCofinancing")]
+        [HttpGet]
+        public async Task<List<Cofinanciacion>> GetCofinancing()
+        {  
+            var result = await _Cofinancing.GetListCofinancing();
+            return result;
+        }
+
 
     }
 }
