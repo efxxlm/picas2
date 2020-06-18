@@ -1,0 +1,35 @@
+﻿
+namespace asivamosffie.services.Helpers.Enumerator
+{
+    public enum EnumeratorTipoDominio : int
+    {
+		Tipo_de_Intervencion = 1,
+
+		Convocatoria = 2,
+
+		Tipo_de_aportante = 3,
+
+		Nombre_Aportante_Aportante = 4,
+
+		Infraestructura_a_intervenir = 5,
+
+		Coordinaciones = 6,
+
+		Tipo_de_documento_cofinanciacion = 7,
+
+		Fuentes_de_financiación = 8,
+
+		Tipo_de_alcance = 9,
+
+		Presupuesto_Proceso_de_Selección = 10,
+
+		Perfil = 11,
+ 
+		Componentes = 12,
+
+		Usos = 13,
+
+		Opcion_por_contratar = 14
+
+	}
+}

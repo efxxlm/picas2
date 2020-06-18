@@ -37,7 +37,7 @@ namespace asivamosffie.services
                 await ChangePasswordUser(usuarioSolicito);
 
 
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)EnumeratorTemplate.RecoveryPassword);
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeradorTemplate.RecuperarClave);
                 string template = TemplateRecoveryPassword.Contenido;
 
                 string urlDestino = pDominio;
