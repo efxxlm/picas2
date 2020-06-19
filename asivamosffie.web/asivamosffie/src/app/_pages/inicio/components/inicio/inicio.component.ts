@@ -64,7 +64,15 @@ export class InicioComponent implements OnInit {
           this.verificarRespuesta( respuesta );
          },
          err => {
-          this.openDialog('Error', err.message);
+            let mensaje: string;
+            console.log(err)
+            if (err.error.message){
+              mensaje = err.error.message;
+            }else {
+              mensaje = err.message;
+            }
+            console.log(err);
+            this.openDialog('Error', mensaje);
          },
          () => {
           console.log('terminó');
@@ -73,19 +81,22 @@ export class InicioComponent implements OnInit {
 
   private verificarRespuesta( respuesta: Respuesta )
   {
-    if (respuesta.codigo === 'OK') // Respuesta sin errores
+    if (respuesta.isSuccessful) // Response witout errors
     {
-      if (respuesta.validation === true) // tiene validaciones
+      if (respuesta.isValidation) // have validations
       {
-        this.openDialog('Validacion Inicio Sesion', respuesta.validationmessage);
+        if (respuesta.code === 'PV') // first time
+        {
+          this.openDialog('Validacion Inicio Sesion', 'Será direccionado para cambiar su contraseña.');
+          this.router.navigate(['/home']);
+        }else
+        {
+          this.openDialog('Validacion Inicio Sesion', respuesta.message);
+        }
       }else // Respuesta esperada
       {
         this.router.navigate(['/home']);
       }
-    }else if ( respuesta.codigo === 'PV' ) // inicio sesion primera vez
-    {
-      this.openDialog('Validacion Inicio Sesion', 'Será direccionado para cambiar su contraseña.');
-      this.router.navigate(['/home']);
     }
   }
 

@@ -1,7 +1,9 @@
-﻿using asivamosffie.services.Exceptions;
+using asivamosffie.services.Exceptions;
+using asivamosffie.services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
+using Microsoft.Data.SqlClient;
 
 namespace asivamosffie.services.Filters
 {
@@ -9,25 +11,31 @@ namespace asivamosffie.services.Filters
     {
         public void OnException(ExceptionContext context)
         {
-            if (context.Exception.GetType() == typeof(BusinessException))
-            {
-                var exception = (BusinessException)context.Exception;
-                var validation = new
+            Respuesta respuesta = new Respuesta()
                 {
-                    Status = 400,
-                    Title = "Bad Request",
-                    Detail = exception.Message
+                    IsSuccessful = false,
+                    IsValidation = false,
+                    IsException = true,
+                    Code = "500",
+                    //Message = "Excepcion no controlada, " + exception.Message + " por favor comuniquese con el Administrador",
+                    Data = context.Exception
                 };
-
-                var json = new
-                {
-                    errors = new[] { validation }
-                };
-
-                context.Result = new BadRequestObjectResult(json);
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.ExceptionHandled = true;
+    
+            if (context.Exception is BusinessException){
+                BusinessException exception = (BusinessException)context.Exception;
+                respuesta.Message = string.Concat("Excepcion Negocio: ",exception.Message);    
             }
+            else if (context.Exception is SqlException){
+                SqlException exception = (SqlException)context.Exception;
+                respuesta.Message = string.Concat("Excepcion Base Datos.");    
+            }
+            else{
+                respuesta.Message = context.Exception.Message;    
+            }
+
+            context.Result = new BadRequestObjectResult(respuesta);
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.ExceptionHandled = true;
         }
     }
 }

@@ -24,6 +24,8 @@ export class AutenticacionService {
     pipe(
       map(user => {
       // login successful if there's a jwt token in the response                
+      console.log(user.data);
+
       if (user && user.token) {          
               // store user details and jwt token in local storage to keep user logged in between page refreshes    
               user.data.token=user.token;                    
@@ -31,9 +33,9 @@ export class AutenticacionService {
               this.actualUser = user.data;
               this.actualUserSubject.next(user.data);                  
       }
-      //console.log(user);
+      console.log(user);
       return user;
-      }));;
+      }));
   }
   public get actualUserValue(): Usuario {
     return this.actualUserSubject.value;
@@ -75,9 +77,11 @@ export interface Usuario{
 }
 
 export interface Respuesta{
-  codigo: string;
-  validation: true;
-  validationmessage: string;
+  isSuccessful: boolean;
+  isValidation: boolean;
+  isException: boolean;
+  code: string;
+  message: string;
   data?: Usuario;
   token?:any;
 }

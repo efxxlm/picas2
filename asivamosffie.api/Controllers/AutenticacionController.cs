@@ -8,6 +8,8 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
 using lalupa.Authorization.JwtHelpers;
+using asivamosffie.services.Models;
+using asivamosffie.services.Exceptions;
 
 namespace asivamosffie.api.Controllers
 {
@@ -28,19 +30,18 @@ namespace asivamosffie.api.Controllers
         [Route("IniciarSesion")]
         public async Task<IActionResult> PostIniciarSesion([FromBody] Usuario pUsuario)
         {
-            try
-            {
-                Task<object> result = autenticacion.IniciarSesion(pUsuario,_settings.Value.Secret,_settings.Value.asivamosffieIssuerJwt, _settings.Value.asivamosffieAudienceJwt);
+            try{
+                Task<Respuesta> result = autenticacion.IniciarSesion(pUsuario,_settings.Value.Secret,_settings.Value.asivamosffieIssuerJwt, _settings.Value.asivamosffieAudienceJwt);
 
-                object respuesta = await result;
+                Respuesta respuesta = await result;
                                
                 return Ok(respuesta);
 
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+             }
+             catch(Exception ex)
+             {
+                 throw ex;
+             }
         }
         
 
