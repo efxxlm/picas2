@@ -64,12 +64,17 @@ namespace asivamosffie.services
         public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
             var user = _context.Usuario.Find(pidusuario);
+            var UppUser = Helpers.Helpers.ConvertToUpercase(user);
+            var OldpwdEncrypt = Helpers.Helpers.encryptSha1(Newpwd);
+            
+
+
             if (user != null)
             {
-                if (user.Contrasena != Oldpwd)
+                if (user.Contrasena != OldpwdEncrypt.ToString())
                     throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-                user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd);
+                user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd.ToString());
                 user.FechaModificacion = DateTime.Now;
                 user.UsuarioModificacion = user.Email;
                 user.CambiarContrasena = false;
