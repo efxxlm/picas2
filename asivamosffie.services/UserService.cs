@@ -31,9 +31,9 @@ namespace asivamosffie.services
             {
                 string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
 
-                usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                 usuarioSolicito.Ip = pUsuario.Ip;
-                await ChangePasswordUser(usuarioSolicito);
+                await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, Helpers.Helpers.encryptSha1(newPass.ToString()));
 
 
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeradorTemplate.RecuperarClave);
@@ -63,23 +63,16 @@ namespace asivamosffie.services
 
         public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
-            //var user = await _unitOfWork.UserRepository.GetById(pUsuario.UsuarioId);
-            var user =  _context.Usuario.Find(pUsuario.UsuarioId);
+            var user = _context.Usuario.Find(pidusuario);
             if (user != null)
             {
                 if (user.Contrasena != Oldpwd)
                     throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-                if (pUsuario.Contrasena != pUsuario.Contrasena) // Pedt: Recibir contrasena nueva desde from
-                    throw new BusinessException("Lo sentimos, la nueva contraseña y confirmación no coinciden.");
-
-                user.Contrasena = pUsuario.Contrasena; // Pedt: encriptar  contrasena
-                user.Ip = pUsuario.Ip;
-                user.UsuarioId = pUsuario.UsuarioId;
+                user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd);
                 user.FechaModificacion = DateTime.Now;
-                user.CambiarContrasena = true;
-
-                
+                user.UsuarioModificacion = user.Email;
+                user.CambiarContrasena = false;
                 await _context.SaveChangesAsync();
             }
             else
