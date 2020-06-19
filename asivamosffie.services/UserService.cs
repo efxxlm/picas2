@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers;
 using asivamosffie.services.Exceptions;
 using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.services.Models;
+
 namespace asivamosffie.services
 {
     public class UserService : IUser
@@ -22,43 +24,68 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio ,string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
-            Object mensaje = null;
+            string strMensaje = "108";
+            bool blEnvioCorreo = false;
+            Respuesta respuesta = new Respuesta();
+
+            //Si no llega Email
+            if(string.IsNullOrEmpty(pUsuario.Email))
+                {
+                string strMensajeValidacion = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, strMensaje);
+                return respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = strMensaje, Message = strMensajeValidacion };
+
+            }
             Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
 
-            if (usuarioSolicito != null)
+            try
             {
-                string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
+                if (usuarioSolicito != null)
+                {
+                    string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
 
-                //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
-                usuarioSolicito.Ip = pUsuario.Ip;
-                await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, Helpers.Helpers.encryptSha1(newPass.ToString()));
+                    //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                    usuarioSolicito.Ip = pUsuario.Ip;
+                    await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, Helpers.Helpers.encryptSha1(newPass.ToString()));
 
 
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeradorTemplate.RecuperarClave);
-                string template = TemplateRecoveryPassword.Contenido;
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.RecuperarClave);
+                    string template = TemplateRecoveryPassword.Contenido;
 
-                string urlDestino = pDominio;
+                    string urlDestino = pDominio;
+                    //asent/img/logo
+                    //template = template.Replace("_Link_", urlDestino);
+                    template = template.Replace("_LinkF_", pDominioFront);
+                    template = template.Replace("_Email_", usuarioSolicito.Email);
+                    template = template.Replace("_Password_", newPass);
 
-                template = template.Replace("_Link_", urlDestino);
-                template = template.Replace("_LinkF_", pDominioFront);
-                template = template.Replace("_Email_", usuarioSolicito.Email);
-                template = template.Replace("_Password_", newPass);
+                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
+                     
+                    if (blEnvioCorreo)
+                    { 
+                        strMensaje = "101";
+                    } 
+                    else 
+                    { 
+                        strMensaje = "107";
+                    } 
+                }
+                else
+                {
+                    strMensaje = "106";
+                }
+                string strMensajeValidacion = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, strMensaje);
+                return respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = strMensaje, Message = strMensajeValidacion };
 
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
-                 
-                mensaje = new { codigo = "200OK", validation = true, validationmessage = (blEnvioCorreo) ? "Cambio de contraseña exitoso" : "Error Envio de correo" };
 
             }
-            else 
+            catch (Exception ex)
             {
-                mensaje = new { codigo = "200OK", validation = true, validationmessage = "Email no encontrado" };
+                 return respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = "500", Message = ex.ToString() +ex.InnerException }; 
             }
-
-
-            return mensaje;
-        }
+             
+       }
 
 
         public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
