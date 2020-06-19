@@ -25,14 +25,22 @@ namespace asivamosffie.api.Controllers
         [Route("perfiles")]
         public async Task<ActionResult<List<Perfil>>> GetProfile()
         {
+            var userId = HttpContext.User.FindFirst("UserId").Value;
             var result = common.GetProfile().Result;
             return result;
         }
         [HttpGet]
         public async Task<ActionResult<string>> GetTest()
-        {            
-
+        {             
             return "ok "+_settings.Value.MailServer;
+        }
+
+        [HttpGet]
+        [Route("dominioByIdDominio")]
+        public async Task<ActionResult<List<Dominio>>> GetDominioByIdDominio(int pIdDominio)
+        {
+            var result = await common.GetListDominioByIdTipoDominio(pIdDominio);
+            return result;
         }
     }
 }

@@ -6,7 +6,8 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers;
-
+using asivamosffie.services.Exceptions;
+using asivamosffie.services.Helpers.Enumerator;
 namespace asivamosffie.services
 {
     public class UserService : IUser
@@ -17,59 +18,70 @@ namespace asivamosffie.services
         public UserService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
+         
             _context = context;
         }
 
-        public async Task<Usuario> RecoverPasswordByEmailAsync(string pUserMail, string pIpClient, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio ,string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
-            Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUserMail.ToUpper())).FirstOrDefault();
+            Object mensaje = null;
+            Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
 
             if (usuarioSolicito != null)
             {
                 string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
 
-                usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
-                usuarioSolicito.Ip = pIpClient;
-                 await UpdatePasswordUser(usuarioSolicito);
+                //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                usuarioSolicito.Ip = pUsuario.Ip;
+                await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, Helpers.Helpers.encryptSha1(newPass.ToString()));
 
 
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeradorTemplate.RecuperarClave);
                 string template = TemplateRecoveryPassword.Contenido;
 
                 string urlDestino = pDominio;
 
                 template = template.Replace("_Link_", urlDestino);
+                template = template.Replace("_LinkF_", pDominioFront);
                 template = template.Replace("_Email_", usuarioSolicito.Email);
                 template = template.Replace("_Password_", newPass);
 
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
-
-
+                 
+                mensaje = new { codigo = "200OK", validation = true, validationmessage = (blEnvioCorreo) ? "Cambio de contraseña exitoso" : "Error Envio de correo" };
 
             }
+            else 
+            {
+                mensaje = new { codigo = "200OK", validation = true, validationmessage = "Email no encontrado" };
+            }
 
-            return usuarioSolicito;
+
+            return mensaje;
         }
 
-        public async Task<Usuario> UpdatePasswordUser(Usuario pUsuario)
+
+        public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
+            var user = _context.Usuario.Find(pidusuario);
+            if (user != null)
+            {
+                if (user.Contrasena != Oldpwd)
+                    throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-            Usuario usuarioSolicito =  _context.Usuario.Where(r => r.Email.Equals(pUsuario.Email)).FirstOrDefault();
-            usuarioSolicito.Contrasena = pUsuario.Contrasena;
-            usuarioSolicito.Ip = pUsuario.Ip;
-            usuarioSolicito.UsuarioId = pUsuario.UsuarioId;
-            usuarioSolicito.FechaModificacion = DateTime.Now;
-            usuarioSolicito.CambiarContrasena = true;
-            _context.Usuario.Update(usuarioSolicito);
-            _context.SaveChanges();
+                user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd);
+                user.FechaModificacion = DateTime.Now;
+                user.UsuarioModificacion = user.Email;
+                user.CambiarContrasena = false;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new BusinessException("Usuario no existe");
+            }
 
-            return usuarioSolicito;
-
+            return user;
         }
-
-
 
     }
-
-
 }

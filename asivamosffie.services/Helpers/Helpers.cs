@@ -12,8 +12,11 @@ namespace asivamosffie.services.Helpers
    public class Helpers
     {
 
+        
         public static string encryptSha1(string password)
         {
+
+
             UTF8Encoding enc = new UTF8Encoding();
             byte[] data = enc.GetBytes(password);
             byte[] result;
@@ -120,11 +123,6 @@ namespace asivamosffie.services.Helpers
             return string.Join(null, password) + def;
         }
 
-
-
-
-
-
-
+       
     }
 }

@@ -15,6 +15,9 @@ namespace asivamosffie.model.Models
         {
         }
 
+        public virtual DbSet<Cofinanciacion> Cofinanciacion { get; set; }
+        public virtual DbSet<CofinanciacionAportante> CofinanciacionAportante { get; set; }
+        public virtual DbSet<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
         public virtual DbSet<Dominio> Dominio { get; set; }
         public virtual DbSet<Localizacion> Localizacion { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
@@ -36,6 +39,72 @@ namespace asivamosffie.model.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Cofinanciacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<CofinanciacionAportante>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
+
+                entity.HasOne(d => d.Cofinanciacion)
+                    .WithMany(p => p.CofinanciacionAportante)
+                    .HasForeignKey(d => d.CofinanciacionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_CofinanciacionAportante_Cofinanciacion_1");
+            });
+
+            modelBuilder.Entity<CofinanciacionDocumento>(entity =>
+            {
+                entity.HasKey(e => e.CofinancicacionDocumentoId)
+                    .HasName("PK__Document__8BC632C7197BCC87");
+
+                entity.Property(e => e.FechaActa).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaAcuerdo).HasMaxLength(1);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaEdicion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroActa).HasMaxLength(15);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.UsuarioEdicion).HasMaxLength(200);
+
+                entity.Property(e => e.ValorDocumento)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                entity.Property(e => e.ValorTotalAportante).HasMaxLength(25);
+
+                entity.HasOne(d => d.Cofinanciacion)
+                    .WithMany(p => p.CofinanciacionDocumento)
+                    .HasForeignKey(d => d.CofinanciacionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_CofinanciacionDocumento_Cofinanciacion_1");
+            });
+
             modelBuilder.Entity<Dominio>(entity =>
             {
                 entity.Property(e => e.DominioId).HasComment("Identificador de la tabla");

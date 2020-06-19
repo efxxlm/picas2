@@ -20,6 +20,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using asivamosffie.services;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using asivamosffie.services.Filters;
 
 namespace asivamosffie.api
 {
@@ -50,12 +53,46 @@ namespace asivamosffie.api
             });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(
+                    options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = appSettings.asivamosffieIssuerJwt,
+                            ValidAudience = appSettings.asivamosffieAudienceJwt,
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.ASCII.GetBytes("asivamosffie@2020application"))
+
+                        };
+                    }
+                );
+
             services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 options.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<GlobalExceptionFilter>();
+            }).AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            })
+           .ConfigureApiBehaviorOptions(options =>
+           {
+                //options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -71,6 +108,8 @@ namespace asivamosffie.api
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
+            services.AddTransient<ICofinancingService, CofinancingService>();
+            // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
