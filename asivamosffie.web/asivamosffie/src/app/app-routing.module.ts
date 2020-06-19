@@ -3,6 +3,8 @@ import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@an
 
 import { LayoutComponent } from './layout/layout.component';
 
+import { AuthGuard } from './_guards/auth.guard';
+
 const routes: Routes = [
   {
     path: '',
@@ -19,6 +21,7 @@ const routes: Routes = [
       },
       {
         path: 'home',
+        canActivate: [AuthGuard],
         loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule)
       },
     ]
@@ -26,7 +29,8 @@ const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    redirectTo: '/inicio',
+    // loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 @NgModule({
