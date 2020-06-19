@@ -9,6 +9,7 @@ using lalupa.Authorization.JwtHelpers;
 using asivamosffie.api.Controllers;
 using AuthorizationTest.JwtHelpers;
 using asivamosffie.services.Models;
+using asivamosffie.services.Exceptions;
 
 namespace asivamosffie.services
 {
@@ -24,7 +25,9 @@ namespace asivamosffie.services
         {
             Respuesta respuesta   = new Respuesta();
             
-            Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
+            try {
+
+                Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
 
                 Usuario usuario = await result;
                 
@@ -45,15 +48,19 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true , IsValidation = true, Code = "004", Message = "La contraseña es incorrecta." };
                 }else if (usuario.FechaUltimoIngreso == null)
                 {
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = "PV", Message = "PrimeraVez", Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience,usuario) };
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = "PV", Message = "PrimeraVez", Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience,usuario) };
                 }else
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = "005", Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
                 }
 
-
                 return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser)
@@ -87,12 +94,17 @@ namespace asivamosffie.services
 
         public async Task ResetFailedAttempts(int pUserId)
         {
-            Usuario usuario = _context.Usuario.Where(u => u.UsuarioId == pUserId).SingleOrDefault();
+            try {
+                Usuario usuario = _context.Usuario.Where(u => u.UsuarioId == pUserId).SingleOrDefault();
 
-            usuario.IntentosFallidos = 0;
-            usuario.FechaUltimoIngreso = DateTime.Now;
+                usuario.IntentosFallidos = 0;
+                usuario.FechaUltimoIngreso = DateTime.Now;
 
-            _context.SaveChanges();
+                _context.SaveChanges();
+            }catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task AddFailedAttempt(int pUserId)

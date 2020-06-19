@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\asivamosffie.authorization\asivamosffie.authorization.csproj" />
-    <ProjectReference Include="..\asivamosffie.model\asivamosffie.model.csproj" />
+    <ProjectReference Include="..\asivamosffie.authorization\asivamosffie.authorization.csproj"/>
+    <ProjectReference Include="..\asivamosffie.model\asivamosffie.model.csproj"/>
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0"/>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1"/>
+  </ItemGroup>
 </Project>
