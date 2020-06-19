@@ -10,12 +10,15 @@ using asivamosffie.api.Controllers;
 using AuthorizationTest.JwtHelpers;
 using asivamosffie.services.Models;
 using asivamosffie.services.Exceptions;
+using asivamosffie.services.Helpers;
+using asivamosffie.services.Helpers.Constant;
 
 namespace asivamosffie.services
 {
     public class AutenticacionService : IAutenticacionService
     {
         private readonly devAsiVamosFFIEContext _context;
+
         public AutenticacionService(devAsiVamosFFIEContext context)
         {
             _context = context;            
@@ -24,6 +27,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> IniciarSesion(Usuario pUsuario, string prmSecret, string prmIssuer, string prmAudience)
         {
             Respuesta respuesta   = new Respuesta();
+            Helpers.Helpers helper = new Helpers.Helpers(_context);
             
             try {
 
@@ -31,29 +35,31 @@ namespace asivamosffie.services
 
                 Usuario usuario = await result;
                 
-                // Usuario no existe
-                if (usuario == null)
+                // User doesn't exist
+                if (usuario == null) 
                 {
-                    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = "001", Message = "El usuario no existe en el sistema. Contacte al administrador." };
-                }else if (!(usuario.Activo.HasValue?usuario.Activo.Value:true))
+                    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessages.UsuarioNoExiste };
+                }else if (!(usuario.Activo.HasValue?usuario.Activo.Value:true)) // User inactive
                 {
-                    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = "002", Message = "El usuario se encuentra inactivo. Contacte al administrador." };
-                }else if (usuario.IntentosFallidos >= 3 || usuario.Bloqueado.Value)
+                    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessages.UsuarioInactivo };
+                }else if (usuario.IntentosFallidos >= 3 || usuario.Bloqueado.Value) // Failed Attempt or User blocked
                 {
                     this.BlockUser(usuario.UsuarioId);
-                    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = "003", Message = "El usuario se encuentra bloqueado, debe remitirse a la opción “Recordar Contraseña”"};
-                }else if (usuario.Contrasena != pUsuario.Contrasena)
+                    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessages.UsuarioBloqueado };
+                }else if (usuario.Contrasena != pUsuario.Contrasena) // incorrect password
                 {
                     this.AddFailedAttempt(usuario.UsuarioId);
-                    respuesta = new Respuesta { IsSuccessful = true , IsValidation = true, Code = "004", Message = "La contraseña es incorrecta." };
-                }else if (usuario.FechaUltimoIngreso == null)
+                    respuesta = new Respuesta { IsSuccessful = true , IsValidation = true, Code = ConstantMessages.ContrasenaIncorrecta };
+                }else if (usuario.FechaUltimoIngreso == null) // first time to log in
                 {
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = "PV", Message = "PrimeraVez", Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience,usuario) };
-                }else
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessages.DirecCambioContrasena, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience,usuario) };
+                }else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = "005", Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessages.OperacionExitosa, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
                 }
+
+                respuesta.Message = helper.getMessageByCode(respuesta.Code);
 
                 return respuesta;
             }

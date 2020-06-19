@@ -85,9 +85,9 @@ export class InicioComponent implements OnInit {
     {
       if (respuesta.isValidation) // have validations
       {
-        if (respuesta.code === 'PV') // first time
+        if (respuesta.code === '301') // first time
         {
-          this.openDialog('Validacion Inicio Sesion', 'Será direccionado para cambiar su contraseña.');
+          this.openDialog('Validacion Inicio Sesion', respuesta.message);
           this.router.navigate(['/home']);
         }else
         {

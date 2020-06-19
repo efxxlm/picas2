@@ -6,13 +6,20 @@ using asivamosffie.model.Models;
 using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Net;
+using System.Linq;
+
 
 namespace asivamosffie.services.Helpers
 {
    public class Helpers
     {
+        private readonly devAsiVamosFFIEContext _context;
 
-        
+        public Helpers(devAsiVamosFFIEContext context)
+        {
+            _context = context;
+        }
+
         public static string encryptSha1(string password)
         {
 
@@ -123,6 +130,19 @@ namespace asivamosffie.services.Helpers
             return string.Join(null, password) + def;
         }
 
+        public string getMessageByCode(string pCode)
+        {
+            string message = "hola";
+
+            MensajesValidaciones prueba = _context.MensajesValidaciones.Where(m => m.Codigo == pCode).SingleOrDefault(); 
+            if (prueba == null)
+                message = string.Concat(pCode,": mensaje no parametrizado");           
+            else
+                message = prueba.Mensaje;           
+
+            return message;
+        }
+ 
        
     }
 }
