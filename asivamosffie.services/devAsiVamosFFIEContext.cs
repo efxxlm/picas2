@@ -20,6 +20,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
         public virtual DbSet<Dominio> Dominio { get; set; }
         public virtual DbSet<Localizacion> Localizacion { get; set; }
+        public virtual DbSet<MensajesValidaciones> MensajesValidaciones { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<MenuPerfil> MenuPerfil { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
@@ -182,6 +183,51 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2)
                     .IsUnicode(false)
                     .HasComment("Tipo de Localización");
+            });
+
+            modelBuilder.Entity<MensajesValidaciones>(entity =>
+            {
+                entity.Property(e => e.MensajesValidacionesId).HasComment("Identificador de la tabla");
+
+                entity.Property(e => e.Activo)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))")
+                    .HasComment("Indica que la parametrica esta activa en el sistema (0)Desactivado (1)Vigente");
+
+                entity.Property(e => e.Codigo)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasComment("Código del mensaje");
+
+                entity.Property(e => e.FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasComment("Fecha de creación de la parametrica");
+
+                entity.Property(e => e.FechaModificacion)
+                    .HasColumnType("datetime")
+                    .HasComment("Si el registro se actualiza con respecto a los campos que no son de auditoria (MensajesValidacionesId, Codigo, Mensaje, Modulo, Activo)");
+
+                entity.Property(e => e.Mensaje)
+                    .IsRequired()
+                    .HasMaxLength(512)
+                    .IsUnicode(false)
+                    .HasComment("Mensaje Validacion");
+
+                entity.Property(e => e.Modulo)
+                    .HasMaxLength(512)
+                    .IsUnicode(false)
+                    .HasComment("Modulo al que pertenecen las validaciones");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasComment("Email del Usuario que crea la nueva parametrica");
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
             });
 
             modelBuilder.Entity<Menu>(entity =>
