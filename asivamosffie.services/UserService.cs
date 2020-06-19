@@ -7,7 +7,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers;
 using asivamosffie.services.Exceptions;
-
+using asivamosffie.services.Helpers.Enumerator;
 namespace asivamosffie.services
 {
     public class UserService : IUser
@@ -18,10 +18,11 @@ namespace asivamosffie.services
         public UserService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
+         
             _context = context;
         }
 
-        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio ,string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             Object mensaje = null;
             Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
@@ -32,15 +33,16 @@ namespace asivamosffie.services
 
                 usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                 usuarioSolicito.Ip = pUsuario.Ip;
-                //await ChangePasswordUser(usuarioSolicito);
+                await ChangePasswordUser(usuarioSolicito);
 
 
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateByTipo("RecoveryPassword");
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeradorTemplate.RecuperarClave);
                 string template = TemplateRecoveryPassword.Contenido;
 
                 string urlDestino = pDominio;
 
                 template = template.Replace("_Link_", urlDestino);
+                template = template.Replace("_LinkF_", pDominioFront);
                 template = template.Replace("_Email_", usuarioSolicito.Email);
                 template = template.Replace("_Password_", newPass);
 
@@ -61,17 +63,24 @@ namespace asivamosffie.services
 
         public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
-            var user = _context.Usuario.Find(pidusuario);
+            //var user = await _unitOfWork.UserRepository.GetById(pUsuario.UsuarioId);
+            var user =  _context.Usuario.Find(pUsuario.UsuarioId);
             if (user != null)
             {
                 if (user.Contrasena != Oldpwd)
                     throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-                    user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd);
-                    user.FechaModificacion = DateTime.Now;
-                    user.UsuarioModificacion = user.Email;
-                    user.CambiarContrasena = false;                
-                    await _context.SaveChangesAsync();
+                if (pUsuario.Contrasena != pUsuario.Contrasena) // Pedt: Recibir contrasena nueva desde from
+                    throw new BusinessException("Lo sentimos, la nueva contraseña y confirmación no coinciden.");
+
+                user.Contrasena = pUsuario.Contrasena; // Pedt: encriptar  contrasena
+                user.Ip = pUsuario.Ip;
+                user.UsuarioId = pUsuario.UsuarioId;
+                user.FechaModificacion = DateTime.Now;
+                user.CambiarContrasena = true;
+
+                
+                await _context.SaveChangesAsync();
             }
             else
             {

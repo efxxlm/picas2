@@ -31,9 +31,16 @@ namespace asivamosffie.api.Controllers
         }
         [HttpGet]
         public async Task<ActionResult<string>> GetTest()
-        {            
-
+        {             
             return "ok "+_settings.Value.MailServer;
+        }
+
+        [HttpGet]
+        [Route("dominioByIdDominio")]
+        public async Task<ActionResult<List<Dominio>>> GetDominioByIdDominio(int pIdDominio)
+        {
+            var result = await common.GetListDominioByIdTipoDominio(pIdDominio);
+            return result;
         }
     }
 }
