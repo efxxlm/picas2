@@ -214,10 +214,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Mensaje Validacion");
 
-                entity.Property(e => e.Modulo)
-                    .HasMaxLength(512)
-                    .IsUnicode(false)
-                    .HasComment("Modulo al que pertenecen las validaciones");
+                entity.Property(e => e.MenuId).HasComment("Modulo al que pertenecen las validaciones");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -228,6 +225,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.MensajesValidaciones)
+                    .HasForeignKey(d => d.MenuId)
+                    .HasConstraintName("Fk_MensajesValidaciones_MenuId_Fk_Menu_MenuId");
             });
 
             modelBuilder.Entity<Menu>(entity =>

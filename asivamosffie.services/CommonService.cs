@@ -11,6 +11,7 @@ namespace asivamosffie.services
     public class CommonService : ICommonService
     {
         private readonly devAsiVamosFFIEContext _context;
+
         public CommonService(devAsiVamosFFIEContext context)
         {
             _context = context;            
@@ -34,7 +35,16 @@ namespace asivamosffie.services
             return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync(); 
         }
 
+        public async Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenu, string pCodigo)
+        {
+            return await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).Select(r => r.Mensaje).FirstOrDefaultAsync();
+        } 
 
-        
+        public async Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
+        {
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.DominioId).FirstOrDefaultAsync();
+        }
+
+       
     }
 }

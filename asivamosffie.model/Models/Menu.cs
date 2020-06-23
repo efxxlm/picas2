@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public Menu()
         {
+            MensajesValidaciones = new HashSet<MensajesValidaciones>();
             MenuPerfil = new HashSet<MenuPerfil>();
         }
 
@@ -23,6 +24,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
 
+        public virtual ICollection<MensajesValidaciones> MensajesValidaciones { get; set; }
         public virtual ICollection<MenuPerfil> MenuPerfil { get; set; }
     }
 }

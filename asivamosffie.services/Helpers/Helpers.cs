@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using asivamosffie.model.Models;
-using System.Security.Cryptography;
-using System.Net.Mail;
+using System.ComponentModel;
 using System.Net;
 using System.Linq;
-
+using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace asivamosffie.services.Helpers
 {
-   public class Helpers
+    public class Helpers
     {
         private readonly devAsiVamosFFIEContext _context;
 
@@ -46,7 +44,29 @@ namespace asivamosffie.services.Helpers
                 sb.Append(result[i].ToString("x"));
             }  
             return sb.ToString().ToUpper();
-        } 
+        }
+
+
+        public static object ConvertToUpercase(object dataObject)
+        {
+            try
+            {
+                object newObject = new System.Dynamic.ExpandoObject();
+                foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(dataObject))
+                {
+                    string name = descriptor.Name;
+                    object value = descriptor.GetValue(dataObject);
+                    ((IDictionary<String, Object>)newObject).Add(name, value = (descriptor.PropertyType.Name == "String" ? Convert.ToString(value).ToUpper() : value));
+                   
+                }
+
+                return newObject; //Newtonsoft.Json.JsonConvert.SerializeObject();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message.ToString();
+            }
+        }
 
         public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort)
         {
