@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using asivamosffie.model.Models;
+using asivamosffie.services.Helpers.Enumerator;
 
 namespace asivamosffie.services.Helpers
 {
@@ -150,11 +152,11 @@ namespace asivamosffie.services.Helpers
             return string.Join(null, password) + def;
         }
 
-        public string getMessageByCode(string pCode)
+        public string getMessageByCode(string pCode, enumeratorMenu pMenuId)
         {
-            string message = "hola";
+            string message = "";
 
-            MensajesValidaciones prueba = _context.MensajesValidaciones.Where(m => m.Codigo == pCode).SingleOrDefault(); 
+            MensajesValidaciones prueba = _context.MensajesValidaciones.Where(m => m.Codigo == pCode && m.MenuId == (int)pMenuId).SingleOrDefault(); 
             if (prueba == null)
                 message = string.Concat(pCode,": mensaje no parametrizado");           
             else

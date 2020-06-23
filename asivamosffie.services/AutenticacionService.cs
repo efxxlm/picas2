@@ -12,6 +12,7 @@ using asivamosffie.services.Models;
 using asivamosffie.services.Exceptions;
 using asivamosffie.services.Helpers;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 
 namespace asivamosffie.services
 {
@@ -52,14 +53,14 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true , IsValidation = true, Code = ConstantMessages.ContrasenaIncorrecta };
                 }else if (usuario.FechaUltimoIngreso == null) // first time to log in
                 {
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessages.DirecCambioContrasena, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience,usuario) };
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessages.DirecCambioContrasena, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience,usuario) };
                 }else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessages.OperacionExitosa, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
                 }
 
-                respuesta.Message = helper.getMessageByCode(respuesta.Code);
+                respuesta.Message = helper.getMessageByCode(respuesta.Code, enumeratorMenu.Usuario);
 
                 return respuesta;
             }
