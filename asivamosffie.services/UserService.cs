@@ -24,7 +24,7 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             string strMensaje = "108";
             bool blEnvioCorreo = false;
@@ -35,7 +35,7 @@ namespace asivamosffie.services
                 {
                 string strMensajeValidacion = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, strMensaje);
                 return respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = strMensaje, Message = strMensajeValidacion };
-
+               
             }
             Usuario usuarioSolicito =  _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
 
@@ -86,8 +86,7 @@ namespace asivamosffie.services
             }
              
        }
-
-
+         
         public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
             var user = _context.Usuario.Find(pidusuario);

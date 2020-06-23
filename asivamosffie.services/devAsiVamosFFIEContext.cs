@@ -83,7 +83,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEdicion).HasColumnType("datetime");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroActa).HasMaxLength(15);
 
@@ -91,7 +91,7 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(200);
 
-                entity.Property(e => e.UsuarioEdicion).HasMaxLength(200);
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
                 entity.Property(e => e.ValorDocumento)
                     .IsRequired()
