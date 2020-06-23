@@ -14,9 +14,9 @@ export class AuthGuard implements CanActivate {
   ) { }
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot): boolean {
     const currentUser = this.authenticationService.actualUserValue;
-    // console.log("auth guard");
+     console.log(currentUser);
     // console.log(this.authenticationService);
 
     if (currentUser) {
@@ -26,6 +26,7 @@ export class AuthGuard implements CanActivate {
     else {
       // not logged in so redirect to home
       this.router.navigate(['/'], {});
+      return false;
     }
   }
 
