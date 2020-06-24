@@ -42,11 +42,8 @@ namespace asivamosffie.services
                 if (usuarioSolicito != null)
                 {
                     string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
-                    usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
-                    usuarioSolicito.FechaModificacion = DateTime.Now;
-                    usuarioSolicito.UsuarioModificacion = usuarioSolicito.Email;
-                    usuarioSolicito.CambiarContrasena = true;
-                    //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                    usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString()); 
+                    usuarioSolicito.CambiarContrasena = true; 
                     usuarioSolicito.Ip = pUsuario.Ip;
                     //Guardar Usuario
                     await UpdateUser(usuarioSolicito); 
@@ -89,8 +86,9 @@ namespace asivamosffie.services
 
 
         public async Task<Usuario> UpdateUser(Usuario pUser)
-        { 
-      
+        {
+            pUser.FechaModificacion = DateTime.Now;
+            pUser.UsuarioModificacion = pUser.Email;
             await _context.SaveChangesAsync(); 
             return pUser;
         }
