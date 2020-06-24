@@ -8,8 +8,8 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
 using lalupa.Authorization.JwtHelpers;
-using asivamosffie.services.Models;
 using asivamosffie.services.Exceptions;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {

@@ -1,6 +1,6 @@
 using AuthorizationTest.JwtHelpers;
 
-namespace asivamosffie.services.Models
+namespace asivamosffie.model.APIModels
 {
     public class Respuesta{       
         public bool IsSuccessful { get; set; }

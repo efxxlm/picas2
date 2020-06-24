@@ -53,7 +53,7 @@ export class AutenticacionService {
   }
 
   changePass(old:string,newpass:string) {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/user/ChangePasswordUser`, {Oldpwd:old,Newpwd:newpass});
+    return this.http.post<Respuesta>(`${environment.apiUrl}/user/ChangePasswordUser?Oldpwd=${old}&Newpwd=${newpass}`,null);
   }
 
   public setCurrentUserValue(updatedUser: Usuario) {

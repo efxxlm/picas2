@@ -1,10 +1,13 @@
-﻿using asivamosffie.model.Models;
+﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
 using asivamosffie.services.Exceptions;
+using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 namespace asivamosffie.services
 {
     public class UserService : IUser
@@ -19,7 +22,7 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Object> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             bool blEnvioCorreo = false;
             Respuesta respuesta = new Respuesta();
@@ -87,31 +90,50 @@ namespace asivamosffie.services
             return pUser;
         }
 
-        public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
+        /**
+         *  Método para cambiar la contraseña del usuario
+         *  @param pidusuario int id del usuario a actualizar
+         *  @param Oldpwd string contraseña anterior encriptada en mayusculas
+         *  @param Newpwd string nueva contraseña encriptada en mayusculas
+         *  @return Respuesta objeto de respuesta
+         * **/
+        public async Task<Respuesta> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
             var user = _context.Usuario.Find(pidusuario);
+            Respuesta respuesta = new Respuesta();
             //var UppUser = Helpers.Helpers.ConvertToUpercase(user);
-            var OldpwdEncrypt = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
-
-
-            if (user != null)
+            //var OldpwdEncrypt = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
+            var OldpwdEncrypt = Oldpwd.ToUpper();
+            try
             {
-                if (user.Contrasena.ToUpper() != OldpwdEncrypt.ToString())
-                    throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
-
-                user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
-                user.FechaModificacion = DateTime.Now;
-                user.UsuarioModificacion = user.Email;
-                user.CambiarContrasena = false;
-                await _context.SaveChangesAsync();
+                if (user != null)
+                {
+                    if (user.Contrasena.ToUpper() != OldpwdEncrypt.ToString())
+                    {
+                        respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorContrasenaAntigua };
+                    }
+                    else
+                    {
+                        //user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
+                        user.Contrasena = Newpwd.ToUpper();
+                        user.FechaModificacion = DateTime.Now;
+                        user.UsuarioModificacion = user.Email;
+                        user.CambiarContrasena = false;
+                        await _context.SaveChangesAsync();
+                        respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data=user, Code = ConstantMessagesContrasena.OperacionExitosa };
+                    }
+                }
+                else
+                {
+                    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorSesion };
+                }
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code);
             }
-            else
+            catch (Exception ex)
             {
-                throw new BusinessException("Usuario no existe");
-            }
-
-            return user;
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code) + ": " + ex.ToString() + ex.InnerException;
+            }                        
+            return respuesta;
         }
-
     }
 }

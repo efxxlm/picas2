@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.api.Controllers;
 using AuthorizationTest.JwtHelpers;
-using asivamosffie.services.Models;
 using asivamosffie.services.Exceptions;
 using asivamosffie.services.Helpers;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.services
 {
