@@ -37,6 +37,12 @@ export class AutenticacionService {
       return user;
       }));
   }
+
+  RecuperarContrasena(usuario: Usuario)
+  {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/user/emailRecover`, usuario);
+  }
+
   public get actualUserValue(): Usuario {
     return this.actualUserSubject.value;
   }

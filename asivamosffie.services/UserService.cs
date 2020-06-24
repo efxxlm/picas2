@@ -47,7 +47,7 @@ namespace asivamosffie.services
 
                     //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                     usuarioSolicito.Ip = pUsuario.Ip;
-                    await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, Helpers.Helpers.encryptSha1(newPass.ToString()));
+                    await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, newPass);
 
 
                     Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.RecuperarClave);
@@ -82,7 +82,8 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                 return respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = "500", Message = ex.ToString() +ex.InnerException }; 
+                 //return respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = "500", Message = ex.ToString() +ex.InnerException }; 
+                 throw ex;
             }
              
        }

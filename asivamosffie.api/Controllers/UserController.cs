@@ -43,7 +43,7 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                throw ex;
             }
         }
 
