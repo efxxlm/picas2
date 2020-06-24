@@ -58,6 +58,10 @@ export class AutenticacionService {
   //   this.saveCloseSesionAudit().subscribe();
   }
 
+  changePass(old:string,newpass:string) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/user/ChangePasswordUser`, {Oldpwd:old,Newpwd:newpass});
+  }
+
   public setCurrentUserValue(updatedUser: Usuario) {
     localStorage.setItem('actualUser', JSON.stringify(updatedUser));
     this.actualUserSubject.next(updatedUser);

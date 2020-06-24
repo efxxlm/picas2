@@ -18,8 +18,8 @@ namespace asivamosffie.model.Models
         public bool Eliminado { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
-        public DateTime? FechaEdicion { get; set; }
-        public string UsuarioEdicion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
 
         public virtual Cofinanciacion Cofinanciacion { get; set; }
     }
