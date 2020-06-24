@@ -42,12 +42,14 @@ namespace asivamosffie.services
                 if (usuarioSolicito != null)
                 {
                     string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
-
+                    usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                    usuarioSolicito.FechaModificacion = DateTime.Now;
+                    usuarioSolicito.UsuarioModificacion = usuarioSolicito.Email;
+                    usuarioSolicito.CambiarContrasena = true;
                     //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                     usuarioSolicito.Ip = pUsuario.Ip;
-                    await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, newPass);
-
-
+                    //Guardar Usuario
+                    await UpdateUser(usuarioSolicito); 
                     Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.RecuperarClave);
                     string template = TemplateRecoveryPassword.Contenido;
 
@@ -85,6 +87,13 @@ namespace asivamosffie.services
 
         }
 
+
+        public async Task<Usuario> UpdateUser(Usuario pUser)
+        { 
+      
+            await _context.SaveChangesAsync(); 
+            return pUser;
+        }
 
         public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
