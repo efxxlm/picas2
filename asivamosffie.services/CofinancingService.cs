@@ -25,7 +25,7 @@ namespace asivamosffie.services
              cofinanciacion.Eliminado = false;
             _context.Cofinanciacion.Add(cofinanciacion);
 
-            foreach (var item in pListCofinanciacionAportante)
+            foreach (var item in cofinanciacion.CofinanciacionAportante)
             {
                 item.CofinanciacionId = cofinanciacion.CofinanciacionId;
                 item.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
