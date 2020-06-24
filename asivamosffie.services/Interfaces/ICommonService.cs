@@ -15,5 +15,9 @@ namespace asivamosffie.services.Interfaces
         Task<Template> GetTemplateById(int pId);
 
         Task <List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio);
+         
+        Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenuId, string pCodigo);
+
+        Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId);
     }
 }

@@ -1,8 +1,8 @@
 ﻿
 namespace asivamosffie.services.Helpers.Enumerator
 {
-    public enum enumeratorTemplate
+    public enum enumeratorMenu
     {
-         RecuperarClave = 2,
+         Usuario = 1,
     }     
 }

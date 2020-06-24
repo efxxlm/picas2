@@ -23,8 +23,8 @@ export class AutenticacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/autenticacion/IniciarSesion`, usuario).
     pipe(
       map(user => {
-      // login successful if there's a jwt token in the response
-      console.log(user.data);
+      // login successful if there's a jwt token in the response                
+      //console.log(user.data);
 
       if (user && user.token) {
               // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -33,7 +33,7 @@ export class AutenticacionService {
               this.actualUser = user.data;
               this.actualUserSubject.next(user.data);
       }
-      console.log(user);
+      //console.log(user);
       return user;
       }));
   }
@@ -50,6 +50,10 @@ export class AutenticacionService {
     this.actualUserSubject.next(null);
     this.actualUser = null;
   //   this.saveCloseSesionAudit().subscribe();
+  }
+
+  changePass(old:string,newpass:string) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/user/ChangePasswordUser`, {Oldpwd:old,Newpwd:newpass});
   }
 
   public setCurrentUserValue(updatedUser: Usuario) {

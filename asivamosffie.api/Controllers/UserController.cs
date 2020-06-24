@@ -35,7 +35,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 userparam.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
-                userparam.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+             //   userparam.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 Task<object> result = _user.RecoverPasswordByEmailAsync(userparam, _settings.Value.Dominio ,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
