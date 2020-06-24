@@ -10,7 +10,7 @@ using asivamosffie.api.Controllers;
 using AuthorizationTest.JwtHelpers;
 using asivamosffie.services.Models;
 using asivamosffie.services.Helpers.Enumerator;
-
+using asivamosffie.services.Helpers.Constant;
 namespace asivamosffie.services
 {
     public class CofinancingService : ICofinancingService
@@ -26,7 +26,7 @@ namespace asivamosffie.services
          
         public async Task<object> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion)
         {
-            string strMensaje = "";
+            Respuesta respuesta = new Respuesta();
             bool IsSuccessful = false;
 
             if (cofinanciacion.CofinanciacionAportante.Count > 0 || cofinanciacion.CofinanciacionDocumento.Count > 0)
@@ -35,14 +35,17 @@ namespace asivamosffie.services
                 { 
                     if (string.IsNullOrEmpty(cofinanciacion.CofinanciacionId.ToString()) || cofinanciacion.CofinanciacionId == 0)
                     {
-                        strMensaje = "103";
+                      
                         cofinanciacion.Eliminado = false;
                         cofinanciacion.FechaCreacion = DateTime.Now;
                         _context.Cofinanciacion.Add(cofinanciacion);
+                        respuesta = new Respuesta() {IsValidation = true, Code = ConstantMessagesCofinanciacion.CreadoCorrrectamente};
+
                     }
                     else
                     {
-                        strMensaje = "102";
+                        respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente };
+
                         cofinanciacion.FechaModificacion = DateTime.Now;
                         _context.Cofinanciacion.Update(cofinanciacion);
                     }
@@ -65,21 +68,20 @@ namespace asivamosffie.services
                 }
                 catch (Exception ex)
                 {
-                    return new Respuesta() { IsSuccessful = false, IsValidation = false, Code = "500", Message = ex.ToString() + ex.InnerException };
-
+                    respuesta = new Respuesta() { IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+                    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code) + ": " + ex.ToString() + ex.InnerException;
+                    return respuesta;
                 }
             }
             else
-            {
-                IsSuccessful = false;
-                strMensaje = "101";
+            { 
+                respuesta = new Respuesta() { IsValidation = false, Code = ConstantMessagesCofinanciacion.CamposIncompletos };
+
             }
 
-
-            string strMensajeValidacion = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinancicacion, strMensaje);
-            return new Respuesta() { IsSuccessful = IsSuccessful, IsValidation = true, Code = strMensaje, Message = strMensajeValidacion };
-
-
+            respuesta.IsSuccessful = IsSuccessful;
+            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code);
+            return respuesta; 
         }
 
         public async Task<bool> CreateCofinancingContributor(CofinanciacionAportante pcofinanciacionAportante)
