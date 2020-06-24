@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.Models;
-using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using asivamosffie.services.Helpers;
+﻿using asivamosffie.model.Models;
 using asivamosffie.services.Exceptions;
 using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.services.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 namespace asivamosffie.services
 {
     public class UserService : IUser
@@ -64,17 +61,16 @@ namespace asivamosffie.services
         public async Task<Usuario> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
             var user = _context.Usuario.Find(pidusuario);
-            var UppUser = Helpers.Helpers.ConvertToUpercase(user);
-            var OldpwdEncrypt = Helpers.Helpers.encryptSha1(Newpwd);
-            
+            //var UppUser = Helpers.Helpers.ConvertToUpercase(user);
+            var OldpwdEncrypt = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
 
 
             if (user != null)
             {
-                if (user.Contrasena != OldpwdEncrypt.ToString())
+                if (user.Contrasena.ToUpper() != OldpwdEncrypt.ToString())
                     throw new BusinessException("Lo sentimos, la contraseña actual no coincide.");
 
-                user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd.ToString());
+                user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
                 user.FechaModificacion = DateTime.Now;
                 user.UsuarioModificacion = user.Email;
                 user.CambiarContrasena = false;
