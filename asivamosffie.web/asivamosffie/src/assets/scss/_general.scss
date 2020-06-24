@@ -1,3 +1,40 @@
 body {
     color: var(--fontColor);
 }
+
+.container {
+    @media only screen and (min-width: 48em) {
+        width: 46rem;
+    }
+
+    @media only screen and (min-width: 62em) {
+        width: 61rem;
+    }
+
+    @media only screen and (min-width: 75em) {
+        width: 71rem;
+    }
+}
+
+.text-center {
+    text-align: center;
+}
+
+.title-menu {
+    .mat-typography &--h1 {
+        text-align: center;
+        color: var(--mainColor);
+        font-weight: 500;
+        margin-top: 1.5em;
+        margin-bottom: 0;
+    }
+
+    &--hr {
+        border: none;
+        height: .3em;
+        background-color: var(--mainColor);
+        border-radius: 1em;
+        width: 20em;
+        margin-top: .3em;
+    }
+}

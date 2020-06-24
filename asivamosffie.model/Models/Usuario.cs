@@ -22,5 +22,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? CambiarContrasena { get; set; }
+        public string Nombres { get; set; }
+        public string Apellidos { get; set; }
+        public string NumeroIdentificacion { get; set; }
     }
 }

@@ -6,7 +6,7 @@
     text-align: center;
     padding: 2em;
     @media only screen and (min-width: 48em) {
-        height: calc(100vh - 181px);
+        height: calc(100vh - 146px);
         padding: 1em 6em;
     }
 }
@@ -63,26 +63,6 @@
                 border-radius: 1em;
                 margin-top: 0;
                 margin-bottom: 2em;
-            }
-
-            mat-form-field {
-                width: 100%;
-
-                .ver-contrasena {
-                    height: 2.2em;
-                    img {
-                        height: 1.2em;
-                        margin-top: -.8em;
-                    }
-                }
-
-                mat-label {
-                    font-weight: 500;
-                }
-            }
-
-            .mat-form-field-appearance-outline .mat-form-field-outline-start, .mat-form-field-appearance-outline .mat-form-field-outline-end {
-                color: var(--mainColor);
             }
 
             .btn {
