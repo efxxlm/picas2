@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Usuario, AutenticacionService, Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { first } from 'rxjs/operators';
+import  sha1 from 'sha1';
+
 
 export const validateConfirmPassword: ValidatorFn = (
   control: FormGroup
@@ -29,6 +33,7 @@ export class CambiarContrasenaComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private autenticacionService: AutenticacionService
   ) {
     this.buildForm();
   }
@@ -39,7 +44,22 @@ export class CambiarContrasenaComponent implements OnInit {
   cambiarContrasena(event: Event) {
     event.preventDefault();
     if (this.formChangePassword.valid) {
-      console.log(this.formChangePassword.value);
+      this.autenticacionService.changePass(this.formChangePassword.value.currentPassword,this.formChangePassword.value.newPassword).pipe(first()).subscribe( respuesta => {
+        console.log(respuesta);
+       },
+       err => {
+          let mensaje: string;
+          console.log(err)
+          if (err.error.message){
+            mensaje = err.error.message;
+          }else {
+            mensaje = err.message;
+          }
+          //this.openDialog('Error', mensaje);
+       },
+       () => {
+        //console.log('terminó');
+       });
     }
   }
 
