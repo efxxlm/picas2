@@ -47,8 +47,7 @@ namespace asivamosffie.services
 
                     //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
                     usuarioSolicito.Ip = pUsuario.Ip;
-                    await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, Helpers.Helpers.encryptSha1(newPass.ToString()));
-
+                    await ChangePasswordUser(usuarioSolicito.UsuarioId, usuarioSolicito.Contrasena, newPass.ToString()); 
 
                     Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.RecuperarClave);
                     string template = TemplateRecoveryPassword.Contenido;
