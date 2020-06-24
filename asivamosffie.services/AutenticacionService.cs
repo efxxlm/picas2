@@ -56,7 +56,7 @@ namespace asivamosffie.services
                     this.AddFailedAttempt(usuario.UsuarioId);
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.ContrasenaIncorrecta };
                 }
-                else if (usuario.FechaUltimoIngreso == null) // first time to log in
+                else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
                 {
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
                 }
