@@ -22,12 +22,17 @@ const routes: Routes = [
       },
       {
         path: 'home',
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
         loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule)
       },
       {
         path: 'cambiarContrasena',
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
+      },
+      {
+        path: 'cargarMasivamente',
+        // tslint:disable-next-line: max-line-length
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
     ]
 

@@ -27,14 +27,19 @@ body {
         font-weight: 500;
         margin-top: 1.5em;
         margin-bottom: 0;
-    }
+        display: inline-block;
 
-    &--hr {
-        border: none;
-        height: .3em;
-        background-color: var(--mainColor);
-        border-radius: 1em;
-        width: 20em;
-        margin-top: .3em;
+        &::after {
+            content: '';
+            display: block;
+            position: relative;
+            height: .15em;
+            background-color: var(--mainColor);
+            border-radius: 1em;
+            width: calc(100% + 1em);
+            max-width: calc(100vw + .5em);
+            left: -0.5em;
+            margin-top: .1em;
+        }
     }
 }

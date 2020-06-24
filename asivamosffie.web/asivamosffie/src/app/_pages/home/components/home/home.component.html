@@ -1,22 +1,21 @@
-<h1 class="title-menu--h1">
-    Bienvenido(a)
-</h1>
-<hr class="title-menu--hr">
+<div class="text-center">
+    <h1 class="title-menu--h1">
+        Bienvenido(a)
+    </h1>
+</div>
 <div class="container">
     <p class="p">
         Al sistema de información del FFIE para la gestión de Proyectos de Infraestructura Educativa, a continuación, encontrará el listado de funcionalidades disponibles para su gestión.
     </p>
 
-    {{actualUser | json}}
-    <button (click)="probarconsumo()">para ver el otro asunto</button>
-    {{data|json}}
+    <!-- {{actualUser | json}} -->
+    <!-- <button (click)="probarconsumo()">para ver el otro asunto</button> -->
+    <!-- {{data|json}} -->
 
     <section class="menu">
-        <a routerlink="#" mat-button class="menu--link">Gestionar fuentes de financiación</a>
-        <a routerlink="#" mat-button class="menu--link">Función 2</a>
-        <a routerlink="#" mat-button class="menu--link">Función 3</a>
-        <a routerlink="#" mat-button class="menu--link">Función 4</a>
-        <a routerlink="#" mat-button class="menu--link">Función 5</a>
-        <a routerlink="#" mat-button class="menu--link">Función 6</a>
+        <a *ngFor="let optionMenu of optionsMenu"
+        [routerLink]="optionMenu.link"
+        mat-button class="menu--link"
+        >{{optionMenu.title}}</a>
     </section>
 </div>

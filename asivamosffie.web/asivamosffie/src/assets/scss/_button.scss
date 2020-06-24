@@ -17,11 +17,13 @@
     color: var(--tertiaryColorFont);
 }
 
+.mat-raised-button[disabled][disabled],
 .mat-raised-button.mat-accent[disabled],
-.mat-raised-button[disabled][disabled] {
+.mat-button:hover .mat-button-focus-overlay {
     opacity: .8;
 }
 
 button.mat-raised-button {
-    line-height: 28px;
+    line-height: 24px;
+    padding: 0 1.5em;
 }

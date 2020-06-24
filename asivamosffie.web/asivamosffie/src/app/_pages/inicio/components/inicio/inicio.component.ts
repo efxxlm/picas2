@@ -54,10 +54,9 @@ export class InicioComponent implements OnInit {
 
   private IniciarSesion()
   {
-    
     const usuario: Usuario = {
-      Email: this.formLogin.value['emailField'],
-      Contrasena: this.formLogin.value['passwordField']
+      Email: this.formLogin.value.emailField,
+      Contrasena: this.formLogin.value.passwordField
     };
 
     this.autenticacionService.IniciarSesion(usuario).pipe(first()).subscribe( respuesta => {
@@ -65,7 +64,7 @@ export class InicioComponent implements OnInit {
          },
          err => {
             let mensaje: string;
-            console.log(err)
+            console.log(err);
             if (err.error.message){
               mensaje = err.error.message;
             }else {
