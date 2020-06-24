@@ -53,10 +53,16 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePasswordUser([FromQuery] string Oldpwd, [FromQuery] string Newpwd)
         {
-            var userId = HttpContext.User.FindFirst("UserId").Value;
-            var result = await _user.ChangePasswordUser(Convert.ToInt32(userId), Oldpwd, Newpwd);            
-            return Ok(result);
-
+            try
+            {
+                var userId = HttpContext.User.FindFirst("UserId").Value;
+                var result = await _user.ChangePasswordUser(Convert.ToInt32(userId), Oldpwd, Newpwd);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }
