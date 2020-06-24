@@ -6,6 +6,9 @@ import { RecoverPasswordComponent } from '../recover-password/recover-password.c
 import { Router, Routes } from '@angular/router';
 import { Usuario, AutenticacionService, Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { first } from 'rxjs/operators';
+import  sha1 from 'sha1';
+import { ClassGetter } from '@angular/compiler/src/output/output_ast';
+
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
@@ -57,7 +60,7 @@ export class InicioComponent implements OnInit {
     
     const usuario: Usuario = {
       Email: this.formLogin.value['emailField'],
-      Contrasena: this.formLogin.value['passwordField']
+      Contrasena: sha1(this.formLogin.value['passwordField'])
     };
 
     this.autenticacionService.IniciarSesion(usuario).pipe(first()).subscribe( respuesta => {
@@ -65,17 +68,16 @@ export class InicioComponent implements OnInit {
          },
          err => {
             let mensaje: string;
-            console.log(err)
+            //console.log(err)
             if (err.error.message){
               mensaje = err.error.message;
             }else {
               mensaje = err.message;
             }
-            console.log(err);
             this.openDialog('Error', mensaje);
          },
          () => {
-          console.log('terminó');
+          //console.log('terminó');
          });
   }
 
@@ -85,15 +87,15 @@ export class InicioComponent implements OnInit {
     {
       if (respuesta.isValidation) // have validations
       {
-        if (respuesta.code === 'PV') // first time
+        if (respuesta.code === '301') // first time
         {
-          this.openDialog('Validacion Inicio Sesion', 'Será direccionado para cambiar su contraseña.');
+          this.openDialog('Validacion Inicio Sesion', respuesta.message);
           this.router.navigate(['/home']);
         }else
         {
           this.openDialog('Validacion Inicio Sesion', respuesta.message);
         }
-      }else // Respuesta esperada
+      }else // Expected response 
       {
         this.router.navigate(['/home']);
       }

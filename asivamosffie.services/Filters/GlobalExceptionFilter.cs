@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 using Microsoft.Data.SqlClient;
+using asivamosffie.model.Models;
 
 namespace asivamosffie.services.Filters
 {
     public class GlobalExceptionFilter : IExceptionFilter
-    {
+    {        
         public void OnException(ExceptionContext context)
         {
             Respuesta respuesta = new Respuesta()
@@ -17,13 +18,12 @@ namespace asivamosffie.services.Filters
                     IsValidation = false,
                     IsException = true,
                     Code = "500",
-                    //Message = "Excepcion no controlada, " + exception.Message + " por favor comuniquese con el Administrador",
                     Data = context.Exception
                 };
     
             if (context.Exception is BusinessException){
                 BusinessException exception = (BusinessException)context.Exception;
-                respuesta.Message = string.Concat("Excepcion Negocio: ",exception.Message);    
+                respuesta.Message = string.Concat("Mensaje Negocio: ",exception.Message);    
             }
             else if (context.Exception is SqlException){
                 SqlException exception = (SqlException)context.Exception;
@@ -38,4 +38,6 @@ namespace asivamosffie.services.Filters
             context.ExceptionHandled = true;
         }
     }
+
+   
 }

@@ -2,16 +2,24 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
+using System.Linq;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using asivamosffie.model.Models;
+using asivamosffie.services.Helpers.Enumerator;
 
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
     {
+        private readonly devAsiVamosFFIEContext _context;
 
-        
+        public Helpers(devAsiVamosFFIEContext context)
+        {
+            _context = context;
+        }
+
         public static string encryptSha1(string password)
         {
 
@@ -144,6 +152,19 @@ namespace asivamosffie.services.Helpers
             return string.Join(null, password) + def;
         }
 
+        public string getMessageByCode(string pCode, enumeratorMenu pMenuId)
+        {
+            string message = "";
+
+            MensajesValidaciones prueba = _context.MensajesValidaciones.Where(m => m.Codigo == pCode && m.MenuId == (int)pMenuId).SingleOrDefault(); 
+            if (prueba == null)
+                message = string.Concat(pCode,": mensaje no parametrizado");           
+            else
+                message = prueba.Mensaje;           
+
+            return message;
+        }
+ 
        
     }
 }
