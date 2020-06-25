@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using asivamosffie.model.APIModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +15,6 @@ namespace asivamosffie.api.Responses
         }
 
         public T Data { get; set; }
-
+        public Respuesta Meta { get; set; }
     }
 }

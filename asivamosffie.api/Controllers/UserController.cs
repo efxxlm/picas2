@@ -9,6 +9,7 @@ using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
 using asivamosffie.api.Responses;
 using System.Security.Claims;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -36,26 +37,32 @@ namespace asivamosffie.api.Controllers
             {
                 userparam.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
              //   userparam.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<object> result = _user.RecoverPasswordByEmailAsync(userparam, _settings.Value.Dominio ,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
-                object respuesta = await result;
+                Task<Respuesta> result = _user.RecoverPasswordByEmailAsync(userparam, _settings.Value.Dominio ,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Respuesta respuesta = await result;
                 return Ok(respuesta);
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                throw ex;
             }
         }
 
 
         [Route("ChangePasswordUser")]
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> ChangePasswordUser([FromQuery] string Oldpwd, [FromQuery] string Newpwd)
         {
-            var userId = HttpContext.User.FindFirst("UserId").Value;
-            var result = await _user.ChangePasswordUser(Convert.ToInt32(2), Oldpwd, Newpwd);
-            var response = new ApiResponse<Usuario>(result);
-            return Ok(response);
+            try
+            {
+                var userId = HttpContext.User.FindFirst("UserId").Value;
+                var result = await _user.ChangePasswordUser(Convert.ToInt32(userId), Oldpwd, Newpwd);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

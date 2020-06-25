@@ -58,8 +58,8 @@ export class InicioComponent implements OnInit {
   private IniciarSesion()
   {
     const usuario: Usuario = {
-      Email: this.formLogin.value.emailField,
-      Contrasena: this.formLogin.value.passwordField
+      Email: this.formLogin.value['emailField'],
+      Contrasena: sha1(this.formLogin.value['passwordField']).toUpperCase()
     };
 
     this.autenticacionService.IniciarSesion(usuario).pipe(first()).subscribe( respuesta => {
@@ -67,7 +67,6 @@ export class InicioComponent implements OnInit {
          },
          err => {
             let mensaje: string;
-            //console.log(err)
             if (err.error.message){
               mensaje = err.error.message;
             }else {
@@ -88,11 +87,11 @@ export class InicioComponent implements OnInit {
       {
         if (respuesta.code === '301') // first time
         {
-          this.openDialog('Validacion Inicio Sesion', respuesta.message);
-          this.router.navigate(['/home']);
+          this.openDialog('Validación Inicio Sesión', respuesta.message);
+          this.router.navigate(['/cambiarContrasena']);
         }else
         {
-          this.openDialog('Validacion Inicio Sesion', respuesta.message);
+          this.openDialog('Validación Inicio Sesión', respuesta.message);
         }
       }else // Expected response 
       {

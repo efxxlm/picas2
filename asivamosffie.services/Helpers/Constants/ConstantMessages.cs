@@ -16,7 +16,6 @@ namespace asivamosffie.services.Helpers.Constant
         public const string EmailObligatorio = "108";
         public const string ErrorGuardarCambios = "109";
 
-
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -32,6 +31,24 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Redireccion
 
 
+
+    }
+
+    public class ConstantMessagesContrasena
+    {
+        #region Mensajes Informativos
+       
+        //cambio de contraseña
+        public const string ErrorContrasenaAntigua = "101";
+        public const string ErrorSesion = "102";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso      
 
     }
 
