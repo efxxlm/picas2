@@ -27,6 +27,10 @@
         public string DirectoryBase { get; set; }
 
         public string DirectoryBaseProyectos { get; set; }
+        
+        public string yearVigente { get; set; }
+
+        public bool yearSiguienteEsVigente { get; set; }
 
     }
 }
