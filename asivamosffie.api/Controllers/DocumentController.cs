@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using asivamosffie.services.Interfaces;
+using Microsoft.Extensions.Options;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -11,36 +15,31 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class DocumentController : ControllerBase
     {
-        // GET: api/Document
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
-        // GET: api/Document/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        private readonly IDocumentService _documentService;
+        private readonly IOptions<AppSettings> _settings;
 
-        // POST: api/Document
+        public DocumentController(IDocumentService documentService , IOptions<AppSettings> settings ) {
+            _settings = settings;
+            _documentService = documentService;
+        }
+        // POST: api/Documentsadsd
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> CreateFile(IFormCollection form)
         {
-        }
+            Guid g = Guid.NewGuid();
+            if (!Directory.Exists(_settings.Value.DirectoryBase + _settings.Value.DirectoryBaseProyectos))
+            {
+                Directory.CreateDirectory(_settings.Value.DirectoryBase + _settings.Value.DirectoryBaseProyectos);
+            }
+            var filePath = _settings.Value.DirectoryBase + _settings.Value.DirectoryBaseProyectos + "/" + g.ToString() + form.Files[0].FileName;
+            int id = Convert.ToInt32(form["id"]);
 
-        // PUT: api/Document/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            // userparam.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
+            //   userparam.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+            Task<Respuesta> result = _documentService.(form);
+            Respuesta respuesta = await result;
         }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+  
     }
 }
