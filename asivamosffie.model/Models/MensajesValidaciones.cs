@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class MensajesValidaciones
     {
+        public MensajesValidaciones()
+        {
+            Auditoria = new HashSet<Auditoria>();
+        }
+
         public int MensajesValidacionesId { get; set; }
         public string Codigo { get; set; }
         public string Mensaje { get; set; }
@@ -16,5 +21,6 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual Menu Menu { get; set; }
+        public virtual ICollection<Auditoria> Auditoria { get; set; }
     }
 }

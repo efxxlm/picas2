@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class Dominio
     {
+        public Dominio()
+        {
+            Auditoria = new HashSet<Auditoria>();
+        }
+
         public int DominioId { get; set; }
         public int TipoDominioId { get; set; }
         public string Codigo { get; set; }
@@ -17,5 +22,6 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual TipoDominio TipoDominio { get; set; }
+        public virtual ICollection<Auditoria> Auditoria { get; set; }
     }
 }
