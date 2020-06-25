@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

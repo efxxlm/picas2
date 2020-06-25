@@ -5,6 +5,7 @@ using System.Net;
 using Microsoft.Data.SqlClient;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
+using System.Diagnostics;
 
 namespace asivamosffie.services.Filters
 {
@@ -32,7 +33,11 @@ namespace asivamosffie.services.Filters
             else{
                 respuesta.Message = context.Exception.Message;    
             }
-
+            using (EventLog eventLog = new EventLog("Application"))
+            {
+                eventLog.Source = "Application - ASIVAMOSFFIE";
+                eventLog.WriteEntry(respuesta.Message, EventLogEntryType.Error, 101, 1);
+            }
             context.Result = new BadRequestObjectResult(respuesta);
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             context.ExceptionHandled = true;

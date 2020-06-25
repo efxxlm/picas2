@@ -68,7 +68,7 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
                 }
 
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code);    
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesión");    
 
                 return respuesta;
             }

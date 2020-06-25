@@ -67,7 +67,7 @@ namespace asivamosffie.services
                     respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.CorreoNoExiste };
 
                 }
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code);
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.SolicitarContraseña, pUsuario.Email, "Recuperar contraseña");
                 return respuesta;
 
 
@@ -75,7 +75,7 @@ namespace asivamosffie.services
             catch (Exception ex)
             {
                 respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code) + ": " + ex.ToString() + ex.InnerException;
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.SolicitarContraseña, pUsuario.Email, "Recuperar contraseña") + ": " + ex.ToString() + ex.InnerException;
                 return respuesta;
             }
 
@@ -127,11 +127,11 @@ namespace asivamosffie.services
                 {
                     respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorSesion };
                 }
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code);
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña");
             }
             catch (Exception ex)
             {
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code) + ": " + ex.ToString() + ex.InnerException;
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña") + ": " + ex.ToString() + ex.InnerException;
             }                        
             return respuesta;
         }

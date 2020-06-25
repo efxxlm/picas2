@@ -35,9 +35,13 @@ namespace asivamosffie.services
             return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync(); 
         }
 
-        public async Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenu, string pCodigo)
+        public async Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenu, string pCodigo, int pAccionId, string pUsuario, string pObservaciones)
         {
-            return await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).Select(r => r.Mensaje).FirstOrDefaultAsync();
+            var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
+            /*almaceno auditoria*/
+            _context.Auditoria.Add(new Auditoria{AccionId=pAccionId,MensajesValidacionesId=retorno.MensajesValidacionesId,Usuario=pUsuario, Observacion= pObservaciones });
+            _context.SaveChangesAsync();
+            return retorno.Mensaje;
         } 
 
         public async Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
