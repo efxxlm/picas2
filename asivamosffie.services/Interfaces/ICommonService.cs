@@ -24,5 +24,8 @@ namespace asivamosffie.services.Interfaces
         Task<List<Localicacion>> GetListDepartamento();
 
         Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento);
+
+
+        Task<List<int>> GetListVigenciaAportes(string pYearVigente , bool yearSiguienteEsVigente);
     }
 }

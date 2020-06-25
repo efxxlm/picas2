@@ -61,5 +61,14 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
+
+
+        [HttpGet]
+        [Route("ListVigenciaAporte")]
+        public async Task<ActionResult<List<int>>> GetListVigenciaAportes()
+        {
+            var result = await common.GetListVigenciaAportes(_settings.Value.yearVigente , _settings.Value.yearSiguienteEsVigente);
+            return result;
+        }
     }
 }
