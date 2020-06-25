@@ -1,10 +1,10 @@
 using asivamosffie.services.Exceptions;
-using asivamosffie.services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 using Microsoft.Data.SqlClient;
 using asivamosffie.model.Models;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.services.Filters
 {

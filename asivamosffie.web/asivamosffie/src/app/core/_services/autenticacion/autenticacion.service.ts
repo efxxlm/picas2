@@ -37,6 +37,12 @@ export class AutenticacionService {
       return user;
       }));
   }
+
+  RecuperarContrasena(usuario: Usuario)
+  {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/user/emailRecover`, usuario);
+  }
+
   public get actualUserValue(): Usuario {
     return this.actualUserSubject.value;
   }
@@ -53,7 +59,7 @@ export class AutenticacionService {
   }
 
   changePass(old:string,newpass:string) {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/user/ChangePasswordUser`, {Oldpwd:old,Newpwd:newpass});
+    return this.http.post<Respuesta>(`${environment.apiUrl}/user/ChangePasswordUser?Oldpwd=${old}&Newpwd=${newpass}`,null);
   }
 
   public setCurrentUserValue(updatedUser: Usuario) {
@@ -71,7 +77,7 @@ export class AutenticacionService {
 export interface Usuario{
   UsuarioId?: number;
   Email: string;
-  Contrasena: string;
+  Contrasena?: string;
   Activo?: boolean;
   Bloqueado?: boolean;
   IntentosFallidos?: number;

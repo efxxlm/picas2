@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Usuario, AutenticacionService, Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { first } from 'rxjs/operators';
 import  sha1 from 'sha1';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 
 export const validateConfirmPassword: ValidatorFn = (
@@ -33,7 +36,9 @@ export class CambiarContrasenaComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private autenticacionService: AutenticacionService
+    private autenticacionService: AutenticacionService,
+    private router: Router,
+    public dialog: MatDialog
   ) {
     this.buildForm();
   }
@@ -41,21 +46,35 @@ export class CambiarContrasenaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   cambiarContrasena(event: Event) {
     event.preventDefault();
     if (this.formChangePassword.valid) {
-      this.autenticacionService.changePass(this.formChangePassword.value.currentPassword,this.formChangePassword.value.newPassword).pipe(first()).subscribe( respuesta => {
+      this.autenticacionService.changePass(sha1(this.formChangePassword.value.currentPassword),sha1(this.formChangePassword.value.newPassword)).pipe(first()).subscribe( respuesta => {
         console.log(respuesta);
+        console.log(respuesta.data);
+        
+        this.openDialog('Validación cambio de contraseña', respuesta.message);
+        if(respuesta.code=="200")
+        {
+            this.router.navigate(['/home']);
+        }
        },
        err => {
           let mensaje: string;
-          console.log(err)
+          //console.log(err)
           if (err.error.message){
             mensaje = err.error.message;
           }else {
             mensaje = err.message;
           }
-          //this.openDialog('Error', mensaje);
+          this.openDialog('Error', mensaje);
        },
        () => {
         //console.log('terminó');
