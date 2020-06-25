@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
+using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,33 @@ namespace asivamosffie.services
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.DominioId).FirstOrDefaultAsync();
         }
 
-       
+        public async Task<List<Localicacion>> GetListDepartamento()
+        { 
+             return await _context.Localizacion.Where(r => r.Nivel == 1)
+             .Select(x => new Localicacion
+             {
+                 LocalizacionId = x.LocalizacionId,
+                 Descripcion = x.Descripcion
+             }).ToListAsync();
+         }
+        public async Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento)
+        {
+            if (!string.IsNullOrEmpty(pIdDepartamento))
+            {
+                return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdDepartamento)).Select(x => new Localicacion
+                {
+                    LocalizacionId = x.LocalizacionId,
+                    Descripcion = x.Descripcion
+                }).ToListAsync();
+            }
+            else {
+                return await _context.Localizacion.Where(r => r.Nivel == 2).Select(x => new Localicacion
+                {
+                    LocalizacionId = x.LocalizacionId,
+                    Descripcion = x.Descripcion
+                }).ToListAsync();
+            }
+   
+        }
     }
 }
