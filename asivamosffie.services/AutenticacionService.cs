@@ -20,15 +20,17 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
 
-        public AutenticacionService(devAsiVamosFFIEContext context)
+        private readonly ICommonService _commonService;
+
+        public AutenticacionService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
+            _commonService = commonService;
         }
 
         public async Task<Respuesta> IniciarSesion(Usuario pUsuario, string prmSecret, string prmIssuer, string prmAudience)
         {
             Respuesta respuesta = new Respuesta();
-            Helpers.Helpers helper = new Helpers.Helpers(_context);
 
             try
             {
@@ -66,7 +68,7 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
                 }
 
-                respuesta.Message = helper.getMessageByCode(respuesta.Code, enumeratorMenu.Usuario);
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code);    
 
                 return respuesta;
             }
