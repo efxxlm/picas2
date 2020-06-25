@@ -88,11 +88,11 @@ export class InicioComponent implements OnInit {
       {
         if (respuesta.code === '301') // first time
         {
-          this.openDialog('Validacion Inicio Sesion', respuesta.message);
+          this.openDialog('Validación Inicio Sesión', respuesta.message);
           this.router.navigate(['/cambiarContrasena']);
         }else
         {
-          this.openDialog('Validacion Inicio Sesion', respuesta.message);
+          this.openDialog('Validación Inicio Sesión', respuesta.message);
         }
       }else // Expected response 
       {

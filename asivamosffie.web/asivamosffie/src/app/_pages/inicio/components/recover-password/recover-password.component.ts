@@ -64,16 +64,21 @@ export class RecoverPasswordComponent implements OnInit {
 
   private verificarRespuesta( respuesta: Respuesta )
   {
+    console.log(respuesta);
     if (respuesta.isSuccessful) // Response witout errors
     {
         if (respuesta.code === '101') // Expected response 
         {
-          this.openDialog('Validacion Inicio Sesion', respuesta.message);
+          this.openDialog('Validación Inicio Sesión', respuesta.message);
           this.router.navigate(['/inicio']);
+        }
+        else
+        {
+          this.openDialog('Validación Inicio Sesión', respuesta.message);
         }
     }else 
     {
-      this.openDialog('Validacion Recuperar Contraseña', respuesta.message);
+      this.openDialog('Validación Recuperar Contraseña', respuesta.message);
     }
     
   }
