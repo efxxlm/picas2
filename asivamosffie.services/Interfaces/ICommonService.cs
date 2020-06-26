@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.services.Interfaces
 {
@@ -19,5 +20,12 @@ namespace asivamosffie.services.Interfaces
         Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenuId, string pCodigo, int pAccionId, string pUsuario, string pObservaciones);
 
         Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId);
+
+        Task<List<Localicacion>> GetListDepartamento();
+
+        Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento);
+
+
+        Task<List<int>> GetListVigenciaAportes(string pYearVigente , bool yearSiguienteEsVigente);
     }
 }
