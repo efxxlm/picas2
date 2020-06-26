@@ -115,6 +115,10 @@ namespace asivamosffie.services
                     else
                     {
                         //user.Contrasena = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
+                        if(user.FechaUltimoIngreso==null)
+                        {
+                            user.FechaUltimoIngreso = DateTime.Now;
+                        }
                         user.Contrasena = Newpwd.ToUpper();
                         user.FechaModificacion = DateTime.Now;
                         user.UsuarioModificacion = user.Email;

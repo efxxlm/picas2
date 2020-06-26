@@ -60,12 +60,14 @@ namespace asivamosffie.services
                 }
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
                 {
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
+                    //para actualizar la fecha de ultimo ingreso                    
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };                    
                 }
                 else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
+                  
                 }
 
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesión");    
