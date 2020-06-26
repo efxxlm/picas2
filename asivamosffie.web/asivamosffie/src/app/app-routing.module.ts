@@ -29,6 +29,11 @@ const routes: Routes = [
         path: 'cambiarContrasena',
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
       },
+      {
+        path: 'gestionarAcueros',
+        loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
+        .then(m => m.GestionarAcuerdoCofinanciacionModule)
+      },
     ]
 
   },

@@ -3,6 +3,7 @@
     color: var(--mainColor);
 }
 
+.mat-form-field .mat-select.mat-select-invalid .mat-select-arrow,
 .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
     color: var(--secondaryColor);
 }
@@ -36,4 +37,47 @@ mat-form-field {
 .mat-form-field-appearance-outline .mat-form-field-prefix,
 .mat-form-field-appearance-outline .mat-form-field-suffix {
     top: 0 !important; //no pude sobreescribir usando especificidad
+}
+
+.label-left {
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 1.2em;
+}
+
+.mat-select-value {
+    color: var(--mainColor);
+    text-align: center;
+}
+
+.mat-select-arrow-wrapper {
+    position: relative;
+    right: -2.3em;
+    top: .3em
+}
+
+div.mat-select-arrow {
+    color: var(--mainColor);
+    border-left: .5em solid transparent;
+    border-right: .5em solid transparent;
+    border-top: 1em solid;
+    margin: 0 4px;
+}
+
+.select-width {
+    width: calc(100% - 2.7em);
+}
+
+.contador {
+    color: var(--mainColor);
+    font-weight: 500;
+    height: 2em;
+    width: 2em;
+    min-width: 2em;
+    border-radius: 50%;
+    border: solid 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: .5em;
 }
