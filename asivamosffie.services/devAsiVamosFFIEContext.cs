@@ -79,8 +79,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Observacion).HasMaxLength(500);
 
-                entity.Property(e => e.UsuarioId)
-                    .HasMaxLength(1)
+                entity.Property(e => e.Usuario)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Accion)

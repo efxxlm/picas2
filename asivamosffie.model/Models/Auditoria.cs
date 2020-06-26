@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class Auditoria
     {
         public int AuditoriaId { get; set; }
-        public string UsuarioId { get; set; }
+        public string Usuario { get; set; }
         public int AccionId { get; set; }
         public int MensajesValidacionesId { get; set; }
         public DateTime? Fecha { get; set; }

@@ -151,20 +151,5 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
-
-        public string getMessageByCode(string pCode, enumeratorMenu pMenuId)
-        {
-            string message = "";
-
-            MensajesValidaciones prueba = _context.MensajesValidaciones.Where(m => m.Codigo == pCode && m.MenuId == (int)pMenuId).SingleOrDefault(); 
-            if (prueba == null)
-                message = string.Concat(pCode,": mensaje no parametrizado");           
-            else
-                message = prueba.Mensaje;           
-
-            return message;
-        }
- 
-       
     }
 }
