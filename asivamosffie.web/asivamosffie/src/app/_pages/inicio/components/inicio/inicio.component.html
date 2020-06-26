@@ -14,7 +14,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Contraseña</mat-label>
-                    <input matInput [type]="verClave ? 'password' : 'text'" required formControlName="passwordField">
+                    <input matInput [type]="verClave ? 'password' : 'text'" maxlength="15" required formControlName="passwordField">
                     <button mat-icon-button matSuffix (click)="verClave = !verClave" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClave" class="ver-contrasena" type="button">
                         <img [src]="verClave ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">
                     </button>
@@ -22,6 +22,6 @@
                 <button class="btn btn-ingresar" mat-raised-button color="warn" type="submit">Ingresar</button>
                 <button (click)="openRecoverPass()" class="btn btn-recuperar" type="button" mat-button color="primary">Recuperar Contraseña</button>
             </form>
-        </mat-card>
+        </mat-card> 
     </div>
 </div>

@@ -3,4 +3,4 @@
 </button>
 
 <h1 mat-dialog-title>{{data.modalTitle}}</h1>
-<p mat-dialog-content class="modalText">{{data.modalText}}</p>
+<p mat-dialog-content class="modalText" [innerHtml]="data.modalText"></p> 

@@ -35,7 +35,7 @@ namespace asivamosffie.services.Filters
             }
             using (EventLog eventLog = new EventLog("Application"))
             {
-                eventLog.Source = "Application - ASIVAMOSFFIE";
+                eventLog.Source = "Application";
                 eventLog.WriteEntry(respuesta.Message, EventLogEntryType.Error, 101, 1);
             }
             context.Result = new BadRequestObjectResult(respuesta);

@@ -65,6 +65,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("ValidateCurrentPassword")]
+        [HttpPost]
+        public async Task<IActionResult> ValidateCurrentPassword([FromQuery] string Oldpwd)
+        {
+            try
+            {
+                var userId = HttpContext.User.FindFirst("UserId").Value;
+                var result = await _user.ValidateCurrentPassword(Convert.ToInt32(userId), Oldpwd);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
   

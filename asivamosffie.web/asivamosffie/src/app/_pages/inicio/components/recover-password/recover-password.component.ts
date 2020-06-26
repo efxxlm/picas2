@@ -23,6 +23,7 @@ export class RecoverPasswordComponent implements OnInit {
   ) {
     this.builderRecoverPass();
   }
+  
 
   ngOnInit(): void {
   }
@@ -69,16 +70,16 @@ export class RecoverPasswordComponent implements OnInit {
     {
         if (respuesta.code === '101') // Expected response 
         {
-          this.openDialog('Validación Inicio Sesión', respuesta.message);
+          this.openDialog('', respuesta.message);
           this.router.navigate(['/inicio']);
         }
         else
         {
-          this.openDialog('Validación Inicio Sesión', respuesta.message);
+          this.openDialog('', respuesta.message);
         }
     }else 
     {
-      this.openDialog('Validación Recuperar Contraseña', respuesta.message);
+      this.openDialog('', respuesta.message);
     }
     
   }
