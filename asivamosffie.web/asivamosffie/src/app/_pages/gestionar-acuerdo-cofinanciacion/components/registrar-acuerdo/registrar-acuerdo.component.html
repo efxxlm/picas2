@@ -1,0 +1,102 @@
+<div class="container">
+  <div class="text-right">
+    <a routerLink="/gestionarAcueros" mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Registrar nuevo acuerdo de cofinanciación
+    </h1>
+  </div>
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Datos del aportante
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-3 pr-0">
+            <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="vigenciaEstado" required>
+                <mat-option></mat-option>
+                <mat-option *ngFor="let vigenciaEstado of vigenciaEstados" [value]="vigenciaEstado">
+                  {{ vigenciaEstado }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 pr-0">
+            <label class="label-left">¿Cuántos aportantes tiene el acuerdo?</label>
+          </div>
+          <div class="col-md-4 d-flex align-items-center">
+            <mat-form-field class="full-width">
+              <input matInput #numAportes maxlength="2" min="1" max="99" required type="number" formControlName="numAportes">
+            </mat-form-field>
+            <span class="contador">{{2 - numAportes.value.length}}</span>
+          </div>
+        </div>
+        <div class="animatedDown" *ngIf="numAportes.value > 0 && numAportes.value < 100">
+          <h2 class="card-subTitle">Aportantes</h2>
+          <mat-card-title class="header-card--text">
+            Aportante 1
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-3 pr-0">
+              <label class="label-left">Tipo de aportante</label>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="tipoAportante">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let selectTipoAportante of selectTiposAportante" [value]="selectTipoAportante.value">
+                    {{ selectTipoAportante.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 pr-0">
+              <label class="label-left">Nombre de Aportante</label>
+            </div>
+            <div class="col-md-9">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="nombreAportante">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.value">
+                    {{ nombreAportante.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 pr-0">
+              <label class="label-left">¿Cuántos documentos de apropiación tiene este aportante?</label>
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+              <mat-form-field class="full-width">
+                <input matInput #cauntosDocumentosAportante maxlength="2" min="1" max="99" required type="number" formControlName="cauntosDocumentosAportante">
+              </mat-form-field>
+              <span class="contador">{{2 - cauntosDocumentosAportante.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div class="text-center animatedOpacity" *ngIf="numAportes.value > 0 && numAportes.value < 100">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
+</div>

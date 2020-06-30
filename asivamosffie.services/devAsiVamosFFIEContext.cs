@@ -890,10 +890,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
 
-                entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
                 entity.Property(e => e.LlaveMen)
                     .IsRequired()
                     .HasColumnName("LlaveMEN")

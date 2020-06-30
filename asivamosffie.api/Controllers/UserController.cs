@@ -24,10 +24,7 @@ namespace asivamosffie.api.Controllers
         {
             _user = user;
             _settings = settings;
-        }
-
-
-
+        } 
 
         [Route("emailRecover")]
         [HttpPost]

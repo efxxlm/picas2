@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.api.Controllers;
 using AuthorizationTest.JwtHelpers;
+using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.services.Helpers.Constant;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.services
 {
@@ -16,71 +19,157 @@ namespace asivamosffie.services
 
         private readonly devAsiVamosFFIEContext _context;
 
-        public CofinancingService(devAsiVamosFFIEContext context)
+        private readonly ICommonService _commonService;
+
+        public CofinancingService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _commonService = commonService;
             _context = context;
         }
-        public async Task<object> CreateCofinancing(Cofinanciacion cofinanciacion, List<CofinanciacionAportante> pListCofinanciacionAportante, List<CofinanciacionDocumento> pListconinanciacionDocumentos)
+
+        public async Task<object> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion)
         {
-             cofinanciacion.Eliminado = false;
-            _context.Cofinanciacion.Add(cofinanciacion);
+            Respuesta respuesta = new Respuesta();
+            bool IsSuccessful = false;
+            int idCofinancicacionAportante = 0;
 
-            foreach (var item in cofinanciacion.CofinanciacionAportante)
+            if (cofinanciacion.CofinanciacionAportante.Count > 0)
             {
-                item.CofinanciacionId = cofinanciacion.CofinanciacionId;
-                item.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
-                await CreateCofinancingContributor(item);
+                try
+                {
+                    if (string.IsNullOrEmpty(cofinanciacion.CofinanciacionId.ToString()) || cofinanciacion.CofinanciacionId == 0)
+                    {
+
+                        cofinanciacion.Eliminado = false;
+                        cofinanciacion.FechaCreacion = DateTime.Now;
+                        _context.Cofinanciacion.Add(cofinanciacion);
+                        respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.CreadoCorrrectamente };
+
+                    }
+                    else
+                    {
+                        respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente };
+
+                        cofinanciacion.FechaModificacion = DateTime.Now;
+                        _context.Cofinanciacion.Update(cofinanciacion);
+                    }
+                    await _context.SaveChangesAsync();
+
+
+                    foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
+                    {
+                        cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
+                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                        idCofinancicacionAportante = await CreateCofinancingContributor(cofinanciacionAportante);
+
+                        //Se crear los CofinanciacionDocumento relacionados a este aportante
+                        if (idCofinancicacionAportante > 0)
+                        {
+                            foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                            {
+                                cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                                cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
+                                await CreateCofinancingDocuments(cofinancicacionDocumento);
+                            }
+                        }
+                    } 
+                }
+                catch (Exception ex)
+                {
+                    respuesta = new Respuesta() { IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+                    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.Error, cofinanciacion.UsuarioCreacion, ex.ToString() + ex.InnerException);
+                    return respuesta;
+                }
+            }
+            else
+            {
+                respuesta = new Respuesta() { IsValidation = false, Code = ConstantMessagesCofinanciacion.CamposIncompletos };
+
             }
 
-            foreach (var item in pListconinanciacionDocumentos)
-            {
-                item.CofinanciacionId = cofinanciacion.CofinanciacionId;
-                await CreateCofinancingDocuments(item);
-                item.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
-            }
-
-
-            return cofinanciacion.CofinanciacionId;
-
+            respuesta.IsSuccessful = IsSuccessful;
+            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.CrearActualizarCofinanciacion, cofinanciacion.UsuarioCreacion, " ");
+            return respuesta;
         }
 
-        public async Task<object> CreateCofinancingContributor(CofinanciacionAportante pcofinanciacionAportante)
+        public async Task<int> CreateCofinancingContributor(CofinanciacionAportante pcofinanciacionAportante)
         {
             try
             {
                 pcofinanciacionAportante.FechaCreacion = DateTime.Now;
                 pcofinanciacionAportante.Eliminado = false;
-                _context.CofinanciacionAportante.Add(pcofinanciacionAportante);
+                if (string.IsNullOrEmpty(pcofinanciacionAportante.CofinanciacionAportanteId.ToString()) || pcofinanciacionAportante.CofinanciacionAportanteId == 0)
+                {
+                    pcofinanciacionAportante.FechaCreacion = DateTime.Now;
+                    _context.CofinanciacionAportante.Add(pcofinanciacionAportante);
+                }
+                else
+                {
+                    pcofinanciacionAportante.UsuarioModificacion = pcofinanciacionAportante.UsuarioCreacion;
+                    pcofinanciacionAportante.FechaModificacion = DateTime.Now;
+                    _context.CofinanciacionAportante.Update(pcofinanciacionAportante);
+                }
+
                 await _context.SaveChangesAsync();
-                return pcofinanciacionAportante.CofinanciacionId;
+                return pcofinanciacionAportante.CofinanciacionAportanteId;
             }
             catch (Exception ex)
             {
-                return ex;
+                CofinanciacionAportante pcofinanciacionAportanteNull = new CofinanciacionAportante();
+                return 0;
             }
 
         }
 
-        public async Task<object> CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento)
+        public async Task<int> CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento)
         {
             try
             {
                 pCofinanciacionDocumento.FechaCreacion = DateTime.Now;
                 pCofinanciacionDocumento.Eliminado = false;
-                _context.CofinanciacionDocumento.Add(pCofinanciacionDocumento);
+
+                if (string.IsNullOrEmpty(pCofinanciacionDocumento.CofinanciacionDocumentoId.ToString()) || pCofinanciacionDocumento.CofinanciacionDocumentoId == 0)
+                {
+                    pCofinanciacionDocumento.FechaCreacion = DateTime.Now;
+                    _context.CofinanciacionDocumento.Add(pCofinanciacionDocumento);
+                }
+                else
+                {
+                    pCofinanciacionDocumento.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion;
+                    pCofinanciacionDocumento.FechaModificacion = DateTime.Now;
+                    _context.CofinanciacionDocumento.Update(pCofinanciacionDocumento);
+                }
+
                 await _context.SaveChangesAsync();
-                return pCofinanciacionDocumento.CofinanciacionId;
+                return pCofinanciacionDocumento.CofinanciacionDocumentoId;
             }
             catch (Exception ex)
             {
-                return ex;
+                CofinanciacionDocumento cofinanciacionDocumentoNull = new CofinanciacionDocumento();
+                return 0;
             }
 
         }
 
         public async Task<List<Cofinanciacion>> GetListCofinancing()
-        {  
-            return await _context.Cofinanciacion.Where(r=> !(bool)r.Eliminado).Include(r => r.CofinanciacionAportante).Include(r => r.CofinanciacionDocumento).ToListAsync();
+        {
+            List<Cofinanciacion> cofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado).ToListAsync();
+
+            //Add todos los cofinanciacion Aportante que esten activo a cada cofinanciacion del foreach
+            foreach (var item in cofinanciacion)
+            {
+                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).ToListAsync();
+
+            }
+            foreach (var item in cofinanciacion)
+            {
+                foreach (var item2 in item.CofinanciacionAportante)
+                {
+                    item2.CofinanciacionDocumento = await _context.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == item2.CofinanciacionAportanteId).ToListAsync();
+                }
+            }
+
+            return cofinanciacion;
         }
     }
 }

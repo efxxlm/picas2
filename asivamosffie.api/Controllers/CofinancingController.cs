@@ -23,17 +23,15 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("CreateCofinancing")]
+        [Route("CreateorUpdateCofinancing")]
         [HttpPost]
         public async Task<IActionResult> CreateCofinancing([FromBody] Cofinanciacion pCofinanciacion)
         {
             try
-            {
-                List<CofinanciacionAportante> pListCofinanciacionAportante = new List<CofinanciacionAportante>();
-                List<CofinanciacionDocumento> pListconinanciacionDocumentos = new List<CofinanciacionDocumento>();
+            { 
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                Task<object> result = _Cofinancing.CreateCofinancing(pCofinanciacion, pListCofinanciacionAportante, pListconinanciacionDocumentos);
+               // pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                Task<object> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }

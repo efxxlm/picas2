@@ -12,6 +12,8 @@ namespace asivamosffie.services.Helpers.Enumerator
     {
         IniciarSesion = 51,      
         CambiarContraseña = 52,
-        SolicitarContraseña=53,
+        SolicitarContraseña=53, 
+        CrearActualizarCofinanciacion = 55,
+        Error = 56
     }
 }
