@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public Proyecto()
         {
             InfraestructuraIntervenirProyecto = new HashSet<InfraestructuraIntervenirProyecto>();
+            ProyectoAportante = new HashSet<ProyectoAportante>();
             ProyectoPredio = new HashSet<ProyectoPredio>();
         }
 
@@ -27,11 +28,6 @@ namespace asivamosffie.model.Models
         public decimal ValorObra { get; set; }
         public decimal ValorInterventoria { get; set; }
         public decimal ValorTotal { get; set; }
-        public int? PlazoMesesObra { get; set; }
-        public int? PlazoDiasObra { get; set; }
-        public int? PlazoMesesInterventoria { get; set; }
-        public int? PlazoDiasInterventoria { get; set; }
-        public string CoordinacionResponsableCodigo { get; set; }
         public string EstadoProyectoCodigo { get; set; }
         public bool? Eliminado { get; set; }
         public DateTime FechaCreacion { get; set; }
@@ -44,6 +40,7 @@ namespace asivamosffie.model.Models
         public virtual Predio PredioPrincipal { get; set; }
         public virtual InstitucionEducativaSede Sede { get; set; }
         public virtual ICollection<InfraestructuraIntervenirProyecto> InfraestructuraIntervenirProyecto { get; set; }
+        public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }
         public virtual ICollection<ProyectoPredio> ProyectoPredio { get; set; }
     }
 }

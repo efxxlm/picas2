@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public Localizacion()
         {
+            Aportante = new HashSet<Aportante>();
             Proyecto = new HashSet<Proyecto>();
         }
 
@@ -16,6 +17,7 @@ namespace asivamosffie.model.Models
         public decimal? Nivel { get; set; }
         public string Tipo { get; set; }
 
+        public virtual ICollection<Aportante> Aportante { get; set; }
         public virtual ICollection<Proyecto> Proyecto { get; set; }
     }
 }

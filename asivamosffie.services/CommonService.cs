@@ -43,7 +43,7 @@ namespace asivamosffie.services
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
             _context.Auditoria.Add(new Auditoria{AccionId=pAccionId,MensajesValidacionesId=retorno.MensajesValidacionesId,Usuario=pUsuario, Observacion= pObservaciones });
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return retorno.Mensaje;
         } 
 
