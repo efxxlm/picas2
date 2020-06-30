@@ -5,8 +5,8 @@ namespace asivamosffie.model.Models
 {
     public partial class CofinanciacionDocumento
     {
-        public int CofinancicacionDocumentoId { get; set; }
-        public int CofinanciacionId { get; set; }
+        public int CofinanciacionDocumentoId { get; set; }
+        public int CofinanciacionAportanteId { get; set; }
         public int VigenciaAporteId { get; set; }
         public string ValorDocumento { get; set; }
         public int TipoDocumentoId { get; set; }
@@ -21,6 +21,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
 
-        public virtual Cofinanciacion Cofinanciacion { get; set; }
+        public virtual CofinanciacionAportante CofinanciacionAportante { get; set; }
     }
 }
