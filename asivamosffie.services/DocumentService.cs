@@ -28,12 +28,15 @@ namespace asivamosffie.services
 
         private readonly devAsiVamosFFIEContext _context;
 
-        public DocumentService(devAsiVamosFFIEContext context)
+        private readonly ICommonService _commonService;
+
+        public DocumentService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _commonService = commonService;
             _context = context;
         }
 
-        public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch)
+        public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
         {
             int CantidadIteraciones = 1;
             Respuesta respuesta = new Respuesta();
@@ -41,7 +44,7 @@ namespace asivamosffie.services
             try
             {
                 ArchivoCargue archivoCarge = await getSaveFile(pFile, pFilePatch);
-              
+
                 // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
                 if (archivoCarge != null)
                 {
@@ -59,16 +62,27 @@ namespace asivamosffie.services
                                 CantidadIteraciones++;
                                 try
                                 {
-                                    //Campos Obligatorios Validos
+                                    /* Columnas Obligatorias de excel
+                                     2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
+                                    Campos Obligatorios Validos   */
                                     if (
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) |
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) |
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) |
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) |
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) |
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) |
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) |
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 7].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 8].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 10].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 12].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 13].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 14].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 28].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 29].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 30].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 31].Text) |
+                                        !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
+                                        )
                                     {
 
                                         TemporalProyecto temporalProyecto = new TemporalProyecto();
@@ -76,17 +90,56 @@ namespace asivamosffie.services
                                         temporalProyecto.ArchivoCargueId = archivoCarge.ArchivoCargueId;
                                         temporalProyecto.EsValido = false;
                                         temporalProyecto.FechaCreacion = DateTime.Now;
-                                        temporalProyecto.UsuarioCreacion = "UsuarioCreacion@Yopmail.com";
+                                        temporalProyecto.UsuarioCreacion = pUsuarioCreo;
 
+                                        // #1
                                         //Fecha sesion Junta 
                                         string strDateTime = (worksheet.Cells[i, 1].Text).ToString();
                                         if (!string.IsNullOrEmpty(strDateTime))
                                         {
-                                            temporalProyecto.FechaSesionJunta = DateTime.ParseExact(strDateTime, "yyyy-MM-dd HH:mm:ss,fff", System.Globalization.CultureInfo.InvariantCulture);
+                                            temporalProyecto.FechaSesionJunta = DateTime.Parse(strDateTime);
                                         }
-                                        archivoCarge.CantidadRegistrosValidos++;
+
+                                        //#2
+                                        //Número de acta de la junta 
+                                        int intNumeroActaJunta = Int32.Parse(worksheet.Cells[i, 2].Text);
+                                        temporalProyecto.NumeroActaJunta = intNumeroActaJunta;
+
+                                        //#3
+                                        // Tipo de Intervención 
+                                        temporalProyecto.TipoIntervencionId = await _commonService.GetDominioIdByNombreDominioAndTipoDominio(worksheet.Cells[i, 3].Text, (int)EnumeratorTipoDominio.Tipo_de_Intervencion);
+
+                                        //#4
+                                        // Llave MEN  
+                                        temporalProyecto.LlaveMen = worksheet.Cells[i, 4].Text;
+
+                                        //#5
+                                        //Región
+                                         
+                                        //#6
+                                        //Departamento
+                                        temporalProyecto.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 6].Text, true);
+
+                                        //#7
+                                        //Municipio
+                                        temporalProyecto.Municipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 7].Text, false);
+
+                                        //#8
+                                        //Institución Educativa 
+                                        //temporalProyecto.InstitucionEducativa = worksheet.Cells[i, 8].Text;
+
+
+
+
+
+
+
+
+
+
                                     }
-                                    else {
+                                    else
+                                    {
 
                                         archivoCarge.CantidadRegistrosInvalidos++;
                                     }
@@ -110,8 +163,8 @@ namespace asivamosffie.services
 
                 respuesta.Message = ex.ToString();
             }
-            respuesta.Message =  " Numero de veces" + CantidadIteraciones.ToString();
-            return respuesta ;
+            respuesta.Message = " Numero de veces" + CantidadIteraciones.ToString();
+            return respuesta;
         }
 
 

@@ -8,7 +8,6 @@ namespace asivamosffie.model.Models
         public Cofinanciacion()
         {
             CofinanciacionAportante = new HashSet<CofinanciacionAportante>();
-            CofinanciacionDocumento = new HashSet<CofinanciacionDocumento>();
         }
 
         public int CofinanciacionId { get; set; }
@@ -20,6 +19,5 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual ICollection<CofinanciacionAportante> CofinanciacionAportante { get; set; }
-        public virtual ICollection<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
     }
 }

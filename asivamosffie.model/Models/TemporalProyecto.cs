@@ -16,7 +16,7 @@ namespace asivamosffie.model.Models
         public string LlaveMen { get; set; }
         public int Departamento { get; set; }
         public int Municipio { get; set; }
-        public int InstitucionEducativa { get; set; }
+        public string InstitucionEducativa { get; set; }
         public int? CodigoDaneIe { get; set; }
         public int Sede { get; set; }
         public int? CodigoDaneSede { get; set; }

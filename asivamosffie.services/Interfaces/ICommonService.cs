@@ -21,11 +21,14 @@ namespace asivamosffie.services.Interfaces
 
         Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId);
 
+        Task<int> GetDominioIdByNombreDominioAndTipoDominio(string pNombre, int pTipoDominioId);
+
+        Task<int> GetLocalizacionIdByName(string pNombre, bool esDepartamento);
+
         Task<List<Localicacion>> GetListDepartamento();
 
         Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento);
-
-
+         
         Task<List<int>> GetListVigenciaAportes(string pYearVigente , bool yearSiguienteEsVigente);
     }
 }

@@ -23,7 +23,7 @@ namespace asivamosffie.model.Models
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
 
-        public virtual Archivo AcuerdoCofinanciacion { get; set; }
+        public virtual AcuerdoCofinanciamiento AcuerdoCofinanciacion { get; set; }
         public virtual Localizacion LocalizacionIdMunicipioNavigation { get; set; }
         public virtual ICollection<DocumentoApropiacion> DocumentoApropiacion { get; set; }
         public virtual ICollection<FuenteFinanciacion> FuenteFinanciacion { get; set; }

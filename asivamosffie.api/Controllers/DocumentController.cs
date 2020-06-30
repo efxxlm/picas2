@@ -38,8 +38,9 @@ namespace asivamosffie.api.Controllers
                 Respuesta respuesta = new Respuesta();
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
-                { 
-                    respuesta = await _documentService.SetValidateCargueMasivo(file , Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos)); 
+                {
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _documentService.SetValidateCargueMasivo(file , Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), strUsuario); 
                 }
                 return Ok(respuesta);
             }

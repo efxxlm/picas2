@@ -6,6 +6,7 @@ using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using asivamosffie.services.Helpers.Enumerator;
 
 namespace asivamosffie.services
 {
@@ -102,6 +103,20 @@ namespace asivamosffie.services
             { 
                 throw;
             } 
+        }
+
+        public async Task<int> GetDominioIdByNombreDominioAndTipoDominio(string pNombreDominio , int pTipoDominioId)
+        {
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Nombre.Trim().ToUpper().Equals(pNombreDominio.Trim().ToUpper()) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
+
+        }
+
+        public async Task<int> GetLocalizacionIdByName(string pNombre, bool esDepartamento)
+        {
+            if (esDepartamento)
+                return Int32.Parse(await _context.Localizacion.Where(r => r.Nivel == 1 && r.Descripcion.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r=> r.LocalizacionId).FirstOrDefaultAsync());
+            else
+                return Int32.Parse(await _context.Localizacion.Where(r => r.Nivel == 2 && r.Descripcion.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r => r.LocalizacionId).FirstOrDefaultAsync());
         }
     }
 }
