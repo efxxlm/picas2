@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-modal-dialog',
@@ -8,6 +9,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ModalDialogComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data,private sanitized: DomSanitizer) {
+    data.modalText=this.sanitized.bypassSecurityTrustHtml(data.modalText);
+  }
 
 }

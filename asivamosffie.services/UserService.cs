@@ -38,29 +38,38 @@ namespace asivamosffie.services
 
                 if (usuarioSolicito != null)
                 {
-                    string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
-                    usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString()); 
-                    usuarioSolicito.CambiarContrasena = true; 
-                    usuarioSolicito.Ip = pUsuario.Ip;
-                    //Guardar Usuario
-                    await UpdateUser(usuarioSolicito); 
-                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.RecuperarClave);
-                    string template = TemplateRecoveryPassword.Contenido;
-
-                    string urlDestino = pDominio;
-                    //asent/img/logo
-                    //template = template.Replace("_Link_", urlDestino);
-                    template = template.Replace("_LinkF_", pDominioFront);
-                    template = template.Replace("_Email_", usuarioSolicito.Email);
-                    template = template.Replace("_Password_", newPass);
-
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
-
-                    if (blEnvioCorreo)
-                        respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.ContrasenaGenerada };
+                    if (usuarioSolicito.Activo==false)
+                    {
+                        respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.UsuarioInactivo };
+                    }
                     else
-                        respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.ErrorEnviarCorreo };
+                    {
+                        string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
+                        usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                        usuarioSolicito.CambiarContrasena = true;
+                        usuarioSolicito.Bloqueado = false;
+                        usuarioSolicito.IntentosFallidos = 0;
+                        usuarioSolicito.Ip = pUsuario.Ip;
+                        //Guardar Usuario
+                        await UpdateUser(usuarioSolicito);
+                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.RecuperarClave);
+                        string template = TemplateRecoveryPassword.Contenido;
 
+                        string urlDestino = pDominio;
+                        //asent/img/logo
+                        //template = template.Replace("_Link_", urlDestino);
+                        template = template.Replace("_LinkF_", pDominioFront);
+                        template = template.Replace("_Email_", usuarioSolicito.Email);
+                        template = template.Replace("_Password_", newPass);
+
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioSolicito.Email, "Recuperar contraseña", template, pSentender, pPassword, pMailServer, pMailPort);
+
+                        if (blEnvioCorreo)
+                            respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.ContrasenaGenerada };
+                        else
+                            respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.ErrorEnviarCorreo };
+
+                    }
                 }
                 else
                 {
@@ -74,6 +83,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
+
                 respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.SolicitarContraseña, pUsuario.Email, "Recuperar contraseña") + ": " + ex.ToString() + ex.InnerException;
                 return respuesta;
@@ -137,6 +147,37 @@ namespace asivamosffie.services
             {
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña") + ": " + ex.ToString() + ex.InnerException;
             }                        
+            return respuesta;
+        }
+
+        public async Task<Respuesta> ValidateCurrentPassword(int pUserid, string pOldpwd)
+        {
+            var user = _context.Usuario.Find(pUserid);
+            Respuesta respuesta = new Respuesta();
+            var OldpwdEncrypt = pOldpwd.ToUpper();
+            try
+            {
+                if (user != null)
+                {
+                    if (user.Contrasena.ToUpper() != OldpwdEncrypt.ToString())
+                    {
+                        respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorContrasenaAntigua };
+                    }
+                    else
+                    {                       
+                        respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = user, Code = ConstantMessagesContrasena.OperacionExitosa };
+                    }
+                }
+                else
+                {
+                    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorSesion };
+                }
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña");
+            }
+            catch (Exception ex)
+            {
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña") + ": " + ex.ToString() + ex.InnerException;
+            }
             return respuesta;
         }
     }
