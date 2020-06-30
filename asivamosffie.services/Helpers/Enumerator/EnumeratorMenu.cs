@@ -1,7 +1,7 @@
 ﻿
 namespace asivamosffie.services.Helpers.Enumerator
 {
-    public enum enumeratorMenu
+    public  enum enumeratorMenu : int
     {
          Usuario = 1,
          Cofinanciacion = 2,

@@ -67,7 +67,7 @@ namespace asivamosffie.api.Controllers
         [Route("ListVigenciaAporte")]
         public async Task<ActionResult<List<int>>> GetListVigenciaAportes()
         {
-            var result = await common.GetListVigenciaAportes(_settings.Value.yearVigente , _settings.Value.yearSiguienteEsVigente);
+            var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente , _settings.Value.YearSiguienteEsVigente);
             return result;
         }
     }

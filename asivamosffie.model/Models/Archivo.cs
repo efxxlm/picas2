@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class AcuerdoCofinanciamiento
+    public partial class Archivo
     {
-        public AcuerdoCofinanciamiento()
+        public Archivo()
         {
             Aportante = new HashSet<Aportante>();
         }

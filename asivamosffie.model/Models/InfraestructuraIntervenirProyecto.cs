@@ -14,6 +14,11 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaEliminacion { get; set; }
         public string UsuarioEliminacion { get; set; }
+        public int PlazoMesesObra { get; set; }
+        public int PlazoDiasObra { get; set; }
+        public int PlazoMesesInterventoria { get; set; }
+        public int PlazoDiasInterventoria { get; set; }
+        public string CoordinacionResponsableCodigo { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
     }
