@@ -30,14 +30,14 @@ export class InicioComponent implements OnInit {
     public dialog: MatDialog,
     private autenticacionService: AutenticacionService
   ) {
-    this.buildForm();
+    
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });
+    });   
   }
 
   openRecoverPass() {
@@ -46,6 +46,7 @@ export class InicioComponent implements OnInit {
 
   ngOnInit(): void {
     this.autenticacionService.logout();
+    this.buildForm();
   }
 
   login(event: Event) {
@@ -86,13 +87,14 @@ export class InicioComponent implements OnInit {
     {
       if (respuesta.isValidation) // have validations
       {
-        if (respuesta.code === '301') // first time
+        if (respuesta.code === '301') // first time, no alert message
         {
-          this.openDialog('Validación Inicio Sesión', respuesta.message);
+          //this.openDialog('Validación Inicio Sesión', respuesta.message);
+          localStorage.setItem('codeRecover',btoa(this.formLogin.value['passwordField']));
           this.router.navigate(['/cambiarContrasena']);
         }else
         {
-          this.openDialog('Validación Inicio Sesión', respuesta.message);
+          this.openDialog('', respuesta.message);
         }
       }else // Expected response 
       {
