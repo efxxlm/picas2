@@ -48,8 +48,7 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente };
-
+                        respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente }; 
                         cofinanciacion.FechaModificacion = DateTime.Now;
                         _context.Cofinanciacion.Update(cofinanciacion);
                     }
@@ -96,11 +95,11 @@ namespace asivamosffie.services
         {
             try
             {
-                pcofinanciacionAportante.FechaCreacion = DateTime.Now;
-                pcofinanciacionAportante.Eliminado = false;
+              
                 if (string.IsNullOrEmpty(pcofinanciacionAportante.CofinanciacionAportanteId.ToString()) || pcofinanciacionAportante.CofinanciacionAportanteId == 0)
                 {
-                    pcofinanciacionAportante.FechaCreacion = DateTime.Now;
+                    pcofinanciacionAportante.FechaCreacion = DateTime.Now; 
+                    pcofinanciacionAportante.Eliminado = false;
                     _context.CofinanciacionAportante.Add(pcofinanciacionAportante);
                 }
                 else
@@ -124,13 +123,11 @@ namespace asivamosffie.services
         public async Task<int> CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento)
         {
             try
-            {
-                pCofinanciacionDocumento.FechaCreacion = DateTime.Now;
-                pCofinanciacionDocumento.Eliminado = false;
-
+            { 
                 if (string.IsNullOrEmpty(pCofinanciacionDocumento.CofinanciacionDocumentoId.ToString()) || pCofinanciacionDocumento.CofinanciacionDocumentoId == 0)
                 {
-                    pCofinanciacionDocumento.FechaCreacion = DateTime.Now;
+                    pCofinanciacionDocumento.FechaCreacion = DateTime.Now; 
+                    pCofinanciacionDocumento.Eliminado = false;
                     _context.CofinanciacionDocumento.Add(pCofinanciacionDocumento);
                 }
                 else
