@@ -118,5 +118,10 @@ namespace asivamosffie.services
             else
                 return Int32.Parse(await _context.Localizacion.Where(r => r.Nivel == 2 && r.Descripcion.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r => r.LocalizacionId).FirstOrDefaultAsync());
         }
+
+        public async Task<int> getInstitucionEducativaIdByName(string pNombre) {
+
+            return await _context.InstitucionEducativaSede.Where(r => r.Nombre.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
+        }
     }
 }

@@ -878,6 +878,12 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TemporalProyecto>(entity =>
             {
+                entity.Property(e => e.Aportante1).HasColumnName("Aportante_1");
+
+                entity.Property(e => e.Aportante2).HasColumnName("Aportante_2");
+
+                entity.Property(e => e.Aportante3).HasColumnName("Aportante_3");
+
                 entity.Property(e => e.CedulaCatastralPredio).HasMaxLength(20);
 
                 entity.Property(e => e.CodigoDaneIe).HasColumnName("CodigoDaneIE");
@@ -890,12 +896,26 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
 
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
                 entity.Property(e => e.LlaveMen)
                     .IsRequired()
                     .HasColumnName("LlaveMEN")
                     .HasMaxLength(8);
 
                 entity.Property(e => e.NumeroDocumentoAcreditacion).HasMaxLength(20);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.Property(e => e.TipoAportanteId1).HasColumnName("TipoAportanteId_1");
+
+                entity.Property(e => e.TipoAportanteId2).HasColumnName("TipoAportanteId_2");
+
+                entity.Property(e => e.TipoAportanteId3).HasColumnName("TipoAportanteId_3");
 
                 entity.Property(e => e.UbicacionPredioPrincipal).HasMaxLength(12);
 
@@ -912,18 +932,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorTotal)
                     .IsRequired()
                     .HasMaxLength(20);
-
-                entity.Property(e => e._1aportante).HasColumnName("1Aportante");
-
-                entity.Property(e => e._1tipoAportanteId).HasColumnName("1TipoAportanteId");
-
-                entity.Property(e => e._2aportante).HasColumnName("2Aportante");
-
-                entity.Property(e => e._2tipoAportanteId).HasColumnName("2TipoAportanteId");
-
-                entity.Property(e => e._3aportente).HasColumnName("3Aportente");
-
-                entity.Property(e => e._3tipoAportante).HasColumnName("3TipoAportante");
 
                 entity.HasOne(d => d.ArchivoCargue)
                     .WithMany(p => p.TemporalProyecto)
