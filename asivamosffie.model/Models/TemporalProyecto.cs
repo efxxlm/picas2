@@ -16,9 +16,9 @@ namespace asivamosffie.model.Models
         public string LlaveMen { get; set; }
         public int Departamento { get; set; }
         public int Municipio { get; set; }
-        public int InstitucionEducativa { get; set; }
+        public string InstitucionEducativa { get; set; }
         public int? CodigoDaneIe { get; set; }
-        public int Sede { get; set; }
+        public string Sede { get; set; }
         public int? CodigoDaneSede { get; set; }
         public bool EstaEnConvotatoria { get; set; }
         public int ConvocatoriaId { get; set; }
@@ -29,12 +29,12 @@ namespace asivamosffie.model.Models
         public int? DocumentoAcreditacionPredioId { get; set; }
         public string NumeroDocumentoAcreditacion { get; set; }
         public string CedulaCatastralPredio { get; set; }
-        public int? _1tipoAportanteId { get; set; }
-        public int? _1aportante { get; set; }
-        public int? _2tipoAportanteId { get; set; }
-        public int? _2aportante { get; set; }
-        public int? _3tipoAportante { get; set; }
-        public int? _3aportente { get; set; }
+        public int? TipoAportanteId1 { get; set; }
+        public int? Aportante1 { get; set; }
+        public int? TipoAportanteId2 { get; set; }
+        public int? Aportante2 { get; set; }
+        public int? TipoAportanteId3 { get; set; }
+        public int? Aportante3 { get; set; }
         public int? VigenciaAcuerdoCofinanciacion { get; set; }
         public string ValorObra { get; set; }
         public string ValorInterventoria { get; set; }
