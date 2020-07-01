@@ -1,0 +1,131 @@
+<div class="container text-center">
+  <h2 class="title-menu--h2">
+    Valor total del acuerdo: {{valorTotalAcuerdo | currency:'':'symbol':'3.0'}}
+  </h2>
+  <p>
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
+</div>
+<div class="container">
+
+  <mat-accordion>
+    <mat-expansion-panel class="form-apropiacion">
+      <mat-expansion-panel-header class="form-apropiacion--header">
+        <mat-panel-title class="form-apropiacion--title">
+          Documentos de apropiación aportante 1
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <mat-card class="shipping-card">
+          <mat-card-header>
+            <mat-card-title class="header-card--text">
+              Documento 1
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+
+            <div class="row">
+              <div class="col-md-3 pr-0">
+                <label class="label-left">Vigencia del aporte</label>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="vigenciaAportante" required>
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let vigenciaAportante of vigenciasAportante" [value]="vigenciaAportante">
+                      {{ vigenciaAportante }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 pr-0">
+                <label class="label-left">Valor indicado en el documento</label>
+              </div>
+              <div class="col-md-4 d-flex align-items-center">
+                <mat-form-field class="full-width">
+                  <input matInput #valorIndicadoEnElDocumento maxlength="20" min="1" required type="number" formControlName="valorIndicadoEnElDocumento">
+                </mat-form-field>
+                <span class="contador">{{20 - valorIndicadoEnElDocumento.value.length}}</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 pr-0">
+                <label class="label-left">Tipo de documento</label>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="tipoDocumento" required>
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.value">
+                      {{ tipoDocumento.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 pr-0">
+                <label class="label-left">Número de documento</label>
+              </div>
+              <div class="col-md-4 d-flex align-items-center">
+                <mat-form-field class="full-width">
+                  <input matInput #numeroDocumento maxlength="10" min="1000000000" required type="number" formControlName="numeroDocumento">
+                </mat-form-field>
+                <span class="contador">{{10 - numeroDocumento.value.length}}</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 pr-0">
+                <label class="label-left">Fecha del documento</label>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="full-width">
+                  <input matInput required type="date" formControlName="fechaDocumento">
+                </mat-form-field>
+                <!-- <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="picker" formControlName="fechaDocumento">
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <button mat-raised-button (click)="picker.open()">Open</button> -->
+              </div>
+              <div class="col-md-5 text-right">
+                <button mat-button color="warn" type="button">
+                  <!-- <img src="assets/img/icon/" alt="Regresar"> -->
+                  Eliminar documento
+                </button>
+              </div>
+            </div>
+
+          </mat-card-content>
+        </mat-card>
+
+        <div class="text-center">
+          <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+          </button>
+        </div>
+      </form>
+
+    </mat-expansion-panel>
+
+    <!-- <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Documentos de apropiación aportante 2
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <p>El segundo formulario</p>
+
+    </mat-expansion-panel> -->
+  </mat-accordion>
+</div>

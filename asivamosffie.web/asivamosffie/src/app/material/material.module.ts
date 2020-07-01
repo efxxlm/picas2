@@ -10,6 +10,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 @NgModule({
   declarations: [],
   imports: [
@@ -23,6 +25,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSelectModule,
     MatRadioModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatDatepickerModule,
   ],
   exports: [
     MatButtonModule,
@@ -34,6 +38,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSelectModule,
     MatRadioModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatDatepickerModule,
   ]
 })
 export class MaterialModule { }
