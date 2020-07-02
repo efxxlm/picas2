@@ -39,60 +39,65 @@
           </div>
           <div class="col-md-4 d-flex align-items-center">
             <mat-form-field class="full-width">
-              <input matInput #numAportes maxlength="2" min="1" max="99" required type="number" formControlName="numAportes">
+              <input (change)="CambioNumeroAportantes()" matInput #numAportes maxlength="2" min="1" max="99" required type="number" formControlName="numAportes">
             </mat-form-field>
             <span class="contador">{{2 - numAportes.value.length}}</span>
           </div>
         </div>
-        <!-- <div class="animatedDown" formGroupName="aportantes" *ngIf="numAportes.value > 0 && numAportes.value < 100"> -->
-        <div class="animatedDown" formArrayName="aportantes">
-          <h2 class="card-subTitle">Aportantes</h2>
-          <div *ngFor="let control of aportantes.controls; let i = index">
-            <mat-card-title class="header-card--text">
-              Aportante {{ i + 1 }}
-            </mat-card-title>
-            <div class="row">
-              <div class="col-md-3 pr-0">
-                <label class="label-left">Tipo de aportante</label>
-              </div>
-              <div class="col-md-4">
-                <mat-form-field class="select-width">
-                  <mat-select [formControlName]="i.tipo">
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let selectTipoAportante of selectTiposAportante" [value]="selectTipoAportante.value">
-                      {{ selectTipoAportante.name }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
 
-            <div class="row">
-              <div class="col-md-3 pr-0">
-                <label class="label-left">Nombre de Aportante</label>
+        <!-- <div class="animatedDown" formGroupName="aportantes" *ngIf="numAportes.value > 0 && numAportes.value < 100"> -->
+         <div class="animatedDown" formArrayName="aportantes" *ngIf="numAportes.value > 0">
+          <h2 class="card-subTitle">Aportantes</h2>
+         <div> 
+           <div *ngFor="let aportante of aportantes.controls; let i = index" >
+              <div [formGroupName]="i">
+                <mat-card-title class="header-card--text">
+                  Aportante {{ i + 1 }}
+                </mat-card-title>
+                <div class="row">
+                  <div class="col-md-3 pr-0">
+                    <label class="label-left">Tipo de aportante</label>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="tipo">
+                        <mat-option>wer</mat-option>
+                        <mat-option *ngFor="let selectTipoAportante of selectTiposAportante" [value]="selectTipoAportante.value">
+                          {{ selectTipoAportante.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3 pr-0">
+                    <label class="label-left">Nombre de Aportante</label>
+                  </div>
+                  <div class="col-md-9">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="nombre">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.value">
+                          {{ nombreAportante.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3 pr-0">
+                    <label class="label-left">¿Cuántos documentos de apropiación tiene este aportante?</label>
+                  </div>
+                  <div class="col-md-4 d-flex align-items-center">
+                    <mat-form-field class="full-width">
+                      <input matInput #cauntosDocumentos maxlength="2" min="1" max="99" required type="number" formControlName="cauntosDocumentos">
+                    </mat-form-field>
+                    <span class="contador">{{2 - cauntosDocumentos.value.length}}</span>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-9">
-                <mat-form-field class="select-width">
-                  <mat-select [formControlName]="i.nombre">
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.value">
-                      {{ nombreAportante.name }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-3 pr-0">
-                <label class="label-left">¿Cuántos documentos de apropiación tiene este aportante?</label>
-              </div>
-              <div class="col-md-4 d-flex align-items-center">
-                <mat-form-field class="full-width">
-                  <input matInput #cauntosDocumentos maxlength="2" min="1" max="99" required type="number" formControlName="cauntosDocumentos">
-                </mat-form-field>
-                <span class="contador">{{2 - cauntosDocumentos.value.length}}</span>
-              </div>
-            </div>
+           </div>
+
           </div>
         </div>
       </mat-card-content>
@@ -104,5 +109,8 @@
     </div>
   </form>
 </div>
+
+<!-- <input type="text" [formControlName]="i" name="prueba"> -->
+{{ addressForm.value | json}}
 
 <app-form-documento-de-apropiacion></app-form-documento-de-apropiacion>
