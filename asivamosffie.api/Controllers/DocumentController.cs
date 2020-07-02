@@ -25,51 +25,8 @@ namespace asivamosffie.api.Controllers
         {
             _settings = settings;
             _documentService = documentService;
-        }
+        } 
 
 
-
-        [Route("SetValidateMassiveLoadProjects")]
-        [HttpPost]
-        public async Task<IActionResult> SetValidateCargueMasivoProyectos(IFormFile file)
-        {
-            try
-            {
-                Respuesta respuesta = new Respuesta();
-
-                if (file.Length > 0 && file.FileName.Contains(".xls"))
-                {
-                    //string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _documentService.SetValidateCargueMasivo(file , Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), " "); 
-                }
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-        }
-
-
-
-
-        [Route("UploadMassiveLoadProjects")]
-        [HttpPost]
-        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
-        {
-            try
-            {
-                Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = "";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _documentService.UploadMassiveLoadProjects(pIdDocument , pUsuarioModifico);
-                
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-        }
     }
 }

@@ -29,9 +29,7 @@
         public string DirectoryBaseCargue { get; set; }
 
         public string DirectoryBaseProyectos { get; set; }
-
-        
-
+         
         public string YearVigente { get; set; }
 
         public bool YearSiguienteEsVigente { get; set; }

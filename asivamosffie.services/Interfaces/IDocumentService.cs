@@ -10,8 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
    public interface IDocumentService
     { 
-        Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile , string pFilePatch , string pUsuarioCreo);
-
-        Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument , string pUsuarioModifico);
+  
+        Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch , int OrigenId);
+ 
     }
 }
