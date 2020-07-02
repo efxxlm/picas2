@@ -36,9 +36,9 @@ namespace asivamosffie.model.Models
         public int? TipoAportanteId3 { get; set; }
         public int? Aportante3 { get; set; }
         public int? VigenciaAcuerdoCofinanciacion { get; set; }
-        public string ValorObra { get; set; }
-        public string ValorInterventoria { get; set; }
-        public string ValorTotal { get; set; }
+        public decimal ValorObra { get; set; }
+        public decimal ValorInterventoria { get; set; }
+        public decimal ValorTotal { get; set; }
         public int EspacioIntervenirId { get; set; }
         public int Cantidad { get; set; }
         public int? PlazoMesesObra { get; set; }

@@ -42,6 +42,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Tipo_de_Predios = 19,
 
-		Origen_Documento_Cargue = 20
+		Origen_Documento_Cargue = 20,
+
+		Estado_Proyecto = 21
 	}
 }

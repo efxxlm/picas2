@@ -913,17 +913,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
-                entity.Property(e => e.ValorInterventoria)
-                    .IsRequired()
-                    .HasMaxLength(20);
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorObra)
-                    .IsRequired()
-                    .HasMaxLength(20);
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorTotal)
-                    .IsRequired()
-                    .HasMaxLength(20);
+                entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ArchivoCargue)
                     .WithMany(p => p.TemporalProyecto)

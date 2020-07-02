@@ -28,12 +28,12 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         private readonly devAsiVamosFFIEContext _context;
-       
 
-        public ProjectService(devAsiVamosFFIEContext context, ICommonService commonService , IDocumentService documentService )
+
+        public ProjectService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
             _documentService = documentService;
-            _commonService = commonService; 
+            _commonService = commonService;
             _context = context;
         }
 
@@ -47,7 +47,7 @@ namespace asivamosffie.services
 
             int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch , OrigenId);
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, OrigenId);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)
@@ -235,15 +235,15 @@ namespace asivamosffie.services
 
                                     //#29
                                     //Valor obra 
-                                    temporalProyecto.ValorObra = (Int32.Parse(worksheet.Cells[i, 29].Text)).ToString();
+                                    temporalProyecto.ValorObra = decimal.Parse(worksheet.Cells[i, 29].Text);
 
                                     //#30
                                     //Valor interventoría 
-                                    temporalProyecto.ValorInterventoria = (Int32.Parse(worksheet.Cells[i, 30].Text)).ToString();
+                                    temporalProyecto.ValorInterventoria = decimal.Parse(worksheet.Cells[i, 30].Text);
 
                                     //#31
                                     //Valor Total 
-                                    temporalProyecto.ValorTotal = (Int32.Parse(worksheet.Cells[i, 31].Text)).ToString();
+                                    temporalProyecto.ValorTotal = decimal.Parse(worksheet.Cells[i, 31].Text);
 
                                     //#32
                                     //Infraestructura para intervenir 
@@ -360,7 +360,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
         public async Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument, string pUsuarioModifico)
         {
             Respuesta respuesta = new Respuesta();
@@ -439,11 +439,24 @@ namespace asivamosffie.services
                     //ProyectoAportante proyectoAportante = new ProyectoAportante();
 
 
-
                     //Relacionar Ids
                     proyecto.PredioPrincipalId = predio.PredioId;
 
-                    //
+                    proyecto.ValorObra = temporalProyecto.ValorObra;
+                    proyecto.ValorInterventoria = temporalProyecto.ValorInterventoria;
+                    proyecto.ValorTotal = temporalProyecto.ValorTotal;
+                    proyecto.EstadoProyectoCodigo = " ";
+
+                    _context.Proyecto.Update(proyecto);
+
+                    //Aportante
+                     
+
+
+
+
+
+                    //Temporal proyecto update
                     temporalProyecto.EstaValidado = true;
                     temporalProyecto.FechaModificacion = DateTime.Now;
                     temporalProyecto.UsuarioModificacion = pUsuarioModifico;
