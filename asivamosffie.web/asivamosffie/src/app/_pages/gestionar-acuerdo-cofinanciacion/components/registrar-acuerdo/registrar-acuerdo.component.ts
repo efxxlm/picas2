@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-registrar-acuerdo',
@@ -10,9 +10,18 @@ export class RegistrarAcuerdoComponent {
   addressForm = this.fb.group({
     vigenciaEstado: ['', Validators.required],
     numAportes: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
-    tipoAportante: ['', Validators.required],
-    nombreAportante: ['', Validators.required],
-    cauntosDocumentosAportante: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+    aportantes: this.fb.array([
+      [{
+          tipo: ['', Validators.required],
+          nombre: ['', Validators.required],
+          cauntosDocumentos: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+        }],
+      [{
+        tipo: ['', Validators.required],
+        nombre: ['', Validators.required],
+        cauntosDocumentos: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      }]
+    ])
   });
 
   vigenciaEstados = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
@@ -23,7 +32,28 @@ export class RegistrarAcuerdoComponent {
     { name: 'fundacion 1', value: 1 }, { name: 'fundacion 2', value: 2 }, { name: 'fundacion 3', value: 3 }
   ];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+    console.log(this.addressForm.value);
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      console.log(value);
+    });
+  }
+
+  get aportantes() {
+    return this.addressForm.get('aportantes') as FormArray;
+  }
+
+  // agregarAportante(e: number) {  (change)="agregarAportante(e)"
+  //   console.log(e);
+  //   this.aportantes.push(
+  //     this.fb.group({
+  //       tipo: ['', Validators.required],
+  //       nombre: ['', Validators.required],
+  //       cauntosDocumentos: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+  //     })
+  //   );
+  // }
 
   onSubmit() {
     if (this.addressForm.valid) {
