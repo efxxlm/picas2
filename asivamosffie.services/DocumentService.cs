@@ -392,7 +392,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument)
+        public async Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument , string pUsuarioModifico)
         {
             try
             {
@@ -474,8 +474,10 @@ namespace asivamosffie.services
                     proyecto.PredioPrincipalId = predio.PredioId;
 
                     //
-                    temporalProyecto.EstaValidado = true; 
-                   // temporalProyecto
+                    temporalProyecto.EstaValidado = true;
+                    temporalProyecto.FechaModificacion = DateTime.Now;
+                    temporalProyecto.UsuarioModificacion = pUsuarioModifico;
+                    _context.TemporalProyecto.Update(temporalProyecto);
                 }
 
                 return respuesta;

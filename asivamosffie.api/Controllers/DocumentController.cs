@@ -60,7 +60,9 @@ namespace asivamosffie.api.Controllers
             try
             {
                 Respuesta respuesta = new Respuesta();
-                respuesta = await _documentService.UploadMassiveLoadProjects(pIdDocument);
+                string pUsuarioModifico = "";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _documentService.UploadMassiveLoadProjects(pIdDocument , pUsuarioModifico);
                 
                 return Ok(respuesta);
             }

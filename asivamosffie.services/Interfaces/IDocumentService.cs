@@ -12,6 +12,6 @@ namespace asivamosffie.services.Interfaces
     { 
         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile , string pFilePatch , string pUsuarioCreo);
 
-        Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument);
+        Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument , string pUsuarioModifico);
     }
 }
