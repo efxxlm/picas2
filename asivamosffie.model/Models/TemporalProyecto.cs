@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public int TemporalProyectoId { get; set; }
         public int ArchivoCargueId { get; set; }
-        public bool EsValido { get; set; }
+        public bool EstaValidado { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public DateTime? FechaSesionJunta { get; set; }
@@ -16,14 +16,14 @@ namespace asivamosffie.model.Models
         public string LlaveMen { get; set; }
         public int Departamento { get; set; }
         public int Municipio { get; set; }
-        public string InstitucionEducativa { get; set; }
+        public int InstitucionEducativaId { get; set; }
         public int? CodigoDaneIe { get; set; }
-        public string Sede { get; set; }
+        public int SedeId { get; set; }
         public int? CodigoDaneSede { get; set; }
-        public bool EstaEnConvotatoria { get; set; }
+        public bool EnConvotatoria { get; set; }
         public int ConvocatoriaId { get; set; }
-        public int NumeroPrediosPostulados { get; set; }
-        public int TipoPrediosId { get; set; }
+        public int CantPrediosPostulados { get; set; }
+        public int TipoPredioId { get; set; }
         public string UbicacionPredioPrincipalLatitud { get; set; }
         public string DireccionPredioPrincipal { get; set; }
         public int? DocumentoAcreditacionPredioId { get; set; }
@@ -47,6 +47,8 @@ namespace asivamosffie.model.Models
         public int? PlazoDiasInterventoria { get; set; }
         public int? CoordinacionResponsableId { get; set; }
         public string UbicacionPredioPrincipalLontitud { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
 
         public virtual ArchivoCargue ArchivoCargue { get; set; }
     }

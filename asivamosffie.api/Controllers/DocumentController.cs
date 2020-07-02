@@ -52,5 +52,22 @@ namespace asivamosffie.api.Controllers
 
 
 
+
+        [Route("UploadMassiveLoadProjects")]
+        [HttpPost]
+        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                respuesta = await _documentService.UploadMassiveLoadProjects(pIdDocument);
+                
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }

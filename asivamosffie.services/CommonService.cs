@@ -123,5 +123,7 @@ namespace asivamosffie.services
 
             return await _context.InstitucionEducativaSede.Where(r => r.Nombre.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
+
+         
     }
 }

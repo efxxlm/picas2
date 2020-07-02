@@ -40,6 +40,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		//???????????
 
-		Tipo_de_Predios = 19 
+		Tipo_de_Predios = 19,
+
+		Origen_Documento_Cargue = 20
 	}
 }

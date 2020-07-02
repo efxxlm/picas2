@@ -46,14 +46,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-        //            }
-        //        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -201,23 +194,19 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.FechaActa).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAcuerdo).HasMaxLength(1);
+                entity.Property(e => e.FechaAcuerdo).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroActa).HasMaxLength(15);
-
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
-                entity.Property(e => e.ValorDocumento)
-                    .IsRequired()
-                    .HasMaxLength(150);
+                entity.Property(e => e.ValorDocumento).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorTotalAportante).HasMaxLength(25);
+                entity.Property(e => e.ValorTotalAportante).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.CofinanciacionDocumento)
@@ -884,15 +873,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.DireccionPredioPrincipal).HasMaxLength(20);
 
-                entity.Property(e => e.EstaEnConvotatoria).HasColumnName("estaEnConvotatoria");
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
-
-                entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
-                    .HasMaxLength(300);
 
                 entity.Property(e => e.LlaveMen)
                     .IsRequired()
@@ -900,10 +883,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(8);
 
                 entity.Property(e => e.NumeroDocumentoAcreditacion).HasMaxLength(20);
-
-                entity.Property(e => e.Sede)
-                    .IsRequired()
-                    .HasMaxLength(300);
 
                 entity.Property(e => e.TipoAportanteId1).HasColumnName("TipoAportanteId_1");
 
