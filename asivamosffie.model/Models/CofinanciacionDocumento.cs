@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public int CofinanciacionDocumentoId { get; set; }
         public int CofinanciacionAportanteId { get; set; }
-        public int VigenciaAporteId { get; set; }
+        public int VigenciaAporte { get; set; }
         public decimal ValorDocumento { get; set; }
         public int TipoDocumentoId { get; set; }
         public int? NumeroActa { get; set; }
