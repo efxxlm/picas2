@@ -36,8 +36,15 @@ const ELEMENT_DATA: RegistrosCargados[] = [
 
 export class TablaProyectosComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'fechaCargue', 'totalRegistros', 'registrosValidos', 'registrosInvalidos'];
+  displayedColumns: string[] = ['fechaCargue', 'totalRegistros', 'registrosValidos', 'registrosInvalidos'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
+
+  columnas = [
+    { titulo: 'Fecha de cargue', name: 'fechaCargue' },
+    { titulo: 'Número total de registros ', name: 'totalRegistros' },
+    { titulo: 'Número de registros validos ', name: 'registrosValidos' },
+    { titulo: 'Número de registros inválidos ', name: 'registrosInvalidos' },
+  ];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -53,6 +60,9 @@ export class TablaProyectosComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
 }

@@ -1,4 +1,9 @@
 <div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
     <h1 class="title-menu--h1">
         Cargar masivamente proyectos viabilizados
     </h1>
@@ -13,7 +18,7 @@
         que han sido postulados y/o han sido viabilizados técnicamente.
     </div>
 
-    <a routerlink="/cargarProyecto" mat-raised-button color="accent" class="btn-cargar-proyecto">Cargar listado de proyectos</a><br>
+    <a routerLink="/cargarMasivamente/cargarProyecto" mat-raised-button color="accent" class="btn-cargar-proyecto">Cargar listado de proyectos</a><br>
     <button mat-button color="warn" class="btn-descargar-plantilla">
         <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
         Descargar plantilla cargue masivo de proyectos
