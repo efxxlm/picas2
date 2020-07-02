@@ -79,4 +79,35 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Redireccion
 
     }
+
+    public class ConstantMessagesCargueProyecto
+    {
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+ 
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
 }

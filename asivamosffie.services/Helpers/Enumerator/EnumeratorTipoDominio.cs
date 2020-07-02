@@ -11,7 +11,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Nombre_Aportante_Aportante = 4,
 
-		Infraestructura_a_intervenir = 5,
+		//Antes llamado Infraestructura a intervenir
+		Espacios_Intervenir = 5,
 
 		Coordinaciones = 6,
 

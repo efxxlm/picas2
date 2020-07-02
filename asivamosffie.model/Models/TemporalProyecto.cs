@@ -23,8 +23,8 @@ namespace asivamosffie.model.Models
         public bool EstaEnConvotatoria { get; set; }
         public int ConvocatoriaId { get; set; }
         public int NumeroPrediosPostulados { get; set; }
-        public int? TipoPrediosId { get; set; }
-        public string UbicacionPredioPrincipal { get; set; }
+        public int TipoPrediosId { get; set; }
+        public string UbicacionPredioPrincipalLatitud { get; set; }
         public string DireccionPredioPrincipal { get; set; }
         public int? DocumentoAcreditacionPredioId { get; set; }
         public string NumeroDocumentoAcreditacion { get; set; }
@@ -39,13 +39,14 @@ namespace asivamosffie.model.Models
         public string ValorObra { get; set; }
         public string ValorInterventoria { get; set; }
         public string ValorTotal { get; set; }
-        public int InfraestructuraIntervenirId { get; set; }
+        public int EspacioIntervenirId { get; set; }
         public int Cantidad { get; set; }
         public int? PlazoMesesObra { get; set; }
         public int? PlazoDiasObra { get; set; }
         public int? PlazoMesesInterventoria { get; set; }
         public int? PlazoDiasInterventoria { get; set; }
         public int? CoordinacionResponsableId { get; set; }
+        public string UbicacionPredioPrincipalLontitud { get; set; }
 
         public virtual ArchivoCargue ArchivoCargue { get; set; }
     }
