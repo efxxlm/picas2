@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AutenticacionService } from 'src/app/core/_services/autenticacion/autenticacion.service';
-import { MatDialog } from '@angular/material/dialog';
+import { UrlResolver } from '@angular/compiler';
+import { Router } from '@angular/router';
+// import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +13,6 @@ import { MatDialog } from '@angular/material/dialog';
 export class HomeComponent implements OnInit {
 
   data: any[];
-
   optionsMenu = [
     {
       title: 'Crear proyecto',
@@ -27,15 +28,24 @@ export class HomeComponent implements OnInit {
     },
   ];
 
-  constructor(private authe: AutenticacionService) {
+  constructor(private authe: AutenticacionService,private router: Router) {
     this.actualUser = this.authe.actualUser;
   }
 
   actualUser: any;
   ngOnInit(): void {
-    this.authe.actualUser$.subscribe(user => {
-      this.actualUser = user;
-      console.log(user);
+    this.authe.actualUser$.subscribe(user => { 
+      if(user==null)
+      {
+        console.log("iniciando");
+      }
+      else{
+        this.actualUser = user;         
+        if(user.fechaUltimoIngreso==null || user.cambiarContrasena)
+        {        
+          this.router.navigate(['/cambiarContrasena']);
+        }
+      }      
     });
   }
   probarconsumo()

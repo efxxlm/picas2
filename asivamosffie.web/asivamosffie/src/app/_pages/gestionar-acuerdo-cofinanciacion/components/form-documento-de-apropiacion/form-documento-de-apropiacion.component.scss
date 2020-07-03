@@ -1,0 +1,86 @@
+.full-width {
+  width: 100%;
+}
+
+.shipping-card {
+  min-width: 120px;
+  margin: 20px auto;
+}
+
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.col:last-child {
+  margin-right: 0;
+}
+
+
+// propio
+
+.sin-diligenciar {
+  --color-info: #D21E17;
+}
+.en-proceso {
+  --color-info: #FCC101;
+}
+.completo {
+  --color-info: #06B935;
+}
+
+%ayuda-color {
+  display: inline-block;
+  background-color: var(--color-info);
+  height: 1em;
+  width: 1em;
+  border-radius: 50%;
+  border: solid 1px #fff;
+}
+
+.info-text {
+  display: inline-block;
+  margin-right: 2em;
+
+  &::before {
+      content: '';
+      @extend %ayuda-color;
+      margin-right: .2em;
+      position: relative;
+      top: 2px;
+  }
+}
+
+.form-apropiacion {
+  box-shadow: none;
+  &--header {
+    width: 25em;
+    max-width: 100%;
+    min-width: max-content;
+    background-color: transparent;
+    margin-left: auto;
+    margin-right: auto;
+
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+  &--title {
+    background-color: var(--mainColor);
+    color: #fff;
+    justify-content: center;
+    padding: .3em 1.5em;
+    border-radius: .5em;
+    position: relative;
+  }
+}

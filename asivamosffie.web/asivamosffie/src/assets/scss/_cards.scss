@@ -1,0 +1,32 @@
+mat-card.mat-card:not([class*=mat-elevation-z]) {
+    border: solid 1px var(--mainColor);
+    border-radius: 2.5em;
+    padding: 1em 4em;
+    box-shadow: none;
+}
+
+.mat-card-header.header-card {
+    margin-top: -2em !important;
+}
+
+.header-card--text {
+    font-size: 1.5em;
+    background-color: #fff;
+    padding-left: .5em;
+    padding-right: .5em;
+    color: var(--mainColor);
+    margin-top: 2em;
+}
+
+.card-subTitle,
+h2.card-subTitle {
+    background-color: var(--mainColor);
+    font-size: 1rem;
+    margin-bottom: 2em;
+    color: #fff;
+    font-weight: 500;
+    display: block;
+    text-align: center;
+    margin-left: -3.5em;
+    margin-right: -3.5em;
+}
