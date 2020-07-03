@@ -2,10 +2,13 @@
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services
@@ -15,12 +18,14 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
+        private Respuesta _reponse = new  Respuesta();
 
-        public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService, Respuesta reponse)
         {
 
             _commonService = commonService;
             _context = context;
+            _reponse = reponse;
         }
 
 
