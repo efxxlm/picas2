@@ -13,9 +13,9 @@ export class AutenticacionService {
   public actualUser: Usuario;
   public actualUser$: Observable<Usuario>;
 
-  constructor(private http: HttpClient) {  
+  constructor(private http: HttpClient) {
     this.actualUserSubject = new BehaviorSubject<Usuario>(JSON.parse(localStorage.getItem('actualUser')));
-        this.actualUser$ = this.actualUserSubject.asObservable();
+    this.actualUser$ = this.actualUserSubject.asObservable();
   }
 
   IniciarSesion(usuario: Usuario)
@@ -26,12 +26,12 @@ export class AutenticacionService {
       // login successful if there's a jwt token in the response                
       console.log(user.data);
 
-      if (user && user.token) {          
-              // store user details and jwt token in local storage to keep user logged in between page refreshes    
-              user.data.token=user.token;                    
+      if (user && user.token) {
+              // store user details and jwt token in local storage to keep user logged in between page refreshes
+              user.data.token = user.token;
               localStorage.setItem('actualUser', JSON.stringify(user.data));
               this.actualUser = user.data;
-              this.actualUserSubject.next(user.data);                  
+              this.actualUserSubject.next(user.data);
       }
       //console.log(user);
       return user;
@@ -52,9 +52,9 @@ export class AutenticacionService {
 
   logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('actualUser'); 
+    localStorage.removeItem('actualUser');
     this.actualUserSubject.next(null);
-    this.actualUser=null; 
+    this.actualUser = null;
   //   this.saveCloseSesionAudit().subscribe();
   }
 
@@ -72,7 +72,7 @@ export class AutenticacionService {
 }
   public consumoePrueba()
   {
-    let retorno = this.http.get<any[]>(`${environment.apiUrl}/common/perfiles`);
+    const retorno = this.http.get<any[]>(`${environment.apiUrl}/common/perfiles`);
     return retorno;
   }
 
@@ -98,5 +98,5 @@ export interface Respuesta{
   code: string;
   message: string;
   data?: Usuario;
-  token?:any;
+  token?: any;
 }

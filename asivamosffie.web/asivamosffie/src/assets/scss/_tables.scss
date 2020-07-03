@@ -1,0 +1,102 @@
+th.mat-header-cell {
+    background-color: var(--mainColor);
+    color: #fff;
+    text-align: center;
+}
+
+.mat-sort-header-container {
+    justify-content: center;
+}
+
+.mat-sort-header-arrow {
+    color: #fff;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-right: solid .5px;
+}
+
+th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+    border-right: none;
+}
+
+.mat-cell, .mat-footer-cell {
+    color: var(--mainColor);
+}
+
+mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-bottom-color: var(--mainColor);
+}
+
+table {
+    width: 100%;
+}
+
+
+// paginador
+
+div.mat-paginator {
+    &-page-size {
+        order: 2;
+    }
+
+    &-range-actions {
+        order: 1;
+        margin: auto;
+        padding-left: 9.6em;
+    }
+
+    &-range-label {
+        order: 2;
+    }
+
+}
+.mat-paginator {
+    .mat-focus-indicator.mat-paginator-navigation-previous.mat-icon-button.mat-button-base {
+        order: 1;
+
+        &:disabled {
+            opacity: .5;
+        }
+
+        >.mat-button-wrapper {
+            &::before {
+                @extend %botones-paginador;
+                border-right: 1.5em solid;
+                right: .5em;
+            }
+            >svg {
+                display: none;
+            }
+        }
+    }
+
+    .mat-focus-indicator.mat-paginator-navigation-next.mat-icon-button.mat-button-base {
+        order: 3;
+
+        &:disabled {
+            opacity: .5;
+        }
+
+        >.mat-button-wrapper {
+            &::before {
+                @extend %botones-paginador;
+                border-left: 1.5em solid;
+                left: .5em;
+            }
+            >svg {
+                display: none;
+            }
+        }
+    }
+}
+
+%botones-paginador {
+    content: "";
+    color: var(--mainColor);
+    border-top: 1em solid transparent;
+    border-bottom: 1em solid transparent;
+    margin: 0 4px;
+    position: absolute;
+    top: .5em;
+}

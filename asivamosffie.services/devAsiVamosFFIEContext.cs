@@ -46,14 +46,14 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-        //            }
-        //        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -175,9 +175,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
-                    .HasMaxLength(200);
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
             });
@@ -188,9 +186,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
-                    .HasMaxLength(200);
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
@@ -205,25 +201,19 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.FechaActa).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAcuerdo).HasMaxLength(1);
+                entity.Property(e => e.FechaAcuerdo).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroActa).HasMaxLength(15);
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
-                    .HasMaxLength(200);
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
-                entity.Property(e => e.ValorDocumento)
-                    .IsRequired()
-                    .HasMaxLength(150);
+                entity.Property(e => e.ValorDocumento).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorTotalAportante).HasMaxLength(25);
+                entity.Property(e => e.ValorTotalAportante).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.CofinanciacionDocumento)
@@ -878,6 +868,12 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TemporalProyecto>(entity =>
             {
+                entity.Property(e => e.Aportante1).HasColumnName("Aportante_1");
+
+                entity.Property(e => e.Aportante2).HasColumnName("Aportante_2");
+
+                entity.Property(e => e.Aportante3).HasColumnName("Aportante_3");
+
                 entity.Property(e => e.CedulaCatastralPredio).HasMaxLength(20);
 
                 entity.Property(e => e.CodigoDaneIe).HasColumnName("CodigoDaneIE");
@@ -890,6 +886,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
 
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
                 entity.Property(e => e.LlaveMen)
                     .IsRequired()
                     .HasColumnName("LlaveMEN")
@@ -897,7 +897,25 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroDocumentoAcreditacion).HasMaxLength(20);
 
-                entity.Property(e => e.UbicacionPredioPrincipal).HasMaxLength(12);
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.Property(e => e.TipoAportanteId1).HasColumnName("TipoAportanteId_1");
+
+                entity.Property(e => e.TipoAportanteId2).HasColumnName("TipoAportanteId_2");
+
+                entity.Property(e => e.TipoAportanteId3).HasColumnName("TipoAportanteId_3");
+
+                entity.Property(e => e.UbicacionPredioPrincipalLatitud)
+                    .IsRequired()
+                    .HasColumnName("UbicacionPredioPrincipal_Latitud")
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.UbicacionPredioPrincipalLontitud)
+                    .IsRequired()
+                    .HasColumnName("UbicacionPredioPrincipal_Lontitud")
+                    .HasMaxLength(10);
 
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
@@ -912,18 +930,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorTotal)
                     .IsRequired()
                     .HasMaxLength(20);
-
-                entity.Property(e => e._1aportante).HasColumnName("1Aportante");
-
-                entity.Property(e => e._1tipoAportanteId).HasColumnName("1TipoAportanteId");
-
-                entity.Property(e => e._2aportante).HasColumnName("2Aportante");
-
-                entity.Property(e => e._2tipoAportanteId).HasColumnName("2TipoAportanteId");
-
-                entity.Property(e => e._3aportente).HasColumnName("3Aportente");
-
-                entity.Property(e => e._3tipoAportante).HasColumnName("3TipoAportante");
 
                 entity.HasOne(d => d.ArchivoCargue)
                     .WithMany(p => p.TemporalProyecto)
