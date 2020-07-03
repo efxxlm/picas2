@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
+using System.Text.RegularExpressions;
 
 namespace asivamosffie.services.Helpers
 {
@@ -48,6 +49,20 @@ namespace asivamosffie.services.Helpers
             return sb.ToString().ToUpper();
         }
 
+        public static string CleanStringInput(string text)//ÁÉÍÓÚ //
+        {
+
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
+
+
+            for (int i = 0; i < accents.Length; i++)
+            {
+                text = text.Replace(accents[i], replacement[i]);
+            }
+
+            return text;
+        }
 
         public static object ConvertToUpercase(object dataObject)
         {

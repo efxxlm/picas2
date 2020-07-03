@@ -109,6 +109,10 @@ namespace asivamosffie.api
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
+            services.AddTransient<IContributorService, ContributorService>();
+            services.AddTransient<ISourceFundingService, SourceFundingService>();
+            services.AddTransient<IBankAccountService, BankAccountService>();
+
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
