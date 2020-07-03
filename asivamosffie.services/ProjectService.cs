@@ -505,7 +505,8 @@ namespace asivamosffie.services
                             cofinanciacionAportante1.TipoAportanteId = (int)temporalProyecto.TipoAportanteId1;
                             cofinanciacionAportante1.NombreAportanteId = (int)temporalProyecto.Aportante1;
                             //
-                             _context.CofinanciacionAportante.Add(cofinanciacionAportante1); 
+                             _context.CofinanciacionAportante.Add(cofinanciacionAportante1);
+                            _context.SaveChanges();
                             //ProyectoAportante
                             //Auditoria
                             ProyectoAportante proyectoAportante = new ProyectoAportante();
@@ -536,6 +537,7 @@ namespace asivamosffie.services
                             cofinanciacionAportante2.NombreAportanteId = (int)temporalProyecto.Aportante2;
                             //
                             _context.CofinanciacionAportante.Add(cofinanciacionAportante2);
+                            _context.SaveChanges();
                             //ProyectoAportante
                             //Auditoria
                             ProyectoAportante proyectoAportante = new ProyectoAportante();
@@ -565,6 +567,7 @@ namespace asivamosffie.services
                             cofinanciacionAportante3.NombreAportanteId = (int)temporalProyecto.Aportante3;
                             //
                               _context.CofinanciacionAportante.Add(cofinanciacionAportante3);
+                            _context.SaveChanges();
                             //ProyectoAportante
                             //Auditoria
                             ProyectoAportante proyectoAportante = new ProyectoAportante();
@@ -586,9 +589,9 @@ namespace asivamosffie.services
                         temporalProyecto.FechaModificacion = DateTime.Now;
                         temporalProyecto.UsuarioModificacion = pUsuarioModifico;
                          _context.TemporalProyecto.Update(temporalProyecto);
+                        _context.SaveChanges();
                     }
-
-                    _context.SaveChanges();
+                     
 
                     return respuesta =
                     new Respuesta
