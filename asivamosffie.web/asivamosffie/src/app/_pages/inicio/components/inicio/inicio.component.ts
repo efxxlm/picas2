@@ -58,7 +58,6 @@ export class InicioComponent implements OnInit {
 
   private IniciarSesion()
   {
-    
     const usuario: Usuario = {
       Email: this.formLogin.value['emailField'],
       Contrasena: sha1(this.formLogin.value['passwordField']).toUpperCase()

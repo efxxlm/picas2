@@ -10,7 +10,7 @@ export class CommonService {
   constructor(private http: HttpClient) {  }
 
   public loadProfiles() {
-    let retorno = this.http.get<any[]>(`${environment.apiUrl}/common/perfiles`);
+    const retorno = this.http.get<any[]>(`${environment.apiUrl}/common/perfiles`);
     return retorno;
   }
 }
