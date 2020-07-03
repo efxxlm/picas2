@@ -86,11 +86,8 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Informativos
 
 
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-
-
+        public const string NoExitenArchivos = "100";
+   
 
         #endregion Mensajes Informativos
 

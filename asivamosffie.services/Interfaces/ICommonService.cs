@@ -33,5 +33,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<int> getInstitucionEducativaIdByName(string pNombre);
 
+        Task<string> GetDominioCodigoByNombreDominioAndTipoDominio(string pNombre, int pTipoDominioId);
+
     }
 }

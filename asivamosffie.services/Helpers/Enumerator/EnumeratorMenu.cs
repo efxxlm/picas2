@@ -16,6 +16,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         SolicitarContraseña=53, 
         CrearActualizarCofinanciacion = 55, 
         Error = 56,
-        ValidarExcel = 63
+        ValidarExcel = 63,
+        CargueProyectosMasivos =  69
     }
 }
