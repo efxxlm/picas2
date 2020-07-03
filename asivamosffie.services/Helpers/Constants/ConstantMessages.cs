@@ -15,7 +15,6 @@ namespace asivamosffie.services.Helpers.Constant
         public const string ErrorEnviarCorreo = "107";
         public const string EmailObligatorio = "108";
         public const string ErrorGuardarCambios = "109";
-
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso

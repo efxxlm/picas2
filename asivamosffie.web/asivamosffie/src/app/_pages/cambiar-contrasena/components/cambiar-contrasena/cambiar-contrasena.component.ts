@@ -33,6 +33,9 @@ export class CambiarContrasenaComponent implements OnInit {
   verClaveConfirmar = true;
 
   formChangePassword: FormGroup;
+  errorCurrentPassword: string;
+  passwordRecovered: string;
+  currentUser: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,10 +43,19 @@ export class CambiarContrasenaComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog
   ) {
-    this.buildForm();
+    
   }
 
   ngOnInit(): void {
+    
+    if(localStorage.getItem("codeRecover")!=null)
+    {
+      this.passwordRecovered=atob(localStorage.getItem("codeRecover"));
+    }    
+    this.autenticacionService.actualUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+    this.buildForm();
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -57,14 +69,27 @@ export class CambiarContrasenaComponent implements OnInit {
     event.preventDefault();
     if (this.formChangePassword.valid) {
       this.autenticacionService.changePass(sha1(this.formChangePassword.value.currentPassword),sha1(this.formChangePassword.value.newPassword)).pipe(first()).subscribe( respuesta => {
-        console.log(respuesta);
-        console.log(respuesta.data);
         
-        this.openDialog('Validación cambio de contraseña', respuesta.message);
-        if(respuesta.code=="200")
+        if(respuesta.code=="101")
         {
-            this.router.navigate(['/home']);
+          this.errorCurrentPassword=respuesta.message;
         }
+        else{          
+          if(respuesta.code=="200")
+          {
+            localStorage.removeItem("codeRecover");
+            let userupdated=respuesta.data;
+            userupdated.token=this.currentUser.token;
+            this.autenticacionService.setCurrentUserValue(userupdated);
+            this.openDialog('', respuesta.message);            
+            this.router.navigate(['/home']);
+          }
+          else{
+            this.openDialog('', respuesta.message);
+          }
+        }
+        
+        
        },
        err => {
           let mensaje: string;
@@ -85,7 +110,7 @@ export class CambiarContrasenaComponent implements OnInit {
   private buildForm() {
     this.formChangePassword = this.formBuilder.group(
       {
-        currentPassword: ['', [Validators.required]],
+        currentPassword: [this.passwordRecovered, [Validators.required]],
         newPassword: ['', [
           Validators.required,
           Validators.minLength(8),
@@ -104,6 +129,28 @@ export class CambiarContrasenaComponent implements OnInit {
     return this.formChangePassword.hasError('noSonIguales')  &&
       this.formChangePassword.get('newPassword').dirty &&
       this.formChangePassword.get('confirmPassword').dirty;
+  }
+  validatePass()
+  {
+    event.preventDefault();    
+    console.log(this.formChangePassword.value.currentPassword);
+    this.autenticacionService.ValdiatePass(sha1(this.formChangePassword.value.currentPassword)).pipe(first()).subscribe( respuesta => {
+      if(respuesta.code=="101")
+      {
+        this.errorCurrentPassword=respuesta.message;
+      }
+      else{
+        this.errorCurrentPassword="";
+      }
+      },
+      err => {
+        let mensaje: string;
+        console.log(err)        
+      },
+      () => {
+      //console.log('terminó');
+      });
+   
   }
 
 }

@@ -59,8 +59,7 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.ContrasenaIncorrecta };
                 }
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
-                {
-                    //para actualizar la fecha de ultimo ingreso                    
+                {                                   
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };                    
                 }
                 else // successful

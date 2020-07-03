@@ -15,6 +15,8 @@ import { AppComponent } from './app.component';
 import { TestComponent } from './_pages/test/test.component';
 import { LayoutComponent } from './layout/layout.component';
 import { JwtInterceptorInterceptor } from './_helpers/jwt-interceptor.interceptor';
+import { SafePipe } from './_pipes/safe.pipe';
+
 
 
 
@@ -23,6 +25,7 @@ import { JwtInterceptorInterceptor } from './_helpers/jwt-interceptor.intercepto
     AppComponent,
     TestComponent,
     LayoutComponent,
+    SafePipe
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,7 @@ import { JwtInterceptorInterceptor } from './_helpers/jwt-interceptor.intercepto
     SharedModule,
     CoreModule,
     BrowserAnimationsModule
-  ],
+  ],    
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
