@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AutenticacionService } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { UrlResolver } from '@angular/compiler';
 import { Router } from '@angular/router';
+// import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +11,26 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
   data: any[];
+  optionsMenu = [
+    {
+      title: 'Crear proyecto',
+      link: '/#'
+    },
+    {
+      title: 'Registrar proyectos postulados',
+      link: '/#'
+    },
+    {
+      title: 'Cargar masivamente proyectos viabilizados',
+      link: '/cargarMasivamente'
+    },
+  ];
 
   constructor(private authe: AutenticacionService,private router: Router) {
     this.actualUser = this.authe.actualUser;
-   }
+  }
 
   actualUser: any;
   ngOnInit(): void {
@@ -34,7 +50,7 @@ export class HomeComponent implements OnInit {
   }
   probarconsumo()
   {
-    this.authe.consumoePrueba().subscribe(data=>{this.data=data});
+    this.authe.consumoePrueba().subscribe(data => { this.data = data; });
   }
 
 }

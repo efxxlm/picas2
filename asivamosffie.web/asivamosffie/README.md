@@ -29,8 +29,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## para crear una vista usar el comando
 
-    ng g m nombre --routing
+    ng g m _pages/<module-name> --routing
 
 y generamos el componente (en angular material hay algunos que podemos utilizae [Angular Material](https://material.angular.io/guide/schematics).
 
-    ng generate @angular/material:address-form nombre/components/<component-name>
+    ng generate @angular/material:address-form _pages/<module-name>/components/<component-name>
