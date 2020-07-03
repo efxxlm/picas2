@@ -86,7 +86,8 @@ namespace asivamosffie.services.Helpers.Constant
 
 
         public const string NoExitenArchivos = "100";
-   
+
+        public const string CamposVacios = "101";
 
         #endregion Mensajes Informativos
 

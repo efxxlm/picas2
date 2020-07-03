@@ -46,6 +46,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -876,10 +877,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
-
-                entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
-                    .HasMaxLength(300);
 
                 entity.Property(e => e.LlaveMen)
                     .IsRequired()

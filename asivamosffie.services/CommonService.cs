@@ -121,14 +121,19 @@ namespace asivamosffie.services
 
         public async Task<int> getInstitucionEducativaIdByName(string pNombre) {
 
-            return await _context.InstitucionEducativaSede.Where(r => r.Nombre.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
+            return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.Nombre.ToUpper().Equals(pNombre.ToUpper())).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
 
         public async Task<string> GetDominioCodigoByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
-            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.Codigo).FirstOrDefaultAsync();
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Nombre.Trim().ToUpper().Equals(pCodigo.Trim().ToUpper()) && r.TipoDominioId == pTipoDominioId).Select(r => r.Codigo).FirstOrDefaultAsync();
         }
 
 
+        public async Task<int> getSedeInstitucionEducativaIdByNameAndInstitucionPadre(string pNombre , int pIdPadre)
+        {
+
+            return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == pIdPadre && r.Nombre.Equals(pNombre)).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
+        }
     }
 }
