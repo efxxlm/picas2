@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using asivamosffie.api.Responses;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -66,6 +67,12 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _sourceFunding.Delete(id);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response);
+        }
     }
 }

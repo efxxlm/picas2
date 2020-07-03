@@ -68,9 +68,21 @@ namespace asivamosffie.services
             return respuesta;
         }
 
-        public Task<bool> Delete(int id)
+
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.FuenteFinanciacion.FindAsync(id);
+
+                _context.FuenteFinanciacion.Remove(entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
 

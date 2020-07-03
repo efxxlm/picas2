@@ -66,21 +66,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("ClearInput")]
-        [HttpGet]
-        public string ClearInput(string text)
-        {
-            try
-            {
-                var result =  _contributor.clearimput(text);
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
 
     }
 }

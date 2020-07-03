@@ -19,6 +19,5 @@ namespace asivamosffie.services.Interfaces
 
         Task<bool> Delete(int id);
 
-        string clearimput(string text);
     }
 }
