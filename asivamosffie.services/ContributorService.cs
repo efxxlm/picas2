@@ -16,7 +16,6 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
-
         public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
 
