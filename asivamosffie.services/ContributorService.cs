@@ -39,6 +39,8 @@ namespace asivamosffie.services
         public async Task<Respuesta> Insert(Aportante aportante)
         {
             Respuesta respuesta = new Respuesta();
+            aportante.NombreCodigo = Helpers.Helpers.CleanStringInput(aportante.NombreCodigo);
+            aportante.UsuarioCreacion = Helpers.Helpers.CleanStringInput(aportante.UsuarioCreacion);
 
             try
             {
@@ -70,12 +72,6 @@ namespace asivamosffie.services
         public Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
-        }
-
-        public string clearimput(string text)
-        {
-           string newtext = Helpers.Helpers.CleanStringInput(text);
-            return newtext;
         }
 
     }
