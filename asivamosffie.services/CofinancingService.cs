@@ -53,7 +53,7 @@ namespace asivamosffie.services
                         cofinanciacionEdit.FechaModificacion = DateTime.Now; 
                         respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente };
                     }
-                    await _context.SaveChangesAsync();
+                    
                      
                     foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                     {
@@ -62,7 +62,7 @@ namespace asivamosffie.services
                         idCofinancicacionAportante = await CreateCofinancingContributor(cofinanciacionAportante);
 
                         //Se crear los CofinanciacionDocumento relacionados a este aportante
-                        if (idCofinancicacionAportante > 0)
+                        if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
                         {
                             foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
                             {
@@ -72,6 +72,8 @@ namespace asivamosffie.services
                             }
                         }
                     } 
+
+                    await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -114,7 +116,7 @@ namespace asivamosffie.services
                     cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId; 
                 }
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
                 return pcofinanciacionAportante.CofinanciacionAportanteId;
             }
             catch (Exception ex)
@@ -149,7 +151,7 @@ namespace asivamosffie.services
                     cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante; 
                 }
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
                 return pCofinanciacionDocumento.CofinanciacionDocumentoId;
             }
             catch (Exception ex)
