@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { Respuesta } from '../autenticacion/autenticacion.service';
+import { CofinanciacionAportante } from '../Cofinanciacion/cofinanciacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,4 +31,11 @@ export interface RespuestaProyecto{
   cantidadDeRegistrosInvalidos: number,
   cantidadDeRegistrosValidos: number,
   llaveConsulta: string
+}
+
+export interface FuenteFinanciacion{
+  AportanteId: number,
+  FuenteRecursosCodigo:string,
+  ValorFuente:number,
+  CantVigencias:number
 }

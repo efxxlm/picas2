@@ -38,6 +38,18 @@ const routes: Routes = [
         path: 'gestionarAcueros',
         loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
         .then(m => m.GestionarAcuerdoCofinanciacionModule)
+      }
+      ,
+      {
+        path: 'crearProyecto',
+        loadChildren: () => import('./_pages/crear-proyecto-tecnico/crear-proyecto-tecnico.module')
+        .then(m => m.CrearProyectoTecnicoModule)
+      }
+      ,
+      {
+        path: 'crearProyectoAdministrativo',
+        loadChildren: () => import('./_pages/crear-proyecto-admin/crear-proyecto-admin.module')
+        .then(m => m.CrearProyectoAdminModule)
       },
     ]
 

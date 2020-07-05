@@ -1,0 +1,33 @@
+<div class="container text-center">
+  <div class="text-right">
+      <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+          <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Administrativo
+  </h1>
+  <p>Proyecto administrativo:{{projectInd}}</p>
+  <div *ngFor="let font of fonts">
+  
+    <label>
+      aportante
+      <input type="text" [(ngModel)]="font.AportanteId" >
+    </label>  
+    <div *ngIf="font.AportanteId!=0">
+      Fuentes
+      
+        <label>
+          fuente:
+          <input type="text" [(ngModel)]="font.FuenteRecursosCodigo">
+          <input type="text" [(ngModel)]="font.ValorFuente">
+        </label>    
+        <button (click)="addFont(font)">Agregar otra fuente</button>
+    </div>
+    <button  (click)="addAportant()">Agregar otro aportante</button>
+    
+    
+  
+  </div>
+</div>
+{{fonts | json}}

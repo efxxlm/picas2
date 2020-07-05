@@ -15,8 +15,12 @@ export class HomeComponent implements OnInit {
   data: any[];
   optionsMenu = [
     {
-      title: 'Crear proyecto',
-      link: '/#'
+      title: 'Crear proyecto tecnico',
+      link: '/crearProyecto'
+    },
+    {
+      title: 'Crear proyecto admin',
+      link: '/crearProyectoAdministrativo'
     },
     {
       title: 'Registrar proyectos postulados',
