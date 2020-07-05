@@ -19,6 +19,10 @@ export class ProjectService {
     return retorno;
   }
 
+  public uploadOkProjectsFileProject(idProject: string) {   
+    const retorno = this.http.post<Respuesta>(`${environment.apiUrl}/Project/UploadMassiveLoadProjects?pIdDocument=${idProject}`,null);
+    return retorno;
+  }
   
 }
 export interface RespuestaProyecto{

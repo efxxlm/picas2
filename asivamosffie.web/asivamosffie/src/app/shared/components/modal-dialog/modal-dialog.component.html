@@ -1,6 +1,10 @@
-<button mat-button mat-dialog-close class="modal--btn-cerrar">
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 
 <h1 mat-dialog-title>{{data.modalTitle}}</h1>
 <p mat-dialog-content class="modalText" [innerHtml]="data.modalText"></p> 
+<mat-dialog-actions *ngIf="data.siNoBoton">
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Si</button>
+    <button mat-button mat-dialog-close class="mat-button-wrapper">No</button>
+</mat-dialog-actions>

@@ -60,8 +60,8 @@ namespace asivamosffie.services
                     {
                         ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
                         //Controlar Registros
-                        //Filas
-                        for (int i = 3; i < worksheet.Dimension.Rows; i++)
+                        //Filas <=
+                        for (int i = 3; i <= worksheet.Dimension.Rows; i++)
                         {
                             try
                             {
@@ -124,13 +124,13 @@ namespace asivamosffie.services
                                     temporalProyecto.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 6].Text, true);
 
                                     //#7
-                                    //Municipio
+                                    //Municipio ///aqui debe recibir el parametro iddepartamento, pueden haber municipios del mismo nombre para diferente departamento
                                     temporalProyecto.Municipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 7].Text, false);
 
 
                                     //#8
                                     //Institución Educativa 
-                                    //Validar si existe institucion educativa y guardar id
+                                    //Validar si existe institucion educativa y guardar id el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
                                     int idInstitucionEducativaSede = await _commonService.getInstitucionEducativaIdByName(worksheet.Cells[i, 8].Text);
                                     if (idInstitucionEducativaSede > 0)
                                     {
@@ -149,7 +149,7 @@ namespace asivamosffie.services
 
                                     //#10
                                     //Código DANE IE 
-                                    //Validar si existe la sede y poner id si no crear sede y poner id 
+                                    //Validar si existe la sede y poner id si no crear sede y poner id  el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
                                     int SedeId = await _commonService.getSedeInstitucionEducativaIdByNameAndInstitucionPadre(worksheet.Cells[i, 10].Text, idInstitucionEducativaSede);
                                     if (SedeId > 0)
                                     { temporalProyecto.SedeId = SedeId; }
