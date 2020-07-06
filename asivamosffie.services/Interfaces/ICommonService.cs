@@ -23,7 +23,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<int> GetDominioIdByNombreDominioAndTipoDominio(string pNombre, int pTipoDominioId);
 
-        Task<int> GetLocalizacionIdByName(string pNombre, bool esDepartamento);
+        Task<int> GetLocalizacionIdByName(string pNombre, string pIdDepartamento);
 
         Task<List<Localicacion>> GetListDepartamento();
 

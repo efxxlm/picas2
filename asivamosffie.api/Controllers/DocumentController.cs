@@ -25,7 +25,45 @@ namespace asivamosffie.api.Controllers
         {
             _settings = settings;
             _documentService = documentService;
-        } 
+        }
+
+
+        [HttpGet]
+        [Route("GetListloadedDocuments")]
+        public async Task<ActionResult<List<ArchivoCargue>>> GetListloadedDocuments()
+        {
+            var result = await _documentService.GetListloadedDocuments();
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("DownloadFilesByName")]
+        public async Task<ActionResult> DownloadFilesByName([FromQuery] string pNameFiles)
+        {
+            if (String.IsNullOrEmpty(pNameFiles))
+                return BadRequest();
+
+            try
+            {
+                ArchivoCargue archivoCargue = await  _documentService.GetArchivoCargueByName(pNameFiles);
+
+                string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre+ ".xlsx";
+
+                Stream stream = new FileStream(Ruta, FileMode.Open, FileAccess.Read);
+
+                if (stream == null)
+                    return NotFound();
+                return  File(stream, "application/octet-stream");
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Archivo no encontrado");
+            }
+
+        }
+
 
 
     }

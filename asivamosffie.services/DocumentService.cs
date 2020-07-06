@@ -69,5 +69,16 @@ namespace asivamosffie.services
 
         }
 
+        public async  Task <List<ArchivoCargue>> GetListloadedDocuments () {
+
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals(OrigenArchivoCargue.Proyecto) && (bool)r.Activo).ToListAsync();
+        
+        
+        }
+
+        public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre) {
+             
+            return await _context.ArchivoCargue.Where(r => r.Nombre.Contains(pNombre)).FirstOrDefaultAsync();
+        } 
     }
 }
