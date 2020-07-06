@@ -8,26 +8,24 @@
     Administrativo
   </h1>
   <p>Proyecto administrativo:{{projectInd}}</p>
-  <div *ngFor="let font of fonts">
+  <div *ngFor="let aportantes of proyectoAdmin.Aportante">
   
     <label>
       aportante
-      <input type="text" [(ngModel)]="font.AportanteId" >
+      <input type="text" [(ngModel)]="aportantes.AportanteId" >
     </label>  
-    <div *ngIf="font.AportanteId!=0">
+    <div *ngIf="aportantes.AportanteId!=0">
       Fuentes
-      
+      <div *ngFor="let fuente of aportantes.FuenteFinanciacion">
         <label>
           fuente:
-          <input type="text" [(ngModel)]="font.FuenteRecursosCodigo">
-          <input type="text" [(ngModel)]="font.ValorFuente">
+          <input type="text" [(ngModel)]="fuente.FuenteRecursosCodigo">
+          <input type="text" [(ngModel)]="fuente.ValorFuente">
         </label>    
-        <button (click)="addFont(font)">Agregar otra fuente</button>
+        <button (click)="addFont(aportantes)">Agregar otra fuente</button>
+      </div>
     </div>
     <button  (click)="addAportant()">Agregar otro aportante</button>
-    
-    
-  
   </div>
 </div>
-{{fonts | json}}
+{{proyectoAdmin | json}}

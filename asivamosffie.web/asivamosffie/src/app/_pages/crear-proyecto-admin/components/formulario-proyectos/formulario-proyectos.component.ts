@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
-import { FuenteFinanciacion } from 'src/app/core/_services/project/project.service';
+import { FuenteFinanciacion, Aportante, ProyectoAdministrativo } from 'src/app/core/_services/project/project.service';
 
 @Component({
   selector: 'app-formulario-proyectos',
@@ -10,7 +10,7 @@ import { FuenteFinanciacion } from 'src/app/core/_services/project/project.servi
 export class FormularioProyectosComponent {
 
 
-  fonts:FuenteFinanciacion[]=[];
+  proyectoAdmin:ProyectoAdministrativo;
 
   projectInd:string="0001";
   projectForm = this.fb.group({
@@ -23,18 +23,18 @@ export class FormularioProyectosComponent {
   });
   fuentes: any;
 
-  addFont(font:FuenteFinanciacion) {
-    this.fonts.push({AportanteId:font.AportanteId,CantVigencias:0,ValorFuente:0,FuenteRecursosCodigo:""});
+  addFont(aportante:Aportante) {
+    aportante.FuenteFinanciacion.push({ValorFuente:0,FuenteRecursosCodigo:""});
   }
 
   ngOnInit()
   {
-    this.addAportant();
+    this.proyectoAdmin={Aportante:[{AportanteId:0,FuenteFinanciacion:[{ValorFuente:0,FuenteRecursosCodigo:""}]}]};    
   }
-
+  
   addAportant()
-  {
-    this.fonts.push({AportanteId:0,CantVigencias:0,ValorFuente:0,FuenteRecursosCodigo:""});
+  {       
+    this.proyectoAdmin.Aportante.push({AportanteId:0,FuenteFinanciacion:[{ValorFuente:0,FuenteRecursosCodigo:""}]});
   }
 
   states = [

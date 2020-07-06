@@ -33,9 +33,18 @@ export interface RespuestaProyecto{
   llaveConsulta: string
 }
 
-export interface FuenteFinanciacion{
-  AportanteId: number,
+export interface ProyectoAdministrativo
+{
+  Aportante:Aportante[],
+
+}
+export interface Aportante
+{
+  AportanteId:number;
+  FuenteFinanciacion:FuenteFinanciacion[],
+}
+
+export interface FuenteFinanciacion{  
   FuenteRecursosCodigo:string,
-  ValorFuente:number,
-  CantVigencias:number
+  ValorFuente:number
 }
