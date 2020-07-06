@@ -12,6 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 @NgModule({
   declarations: [],
   imports: [
@@ -27,6 +28,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatProgressSpinnerModule,
     MatExpansionModule,
     MatDatepickerModule,
+    MatNativeDateModule,
+    MatRippleModule
   ],
   exports: [
     MatButtonModule,
@@ -40,6 +43,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatProgressSpinnerModule,
     MatExpansionModule,
     MatDatepickerModule,
+    MatNativeDateModule,
+    MatRippleModule
   ]
 })
 export class MaterialModule { }
