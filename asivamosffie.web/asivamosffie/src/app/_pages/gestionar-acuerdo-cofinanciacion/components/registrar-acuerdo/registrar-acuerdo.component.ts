@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
 import { CofinanciacionService, CofinanciacionAportante, Cofinanciacion, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
-import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
+import { Dominio, CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 import { Console } from 'console';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-registrar-acuerdo',
@@ -23,7 +25,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private cofinanciacionService: CofinanciacionService,
-              private commonService: CommonService) {
+              private commonService: CommonService,
+              public dialog: MatDialog,) {
     this.maxDate = new Date();
 
     this.datosAportantes.get('numAportes').valueChanges
@@ -151,10 +154,47 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
       cofinanciacion.cofinanciacionAportante = this.listaAportantes();
 
-      this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe( console.log );
+      this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe( 
+        respuesta => 
+        {
+          this.verificarRespuesta( respuesta );
+        },
+        err => {
+          let mensaje: string;
+          if (err.error.message){
+            mensaje = err.error.message;
+          }else {
+            mensaje = err.message;
+          }
+          this.openDialog('Error', mensaje);
+       },
+       () => {
+        //console.log('terminó');
+       });
 
       this.mostrarDocumentosDeApropiacion = true;
     }
+  }
+
+  private verificarRespuesta( respuesta: Respuesta )
+  {
+    if (respuesta.isSuccessful) // Response witout errors
+    {
+      this.openDialog('', respuesta.message);
+      if (respuesta.isValidation) // have validations
+      {
+        
+      }
+     }else{
+      this.openDialog('', respuesta.message);
+    }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   }
 
   onSubmitDocumentosAportantes() {
