@@ -4,8 +4,10 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +19,13 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
-        private Respuesta _reponse = new  Respuesta();
 
-        public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService, Respuesta reponse)
+
+        public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
 
             _commonService = commonService;
             _context = context;
-            _reponse = reponse;
         }
 
 
@@ -38,18 +39,39 @@ namespace asivamosffie.services
         public async Task<Aportante> GetContributorById(int id)
         {
             return await _context.Aportante.FindAsync(id);
+
         }
+
+
+        // Grilla de control? { AportanteId }
+        public async Task<Aportante> GetControlGrid(int ContributorId)
+        {
+            try
+            {
+                return await _context.Aportante.Where(s => s.AportanteId == ContributorId)
+                         .Include(s => s.FuenteFinanciacion)
+                             .ThenInclude(g => g.ControlRecurso) // (ThenInclude) Para cargar varios niveles de entidades  relacionadas
+                         .FirstOrDefaultAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
 
         public async Task<Respuesta> Insert(Aportante aportante)
         {
-
+            Respuesta _reponse = new Respuesta();
             try
             {
                 if (aportante != null)
                 {
                     _context.Add(aportante);
                     await _context.SaveChangesAsync();
-                    _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
+                     _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
                 }
                 else
                 {
@@ -68,6 +90,7 @@ namespace asivamosffie.services
         //Registrar Control de recursos
         public async Task<Respuesta> ResourceControl(ControlRecurso controlRecurso)
         {
+            Respuesta _reponse = new Respuesta();
             try
             {
                 var result =  _context.ControlRecurso.Add(controlRecurso);
@@ -87,6 +110,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> BudgetRecords(RegistroPresupuestal registroPresupuestal)
         {
             //Pendiente : validaciones
+            Respuesta _reponse = new Respuesta();
             try
             {
                 var result = _context.RegistroPresupuestal.Add(registroPresupuestal);
