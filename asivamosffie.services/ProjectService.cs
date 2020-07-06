@@ -36,6 +36,16 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<Respuesta> createOrEditProyect(Proyecto proyecto) {
+
+            Respuesta respuesta = new Respuesta();
+
+            
+
+
+
+            return respuesta;
+        }
 
         public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
         {
