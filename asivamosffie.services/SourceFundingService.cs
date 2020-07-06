@@ -31,7 +31,8 @@ namespace asivamosffie.services
 
         public async Task<FuenteFinanciacion> GetISourceFundingById(int id)
         {
-            return await _context.FuenteFinanciacion.FindAsync(id);
+              return await _context.FuenteFinanciacion.FindAsync(id);
+            //return await _context.FuenteFinanciacion.Where(r => r.AportanteId == id).ToListAsync();
         }
 
 
@@ -51,7 +52,18 @@ namespace asivamosffie.services
             {
                 if (fuentefinanciacion != null)
                 {
-                    _context.Add(fuentefinanciacion);
+                  var SF = new FuenteFinanciacion()
+                    {
+                       CantVigencias = fuentefinanciacion.CantVigencias,
+                       FechaCreacion = fuentefinanciacion.FechaCreacion,
+                       UsuarioCreacion = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.UsuarioCreacion),
+                       FuenteRecursosCodigo = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.FuenteRecursosCodigo),
+                       ValorFuente = fuentefinanciacion.ValorFuente,
+                       FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId,
+                       
+
+                  };
+                    _context.Add(SF);
                     await _context.SaveChangesAsync();
                     respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = fuentefinanciacion, Code = ConstantMessagesContributor.OperacionExitosa };
                 }

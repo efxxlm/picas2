@@ -55,7 +55,6 @@ namespace asivamosffie.services.Helpers
             char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
             char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
 
-
             for (int i = 0; i < accents.Length; i++)
             {
                 text = text.Replace(accents[i], replacement[i]);
@@ -64,7 +63,7 @@ namespace asivamosffie.services.Helpers
             return text;
         }
 
-        public static object ConvertToUpercase(object dataObject)
+        public static string ConvertToUpercase(string dataObject)
         {
             try
             {
@@ -73,11 +72,12 @@ namespace asivamosffie.services.Helpers
                 {
                     string name = descriptor.Name;
                     object value = descriptor.GetValue(dataObject);
-                    ((IDictionary<String, Object>)newObject).Add(name, value = (descriptor.PropertyType.Name == "String" ? Convert.ToString(value).ToUpper() : value));
+                  
+                  ((IDictionary<String, Object>)newObject).Add(name, value = (descriptor.PropertyType.Name == "String" ? Convert.ToString(value).ToUpper() : CleanStringInput(value.ToString())));
                    
                 }
 
-                return newObject; //Newtonsoft.Json.JsonConvert.SerializeObject();
+                return newObject.ToString(); //Newtonsoft.Json.JsonConvert.SerializeObject();
             }
             catch (Exception ex)
             {
