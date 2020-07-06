@@ -12,7 +12,7 @@ import { AutenticacionService } from '../core/_services/autenticacion/autenticac
 @Injectable()
 export class JwtInterceptorInterceptor implements HttpInterceptor {
 
-  constructor(private authenticationService: AutenticacionService,private http: HttpClient) { }
+  constructor(private authenticationService: AutenticacionService, private http: HttpClient) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // add authorization header with jwt token if available
@@ -21,7 +21,6 @@ export class JwtInterceptorInterceptor implements HttpInterceptor {
         this.authenticationService.actualUser$.subscribe(user => {
             currentUser = user;
           });
-          console.log(currentUser);
         if (currentUser) {
             // //console.log("token de usuario");
             request = request.clone({
@@ -30,7 +29,7 @@ export class JwtInterceptorInterceptor implements HttpInterceptor {
                 }
             });
         }
-        
+
         return next.handle(request);
   }
 }

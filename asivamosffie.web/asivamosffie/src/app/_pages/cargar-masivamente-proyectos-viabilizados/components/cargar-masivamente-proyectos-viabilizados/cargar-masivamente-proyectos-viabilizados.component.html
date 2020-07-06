@@ -1,0 +1,28 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Cargar masivamente proyectos viabilizados
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenido/a aquí podrá realizar el cargue masivo de los proyectos de infraestructura del FFIE. En este módulo
+        podrá registrar la información básica para la identificación completa o incompleta de cada uno de los proyectos
+        que han sido postulados y/o han sido viabilizados técnicamente.
+    </div>
+
+    <a routerLink="/cargarMasivamente/cargarProyecto" mat-raised-button color="accent" class="btn-cargar-proyecto">Cargar listado de proyectos</a><br>
+    <button mat-button color="warn" class="btn-descargar-plantilla">
+        <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
+        Descargar plantilla cargue masivo de proyectos
+    </button>
+
+    <app-tabla-proyectos></app-tabla-proyectos>
+</div>
