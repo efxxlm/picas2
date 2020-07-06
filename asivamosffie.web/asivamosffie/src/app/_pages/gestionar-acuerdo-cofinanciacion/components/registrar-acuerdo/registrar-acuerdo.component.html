@@ -72,10 +72,10 @@
                       <div class="col">
                         <mat-form-field class="select-width">
                           <mat-select formControlName="tipo">
-                            <mat-option>wer</mat-option>
+                            <mat-option>Seleccione</mat-option>
                             <mat-option *ngFor="let selectTipoAportante of selectTiposAportante"
-                              [value]="selectTipoAportante.value">
-                              {{ selectTipoAportante.name }}
+                              [value]="selectTipoAportante.codigo">
+                              {{ selectTipoAportante.nombre }}
                             </mat-option>
                           </mat-select>
                         </mat-form-field>
@@ -91,8 +91,8 @@
                     <mat-form-field class="select-width">
                       <mat-select formControlName="nombre">
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.value">
-                          {{ nombreAportante.name }}
+                        <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.codigo">
+                          {{ nombreAportante.nombre }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -139,6 +139,7 @@
 
 <pre class="container">
   {{ datosAportantes.value | json}}
+  {{ datosAportantes.state | json }}
 </pre>
 
 <div *ngIf="mostrarDocumentosDeApropiacion">
