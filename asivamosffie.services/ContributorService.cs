@@ -4,6 +4,7 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,13 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
-        private Respuesta _reponse = new  Respuesta();
 
-        public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService, Respuesta reponse)
+
+        public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
 
             _commonService = commonService;
             _context = context;
-            _reponse = reponse;
         }
 
 
@@ -86,7 +86,7 @@ namespace asivamosffie.services
                     var AP = Helpers.Helpers.ConvertToUpercase(aportante);
                     _context.Add(aportante);
                     await _context.SaveChangesAsync();
-                    _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
+                     _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
                 }
                 else
                 {
