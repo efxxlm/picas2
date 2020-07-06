@@ -132,7 +132,7 @@ namespace asivamosffie.services
                                     //#8
                                     //Institución Educativa 
                                     //Validar si existe institucion educativa y guardar id el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
-                                    int idInstitucionEducativaSede = await _commonService.getInstitucionEducativaIdByName(worksheet.Cells[i, 8].Text);
+                                    int idInstitucionEducativaSede = await _commonService.getInstitucionEducativaIdByCodigoDane(Int32.Parse(worksheet.Cells[i, 9].Text));
                                     if (idInstitucionEducativaSede > 0)
                                     {
                                         temporalProyecto.InstitucionEducativaId = idInstitucionEducativaSede;
@@ -145,12 +145,12 @@ namespace asivamosffie.services
 
                                     //#9
                                     //Código DANE IE 
-                                    //        temporalProyecto.CodigoDaneIe = Int32.TryParse(worksheet.Cells[i, 9].Text, out 1);
+                                    //     temporalProyecto.CodigoDaneIe = Int32.TryParse(worksheet.Cells[i, 9].Text, out 1);
 
                                     //#10
                                     //Código DANE IE 
                                     //Validar si existe la sede y poner id si no crear sede y poner id  el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
-                                    int SedeId = await _commonService.getSedeInstitucionEducativaIdByNameAndInstitucionPadre(worksheet.Cells[i, 10].Text, idInstitucionEducativaSede);
+                                    int SedeId = await _commonService.getInstitucionEducativaIdByCodigoDane(Int32.Parse(worksheet.Cells[i, 11].Text));
                                     if (SedeId > 0)
                                     { temporalProyecto.SedeId = SedeId; }
                                     else

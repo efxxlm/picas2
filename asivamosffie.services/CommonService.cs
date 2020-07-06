@@ -135,5 +135,12 @@ namespace asivamosffie.services
 
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == pIdPadre && r.Nombre.Equals(pNombre)).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
+
+
+        public async Task<int> getInstitucionEducativaIdByCodigoDane(int pCodigoDane)
+        {
+
+            return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.CodigoDane == pCodigoDane).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
+        }
     }
 }
