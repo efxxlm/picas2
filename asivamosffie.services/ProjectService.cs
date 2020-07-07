@@ -36,14 +36,68 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Respuesta> createOrEditProyect(Proyecto proyecto) {
+        public async Task<Respuesta> ListProyectos(string pUsuarioConsulto)
+        {
 
             Respuesta respuesta = new Respuesta();
 
-             
+            try
+            {
+                List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r=> r.ProyectoPredio).ToListAsync();
+                List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
 
+                foreach (var proyecto in ListProyectos)
+                {
+                    Localizacion municipio    = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
+                    Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                    Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo , (int)EnumeratorTipoDominio.Estado_Registro);
+                    // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
 
+                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    {
+                        ProyectoId = proyecto.ProyectoId,
+                        Departamento = departamento.Descripcion,
+                        Municipio = municipio.Descripcion,
+                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId),
+                        Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId),
+                        EstadoRegistro = estadoRegistro.Nombre,
+                        EstadoJuridicoPredios = " "
+                    };
+                    ListProyectoGrilla.Add(proyectoGrilla);      
+                }
+                int  idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(enumeratorAccionCodigo.Listar_Proyectos.ToString(), (int)EnumeratorTipoDominio.Acciones);
+                return respuesta =
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = false,
+                       IsValidation = true,
+                       Code = ConstantMessagesProyecto.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto,ConstantMessagesProyecto.OperacionExitosa,idAccion,pUsuarioConsulto, "")
+                   };
+            }
+            catch (Exception ex)
+            {
+                int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(enumeratorAccionCodigo.Listar_Proyectos.ToString(), (int)EnumeratorTipoDominio.Acciones);
+                return respuesta =
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = false,
+                       IsValidation = true,
+                       Code = ConstantMessagesProyecto.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccion, pUsuarioConsulto, ex.InnerException.ToString())
+                   };
+            }
+           
 
+        }
+
+        public async Task<Respuesta> CreateOrEditProyect(Proyecto proyecto) {
+
+            Respuesta respuesta = new Respuesta();
+
+  
             return respuesta;
         }
 

@@ -81,8 +81,27 @@ namespace asivamosffie.api.Controllers
                 Respuesta respuesta = new Respuesta();
                 string pUsuarioModifico = "";
                 //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _projectService.UploadMassiveLoadProjects(pIdDocument, pUsuarioModifico);
+               // respuesta = await _projectService.UploadMassiveLoadProjects(pIdDocument, pUsuarioModifico);
 
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+        [Route("ListProjects")]
+        [HttpGet]
+        public async Task<IActionResult> ListProjects()
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = "";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _projectService.ListProyectos(pUsuarioModifico); 
                 return Ok(respuesta);
             }
             catch (Exception ex)

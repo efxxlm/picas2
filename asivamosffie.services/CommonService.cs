@@ -142,5 +142,25 @@ namespace asivamosffie.services
 
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.CodigoDane == pCodigoDane).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
+
+        public async Task<Localizacion> GetLocalizacionByLocalizacionId(string pLocalizacionId)
+        {
+
+            return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
+        }
+
+        public async Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio)
+        { 
+            //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
+            string idPadre  = await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pIdMunicipio)).Select(r=> r.IdPadre).FirstOrDefaultAsync();
+            return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(idPadre)).FirstOrDefaultAsync();
+        }
+
+
+
+        public async Task<Dominio> GetDominioByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId)
+        {
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
+        }
     }
 }
