@@ -8,7 +8,7 @@
     Administrativo
   </h1>
   <p class="mt1">Proyecto administrativo:{{proyectoAdmin.identificador}}</p>
-  <div *ngFor="let aportantes of proyectoAdmin.Aportante">
+  <div *ngFor="let aportantes of proyectoAdmin.Aportante;index as a">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
@@ -78,7 +78,13 @@
               </div>
             </div>
             <div class="row">
+              
               <div class="col text-right">
+                <button mat-button color="warn" type="button" *ngIf="i<=aportantes.FuenteFinanciacion.length"
+                  class="btn-eliminar"  (click)="deleteFont(fuente,aportantes)">
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente">
+                  Eliminar fuente
+                </button>
                 <button mat-button color="warn" type="button"
                   class="btn-eliminar"  (click)="addFont(aportantes)">
                   <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente">
@@ -92,17 +98,23 @@
     </mat-card>
     <div class="row">
       <div class="col text-right">
+        <button mat-button color="warn" type="button" *ngIf="proyectoAdmin.Aportante.length>1"
+          class="btn-eliminar"  (click)="deleteAportant(aportantes)">
+          <img src="assets/img/icon/menos.svg" alt="Eliminar otro aportante">
+          Eliminar aportante
+        </button>
         <button mat-button color="warn" type="button"
           class="btn-eliminar"  (click)="addAportant()">
           <img src="assets/img/icon/mas.svg" alt="Agregar otro aportante">
           Agregar otro aportante
         </button>
       </div>    
-    </div>
-    <div class="text-center animatedOpacity">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar">
-      </button>
-    </div>
+    </div>    
 </div>
-{{proyectoAdmin | json}}
+<div class="text-center animatedOpacity">
+  <button mat-button color="warn" class="btn-guardar"
+   *ngIf="proyectoAdmin.Aportante[0].FuenteFinanciacion[0].ValorFuente>0" type="button"
+   (click)="onSubmit()">
+    <img src="assets/img/icon/guardar.svg" alt="Regresar">
+  </button>
+</div>
