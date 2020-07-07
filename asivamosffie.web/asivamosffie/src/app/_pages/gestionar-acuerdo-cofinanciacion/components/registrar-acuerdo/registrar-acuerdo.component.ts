@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, Fo
 import { CofinanciacionService, CofinanciacionAportante, Cofinanciacion, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { Dominio, CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ClassGetter } from '@angular/compiler/src/output/output_ast';
-import { Console } from 'console';
+//import { Console } from 'console';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -111,7 +111,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     let lista: CofinanciacionDocumento[] = [];
 
     controles.controls.forEach(doc => {
-      let cofDoc: CofinanciacionDocumento = {};
+      let cofDoc: CofinanciacionDocumento;
       //cofDoc.FechaActa = new Date;
       cofDoc.FechaAcuerdo = new Date;
       cofDoc.NumeroActa = '111';
@@ -132,7 +132,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     let lista: CofinanciacionAportante[] = [];
     this.aportantes.controls.forEach( control => 
       {
-        let cofiApo: CofinanciacionAportante = {};
+        let cofiApo: CofinanciacionAportante;
         cofiApo.tipoAportanteId = control.get('tipo').value;
         cofiApo.nombreAportanteId = control.get('nombre').value;
 
@@ -149,7 +149,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
       let cofinanciacion: Cofinanciacion = 
       {
-        vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
+        vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value, cofinanciacionAportante:[],cofinanciacionId:0
       }
 
       cofinanciacion.cofinanciacionAportante = this.listaAportantes();

@@ -7,25 +7,102 @@
   <h1 class="title-menu--h1">
     Administrativo
   </h1>
-  <p>Proyecto administrativo:{{projectInd}}</p>
+  <p class="mt1">Proyecto administrativo:{{proyectoAdmin.identificador}}</p>
   <div *ngFor="let aportantes of proyectoAdmin.Aportante">
-  
-    <label>
-      aportante
-      <input type="text" [(ngModel)]="aportantes.AportanteId" >
-    </label>  
-    <div *ngIf="aportantes.AportanteId!=0">
-      Fuentes
-      <div *ngFor="let fuente of aportantes.FuenteFinanciacion">
-        <label>
-          fuente:
-          <input type="text" [(ngModel)]="fuente.FuenteRecursosCodigo">
-          <input type="text" [(ngModel)]="fuente.ValorFuente">
-        </label>    
-        <button (click)="addFont(aportantes)">Agregar otra fuente</button>
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Aportante
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Aportante</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required [(ngModel)]="aportantes.AportanteId">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let listado of listadoAportantes" [value]="listado.id">
+                      {{ listado.valor }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <div *ngIf="aportantes.AportanteId!=0">
+        <h2 _ngcontent-oba-c177="" class="card-subTitle">Fuentes</h2>
+        <div *ngFor="let fuente of aportantes.FuenteFinanciacion;index as i">
+          <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
+              Fuentes {{i+1}}
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="row" >
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left">Fuentes</label>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select required [(ngModel)]="fuente.FuenteRecursosCodigo">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.id">
+                          {{ listado.valor }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>                  
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left">Valor de la fuente</label>
+                  </div>                  
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput [(ngModel)]="fuente.ValorFuente" id="numAportes" maxlength="20" min="1" max="99999999999999999999" required type="number">
+                    </mat-form-field>                    
+                    <span class="contador">{{20 - fuente.ValorFuente.toString().length}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col text-right">
+                <button mat-button color="warn" type="button"
+                  class="btn-eliminar"  (click)="addFont(aportantes)">
+                  <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente">
+                  Agregar otra fuente
+                </button>
+              </div>
+            </div>            
+          </mat-card-content>
+        </div>        
       </div>
+    </mat-card>
+    <div class="row">
+      <div class="col text-right">
+        <button mat-button color="warn" type="button"
+          class="btn-eliminar"  (click)="addAportant()">
+          <img src="assets/img/icon/mas.svg" alt="Agregar otro aportante">
+          Agregar otro aportante
+        </button>
+      </div>    
     </div>
-    <button  (click)="addAportant()">Agregar otro aportante</button>
-  </div>
+    <div class="text-center animatedOpacity">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
 </div>
 {{proyectoAdmin | json}}

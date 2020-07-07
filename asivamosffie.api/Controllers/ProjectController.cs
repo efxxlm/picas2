@@ -79,9 +79,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = "";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-               // respuesta = await _projectService.UploadMassiveLoadProjects(pIdDocument, pUsuarioModifico);
+                string pUsuarioModifico = ""; 
 
                 return Ok(respuesta);
             }
@@ -90,7 +88,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-
+         
 
         [Route("ListProjects")]
         [HttpGet]
