@@ -45,8 +45,8 @@ export interface RespuestaProyecto{
 
 export interface ProyectoAdministrativo
 {
-  Aportante:Aportante[],
-
+  Aportante:Aportante[],  
+  identificador:string
 }
 export interface Aportante
 {
@@ -57,4 +57,9 @@ export interface Aportante
 export interface FuenteFinanciacion{  
   FuenteRecursosCodigo:string,
   ValorFuente:number
+}
+
+export interface Listados{
+  id:string,
+  valor:string
 }
