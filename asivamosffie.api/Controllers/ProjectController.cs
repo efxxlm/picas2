@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,26 @@ namespace asivamosffie.api.Controllers
         [Route("UploadMassiveLoadProjects")]
         [HttpPost]
         public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = "";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _projectService.UploadMassiveLoadProjects(pIdDocument, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+        [Route("CreateOrUpdateProyect")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrUpdateProyect([FromBody] Proyecto pProyecto)
         {
             try
             {
