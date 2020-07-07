@@ -95,6 +95,8 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string OperacionExitosa = "200";
 
+        public const string DescargaExcelExitosa = "201";
+
         #endregion Mensajes Exitoso
 
         #region Mensajes Redireccion
@@ -105,6 +107,7 @@ namespace asivamosffie.services.Helpers.Constant
  
         #region 
         public const string Error = "500";
+        public const string ErrorDescargarArchivo = "501";
         #endregion
     }
      

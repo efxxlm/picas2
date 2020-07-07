@@ -18,6 +18,15 @@ export class FormularioProyectosComponent {
     aportante.FuenteFinanciacion.push({ValorFuente:0,FuenteRecursosCodigo:""});
   }
 
+  deleteFont(key:FuenteFinanciacion,aportante:Aportante)
+  {
+    const index = this.proyectoAdmin.Aportante.indexOf(aportante, 0);
+    const index2 = this.proyectoAdmin.Aportante[index].FuenteFinanciacion.indexOf(key, 0);
+    if (index2 > -1) {
+      this.proyectoAdmin.Aportante[index].FuenteFinanciacion.splice(index2, 1);
+    } 
+  }
+
   ngOnInit()
   {
     this.proyectoAdmin={identificador:"0001",Aportante:[{AportanteId:0,FuenteFinanciacion:[{ValorFuente:0,FuenteRecursosCodigo:""}]}]};    
@@ -30,11 +39,18 @@ export class FormularioProyectosComponent {
   {       
     this.proyectoAdmin.Aportante.push({AportanteId:0,FuenteFinanciacion:[{ValorFuente:0,FuenteRecursosCodigo:""}]});
   }
+  deleteAportant(key:Aportante)
+  {
+    const index = this.proyectoAdmin.Aportante.indexOf(key, 0);
+    if (index > -1) {
+      this.proyectoAdmin.Aportante.splice(index, 1);
+    }    
+  }
 
 
   constructor(private fb: FormBuilder) {}
 
   onSubmit() {
-    alert('Thanks!');
+    console.log(this.proyectoAdmin);
   }
 }
