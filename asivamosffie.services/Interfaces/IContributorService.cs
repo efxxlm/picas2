@@ -12,7 +12,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<Aportante>> GetContributor();
 
         Task<Aportante> GetContributorById(int id);
-
+        Task<Respuesta> GetControlGrid(int ContributorId);
         Task<Respuesta> Insert(Aportante aportante);
 
         Task<bool> Update(Respuesta aportante);

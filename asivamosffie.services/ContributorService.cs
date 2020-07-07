@@ -2,14 +2,10 @@
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services
@@ -44,19 +40,33 @@ namespace asivamosffie.services
 
 
         // Grilla de control? { AportanteId }
-        public async Task<Aportante> GetControlGrid(int ContributorId)
+        public async Task<Respuesta> GetControlGrid(int ContributorId)
         {
+            Respuesta _reponse = new Respuesta();
             try
             {
-                return await _context.Aportante.Where(s => s.AportanteId == ContributorId)
-                         .Include(s => s.FuenteFinanciacion)
-                             .ThenInclude(g => g.ControlRecurso) // (ThenInclude) Para cargar varios niveles de entidades  relacionadas
-                         .FirstOrDefaultAsync();
-            }
-            catch (Exception)
-            {
+                var result = await _context.Aportante
+                          .Include(s => s.RegistroPresupuestal)
+                          .Include(s => s.FuenteFinanciacion)
+                              .ThenInclude(p => p.Aportante) //(ThenInclude) Para cargar varios niveles de entidades  relacionadas
+                                .ThenInclude(p => p.FuenteFinanciacion)
+                                .ThenInclude(info => info.CuentaBancaria)
+                            .Where(t => t.AportanteId.Equals(ContributorId))
+                              .FirstOrDefaultAsync();
 
-                throw;
+
+                if (result == null)
+                {
+                    return _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
+                }
+                  
+
+                return _reponse = new Respuesta { IsSuccessful = true, IsValidation = false, Data = result, Code = ConstantMessagesContributor.OperacionExitosa };
+
+            }
+            catch (Exception ex)
+            {
+               return _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString()};
             }
         }
 
@@ -69,9 +79,10 @@ namespace asivamosffie.services
             {
                 if (aportante != null)
                 {
+                    var AP = Helpers.Helpers.ConvertToUpercase(aportante);
                     _context.Add(aportante);
                     await _context.SaveChangesAsync();
-                     _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
+                    _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
                 }
                 else
                 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -53,6 +54,23 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("GetControlGrid")]
+        [HttpGet]
+        public async Task<Respuesta> GetControlGrid(int ContributorId)
+        {
+            try
+            {
+               return await _contributor.GetControlGrid(ContributorId);
+              
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
 
         [HttpPost]
