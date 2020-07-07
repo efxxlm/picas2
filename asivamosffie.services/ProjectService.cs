@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using System.Globalization;
 using asivamosffie.services.Validators;
+using asivamosffie.services.Filters;
 namespace asivamosffie.services
 {
     public class ProjectService : IProjectService
@@ -37,13 +38,13 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> ListProyectos(string pUsuarioConsulto)
-        {
-
-            Respuesta respuesta = new Respuesta();
+        { 
+            Respuesta respuesta = new Respuesta(); 
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Listar_Proyectos, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r=> r.ProyectoPredio).ToListAsync();
+                List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r=> r.ProyectoPredio).Distinct().ToListAsync();
                 List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
 
                 foreach (var proyecto in ListProyectos)
@@ -58,18 +59,19 @@ namespace asivamosffie.services
                         ProyectoId = proyecto.ProyectoId,
                         Departamento = departamento.Descripcion,
                         Municipio = municipio.Descripcion,
-                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId),
-                        Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId),
+                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
+                        Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                         EstadoRegistro = estadoRegistro.Nombre,
                         EstadoJuridicoPredios = " "
                     };
                     ListProyectoGrilla.Add(proyectoGrilla);      
                 }
-                int  idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Listar_Proyectos, (int)EnumeratorTipoDominio.Acciones);
+
                 return respuesta =
                    new Respuesta
                    {
-                       IsSuccessful = false,
+                       Data = ListProyectoGrilla,
+                       IsSuccessful = true,
                        IsException = false,
                        IsValidation = true,
                        Code = ConstantMessagesProyecto.OperacionExitosa,
@@ -77,9 +79,7 @@ namespace asivamosffie.services
                    };
             }
             catch (Exception ex)
-            {
-                int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Listar_Proyectos, (int)EnumeratorTipoDominio.Acciones);
-                return respuesta =
+            { return respuesta =
                    new Respuesta
                    {
                        IsSuccessful = false,
@@ -96,6 +96,8 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateOrEditProyect(Proyecto proyecto) {
 
             Respuesta respuesta = new Respuesta();
+            ValidationFilter validationFilter = new ValidationFilter();
+            validationFilter.OnActionExecutionAsync(proyecto);
 
             //respuesta.Message =
             return respuesta;
