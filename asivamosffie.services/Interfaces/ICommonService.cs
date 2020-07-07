@@ -23,7 +23,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<int> GetDominioIdByNombreDominioAndTipoDominio(string pNombre, int pTipoDominioId);
 
-        Task<int> GetLocalizacionIdByName(string pNombre, bool esDepartamento);
+        Task<int> GetLocalizacionIdByName(string pNombre, string pIdDepartamento);
 
         Task<List<Localicacion>> GetListDepartamento();
 
@@ -35,7 +35,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<string> GetDominioCodigoByNombreDominioAndTipoDominio(string pNombre, int pTipoDominioId);
 
-        Task<int> getSedeInstitucionEducativaIdByNameAndInstitucionPadre(string pNombre , int pIdPadre);
-        
+        Task<int> getSedeInstitucionEducativaIdByNameAndInstitucionPadre(string pNombre, int pIdPadre);
+
+        Task<int> getInstitucionEducativaIdByCodigoDane(int pCodigoDane);
     }
 }

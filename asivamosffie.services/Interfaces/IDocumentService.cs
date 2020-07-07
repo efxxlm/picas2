@@ -8,10 +8,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.services.Interfaces
 {
-   public interface IDocumentService
-    { 
-  
-        Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch , int OrigenId);
- 
+    public interface IDocumentService
+    {
+
+        Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch, int OrigenId);
+
+        Task<List<ArchivoCargue>> GetListloadedDocuments();
+
+        Task<ArchivoCargue> GetArchivoCargueByName(string pNombre);
+
     }
 }

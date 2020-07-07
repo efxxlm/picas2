@@ -55,9 +55,9 @@ namespace asivamosffie.services
             Respuesta respuesta = new Respuesta();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+            //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, OrigenId);
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.Proyecto));
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)
@@ -71,7 +71,8 @@ namespace asivamosffie.services
                         ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
                         //Controlar Registros
                         //Filas <=
-                        for (int i = 3; i <= worksheet.Dimension.Rows; i++)
+                        //No comienza desde 0 por lo tanto el = no es necesario
+                        for (int i = 3; i < worksheet.Dimension.Rows; i++)
                         {
                             try
                             {
@@ -131,17 +132,17 @@ namespace asivamosffie.services
 
                                     //#6
                                     //Departamento
-                                    temporalProyecto.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 6].Text, true);
+                                    temporalProyecto.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 6].Text, "0");
 
                                     //#7
                                     //Municipio ///aqui debe recibir el parametro iddepartamento, pueden haber municipios del mismo nombre para diferente departamento
-                                    temporalProyecto.Municipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 7].Text, false);
+                                    temporalProyecto.Municipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 7].Text, temporalProyecto.Departamento.ToString());
 
 
                                     //#8
                                     //Institución Educativa 
                                     //Validar si existe institucion educativa y guardar id el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
-                                    int idInstitucionEducativaSede = await _commonService.getInstitucionEducativaIdByName(worksheet.Cells[i, 8].Text);
+                                    int idInstitucionEducativaSede = await _commonService.getInstitucionEducativaIdByCodigoDane(Int32.Parse(worksheet.Cells[i, 9].Text));
                                     if (idInstitucionEducativaSede > 0)
                                     {
                                         temporalProyecto.InstitucionEducativaId = idInstitucionEducativaSede;
@@ -152,15 +153,14 @@ namespace asivamosffie.services
                                         break;
                                     }
 
-
                                     //#9
                                     //Código DANE IE 
-                                    //        temporalProyecto.CodigoDaneIe = Int32.TryParse(worksheet.Cells[i, 9].Text, out 1);
+                                    //     temporalProyecto.CodigoDaneIe = Int32.TryParse(worksheet.Cells[i, 9].Text, out 1);
 
                                     //#10
                                     //Código DANE IE 
                                     //Validar si existe la sede y poner id si no crear sede y poner id  el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
-                                    int SedeId = await _commonService.getSedeInstitucionEducativaIdByNameAndInstitucionPadre(worksheet.Cells[i, 10].Text, idInstitucionEducativaSede);
+                                    int SedeId = await _commonService.getInstitucionEducativaIdByCodigoDane(Int32.Parse(worksheet.Cells[i, 11].Text));
                                     if (SedeId > 0)
                                     { temporalProyecto.SedeId = SedeId; }
                                     else
@@ -392,7 +392,8 @@ namespace asivamosffie.services
         {
             Respuesta respuesta = new Respuesta();
 
-            if (string.IsNullOrEmpty(pIdDocument)) {
+            if (string.IsNullOrEmpty(pIdDocument))
+            {
                 return respuesta =
                  new Respuesta
                  {
@@ -435,7 +436,7 @@ namespace asivamosffie.services
                         predio.NumeroDocumento = temporalProyecto.NumeroDocumentoAcreditacion;
                         predio.CedulaCatastral = temporalProyecto.CedulaCatastralPredio;
                         //
-                         _context.Predio.Add(predio);
+                        _context.Predio.Add(predio);
                         _context.SaveChanges();
 
                         //Proyecto
@@ -486,11 +487,11 @@ namespace asivamosffie.services
                         _context.SaveChanges();
 
                         //Relacionar Ids
-                      
 
 
 
-                     //   _context.Proyecto.Add(proyecto);
+
+                        //   _context.Proyecto.Add(proyecto);
 
                         //Cofinanciacion
                         Cofinanciacion cofinanciacion = new Cofinanciacion();
@@ -499,7 +500,7 @@ namespace asivamosffie.services
                         cofinanciacion.VigenciaCofinanciacionId = temporalProyecto.VigenciaAcuerdoCofinanciacion;
                         cofinanciacion.UsuarioCreacion = temporalProyecto.UsuarioCreacion;
                         //
-                          _context.Cofinanciacion.Add(cofinanciacion);
+                        _context.Cofinanciacion.Add(cofinanciacion);
                         _context.SaveChanges();
 
                         //CofinanciacionAportante 1 
@@ -515,7 +516,7 @@ namespace asivamosffie.services
                             cofinanciacionAportante1.TipoAportanteId = (int)temporalProyecto.TipoAportanteId1;
                             cofinanciacionAportante1.NombreAportanteId = (int)temporalProyecto.Aportante1;
                             //
-                             _context.CofinanciacionAportante.Add(cofinanciacionAportante1);
+                            _context.CofinanciacionAportante.Add(cofinanciacionAportante1);
                             _context.SaveChanges();
                             //ProyectoAportante
                             //Auditoria
@@ -576,7 +577,7 @@ namespace asivamosffie.services
                             cofinanciacionAportante3.TipoAportanteId = (int)temporalProyecto.TipoAportanteId3;
                             cofinanciacionAportante3.NombreAportanteId = (int)temporalProyecto.Aportante3;
                             //
-                              _context.CofinanciacionAportante.Add(cofinanciacionAportante3);
+                            _context.CofinanciacionAportante.Add(cofinanciacionAportante3);
                             _context.SaveChanges();
                             //ProyectoAportante
                             //Auditoria
@@ -598,10 +599,10 @@ namespace asivamosffie.services
                         temporalProyecto.EstaValidado = true;
                         temporalProyecto.FechaModificacion = DateTime.Now;
                         temporalProyecto.UsuarioModificacion = pUsuarioModifico;
-                         _context.TemporalProyecto.Update(temporalProyecto);
+                        _context.TemporalProyecto.Update(temporalProyecto);
                         _context.SaveChanges();
                     }
-                     
+
 
                     return respuesta =
                     new Respuesta

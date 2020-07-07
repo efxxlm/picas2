@@ -111,12 +111,12 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<int> GetLocalizacionIdByName(string pNombre, bool esDepartamento)
+        public async Task<int> GetLocalizacionIdByName(string pNombre, string pIdDepartamento)
         {
-            if (esDepartamento)
+            if (pIdDepartamento.Equals("0"))
                 return Int32.Parse(await _context.Localizacion.Where(r => r.Nivel == 1 && r.Descripcion.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r=> r.LocalizacionId).FirstOrDefaultAsync());
             else
-                return Int32.Parse(await _context.Localizacion.Where(r => r.Nivel == 2 && r.Descripcion.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r => r.LocalizacionId).FirstOrDefaultAsync());
+                return Int32.Parse(await _context.Localizacion.Where(r => r.IdPadre.Contains(pIdDepartamento) && r.Nivel == 2 && r.Descripcion.Trim().ToUpper().Equals(pNombre.Trim().ToUpper())).Select(r => r.LocalizacionId).FirstOrDefaultAsync());
         }
 
         public async Task<int> getInstitucionEducativaIdByName(string pNombre) {
@@ -134,6 +134,13 @@ namespace asivamosffie.services
         {
 
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == pIdPadre && r.Nombre.Equals(pNombre)).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
+        }
+
+
+        public async Task<int> getInstitucionEducativaIdByCodigoDane(int pCodigoDane)
+        {
+
+            return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.CodigoDane == pCodigoDane).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
     }
 }

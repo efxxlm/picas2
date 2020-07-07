@@ -18,6 +18,7 @@ import { JwtInterceptorInterceptor } from './_helpers/jwt-interceptor.intercepto
 import { SafePipe } from './_pipes/safe.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -39,7 +40,7 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     FormsModule
   ],    
-  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true }],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true },DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
