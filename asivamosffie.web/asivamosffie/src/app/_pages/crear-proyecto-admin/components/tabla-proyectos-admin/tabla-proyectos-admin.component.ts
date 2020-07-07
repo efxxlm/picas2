@@ -5,27 +5,21 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 export interface RegistrosCargados {
-  id: number;
-  fechaCargue: string;
-  totalRegistros: number;
-  registrosValidos: number;
-  registrosInvalidos: number;
+  id: number;    
+  consecutivo: number;
+  estado:string;
 }
 
 const ELEMENT_DATA: RegistrosCargados[] = [
   {
     id: 1,
-    fechaCargue: '25/03/2020',
-    totalRegistros: 5,
-    registrosValidos: 3,
-    registrosInvalidos: 2
+    consecutivo: 1,
+    estado: "Completo"
   },
   {
     id: 2,
-    fechaCargue: '27/03/2020',
-    totalRegistros: 9,
-    registrosValidos: 2,
-    registrosInvalidos: 1
+    consecutivo: 2,
+    estado: "Completo"
   },
 ];
 
@@ -35,14 +29,12 @@ const ELEMENT_DATA: RegistrosCargados[] = [
   styleUrls: ['./tabla-proyectos-admin.component.scss']
 })
 export class TablaProyectosAdminComponent {
-  displayedColumns: string[] = ['fechaCargue', 'totalRegistros', 'registrosValidos', 'registrosInvalidos'];
+  displayedColumns: string[] = ['consecutivo', 'estado','gestion'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   columnas = [
-    { titulo: 'Fecha de cargue', name: 'fechaCargue' },
-    { titulo: 'Número total de registros ', name: 'totalRegistros' },
-    { titulo: 'Número de registros validos ', name: 'registrosValidos' },
-    { titulo: 'Número de registros inválidos ', name: 'registrosInvalidos' },
+    { titulo: 'Consecutivo proyecto administrativo', name: 'consecutivo' },
+    { titulo: 'Estado del registro', name: 'estado' }
   ];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -63,4 +55,20 @@ export class TablaProyectosAdminComponent {
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
+
+  ver(gestion:any)
+  {
+    console.log(gestion);    
+  }
+
+  eliminar(gestion:any)
+  {
+    console.log(gestion);    
+  }
+  
+  enviar(gestion:any)
+  {
+    console.log(gestion);
+  }
+
 }
