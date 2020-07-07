@@ -17,6 +17,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         CrearActualizarCofinanciacion = 55, 
         Error = 56,
         ValidarExcel = 63,
-        CargueProyectosMasivos =  69
+        CargueProyectosMasivos =  69,
+        DescargarExcelProyectos = 75 
     }
+
+  
 }

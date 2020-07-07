@@ -76,9 +76,50 @@ namespace asivamosffie.services
         
         }
 
-        public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre) {
-             
-            return await _context.ArchivoCargue.Where(r => r.Nombre.Contains(pNombre)).FirstOrDefaultAsync();
+        public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser) {
+
+            Respuesta respuesta = new Respuesta();
+            ArchivoCargue archivoCargue = new ArchivoCargue();
+            try
+            { 
+                archivoCargue = await _context.ArchivoCargue.Where(r => r.Nombre.Equals(pNombre)).FirstOrDefaultAsync();
+
+                if (archivoCargue != null)
+                {
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueProyecto.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueProyecto.DescargaExcelExitosa, (int)enumeratorAccion.DescargarExcelProyectos, pUser, "Se descargo el archivo")
+                    };
+                    return archivoCargue;
+                }
+                else {
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueProyecto.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueProyecto.ErrorDescargarArchivo, (int)enumeratorAccion.DescargarExcelProyectos, pUser, "No se encontro el archivo")
+                    };
+                    return archivoCargue;
+                }
+            }
+            catch (Exception ex)
+            {
+                new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = false,
+                    IsValidation = true,
+                    Code = ConstantMessagesCargueProyecto.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueProyecto.ErrorDescargarArchivo, (int)enumeratorAccion.DescargarExcelProyectos, pUser, ex.ToString())
+                };
+                return archivoCargue;
+            }
         } 
     }
 }
