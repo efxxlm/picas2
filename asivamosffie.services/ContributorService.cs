@@ -2,14 +2,10 @@
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services
@@ -86,7 +82,7 @@ namespace asivamosffie.services
                     var AP = Helpers.Helpers.ConvertToUpercase(aportante);
                     _context.Add(aportante);
                     await _context.SaveChangesAsync();
-                     _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
+                    _reponse = new Respuesta { IsSuccessful = true, IsValidation = true, Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa };
                 }
                 else
                 {

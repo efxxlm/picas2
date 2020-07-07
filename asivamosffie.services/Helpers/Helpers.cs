@@ -66,7 +66,7 @@ namespace asivamosffie.services.Helpers
             return text;
         }
 
-        public static string ConvertToUpercase(string dataObject)
+        public static object ConvertToUpercase(object dataObject)
         {
             try
             {
