@@ -50,7 +50,7 @@ namespace asivamosffie.services
 
         public async Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
-            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.DominioId).FirstOrDefaultAsync();
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo.ToString()) && r.TipoDominioId == pTipoDominioId).Select(r=> r.DominioId).FirstOrDefaultAsync();
         }
 
         public async Task<List<Localicacion>> GetListDepartamento()

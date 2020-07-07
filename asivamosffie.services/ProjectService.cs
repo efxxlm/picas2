@@ -65,7 +65,7 @@ namespace asivamosffie.services
                     };
                     ListProyectoGrilla.Add(proyectoGrilla);      
                 }
-                int  idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(enumeratorAccionCodigo.Listar_Proyectos.ToString(), (int)EnumeratorTipoDominio.Acciones);
+                int  idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Listar_Proyectos, (int)EnumeratorTipoDominio.Acciones);
                 return respuesta =
                    new Respuesta
                    {
@@ -78,7 +78,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(enumeratorAccionCodigo.Listar_Proyectos.ToString(), (int)EnumeratorTipoDominio.Acciones);
+                int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Listar_Proyectos, (int)EnumeratorTipoDominio.Acciones);
                 return respuesta =
                    new Respuesta
                    {

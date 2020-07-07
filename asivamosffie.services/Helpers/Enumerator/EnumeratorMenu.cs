@@ -20,23 +20,5 @@ namespace asivamosffie.services.Helpers.Enumerator
         ValidarExcel = 63, 
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75
-    }
-  
- 
-    //Julian Martinez
-    //Creo ese enum para listar por codigo y ni por id dominio como esta arriba
-    public enum enumeratorAccionCodigo
-    { 
-        Inicio_de_sesion = 1,
-        Cambio_de_contrasena = 2,
-        Solicitud_de_contrasena = 3,
-        CrearActualizarCofinanciacion = 4,
-        Error = 5,
-        Validar_Archivo_Excel = 6,
-        Cargue_Proyectos_Masivos = 7,
-        Descargar_Excel_Proyectos = 8,
-        Listar_Proyectos = 9
-    } 
-      
-   
+    }    
 }
