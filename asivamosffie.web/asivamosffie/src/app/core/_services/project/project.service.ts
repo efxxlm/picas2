@@ -23,6 +23,16 @@ export class ProjectService {
     const retorno = this.http.post<Respuesta>(`${environment.apiUrl}/Project/UploadMassiveLoadProjects?pIdDocument=${idProject}`,null);
     return retorno;
   }
+
+  public getListProjectsFileProject() {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocuments`);
+    return retorno;
+  }
+
+  public getFileByName(name: string) {   
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesByName?pNameFiles=${name}`, { responseType: "blob" });
+    return retorno;
+  }
   
 }
 export interface RespuestaProyecto{
