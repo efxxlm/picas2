@@ -55,29 +55,43 @@ namespace asivamosffie.services.Helpers
             char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
             char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
 
-            for (int i = 0; i < accents.Length; i++)
+            if (text != null)
             {
-                text = text.Replace(accents[i], replacement[i]);
+                for (int i = 0; i < accents.Length; i++)
+                {
+                    text = text.Replace(accents[i], replacement[i]);
+                }
             }
 
             return text;
         }
 
-        public static string ConvertToUpercase(string dataObject)
+        public static object ConvertToUpercase(object dataObject)
         {
             try
             {
                 object newObject = new System.Dynamic.ExpandoObject();
+                char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+                char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
+
                 foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(dataObject))
                 {
+
                     string name = descriptor.Name;
                     object value = descriptor.GetValue(dataObject);
-                  
-                  ((IDictionary<String, Object>)newObject).Add(name, value = (descriptor.PropertyType.Name == "String" ? Convert.ToString(value).ToUpper() : CleanStringInput(value.ToString())));
-                   
+                    for (int i = 0; i < accents.Length; i++)
+                    {
+                        ((IDictionary<String, Object>)newObject).Add(name,
+                         value =
+                         (
+                             descriptor.PropertyType.Name == "String" && value.ToString() != null ?
+                             Convert.ToString(value.ToString().Replace(accents[i], replacement[i])).ToUpper() : value
+                         ));
+                    }
                 }
 
-                return newObject.ToString(); //Newtonsoft.Json.JsonConvert.SerializeObject();
+
+                return newObject; //Newtonsoft.Json.JsonConvert.SerializeObject();
             }
             catch (Exception ex)
             {

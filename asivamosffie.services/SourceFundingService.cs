@@ -54,12 +54,12 @@ namespace asivamosffie.services
                 {
                   var SF = new FuenteFinanciacion()
                     {
-                       CantVigencias = fuentefinanciacion.CantVigencias,
-                       FechaCreacion = fuentefinanciacion.FechaCreacion,
-                       UsuarioCreacion = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.UsuarioCreacion),
-                       FuenteRecursosCodigo = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.FuenteRecursosCodigo),
-                       ValorFuente = fuentefinanciacion.ValorFuente,
-                       FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId,
+                       //CantVigencias = fuentefinanciacion.CantVigencias,
+                       //FechaCreacion = fuentefinanciacion.FechaCreacion,
+                       //UsuarioCreacion = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.UsuarioCreacion),
+                       //FuenteRecursosCodigo = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.FuenteRecursosCodigo),
+                       //ValorFuente = fuentefinanciacion.ValorFuente,
+                       //FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId,
                        
 
                   };
