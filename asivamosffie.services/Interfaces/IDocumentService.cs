@@ -15,7 +15,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<ArchivoCargue>> GetListloadedDocuments();
 
-        Task<ArchivoCargue> GetArchivoCargueByName(string pNombre);
+        Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser);
 
     }
 }

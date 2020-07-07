@@ -46,7 +46,9 @@ namespace asivamosffie.api.Controllers
 
             try
             {
-                ArchivoCargue archivoCargue = await  _documentService.GetArchivoCargueByName(pNameFiles);
+                string pUser = " ";
+                // string  pUser = HttpContext.User.FindFirst("User").Value;
+                ArchivoCargue archivoCargue = await  _documentService.GetArchivoCargueByName(pNameFiles  , pUser);
 
                 string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre+ ".xlsx";
 
