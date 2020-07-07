@@ -12,6 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -31,6 +32,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatProgressSpinnerModule,
     MatExpansionModule,
     MatDatepickerModule,
+    MatNativeDateModule,
+    MatRippleModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -47,6 +50,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatProgressSpinnerModule,
     MatExpansionModule,
     MatDatepickerModule,
+    MatNativeDateModule,
+    MatRippleModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
