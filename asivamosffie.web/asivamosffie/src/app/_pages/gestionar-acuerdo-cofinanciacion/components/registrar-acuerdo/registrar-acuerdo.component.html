@@ -1,7 +1,7 @@
 <div class="container">
   <div class="text-right">
     <a routerLink="/gestionarAcueros" mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
     </a>
   </div>
   <div class="text-center">
@@ -10,7 +10,7 @@
     </h1>
   </div>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <form [formGroup]="datosAportantes" novalidate (ngSubmit)="onSubmitDatosAportantes()">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
@@ -19,90 +19,117 @@
       </mat-card-header>
       <mat-card-content>
         <div class="row">
-          <div class="col-md-3 pr-0">
-            <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="select-width">
-              <mat-select formControlName="vigenciaEstado" required>
-                <mat-option></mat-option>
-                <mat-option *ngFor="let vigenciaEstado of vigenciaEstados" [value]="vigenciaEstado">
-                  {{ vigenciaEstado }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="vigenciaEstado" required>
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let vigenciaEstado of vigenciaEstados" [value]="vigenciaEstado">
+                      {{ vigenciaEstado }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3 pr-0">
-            <label class="label-left">¿Cuántos aportantes tiene el acuerdo?</label>
-          </div>
-          <div class="col-md-4 d-flex align-items-center">
-            <mat-form-field class="full-width">
-              <input (change)="CambioNumeroAportantes()" matInput #numAportes maxlength="2" min="1" max="99" required type="number" formControlName="numAportes">
-            </mat-form-field>
-            <span class="contador">{{2 - numAportes.value.length}}</span>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">¿Cuántos aportantes tiene el acuerdo?</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #numAportes id="numAportes" maxlength="2" min="1" max="99" required type="number"
+                    formControlName="numAportes">
+                </mat-form-field>
+                <span class="contador">{{2 - numAportes.value.length}}</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- <div class="animatedDown" formGroupName="aportantes" *ngIf="numAportes.value > 0 && numAportes.value < 100"> -->
-         <div class="animatedDown" formArrayName="aportantes" *ngIf="numAportes.value > 0">
+        <div class="animatedDown" formGroupName="aportantes"
+          *ngIf="datosAportantes.value.aportantes.length > 0 && numAportes.value < 100">
           <h2 class="card-subTitle">Aportantes</h2>
-         <div> 
-           <div *ngFor="let aportante of aportantes.controls; let i = index" >
+          <div>
+            <div *ngFor="let aportante of aportantes.controls; let i = index">
               <div [formGroupName]="i">
                 <mat-card-title class="header-card--text">
                   Aportante {{ i + 1 }}
                 </mat-card-title>
                 <div class="row">
-                  <div class="col-md-3 pr-0">
-                    <label class="label-left">Tipo de aportante</label>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field class="select-width">
-                      <mat-select formControlName="tipo">
-                        <mat-option>wer</mat-option>
-                        <mat-option *ngFor="let selectTipoAportante of selectTiposAportante" [value]="selectTipoAportante.value">
-                          {{ selectTipoAportante.name }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
+                  <div class="col-md-8">
+                    <div class="row">
+                      <div class="pr-1">
+                        <label class="label-left">Tipo de aportante</label>
+                      </div>
+                      <div class="col">
+                        <mat-form-field class="select-width">
+                          <mat-select formControlName="tipo">
+                            <mat-option>Seleccione</mat-option>
+                            <mat-option *ngFor="let selectTipoAportante of selectTiposAportante"
+                              [value]="selectTipoAportante.codigo">
+                              {{ selectTipoAportante.nombre }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-3 pr-0">
+                  <div class="pr-1">
                     <label class="label-left">Nombre de Aportante</label>
                   </div>
-                  <div class="col-md-9">
+                  <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="nombre">
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.value">
-                          {{ nombreAportante.name }}
+                        <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.codigo">
+                          {{ nombreAportante.nombre }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-3 pr-0">
-                    <label class="label-left">¿Cuántos documentos de apropiación tiene este aportante?</label>
+                  <div class="col-md-8">
+                    <div class="row">
+                      <div class="pr-1">
+                        <label class="label-left">¿Cuántos documentos de apropiación tiene este aportante?</label>
+                      </div>
+                      <div class="col d-flex">
+                        <mat-form-field class="full-width">
+                          <input matInput #cauntosDocumentos maxlength="2" min="1" max="99" required type="number"
+                            formControlName="cauntosDocumentos">
+                        </mat-form-field>
+                        <span class="contador">{{2 - cauntosDocumentos.value.length}}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-md-4 d-flex align-items-center">
-                    <mat-form-field class="full-width">
-                      <input matInput #cauntosDocumentos maxlength="2" min="1" max="99" required type="number" formControlName="cauntosDocumentos">
-                    </mat-form-field>
-                    <span class="contador">{{2 - cauntosDocumentos.value.length}}</span>
+                  <div class="col text-right">
+                    <button *ngIf="datosAportantes.value.aportantes.length > 1" mat-button color="warn" type="button"
+                      class="btn-eliminar" (click)="borrarAportante(aportantes, i)">
+                      <img src="assets/img/icon/menos.svg" alt="Eliminar documento">
+                      Eliminar documento
+                    </button>
                   </div>
                 </div>
               </div>
-           </div>
+            </div>
 
           </div>
         </div>
       </mat-card-content>
     </mat-card>
-    <div class="text-center animatedOpacity" *ngIf="numAportes.value > 0 && numAportes.value < 100">
+    <div class="text-center animatedOpacity"
+      *ngIf="datosAportantes.value.aportantes.length > 0 && numAportes.value < 100">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Regresar">
       </button>
@@ -110,7 +137,162 @@
   </form>
 </div>
 
-<!-- <input type="text" [formControlName]="i" name="prueba"> -->
-{{ addressForm.value | json}}
+<pre class="container">
+  {{ datosAportantes.value | json}}
+  {{ datosAportantes.state | json }}
+</pre>
 
-<app-form-documento-de-apropiacion></app-form-documento-de-apropiacion>
+<div *ngIf="mostrarDocumentosDeApropiacion">
+  <div class="container text-center">
+    <h2 class="title-menu--h2">
+      Valor total del acuerdo: {{valorTotalAcuerdo | currency:'':'symbol':'3.0'}}
+    </h2>
+    <p>
+      <span class="info-text sin-diligenciar">Sin diligenciar</span>
+      <span class="info-text en-proceso">En proceso</span>
+      <span class="info-text completo">Completo</span>
+    </p>
+  </div>
+  <div class="container">
+    <form [formGroup]="documentoApropiacion" novalidate (ngSubmit)="onSubmitDocumentosAportantes()">
+      <mat-accordion>
+        <mat-expansion-panel class="form-apropiacion" *ngFor="let aportante of aportantes.controls; let i = index">
+          <mat-expansion-panel-header class="form-apropiacion--header">
+            <mat-panel-title class="form-apropiacion--title">
+              Documentos de apropiación aportante {{ i + 1}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-card [formGroupName]="i" class="shipping-card">
+            <mat-card-header>
+              <mat-card-title class="header-card--text">
+                Documento 1
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Vigencia del aporte</label>
+                    </div>
+                    <div class="col">
+                      <mat-form-field class="select-width">
+                        <mat-select formControlName="vigenciaAportante" required>
+                          <mat-option></mat-option>
+                          <mat-option *ngFor="let vigenciaAportante of vigenciasAportante" [value]="vigenciaAportante">
+                            {{ vigenciaAportante }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Valor indicado en el documento</label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="full-width">
+                        <input matInput #valorIndicadoEnElDocumento maxlength="20" min="1" required type="number"
+                          formControlName="valorIndicadoEnElDocumento">
+                      </mat-form-field>
+                      <span class="contador">{{20 - valorIndicadoEnElDocumento.value.length}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Tipo de documento</label>
+                    </div>
+                    <div class="col">
+                      <mat-form-field class="select-width">
+                        <mat-select formControlName="tipoDocumento" required>
+                          <mat-option></mat-option>
+                          <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.value">
+                            {{ tipoDocumento.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Número de documento</label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="full-width">
+                        <input matInput #numeroDocumento maxlength="10" min="1000000000" required type="number"
+                          formControlName="numeroDocumento">
+                      </mat-form-field>
+                      <span class="contador">{{10 - numeroDocumento.value.length}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Fecha del documento</label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="example-full-width">
+                        <input matInput [matDatepicker]="picker" formControlName="fechaDocumento" [max]="maxDate">
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col text-right">
+                  <button mat-button color="warn" type="button" class="btn-eliminar">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar documento">
+                    Eliminar documento
+                  </button>
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+
+          <div class="text-center">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+              <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+          </div>
+
+        </mat-expansion-panel>
+
+        <!-- <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Documentos de apropiación aportante 2
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <p>El segundo formulario</p>
+          
+        </mat-expansion-panel> -->
+      </mat-accordion>
+    </form>
+  </div>
+</div>
+
+<!-- <pre class="container">
+  {{ documentoApropiacion.value | json}}
+</pre> -->
