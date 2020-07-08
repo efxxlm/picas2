@@ -3,27 +3,21 @@ import { CommonModule } from '@angular/common';
 
 import { CrearProyectoTecnicoRoutingModule } from './crear-proyecto-tecnico-routing.module';
 import { CrearProyectoTenicoComponent } from './components/crear-proyecto-tenico/crear-proyecto-tenico.component';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatCardModule } from '@angular/material/card';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FormularioProyectosComponent } from './components/formulario-proyectos/formulario-proyectos.component';
+import { TablaProyectosTecnicoComponent } from './components/tabla-proyectos-tecnico/tabla-proyectos-tecnico.component';
+import { MaterialModule } from 'src/app/material/material.module';
 
 
 
 @NgModule({
-  declarations: [CrearProyectoTenicoComponent, FormularioProyectosComponent],
+  declarations: [CrearProyectoTenicoComponent, FormularioProyectosComponent, TablaProyectosTecnicoComponent],
   imports: [
     CommonModule,
     CrearProyectoTecnicoRoutingModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatCardModule,
-    ReactiveFormsModule
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule    
   ]
 })
 export class CrearProyectoTecnicoModule { }

@@ -10,7 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [CrearProyectoAdminComponent, TablaProyectosAdminComponent, FormularioProyectosComponent, TablaProyectosAdminComponent],
+  declarations: [CrearProyectoAdminComponent, TablaProyectosAdminComponent, FormularioProyectosComponent],
   imports: [
     CommonModule,
     CrearProyectoAdminRoutingModule,
