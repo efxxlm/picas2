@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Respuesta } from '../autenticacion/autenticacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class CofinanciacionService {
 
   CrearOModificarAcuerdoCofinanciacion(cofinanciacion: Cofinanciacion)
   {
-    return this.http.post(`${environment.apiUrl}/Cofinancing/CreateorUpdateCofinancing`,cofinanciacion);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/CreateorUpdateCofinancing`,cofinanciacion);
   }
 }
 
