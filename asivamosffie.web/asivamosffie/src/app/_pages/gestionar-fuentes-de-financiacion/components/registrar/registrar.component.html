@@ -255,6 +255,14 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-md-4 text-right">
+                  <button mat-button color="warn" type="button" class="btn-eliminar"
+                    *ngIf="addressForm.value.cuentasBancaria.length > 1"
+                    (click)="borrarArray(cuentasBancaria, i)">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                    Eliminar vigencia
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -262,7 +270,7 @@
       </mat-card-content>
     </mat-card>
     <div class="text-right">
-      <button mat-button color="warn" type="button" class="btn-eliminar">
+      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarCuentaBancaria()">
         <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria">
         Agregar otra cuenta bancaria
       </button>

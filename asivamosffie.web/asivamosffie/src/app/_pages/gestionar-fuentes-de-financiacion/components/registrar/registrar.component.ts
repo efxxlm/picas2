@@ -55,7 +55,7 @@ export class RegistrarComponent {
     const FormNumvigencias = this.addressForm.value;
     if (FormNumvigencias.cuantasVigencias > this.vigencias.length && FormNumvigencias.cuantasVigencias < 100) {
       while (this.vigencias.length < FormNumvigencias.cuantasVigencias) {
-        this.vigencias.push(this.createvigencia());
+        this.vigencias.push(this.createVigencia());
       }
     } else if (FormNumvigencias.cuantasVigencias <= this.vigencias.length && FormNumvigencias.cuantasVigencias >= 0) {
       while (this.vigencias.length > FormNumvigencias.cuantasVigencias) {
@@ -64,7 +64,28 @@ export class RegistrarComponent {
     }
   }
 
-  createvigencia(): FormGroup {
+  agregarCuentaBancaria() {
+    this.cuentasBancaria.push(this.createCuentaBancaria());
+  }
+
+  createCuentaBancaria(): FormGroup {
+    return this.fb.group({
+      numeroCuenta: [null, Validators.compose([
+        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+      ],
+      nombreCuenta: [null, Validators.compose([
+        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      ],
+      codigoSIFI: [null, Validators.compose([
+        Validators.required, Validators.minLength(6), Validators.maxLength(6)])
+      ],
+      tipoCuenta: ['free', Validators.required],
+      banco: [null, Validators.required],
+      extra: ['free', Validators.required]
+      });
+  }
+
+  createVigencia(): FormGroup {
     return this.fb.group({
       vigenciaAportante: [null, Validators.required],
       valorVigencia: [null, Validators.compose([
