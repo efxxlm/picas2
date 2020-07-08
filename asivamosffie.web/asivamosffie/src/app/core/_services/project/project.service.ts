@@ -64,37 +64,39 @@ export interface Listados{
   valor:string
 }
 
-export class Proyecto{
-  ProyectoId:number;
-  FechaSesionJunta?: Date;
-  NumeroActaJunta:number;
-  TipoIntervencionCodigo:string;
-  LlaveMen:string;
-  LocalizacionIdMunicipio:string;
-  InstitucionEducativaId:number;
-  SedeId:number;
-  EnConvocatoria:boolean;
-  ConvocatoriaId?:number;
-  CantPrediosPostulados:string;
-  TipoPredioCodigo:string;
-  PredioPrincipalId:number;
-  ValorObra:number;
-  ValorInterventoria:number;
-  ValorTotal:number;
-  EstadoProyectoCodigo:string;
-  Eliminado?:boolean;
-  FechaCreacion: Date;
-  UsuarioCreacion:string;
-  FechaModificacion?: Date;
-  UsuarioModificacion:string;
+export interface Proyecto{
+  ProyectoId:number,
+  FechaSesionJunta?: Date,
+  NumeroActaJunta:number,
+  TipoIntervencionCodigo:string,
+  LlaveMen:string,
+  LocalizacionIdMunicipio:string,
+  InstitucionEducativaId:number,
+  SedeId:number,
+  EnConvocatoria:boolean,
+  ConvocatoriaId?:number,
+  CantPrediosPostulados:number,
+  TipoPredioCodigo:string,
+  PredioPrincipalId:number,
+  ValorObra:number,
+  ValorInterventoria:number,
+  ValorTotal:number,
+  EstadoProyectoCodigo:string,
+  Eliminado?:boolean,
+  FechaCreacion: Date,
+  UsuarioCreacion:string,
+  FechaModificacion?: Date,
+  UsuarioModificacion:string,
+  //no modelado
+  cantidadAportantes:number;
 
-  InstitucionEducativaSede:InstitucionEducativa;
-  LocalizacionIdMunicipioNavigation: Localizacion;
-  Predio: PredioPrincipal;
-  Sede:InstitucionEducativa;
-  InfraestructuraIntervenirProyecto:InfraestructuraIntervenirProyecto[];
-  ProyectoAportante:ProyectoAportante[];
-  ProyectoPredio:ProyectoPredio[];
+  InstitucionEducativaSede:InstitucionEducativa,
+  LocalizacionIdMunicipioNavigation: Localizacion,
+  PredioPrincipal: Predio,
+  Sede:InstitucionEducativa,
+  InfraestructuraIntervenirProyecto:InfraestructuraIntervenirProyecto[],
+  ProyectoAportante:ProyectoAportante[],
+  ProyectoPredio:ProyectoPredio[],
   
 }
 
@@ -116,7 +118,7 @@ export interface Localizacion{
   Nivel?:string ,
   Tipo :string,
 }
-export interface PredioPrincipal{  
+export interface Predio{  
   PredioId :number,
   InstitucionEducativaSedeId:number ,
   TipoPredioCodigo:string ,
@@ -165,4 +167,5 @@ export interface ProyectoPredio{
   Activo?:boolean ,
   FechaCreacion?:Date ,
   UsuarioCreacion:string ,
+  Predio:Predio
 }
