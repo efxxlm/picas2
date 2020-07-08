@@ -15,6 +15,11 @@ export class HomeComponent implements OnInit {
   data: any[];
   optionsMenu = [
     {
+      title: 'Gestionar acuerdo de cofinanciación',
+      link: '/gestionarAcueros'
+    },
+    
+    {
       title: 'Crear proyecto',
       link: '/#'
     },
