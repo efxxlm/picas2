@@ -156,6 +156,34 @@ namespace asivamosffie.services
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(idPadre)).FirstOrDefaultAsync();
         }
 
+        public async Task<List<Localicacion>> ListDepartamentoByRegionId(string pIdRegion)
+        {
+            if (!string.IsNullOrEmpty(pIdRegion) && !pIdRegion.Contains(pIdRegion))
+            {
+                return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdRegion)).Select(x => new Localicacion
+                {
+                    LocalizacionId = x.LocalizacionId,
+                    Descripcion = x.Descripcion
+                }).ToListAsync();
+            }
+            else
+            {
+                return await _context.Localizacion.Where(r => r.Nivel == 1).Select(x => new Localicacion
+                {
+                    LocalizacionId = x.LocalizacionId,
+                    Descripcion = x.Descripcion
+                }).ToListAsync();
+            }
+        }
+
+        public async Task<List<Localicacion>> ListRegion()
+        {
+            return await _context.Localizacion.Where(r => r.Nivel == 3).Select(x => new Localicacion
+            {
+                LocalizacionId = x.LocalizacionId,
+                Descripcion = x.Descripcion
+            }).ToListAsync();
+        }
 
 
         public async Task<Dominio> GetDominioByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId)

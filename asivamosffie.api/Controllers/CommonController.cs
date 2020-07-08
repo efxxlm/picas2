@@ -56,11 +56,30 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
-        public async Task<ActionResult<List<Localicacion>>> GetListDepartamento(string idDepartamento)
+        public async Task<ActionResult<List<Localicacion>>> GetListMunicipio(string idDepartamento)
         {
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
+
+        [HttpGet]
+        [Route("ListDepartamentoByRegionId")]
+        public async Task<ActionResult<List<Localicacion>>> ListDepartamentoByRegionId(string idRegion)
+        {
+            var result = await common.ListDepartamentoByRegionId(idRegion);
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("ListRegion")]
+        public async Task<ActionResult<List<Localicacion>>> ListRegion(string idDepartamento)
+        {
+            var result = await common.ListRegion();
+            return result;
+        }
+
+
 
 
         [HttpGet]

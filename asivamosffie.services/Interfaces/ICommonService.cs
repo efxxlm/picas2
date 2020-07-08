@@ -43,6 +43,12 @@ namespace asivamosffie.services.Interfaces
 
         Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio);
 
+        Task<List<Localicacion>> ListDepartamentoByRegionId(string idRegion);
+
+        Task<List<Localicacion>> ListRegion();
+
         Task<Dominio> GetDominioByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId);
+
+
     }
 }

@@ -97,9 +97,7 @@ namespace asivamosffie.services
 
             Respuesta respuesta = new Respuesta();
             ValidationFilter validationFilter = new ValidationFilter();
-            validationFilter.OnActionExecutionAsync(proyecto);
 
-            //respuesta.Message =
             return respuesta;
         }
 
