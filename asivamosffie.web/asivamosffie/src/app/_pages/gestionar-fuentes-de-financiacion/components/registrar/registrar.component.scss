@@ -26,7 +26,12 @@
   margin-right: 0;
 }
 
+.radioInput>* {
+  display: inline-block;
+  margin: 5px 1em;
+}
 
+.btn-eliminar,
 .btn-guardar {
   margin-bottom: 1em;
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-registrar',
@@ -8,86 +8,78 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class RegistrarComponent {
   addressForm = this.fb.group({
-    company: null,
-    firstName: [null, Validators.required],
-    lastName: [null, Validators.required],
-    address: [null, Validators.required],
-    address2: null,
-    city: [null, Validators.required],
-    state: [null, Validators.required],
-    postalCode: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(5)])
+    nombreAportante: [null, Validators.required],
+    documentoApropiacion: [null, Validators.required],
+    numerodocumento: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
     ],
-    shipping: ['free', Validators.required]
+    fuenteRecursos: [null, Validators.required],
+    valorFuenteRecursos: [null, Validators.compose([
+      Validators.required, Validators.minLength(2), Validators.maxLength(2)])
+    ],
+    cuantasVigencias: [null, Validators.required],
+    vigencias: this.fb.array([]),
+    cuentasBancaria: this.fb.array([
+      this.fb.group({
+        numeroCuenta: [null, Validators.compose([
+          Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+        ],
+        nombreCuenta: [null, Validators.compose([
+          Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        ],
+        codigoSIFI: [null, Validators.compose([
+          Validators.required, Validators.minLength(6), Validators.maxLength(6)])
+        ],
+        tipoCuenta: ['free', Validators.required],
+        banco: [null, Validators.required],
+        extra: ['free', Validators.required]
+        })
+    ]),
   });
 
-  hasUnitNumber = false;
+  nombresAportantes = [ {name: 'FFIE', value: '1'}, {name: 'FFIE', value: '2'}, {name: 'FFIE', value: '3'}, {name: 'FFIE', value: '4'} ];
+  fuentesDeRecursos = [ {name: 'Recursos propios', value: '1'}, {name: 'Recursos propios', value: '2'}, {name: 'Recursos propios', value: '3'}, {name: 'Recursos propios', value: '4'} ];
+  bancos = [ {name: 'banco 1', value: '1'}, {name: 'banco 2', value: '2'}, {name: 'banco 3', value: '3'}, {name: 'banco 4', value: '4'} ];
+  VigenciasAporte = [ 2015, 2016, 2017, 2019, 2020, 2021, 2022 ];
 
-  states = [
-    {name: 'Alabama', abbreviation: 'AL'},
-    {name: 'Alaska', abbreviation: 'AK'},
-    {name: 'American Samoa', abbreviation: 'AS'},
-    {name: 'Arizona', abbreviation: 'AZ'},
-    {name: 'Arkansas', abbreviation: 'AR'},
-    {name: 'California', abbreviation: 'CA'},
-    {name: 'Colorado', abbreviation: 'CO'},
-    {name: 'Connecticut', abbreviation: 'CT'},
-    {name: 'Delaware', abbreviation: 'DE'},
-    {name: 'District Of Columbia', abbreviation: 'DC'},
-    {name: 'Federated States Of Micronesia', abbreviation: 'FM'},
-    {name: 'Florida', abbreviation: 'FL'},
-    {name: 'Georgia', abbreviation: 'GA'},
-    {name: 'Guam', abbreviation: 'GU'},
-    {name: 'Hawaii', abbreviation: 'HI'},
-    {name: 'Idaho', abbreviation: 'ID'},
-    {name: 'Illinois', abbreviation: 'IL'},
-    {name: 'Indiana', abbreviation: 'IN'},
-    {name: 'Iowa', abbreviation: 'IA'},
-    {name: 'Kansas', abbreviation: 'KS'},
-    {name: 'Kentucky', abbreviation: 'KY'},
-    {name: 'Louisiana', abbreviation: 'LA'},
-    {name: 'Maine', abbreviation: 'ME'},
-    {name: 'Marshall Islands', abbreviation: 'MH'},
-    {name: 'Maryland', abbreviation: 'MD'},
-    {name: 'Massachusetts', abbreviation: 'MA'},
-    {name: 'Michigan', abbreviation: 'MI'},
-    {name: 'Minnesota', abbreviation: 'MN'},
-    {name: 'Mississippi', abbreviation: 'MS'},
-    {name: 'Missouri', abbreviation: 'MO'},
-    {name: 'Montana', abbreviation: 'MT'},
-    {name: 'Nebraska', abbreviation: 'NE'},
-    {name: 'Nevada', abbreviation: 'NV'},
-    {name: 'New Hampshire', abbreviation: 'NH'},
-    {name: 'New Jersey', abbreviation: 'NJ'},
-    {name: 'New Mexico', abbreviation: 'NM'},
-    {name: 'New York', abbreviation: 'NY'},
-    {name: 'North Carolina', abbreviation: 'NC'},
-    {name: 'North Dakota', abbreviation: 'ND'},
-    {name: 'Northern Mariana Islands', abbreviation: 'MP'},
-    {name: 'Ohio', abbreviation: 'OH'},
-    {name: 'Oklahoma', abbreviation: 'OK'},
-    {name: 'Oregon', abbreviation: 'OR'},
-    {name: 'Palau', abbreviation: 'PW'},
-    {name: 'Pennsylvania', abbreviation: 'PA'},
-    {name: 'Puerto Rico', abbreviation: 'PR'},
-    {name: 'Rhode Island', abbreviation: 'RI'},
-    {name: 'South Carolina', abbreviation: 'SC'},
-    {name: 'South Dakota', abbreviation: 'SD'},
-    {name: 'Tennessee', abbreviation: 'TN'},
-    {name: 'Texas', abbreviation: 'TX'},
-    {name: 'Utah', abbreviation: 'UT'},
-    {name: 'Vermont', abbreviation: 'VT'},
-    {name: 'Virgin Islands', abbreviation: 'VI'},
-    {name: 'Virginia', abbreviation: 'VA'},
-    {name: 'Washington', abbreviation: 'WA'},
-    {name: 'West Virginia', abbreviation: 'WV'},
-    {name: 'Wisconsin', abbreviation: 'WI'},
-    {name: 'Wyoming', abbreviation: 'WY'}
-  ];
+  constructor(private fb: FormBuilder) { }
 
-  constructor(private fb: FormBuilder) {}
+  get vigencias() {
+    return this.addressForm.get('vigencias') as FormArray;
+  }
+  get cuentasBancaria() {
+    return this.addressForm.get('cuentasBancaria') as FormArray;
+  }
+
+  CambioNumerovigencia() {
+    const FormNumvigencias = this.addressForm.value;
+    if (FormNumvigencias.cuantasVigencias > this.vigencias.length && FormNumvigencias.cuantasVigencias < 100) {
+      while (this.vigencias.length < FormNumvigencias.cuantasVigencias) {
+        this.vigencias.push(this.createvigencia());
+      }
+    } else if (FormNumvigencias.cuantasVigencias <= this.vigencias.length && FormNumvigencias.cuantasVigencias >= 0) {
+      while (this.vigencias.length > FormNumvigencias.cuantasVigencias) {
+        this.borrarArray(this.vigencias, this.vigencias.length - 1);
+      }
+    }
+  }
+
+  createvigencia(): FormGroup {
+    return this.fb.group({
+      vigenciaAportante: [null, Validators.required],
+      valorVigencia: [null, Validators.compose([
+        Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+      ]
+      });
+  }
+
+  borrarArray(borrarForm: any, i: number) {
+    borrarForm.removeAt(i);
+  }
 
   onSubmit() {
-    alert('Thanks!');
+    if (this.addressForm.valid) {
+      alert('Thanks!');
+    }
   }
 }
