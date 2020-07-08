@@ -70,7 +70,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetControlGrid")]
+        [HttpGet]
+        public async Task<DocumentoApropiacion> GetDocument()
+        {
+            try
+            {
+                return await _contributor.GetDocument();
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         [HttpPost]

@@ -60,8 +60,9 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CamposIncompletos = "101";
         public const string EditadoCorrrectamente = "102";
         public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
 
-
+        
 
         #endregion Mensajes Informativos
 
@@ -76,7 +77,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string DirecCambioContrasena = "301";
 
         #endregion Mensajes Redireccion
-
+        
     }
 
     public class ConstantMessagesContributor

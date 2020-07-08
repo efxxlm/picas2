@@ -11,7 +11,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Nombre_Aportante_Aportante = 4,
 
-		Infraestructura_a_intervenir = 5,
+		//Antes llamado Infraestructura a intervenir
+		Espacios_Intervenir = 5,
 
 		Coordinaciones = 6,
 
@@ -24,7 +25,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Presupuesto_Proceso_de_Selección = 10,
 
 		Perfil = 11,
- 
+
 		Componentes = 12,
 
 		Usos = 13,
@@ -33,7 +34,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Documento_Acreditacion = 15,
 
-		Fases = 16
+		Fases = 16,
+
+		Tipo_de_Predios = 19,
+
+		Origen_Documento_Cargue = 20,
+		Acciones = 17
 
 
 	}

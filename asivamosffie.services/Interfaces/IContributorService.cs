@@ -14,7 +14,7 @@ namespace asivamosffie.services.Interfaces
         Task<Aportante> GetContributorById(int id);
         Task<Respuesta> GetControlGrid(int ContributorId);
         Task<Respuesta> Insert(Aportante aportante);
-
+        Task<DocumentoApropiacion> GetDocument();
         Task<bool> Update(Respuesta aportante);
 
         Task<bool> Delete(int id);
