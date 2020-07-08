@@ -5,11 +5,11 @@ import { CrearProyectoTenicoComponent } from './components/crear-proyecto-tenico
 
 
 const routes: Routes = [{
-  path: '',
+  path: 'crearProyecto',
   component: FormularioProyectosComponent
 },
 {
-  path: 'crearProyectoAdministrativo',
+  path: '',
   component: CrearProyectoTenicoComponent
 }];
 
