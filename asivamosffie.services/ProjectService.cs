@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using System.Globalization;
 using asivamosffie.services.Validators;
+using asivamosffie.services.Filters;
 namespace asivamosffie.services
 {
     public class ProjectService : IProjectService
@@ -36,14 +37,69 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Respuesta> createOrEditProyect(Proyecto proyecto) {
+        public async Task<Respuesta> ListProyectos(string pUsuarioConsulto)
+        { 
+            Respuesta respuesta = new Respuesta(); 
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Listar_Proyectos, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r=> r.ProyectoPredio).Distinct().ToListAsync();
+                List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
+
+                foreach (var proyecto in ListProyectos)
+                {
+                    Localizacion municipio    = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
+                    Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                    Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo , (int)EnumeratorTipoDominio.Estado_Registro);
+                    // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+
+                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    {
+                        ProyectoId = proyecto.ProyectoId,
+                        Departamento = departamento.Descripcion,
+                        Municipio = municipio.Descripcion,
+                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
+                        Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
+                        EstadoRegistro = estadoRegistro.Nombre,
+                        EstadoJuridicoPredios = " "
+                    };
+                    ListProyectoGrilla.Add(proyectoGrilla);      
+                }
+
+                return respuesta =
+                   new Respuesta
+                   {
+                       Data = ListProyectoGrilla,
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = true,
+                       Code = ConstantMessagesProyecto.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto,ConstantMessagesProyecto.OperacionExitosa,idAccion,pUsuarioConsulto, "")
+                   };
+            }
+            catch (Exception ex)
+            { return respuesta =
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = false,
+                       IsValidation = true,
+                       Code = ConstantMessagesProyecto.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccion, pUsuarioConsulto, ex.InnerException.ToString())
+                   };
+            }
+           
+
+        }
+
+        public async Task<Respuesta> CreateOrEditProyect(Proyecto proyecto) {
 
             Respuesta respuesta = new Respuesta();
+            ValidationFilter validationFilter = new ValidationFilter();
+            validationFilter.OnActionExecutionAsync(proyecto);
 
-             
-
-
-
+            //respuesta.Message =
             return respuesta;
         }
 

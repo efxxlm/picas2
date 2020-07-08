@@ -38,5 +38,11 @@ namespace asivamosffie.services.Interfaces
         Task<int> getSedeInstitucionEducativaIdByNameAndInstitucionPadre(string pNombre, int pIdPadre);
 
         Task<int> getInstitucionEducativaIdByCodigoDane(int pCodigoDane);
+
+        Task<Localizacion> GetLocalizacionByLocalizacionId(string pLocalizacionId);
+
+        Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio);
+
+        Task<Dominio> GetDominioByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId);
     }
 }
