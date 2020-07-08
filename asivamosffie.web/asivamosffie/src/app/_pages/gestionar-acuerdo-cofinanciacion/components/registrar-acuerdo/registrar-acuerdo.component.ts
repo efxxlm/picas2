@@ -1,25 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
-import { CofinanciacionService, CofinanciacionAportante } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
+import { CofinanciacionService, CofinanciacionAportante, Cofinanciacion, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
+import { Dominio, CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
+import { ClassGetter } from '@angular/compiler/src/output/output_ast';
+import { Console } from 'console';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-registrar-acuerdo',
   templateUrl: './registrar-acuerdo.component.html',
   styleUrls: ['./registrar-acuerdo.component.scss']
 })
-export class RegistrarAcuerdoComponent {
+export class RegistrarAcuerdoComponent implements OnInit {
 
   mostrarDocumentosDeApropiacion = true;
   maxDate: Date;
+  vigenciaEstados: number[];
+  vigenciasAportante: number[];
+  tiposDocumento: Dominio[]; 
+  selectTiposAportante: Dominio[];
+  nombresAportante: Dominio[];
+  valorTotalAcuerdo = 85000000;
 
   constructor(private fb: FormBuilder,
-              private cofinanciacionService: CofinanciacionService) {
+              private cofinanciacionService: CofinanciacionService,
+              private commonService: CommonService,
+              public dialog: MatDialog,) {
     this.maxDate = new Date();
 
     this.datosAportantes.get('numAportes').valueChanges
     .subscribe( () => {
       this.CambioNumeroAportantes();
     });
+  }
+
+  ngOnInit(): void {
+    this.vigenciasAportante = this.cofinanciacionService.vigenciasAcuerdoCofinanciacion();
+    this.vigenciaEstados = this.cofinanciacionService.vigenciasAcuerdoCofinanciacion();
+    
+    this.commonService.listaTipoDocFinanciacion().subscribe( doc => { this.tiposDocumento = doc; });
+    this.commonService.listaTipoAportante().subscribe( apo => {this.selectTiposAportante = apo; });
+    this.commonService.listaNombreAportante().subscribe( nom => {this.nombresAportante = nom; });
+
   }
 
   get aportantes() {
@@ -36,26 +59,10 @@ export class RegistrarAcuerdoComponent {
     aportantes: this.fb.array([])
   });
 
-  vigenciaEstados = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-  selectTiposAportante = [
-    { name: 'FFIE', value: 1 }, { name: 'ET', value: 2 }, { name: 'Tercero/otro', value: 3 }
-  ];
-  nombresAportante = [
-    { name: 'fundacion 1', value: 1 }, { name: 'fundacion 2', value: 2 }, { name: 'fundacion 3', value: 3 }
-  ];
-
-
   // tabla de los documentos de aportantes
   documentoApropiacion = this.fb.group({
     aportantes: this.fb.array([])
   });
-
-  valorTotalAcuerdo = 85000000;
-
-  vigenciasAportante = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-  tiposDocumento = [
-    { name: 'Resolución 1', value: 1 }, { name: 'Resolución 2', value: 2 }, { name: 'Resolución 3', value: 3 }
-  ];
 
   CambioNumeroAportantes(){
     const FormNumAportantes = this.datosAportantes.value;
@@ -99,11 +106,95 @@ export class RegistrarAcuerdoComponent {
     borrarForm.removeAt(i);
   }
 
+  listaDocumentos( controles: FormArray )
+  {
+    let lista: CofinanciacionDocumento[] = [];
+
+    controles.controls.forEach(doc => {
+      let cofDoc: CofinanciacionDocumento = {};
+      //cofDoc.FechaActa = new Date;
+      cofDoc.FechaAcuerdo = new Date;
+      cofDoc.NumeroActa = '111';
+      //cofDoc.NumeroAcuerdo
+      cofDoc.TipoDocumentoId = 1;
+      cofDoc.ValorDocumento = '110011';
+      cofDoc.ValorTotalAportante = '55444';
+      cofDoc.VigenciaAporteId = 2017;
+
+      lista.push(cofDoc);
+    });
+
+    return lista;
+  }
+
+  listaAportantes()
+  {
+    let lista: CofinanciacionAportante[] = [];
+    this.aportantes.controls.forEach( control => 
+      {
+        let cofiApo: CofinanciacionAportante = {};
+        cofiApo.tipoAportanteId = control.get('tipo').value;
+        cofiApo.nombreAportanteId = control.get('nombre').value;
+
+        //cofiApo.cofinanciacionDocumento = this.listaDocumentos( control )
+                
+        lista.push(cofiApo);
+      });
+
+      return lista;
+  }
+
   onSubmitDatosAportantes() {
     if (this.datosAportantes.valid) {
-      console.log(this.datosAportantes.value);
+
+      let cofinanciacion: Cofinanciacion = 
+      {
+        vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
+      }
+
+      cofinanciacion.cofinanciacionAportante = this.listaAportantes();
+
+      this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe( 
+        respuesta => 
+        {
+          this.verificarRespuesta( respuesta );
+        },
+        err => {
+          let mensaje: string;
+          if (err.error.message){
+            mensaje = err.error.message;
+          }else {
+            mensaje = err.message;
+          }
+          this.openDialog('Error', mensaje);
+       },
+       () => {
+        //console.log('terminó');
+       });
+
       this.mostrarDocumentosDeApropiacion = true;
     }
+  }
+
+  private verificarRespuesta( respuesta: Respuesta )
+  {
+    if (respuesta.isSuccessful) // Response witout errors
+    {
+      this.openDialog('', respuesta.message);
+      if (respuesta.isValidation) // have validations
+      {
+        
+      }
+     }else{
+      this.openDialog('', respuesta.message);
+    }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   }
 
   onSubmitDocumentosAportantes() {

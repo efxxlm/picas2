@@ -50,5 +50,19 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("GetDocument")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int ContributorId)
+        {
+            try
+            {
+                return await _Cofinancing.GetDocument(ContributorId);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

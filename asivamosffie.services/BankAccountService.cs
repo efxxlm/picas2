@@ -2,10 +2,13 @@
 using asivamosffie.model.Models;
 using asivamosffie.services.Exceptions;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +26,7 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<List<CuentaBancaria>> GetBankAccount()
+        public async Task<ActionResult<List<CuentaBancaria>>> GetBankAccount()
         {
             return await _context.CuentaBancaria.ToListAsync();
         }
@@ -34,27 +37,46 @@ namespace asivamosffie.services
         }
         public async Task<Respuesta> Insert(CuentaBancaria cuentaBancaria)
         {
-            Respuesta respuesta = new Respuesta();
+            Respuesta _reponse = new Respuesta();
+            int IdAccionCrearCuentaBancaria = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.CrearCuentaBancaria)).Select(x => x.DominioId).First();
             try
             {
                 if (cuentaBancaria != null)
                 {
                     _context.Add(cuentaBancaria);
                     await _context.SaveChangesAsync();
-                    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = cuentaBancaria, Code = ConstantMessagesContributor.OperacionExitosa };
+                    //respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = cuentaBancaria, Code = ConstantMessagesContributor.OperacionExitosa };
+
+                    return _reponse = new Respuesta
+                    {
+                        IsSuccessful = true, IsValidation = false,
+                        Data = cuentaBancaria,  Code = ConstantMessagesContributor.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion.ToString(), ConstantMessagesContributor.OperacionExitosa)
+                    };
                 }
                 else
                 {
-                    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContributor.CamposIncompletos };
+                    //respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContributor.CamposIncompletos };
+                    return _reponse = new Respuesta
+                    {
+                        IsSuccessful = false,  IsValidation = false,
+                        Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.RecursoNoEncontrado, IdAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion.ToString(), ConstantMessagesContributor.RecursoNoEncontrado)
+                    };
                 }
 
             }
             catch (Exception ex)
             {
-                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+                return _reponse = new Respuesta
+                {
+                    IsSuccessful = false, IsValidation = false,
+                    Data = null, Code = ConstantMessagesContributor.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
+
+                };
             }
 
-            return respuesta;
         }
 
         public Task<bool> Update(CuentaBancaria cuentaBancaria)

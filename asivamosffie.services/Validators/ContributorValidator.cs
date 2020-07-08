@@ -1,4 +1,5 @@
-﻿using asivamosffie.model.Models;
+﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,9 @@ namespace asivamosffie.services.Validators
     {
         public ContributorValidator()
         {
-            RuleFor(x => x.TipoAportanteCodigo).NotEmpty().WithMessage("101");
+          
+
+            RuleFor(x => x.TipoAportanteCodigo).NotEmpty().WithMessage("uno dos");
             RuleFor(x => x.CantidadDocumentos).NotEmpty().WithMessage("101");
             RuleFor(x => x.ValorTotal).NotEmpty().WithMessage("101");
             RuleFor(x => x.AcuerdoCofinanciacionId).NotEmpty().WithMessage("101");

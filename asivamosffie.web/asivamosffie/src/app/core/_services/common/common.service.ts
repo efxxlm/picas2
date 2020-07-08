@@ -48,3 +48,13 @@ export interface Localizacion{
   localizacionId: string,
   descripcion: string
 }
+
+export interface Respuesta{
+  isSuccessful: boolean;
+  isValidation: boolean;
+  isException: boolean;
+  code: string;
+  message: string;
+  data?: any;
+  token?: any;
+}

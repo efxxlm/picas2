@@ -11,6 +11,7 @@ using AuthorizationTest.JwtHelpers;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace asivamosffie.services
 {
@@ -89,7 +90,7 @@ namespace asivamosffie.services
             }
 
             respuesta.IsSuccessful = IsSuccessful;
-            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.CrearActualizarCofinanciacion, cofinanciacion.UsuarioCreacion, " ");
+            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, respuesta.Code, (int)enumeratorAccion.CrearActualizarCofinanciacion, cofinanciacion.UsuarioCreacion, " ");
             return respuesta;
         }
 
@@ -181,6 +182,22 @@ namespace asivamosffie.services
             }
 
             return cofinanciacion;
+        }
+
+        //GetDocument?cofinancionAportanteId
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int id)
+        {
+
+            try
+            {
+                //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
+                return await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == id).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

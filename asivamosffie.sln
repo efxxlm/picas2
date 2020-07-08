@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "asivamosffie.services", "as
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "asivamosffie.model", "asivamosffie.model\asivamosffie.model.csproj", "{E7FAE897-530D-471C-85EE-1C1625BA48C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asivamosffie.authorization", "asivamosffie.authorization\asivamosffie.authorization.csproj", "{0383B8A9-50F5-42EE-8EDD-12A825507C3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "asivamosffie.authorization", "asivamosffie.authorization\asivamosffie.authorization.csproj", "{0383B8A9-50F5-42EE-8EDD-12A825507C3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

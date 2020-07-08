@@ -23,12 +23,11 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        public async Task<List<CuentaBancaria>> Get()
+        public async Task<ActionResult<List<CuentaBancaria>>> Get()
         {
             try
             {
-                var result = await _bankAccount.GetBankAccount();
-                return result;
+                return await _bankAccount.GetBankAccount();
             }
             catch (Exception ex)
             {
