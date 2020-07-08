@@ -1,29 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using asivamosffie.services;
+using asivamosffie.services.Filters;
+using asivamosffie.services.Interfaces;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 //using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Net.Http.Headers;
-using asivamosffie.services;
-using asivamosffie.services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using asivamosffie.services.Filters;
 using FluentValidation.AspNetCore;
+using System;
+using System.Text;
 
 namespace asivamosffie.api
 {
@@ -39,6 +32,7 @@ namespace asivamosffie.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             ConfigureDependencyInjection(services);
             services.AddCors(options =>
             {
@@ -88,6 +82,7 @@ namespace asivamosffie.api
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 options.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+
             services.AddControllers(options =>
             {
                 options.Filters.Add<GlobalExceptionFilter>();
@@ -98,8 +93,10 @@ namespace asivamosffie.api
             })
            .ConfigureApiBehaviorOptions(options =>
            {
-                //options.SuppressModelStateInvalidFilter = true;
+                options.SuppressModelStateInvalidFilter = true;
             });
+
+           
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -113,12 +110,17 @@ namespace asivamosffie.api
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
           //Agregar Interfaces y clases
+
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IContributorService, ContributorService>();
+            services.AddTransient<ISourceFundingService, SourceFundingService>();
+            services.AddTransient<IBankAccountService, BankAccountService>();
+
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

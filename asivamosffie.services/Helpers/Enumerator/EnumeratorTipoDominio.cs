@@ -25,7 +25,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Presupuesto_Proceso_de_Selección = 10,
 
 		Perfil = 11,
- 
+
 		Componentes = 12,
 
 		Usos = 13,
