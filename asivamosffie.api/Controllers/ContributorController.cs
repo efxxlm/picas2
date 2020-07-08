@@ -24,7 +24,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Aportante>>> Get()
+        public async Task<ActionResult<List<CofinanciacionAportante>>> Get()
         {
             try
             {
@@ -71,11 +71,11 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> post(Aportante aportante)
+        public async Task<IActionResult> post(CofinanciacionAportante CofnaAportante)
         {
             try
             {
-                var result = await _contributor.Insert(aportante);
+                var result = await _contributor.Insert(CofnaAportante);
                 return Ok(result);
             }
             catch (Exception ex)

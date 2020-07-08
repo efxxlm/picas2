@@ -184,13 +184,14 @@ namespace asivamosffie.services
             return cofinanciacion;
         }
 
-        public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
+        //GetDocument?cofinancionAportanteId
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int id)
         {
 
             try
             {
                 //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
-                return await _context.DocumentoApropiacion.Where(x => x.AportanteId == ContributorId).ToListAsync();
+                return await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == id).ToListAsync();
             }
             catch (Exception)
             {

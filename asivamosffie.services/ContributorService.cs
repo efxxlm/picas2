@@ -28,14 +28,14 @@ namespace asivamosffie.services
 
 
 
-        public async Task<ActionResult<List<Aportante>>> GetContributor()
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetContributor()
         {
-            return await _context.Aportante.ToListAsync();
+            return await _context.CofinanciacionAportante.ToListAsync();
         }
 
-        public async Task<Aportante> GetContributorById(int id)
+        public async Task<CofinanciacionAportante> GetContributorById(int id)
         {
-            return await _context.Aportante.FindAsync(id);
+            return await _context.CofinanciacionAportante.FindAsync(id);
 
         }
 
@@ -79,17 +79,17 @@ namespace asivamosffie.services
 
 
         //Registrar Aportante
-        public async Task<Respuesta> Insert(Aportante aportante)
+        public async Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
         {
             Respuesta _reponse = new Respuesta();
             int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
 
             try
             {
-                if (aportante != null)
+                if (CofnaAportante != null)
                 {
                     //var AP = Helpers.Helpers.ConvertToUpercase(aportante);
-                    _context.Add(aportante);
+                    _context.Add(CofnaAportante);
                     await _context.SaveChangesAsync();
 
                    
@@ -97,8 +97,8 @@ namespace asivamosffie.services
                     return _reponse = new Respuesta
                     {
                         IsSuccessful = true, IsValidation = false,
-                        Data = aportante, Code = ConstantMessagesContributor.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, aportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.OperacionExitosa)
+                        Data = CofnaAportante, Code = ConstantMessagesContributor.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.OperacionExitosa)
                     };
                 }
                 else
@@ -108,7 +108,7 @@ namespace asivamosffie.services
                     {
                         IsSuccessful = false,IsValidation = false,
                         Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, aportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.RecursoNoEncontrado)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.RecursoNoEncontrado)
                     };
                 }
 
@@ -119,7 +119,7 @@ namespace asivamosffie.services
                 {
                     IsSuccessful = false, IsValidation = false,
                     Data = null,Code = ConstantMessagesContributor.RecursoNoEncontrado,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCRegistrarAportante, aportante.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
                     
                 };
             }
@@ -175,6 +175,5 @@ namespace asivamosffie.services
         {
             throw new NotImplementedException();
         }
-
     }
 }

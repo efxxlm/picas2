@@ -52,7 +52,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetDocument")]
         [HttpGet]
-        public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int ContributorId)
         {
             try
             {

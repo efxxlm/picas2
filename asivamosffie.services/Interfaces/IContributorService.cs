@@ -10,11 +10,11 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IContributorService
     {
-        Task<ActionResult<List<Aportante>>> GetContributor();
+        Task<ActionResult<List<CofinanciacionAportante>>> GetContributor();
 
-        Task<Aportante> GetContributorById(int id);
+        Task<CofinanciacionAportante> GetContributorById(int id);
         Task<ActionResult<List<Respuesta>>> GetControlGrid(int ContributorId);
-        Task<Respuesta> Insert(Aportante aportante);
+        Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante);
         Task<bool> Update(Respuesta aportante);
 
         Task<bool> Delete(int id);
