@@ -28,6 +28,17 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion) 
+        { 
+            Cofinanciacion cofinanciacion = await _context.Cofinanciacion.Where(r => r.CofinanciacionId == idCofinanciacion).Include(r=> r.CofinanciacionAportante).FirstOrDefaultAsync();
+
+            foreach (var item in cofinanciacion.CofinanciacionAportante)
+            {
+                item.CofinanciacionDocumento = _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
+            }
+            return cofinanciacion;
+        }
+
         public async Task<object> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion)
         {
             Respuesta respuesta = new Respuesta();
