@@ -158,7 +158,7 @@ namespace asivamosffie.services
 
         public async Task<List<Localicacion>> ListDepartamentoByRegionId(string pIdRegion)
         {
-            if (!string.IsNullOrEmpty(pIdRegion) && !pIdRegion.Contains(pIdRegion))
+            if (!string.IsNullOrEmpty(pIdRegion) && !pIdRegion.Contains("7"))
             {
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdRegion)).Select(x => new Localicacion
                 {
