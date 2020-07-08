@@ -24,12 +24,11 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Aportante>> Get()
+        public async Task<ActionResult<List<Aportante>>> Get()
         {
             try
             {
-                var result = await _contributor.GetContributor();
-                return result;
+                return await _contributor.GetContributor();
             }
             catch (Exception ex)
             {
@@ -57,27 +56,12 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetControlGrid")]
         [HttpGet]
-        public async Task<Respuesta> GetControlGrid(int ContributorId)
+        public async Task<ActionResult<List<Respuesta>>> GetControlGrid(int ContributorId)
         {
             try
             {
                return await _contributor.GetControlGrid(ContributorId);
               
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        [Route("GetControlGrid")]
-        [HttpGet]
-        public async Task<DocumentoApropiacion> GetDocument()
-        {
-            try
-            {
-                return await _contributor.GetDocument();
-
             }
             catch (Exception ex)
             {

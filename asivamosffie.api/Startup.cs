@@ -91,7 +91,7 @@ namespace asivamosffie.api
             })
            .ConfigureApiBehaviorOptions(options =>
            {
-                //options.SuppressModelStateInvalidFilter = true;
+                options.SuppressModelStateInvalidFilter = true;
             });
 
            

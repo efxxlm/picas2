@@ -13,5 +13,6 @@
         public const string Listar_Proyectos = "9";
         public const string Listar_Fuentes_Financiacion = "10";
         public const string RegistrarAportante = "11";
+        public const string CrearCuentaBancaria = "12";
     }
 }

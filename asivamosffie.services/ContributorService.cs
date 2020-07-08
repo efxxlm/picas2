@@ -3,6 +3,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace asivamosffie.services
 
 
 
-        public async Task<List<Aportante>> GetContributor()
+        public async Task<ActionResult<List<Aportante>>> GetContributor()
         {
             return await _context.Aportante.ToListAsync();
         }
@@ -39,24 +40,15 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<DocumentoApropiacion> GetDocument()
-        {
-            try
-            {
-              return  await _context.DocumentoApropiacion.FirstAsync();
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
-        }
 
 
         // Grilla de control? { AportanteId }
-        public async Task<Respuesta> GetControlGrid(int ContributorId)
+        public async Task<ActionResult<List<Respuesta>>> GetControlGrid(int ContributorId)
         {
             Respuesta _reponse = new Respuesta();
+            int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
+
             try
             {
                 var result = await _context.Aportante
@@ -71,16 +63,16 @@ namespace asivamosffie.services
 
                 if (result == null)
                 {
-                    return _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
+                    return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
                 }
 
 
-                return _reponse = new Respuesta { IsSuccessful = true, IsValidation = false, Data = result, Code = ConstantMessagesContributor.OperacionExitosa };
+                return null;// _reponse = new Respuesta { IsSuccessful = true, IsValidation = false, Data = result, Code = ConstantMessagesContributor.OperacionExitosa };
 
             }
             catch (Exception ex)
             {
-                return _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+                return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
             }
         }
 
@@ -127,7 +119,7 @@ namespace asivamosffie.services
                 {
                     IsSuccessful = false, IsValidation = false,
                     Data = null,Code = ConstantMessagesContributor.RecursoNoEncontrado,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, aportante.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCRegistrarAportante, aportante.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
                     
                 };
             }

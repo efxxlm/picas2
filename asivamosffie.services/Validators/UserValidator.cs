@@ -11,5 +11,7 @@ namespace asivamosffie.services.Validators
                 .Length(8, 15).WithMessage("Lo sentimos, la nueva contraseña no cumple con los estándares de seguridad.")
                 .NotEmpty().WithMessage("Por favor Especifique la contraseña actual.");
         }
+
+
     }
 }

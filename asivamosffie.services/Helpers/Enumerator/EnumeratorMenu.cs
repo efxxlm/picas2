@@ -8,7 +8,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         CambioContraseña = 6,
         CargueMasivoProyecto = 9,
         Fuentes = 14,
-        Aportantes = 15
+        Aportantes = 15,
+        CuentaBancaria = 16
 
     }
 
