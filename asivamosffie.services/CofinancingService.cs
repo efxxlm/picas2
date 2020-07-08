@@ -88,7 +88,7 @@ namespace asivamosffie.services
                 respuesta = new Respuesta() { IsValidation = false, Code = ConstantMessagesCofinanciacion.CamposIncompletos };
 
             }
-
+            respuesta.Data = cofinanciacion.CofinanciacionId;
             respuesta.IsSuccessful = IsSuccessful;
             respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, respuesta.Code, (int)enumeratorAccion.CrearActualizarCofinanciacion, cofinanciacion.UsuarioCreacion, " ");
             return respuesta;
