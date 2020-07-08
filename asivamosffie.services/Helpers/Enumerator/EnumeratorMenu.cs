@@ -7,7 +7,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Cofinanciacion = 2,
         CambioContraseña = 6,
         CargueMasivoProyecto = 9,
-        Proyecto = 10
+        Proyecto = 10,
         Fuentes = 14,
         Aportantes = 15,
         CuentaBancaria = 16
