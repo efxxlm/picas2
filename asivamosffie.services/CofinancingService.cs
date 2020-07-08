@@ -30,7 +30,7 @@ namespace asivamosffie.services
 
         public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion) 
         { 
-            Cofinanciacion cofinanciacion = await _context.Cofinanciacion.Where(r => r.CofinanciacionId == idCofinanciacion).Include(r=> r.CofinanciacionAportante).FirstOrDefaultAsync();
+            Cofinanciacion cofinanciacion = await _context.Cofinanciacion.Where(r => r.CofinanciacionId == idCofinanciacion && !(bool)r.Eliminado).Include(r=> r.CofinanciacionAportante).FirstOrDefaultAsync();
 
             foreach (var item in cofinanciacion.CofinanciacionAportante)
             {
