@@ -184,19 +184,19 @@ namespace asivamosffie.services
             return cofinanciacion;
         }
 
-        public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
-        {
+        //public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
+        //{
 
-            try
-            {
-                //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
-                return await _context.DocumentoApropiacion.Where(x => x.AportanteId == ContributorId).ToListAsync();
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
+        //        return await _context.DocumentoApropiacion.Where(x => x.AportanteId == ContributorId).ToListAsync();
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
     }
 }

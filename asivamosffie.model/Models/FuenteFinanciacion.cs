@@ -20,7 +20,7 @@ namespace asivamosffie.model.Models
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
 
-        public virtual Aportante Aportante { get; set; }
+        public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
         public virtual ICollection<CuentaBancaria> CuentaBancaria { get; set; }
         public virtual ICollection<VigenciaAporte> VigenciaAporte { get; set; }
