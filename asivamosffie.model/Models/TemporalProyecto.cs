@@ -21,7 +21,7 @@ namespace asivamosffie.model.Models
         public int SedeId { get; set; }
         public int? CodigoDaneSede { get; set; }
         public bool EnConvotatoria { get; set; }
-        public int ConvocatoriaId { get; set; }
+        public int? ConvocatoriaId { get; set; }
         public int CantPrediosPostulados { get; set; }
         public int TipoPredioId { get; set; }
         public string UbicacionPredioPrincipalLatitud { get; set; }

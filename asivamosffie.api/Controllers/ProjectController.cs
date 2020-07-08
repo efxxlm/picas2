@@ -9,7 +9,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
+using asivamosffie.model.APIModels;
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
@@ -76,9 +76,11 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateProyect([FromBody] Proyecto pProyecto)
         {
+            Respuesta respuesta = new Respuesta();
             try
             {
-                Respuesta respuesta = new Respuesta();
+               
+
                 string pUsuarioModifico = " ";
                 //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyecto.UsuarioCreacion = pUsuarioModifico;
@@ -87,7 +89,8 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                respuesta.Data = ex.ToString();
+                return Ok(respuesta);
             }
         }
 
