@@ -23,6 +23,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using asivamosffie.services.Filters;
+using FluentValidation.AspNetCore;
 
 namespace asivamosffie.api
 {
@@ -45,6 +46,13 @@ namespace asivamosffie.api
                 builder => builder.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+            });
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+            }).AddFluentValidation(options =>
+            {
+                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
             services.Configure<FormOptions>(x =>
             {

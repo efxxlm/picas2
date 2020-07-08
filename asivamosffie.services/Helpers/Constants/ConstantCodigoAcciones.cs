@@ -11,5 +11,8 @@
         public const string Cargue_Proyectos_Masivos = "7";
         public const string Descargar_Excel_Proyectos = "8";
         public const string Listar_Proyectos = "9";
+
+        public const string Crear_Proyecto = "11";
+        public const string Editar_Proyecto = "12";
     }
 }

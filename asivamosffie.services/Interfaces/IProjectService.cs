@@ -10,10 +10,14 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IProjectService
     {
+        Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto);
+
+        Task<Respuesta> CreateOrEditProyect(Proyecto pProyecto);
+
         Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument, string pUsuarioModifico);
 
         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
 
-        Task<Respuesta> ListProyectos(string pUsuarioConsulto);
+        
     }
 }

@@ -17,12 +17,12 @@ namespace asivamosffie.api.Controllers
     public class ProjectController : ControllerBase
     {
 
-        private readonly IDocumentService _documentService; 
+        private readonly IDocumentService _documentService;
         private readonly IProjectService _projectService;
         private readonly IOptions<AppSettings> _settings;
 
 
-        public ProjectController(IDocumentService documentService, IOptions<AppSettings> settings , IProjectService projectService)
+        public ProjectController(IDocumentService documentService, IOptions<AppSettings> settings, IProjectService projectService)
         {
             _projectService = projectService;
             _settings = settings;
@@ -79,8 +79,10 @@ namespace asivamosffie.api.Controllers
             try
             {
                 Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = ""; 
-
+                string pUsuarioModifico = " ";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                pProyecto.UsuarioCreacion = pUsuarioModifico;
+                respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -88,24 +90,18 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-         
 
-        [Route("ListProjects")]
+
+        [Route("ListProject")]
         [HttpGet]
-        public async Task<IActionResult> ListProjects()
+        public async Task<List<ProyectoGrilla>> ListProjects()
         {
-            try
-            {
-                Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = "";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _projectService.ListProyectos(pUsuarioModifico); 
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+
+            string pUsuarioModifico = "";
+            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _projectService.ListProyectos(pUsuarioModifico);
+            return respuesta;
+
         }
     }
 }

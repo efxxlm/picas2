@@ -89,5 +89,21 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente , _settings.Value.YearSiguienteEsVigente);
             return result;
         }
+
+        [HttpGet]
+        [Route("ListIntitucionEducativaByMunicipioId")]
+        public async Task<ActionResult<List<InstitucionEducativaSede>>> ListIntitucionEducativaByMunicipioId(string idMunicipio)
+        {
+            var result = await common.ListIntitucionEducativaByMunicipioId(idMunicipio);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("ListSedeByInstitucionEducativaId")]
+        public async Task<ActionResult<List<InstitucionEducativaSede>>> ListSedeByInstitucionEducativaId(int idInstitucionEducativaId)
+        {
+            var result = await common.ListSedeByInstitucionEducativaId(idInstitucionEducativaId);
+            return result;
+        }
     }
 }

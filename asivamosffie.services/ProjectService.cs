@@ -29,7 +29,7 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         private readonly devAsiVamosFFIEContext _context;
-         
+
         public ProjectService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
             _documentService = documentService;
@@ -37,21 +37,19 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Respuesta> ListProyectos(string pUsuarioConsulto)
-        { 
-            Respuesta respuesta = new Respuesta(); 
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Listar_Proyectos, (int)EnumeratorTipoDominio.Acciones);
+        public async Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto)
+        {
+            List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
 
             try
             {
-                List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r=> r.ProyectoPredio).Distinct().ToListAsync();
-                List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
+                List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r => r.ProyectoPredio).Distinct().ToListAsync();
 
                 foreach (var proyecto in ListProyectos)
                 {
-                    Localizacion municipio    = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
+                    Localizacion municipio = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
                     Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo , (int)EnumeratorTipoDominio.Estado_Registro);
+                    Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
                     // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
 
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
@@ -64,41 +62,61 @@ namespace asivamosffie.services
                         EstadoRegistro = estadoRegistro.Nombre,
                         EstadoJuridicoPredios = " "
                     };
-                    ListProyectoGrilla.Add(proyectoGrilla);      
+                    ListProyectoGrilla.Add(proyectoGrilla);
+                }
+
+                return ListProyectoGrilla;
+
+
+            }
+            catch (Exception ex)
+            {
+                return ListProyectoGrilla;
+
+            }
+
+
+        }
+
+        public async Task<Respuesta> CreateOrEditProyect(Proyecto pProyecto)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(pProyecto.ProyectoId.ToString()))
+                {
+                    //El proyecto es nuevo 
+
+                    _context.Proyecto.Add(pProyecto);
+
+
                 }
 
                 return respuesta =
-                   new Respuesta
-                   {
-                       Data = ListProyectoGrilla,
-                       IsSuccessful = true,
-                       IsException = false,
-                       IsValidation = true,
-                       Code = ConstantMessagesProyecto.OperacionExitosa,
-                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto,ConstantMessagesProyecto.OperacionExitosa,idAccion,pUsuarioConsulto, "")
-                   };
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesProyecto.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyecto, pProyecto.UsuarioCreacion, " ")
+                    };
+
             }
             catch (Exception ex)
-            { return respuesta =
+            {
+                return respuesta =
                    new Respuesta
                    {
                        IsSuccessful = false,
                        IsException = false,
                        IsValidation = true,
                        Code = ConstantMessagesProyecto.Error,
-                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccion, pUsuarioConsulto, ex.InnerException.ToString())
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyecto, pProyecto.UsuarioCreacion, ex.InnerException.ToString())
                    };
             }
-           
-
-        }
-
-        public async Task<Respuesta> CreateOrEditProyect(Proyecto proyecto) {
-
-            Respuesta respuesta = new Respuesta();
-            ValidationFilter validationFilter = new ValidationFilter();
-
-            return respuesta;
         }
 
         public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
