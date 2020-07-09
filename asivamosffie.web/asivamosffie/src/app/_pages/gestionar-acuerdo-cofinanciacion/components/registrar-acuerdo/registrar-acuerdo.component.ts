@@ -156,13 +156,14 @@ export class RegistrarAcuerdoComponent implements OnInit {
       this.listaCofinancAportantes=listaCofinancAportant;  
   }
 
-  onSubmitDatosAportantes() {
+  onSubmit() {
+    console.log("entró");
     if (this.datosAportantes.valid) {
 
       let cofinanciacion: Cofinanciacion = 
       {
         vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
-        cofinanciacionAportante:this.listaCofinancAportantes,
+        cofinanciacionAportante: this.listaCofinancAportantes,
         cofinanciacionId:0
       }
 
@@ -220,10 +221,6 @@ export class RegistrarAcuerdoComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });   
-  }
-
-  onSubmitDocumentosAportantes() {
-    console.log(this.listaAportantes);
   }
 
   cantidadDocumentos(data:any,identificador:number)

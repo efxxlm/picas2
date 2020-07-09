@@ -10,7 +10,7 @@
     </h1>
   </div>
 
-  <form [formGroup]="datosAportantes" novalidate (ngSubmit)="onSubmitDatosAportantes()">
+  <form [formGroup]="datosAportantes" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
@@ -214,8 +214,8 @@
                       <mat-form-field class="select-width">
                         <mat-select [(ngModel)]="documento.TipoDocumentoId" required>
                           <mat-option></mat-option>
-                          <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.value">
-                            {{ tipoDocumento.name }}
+                          <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.dominioId">
+                            {{ tipoDocumento.nombre }}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
@@ -275,7 +275,7 @@
       </mat-accordion>
       <div class="text-center">
         <button mat-button color="warn" class="btn-guardar" type="button">
-          <img src="assets/img/icon/guardar.svg" alt="Regresar" (click)="onSubmitDocumentosAportantes()">
+          <img src="assets/img/icon/guardar.svg" alt="Regresar" (click)="onSubmit()">
         </button>
       </div>
     </div>
