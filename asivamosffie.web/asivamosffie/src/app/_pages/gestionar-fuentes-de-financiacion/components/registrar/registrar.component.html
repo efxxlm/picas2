@@ -69,199 +69,204 @@
           Datos de la fuente
         </mat-card-title>
       </mat-card-header>
-      <mat-card-content>
-        <div class="row">
-          <div class="pr-1">
-            <label class="label-left">Fuente de recursos</label>
-          </div>
-          <div class="col">
-            <mat-form-field class="select-width">
-              <mat-select formControlName="fuenteRecursos">
-                <mat-option *ngFor="let fuenteDeRecursos of fuentesDeRecursos" [value]="fuenteDeRecursos.value">
-                  {{ fuenteDeRecursos.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
+      <mat-card-content formGroupName="fuenteRecursosArray">  
+        <div *ngFor="let fuente of fuenteRecursosArray.controls; let j = index">
+          <div [formGroupName]="j">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">Valor aporte fuente de recursos</label>
+                <label class="label-left">Fuente de recursos </label>
               </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #valorAporte type="number" formControlName="valorFuenteRecursos">
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="fuenteRecursos">
+                    <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista" [value]="fuenteDeRecursos1.value">
+                      {{ fuenteDeRecursos1.name }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
-                <span class="contador">{{20 - valorAporte.value.length}}</span>
               </div>
             </div>
-          </div>
-        </div>
-        <h2 class="card-subTitle">Vigencias</h2>
-        <div class="row">
-          <div class="col-md-8">
             <div class="row">
-              <div class="pr-1">
-                <label class="label-left">¿De cuántas vigencias se realizará el aporte?</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #cuantasVigencias type="number" min="1" max="99" formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia()">
-                </mat-form-field>
-                <span class="contador">{{2 - cuantasVigencias.value.length}}</span>
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left">Valor aporte fuente de recursos</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput #valorAporte type="number" formControlName="valorFuenteRecursos">
+                    </mat-form-field>
+                    <span class="contador">{{20 - valorAporte.value.length}}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div formGroupName="vigencias">
-          <div *ngFor="let vigencia of vigencias.controls; let i = index">
-            <div [formGroupName]="i">
-              <mat-card-title class="header-card--text sub-text">
-                Vigencia {{ i + 1}}
-              </mat-card-title>
-              <div class="row">
-                <div class="col-md-8">
+            <h2 class="card-subTitle">Vigencias</h2>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left">¿De cuántas vigencias se realizará el aporte?</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput #cuantasVigencias type="number" min="1" max="99" formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia()">
+                    </mat-form-field>
+                    <span class="contador">{{2 - cuantasVigencias.value.length}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div formGroupName="vigencias">
+              
+              <div *ngFor="let vigencia of vigencias1.controls; let i = index">
+                <div [formGroupName]="i">
+                  <mat-card-title class="header-card--text sub-text">
+                    Vigencia {{ i + 1}}
+                  </mat-card-title>
                   <div class="row">
-                    <div class="pr-1">
-                      <label class="label-left">Vigencia del aporte</label>
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left">Vigencia del aporte</label>
+                        </div>
+                        <div class="col">
+                          <mat-form-field class="select-width">
+                            <mat-select  formControlName="vigenciaAportante">
+                              <mat-option *ngFor="let VigenciaAporte of VigenciasAporte" [value]="VigenciaAporte">
+                                {{ VigenciaAporte }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
                     </div>
-                    <div class="col">
-                      <mat-form-field class="select-width">
-                        <mat-select  formControlName="vigenciaAportante">
-                          <mat-option *ngFor="let VigenciaAporte of VigenciasAporte" [value]="VigenciaAporte">
-                            {{ VigenciaAporte }}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left">Valor aporte de la vigencia</label>
+                        </div>
+                        <div class="col d-flex">
+                          <mat-form-field class="full-width">
+                            <input matInput #valorVigencia type="number" formControlName="valorVigencia">
+                          </mat-form-field>
+                          <span class="contador">{{20 - valorVigencia.value.length}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(vigencias1, i)">
+                        <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                        Eliminar vigencia
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="row">
-                    <div class="pr-1">
-                      <label class="label-left">Valor aporte de la vigencia</label>
-                    </div>
-                    <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                        <input matInput #valorVigencia type="number" formControlName="valorVigencia">
-                      </mat-form-field>
-                      <span class="contador">{{20 - valorVigencia.value.length}}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 text-right">
-                  <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(vigencias, i)">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
-                    Eliminar vigencia
-                  </button>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
 
-        <div formGroupName="cuentasBancaria">
-        <h2 class="card-subTitle">Cuentas bancarias</h2>
-          <div *ngFor="let cuentaBancaria of cuentasBancaria.controls; let i = index">
-            <div [formGroupName]="i">
-              <mat-card-title class="header-card--text sub-text">
-                Cuenta bancaria {{ i + 1 }}
-              </mat-card-title>
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left">Número de cuenta</label>
-                </div>
-                <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input matInput #numeroCuemta type="number" formControlName="numeroCuenta">
-                  </mat-form-field>
-                  <span class="contador">{{50 - numeroCuemta.value.length}}</span>
-                </div>
-              </div>
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left">Nombre de cuenta</label>
-                </div>
-                <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta">
-                  </mat-form-field>
-                  <span class="contador">{{100 - nombreCuenta.value.length}}</span>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
+            <div formGroupName="cuentasBancaria">
+            <h2 class="card-subTitle">Cuentas bancarias</h2>
+              <div *ngFor="let cuentaBancaria of cuentasBancaria.controls; let i = index">
+                <div [formGroupName]="i">
+                  <mat-card-title class="header-card--text sub-text">
+                    Cuenta bancaria {{ i + 1 }}
+                  </mat-card-title>
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Código SIFI</label>
+                      <label class="label-left">Número de cuenta</label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #codigoSIFI type="text" formControlName="codigoSIFI">
+                        <input matInput #numeroCuemta type="number" formControlName="numeroCuenta">
                       </mat-form-field>
-                      <span class="contador">{{6 - codigoSIFI.value.length}}</span>
+                      <span class="contador">{{50 - numeroCuemta.value.length}}</span>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Tipo de cuenta</label>
+                      <label class="label-left">Nombre de cuenta</label>
                     </div>
-                    <div class="col">
-                      <mat-radio-group class="radioInput" formControlName="tipoCuenta">
-                        <mat-radio-button value="ahorros">Ahorros</mat-radio-button>
-                        <mat-radio-button value="corriente">Corriente</mat-radio-button>
-                      </mat-radio-group>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="row">
-                    <div class="pr-1">
-                      <label class="label-left">Banco</label>
-                    </div>
-                    <div class="col">
-                      <mat-form-field class="select-width">
-                        <mat-select formControlName="banco">
-                          <mat-option *ngFor="let banco of bancos" [value]="banco.value">
-                            {{ banco.name }}
-                          </mat-option>
-                        </mat-select>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta">
                       </mat-form-field>
+                      <span class="contador">{{100 - nombreCuenta.value.length}}</span>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
                   <div class="row">
-                    <div class="pr-1">
-                      <label class="label-left">¿Exenta?</label>
-                    </div>
-                    <div class="col">
-                      <mat-radio-group class="radioInput" formControlName="extra">
-                        <mat-radio-button value="no">Sí</mat-radio-button>
-                        <mat-radio-button value="si">No</mat-radio-button>
-                      </mat-radio-group>
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left">Código SIFI</label>
+                        </div>
+                        <div class="col d-flex">
+                          <mat-form-field class="full-width">
+                            <input matInput #codigoSIFI type="text" formControlName="codigoSIFI">
+                          </mat-form-field>
+                          <span class="contador">{{6 - codigoSIFI.value.length}}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-md-4 text-right">
-                  <button mat-button color="warn" type="button" class="btn-eliminar"
-                    *ngIf="addressForm.value.cuentasBancaria.length > 1"
-                    (click)="borrarArray(cuentasBancaria, i)">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
-                    Eliminar vigencia
-                  </button>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left">Tipo de cuenta</label>
+                        </div>
+                        <div class="col">
+                          <mat-radio-group class="radioInput" formControlName="tipoCuenta">
+                            <mat-radio-button value="ahorros">Ahorros</mat-radio-button>
+                            <mat-radio-button value="corriente">Corriente</mat-radio-button>
+                          </mat-radio-group>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left">Banco</label>
+                        </div>
+                        <div class="col">
+                          <mat-form-field class="select-width">
+                            <mat-select formControlName="banco">
+                              <mat-option *ngFor="let banco of bancos" [value]="banco.value">
+                                {{ banco.name }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left">¿Exenta?</label>
+                        </div>
+                        <div class="col">
+                          <mat-radio-group class="radioInput" formControlName="extra">
+                            <mat-radio-button value="no">Sí</mat-radio-button>
+                            <mat-radio-button value="si">No</mat-radio-button>
+                          </mat-radio-group>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <button mat-button color="warn" type="button" class="btn-eliminar"
+                        
+                        (click)="borrarArray(cuentasBancaria, i)">
+                        <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                        Eliminar vigencia
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -278,7 +283,7 @@
         <img src="assets/img/icon/menos.svg" alt="Eliminar fuente de recursos">
         Eliminar fuente de recursos
       </button>
-      <button mat-button color="warn" type="button" class="btn-eliminar">
+      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaFuente()">
         <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos">
         Agregar otra fuente de recursos
       </button>

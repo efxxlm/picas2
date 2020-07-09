@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<Cofinanciacion>> GetListCofinancing();
 
-        Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId);
+        Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int ContributorId);
 
         Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion);
 
