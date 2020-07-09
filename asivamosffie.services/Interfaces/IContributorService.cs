@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.services.Interfaces
 {
-    public interface IContributorService
+    public interface ICofinancingContributorService
     {
         Task<ActionResult<List<CofinanciacionAportante>>> GetContributor();
 
         Task<CofinanciacionAportante> GetContributorById(int id);
-        Task<ActionResult<List<Respuesta>>> GetControlGrid(int ContributorId);
+        Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId);
         Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante);
         Task<bool> Update(Respuesta aportante);
 
