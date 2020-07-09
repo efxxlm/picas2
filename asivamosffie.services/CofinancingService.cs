@@ -28,14 +28,39 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion) 
-        { 
-            Cofinanciacion cofinanciacion = await _context.Cofinanciacion.Where(r => r.CofinanciacionId == idCofinanciacion && !(bool)r.Eliminado).Include(r=> r.CofinanciacionAportante).FirstOrDefaultAsync();
+        public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion)
+        {
+            Cofinanciacion cofinanciacion = await
+              _context.Cofinanciacion.Where(cof => cof.CofinanciacionId == idCofinanciacion && !(bool)cof.Eliminado)
+             .Include(r => r.CofinanciacionAportante)
+             .ThenInclude(post => post.CofinanciacionDocumento)
+             .Where(e => e.CofinanciacionAportante.Any(r => r.CofinanciacionDocumento.Any(r => !(bool)r.Eliminado)))
+             .FirstOrDefaultAsync();
 
-            foreach (var item in cofinanciacion.CofinanciacionAportante)
-            {
-                item.CofinanciacionDocumento = _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
-            }
+
+            //Con linq
+            //var cofinanciacion = (
+            //            from cof in _context.Cofinanciacion  
+
+            //            where cof.CofinanciacionId == idCofinanciacion
+            //             join  cofApor in _context.CofinanciacionAportante
+            //             on idCofinanciacion equals cofApor.CofinanciacionId
+            //             into JoinedCofCofApor
+            //             from cofApor in JoinedCofCofApor.DefaultIfEmpty()
+            //            where cofApor.CofinanciacionId == cof.CofinanciacionId
+            //            select  new 
+            //            { 
+            //                cofinanciacion = cof
+
+            //            }).ToList()  
+            //            .Select(coff => new Cofinanciacion() {
+            //                CofinanciacionAportante = coff.cofinanciacion.CofinanciacionAportante 
+            //            });
+
+
+
+
+
             return cofinanciacion;
         }
 
@@ -61,12 +86,12 @@ namespace asivamosffie.services
                     else
                     {
                         Cofinanciacion cofinanciacionEdit = _context.Cofinanciacion.Find(cofinanciacion.CofinanciacionId);
-                        cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId; 
-                        cofinanciacionEdit.FechaModificacion = DateTime.Now; 
+                        cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
+                        cofinanciacionEdit.FechaModificacion = DateTime.Now;
                         respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente };
                     }
-                    
-                     
+
+
                     foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                     {
                         cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
@@ -83,7 +108,7 @@ namespace asivamosffie.services
                                 await CreateCofinancingDocuments(cofinancicacionDocumento);
                             }
                         }
-                    } 
+                    }
 
                     await _context.SaveChangesAsync();
                 }
@@ -109,10 +134,10 @@ namespace asivamosffie.services
         {
             try
             {
-              
+
                 if (string.IsNullOrEmpty(pcofinanciacionAportante.CofinanciacionAportanteId.ToString()) || pcofinanciacionAportante.CofinanciacionAportanteId == 0)
                 {
-                    pcofinanciacionAportante.FechaCreacion = DateTime.Now; 
+                    pcofinanciacionAportante.FechaCreacion = DateTime.Now;
                     pcofinanciacionAportante.Eliminado = false;
                     _context.CofinanciacionAportante.Add(pcofinanciacionAportante);
                 }
@@ -125,7 +150,7 @@ namespace asivamosffie.services
                     cofinanciacionAportanteEdit.MunicipioId = pcofinanciacionAportante.MunicipioId;
                     cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
                     cofinanciacionAportanteEdit.TipoAportanteId = pcofinanciacionAportante.TipoAportanteId;
-                    cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId; 
+                    cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
                 }
 
                 //await _context.SaveChangesAsync();
@@ -160,7 +185,7 @@ namespace asivamosffie.services
                     cofinanciacionDocumentoEdit.NumeroActa = pCofinanciacionDocumento.NumeroActa;
                     cofinanciacionDocumentoEdit.TipoDocumentoId = pCofinanciacionDocumento.TipoDocumentoId;
                     cofinanciacionDocumentoEdit.ValorDocumento = pCofinanciacionDocumento.ValorDocumento;
-                    cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante; 
+                    cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante;
                 }
 
                 //await _context.SaveChangesAsync();
