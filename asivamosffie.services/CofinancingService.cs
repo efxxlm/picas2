@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.api.Controllers;
 using AuthorizationTest.JwtHelpers;
@@ -12,6 +11,8 @@ using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.model.APIModels;
 using Microsoft.AspNetCore.Mvc;
+using Z.EntityFramework.Plus;
+using Microsoft.EntityFrameworkCore;
 
 namespace asivamosffie.services
 {
@@ -29,15 +30,26 @@ namespace asivamosffie.services
         }
 
         public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion)
-        {
-            Cofinanciacion cofinanciacion = await
-              _context.Cofinanciacion.Where(cof => cof.CofinanciacionId == idCofinanciacion && !(bool)cof.Eliminado)
-             .Include(r => r.CofinanciacionAportante)
-             .ThenInclude(post => post.CofinanciacionDocumento)
-             .Where(e => e.CofinanciacionAportante.Any(r => r.CofinanciacionDocumento.Any(r => !(bool)r.Eliminado)))
-             .FirstOrDefaultAsync();
+        {//con include
+         //Cofinanciacion cofinanciacion = await
+         //  _context.Cofinanciacion
+         // .Include(r => r.CofinanciacionAportante)
+         //    .ThenInclude(post => post.CofinanciacionDocumento)
+         //    .Where(c => c.CofinanciacionId == idCofinanciacion && !(bool)c.Eliminado)
+         //    .Where(e => e.CofinanciacionAportante.Any(r => !(bool)r.Eliminado))
+         //    .Where(d => d.CofinanciacionAportante.Any(r => r.CofinanciacionDocumento.Any(x => !(bool)x.Eliminado)))
+         // .FirstOrDefaultAsync();
 
+            //includefilter
+            Cofinanciacion cofinanciacion = new Cofinanciacion();
+             cofinanciacion =  _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
 
+            if (cofinanciacion != null)
+            {
+                List<CofinanciacionAportante> cofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => r.CofinanciacionId == idCofinanciacion && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+
+                cofinanciacion.CofinanciacionAportante = cofinanciacionAportante;
+            }
             //Con linq
             //var cofinanciacion = (
             //            from cof in _context.Cofinanciacion  
@@ -56,8 +68,6 @@ namespace asivamosffie.services
             //            .Select(coff => new Cofinanciacion() {
             //                CofinanciacionAportante = coff.cofinanciacion.CofinanciacionAportante 
             //            });
-
-
 
 
 
@@ -201,23 +211,13 @@ namespace asivamosffie.services
 
         public async Task<List<Cofinanciacion>> GetListCofinancing()
         {
-            List<Cofinanciacion> cofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado).ToListAsync();
-
-            //Add todos los cofinanciacion Aportante que esten activo a cada cofinanciacion del foreach
-            foreach (var item in cofinanciacion)
+            List<Cofinanciacion> Listcofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado).ToListAsync();
+             
+            foreach (var item in Listcofinanciacion)
             {
-                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).ToListAsync();
-
-            }
-            foreach (var item in cofinanciacion)
-            {
-                foreach (var item2 in item.CofinanciacionAportante)
-                {
-                    item2.CofinanciacionDocumento = await _context.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == item2.CofinanciacionAportanteId).ToListAsync();
-                }
-            }
-
-            return cofinanciacion;
+                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r=> r.CofinanciacionDocumento.Where(r=> !(bool)r.Eliminado)).ToListAsync();
+             } 
+            return Listcofinanciacion;
         }
 
         public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
