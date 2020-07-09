@@ -48,7 +48,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		//???????????
 
-		Estado_Registro = 23
+		Estado_Registro = 23,
+
+		Estado_Juridico_Predios = 25
 
 	}
 }
