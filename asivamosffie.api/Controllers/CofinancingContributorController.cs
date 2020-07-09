@@ -13,12 +13,12 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContributorController : ControllerBase
+    public class CofinancingContributorController : ControllerBase
     {
-        public readonly IContributorService _contributor;
+        public readonly ICofinancingContributorService _contributor;
 
 
-        public ContributorController(IContributorService contributor)
+        public CofinancingContributorController(ICofinancingContributorService contributor)
         {
             _contributor = contributor;
         }
@@ -56,7 +56,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetControlGrid")]
         [HttpGet]
-        public async Task<ActionResult<List<Respuesta>>> GetControlGrid(int ContributorId)
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
         {
             try
             {

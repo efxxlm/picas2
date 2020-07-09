@@ -12,21 +12,18 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.services
 {
-    public class ContributorService : IContributorService
+    public class CofinancingContributorService : ICofinancingContributorService
     {
 
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
 
-        public ContributorService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public CofinancingContributorService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
             _commonService = commonService;
         }
-
-
-
 
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetContributor()
         {
@@ -44,38 +41,10 @@ namespace asivamosffie.services
 
 
         // Grilla de control? { AportanteId }
-        public async Task<ActionResult<List<Respuesta>>> GetControlGrid(int ContributorId)
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
         {
-            Respuesta _reponse = new Respuesta();
-            int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
-
-            try
-            {
-                var result = await _context.Aportante
-                          .Include(s => s.RegistroPresupuestal)
-                          .Include(s => s.FuenteFinanciacion)
-                              .ThenInclude(p => p.Aportante) //(ThenInclude) Para cargar varios niveles de entidades  relacionadas
-                                .ThenInclude(p => p.FuenteFinanciacion)
-                                .ThenInclude(info => info.CuentaBancaria)
-                            .Where(t => t.AportanteId.Equals(ContributorId))
-                              .FirstOrDefaultAsync();
-
-
-                if (result == null)
-                {
-                    return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
-                }
-
-
-                return null;// _reponse = new Respuesta { IsSuccessful = true, IsValidation = false, Data = result, Code = ConstantMessagesContributor.OperacionExitosa };
-
-            }
-            catch (Exception ex)
-            {
-                return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
-            }
+            return await _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == ContributorId).ToListAsync();
         }
-
 
 
         //Registrar Aportante
@@ -92,22 +61,26 @@ namespace asivamosffie.services
                     _context.Add(CofnaAportante);
                     await _context.SaveChangesAsync();
 
-                   
+
 
                     return _reponse = new Respuesta
                     {
-                        IsSuccessful = true, IsValidation = false,
-                        Data = CofnaAportante, Code = ConstantMessagesContributor.OperacionExitosa,
+                        IsSuccessful = true,
+                        IsValidation = false,
+                        Data = CofnaAportante,
+                        Code = ConstantMessagesContributor.OperacionExitosa,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.OperacionExitosa)
                     };
                 }
                 else
                 {
-                   
+
                     return _reponse = new Respuesta
                     {
-                        IsSuccessful = false,IsValidation = false,
-                        Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado,
+                        IsSuccessful = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesContributor.RecursoNoEncontrado,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.RecursoNoEncontrado)
                     };
                 }
@@ -117,10 +90,12 @@ namespace asivamosffie.services
             {
                 return _reponse = new Respuesta
                 {
-                    IsSuccessful = false, IsValidation = false,
-                    Data = null,Code = ConstantMessagesContributor.RecursoNoEncontrado,
+                    IsSuccessful = false,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesContributor.RecursoNoEncontrado,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
-                    
+
                 };
             }
 

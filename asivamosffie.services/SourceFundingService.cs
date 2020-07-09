@@ -14,10 +14,10 @@ namespace asivamosffie.services
     public class SourceFundingService : ISourceFundingService
     {
         private readonly ICommonService _commonService;
-        private readonly IContributorService _contributor;
+        private readonly ICofinancingContributorService _contributor;
         private readonly devAsiVamosFFIEContext _context;
 
-        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService, IContributorService contributor)
+        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService, ICofinancingContributorService contributor)
         {
             _context = context;
             _commonService = commonService;
