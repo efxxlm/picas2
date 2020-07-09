@@ -85,9 +85,36 @@ namespace asivamosffie.services
 
             try
             {
+                // Crear o editar el predio principal
 
-                //create or update proyect
-                if (pProyecto == null)
+                //Predio  principal 
+                //el principal se supone que no va relacionado con la tabla ProyectoPredio 
+                //Ya que tiene una relacion directa en la tabla proyecto.predioPrincipalId
+                if (pProyecto.PredioPrincipal.PredioId == null)
+                {
+                    pProyecto.PredioPrincipal.UsuarioCreacion = pProyecto.UsuarioCreacion; 
+                    pProyecto.PredioPrincipal.FechaCreacion = DateTime.Now;
+                    pProyecto.PredioPrincipal.Activo = true;
+                    _context.Predio.Add(pProyecto.PredioPrincipal);
+                }
+                else
+                {
+                    Predio predio = _context.Predio.Find(pProyecto.PredioPrincipal.PredioId);
+                    predio.InstitucionEducativaSedeId = pProyecto.PredioPrincipal.InstitucionEducativaSedeId;
+                    predio.TipoPredioCodigo = pProyecto.PredioPrincipal.TipoPredioCodigo;
+                    predio.UbicacionLatitud = pProyecto.PredioPrincipal.UbicacionLatitud;
+                    predio.UbicacionLongitud = pProyecto.PredioPrincipal.UbicacionLongitud;
+                    predio.Direccion = pProyecto.PredioPrincipal.Direccion;
+                    predio.DocumentoAcreditacionCodigo = pProyecto.PredioPrincipal.DocumentoAcreditacionCodigo;
+                    predio.NumeroDocumento = pProyecto.PredioPrincipal.NumeroDocumento;
+                    predio.CedulaCatastral = pProyecto.PredioPrincipal.CedulaCatastral; 
+                    _context.Update(predio);
+                }
+                _context.SaveChanges();
+
+
+                //Proyecto
+                if (pProyecto.ProyectoId == null)
                 {
                     //El proyecto es nuevo  
                     pProyecto.Eliminado = false;
@@ -111,68 +138,77 @@ namespace asivamosffie.services
                     proyectoAntiguo.ConvocatoriaId = pProyecto.ConvocatoriaId;
                     proyectoAntiguo.CantPrediosPostulados = pProyecto.CantPrediosPostulados;
                     proyectoAntiguo.TipoPredioCodigo = pProyecto.TipoPredioCodigo;
+                    _context.Update(proyectoAntiguo);
                 }
                 _context.SaveChanges();
 
-                //La relacion la cual viene el modelo es un predio por proyecto
-                //La relacion la cual viene el modelo es un predio por proyecto
-                //La relacion la cual viene el modelo es un predio por proyecto
-                //Predio 
-                if (pProyecto.PredioPrincipal.PredioId == null)
+                //Los otros predios  
+                foreach (var predio in pProyecto.ProyectoPredio)
                 {
-                    pProyecto.PredioPrincipal.UsuarioCreacion = pProyecto.UsuarioCreacion;
-                    pProyecto.PredioPrincipal.UsuarioCreacion = pProyecto.UsuarioCreacion;
-                    pProyecto.PredioPrincipal.FechaCreacion = DateTime.Now;
-                    pProyecto.PredioPrincipal.Activo = true;
-                    _context.Predio.Add(pProyecto.PredioPrincipal);
-                    _context.SaveChanges();
+                    if (predio.Predio.PredioId == null)
+                    {
+                        predio.Predio.UsuarioCreacion = pProyecto.UsuarioCreacion;
+                        predio.Predio.UsuarioCreacion = pProyecto.UsuarioCreacion;
+                        predio.Predio.FechaCreacion = DateTime.Now;
+                        predio.Predio.Activo = true;
+                        _context.Predio.Add(predio.Predio);
+                        _context.SaveChanges();
 
+                        //Relacion Proyecto Predio 
+                        ProyectoPredio proyectoPredio = new ProyectoPredio();
+                        proyectoPredio.Activo = true;
+                        proyectoPredio.UsuarioCreacion = pProyecto.UsuarioCreacion;
+                        proyectoPredio.FechaCreacion = DateTime.Now;
+                        proyectoPredio.PredioId = predio.Predio.PredioId;
+                        proyectoPredio.ProyectoId = pProyecto.ProyectoId;
+                        //Definir que poner
+                        proyectoPredio.EstadoJuridicoCodigo = " ";
+                        _context.ProyectoPredio.Add(proyectoPredio);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        Predio predioedit = _context.Predio.Find(predio.Predio.PredioId);
+                        predioedit.InstitucionEducativaSedeId = predio.Predio.InstitucionEducativaSedeId;
+                        predioedit.TipoPredioCodigo = predio.Predio.TipoPredioCodigo;
+                        predioedit.UbicacionLatitud = predio.Predio.UbicacionLatitud;
+                        predioedit.UbicacionLongitud = predio.Predio.UbicacionLongitud;
+                        predioedit.Direccion = predio.Predio.Direccion;
+                        predioedit.DocumentoAcreditacionCodigo = predio.Predio.DocumentoAcreditacionCodigo;
+                        predioedit.NumeroDocumento = predio.Predio.NumeroDocumento;
+                        predioedit.CedulaCatastral = predio.Predio.CedulaCatastral;
 
-                    //Relacion Proyecto Predio 
-                    ProyectoPredio proyectoPredio = new ProyectoPredio();
-                    proyectoPredio.Activo = true;
-                    proyectoPredio.UsuarioCreacion = pProyecto.UsuarioCreacion;
-                    proyectoPredio.FechaCreacion = DateTime.Now;
-                    proyectoPredio.PredioId = pProyecto.PredioPrincipal.PredioId;
-                    proyectoPredio.ProyectoId = pProyecto.ProyectoId;
-                    //Definir que poner
-                    proyectoPredio.EstadoJuridicoCodigo = " ";
-                    _context.ProyectoPredio.Add(proyectoPredio);
-                }
-                else
-                {
-                    Predio predio = _context.Predio.Find(pProyecto.PredioPrincipal.PredioId);
-                    predio.InstitucionEducativaSedeId = pProyecto.PredioPrincipal.InstitucionEducativaSedeId;
-                    predio.TipoPredioCodigo = pProyecto.PredioPrincipal.TipoPredioCodigo;
-                    predio.UbicacionLatitud = pProyecto.PredioPrincipal.UbicacionLatitud;
-                    predio.UbicacionLongitud = pProyecto.PredioPrincipal.UbicacionLongitud;
-                    predio.Direccion = pProyecto.PredioPrincipal.Direccion;
-                    predio.DocumentoAcreditacionCodigo = pProyecto.PredioPrincipal.DocumentoAcreditacionCodigo;
-                    predio.NumeroDocumento = pProyecto.PredioPrincipal.NumeroDocumento;
-                    predio.CedulaCatastral = pProyecto.PredioPrincipal.CedulaCatastral;
-
-                    //Relacion Proyecto Predio 
-                    ProyectoPredio proyectoPredio = _context.ProyectoPredio.Where(r => r.ProyectoId == pProyecto.ProyectoId && r.PredioId == predio.PredioId).FirstOrDefault();
-                    proyectoPredio.Activo = predio.Activo;
-                }
-                //Guarda los cambios de proyectoPredio
-                _context.SaveChanges();
+                        //Relacion Proyecto Predio 
+                        //si envia el predio . activo como false elimina logicamente tambien la relacion  proyectoPredio 
+                        ProyectoPredio proyectoPredio = _context.ProyectoPredio.Where(r => r.ProyectoId == pProyecto.ProyectoId && r.PredioId == predio.PredioId).FirstOrDefault();
+                        proyectoPredio.Activo = predio.Activo;
+                    }
+                } 
 
                 //Aportantes
                 foreach (var aportante in pProyecto.ProyectoAportante)
-                {
+                { 
+                    //aportante.
+                    if (aportante.AportanteId == null)
+                    {
+                        //Definir como llega vigencia de cofinanciacion para relacionarlo con cofinanciacionAportante
+                        //Relacion cofinanciacion aportante 
 
-//aportante.
-                    if (aportante.AportanteId == null) { 
+                       // aportante.Aportante.Cofinanciacion.
+                        //cofinanciacionAportante 
                         CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
-                       
+                        cofinanciacionAportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
                         cofinanciacionAportante.Eliminado = false;
                         cofinanciacionAportante.FechaCreacion = DateTime.Now;
-                        cofinanciacionAportante.UsuarioCreacion = pProyecto.UsuarioCreacion; 
+                        
+                         
 
-                    //    cofinanciacionAportante.
+                        aportante.Eliminado = false;
+                        aportante.FechaCreacion = DateTime.Now;
+                        aportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
+                        _context.ProyectoAportante.Add(aportante);
 
-                  
+
 
                     }
 
