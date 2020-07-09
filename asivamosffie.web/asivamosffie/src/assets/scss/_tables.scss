@@ -32,6 +32,32 @@ table {
     width: 100%;
 }
 
+.busqueda {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &--input {
+        width: 30em;
+    }
+    &--img {
+        margin-bottom: 1em !important;
+        margin-left: .5em;
+        padding: .5em;
+        min-width: 0;
+
+        img {
+            height: 2.5em;
+        }
+    }
+
+    .mat-form-field-appearance-outline .mat-form-field-label {
+        top: 2.2em;
+    }
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+        transform: translateY(-1.2em) scale(0.75);
+    }
+}
 
 // paginador
 

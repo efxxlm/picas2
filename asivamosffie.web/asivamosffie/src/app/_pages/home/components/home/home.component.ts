@@ -21,6 +21,11 @@ export class HomeComponent implements OnInit {
     {
       title: 'Crear proyecto admin',
       link: '/crearProyectoAdministrativo'
+     
+    },    
+    {
+      title: 'Gestionar acuerdo de cofinanciación',
+      link: '/gestionarAcueros'
     },
     {
       title: 'Registrar proyectos postulados',
