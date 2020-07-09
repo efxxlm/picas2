@@ -12,8 +12,6 @@ namespace asivamosffie.services.Interfaces
         Task<object> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion);
 
         Task<List<Cofinanciacion>> GetListCofinancing();
-        Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId);
-
-
+       
     }
 }
