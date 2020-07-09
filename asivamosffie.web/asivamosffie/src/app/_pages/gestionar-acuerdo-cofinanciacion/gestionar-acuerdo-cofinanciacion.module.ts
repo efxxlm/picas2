@@ -6,7 +6,7 @@ import { BotonRegistrarAcuerdoComponent } from './components/boton-registrar-acu
 import { RegistrarAcuerdoComponent } from './components/registrar-acuerdo/registrar-acuerdo.component';
 
 import { MaterialModule } from './../../material/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerdos.component';
 
 @NgModule({
@@ -16,6 +16,7 @@ import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerd
     GestionarAcuerdoCofinanciacionRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class GestionarAcuerdoCofinanciacionModule { }

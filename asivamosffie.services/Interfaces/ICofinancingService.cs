@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace asivamosffie.services.Interfaces
 {
@@ -11,6 +12,11 @@ namespace asivamosffie.services.Interfaces
         Task<object> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion);
 
         Task<List<Cofinanciacion>> GetListCofinancing();
+
+        Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId);
+
+        Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion);
+
 
     }
 }
