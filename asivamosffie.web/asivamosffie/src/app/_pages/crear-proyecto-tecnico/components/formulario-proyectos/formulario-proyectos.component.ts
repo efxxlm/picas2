@@ -40,11 +40,21 @@ export class FormularioProyectosComponent {
     err => {
       let mensaje: string;
       console.log(err);
-      if (err.message){
-        mensaje = err.message;
+      let msn="";
+      if(err.error.code=="501")
+      {
+        err.error.data.forEach(element => {
+          msn+="El campo "+element.errors.key;
+          element.errors.forEach(element => {
+            msn+=element.errorMessage+" ";
+          });
+        });
       }
-      else if (err.error.message){
+      if (err.error.message){
         mensaje = err.error.message;
+      }
+      else if (err.message){
+        mensaje = err.message;
       }
       this.openDialog('Error', mensaje);
    },
@@ -81,7 +91,11 @@ export class FormularioProyectosComponent {
       UsuarioModificacion:"",
       InstitucionEducativaSede:null,
       LocalizacionIdMunicipioNavigation:null,
-      PredioPrincipal:null,
+      PredioPrincipal:{
+        CedulaCatastral:"",Direccion:"",DocumentoAcreditacionCodigo:"",
+        FechaCreacion:new Date,InstitucionEducativaSedeId:0,NumeroDocumento:"",
+        UsuarioCreacion:"",PredioId:0,TipoPredioCodigo:"",UbicacionLatitud:"",UbicacionLongitud:""
+      },
       Sede:null,
       InfraestructuraIntervenirProyecto:[],
       ProyectoAportante:[],
