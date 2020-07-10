@@ -48,24 +48,15 @@ namespace asivamosffie.api.Controllers
             var result = await _Cofinancing.GetListCofinancing();
             return result;
         }
+ 
 
-
-        [Route("GetDocument")]
-        [HttpGet]
-        public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
-        {
-            try
-            {
-                return await _Cofinancing.GetDocument(ContributorId);
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
+        // [Route("GetListAportante")]
+        //[HttpGet]
+        //public async Task<List<Cofinanciacion>> GetListAportante()
+        //{
+        //    var result = await _Cofinancing.GetListAportante();
+        //    return result;
+        //}
 
         [Route("GetCofinancingByIdCofinancing")]
         [HttpGet]
@@ -74,5 +65,9 @@ namespace asivamosffie.api.Controllers
             var result = await _Cofinancing.GetCofinanciacionByIdCofinanciacion(IdCofinancing);
             return result;
         }
+
+
+
+
     }
 }

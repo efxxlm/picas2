@@ -42,7 +42,7 @@ namespace asivamosffie.services
 
             //includefilter
             Cofinanciacion cofinanciacion = new Cofinanciacion();
-             cofinanciacion =  _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
+            cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
 
             if (cofinanciacion != null)
             {
@@ -208,14 +208,24 @@ namespace asivamosffie.services
         public async Task<List<Cofinanciacion>> GetListCofinancing()
         {
             List<Cofinanciacion> Listcofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado).ToListAsync();
-             
+
             foreach (var item in Listcofinanciacion)
             {
-                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r=> r.CofinanciacionDocumento.Where(r=> !(bool)r.Eliminado)).ToListAsync();
-             } 
+                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+            }
             return Listcofinanciacion;
         }
 
-      
+        public async Task<List<CofinanciacionDocumento>> GetDocument(int ContributorId)
+        {
+            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).ToListAsync();
+        }
+
+        public async Task<List<CofinanciacionAportante>> GetListAportante()
+        {
+
+            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).ToListAsync();
+        }
     }
+    
 }
