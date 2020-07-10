@@ -74,6 +74,14 @@ export class CommonService {
   listaVigencias() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/ListVigenciaAporte`);
   }
+  
+  listaAportanteByTipoAportanteId(pTipoAportanteID:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
+  }
+
+  listaDocumentoByAportanteId(pAportanteID:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetListDocumentoByAportanteId?pAportanteID=${pAportanteID}`);
+  }
 }
 
 export interface Dominio{

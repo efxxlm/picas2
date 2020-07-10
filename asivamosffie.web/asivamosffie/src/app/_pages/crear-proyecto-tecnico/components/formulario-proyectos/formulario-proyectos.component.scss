@@ -7,11 +7,6 @@
   margin: 20px auto;
 }
 
-.mat-radio-button {
-  display: block;
-  margin: 5px 0;
-}
-
 .row {
   display: flex;
   flex-direction: row;
@@ -26,12 +21,23 @@
   margin-right: 0;
 }
 
-.btn-add
-{
+.btn-add {
   width: 2em;
 }
 
-.mt1
-{
+.mt1 {
   margin-top: 1em;
+}
+
+.w-2em {
+  width: 2em;
+}
+
+.w-8em {
+  width: 8em;
+}
+
+.input-string {
+  font-weight: 600;
+  color: var(--mainColor)
 }

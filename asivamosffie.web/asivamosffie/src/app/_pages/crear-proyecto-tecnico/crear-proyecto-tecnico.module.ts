@@ -17,7 +17,7 @@ import { MaterialModule } from 'src/app/material/material.module';
     CrearProyectoTecnicoRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule    
+    FormsModule
   ]
 })
 export class CrearProyectoTecnicoModule { }
