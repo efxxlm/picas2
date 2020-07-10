@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using asivamosffie.services;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,14 @@ namespace asivamosffie.api.Controllers
     {
         public readonly IContributorService _contributor;
 
-
+        /*
         public ContributorController(IContributorService contributor)
         {
             _contributor = contributor;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Aportante>>> Get()
+        public async Task<ActionResult<List<CofinanciacionAportante>>> Get()
         {
             try
             {
@@ -60,7 +61,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-               return await _contributor.GetControlGrid(ContributorId);
+              // return await _contributor.GetControlGrid(ContributorId);
               
             }
             catch (Exception ex)
@@ -71,11 +72,11 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> post(Aportante aportante)
+        public async Task<IActionResult> post(CofinanciacionAportante aportante)
         {
             try
             {
-                var result = await _contributor.Insert(aportante);
+               // var result = await _contributor.Insert(aportante);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -83,7 +84,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+        */
 
     }
 }

@@ -18,7 +18,7 @@ namespace asivamosffie.services
 {
     public class CofinancingService : ICofinancingService
     {
-
+        
         private readonly devAsiVamosFFIEContext _context;
 
         private readonly ICommonService _commonService;
@@ -216,6 +216,9 @@ namespace asivamosffie.services
             return Listcofinanciacion;
         }
 
-      
+        public Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int ContributorId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
