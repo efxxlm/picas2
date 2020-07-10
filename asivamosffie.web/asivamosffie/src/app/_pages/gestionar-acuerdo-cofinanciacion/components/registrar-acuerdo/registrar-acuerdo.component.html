@@ -73,10 +73,10 @@
                       </div>
                       <div class="col">
                         <mat-form-field class="select-width">
-                          <mat-select formControlName="tipo">
-                            <mat-option>Seleccione</mat-option>
+                          <mat-select formControlName="tipo" >
+                            <mat-option value="0">Seleccione</mat-option>
                             <mat-option *ngFor="let selectTipoAportante of selectTiposAportante"
-                              [value]="selectTipoAportante.codigo">
+                              [value]="selectTipoAportante">
                               {{ selectTipoAportante.nombre }}
                             </mat-option>
                           </mat-select>
@@ -93,7 +93,7 @@
                     <mat-form-field class="select-width">                      
                       <mat-select formControlName="nombre">
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante.codigo">
+                        <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante">
                           {{ nombreAportante.nombre }}
                         </mat-option>
                       </mat-select>
@@ -177,7 +177,7 @@
                     </div>
                     <div class="col">
                       <mat-form-field class="select-width">
-                        <mat-select [(ngModel)]="documento.VigenciaAporteId" required>
+                        <mat-select [(ngModel)]="documento.vigenciaAporte" required>
                           <mat-option></mat-option>
                           <mat-option *ngFor="let vigenciaAportante of vigenciasAportante" [value]="vigenciaAportante">
                             {{ vigenciaAportante }}
@@ -197,9 +197,10 @@
                     <div class="col d-flex align-items-center">
                       <mat-form-field class="full-width">
                         <input matInput #valorIndicadoEnElDocumento maxlength="20" min="1" required type="number"
-                        [(ngModel)]="documento.ValorDocumento">
+                        [(ngModel)]="documento.valorDocumento">
                       </mat-form-field>
                       <span class="contador">{{20 - (documento.ValorDocumento?documento.ValorDocumento.toString().length:0)}}</span>
+                      
                     </div>
                   </div>
                 </div>
@@ -212,7 +213,7 @@
                     </div>
                     <div class="col">
                       <mat-form-field class="select-width">
-                        <mat-select [(ngModel)]="documento.TipoDocumentoId" required>
+                        <mat-select [(ngModel)]="documento.tipoDocumentoId" required>
                           <mat-option></mat-option>
                           <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.dominioId">
                             {{ tipoDocumento.nombre }}
@@ -233,7 +234,7 @@
                     <div class="col d-flex align-items-center">
                       <mat-form-field class="full-width">
                         <input matInput #numeroDocumento maxlength="10" min="1000000000" required type="number"
-                        [(ngModel)]="documento.NumeroActa">
+                        [(ngModel)]="documento.numeroActa">
                       </mat-form-field>
                       <span class="contador">{{10 - (documento.NumeroActa?documento.NumeroActa.toString().length:0)}}</span>
                     </div>
@@ -249,7 +250,7 @@
                     </div>
                     <div class="col d-flex align-items-center">
                       <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="picker" [(ngModel)]="documento.FechaAcuerdo" [max]="maxDate">
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="documento.fechaAcuerdo" [max]="maxDate">
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                       <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">

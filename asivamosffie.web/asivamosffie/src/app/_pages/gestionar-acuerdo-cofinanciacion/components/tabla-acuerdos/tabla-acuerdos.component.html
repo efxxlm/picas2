@@ -17,12 +17,12 @@
 
         <ng-container matColumnDef="numeroAcuerdo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del acuerdo </th>
-            <td mat-cell *matCellDef="let element"> {{element.numeroAcuerdo}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.cofinanciacionId}} </td>
         </ng-container>
 
         <ng-container matColumnDef="vigenciaAcuerdo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Vigencia del acuerdo de cofinanciación </th>
-            <td mat-cell *matCellDef="let element"> {{element.vigenciaAcuerdo}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.vigenciaCofinanciacionId}} </td>
         </ng-container>
 
         <ng-container matColumnDef="valorTotal">
@@ -38,8 +38,8 @@
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="accent" class="btn-table" (click)="editarAcuerdo(element.id)">Ver detalle/<br>Editar</button>
-                <button mat-raised-button color="accent" class="btn-table" (click)="eliminarAcuerdo(element.id)">Eliminar</button>
+                <button mat-raised-button color="accent" class="btn-table" (click)="editarAcuerdo(element.cofinanciacionId)">Ver detalle/<br>Editar</button>
+                <button mat-raised-button color="accent" class="btn-table" (click)="eliminarAcuerdo(element.cofinanciacionId)">Eliminar</button>
             </td>
         </ng-container>
 
