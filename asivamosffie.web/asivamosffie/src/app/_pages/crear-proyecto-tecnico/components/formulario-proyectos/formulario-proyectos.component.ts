@@ -112,14 +112,14 @@ export class FormularioProyectosComponent implements OnInit  {
       ProyectoPredio: [],
       cantidadAportantes: null
     };
-    this.proyecto.ProyectoPredio.push({
+    /*this.proyecto.ProyectoPredio.push({
       ProyectoPredioId: 0, EstadoJuridicoCodigo: '', UsuarioCreacion: '',
       Predio: {
         CedulaCatastral: '', Direccion: '', DocumentoAcreditacionCodigo: '',
         FechaCreacion: new Date, InstitucionEducativaSedeId: 0, NumeroDocumento: '',
         UsuarioCreacion: '', PredioId: 0, TipoPredioCodigo: '', UbicacionLatitud: '', UbicacionLongitud: ''
       }
-    });
+    });*/
     // cargo lsitas
     this.getListas();
     this.addInfraestructura();
@@ -342,7 +342,7 @@ export class FormularioProyectosComponent implements OnInit  {
         data: { modalTitle, modalText }
       });
     }
-    
+
   addInfraestructura()
   {
     this.proyecto.InfraestructuraIntervenirProyecto.push({
@@ -364,26 +364,30 @@ export class FormularioProyectosComponent implements OnInit  {
 
   evaluopredios()
   {
-    if(this.proyecto.CantPrediosPostulados!=this.proyecto.ProyectoPredio.length)
+    if(this.proyecto.CantPrediosPostulados>1)
     {
-      if(this.proyecto.CantPrediosPostulados<this.proyecto.ProyectoPredio.length)
+      if(this.proyecto.CantPrediosPostulados!=this.proyecto.ProyectoPredio.length)
       {
-        //preguntar
-      }
-      else{
-        if(this.proyecto.CantPrediosPostulados>this.proyecto.ProyectoPredio.length)
+        if(this.proyecto.CantPrediosPostulados<this.proyecto.ProyectoPredio.length)
         {
-          
-          for(let a=this.proyecto.ProyectoPredio.length;a<this.proyecto.CantPrediosPostulados;a++)
+          //preguntar
+        }
+        else{
+          if(this.proyecto.CantPrediosPostulados>this.proyecto.ProyectoPredio.length)
           {
-            this.proyecto.ProyectoPredio.push({ProyectoPredioId:0,EstadoJuridicoCodigo:"",UsuarioCreacion:"",
-              Predio:{CedulaCatastral:"",Direccion:"",DocumentoAcreditacionCodigo:"",
-              FechaCreacion:new Date,InstitucionEducativaSedeId:0,NumeroDocumento:"",
-              UsuarioCreacion:"",PredioId:0,TipoPredioCodigo:"",UbicacionLatitud:"",UbicacionLongitud:""}});
+            
+            for(let a=this.proyecto.ProyectoPredio.length;a<this.proyecto.CantPrediosPostulados;a++)
+            {
+              this.proyecto.ProyectoPredio.push({ProyectoPredioId:0,EstadoJuridicoCodigo:"",UsuarioCreacion:"",
+                Predio:{CedulaCatastral:"",Direccion:"",DocumentoAcreditacionCodigo:"",
+                FechaCreacion:new Date,InstitucionEducativaSedeId:null,NumeroDocumento:"",
+                UsuarioCreacion:"",PredioId:0,TipoPredioCodigo:"",UbicacionLatitud:"",UbicacionLongitud:""}});
+            }
           }
         }
       }
     }
+    
   }
   evaluoaportantes()
   {
@@ -409,8 +413,10 @@ export class FormularioProyectosComponent implements OnInit  {
               FechaCreacion:null ,
               UsuarioCreacion:"" ,
             });
-            this.listaAportante.push({});
-            this.listaVigencias.push({});
+            let listavacia:any[]=[];
+            this.listaAportante.push(listavacia);
+            console.log(this.listaAportante);
+            this.listaVigencias.push(listavacia);
           }
         //}
       //}

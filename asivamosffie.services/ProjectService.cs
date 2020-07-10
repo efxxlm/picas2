@@ -22,6 +22,8 @@ using OfficeOpenXml;
 using System.Globalization;
 using asivamosffie.services.Validators;
 using asivamosffie.services.Filters;
+using System.Data.Common;
+
 namespace asivamosffie.services
 {
     public class ProjectService : IProjectService
@@ -95,9 +97,7 @@ namespace asivamosffie.services
                     pProyecto.PredioPrincipal.InstitucionEducativaSedeId = null;
                     pProyecto.PredioPrincipal.UsuarioCreacion = pProyecto.UsuarioCreacion; 
                     pProyecto.PredioPrincipal.FechaCreacion = DateTime.Now;
-                    pProyecto.PredioPrincipal.Activo = true;
-                    pProyecto.InstitucionEducativa = _context.InstitucionEducativaSede.Find(pProyecto.InstitucionEducativaId);
-                    pProyecto.Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId);
+                    pProyecto.PredioPrincipal.Activo = true;                    
                     _context.Predio.Add(pProyecto.PredioPrincipal);
                 }
                 else
@@ -115,34 +115,16 @@ namespace asivamosffie.services
                 }
                 _context.SaveChanges();
                  
-                //Proyecto
-                if (pProyecto.ProyectoId == null || pProyecto.ProyectoId == 0)
+                
+                
+                //infraestructura
+                foreach(var infraestructura in  pProyecto.InfraestructuraIntervenirProyecto)
                 {
-                    //El proyecto es nuevo  
-                    pProyecto.Eliminado = false;
-                    pProyecto.FechaCreacion = DateTime.Now;
-                    _context.Proyecto.Add(pProyecto);
+                    if(infraestructura.InfraestrucutraIntervenirProyectoId==0|| infraestructura.InfraestrucutraIntervenirProyectoId==null)
+                    {
+                        infraestructura.FechaCreacion = DateTime.Now;
+                    }
                 }
-                else
-                {
-                    Proyecto proyectoAntiguo = _context.Proyecto.Find(pProyecto.ProyectoId);
-                    proyectoAntiguo.FechaModificacion = DateTime.Now;
-                    proyectoAntiguo.UsuarioModificacion = pProyecto.UsuarioCreacion;
-
-                    proyectoAntiguo.FechaSesionJunta = pProyecto.FechaSesionJunta;
-                    proyectoAntiguo.NumeroActaJunta = pProyecto.NumeroActaJunta;
-                    proyectoAntiguo.TipoIntervencionCodigo = pProyecto.TipoIntervencionCodigo;
-                    proyectoAntiguo.LlaveMen = pProyecto.LlaveMen;
-                    proyectoAntiguo.LocalizacionIdMunicipio = pProyecto.LocalizacionIdMunicipio;
-                    proyectoAntiguo.InstitucionEducativaId = pProyecto.InstitucionEducativaId;
-                    proyectoAntiguo.Sede = pProyecto.Sede;
-                    proyectoAntiguo.EnConvocatoria = pProyecto.EnConvocatoria;
-                    proyectoAntiguo.ConvocatoriaId = pProyecto.ConvocatoriaId;
-                    proyectoAntiguo.CantPrediosPostulados = pProyecto.CantPrediosPostulados;
-                    proyectoAntiguo.TipoPredioCodigo = pProyecto.TipoPredioCodigo;
-                    _context.Update(proyectoAntiguo);
-                }
-                _context.SaveChanges();
 
                 //Los otros predios  
                 foreach (var predio in pProyecto.ProyectoPredio)
@@ -185,8 +167,8 @@ namespace asivamosffie.services
                         ProyectoPredio proyectoPredio = _context.ProyectoPredio.Where(r => r.ProyectoId == pProyecto.ProyectoId && r.PredioId == predio.PredioId).FirstOrDefault();
                         proyectoPredio.Activo = predio.Activo;
                     }
-                } 
-
+                }
+                
                 //Aportantes
                 foreach (var aportante in pProyecto.ProyectoAportante)
                 { 
@@ -209,16 +191,51 @@ namespace asivamosffie.services
                         _context.ProyectoAportante.Add(aportante);  
                     }
 
-                } 
+                }
+                //Proyecto
+                if (pProyecto.ProyectoId == null || pProyecto.ProyectoId == 0)
+                {
+                    //El proyecto es nuevo  
+                    pProyecto.InstitucionEducativa = _context.InstitucionEducativaSede.Find(pProyecto.InstitucionEducativaId);
+                    pProyecto.Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId);
+                    pProyecto.ProyectoAportante = null;
+                    //pProyecto.InfraestructuraIntervenirProyecto = null;
+                    pProyecto.Eliminado = false;
+                    pProyecto.FechaCreacion = DateTime.Now;
+                    _context.Proyecto.Add(pProyecto);
+                }
+                else
+                {
+                    Proyecto proyectoAntiguo = _context.Proyecto.Find(pProyecto.ProyectoId);
+                    proyectoAntiguo.FechaModificacion = DateTime.Now;
+                    proyectoAntiguo.UsuarioModificacion = pProyecto.UsuarioCreacion;
+
+                    proyectoAntiguo.FechaSesionJunta = pProyecto.FechaSesionJunta;
+                    proyectoAntiguo.NumeroActaJunta = pProyecto.NumeroActaJunta;
+                    proyectoAntiguo.TipoIntervencionCodigo = pProyecto.TipoIntervencionCodigo;
+                    proyectoAntiguo.LlaveMen = pProyecto.LlaveMen;
+                    proyectoAntiguo.LocalizacionIdMunicipio = pProyecto.LocalizacionIdMunicipio;
+                    proyectoAntiguo.InstitucionEducativaId = pProyecto.InstitucionEducativaId;
+                    proyectoAntiguo.Sede = pProyecto.Sede;
+                    proyectoAntiguo.EnConvocatoria = pProyecto.EnConvocatoria;
+                    proyectoAntiguo.ConvocatoriaId = pProyecto.ConvocatoriaId;
+                    proyectoAntiguo.CantPrediosPostulados = pProyecto.CantPrediosPostulados;
+                    proyectoAntiguo.TipoPredioCodigo = pProyecto.TipoPredioCodigo;
+                    _context.Update(proyectoAntiguo);
+                }
+               
+                _context.SaveChanges();                
+
                 return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesProyecto.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyecto, pProyecto.UsuarioCreacion, " ")
-                    };
+                new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = false,
+                    IsValidation = true,
+                    Data=pProyecto,
+                    Code = ConstantMessagesProyecto.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyecto, pProyecto.UsuarioCreacion, " ")
+                };
 
             }
             catch (Exception ex)

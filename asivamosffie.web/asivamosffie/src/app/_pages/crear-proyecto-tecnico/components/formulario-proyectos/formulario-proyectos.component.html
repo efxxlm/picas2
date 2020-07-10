@@ -388,8 +388,8 @@
 
 
       <div *ngFor="let predios of proyecto.ProyectoPredio;index as i">
-        <div *ngIf="i>0">
-          Predio {{i+1}}
+        <div >
+          Predio {{i+2}}
           <div class="row">
             <div class="col-md-8">
               <div class="row">
@@ -475,7 +475,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required >
+                  <mat-select required (selectionChange)="getAportante($event,ii)">
                     <mat-option></mat-option>
                     <mat-option *ngFor="let listado of listaTipoAportante" [value]="listado.dominioId">
                       {{ listado.nombre }}
@@ -494,10 +494,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.AportanteId">
+                  <mat-select required [(ngModel)]="aportantes.AportanteId" (selectionChange)="getVigencia($event,ii)">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listaAportante" [value]="listado.dominioId">
-                      {{ listado.nombre }}
+                    <mat-option *ngFor="let listado of listaAportante[ii]" [value]="listado.cofinanciacionAportanteId">
+                      {{ listado.nombreAportanteId }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -515,8 +515,8 @@
                 <mat-form-field class="select-width">
                   <mat-select required>
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listaVigencias" [value]="listado.dominioId">
-                      {{ listado.nombre }}
+                    <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionDocumentoId">
+                      {{ listado.vigenciaAporte }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
