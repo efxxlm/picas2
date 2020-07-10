@@ -50,36 +50,7 @@ export class InicioComponent implements OnInit {
     this.autenticacionService.logout();
     this.buildForm();
 
-    let data: Cofinanciacion// = {};
-    data.cofinanciacionId = 2;
-    data.vigenciaCofinanciacionId = 104;
-
-    let aportante1: CofinanciacionAportante// = {};
-    aportante1.cofinanciacionAportanteId = 3;
-    aportante1.cofinanciacionId = 1;
-    aportante1.municipioId = 555;
-    aportante1.nombreAportanteId = 1;
-    aportante1.tipoAportanteId = 1
-
-    let docu: CofinanciacionDocumento// = {};
-    docu.CofinanciacionAportanteId = 1;
-    //docu.CofinanciacionDocumentoId = 1;
-    docu.FechaActa = new Date;
-    docu.FechaAcuerdo = new Date;
-    docu.NumeroActa = '123';
-    docu.TipoDocumentoId = 1;
-    docu.ValorDocumento = '111';
-    docu.ValorTotalAportante = '888';
-    docu.VigenciaAporteId = 1;
-
-    aportante1.cofinanciacionDocumento = [];
-    aportante1.cofinanciacionDocumento.push(docu);
-
-    data.cofinanciacionAportante = [];
-    data.cofinanciacionAportante.push(aportante1);
     
-
-    this.p.CrearOModificarAcuerdoCofinanciacion(data).subscribe( console.log );
   }
 
   login(event: Event) {
