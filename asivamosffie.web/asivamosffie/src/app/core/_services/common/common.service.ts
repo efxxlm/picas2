@@ -76,11 +76,11 @@ export class CommonService {
   }
   
   listaAportanteByTipoAportanteId(pTipoAportanteID:number){
-    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
   }
 
   listaDocumentoByAportanteId(pAportanteID:number){
-    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetListDocumentoByAportanteId?pAportanteID=${pAportanteID}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListDocumentoByAportanteId?pAportanteID=${pAportanteID}`);
   }
 }
 
