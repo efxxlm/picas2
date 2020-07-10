@@ -81,6 +81,7 @@ export interface Dominio{
   tipoDominioId: number,
   nombre: string,
   activo: boolean,
+  codigo:string
 }
 
 export interface Localizacion{

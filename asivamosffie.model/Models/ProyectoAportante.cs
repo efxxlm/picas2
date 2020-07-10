@@ -14,8 +14,10 @@ namespace asivamosffie.model.Models
         public bool Eliminado { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
+        public int? CofinanciacionDocumentoId { get; set; }
 
         public virtual CofinanciacionAportante Aportante { get; set; }
+        public virtual CofinanciacionDocumento CofinanciacionDocumento { get; set; }
         public virtual Proyecto Proyecto { get; set; }
     }
 }

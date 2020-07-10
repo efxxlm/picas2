@@ -85,7 +85,7 @@ namespace asivamosffie.services
 
             try
             {
-                // Crear o editar el predio principal
+                // Crear o editar el predio principal 
 
                 //Predio  principal 
                 //el principal se supone que no va relacionado con la tabla ProyectoPredio 
@@ -100,7 +100,7 @@ namespace asivamosffie.services
                 else
                 {
                     Predio predio = _context.Predio.Find(pProyecto.PredioPrincipal.PredioId);
-                    predio.InstitucionEducativaSedeId = pProyecto.PredioPrincipal.InstitucionEducativaSedeId;
+                    //predio.InstitucionEducativaSedeId = pProyecto.PredioPrincipal.InstitucionEducativaSedeId;
                     predio.TipoPredioCodigo = pProyecto.PredioPrincipal.TipoPredioCodigo;
                     predio.UbicacionLatitud = pProyecto.PredioPrincipal.UbicacionLatitud;
                     predio.UbicacionLongitud = pProyecto.PredioPrincipal.UbicacionLongitud;
@@ -111,8 +111,7 @@ namespace asivamosffie.services
                     _context.Update(predio);
                 }
                 _context.SaveChanges();
-
-
+                 
                 //Proyecto
                 if (pProyecto.ProyectoId == null)
                 {
@@ -200,26 +199,14 @@ namespace asivamosffie.services
                         cofinanciacionAportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
                         cofinanciacionAportante.Eliminado = false;
                         cofinanciacionAportante.FechaCreacion = DateTime.Now;
-                        
                          
-
                         aportante.Eliminado = false;
                         aportante.FechaCreacion = DateTime.Now;
                         aportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
-                        _context.ProyectoAportante.Add(aportante);
-
-
-
+                        _context.ProyectoAportante.Add(aportante);  
                     }
 
-                }
-
-
-
-
-
-
-
+                } 
                 return respuesta =
                     new Respuesta
                     {
@@ -685,9 +672,7 @@ namespace asivamosffie.services
                         _context.SaveChanges();
 
                         //Relacionar Ids
-
-
-
+                         
 
                         //   _context.Proyecto.Add(proyecto);
 
@@ -823,10 +808,7 @@ namespace asivamosffie.services
                             Code = ConstantMessagesCargueProyecto.NoExitenArchivos,
                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueProyecto.NoExitenArchivos, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, "")
                         };
-                }
-
-
-
+                } 
             }
             catch (Exception ex)
             {
@@ -842,5 +824,9 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Proyecto> GetProyectoByProyectoId(int idProyecto)
+        {
+            return  await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).Include(r => r.ProyectoAportante).FirstOrDefaultAsync();
+        }
     }
 }
