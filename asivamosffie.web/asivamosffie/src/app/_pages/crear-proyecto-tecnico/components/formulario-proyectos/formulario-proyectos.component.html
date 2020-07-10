@@ -442,10 +442,10 @@
                   <label class="label-left">Tipo de aportante</label>
                 </div>
                 <div class="col">
-                  <mat-form-field class="select-width">
+                  <mat-form-field class="select-width" (selectionChange)="getAportante($event,ii)">
                     <mat-select required >
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listaTipoAportante" [value]="listado.codigo">
+                      <mat-option *ngFor="let listado of listaTipoAportante[ii]" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
@@ -462,9 +462,9 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="aportantes.AportanteId">
+                    <mat-select required [(ngModel)]="aportantes.AportanteId"  (selectionChange)="getVigencia($event,ii)">
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listaAportante" [value]="listado.codigo">
+                      <mat-option *ngFor="let listado of listaAportante[ii]" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>

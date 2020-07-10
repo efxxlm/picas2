@@ -15,8 +15,8 @@ import { MatSelectChange } from '@angular/material/select';
 export class FormularioProyectosComponent {
   listadoDocumentoAcreditacion: Dominio[];
   listaTipoAportante: Dominio[];
-  listaAportante: Dominio[];
-  listaVigencias: Dominio[];
+  listaAportante: any[]=[];
+  listaVigencias: any[]=[];
   listaInfraestructura: Dominio[];
   listaCordinaciones: Dominio[];
     constructor(private fb: FormBuilder,public commonServices: CommonService,public dialog: MatDialog,public datepipe: DatePipe,public projectServices:ProjectService) {}
@@ -203,41 +203,7 @@ err => {
 //console.log('terminó');
 });
 
-this.commonServices.listaNombreAportante().subscribe(respuesta => {
-  this.listaAportante=respuesta;
-}, 
-err => {
-  let mensaje: string;
-  console.log(err);
-  if (err.message){
-    mensaje = err.message;
-  }
-  else if (err.error.message){
-    mensaje = err.error.message;
-  }
-  this.openDialog('Error', mensaje);
-},
-() => {
-//console.log('terminó');
-});
 
-this.commonServices.listaVigencias().subscribe(respuesta => {
-  this.listaVigencias=respuesta;
-}, 
-err => {
-  let mensaje: string;
-  console.log(err);
-  if (err.message){
-    mensaje = err.message;
-  }
-  else if (err.error.message){
-    mensaje = err.error.message;
-  }
-  this.openDialog('Error', mensaje);
-},
-() => {
-//console.log('terminó');
-});
 
 this.commonServices.listaInfraestructuraIntervenir().subscribe(respuesta => {
   this.listaInfraestructura=respuesta;
@@ -415,13 +381,15 @@ err => {
   {
     if(this.proyecto.cantidadAportantes!=this.proyecto.ProyectoAportante.length)
     {
-      if(this.proyecto.cantidadAportantes<this.proyecto.ProyectoAportante.length)
+      this.proyecto.ProyectoAportante=[];
+      /*if(this.proyecto.cantidadAportantes<this.proyecto.ProyectoAportante.length)
       {
+        
         //preguntar
       }
       else{
         if(this.proyecto.cantidadAportantes>this.proyecto.ProyectoAportante.length)
-        {
+        {*/
           
           for(let a=this.proyecto.ProyectoAportante.length;a<this.proyecto.cantidadAportantes;a++)
           {
@@ -433,9 +401,11 @@ err => {
               FechaCreacion:null ,
               UsuarioCreacion:"" ,
             });
+            this.listaAportante.push({});
+            this.listaVigencias.push({});
           }
-        }
-      }
+        //}
+      //}
     }
   }
   valorTotal(aportantes:any)
@@ -446,6 +416,50 @@ err => {
   formularioCompleto()
   {
     return true;
+  }
+
+  getAportante(i:number)
+  {
+    this.commonServices.listaNombreAportante().subscribe(respuesta => {
+      this.listaAportante[i]=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+    },
+    () => {
+    //console.log('terminó');
+    });
+    
+    
+  }
+
+  getVigencia(i:number)
+  {
+    this.commonServices.listaVigencias().subscribe(respuesta => {
+      this.listaVigencias[i]=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+    },
+    () => {
+    //console.log('terminó');
+    });
   }
 
 }

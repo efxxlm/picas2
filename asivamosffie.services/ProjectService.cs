@@ -90,11 +90,14 @@ namespace asivamosffie.services
                 //Predio  principal 
                 //el principal se supone que no va relacionado con la tabla ProyectoPredio 
                 //Ya que tiene una relacion directa en la tabla proyecto.predioPrincipalId
-                if (pProyecto.PredioPrincipal.PredioId == null)
+                if (pProyecto.PredioPrincipal.PredioId == null || pProyecto.PredioPrincipal.PredioId == 0)
                 {
+                    pProyecto.PredioPrincipal.InstitucionEducativaSedeId = null;
                     pProyecto.PredioPrincipal.UsuarioCreacion = pProyecto.UsuarioCreacion; 
                     pProyecto.PredioPrincipal.FechaCreacion = DateTime.Now;
                     pProyecto.PredioPrincipal.Activo = true;
+                    pProyecto.InstitucionEducativa = _context.InstitucionEducativaSede.Find(pProyecto.InstitucionEducativaId);
+                    pProyecto.Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId);
                     _context.Predio.Add(pProyecto.PredioPrincipal);
                 }
                 else
@@ -113,7 +116,7 @@ namespace asivamosffie.services
                 _context.SaveChanges();
                  
                 //Proyecto
-                if (pProyecto.ProyectoId == null)
+                if (pProyecto.ProyectoId == null || pProyecto.ProyectoId == 0)
                 {
                     //El proyecto es nuevo  
                     pProyecto.Eliminado = false;
