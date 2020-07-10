@@ -1,0 +1,23 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar procesos de selección
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+
+        Bienvenido/a aquí podrá gestionar los procesos de selección relacionados con proyectos de infraestructura del FFIE
+    </div>
+
+    <a routerLink="/seleccion/nuevo" mat-raised-button color="accent" class="btn-registrar-acuerdo">
+        Registrar nuevo proceso de selección
+    </a>
+</div>

@@ -1,3 +1,4 @@
+import { GestionarAcuerdoCofinanciacionRoutingModule } from './_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion-routing.module';
 import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@angular/router';
@@ -38,6 +39,11 @@ const routes: Routes = [
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+      },
+      {
+        path: 'seleccion',
+        loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
+        .then(m => m.GestionarProcesosDeSeleccionModule)
       },
     ]
 

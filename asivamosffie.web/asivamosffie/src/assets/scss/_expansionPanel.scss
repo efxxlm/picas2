@@ -1,0 +1,23 @@
+.expansion-style {
+    box-shadow: none;
+    &--header {
+        width: 25em;
+        max-width: 100%;
+        min-width: max-content;
+        background-color: transparent;
+        margin-left: auto;
+        margin-right: auto;
+
+        &:hover {
+            background-color: transparent !important;
+        }
+    }
+    &--title {
+        background-color: var(--mainColor);
+        color: #fff;
+        justify-content: center;
+        padding: .3em 1.5em;
+        border-radius: .5em;
+        position: relative;
+    }
+}
