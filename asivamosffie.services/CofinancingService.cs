@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Z.EntityFramework.Plus;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace asivamosffie.services
 {
     public class CofinancingService : ICofinancingService
@@ -227,18 +228,31 @@ namespace asivamosffie.services
             return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).ToListAsync();
         }
 
-        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
         {
-            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+            List<CofinanciacionAportante> ListCofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+
+            List<CofinanicacionAportanteGrilla> ListCofinanicacionAportanteGrilla = new List<CofinanicacionAportanteGrilla>();
+
+            foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
+            {
+                CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
+                { 
+                    CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
+                    Nombre = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.NombreAportanteId),
+                    TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId)
+                };
+                ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
+            }
+
+            return ListCofinanicacionAportanteGrilla;
         }
-         
+
         public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
         {
             return await _context.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == pAportanteID).ToListAsync();
         }
 
-
-
     }
+
 }
-     

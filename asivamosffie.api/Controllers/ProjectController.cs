@@ -29,6 +29,26 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
+        [Route("CreateOrEditAdministrativeProject")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditAdministrativeProject([FromBody] ProyectoAdministrativo pProyectoAdministrativo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                 
+                string pUsuarioModifico = " ";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
+                respuesta = await _projectService.CreateOrEditAdministrativeProject(pProyectoAdministrativo);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return Ok(respuesta);
+            }
+        }
 
         [Route("SetValidateMassiveLoadProjects")]
         [HttpPost]
