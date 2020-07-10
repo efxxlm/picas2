@@ -25,7 +25,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   nombresAportante: Dominio[];
   valorTotalAcuerdo = 85000000;
   listaCofinancAportantes: CofinanciacionAportante[] = [];
-  selected = 2;
+  id: number = 0;
 
   constructor(private fb: FormBuilder,
               private cofinanciacionService: CofinanciacionService,
@@ -43,17 +43,18 @@ export class RegistrarAcuerdoComponent implements OnInit {
   });
 
   EditMode(){
-    let id: number = 0;
     this.activatedRoute.params.subscribe( param =>{
-    id = param['id'];
+    
 
-       if (id){
-         this.cofinanciacionService.getAcuerdoCofinanciacionById(id).subscribe(cof => {
+       if (param['id']){
+        this.id = param['id'];
+        this.cofinanciacionService.getAcuerdoCofinanciacionById(this.id).subscribe(cof => {
             this.datosAportantes.setControl('vigenciaEstado',this.fb.control(cof.vigenciaCofinanciacionId, Validators.required));
             this.datosAportantes.setControl('numAportes', this.fb.control(cof.cofinanciacionAportante.length));
 
             cof.cofinanciacionAportante.forEach( apor => {
-              let grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId, apor.nombreAportanteId, apor.cofinanciacionDocumento.length);   
+              let grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId, apor.nombreAportanteId, apor.cofinanciacionDocumento.length,
+                                                                apor.cofinanciacionId, apor.cofinanciacionAportanteId);   
 
               const valorTipo = this.selectTiposAportante.find( a => a.dominioId == apor.tipoAportanteId);
               const valorNombre = this.nombresAportante.find( a => a.dominioId == apor.nombreAportanteId);
@@ -127,14 +128,18 @@ export class RegistrarAcuerdoComponent implements OnInit {
       tipo: ['', Validators.required],
       nombre: ['', Validators.required],
       cauntosDocumentos: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cofinanciacionId:[''],
+      cofinanciacionAportanteId:['']
     });
   }
 
-  createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number): FormGroup {
+  createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number, pCofinanciacionId: number, pCofinanciacionAportanteId: number): FormGroup {
     return this.fb.group({
       tipo: [pTipo, Validators.required],
       nombre: [pNombre, Validators.required],
       cauntosDocumentos: [pCantidad, [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cofinanciacionId: [pCofinanciacionId],
+      cofinanciacionAportanteId: [pCofinanciacionAportanteId]
     });
   }
 
@@ -174,8 +179,11 @@ export class RegistrarAcuerdoComponent implements OnInit {
         }
         let cofiApo: CofinanciacionAportante={
           tipoAportanteId:control.get('tipo').value,
-          nombreAportanteId:control.get('nombre').value,municipioId:null,cofinanciacionId:null,
-          cofinanciacionAportanteId:null,cofinanciacionDocumento:cofinanciacionDocumento
+          nombreAportanteId:control.get('nombre').value,
+          municipioId:null,
+          cofinanciacionId:control.get('cofinanciacionId').value,
+          cofinanciacionAportanteId:control.get('cofinanciacionAportanteId').value,
+          cofinanciacionDocumento:cofinanciacionDocumento
         }
 
         //cofiApo.cofinanciacionDocumento = this.listaDocumentos( control )
@@ -194,7 +202,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       {
         vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
         cofinanciacionAportante: this.listaCofinancAportantes,
-        cofinanciacionId:0
+        cofinanciacionId: this.id
       }
 
       console.log(cofinanciacion);

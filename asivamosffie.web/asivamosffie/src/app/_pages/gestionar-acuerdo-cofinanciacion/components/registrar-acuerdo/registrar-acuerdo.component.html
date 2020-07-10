@@ -110,6 +110,8 @@
                         <mat-form-field class="full-width">
                           <input matInput #cauntosDocumentos maxlength="2" (keyup)="cantidadDocumentos(aportante,i)" min="1" max="99" required type="number"
                             formControlName="cauntosDocumentos">
+                            <input formControlName="cofinanciacionId" type="hidden" >
+                            <input formControlName="cofinanciacionAportanteId" type="hidden" >
                         </mat-form-field>
                         <span class="contador">{{2 - cauntosDocumentos.value.length}}</span>
                       </div>
