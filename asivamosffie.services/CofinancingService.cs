@@ -18,7 +18,7 @@ namespace asivamosffie.services
 {
     public class CofinancingService : ICofinancingService
     {
-        
+
         private readonly devAsiVamosFFIEContext _context;
 
         private readonly ICommonService _commonService;
@@ -215,7 +215,7 @@ namespace asivamosffie.services
             }
             return Listcofinanciacion;
         }
- 
+
         public async Task<List<CofinanciacionDocumento>> GetDocument(int ContributorId)
         {
             return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).ToListAsync();
@@ -226,11 +226,19 @@ namespace asivamosffie.services
 
             return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).ToListAsync();
         }
-        //    public Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int ContributorId)
-        //{
-        //    throw new NotImplementedException();
- 
-        //}
+
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+        }
+         
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
+        {
+            return await _context.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == pAportanteID).ToListAsync();
+        }
+
+
+
     }
-    
 }
+     
