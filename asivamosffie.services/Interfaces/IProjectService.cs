@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IProjectService
     {
+        Task<Respuesta> CreateOrEditAdministrativeProject(ProyectoAdministrativo pProyectoAdministrativo);
+
         Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto);
 
         Task<Respuesta> CreateOrEditProyect(Proyecto pProyecto);
