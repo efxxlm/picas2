@@ -48,7 +48,8 @@ namespace asivamosffie.api.Controllers
             var result = await _Cofinancing.GetListCofinancing();
             return result;
         }
-
+ 
+ 
 
         [Route("GetDocument")]
         [HttpGet]
@@ -65,8 +66,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
+         
         [Route("GetCofinancingByIdCofinancing")]
         [HttpGet]
         public async Task<Cofinanciacion> GetCofinancing(int IdCofinancing)
@@ -74,5 +74,9 @@ namespace asivamosffie.api.Controllers
             var result = await _Cofinancing.GetCofinanciacionByIdCofinanciacion(IdCofinancing);
             return result;
         }
+
+
+
+
     }
 }
