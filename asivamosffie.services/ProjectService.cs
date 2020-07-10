@@ -100,7 +100,7 @@ namespace asivamosffie.services
                 else
                 {
                     Predio predio = _context.Predio.Find(pProyecto.PredioPrincipal.PredioId);
-                    predio.InstitucionEducativaSedeId = pProyecto.PredioPrincipal.InstitucionEducativaSedeId;
+                    //predio.InstitucionEducativaSedeId = pProyecto.PredioPrincipal.InstitucionEducativaSedeId;
                     predio.TipoPredioCodigo = pProyecto.PredioPrincipal.TipoPredioCodigo;
                     predio.UbicacionLatitud = pProyecto.PredioPrincipal.UbicacionLatitud;
                     predio.UbicacionLongitud = pProyecto.PredioPrincipal.UbicacionLongitud;

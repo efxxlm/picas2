@@ -55,7 +55,7 @@
                 <mat-form-field class="select-width">
                   <mat-select required [(ngModel)]="proyecto.TipoIntervencionCodigo">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.dominioId">
+                    <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.codigo">
                       {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
@@ -227,7 +227,7 @@
                 <mat-form-field class="select-width">
                   <mat-select required [(ngModel)]="proyecto.ConvocatoriaId" [disabled]="proyecto.EnConvocatoria==false">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
+                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.codigo">
                       {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
@@ -262,7 +262,7 @@
                 <mat-form-field class="select-width">
                   <mat-select required [(ngModel)]="proyecto.PredioPrincipal.TipoPredioCodigo">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoPredios" [value]="listado.dominioId">
+                    <mat-option *ngFor="let listado of listadoPredios" [value]="listado.codigo">
                       {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
@@ -319,7 +319,7 @@
                 <mat-form-field class="select-width">
                   <mat-select required [(ngModel)]="proyecto.PredioPrincipal.DocumentoAcreditacionCodigo">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.dominioId">
+                    <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                       {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
@@ -373,7 +373,7 @@
                     <mat-form-field class="select-width">
                       <mat-select required [(ngModel)]="predios.DocumentoAcreditacionCodigo">
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
+                        <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.codigo">
                           {{ listado.nombre }}
                         </mat-option>
                       </mat-select>
@@ -445,7 +445,7 @@
                   <mat-form-field class="select-width">
                     <mat-select required >
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listaTipoAportante" [value]="listado.dominioId">
+                      <mat-option *ngFor="let listado of listaTipoAportante" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
@@ -464,7 +464,7 @@
                   <mat-form-field class="select-width">
                     <mat-select required [(ngModel)]="aportantes.AportanteId">
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listaAportante" [value]="listado.dominioId">
+                      <mat-option *ngFor="let listado of listaAportante" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
@@ -483,7 +483,7 @@
                   <mat-form-field class="select-width">
                     <mat-select required >
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listaVigencias" [value]="listado.dominioId">
+                      <mat-option *ngFor="let listado of listaVigencias" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
@@ -554,7 +554,7 @@
                   <mat-form-field class="select-width">
                     <mat-select required [(ngModel)]="infraestructura.InfraestructuraCodigo">
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.dominioId">
+                      <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
@@ -622,7 +622,7 @@
                   <mat-form-field class="select-width">
                     <mat-select required [(ngModel)]="infraestructura.CoordinacionResponsableCodigo">
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listaCordinaciones" [value]="listado.dominioId">
+                      <mat-option *ngFor="let listado of listaCordinaciones" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
