@@ -1,6 +1,6 @@
 <div class="container text-center">
   <div class="text-right">
-      <a routerLink="/crearProyectoAdministrativo" mat-button color="primary" class="btn-regresar">
+      <a routerLink="/crearProyecto" mat-button color="primary" class="btn-regresar">
           <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
   </div> 
@@ -55,8 +55,8 @@
                 <mat-form-field class="select-width">
                   <mat-select required [(ngModel)]="proyecto.TipoIntervencionCodigo">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.dominioId">
+                      {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -87,10 +87,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required >
+                  <mat-select required  (selectionChange)="getDepartments($event)">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoregion" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId">
+                      {{ listado.descripcion }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -106,10 +106,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required >
+                  <mat-select required (selectionChange)="getMunicipio($event)">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId">
+                      {{ listado.descripcion }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -125,10 +125,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.LocalizacionIdMunicipio">
+                  <mat-select required [(ngModel)]="proyecto.LocalizacionIdMunicipio" (selectionChange)="getInstitucion()">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.localizacionId">
+                      {{ listado.descripcion }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -144,10 +144,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.InstitucionEducativaId">
+                  <mat-select required [(ngModel)]="proyecto.InstitucionEducativaId" (selectionChange)="getSede()">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoInstitucion" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoInstitucion" [value]="listado.institucionEducativaSedeId">
+                      {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -179,8 +179,8 @@
                 <mat-form-field class="select-width">
                   <mat-select required [(ngModel)]="proyecto.SedeId">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoSede" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoSede" [value]="listado.institucionEducativaSedeId">
+                      {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -221,14 +221,14 @@
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">Convocatoria</label>
+                <label class="label-left" [ngClass]="{'opaco': proyecto.EnConvocatoria==false}">Convocatoria</label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
+                  <mat-select required [(ngModel)]="proyecto.ConvocatoriaId" [disabled]="proyecto.EnConvocatoria==false">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
+                      {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -260,10 +260,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.TipoPredioCodigo">
+                  <mat-select required [(ngModel)]="proyecto.PredioPrincipal.TipoPredioCodigo">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoPredios" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoPredios" [value]="listado.dominioId">
+                      {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -282,14 +282,14 @@
               <div class="col d-flex">
                 latitud
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="2" min="1" max="99" required type="number">
+                  <input matInput [(ngModel)]="proyecto.PredioPrincipal.UbicacionLatitud" maxlength="2" min="1" max="99" required type="number">
                 </mat-form-field>                    
-                <span class="contador">{{2 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                <span class="contador">{{2 - (proyecto.PredioPrincipal.UbicacionLatitud?proyecto.PredioPrincipal.UbicacionLatitud.toString().length:0)}}</span>
                 longitud
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="2" min="1" max="99" required type="number">
+                  <input matInput [(ngModel)]="proyecto.PredioPrincipal.UbicacionLongitud" maxlength="2" min="1" max="99" required type="number">
                 </mat-form-field>                    
-                <span class="contador">{{2 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                <span class="contador">{{2 - (proyecto.PredioPrincipal.UbicacionLongitud?proyecto.PredioPrincipal.UbicacionLongitud.toString().length:0)}}</span>
               </div>
             </div>
           </div>
@@ -302,9 +302,9 @@
               </div>                  
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="20" required type="text">
+                  <input matInput [(ngModel)]="proyecto.PredioPrincipal.Direccion" maxlength="20" required type="text">
                 </mat-form-field>                    
-                <span class="contador">{{20 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                <span class="contador">{{20 - (proyecto.PredioPrincipal.Direccion?proyecto.PredioPrincipal.Direccion.length:0)}}</span>
               </div>
             </div>
           </div>
@@ -317,10 +317,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
+                  <mat-select required [(ngModel)]="proyecto.PredioPrincipal.DocumentoAcreditacionCodigo">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.dominioId">
+                      {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -336,9 +336,9 @@
               </div>                  
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="2" min="1" max="99" required type="number">
+                  <input matInput [(ngModel)]="proyecto.PredioPrincipal.NumeroDocumento" maxlength="20" required type="text">
                 </mat-form-field>                    
-                <span class="contador">{{20 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                <span class="contador">{{20 - (proyecto.PredioPrincipal.NumeroDocumento?proyecto.PredioPrincipal.NumeroDocumento.length:0)}}</span>
               </div>
             </div>
           </div>
@@ -351,7 +351,7 @@
               </div>                  
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="2" min="1" max="99" required type="number">
+                  <input matInput [(ngModel)]="proyecto.PredioPrincipal.CedulaCatastral" maxlength="20" required type="text">
                 </mat-form-field>                    
                 <span class="contador">{{20 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
               </div>
@@ -371,10 +371,10 @@
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
-                      <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
+                      <mat-select required [(ngModel)]="predios.DocumentoAcreditacionCodigo">
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                          {{ listado.valor }}
+                        <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
+                          {{ listado.nombre }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -390,9 +390,9 @@
                   </div>                  
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="2" min="1" max="99" required type="number">
+                      <input matInput [(ngModel)]="predios.NumeroDocumento" maxlength="20"required type="text">
                     </mat-form-field>                    
-                    <span class="contador">{{20 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                    <span class="contador">{{20 - (predios.NumeroDocumento?predios.NumeroDocumento.toString().length:0)}}</span>
                   </div>
                 </div>
               </div>
@@ -405,9 +405,9 @@
                   </div>                  
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="2" min="1" max="99" required type="number">
+                      <input matInput [(ngModel)]="predios.CedulaCatastral" maxlength="20" required type="text">
                     </mat-form-field>                    
-                    <span class="contador">{{20 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                    <span class="contador">{{20 - (predios.CedulaCatastral?predios.CedulaCatastral.toString().length:0)}}</span>
                   </div>
                 </div>
               </div>
@@ -443,10 +443,10 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
+                    <mat-select required >
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                        {{ listado.valor }}
+                      <mat-option *ngFor="let listado of listaTipoAportante" [value]="listado.dominioId">
+                        {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -462,10 +462,10 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
+                    <mat-select required [(ngModel)]="aportantes.AportanteId">
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                        {{ listado.valor }}
+                      <mat-option *ngFor="let listado of listaAportante" [value]="listado.dominioId">
+                        {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -480,10 +480,15 @@
                   <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
                 </div>                  
                 <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="proyecto.NumeroActaJunta"  required type="date">
-                  </mat-form-field>                    
-                  <span class="contador">{{3 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                  <mat-form-field class="select-width">
+                    <mat-select required >
+                      <mat-option></mat-option>
+                      <mat-option *ngFor="let listado of listaVigencias" [value]="listado.dominioId">
+                        {{ listado.nombre }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
                 </div>
               </div>
             </div>
@@ -496,9 +501,9 @@
                 </div>                  
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="32" min="1" max="999" required type="number">
+                    <input matInput [(ngModel)]="aportantes.ValorObra" (keyup)="valorTotal(aportantes)" maxlength="32" min="1" max="999" required type="number">
                   </mat-form-field>                    
-                  <span class="contador">{{3 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                  <span class="contador">{{20 - (aportantes.ValorObra?aportantes.ValorObra.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
@@ -511,9 +516,9 @@
                 </div>                  
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="32" min="1" max="999" required type="number">
+                    <input matInput [(ngModel)]="aportantes.ValorInterventoria" (keyup)="valorTotal(aportantes)" maxlength="32" min="1" max="999" required type="number">
                   </mat-form-field>                    
-                  <span class="contador">{{3 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                  <span class="contador">{{20 - (aportantes.ValorInterventoria?aportantes.ValorInterventoria.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
@@ -526,123 +531,107 @@
                 </div>                  
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="32" min="1" max="999" required type="number">
+                    <input matInput [(ngModel)]="aportantes.ValorTotalAportante" maxlength="32" min="1" max="999" required type="number" readonly>
                   </mat-form-field>                    
-                  <span class="contador">{{3 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+                  <span class="contador">{{20 - (aportantes.ValorTotalAportante?aportantes.ValorTotalAportante.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <h2 class="card-subTitle">Alcance</h2>
-        Infraestructura 1
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left">Infraestructura a intervenir</label>
+        <div *ngFor="let infraestructura of proyecto.InfraestructuraIntervenirProyecto;index as i">
+
+        
+          Infraestructura {{i+1}}
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Infraestructura a intervenir</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select required [(ngModel)]="infraestructura.InfraestructuraCodigo">
+                      <mat-option></mat-option>
+                      <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.dominioId">
+                        {{ listado.nombre }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>   
               </div>
-              <div class="col">
-                <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                      {{ listado.valor }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>   
-            </div>
-          </div>               
-        </div> 
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left">Cantidad</label>
-              </div>                  
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="proyecto.NumeroActaJunta" maxlength="32" min="1" max="999" required type="number">
-                </mat-form-field>                    
-                <span class="contador">{{3 - (proyecto.NumeroActaJunta?proyecto.NumeroActaJunta.toString().length:0)}}</span>
+            </div>               
+          </div> 
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Cantidad</label>
+                </div>                  
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="infraestructura.Cantidad" maxlength="32" min="1" max="999" required type="number">
+                  </mat-form-field>                    
+                  <span class="contador">{{3 - (infraestructura.Cantidad?infraestructura.Cantidad.toString().length:0)}}</span>
+                </div>
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Plazo obra</label>
+                </div>
+                <div class="col">
+                  Mes <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="infraestructura.PlazoMesesObra" maxlength="32" min="1" max="999" required type="number">
+                  </mat-form-field>    
+                    Día <mat-form-field class="full-width">
+                      <input matInput [(ngModel)]="infraestructura.PlazoDiasObra" maxlength="2" min="1" max="31" required type="number">
+                    </mat-form-field> 
+                </div>   
+              </div>
+            </div>               
+          </div> 
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Plazo interventoría</label>
+                </div>
+                <div class="col">
+                  Mes <mat-form-field class="full-width">
+                    <input matInput [(ngModel)]="infraestructura.PlazoMesesInterventoria" maxlength="2" min="1" max="999" required type="number">
+                  </mat-form-field>    
+                    Día <mat-form-field class="full-width">
+                      <input matInput [(ngModel)]="infraestructura.PlazoDiasInterventoria" maxlength="2" min="1" max="31" required type="number">
+                    </mat-form-field>    
+                </div>   
+              </div>
+            </div>               
+          </div> 
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Coordinación responsable</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select required [(ngModel)]="infraestructura.CoordinacionResponsableCodigo">
+                      <mat-option></mat-option>
+                      <mat-option *ngFor="let listado of listaCordinaciones" [value]="listado.dominioId">
+                        {{ listado.nombre }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>   
+              </div>
+            </div>               
+          </div> 
         </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left">Plazo obra</label>
-              </div>
-              <div class="col">
-                Mes <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                      {{ listado.valor }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                  Día <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
-                      <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                        {{ listado.valor }}
-                      </mat-option>
-                    </mat-select>
-                </mat-form-field>
-              </div>   
-            </div>
-          </div>               
-        </div> 
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left">Plazo interventoría</label>
-              </div>
-              <div class="col">
-                Mes <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                      {{ listado.valor }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                  Día <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
-                      <mat-option></mat-option>
-                      <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                        {{ listado.valor }}
-                      </mat-option>
-                    </mat-select>
-                </mat-form-field>
-              </div>   
-            </div>
-          </div>               
-        </div> 
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left">Coordinación responsable</label>
-              </div>
-              <div class="col">
-                <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="proyecto.ConvocatoriaId">
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.id">
-                      {{ listado.valor }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>   
-            </div>
-          </div>               
-        </div> 
         <button mat-button color="warn" type="button"
           class="btn-eliminar"  (click)="addInfraestructura()">
           <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura">
@@ -653,7 +642,7 @@
   </div>
   <div class="text-center animatedOpacity">
     <button mat-button color="warn" class="btn-guardar"
-    *ngIf="false" type="button"
+    *ngIf="formularioCompleto()" type="button"
     (click)="onSubmit()">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>

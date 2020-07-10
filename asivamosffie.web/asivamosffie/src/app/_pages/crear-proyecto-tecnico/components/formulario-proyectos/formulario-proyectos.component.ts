@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Listados, Proyecto } from 'src/app/core/_services/project/project.service';
+import { Listados, Proyecto, ProjectService } from 'src/app/core/_services/project/project.service';
+import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { DatePipe } from '@angular/common';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-formulario-proyectos',
@@ -8,21 +13,55 @@ import { Listados, Proyecto } from 'src/app/core/_services/project/project.servi
   styleUrls: ['./formulario-proyectos.component.scss']
 })
 export class FormularioProyectosComponent {
-    constructor(private fb: FormBuilder) {}
+  listadoDocumentoAcreditacion: Dominio[];
+  listaTipoAportante: Dominio[];
+  listaAportante: Dominio[];
+  listaVigencias: Dominio[];
+  listaInfraestructura: Dominio[];
+  listaCordinaciones: Dominio[];
+    constructor(private fb: FormBuilder,public commonServices: CommonService,public dialog: MatDialog,public datepipe: DatePipe,public projectServices:ProjectService) {}
 
-    listadoTipoIntervencion:Listados[];
-    listadoregion:Listados[];
-    listadoDepartamento:Listados[];
-    listadoMunicipio:Listados[];
-    listadoInstitucion:Listados[];
-    listadoSede:Listados[];
-    listadoConvocatoria:Listados[];
-    listadoPredios
+    listadoTipoIntervencion:Dominio[];
+    listadoregion:Localizacion[];
+    listadoDepartamento:Localizacion[];
+    listadoMunicipio:Localizacion[];
+    listadoInstitucion:any[];
+    listadoSede:any[];
+    listadoConvocatoria:Dominio[];
+    listadoPredios:Dominio[];
     proyecto:Proyecto;
     CodigoDaneIE:string="";
     codigoDaneSede:string="";
+
   onSubmit() {
-    alert('Thanks!');
+    this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(respuesta => {
+      this.openDialog('', respuesta.message);
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      let msn="";
+      if(err.error.code=="501")
+      {
+        err.error.data.forEach(element => {
+          msn+="El campo "+element.errors.key;
+          element.errors.forEach(element => {
+            msn+=element.errorMessage+" ";
+          });
+        });
+      }
+      if (err.error.message){
+        mensaje = err.error.message;
+      }
+      else if (err.message){
+        mensaje = err.message;
+      }
+      this.openDialog('Error', mensaje);
+   },
+   () => {
+    //console.log('terminó');
+   });
+    
   }
 
   ngOnInit(): void {
@@ -34,9 +73,9 @@ export class FormularioProyectosComponent {
       TipoIntervencionCodigo:"",
       LlaveMen:"",
       LocalizacionIdMunicipio:"",
-      InstitucionEducativaId:null,
-      SedeId:null,
-      EnConvocatoria:null,
+      InstitucionEducativaId:0,
+      SedeId:0,
+      EnConvocatoria:false,
       ConvocatoriaId:null,
       CantPrediosPostulados:null,
       TipoPredioCodigo:"",
@@ -52,9 +91,13 @@ export class FormularioProyectosComponent {
       UsuarioModificacion:"",
       InstitucionEducativaSede:null,
       LocalizacionIdMunicipioNavigation:null,
-      PredioPrincipal:null,
+      PredioPrincipal:{
+        CedulaCatastral:"",Direccion:"",DocumentoAcreditacionCodigo:"",
+        FechaCreacion:new Date,InstitucionEducativaSedeId:0,NumeroDocumento:"",
+        UsuarioCreacion:"",PredioId:0,TipoPredioCodigo:"",UbicacionLatitud:"",UbicacionLongitud:""
+      },
       Sede:null,
-      InfraestructuraIntervenirProyecto:null,
+      InfraestructuraIntervenirProyecto:[],
       ProyectoAportante:[],
       ProyectoPredio:[],
       cantidadAportantes:null};
@@ -62,11 +105,287 @@ export class FormularioProyectosComponent {
       Predio:{CedulaCatastral:"",Direccion:"",DocumentoAcreditacionCodigo:"",
       FechaCreacion:new Date,InstitucionEducativaSedeId:0,NumeroDocumento:"",
       UsuarioCreacion:"",PredioId:0,TipoPredioCodigo:"",UbicacionLatitud:"",UbicacionLongitud:""}});
+    //cargo lsitas
+    this.getListas();
+    this.addInfraestructura();
+  
+
+  }
+  getListas() {
+    this.commonServices.listaTipoIntervencion().subscribe(respuesta => {
+      this.listadoTipoIntervencion=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+   },
+   () => {
+    //console.log('terminó');
+   });
+
+
+   this.commonServices.listaRegion().subscribe(respuesta => {
+    this.listadoregion=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+  },
+  () => {
+    //console.log('terminó');
+  });
+
+  this.commonServices.listaTipoPredios().subscribe(respuesta => {
+    this.listadoPredios=respuesta;
+  }, 
+  err => {
+    let mensaje: string;
+    console.log(err);
+    if (err.message){
+      mensaje = err.message;
+    }
+    else if (err.error.message){
+      mensaje = err.error.message;
+    }
+    this.openDialog('Error', mensaje);
+ },
+ () => {
+  //console.log('terminó');
+ });
+
+ this.commonServices.listaDocumentoAcrditacion().subscribe(respuesta => {
+  this.listadoDocumentoAcreditacion=respuesta;
+}, 
+err => {
+  let mensaje: string;
+  console.log(err);
+  if (err.message){
+    mensaje = err.message;
+  }
+  else if (err.error.message){
+    mensaje = err.error.message;
+  }
+  this.openDialog('Error', mensaje);
+},
+() => {
+//console.log('terminó');
+});
+
+this.commonServices.listaTipoAportante().subscribe(respuesta => {
+  this.listaTipoAportante=respuesta;
+}, 
+err => {
+  let mensaje: string;
+  console.log(err);
+  if (err.message){
+    mensaje = err.message;
+  }
+  else if (err.error.message){
+    mensaje = err.error.message;
+  }
+  this.openDialog('Error', mensaje);
+},
+() => {
+//console.log('terminó');
+});
+
+this.commonServices.listaNombreAportante().subscribe(respuesta => {
+  this.listaAportante=respuesta;
+}, 
+err => {
+  let mensaje: string;
+  console.log(err);
+  if (err.message){
+    mensaje = err.message;
+  }
+  else if (err.error.message){
+    mensaje = err.error.message;
+  }
+  this.openDialog('Error', mensaje);
+},
+() => {
+//console.log('terminó');
+});
+
+this.commonServices.listaVigencias().subscribe(respuesta => {
+  this.listaVigencias=respuesta;
+}, 
+err => {
+  let mensaje: string;
+  console.log(err);
+  if (err.message){
+    mensaje = err.message;
+  }
+  else if (err.error.message){
+    mensaje = err.error.message;
+  }
+  this.openDialog('Error', mensaje);
+},
+() => {
+//console.log('terminó');
+});
+
+this.commonServices.listaInfraestructuraIntervenir().subscribe(respuesta => {
+  this.listaInfraestructura=respuesta;
+}, 
+err => {
+  let mensaje: string;
+  console.log(err);
+  if (err.message){
+    mensaje = err.message;
+  }
+  else if (err.error.message){
+    mensaje = err.error.message;
+  }
+  this.openDialog('Error', mensaje);
+},
+() => {
+//console.log('terminó');
+});
+this.commonServices.listaCoordinaciones().subscribe(respuesta => {
+  this.listaCordinaciones=respuesta;
+}, 
+err => {
+  let mensaje: string;
+  console.log(err);
+  if (err.message){
+    mensaje = err.message;
+  }
+  else if (err.error.message){
+    mensaje = err.error.message;
+  }
+  this.openDialog('Error', mensaje);
+},
+() => {
+//console.log('terminó');
+});
+  }
+
+  getDepartments(event: MatSelectChange)
+  {
+    console.log(event.value);
+    this.commonServices.listaDepartamentosByRegionId(event.value).subscribe(respuesta => {
+      this.listadoDepartamento=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+   },
+   () => {
+    //console.log('terminó');
+   });
+  }
+
+  getMunicipio(event: MatSelectChange)
+  {
+    this.commonServices.listaMunicipiosByIdDepartamento(event.value).subscribe(respuesta => {
+      this.listadoMunicipio=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+   },
+   () => {
+    //console.log('terminó');
+   });
+  }
+
+  getInstitucion()
+  {
+    
+    this.commonServices.listaIntitucionEducativaByMunicipioId(this.proyecto.LocalizacionIdMunicipio).subscribe(respuesta => {
+      this.listadoInstitucion=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+   },
+   () => {
+    //console.log('terminó');
+   });
+  }
+
+  getSede()
+  {
+    //console.log(this.proyecto);
+    this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.InstitucionEducativaId).subscribe(respuesta => {
+      this.listadoSede=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+   },
+   () => {
+    //console.log('terminó');
+   });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 
   addInfraestructura()
   {
-    
+    this.proyecto.InfraestructuraIntervenirProyecto.push({
+      InfraestrucutraIntervenirProyectoId :0,
+      ProyectoId :0,
+      InfraestructuraCodigo:"" ,
+      Cantidad :0,
+      Eliminado:false ,
+      FechaCreacion:null ,
+      UsuarioCreacion:"" ,      
+      UsuarioEliminacion:"" ,
+      PlazoMesesObra :0,
+      PlazoDiasObra:0 ,
+      PlazoMesesInterventoria:0 ,
+      PlazoDiasInterventoria:0 ,
+      CoordinacionResponsableCodigo:""
+    });
   }
 
   evaluopredios()
@@ -119,4 +438,14 @@ export class FormularioProyectosComponent {
       }
     }
   }
+  valorTotal(aportantes:any)
+  {
+    aportantes.ValorTotalAportante=aportantes.ValorInterventoria+aportantes.ValorObra;
+  }
+
+  formularioCompleto()
+  {
+    return true;
+  }
+
 }

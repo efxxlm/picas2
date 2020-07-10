@@ -26,10 +26,10 @@ namespace asivamosffie.services.Validators
             RuleFor(x => x.LocalizacionIdMunicipio)
                     .NotEmpty().WithMessage("Debe ingresar Municipio.");
 
-            RuleFor(x => x.InstitucionEducativa)
+            RuleFor(x => x.InstitucionEducativaId)
                     .NotEmpty().WithMessage("Debe ingresar Institución Educativa.");
              
-            RuleFor(x => x.Sede)
+            RuleFor(x => x.SedeId)
                     .NotEmpty().WithMessage("Debe ingresar Sede.");
 
             RuleFor(x => x.EnConvocatoria)

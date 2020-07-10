@@ -34,6 +34,18 @@ export class ProjectService {
     const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesByName?pNameFiles=${name}`, { responseType: "blob" });
     return retorno;
   }
+
+  public getListProjects() {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Project/ListProject`);
+    return retorno;
+  }
+
+  
+  public createOrUpdateProyect(proyecto: Proyecto) {   
+    const retorno = this.http.post<Respuesta>(`${environment.apiUrl}/Project/CreateOrUpdateProyect`,proyecto);
+    return retorno;
+  }
+  
   
 }
 export interface RespuestaProyecto{

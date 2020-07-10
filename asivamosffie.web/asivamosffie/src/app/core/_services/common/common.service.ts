@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CommonService {
+  
 
   constructor(private http: HttpClient) { }
 
@@ -35,6 +36,44 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=7`);
   }
 
+  listaTipoIntervencion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=1`);
+  }
+
+  listaRegion(){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListRegion`);
+  }
+
+  listaDepartamentosByRegionId(pIdRegion:string){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamentoByRegionId?idDepartamento=${pIdRegion}`);
+  }
+
+  listaIntitucionEducativaByMunicipioId(pidMunicipio:string){
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/ListIntitucionEducativaByMunicipioId?idMunicipio=${pidMunicipio}`);
+  }
+
+  listaSedeByInstitucionEducativaId(pidInstitucionEducativaId:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/ListSedeByInstitucionEducativaId?idInstitucionEducativaId=${pidInstitucionEducativaId}`);
+  }
+  listaTipoPredios() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=19`);
+  }
+
+  listaDocumentoAcrditacion() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=15`);
+  }
+  
+  listaInfraestructuraIntervenir() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=5`);
+  }
+
+  listaCoordinaciones() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=6`);
+  }
+
+  listaVigencias() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/ListVigenciaAporte`);
+  }
 }
 
 export interface Dominio{
