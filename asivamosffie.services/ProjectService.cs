@@ -829,7 +829,7 @@ namespace asivamosffie.services
 
         public async Task<Proyecto> GetProyectoByProyectoId(int idProyecto)
         {
-            return await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).Include(r => r.ProyectoAportante).FirstOrDefaultAsync();
+            return await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).Include(r => r.ProyectoAportante).Include(r => r.InfraestructuraIntervenirProyecto).Include(r => r.ProyectoPredio).FirstOrDefaultAsync();  
         }
 
         public async Task<Respuesta> CreateOrEditAdministrativeProject(ProyectoAdministrativo pProyectoAdministrativo)
@@ -900,11 +900,7 @@ namespace asivamosffie.services
                 proyectoAdministrativoAntiguo.Enviado = pProyectoAdministrativo.Enviado;
                 _context.Update(proyectoAdministrativoAntiguo);
 
-            }
-
-
-
-
+            } 
 
             try
             {

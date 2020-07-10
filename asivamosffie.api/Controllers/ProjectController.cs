@@ -131,11 +131,9 @@ namespace asivamosffie.api.Controllers
         [Route("GetProyectoByProyectoId")]
         [HttpGet]
         public async Task<Proyecto> GetProyectoByProyectoId(int pProyectoId)
-        {
-              
+        { 
             var respuesta = await _projectService.GetProyectoByProyectoId(pProyectoId);
-            return respuesta;
-
+            return respuesta; 
         }
     }
 }
