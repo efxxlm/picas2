@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -79,7 +80,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListAportanteByTipoAportanteId")]
         [HttpGet]
-        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
         {
             try
             {

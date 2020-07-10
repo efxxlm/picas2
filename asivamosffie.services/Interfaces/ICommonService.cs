@@ -52,5 +52,9 @@ namespace asivamosffie.services.Interfaces
         Task<List<InstitucionEducativaSede>> ListIntitucionEducativaByMunicipioId(string pIdMunicipio);
 
         Task<List<InstitucionEducativaSede>> ListSedeByInstitucionEducativaId(int pInstitucionEducativaCodigo);
+
+        Task<string> GetNombreDominioByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId);
+
+        Task<string> GetNombreDominioByDominioID(int pDominioID);
     }
 }
