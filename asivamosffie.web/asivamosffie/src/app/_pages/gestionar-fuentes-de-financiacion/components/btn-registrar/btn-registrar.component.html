@@ -1,0 +1,48 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar fuentes de financiación
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenido/a aquí podrá realizar el registro y actualización de los aportantes y las fuentes de financiación
+        disponibles y activas en el sistema de información que serán asignadas en los proyectos de infraestructura del
+        FFIE.
+    </div>
+
+    <form [formGroup]="regitrarAporteForm" (ngSubmit)="onSubmit()">
+        <div class="row justify-content-center">
+            <div class="pr-1">
+                <label class="label-left">Tipo de aportante</label>
+            </div>
+            <div class="col">
+                <mat-form-field class="select-width">
+                    <mat-select formControlName="tipoAportante" required>
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let tipoAportante of tiposAportante" [value]="tipoAportante.value">
+                            {{ tipoAportante.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div>
+            <button type="submit"
+                mat-raised-button color="accent"
+                class="btn-registrar-acuerdo">
+                Registrar aportante y fuente de recursos
+            </button>
+        </div>
+    </form>
+
+    <app-tabla-fuentes></app-tabla-fuentes>
+</div>

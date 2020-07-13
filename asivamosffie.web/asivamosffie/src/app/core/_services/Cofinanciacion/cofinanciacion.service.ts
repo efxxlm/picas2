@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../autenticacion/autenticacion.service';
+import { forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,6 @@ export class CofinanciacionService {
       vigencias.push(i);
     }
 
-    console.log(vigencias);
-
     return vigencias;
   }
 
@@ -26,32 +25,45 @@ export class CofinanciacionService {
   {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/CreateorUpdateCofinancing`,cofinanciacion);
   }
+
+  listaAcuerdosCofinanciacion(){ 
+    return this.http.get<Cofinanciacion[]>(`${environment.apiUrl}/Cofinancing/GetListCofinancing`);
+  }
+
+  getAcuerdoCofinanciacionById(id: number)
+  {
+    return this.http.get<Cofinanciacion>(`${environment.apiUrl}/Cofinancing/GetCofinancingByIdCofinancing?IdCofinancing=${id}`);
+  }
+  
 }
 
 export interface Cofinanciacion{
   cofinanciacionId: number,
   vigenciaCofinanciacionId: number,
-  cofinanciacionAportante: CofinanciacionAportante[]
+  cofinanciacionAportante: CofinanciacionAportante[],
+  fechaCreacion?: Date,
+  valorTotal?: number,
+  estadoRegistro?: string
 }
 
 export interface CofinanciacionAportante{
   cofinanciacionAportanteId: number,
   cofinanciacionId: number,
-  tipoAportanteId: number,
-  nombreAportanteId?: number,
+  tipoAportanteId: any,
+  nombreAportanteId?: any,
   municipioId: number,
   cofinanciacionDocumento: CofinanciacionDocumento[]
 }
 
 export interface CofinanciacionDocumento{
-  CofinanciacionDocumentoId: number,
-  CofinanciacionAportanteId: number,
-  VigenciaAporteId: number,
-  ValorDocumento: string,
-  TipoDocumentoId: number,
-  NumeroActa: string,
-  FechaActa?: Date,
-  NumeroAcuerdo?: number,
-  FechaAcuerdo: Date,
-  ValorTotalAportante: string 
+  cofinanciacionDocumentoId: number,
+  cofinanciacionAportanteId: number,
+  vigenciaAporte: number,
+  valorDocumento: string,
+  tipoDocumentoId: number,
+  numeroActa: string,
+  fechaActa?: Date,
+  numeroAcuerdo?: number,
+  fechaAcuerdo: Date,
+  valorTotalAportante: string 
 }

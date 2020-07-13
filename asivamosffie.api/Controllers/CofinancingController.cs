@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -41,18 +42,19 @@ namespace asivamosffie.api.Controllers
             } 
         }
 
-        [Route("GetCofinancing")]
+        [Route("GetListCofinancing")]
         [HttpGet]
         public async Task<List<Cofinanciacion>> GetCofinancing()
         {  
             var result = await _Cofinancing.GetListCofinancing();
             return result;
         }
-
+ 
+ 
 
         [Route("GetDocument")]
         [HttpGet]
-        public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int ContributorId)
         {
             try
             {
@@ -64,5 +66,46 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+         
+        [Route("GetCofinancingByIdCofinancing")]
+        [HttpGet]
+        public async Task<Cofinanciacion> GetCofinancing(int IdCofinancing)
+        {
+            var result = await _Cofinancing.GetCofinanciacionByIdCofinanciacion(IdCofinancing);
+            return result;
+        }
+
+
+
+        [Route("GetListAportanteByTipoAportanteId")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListAportanteByTipoAportanteId(pTipoAportanteID); 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("GetListDocumentoByAportanteId")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListDocumentoByAportanteId(pAportanteID);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

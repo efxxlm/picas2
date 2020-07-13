@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using asivamosffie.services;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +14,18 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContributorController : ControllerBase
+    public class CofinancingContributorController : ControllerBase
     {
-        public readonly IContributorService _contributor;
+        public readonly ICofinancingContributorService _contributor;
 
 
-        public ContributorController(IContributorService contributor)
+        public CofinancingContributorController(ICofinancingContributorService contributor)
         {
             _contributor = contributor;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Aportante>>> Get()
+        public async Task<ActionResult<List<CofinanciacionAportante>>> Get()
         {
             try
             {
@@ -35,8 +36,6 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-       
 
 
         [HttpGet("{id}")]
@@ -56,7 +55,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetControlGrid")]
         [HttpGet]
-        public async Task<ActionResult<List<Respuesta>>> GetControlGrid(int ContributorId)
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
         {
             try
             {
@@ -71,11 +70,11 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> post(Aportante aportante)
+        public async Task<IActionResult> post(CofinanciacionAportante CofnaAportante)
         {
             try
             {
-                var result = await _contributor.Insert(aportante);
+                var result = await _contributor.Insert(CofnaAportante);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -83,7 +82,6 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
 
     }
 }

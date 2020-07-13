@@ -1,0 +1,305 @@
+<div class="container">
+  <div class="text-right">
+    <a routerLink="/gestionarFuentes" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Registrar aporte y fuente de recursos
+    </h1>
+  </div>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Datos del aportante
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left">Nombre del aportante</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="nombreAportante">
+                <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes.value">
+                  {{ nombreAportantes.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Documento de apropiación</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input matInput formControlName="documentoApropiacion">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Número de documento</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #numDocumento type="number" formControlName="numerodocumento">
+                </mat-form-field>
+                <span class="contador">{{10 - numDocumento.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div formGroupName="fuenteRecursosArray">
+      <div *ngFor="let fuente of fuenteRecursosArray.controls; let j = index">
+        <div [formGroupName]="j">
+          <mat-card class="shipping-card">
+            <mat-card-header class="header-card">
+              <mat-card-title class="header-card--text">
+                Datos de la fuente
+                <span *ngIf="addressForm.value.fuenteRecursosArray.length > 1">{{ j + 1 }}</span>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Fuente de recursos</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="fuenteRecursos">
+                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista"
+                        [value]="fuenteDeRecursos1.value">
+                        {{ fuenteDeRecursos1.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Valor aporte fuente de recursos</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #valorAporte type="number" formControlName="valorFuenteRecursos">
+                      </mat-form-field>
+                      <span class="contador">{{20 - valorAporte.value.length}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="card-subTitle">Vigencias</h2>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">¿De cuántas vigencias se realizará el aporte?</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #cuantasVigencias type="number" min="1" max="99"
+                          formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)">
+                      </mat-form-field>
+                      <span class="contador">{{2 - cuantasVigencias.value.length}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div formGroupName="vigencias">
+
+                <div *ngFor="let vigencia of vigencias1.controls; let i = index">
+                  <div [formGroupName]="i">
+                    <mat-card-title class="header-card--text sub-text">
+                      Vigencia {{ i + 1}}
+                    </mat-card-title>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left">Vigencia del aporte</label>
+                          </div>
+                          <div class="col">
+                            <mat-form-field class="select-width">
+                              <mat-select formControlName="vigenciaAportante">
+                                <mat-option *ngFor="let VigenciaAporte of VigenciasAporte" [value]="VigenciaAporte">
+                                  {{ VigenciaAporte }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left">Valor aporte de la vigencia</label>
+                          </div>
+                          <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                              <input matInput #valorVigencia type="number" formControlName="valorVigencia">
+                            </mat-form-field>
+                            <span class="contador">{{20 - valorVigencia.value.length}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 text-right">
+                        <button mat-button color="warn" type="button" class="btn-eliminar"
+                          (click)="borrarArray(vigencias1, i)">
+                          <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                          Eliminar vigencia
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div formGroupName="cuentasBancaria">
+                <h2 class="card-subTitle">Cuentas bancarias</h2>
+                <div *ngFor="let cuentaBancaria of cuentasBancaria.controls; let i = index">
+                  <div [formGroupName]="i">
+                    <mat-card-title class="header-card--text sub-text">
+                      Cuenta bancaria {{ i + 1 }}
+                    </mat-card-title>
+                    <div class="row">
+                      <div class="pr-1">
+                        <label class="label-left">Número de cuenta</label>
+                      </div>
+                      <div class="col d-flex">
+                        <mat-form-field class="full-width">
+                          <input matInput #numeroCuemta type="number" formControlName="numeroCuenta">
+                        </mat-form-field>
+                        <span class="contador">{{50 - numeroCuemta.value.length}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="pr-1">
+                        <label class="label-left">Nombre de cuenta</label>
+                      </div>
+                      <div class="col d-flex">
+                        <mat-form-field class="full-width">
+                          <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta">
+                        </mat-form-field>
+                        <span class="contador">{{100 - nombreCuenta.value.length}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left">Código SIFI</label>
+                          </div>
+                          <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                              <input matInput #codigoSIFI type="text" formControlName="codigoSIFI">
+                            </mat-form-field>
+                            <span class="contador">{{6 - codigoSIFI.value.length}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left">Tipo de cuenta</label>
+                          </div>
+                          <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="tipoCuenta">
+                              <mat-radio-button value="ahorros">Ahorros</mat-radio-button>
+                              <mat-radio-button value="corriente">Corriente</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left">Banco</label>
+                          </div>
+                          <div class="col">
+                            <mat-form-field class="select-width">
+                              <mat-select formControlName="banco">
+                                <mat-option *ngFor="let banco of bancos" [value]="banco.value">
+                                  {{ banco.name }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left">¿Exenta?</label>
+                          </div>
+                          <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="extra">
+                              <mat-radio-button value="no">Sí</mat-radio-button>
+                              <mat-radio-button value="si">No</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 text-right">
+                        <button mat-button color="warn" type="button" class="btn-eliminar"
+                          *ngIf="addressForm.value.fuenteRecursosArray[j].cuentasBancaria.length > 1"
+                          (click)="borrarArray(cuentasBancaria, i)">
+                          <img src="assets/img/icon/menos.svg" alt="Eliminar cuenta bancaria">
+                          Eliminar cuenta bancaria
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <div class="text-right">
+            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarCuentaBancaria()">
+              <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria">
+              Agregar otra cuenta bancaria
+            </button>
+            <button mat-button color="warn" type="button" class="btn-eliminar"
+              (click)="borrarArray(fuenteRecursosArray, j)" *ngIf="addressForm.value.fuenteRecursosArray.length > 1">
+              <img src="assets/img/icon/menos.svg" alt="Eliminar fuente de recursos">
+              Eliminar fuente de recursos
+            </button>
+            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaFuente()">
+              <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos">
+              Agregar otra fuente de recursos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
+
+ 
+</div>

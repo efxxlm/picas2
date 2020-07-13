@@ -3,51 +3,52 @@ namespace asivamosffie.services.Helpers.Enumerator
 {
     public enum EnumeratorTipoDominio : int
     {
-		Tipo_de_Intervencion = 1,
+        Tipo_de_Intervencion = 1,
 
-		Convocatoria = 2,
+        Convocatoria = 2,
 
-		Tipo_de_aportante = 3,
+        Tipo_de_aportante = 3,
 
-		Nombre_Aportante_Aportante = 4,
+        Nombre_Aportante_Aportante = 4,
 
-		//Antes llamado Infraestructura a intervenir
-		Espacios_Intervenir = 5,
+        //Antes llamado Infraestructura a intervenir
+        Espacios_Intervenir = 5,
 
-		Coordinaciones = 6,
+        Coordinaciones = 6,
 
-		Tipo_de_documento_cofinanciacion = 7,
+        Tipo_de_documento_cofinanciacion = 7,
 
-		Fuentes_de_financiación = 8,
+        Fuentes_de_financiación = 8,
 
-		Tipo_de_alcance = 9,
+        Tipo_de_alcance = 9,
 
-		Presupuesto_Proceso_de_Selección = 10,
+        Presupuesto_Proceso_de_Selección = 10,
 
-		Perfil = 11,
+        Perfil = 11,
 
-		Componentes = 12,
+        Componentes = 12,
 
-		Usos = 13,
+        Usos = 13,
 
-		Opcion_por_contratar = 14,
+        Opcion_por_contratar = 14,
 
-		Documento_Acreditacion = 15,
+        Documento_Acreditacion = 15,
 
-		Fases = 16,
+        Fases = 16,
 
-		Tipo_de_Predios = 19,
+        Acciones = 17,
 
-		Origen_Documento_Cargue = 20,
+        Fuente_de_Recurso = 18,
 
-		Acciones = 17,
+        Tipo_de_Predios = 19,
 
-		//NO se estan poniendo los Tipo Dominio ?
-		//NO se estan poniendo los Tipo Dominio ?
-		//JM
+        Origen_Documento_Cargue = 20,
+          
+        Estado_Registro = 23,
 
-		Tipo_de_Solicitud = 29
+        Estado_Juridico_Predios = 25,
 
+        Tipo_de_Solicitud = 29
 
-	}
+    }
 }
