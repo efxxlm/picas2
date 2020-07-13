@@ -20,9 +20,14 @@ export class HomeComponent implements OnInit {
     },
     
     {
-      title: 'Crear proyecto',
-      link: '/#'
+      title: 'Crear proyecto técnico',
+      link: '/crearProyecto'
     },
+    {
+      title: 'Crear proyecto administrativo',
+      link: '/crearProyectoAdministrativo'
+     
+    }, 
     {
       title: 'Registrar proyectos postulados',
       link: '/#'
