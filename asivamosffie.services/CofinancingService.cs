@@ -111,7 +111,7 @@ namespace asivamosffie.services
 
                         foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
                         {
-                            cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionId;
                             cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
                             await CreateCofinancingDocuments(cofinancicacionDocumento);
                         }
