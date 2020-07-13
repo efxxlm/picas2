@@ -94,9 +94,7 @@ export class CommonService {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/listDepartamentoByIdMunicipio?idMunicipio=${idMunicipio}`);
   }
   
-  listaFuentes(pAportanteId:number) {
-    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetFontsByAportantID?pAportanteId=${pAportanteId}`);
-  }
+  
 
 
   public forkProject():Observable<any[]>

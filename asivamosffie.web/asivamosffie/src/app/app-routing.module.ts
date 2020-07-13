@@ -63,6 +63,11 @@ const routes: Routes = [
         // tslint:disable-next-line: max-line-length
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
+      {
+        path: 'gestionarFuentes',
+        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
+        .then(m => m.GestionarFuentesDeFinanciacionModule)
+      }
     ]
 
   },

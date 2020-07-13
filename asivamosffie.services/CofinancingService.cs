@@ -111,7 +111,7 @@ namespace asivamosffie.services
 
                         foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
                         {
-                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionId;
+                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId;
                             cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
                             await CreateCofinancingDocuments(cofinancicacionDocumento);
                         }
@@ -222,6 +222,20 @@ namespace asivamosffie.services
             return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).ToListAsync();
         }
 
+        //public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
+        //{
+
+        //    try
+        //    {
+        //        //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
+        //        return await _context.DocumentoApropiacion.Where(x => x.AportanteId == ContributorId).ToListAsync();
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
         public async Task<List<CofinanciacionAportante>> GetListAportante()
         {
 

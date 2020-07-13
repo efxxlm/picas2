@@ -48,13 +48,14 @@ export class TablaAcuerdosComponent implements OnInit {
       {
          this.listaCofinanciacion = cof; 
          this.dataSource.data = this.listaCofinanciacion;
+         this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.previousPageLabel = 'Anterior';
       } );
 
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    
   }
 
   editarAcuerdo(e: number) {
