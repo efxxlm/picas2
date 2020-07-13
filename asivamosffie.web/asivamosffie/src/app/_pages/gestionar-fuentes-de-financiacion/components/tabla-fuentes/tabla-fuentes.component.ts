@@ -71,7 +71,13 @@ export class TablaFuentesComponent implements OnInit {
   editarFuente(e: number) {
     console.log(e);
   }
+  editarAcuerdo(e: number) {
+    console.log(e);
+  }
   eliminarFuente(e: number) {
+    console.log(e);
+  }
+  eliminarAcuerdo(e: number) {
     console.log(e);
   }
   controlRecursosFuente(e: number) {
