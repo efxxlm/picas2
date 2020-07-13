@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
+  
   
 
   constructor(private http: HttpClient) { }
@@ -82,6 +84,40 @@ export class CommonService {
   listaDocumentoByAportanteId(pAportanteID:number){
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListDocumentoByAportanteId?pAportanteID=${pAportanteID}`);
   }
+
+  listMunicipiosByIdMunicipio(idMunicipio:string){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdMunicipio?idMunicipio=${idMunicipio}`);
+  }
+  
+
+  listDepartamentoByIdMunicipio(idMunicipio:string){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/listDepartamentoByIdMunicipio?idMunicipio=${idMunicipio}`);
+  }
+  
+  listaFuentes(pAportanteId:number) {
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetFontsByAportantID?pAportanteId=${pAportanteId}`);
+  }
+
+
+  public forkProject():Observable<any[]>
+  {
+    return forkJoin([
+      this.listaTipoIntervencion(),
+      this.listaRegion(),
+      this.listaTipoPredios(),
+      this.listaDocumentoAcrditacion(),
+      this.listaTipoAportante(),
+      this.listaInfraestructuraIntervenir(),
+      this.listaCoordinaciones()
+    
+      ]);  
+  }
+  forkDepartamentoMunicipio(idMunicipio:string){
+    return forkJoin([
+      this.listMunicipiosByIdMunicipio(idMunicipio),
+      this.listDepartamentoByIdMunicipio(idMunicipio)
+      ]);  
+  }
 }
 
 export interface Dominio{
@@ -94,7 +130,8 @@ export interface Dominio{
 
 export interface Localizacion{
   localizacionId: string,
-  descripcion: string
+  descripcion: string,
+  idPadre:string
 }
 
 export interface Respuesta{

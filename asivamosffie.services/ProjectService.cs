@@ -233,8 +233,8 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = true,
                     Data=pProyecto,
-                    Code = ConstantMessagesProyecto.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyecto, pProyecto.UsuarioCreacion, " ")
+                    Code = ConstantMessagesProyecto.OperacionExitosa, 
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyecto, pProyecto.UsuarioCreacion, " ")
                 };
 
             }
@@ -846,7 +846,33 @@ namespace asivamosffie.services
 
         public async Task<Proyecto> GetProyectoByProyectoId(int idProyecto)
         {
-            return await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).Include(r => r.ProyectoAportante).Include(r => r.InfraestructuraIntervenirProyecto).Include(r => r.ProyectoPredio).FirstOrDefaultAsync();  
+            Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).FirstOrDefaultAsync();
+            proyecto.ProyectoAportante = _context.ProyectoAportante.Where(x=>x.ProyectoId==proyecto.ProyectoId && x.Eliminado==false).Include(y=>y.Aportante).Include(z=>z.CofinanciacionDocumento).ToList();
+            proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();
+            List<InfraestructuraIntervenirProyecto> infraestructuras=_context.InfraestructuraIntervenirProyecto.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado== false).ToList();
+            foreach(var infraestructura in infraestructuras)
+            {
+                infraestructura.Proyecto = null;
+            }
+            proyecto.InfraestructuraIntervenirProyecto = infraestructuras;
+            //proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).ToList();
+            return  proyecto;
+        }
+
+        public async Task<bool> DeleteProyectoByProyectoId(int idProyecto)
+        {
+            Proyecto proyecto = _context.Proyecto.Find(idProyecto);
+            bool retorno = true;
+            try
+            {
+                proyecto.Eliminado = true;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return retorno;
         }
 
         public async Task<Respuesta> CreateOrEditAdministrativeProject(ProyectoAdministrativo pProyectoAdministrativo)
@@ -944,6 +970,85 @@ namespace asivamosffie.services
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pProyectoAdministrativo.UsuarioCreacion, ex.InnerException.ToString())
                      };
             }
+        }
+
+        
+
+        public async Task<List<ProyectoGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto)
+        {
+            List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
+
+            try
+            {
+                List<ProyectoAdministrativo> ListProyectos = await _context.ProyectoAdministrativo.Where(r => !(bool)r.Eliminado).ToListAsync();
+
+                foreach (var proyecto in ListProyectos)
+                {
+                    /*Localizacion municipio = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
+                    Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                    Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+                    // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+                    */
+                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    {
+                        ProyectoId = proyecto.ProyectoAdministrativoId,
+                        Departamento = "",
+                        Municipio = "",
+                        InstitucionEducativa = "",
+                        Sede = "",
+                        EstadoRegistro = "Completo",
+                        EstadoJuridicoPredios = " "
+                    };
+                    ListProyectoGrilla.Add(proyectoGrilla);
+                }
+
+                return ListProyectoGrilla;
+
+
+            }
+            catch (Exception ex)
+            {
+                return ListProyectoGrilla;
+
+            }
+        }
+
+        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
+        {
+            ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
+            bool retorno = true;
+            try
+            {
+                proyecto.Eliminado = true;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
+        {
+            ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
+            bool retorno = true;
+            try
+            {
+                proyecto.Enviado = true;
+                proyecto.FechaModificacion = DateTime.Now;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId)
+        {
+            return _context.FuenteFinanciacion.Where(x=>x.Aportante.NombreAportanteId==pAportanteId).ToList();
         }
     }
 }

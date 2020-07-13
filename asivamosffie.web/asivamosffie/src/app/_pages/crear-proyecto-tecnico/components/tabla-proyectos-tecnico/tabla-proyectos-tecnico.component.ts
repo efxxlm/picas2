@@ -7,6 +7,7 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Router } from '@angular/router';
 
 
 export interface RegistrosCargados {
@@ -43,13 +44,15 @@ export class TablaProyectosTecnicoComponent {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataSource= new MatTableDataSource();
+  proyectoid: number;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(private projectService: ProjectService,public dialog: MatDialog,public datepipe: DatePipe) {
+  constructor(private projectService: ProjectService,public dialog: MatDialog,
+    public datepipe: DatePipe,private router: Router,) {
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -59,7 +62,47 @@ export class TablaProyectosTecnicoComponent {
     });
   }
 
-  ngOnInit(): void {
+  openDialogSiNo(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        this.projectService.deleteProjectById(this.proyectoid).subscribe(respuesta => {
+          let proyecto = respuesta;
+          if(respuesta)
+          {
+            this.inicializar();
+            this.openDialog('', "Proyecto eliminado correctamente");
+          }
+          else
+          {
+            this.openDialog('', "Hubo un error al eliminar el proyecto, por favor intenta nuevamente.");
+          }
+        },
+          err => {
+            let mensaje: string;
+            console.log(err);
+            if (err.message) {
+              mensaje = err.message;
+            }
+            else if (err.error.message) {
+              mensaje = err.error.message;
+            }
+            this.openDialog('Error', mensaje);
+          },
+          () => {
+            // console.log('terminó');
+          });    
+      }           
+    });
+  }
+
+  inicializar()
+  {
     this.projectService.getListProjects().subscribe(respuesta => {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
@@ -91,15 +134,22 @@ export class TablaProyectosTecnicoComponent {
     //console.log('terminó');
    });
   }
+  ngOnInit(): void {
+    this.inicializar();
+  }
 
   ver(gestion:any)
   {
     console.log(gestion);    
+    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion.id}]);
   }
 
   eliminar(gestion:any)
   {
-    console.log(gestion);    
+    console.log(gestion);  
+    this.proyectoid=gestion.id;
+    this.openDialogSiNo('', "Está seguro de eliminar este registro?",);  
+    
   }
   
   enviar(gestion:any)

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { Respuesta } from '../autenticacion/autenticacion.service';
-import { CofinanciacionAportante } from '../Cofinanciacion/cofinanciacion.service';
+import { CofinanciacionAportante, CofinanciacionDocumento } from '../Cofinanciacion/cofinanciacion.service';
+import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +46,39 @@ export class ProjectService {
     const retorno = this.http.post<Respuesta>(`${environment.apiUrl}/Project/CreateOrUpdateProyect`,proyecto);
     return retorno;
   }
+  public getProjectById(pIdProject:number) {   
+    const retorno = this.http.get<Proyecto>(`${environment.apiUrl}/Project/GetProyectoByProyectoId?pProyectoId=${pIdProject}`);
+    return retorno;
+  }
+
+  public deleteProjectById(pIdProject:number) {   
+    const retorno = this.http.get<Proyecto>(`${environment.apiUrl}/Project/DeleteProyectoByProyectoId?pProyectoId=${pIdProject}`);
+    return retorno;
+  }  
   
-  
+  public CreateOrUpdateAdministrativeProyect(pIdProject:ProyectoAdministrativo) {   
+    const retorno = this.http.post<Respuesta>(`${environment.apiUrl}/Project/CreateOrEditAdministrativeProject`,pIdProject);
+    return retorno;
+  }
+
+  public ListAdministrativeProject() {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Project/ListAdministrativeProject`);
+    return retorno;
+  }
+
+  public DeleteProyectoAdministrativoByProyectoId(pIdProject:number) {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Project/DeleteProyectoAdministrativoByProyectoId?pProyectoId=${pIdProject}`);
+    return retorno;
+  }
+
+  public EnviarProyectoAdministrativoByProyectoId(pIdProject:number) {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Project/EnviarProyectoAdministrativoByProyectoId?pProyectoId=${pIdProject}`);
+    return retorno;
+  }
+
+  public listaFuentes(pAportanteId:number) {
+    return this.http.get<any>(`${environment.apiUrl}/Project/GetFontsByAportantID?pAportanteId=${pAportanteId}`);
+  }
 }
 export interface RespuestaProyecto{
   cantidadDeRegistros: number,
@@ -62,13 +94,16 @@ export interface ProyectoAdministrativo
 }
 export interface Aportante
 {
-  AportanteId:number;
-  FuenteFinanciacion:FuenteFinanciacion[],
+  aportanteId:number;
+  tipoAportanteId:number;
+  nombreAportanteId:number;
+
+  fuenteFinanciacion:FuenteFinanciacion[],
 }
 
 export interface FuenteFinanciacion{  
-  FuenteRecursosCodigo:string,
-  ValorFuente:number
+  fuenteRecursosCodigo:string,
+  valorFuente:number
 }
 
 export interface Listados{
@@ -77,38 +112,40 @@ export interface Listados{
 }
 
 export interface Proyecto{
-  ProyectoId:number,
-  FechaSesionJunta?: Date,
-  NumeroActaJunta:number,
-  TipoIntervencionCodigo:string,
-  LlaveMen:string,
-  LocalizacionIdMunicipio:string,
-  InstitucionEducativaId:number,
-  SedeId:number,
-  EnConvocatoria:boolean,
-  ConvocatoriaId?:number,
-  CantPrediosPostulados:number,
-  TipoPredioCodigo:string,
-  PredioPrincipalId:number,
-  ValorObra:number,
-  ValorInterventoria:number,
-  ValorTotal:number,
-  EstadoProyectoCodigo:string,
-  Eliminado?:boolean,
-  FechaCreacion: Date,
-  UsuarioCreacion:string,
-  FechaModificacion?: Date,
-  UsuarioModificacion:string,
+  proyectoId:number,
+  fechaSesionJunta?: Date,
+  numeroActaJunta:number,
+  tipoIntervencionCodigo:number,
+  llaveMen:string,
+  localizacionIdMunicipio:string,
+  institucionEducativaId:number,
+  sedeId:number,
+  enConvocatoria:boolean,
+  convocatoriaId?:number,
+  cantPrediosPostulados:number,
+  tipoPredioCodigo:string,
+  predioPrincipalId:number,
+  valorObra:number,
+  valorInterventoria:number,
+  valorTotal:number,
+  estadoProyectoCodigo:string,
+  eliminado?:boolean,
+  fechaCreacion: Date,
+  usuarioCreacion:string,
+  fechaModificacion?: Date,
+  usuarioModificacion:string,
   //no modelado
   cantidadAportantes:number;
+  regid?:string;
+  depid?:string;
 
-  InstitucionEducativaSede:InstitucionEducativa,
-  LocalizacionIdMunicipioNavigation: Localizacion,
-  PredioPrincipal: Predio,
-  Sede:InstitucionEducativa,
-  InfraestructuraIntervenirProyecto:InfraestructuraIntervenirProyecto[],
-  ProyectoAportante:ProyectoAportante[],
-  ProyectoPredio:ProyectoPredio[],
+  institucionEducativaSede:InstitucionEducativa,
+  localizacionIdMunicipioNavigation: Localizacion,
+  predioPrincipal: Predio,
+  sede:InstitucionEducativa,
+  infraestructuraIntervenirProyecto:InfraestructuraIntervenirProyecto[],
+  proyectoAportante:ProyectoAportante[],
+  proyectoPredio:ProyectoPredio[],
   
 }
 
@@ -131,45 +168,48 @@ export interface Localizacion{
   Tipo :string,
 }
 export interface Predio{  
-  PredioId :number,
-  InstitucionEducativaSedeId:number ,
-  TipoPredioCodigo:string ,
-  UbicacionLatitud:string ,
-  UbicacionLongitud:string ,
-  Direccion:string ,
-  DocumentoAcreditacionCodigo :string,
-  NumeroDocumento:string ,
-  CedulaCatastral:string ,
-  Activo?:boolean ,
-  FechaCreacion:Date ,
-  UsuarioCreacion:string ,
+  predioId :number,
+  institucionEducativaSedeId:number ,
+  tipoPredioCodigo:string ,
+  ubicacionLatitud:string ,
+  ubicacionLongitud:string ,
+  direccion:string ,
+  documentoAcreditacionCodigo :string,
+  numeroDocumento:string ,
+  cedulaCatastral:string ,
+  activo?:boolean ,
+  fechaCreacion:Date ,
+  usuarioCreacion:string ,
 }
 export interface InfraestructuraIntervenirProyecto{  
-  InfraestrucutraIntervenirProyectoId :number,
-  ProyectoId :number,
-  InfraestructuraCodigo:string ,
-  Cantidad :number,
-  Eliminado:boolean ,
-  FechaCreacion:Date ,
-  UsuarioCreacion:string ,
-  FechaEliminacion?:Date ,
-  UsuarioEliminacion:string ,
-  PlazoMesesObra :number,
-  PlazoDiasObra:number ,
-  PlazoMesesInterventoria:number ,
-  PlazoDiasInterventoria:number ,
-  CoordinacionResponsableCodigo:string ,
+  infraestrucutraIntervenirProyectoId :number,
+  proyectoId :number,
+  infraestructuraCodigo:string ,
+  cantidad :number,
+  eliminado:boolean ,
+  fechaCreacion:Date ,
+  usuarioCreacion:string ,
+  fechaEliminacion?:Date ,
+  usuarioEliminacion:string ,
+  plazoMesesObra :number,
+  plazoDiasObra:number ,
+  plazoMesesInterventoria:number ,
+  plazoDiasInterventoria:number ,
+  coordinacionResponsableCodigo:string ,
 }
 export interface ProyectoAportante{  
-  ProyectoAportanteId :number,
-  ProyectoId :number,
-  AportanteId :number,
-  ValorObra? :number ,
-  ValorInterventoria? :number ,
-  ValorTotalAportante? :number ,
-  Eliminado :boolean,
-  FechaCreacion:Date ,
-  UsuarioCreacion:string ,
+  proyectoAportanteId :number,
+  proyectoId :number,
+  aportanteId :number,
+  valorObra? :number ,
+  valorInterventoria? :number ,
+  valorTotalAportante? :number ,
+  eliminado :boolean,
+  fechaCreacion:Date ,
+  usuarioCreacion:string ,
+  cofinanciacionDocumentoID:number,
+  aportante?:CofinanciacionAportante,
+  cofinanciacionDocumento?:CofinanciacionDocumento
 }
 export interface ProyectoPredio{  
   ProyectoPredioId:number ,

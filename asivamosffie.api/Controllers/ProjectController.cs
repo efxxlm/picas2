@@ -115,6 +115,38 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        
+
+        [Route("ListAdministrativeProject")]
+        [HttpGet]
+        public async Task<List<ProyectoGrilla>> ListAdministrativeProjects()
+        {
+
+            string pUsuarioModifico = "";
+            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _projectService.ListAdministrativeProyectos(pUsuarioModifico);
+            return respuesta;
+
+        }
+
+        [Route("DeleteProyectoAdministrativoByProyectoId")]
+        [HttpGet]
+        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
+        {
+            var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId);
+            return respuesta;
+        }
+
+        
+
+        [Route("EnviarProyectoAdministrativoByProyectoId")]
+        [HttpGet]
+        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
+        {
+            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId);
+            return respuesta;
+        }
+
         [Route("ListProject")]
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
@@ -134,6 +166,22 @@ namespace asivamosffie.api.Controllers
         { 
             var respuesta = await _projectService.GetProyectoByProyectoId(pProyectoId);
             return respuesta; 
+        }
+
+        [Route("DeleteProyectoByProyectoId")]
+        [HttpGet]
+        public async Task<bool> DeleteProyectoByProyectoId(int pProyectoId)
+        {
+            var respuesta = await _projectService.DeleteProyectoByProyectoId(pProyectoId);
+            return respuesta;
+        }
+
+        [Route("GetFontsByAportantID")]
+        [HttpGet]
+        public async Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId)
+        {
+            var respuesta = await _projectService.GetFontsByAportantId(pAportanteId);
+            return respuesta;
         }
     }
 }

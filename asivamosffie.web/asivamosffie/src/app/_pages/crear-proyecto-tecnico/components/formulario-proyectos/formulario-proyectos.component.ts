@@ -6,6 +6,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { MatSelectChange } from '@angular/material/select';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-formulario-proyectos',
@@ -27,7 +28,9 @@ export class FormularioProyectosComponent implements OnInit  {
     private fb: FormBuilder,
     public commonServices: CommonService,
     public dialog: MatDialog,
-    public projectServices: ProjectService
+    public projectServices: ProjectService,
+    private route: ActivatedRoute,
+    private router: Router
     ) {
       this.maxDate = new Date();
     }
@@ -40,7 +43,42 @@ export class FormularioProyectosComponent implements OnInit  {
   listadoSede: any[];
   listadoConvocatoria: Dominio[];
   listadoPredios: Dominio[];
-  proyecto: Proyecto;
+  proyecto: Proyecto= {
+    proyectoId: null,
+    fechaSesionJunta: null,
+    numeroActaJunta: null,
+    tipoIntervencionCodigo: null,
+    llaveMen: '',
+    localizacionIdMunicipio: '',
+    institucionEducativaId: 0,
+    sedeId: 0,
+    enConvocatoria: false,
+    convocatoriaId: null,
+    cantPrediosPostulados: null,
+    tipoPredioCodigo: '',
+    predioPrincipalId: null,
+    valorObra: null,
+    valorInterventoria: null,
+    valorTotal: null,
+    estadoProyectoCodigo: '',
+    eliminado: null,
+    fechaCreacion: null,
+    usuarioCreacion: '',
+    fechaModificacion: null,
+    usuarioModificacion: '',
+    institucionEducativaSede: null,
+    localizacionIdMunicipioNavigation: null,
+    predioPrincipal: {
+      cedulaCatastral:"",direccion:"",documentoAcreditacionCodigo:"",
+        fechaCreacion:new Date,institucionEducativaSedeId:null,numeroDocumento:"",
+        usuarioCreacion:"",predioId:0,tipoPredioCodigo:"",ubicacionLatitud:"",ubicacionLongitud:""
+    },
+    sede: null,
+    infraestructuraIntervenirProyecto: [],
+    proyectoAportante: [],
+    proyectoPredio: [],
+    cantidadAportantes: null
+  };
   CodigoDaneIE: string = '';
   codigoDaneSede: string = '';
 
@@ -75,56 +113,78 @@ export class FormularioProyectosComponent implements OnInit  {
   }
 
   ngOnInit(): void {
-    // agrego el predio principal
-    this.proyecto = {
-      ProyectoId: null,
-      FechaSesionJunta: null,
-      NumeroActaJunta: null,
-      TipoIntervencionCodigo: '',
-      LlaveMen: '',
-      LocalizacionIdMunicipio: '',
-      InstitucionEducativaId: 0,
-      SedeId: 0,
-      EnConvocatoria: false,
-      ConvocatoriaId: null,
-      CantPrediosPostulados: null,
-      TipoPredioCodigo: '',
-      PredioPrincipalId: null,
-      ValorObra: null,
-      ValorInterventoria: null,
-      ValorTotal: null,
-      EstadoProyectoCodigo: '',
-      Eliminado: null,
-      FechaCreacion: null,
-      UsuarioCreacion: '',
-      FechaModificacion: null,
-      UsuarioModificacion: '',
-      InstitucionEducativaSede: null,
-      LocalizacionIdMunicipioNavigation: null,
-      PredioPrincipal: {
-        CedulaCatastral: '', Direccion: '', DocumentoAcreditacionCodigo: '',
-        FechaCreacion: new Date, InstitucionEducativaSedeId: 0, NumeroDocumento: '',
-        UsuarioCreacion: '', PredioId: 0, TipoPredioCodigo: '', UbicacionLatitud: '', UbicacionLongitud: ''
-      },
-      Sede: null,
-      InfraestructuraIntervenirProyecto: [],
-      ProyectoAportante: [],
-      ProyectoPredio: [],
-      cantidadAportantes: null
-    };
-    /*this.proyecto.ProyectoPredio.push({
-      ProyectoPredioId: 0, EstadoJuridicoCodigo: '', UsuarioCreacion: '',
-      Predio: {
-        CedulaCatastral: '', Direccion: '', DocumentoAcreditacionCodigo: '',
-        FechaCreacion: new Date, InstitucionEducativaSedeId: 0, NumeroDocumento: '',
-        UsuarioCreacion: '', PredioId: 0, TipoPredioCodigo: '', UbicacionLatitud: '', UbicacionLongitud: ''
-      }
-    });*/
-    // cargo lsitas
-    this.getListas();
-    this.addInfraestructura();
-
-
+    let id = this.route.snapshot.paramMap.get('id');
+    console.log(id);
+    
+    
+    if(id)
+    {
+      this.commonServices.forkProject().subscribe(listas => {
+        console.log(listas);
+        this.listadoTipoIntervencion=listas[0];
+        this.listadoregion=listas[1];
+        this.listadoPredios=listas[2];
+        this.listadoDocumentoAcreditacion=listas[3];
+        this.listaTipoAportante=listas[4];
+        this.listaInfraestructura=listas[5];
+        this.listaCordinaciones=listas[6];
+        this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
+          console.log(respuesta.numeroActaJunta);
+          this.proyecto=respuesta;
+          this.proyecto.cantidadAportantes=respuesta.proyectoAportante.length;
+          this.getInstitucion();
+          this.getSede();
+          this.commonServices.forkDepartamentoMunicipio(respuesta.localizacionIdMunicipio).subscribe(
+            listadoregiones=>{
+              this.listadoMunicipio=listadoregiones[0];
+              this.listadoDepartamento=listadoregiones[1];
+              this.proyecto.localizacionIdMunicipio=respuesta.localizacionIdMunicipio;
+              
+              this.proyecto.depid=listadoregiones[0][0].idPadre;
+              this.proyecto.regid=listadoregiones[1][0].idPadre;
+            }
+          );
+          let i=0;
+          respuesta.proyectoAportante.forEach(element => {
+            this.getAportanteById(element.aportante.tipoAportanteId,i);
+            this.getVigenciaById(element.aportanteId,i);
+            i++;
+          });
+        },
+        err => {
+          let mensaje: string;
+          console.log(err);
+          if (err.message) {
+            mensaje = err.message;
+          }
+          else if (err.error.message) {
+            mensaje = err.error.message;
+          }
+          this.openDialog('Error', mensaje);
+        },
+        () => {
+          // console.log('terminó');
+        });
+      });
+      
+    }
+    else{
+      //this.proyecto 
+      // agrego el predio principal
+      
+      /*this.proyecto.proyectoPredio.push({
+        ProyectoPredioId: 0, EstadoJuridicoCodigo: '', UsuarioCreacion: '',
+        Predio: {
+          CedulaCatastral: '', Direccion: '', DocumentoAcreditacionCodigo: '',
+          FechaCreacion: new Date, InstitucionEducativaSedeId: 0, NumeroDocumento: '',
+          UsuarioCreacion: '', PredioId: 0, TipoPredioCodigo: '', UbicacionLatitud: '', UbicacionLongitud: ''
+        }
+      });*/
+      // cargo lsitas
+      this.getListas();
+      this.addInfraestructura();
+    }
+    
   }
   getListas() {
     this.commonServices.listaTipoIntervencion().subscribe(respuesta => {
@@ -296,7 +356,7 @@ export class FormularioProyectosComponent implements OnInit  {
   
     getInstitucion() {
   
-      this.commonServices.listaIntitucionEducativaByMunicipioId(this.proyecto.LocalizacionIdMunicipio).subscribe(respuesta => {
+      this.commonServices.listaIntitucionEducativaByMunicipioId(this.proyecto.localizacionIdMunicipio).subscribe(respuesta => {
         this.listadoInstitucion = respuesta;
       },
         err => {
@@ -317,7 +377,7 @@ export class FormularioProyectosComponent implements OnInit  {
   
     getSede() {
       // console.log(this.proyecto);
-      this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.InstitucionEducativaId).subscribe(respuesta => {
+      this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId).subscribe(respuesta => {
         this.listadoSede = respuesta;
       },
         err => {
@@ -345,43 +405,43 @@ export class FormularioProyectosComponent implements OnInit  {
 
   addInfraestructura()
   {
-    this.proyecto.InfraestructuraIntervenirProyecto.push({
-      InfraestrucutraIntervenirProyectoId :0,
-      ProyectoId :0,
-      InfraestructuraCodigo:"" ,
-      Cantidad :0,
-      Eliminado:false ,
-      FechaCreacion:null ,
-      UsuarioCreacion:"" ,      
-      UsuarioEliminacion:"" ,
-      PlazoMesesObra :0,
-      PlazoDiasObra:0 ,
-      PlazoMesesInterventoria:0 ,
-      PlazoDiasInterventoria:0 ,
-      CoordinacionResponsableCodigo:""
+    this.proyecto.infraestructuraIntervenirProyecto.push({
+      infraestrucutraIntervenirProyectoId :0,
+      proyectoId :0,
+      infraestructuraCodigo:"" ,
+      cantidad :0,
+      eliminado:false ,
+      fechaCreacion:null ,
+      usuarioCreacion:"" ,      
+      usuarioEliminacion:"" ,
+      plazoMesesObra :0,
+      plazoDiasObra:0 ,
+      plazoMesesInterventoria:0 ,
+      plazoDiasInterventoria:0 ,
+      coordinacionResponsableCodigo:""
     });
   }
 
   evaluopredios()
   {
-    if(this.proyecto.CantPrediosPostulados>1)
+    if(this.proyecto.cantPrediosPostulados>1)
     {
-      if(this.proyecto.CantPrediosPostulados!=this.proyecto.ProyectoPredio.length)
+      if(this.proyecto.cantPrediosPostulados!=this.proyecto.proyectoPredio.length)
       {
-        if(this.proyecto.CantPrediosPostulados<this.proyecto.ProyectoPredio.length)
+        if(this.proyecto.cantPrediosPostulados<this.proyecto.proyectoPredio.length)
         {
           //preguntar
         }
         else{
-          if(this.proyecto.CantPrediosPostulados>this.proyecto.ProyectoPredio.length)
+          if(this.proyecto.cantPrediosPostulados>this.proyecto.proyectoPredio.length)
           {
             
-            for(let a=this.proyecto.ProyectoPredio.length;a<this.proyecto.CantPrediosPostulados;a++)
+            for(let a=this.proyecto.proyectoPredio.length;a<this.proyecto.cantPrediosPostulados;a++)
             {
-              this.proyecto.ProyectoPredio.push({ProyectoPredioId:0,EstadoJuridicoCodigo:"",UsuarioCreacion:"",
-                Predio:{CedulaCatastral:"",Direccion:"",DocumentoAcreditacionCodigo:"",
-                FechaCreacion:new Date,InstitucionEducativaSedeId:null,NumeroDocumento:"",
-                UsuarioCreacion:"",PredioId:0,TipoPredioCodigo:"",UbicacionLatitud:"",UbicacionLongitud:""}});
+              this.proyecto.proyectoPredio.push({ProyectoPredioId:0,EstadoJuridicoCodigo:"",UsuarioCreacion:"",
+                Predio:{cedulaCatastral:"",direccion:"",documentoAcreditacionCodigo:"",
+                fechaCreacion:new Date,institucionEducativaSedeId:null,numeroDocumento:"",
+                usuarioCreacion:"",predioId:0,tipoPredioCodigo:"",ubicacionLatitud:"",ubicacionLongitud:""}});
             }
           }
         }
@@ -391,9 +451,9 @@ export class FormularioProyectosComponent implements OnInit  {
   }
   evaluoaportantes()
   {
-    if(this.proyecto.cantidadAportantes!=this.proyecto.ProyectoAportante.length)
+    if(this.proyecto.cantidadAportantes!=this.proyecto.proyectoAportante.length)
     {
-      this.proyecto.ProyectoAportante=[];
+      this.proyecto.proyectoAportante=[];
       /*if(this.proyecto.cantidadAportantes<this.proyecto.ProyectoAportante.length)
       {
         
@@ -403,15 +463,16 @@ export class FormularioProyectosComponent implements OnInit  {
         if(this.proyecto.cantidadAportantes>this.proyecto.ProyectoAportante.length)
         {*/
           
-          for(let a=this.proyecto.ProyectoAportante.length;a<this.proyecto.cantidadAportantes;a++)
+          for(let a=this.proyecto.proyectoAportante.length;a<this.proyecto.cantidadAportantes;a++)
           {
-            this.proyecto.ProyectoAportante.push({
-              ProyectoAportanteId :null,
-              ProyectoId :null,
-              AportanteId :null,
-              Eliminado :false,
-              FechaCreacion:null ,
-              UsuarioCreacion:"" ,
+            this.proyecto.proyectoAportante.push({
+              proyectoAportanteId :null,
+              proyectoId :null,
+              aportanteId :null,
+              eliminado :false,
+              fechaCreacion:null ,
+              usuarioCreacion:"" ,
+              cofinanciacionDocumentoID:null
             });
             let listavacia:any[]=[];
             this.listaAportante.push(listavacia);
@@ -450,14 +511,55 @@ export class FormularioProyectosComponent implements OnInit  {
     },
     () => {
     //console.log('terminó');
-    });
-    
-    
+    });    
+  }
+
+  getAportanteById(id:number,i:number)
+  {
+    this.commonServices.listaAportanteByTipoAportanteId(id).subscribe(respuesta => {
+      console.log(respuesta);
+      this.listaAportante[i]=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+    },
+    () => {
+    //console.log('terminó');
+    });    
   }
 
   getVigencia(event: MatSelectChange,i:number)
   {
     this.commonServices.listaDocumentoByAportanteId(event.value).subscribe(respuesta => {
+      this.listaVigencias[i]=respuesta;
+    }, 
+    err => {
+      let mensaje: string;
+      console.log(err);
+      if (err.message){
+        mensaje = err.message;
+      }
+      else if (err.error.message){
+        mensaje = err.error.message;
+      }
+      this.openDialog('Error', mensaje);
+    },
+    () => {
+    //console.log('terminó');
+    });
+  }
+
+  getVigenciaById(id:number,i:number)
+  {
+    this.commonServices.listaDocumentoByAportanteId(id).subscribe(respuesta => {
       this.listaVigencias[i]=respuesta;
     }, 
     err => {

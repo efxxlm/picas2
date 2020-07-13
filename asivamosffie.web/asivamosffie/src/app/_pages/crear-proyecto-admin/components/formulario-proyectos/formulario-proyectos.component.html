@@ -24,10 +24,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.AportanteId">
+                  <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="onchangeFont(a)">
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let listado of listadoAportantes" [value]="listado.id">
-                      {{ listado.valor }}
+                    <mat-option *ngFor="let listado of listadoAportantes" [value]="listado.dominioId">
+                      {{ listado.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -36,9 +36,9 @@
           </div>
         </div>
       </mat-card-content>
-      <div *ngIf="aportantes.AportanteId!=0">
+      <div *ngIf="aportantes.aportanteId!=0">
         <h2 _ngcontent-oba-c177="" class="card-subTitle">Fuentes</h2>
-        <div *ngFor="let fuente of aportantes.FuenteFinanciacion;index as i">
+        <div *ngFor="let fuente of aportantes.fuenteFinanciacion;index as i">
           <mat-card-header class="header-card">
             <mat-card-title class="header-card--text">
               Fuentes {{i+1}}
@@ -53,10 +53,10 @@
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
-                      <mat-select required [(ngModel)]="fuente.FuenteRecursosCodigo">
+                      <mat-select required [(ngModel)]="fuente.fuenteRecursosCodigo">
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.id">
-                          {{ listado.valor }}
+                        <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
+                          {{ listado.fuenteRecursosCodigo }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -70,9 +70,9 @@
                   </div>                  
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput [(ngModel)]="fuente.ValorFuente" id="numAportes" maxlength="20" min="1" max="99999999999999999999" required type="number">
+                      <input matInput [(ngModel)]="fuente.valorFuente" id="numAportes" maxlength="20" min="1" max="99999999999999999999" required type="number">
                     </mat-form-field>                    
-                    <span class="contador">{{20 - fuente.ValorFuente.toString().length}}</span>
+                    <span class="contador">{{20 - fuente.valorFuente.toString().length}}</span>
                   </div>
                 </div>
               </div>
@@ -80,7 +80,7 @@
             <div class="row">
               
               <div class="col text-right">
-                <button mat-button color="warn" type="button" *ngIf="i<=aportantes.FuenteFinanciacion.length"
+                <button mat-button color="warn" type="button" *ngIf="i<=aportantes.fuenteFinanciacion.length"
                   class="btn-eliminar"  (click)="deleteFont(fuente,aportantes)">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente">
                   Eliminar fuente
@@ -113,7 +113,7 @@
 </div>
 <div class="text-center animatedOpacity">
   <button mat-button color="warn" class="btn-guardar"
-   *ngIf="proyectoAdmin.Aportante[0].FuenteFinanciacion[0].ValorFuente>0" type="button"
+   *ngIf="proyectoAdmin.Aportante[0].fuenteFinanciacion[0].valorFuente>0" type="button"
    (click)="onSubmit()">
     <img src="assets/img/icon/guardar.svg" alt="Regresar">
   </button>

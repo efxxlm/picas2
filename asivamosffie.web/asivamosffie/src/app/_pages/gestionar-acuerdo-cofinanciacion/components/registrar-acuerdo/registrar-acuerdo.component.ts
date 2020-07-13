@@ -112,13 +112,13 @@ export class RegistrarAcuerdoComponent implements OnInit {
     controles.controls.forEach(doc => {
       let cofDoc: CofinanciacionDocumento;
       //cofDoc.FechaActa = new Date;
-      cofDoc.FechaAcuerdo = new Date;
-      cofDoc.NumeroActa = '111';
+      cofDoc.fechaAcuerdo = new Date;
+      cofDoc.numeroActa = '111';
       //cofDoc.NumeroAcuerdo
-      cofDoc.TipoDocumentoId = 1;
-      cofDoc.ValorDocumento = '110011';
-      cofDoc.ValorTotalAportante = '55444';
-      cofDoc.VigenciaAporteId = 2017;
+      cofDoc.tipoDocumentoId = 1;
+      cofDoc.valorDocumento = '110011';
+      cofDoc.valorTotalAportante = '55444';
+      cofDoc.vigenciaAporte = 2017;
 
       lista.push(cofDoc);
     });
@@ -236,8 +236,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
     this.listaCofinancAportantes[index].cofinanciacionDocumento=[];
     for(let i=0;i<data.value.cauntosDocumentos;i++)
     {
-      this.listaCofinancAportantes[index].cofinanciacionDocumento.push({CofinanciacionAportanteId:identificador,FechaAcuerdo:null,CofinanciacionDocumentoId:null,
-        NumeroActa:null,TipoDocumentoId:null,ValorDocumento:null,ValorTotalAportante:null,VigenciaAporteId:null});
+      this.listaCofinancAportantes[index].cofinanciacionDocumento.push({cofinanciacionAportanteId:identificador,fechaAcuerdo:null,cofinanciacionDocumentoId:null,
+        numeroActa:null,tipoDocumentoId:null,valorDocumento:null,valorTotalAportante:null,vigenciaAporte:null});
     }
     
   }

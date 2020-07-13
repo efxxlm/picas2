@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
-import { FuenteFinanciacion, Aportante, ProyectoAdministrativo, Listados } from 'src/app/core/_services/project/project.service';
+import { FuenteFinanciacion, Aportante, ProyectoAdministrativo, Listados, ProjectService } from 'src/app/core/_services/project/project.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-formulario-proyectos',
@@ -11,33 +15,95 @@ export class FormularioProyectosComponent {
 
 
   proyectoAdmin:ProyectoAdministrativo;
-  listadoAportantes:Listados[];
-  listadoFuentes:Listados[];
+  listadoAportantes:Dominio[];
+  listadoFuentes:Dominio[];
 
   addFont(aportante:Aportante) {
-    aportante.FuenteFinanciacion.push({ValorFuente:0,FuenteRecursosCodigo:""});
+    aportante.fuenteFinanciacion.push({valorFuente:0,fuenteRecursosCodigo:""});
   }
 
   deleteFont(key:FuenteFinanciacion,aportante:Aportante)
   {
     const index = this.proyectoAdmin.Aportante.indexOf(aportante, 0);
-    const index2 = this.proyectoAdmin.Aportante[index].FuenteFinanciacion.indexOf(key, 0);
+    const index2 = this.proyectoAdmin.Aportante[index].fuenteFinanciacion.indexOf(key, 0);
     if (index2 > -1) {
-      this.proyectoAdmin.Aportante[index].FuenteFinanciacion.splice(index2, 1);
+      this.proyectoAdmin.Aportante[index].fuenteFinanciacion.splice(index2, 1);
     } 
   }
 
+  onchangeFont(i:number)
+  {
+    console.log(this.proyectoAdmin);
+    console.log(i);
+    this.projectServices.listaFuentes(this.proyectoAdmin.Aportante[i].aportanteId).subscribe(respuesta => {
+      this.listadoFuentes = respuesta;
+    },
+      err => {
+        let mensaje: string;
+        console.log(err);
+        if (err.message) {
+          mensaje = err.message;
+        }
+        else if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        // console.log('terminó');
+      });
+  }
   ngOnInit()
   {
-    this.proyectoAdmin={identificador:"0001",Aportante:[{AportanteId:0,FuenteFinanciacion:[{ValorFuente:0,FuenteRecursosCodigo:""}]}]};    
-    this.listadoAportantes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
-    this.listadoFuentes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
+    this.projectServices.ListAdministrativeProject().subscribe(respuesta => {
+      let id=0;
+      respuesta.forEach(element => {
+        id=element.proyectoId
+      });
+      this.proyectoAdmin={identificador:(id+1).toString(),Aportante:[{aportanteId:0,nombreAportanteId:0,tipoAportanteId:0,fuenteFinanciacion:[{valorFuente:0,fuenteRecursosCodigo:""}]}]};    
+    },
+      err => {
+        let mensaje: string;
+        console.log(err);
+        if (err.message) {
+          mensaje = err.message;
+        }
+        else if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        // console.log('terminó');
+      });
+    
+    //this.listadoAportantes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
+    this.commonServices.listaNombreAportante().subscribe(respuesta => {
+      this.listadoAportantes = respuesta;
+    },
+      err => {
+        let mensaje: string;
+        console.log(err);
+        if (err.message) {
+          mensaje = err.message;
+        }
+        else if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        // console.log('terminó');
+      });
+
+      
+    //this.listadoFuentes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
     
   }
   
   addAportant()
   {       
-    this.proyectoAdmin.Aportante.push({AportanteId:0,FuenteFinanciacion:[{ValorFuente:0,FuenteRecursosCodigo:""}]});
+    this.proyectoAdmin.Aportante.push({aportanteId:0,nombreAportanteId:0,tipoAportanteId:0,fuenteFinanciacion:[{valorFuente:0,fuenteRecursosCodigo:""}]});
   }
   deleteAportant(key:Aportante)
   {
@@ -48,9 +114,47 @@ export class FormularioProyectosComponent {
   }
 
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    public commonServices: CommonService,
+    public dialog: MatDialog,
+    public projectServices: ProjectService,
+    private route: ActivatedRoute,
+    private router: Router) {}
 
   onSubmit() {
-    console.log(this.proyectoAdmin);
+    this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
+      this.openDialog('', respuesta.message);
+    },
+      err => {
+        let mensaje: string;
+        console.log(err);
+        let msn = '';
+        if (err.error.code === '501') {
+          err.error.data.forEach(element => {
+            msn += 'El campo ' + element.errors.key;
+            element.errors.forEach(element => {
+              msn += element.errorMessage + ' ';
+            });
+          });
+        }
+        if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        else if (err.message) {
+          mensaje = err.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        // console.log('terminó');
+      });
+
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 }
