@@ -52,6 +52,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/crear-proyecto-admin/crear-proyecto-admin.module')
           .then(m => m.CrearProyectoAdminModule)
       },
+      {
+        path: 'gestionarFuentes',
+        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
+        .then(m => m.GestionarFuentesDeFinanciacionModule)
+      }
     ]
 
   },

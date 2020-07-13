@@ -45,7 +45,6 @@ namespace asivamosffie.services
                 {
                     _context.Add(cuentaBancaria);
                     await _context.SaveChangesAsync();
-                    //respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = cuentaBancaria, Code = ConstantMessagesContributor.OperacionExitosa };
 
                     return _reponse = new Respuesta
                     {
@@ -56,7 +55,6 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    //respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContributor.CamposIncompletos };
                     return _reponse = new Respuesta
                     {
                         IsSuccessful = false,  IsValidation = false,
