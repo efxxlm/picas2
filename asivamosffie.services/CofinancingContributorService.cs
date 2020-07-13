@@ -33,7 +33,7 @@ namespace asivamosffie.services
         public async Task<CofinanciacionAportante> GetContributorById(int id)
         {
             return await _context.CofinanciacionAportante.FindAsync(id);
-
+        }
 
 
 //        //public async Task<ActionResult<List<Aportante>>> GetContributor()
@@ -54,10 +54,10 @@ namespace asivamosffie.services
             return await _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == ContributorId).ToListAsync();
         }
 
-//        //        if (result == null)
-//        //        {
-//        //            return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
-//        //        }
+        //        //        if (result == null)
+        //        //        {
+        //        //            return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
+        //        //        }
 
         //Registrar Aportante
         public async Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
@@ -110,6 +110,7 @@ namespace asivamosffie.services
 
                 };
             }
+        }
 
 //        //    try
 //        //    {

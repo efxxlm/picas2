@@ -111,7 +111,7 @@ namespace asivamosffie.services
 
                         foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
                         {
-                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionId;
+                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId;
                             cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
                             await CreateCofinancingDocuments(cofinancicacionDocumento);
                         }
@@ -218,9 +218,9 @@ namespace asivamosffie.services
         }
 
         //GetDocument?cofinancionAportanteId
-        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int id)
+        public async Task<List<CofinanciacionDocumento>> GetDocument(int id)
         {
-            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).ToListAsync();
+            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == id && !(bool)r.Eliminado).ToListAsync();
         }
 
         //public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
@@ -252,7 +252,7 @@ namespace asivamosffie.services
             foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
             {
                 //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
-                return await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == id).ToListAsync();
+                cofinanciacionAportante.CofinanciacionDocumento= await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == cofinanciacionAportante.CofinanciacionAportanteId).ToListAsync();
             }
 
             return ListCofinanicacionAportanteGrilla;
