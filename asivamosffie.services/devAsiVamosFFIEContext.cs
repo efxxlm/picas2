@@ -47,8 +47,14 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+        public virtual DbSet<ProcesoSeleccion> ProcesoSeleccion { get; set; }
+        public virtual DbSet<ProcesoSeleccionCotizacion> ProcesoSeleccionCotizacion { get; set; }
+        public virtual DbSet<ProcesoSeleccionCronograma> ProcesoSeleccionCronograma { get; set; }
+        public virtual DbSet<ProcesoSeleccionGrupo> ProcesoSeleccionGrupo { get; set; }
+        public virtual DbSet<ProcesoSeleccionIntegrante> ProcesoSeleccionIntegrante { get; set; }
+        public virtual DbSet<ProcesoSeleccionObservacion> ProcesoSeleccionObservacion { get; set; }
+        public virtual DbSet<ProcesoSeleccionProponente> ProcesoSeleccionProponente { get; set; }
 
-     
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -1060,6 +1066,161 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.FuenteFinanciacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VigenciaAporte_FuenteFinanciacion");
+            });
+            
+            modelBuilder.Entity<ProcesoSeleccion>(entity =>
+            {
+                entity.Property(e => e.AlcanceParticular).IsUnicode(false);
+
+                entity.Property(e => e.CondicionesAsignacionPuntaje).IsUnicode(false);
+
+                entity.Property(e => e.CondicionesFinancierasHabilitantes).IsUnicode(false);
+
+                entity.Property(e => e.CondicionesJuridicasHabilitantes).IsUnicode(false);
+
+                entity.Property(e => e.CondicionesTecnicasHabilitantes).IsUnicode(false);
+
+                entity.Property(e => e.CriteriosSeleccion).IsUnicode(false);
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.EstadoProcesoSeleccionCodigo).IsUnicode(false);
+
+                entity.Property(e => e.EtapaProcesoSeleccionCodigo).IsUnicode(false);
+
+                entity.Property(e => e.EvaluacionDescripcion).IsUnicode(false);
+
+                entity.Property(e => e.Justificacion).IsUnicode(false);
+
+                entity.Property(e => e.NumeroProceso).IsUnicode(false);
+
+                entity.Property(e => e.Objeto).IsUnicode(false);
+
+                entity.Property(e => e.TipoAlcanceCodigo).IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencionCodigo).IsUnicode(false);
+
+                entity.Property(e => e.TipoOrdenEligibilidadCodigo).IsUnicode(false);
+
+                entity.Property(e => e.TipoProcesoCodigo).IsUnicode(false);
+
+                entity.Property(e => e.UrlSoporteEvaluacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ProcesoSeleccionCotizacion>(entity =>
+            {
+                entity.Property(e => e.Descripcion).IsUnicode(false);
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.NombreOrganizacion).IsUnicode(false);
+
+                entity.Property(e => e.UrlSoporte).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
+
+                entity.HasOne(d => d.ProcesoSeleccion)
+                    .WithMany(p => p.ProcesoSeleccionCotizacion)
+                    .HasForeignKey(d => d.ProcesoSeleccionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionCotizacion_ProcesoSeleccion");
+            });
+
+            modelBuilder.Entity<ProcesoSeleccionCronograma>(entity =>
+            {
+                entity.Property(e => e.ProcesoSeleccionCronogramaId).ValueGeneratedNever();
+
+                entity.Property(e => e.Descripcion).IsUnicode(false);
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.EstadoActividadCodigo).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
+
+                entity.HasOne(d => d.ProcesoSeleccion)
+                    .WithMany(p => p.ProcesoSeleccionCronograma)
+                    .HasForeignKey(d => d.ProcesoSeleccionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionCronograma_ProcesoSeleccion");
+            });
+
+            modelBuilder.Entity<ProcesoSeleccionGrupo>(entity =>
+            {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.NombreGrupo).IsUnicode(false);
+
+                entity.Property(e => e.TipoPresupuestoCodigo).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
+
+                entity.HasOne(d => d.ProcesoSeleccion)
+                    .WithMany(p => p.ProcesoSeleccionGrupo)
+                    .HasForeignKey(d => d.ProcesoSeleccionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionGrupo_ProcesoSeleccion");
+            });
+
+            modelBuilder.Entity<ProcesoSeleccionIntegrante>(entity =>
+            {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
+
+                entity.HasOne(d => d.ProcesoSeleccion)
+                    .WithMany(p => p.ProcesoSeleccionIntegrante)
+                    .HasForeignKey(d => d.ProcesoSeleccionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionIntegrante_ProcesoSeleccion");
+            });
+
+            modelBuilder.Entity<ProcesoSeleccionObservacion>(entity =>
+            {
+                entity.Property(e => e.Observacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.HasOne(d => d.ProcesoSeleccion)
+                    .WithMany(p => p.ProcesoSeleccionObservacion)
+                    .HasForeignKey(d => d.ProcesoSeleccionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionObservacion_ProcesoSeleccion");
+            });
+
+            modelBuilder.Entity<ProcesoSeleccionProponente>(entity =>
+            {
+                entity.Property(e => e.DireccionProponente).IsUnicode(false);
+
+                entity.Property(e => e.EmailProponente).IsUnicode(false);
+
+                entity.Property(e => e.LocalizacionIdMunicipio).IsUnicode(false);
+
+                entity.Property(e => e.NombreProponente).IsUnicode(false);
+
+                entity.Property(e => e.NumeroIdentificacion).IsUnicode(false);
+
+                entity.Property(e => e.TelefonoProponente).IsUnicode(false);
+
+                entity.Property(e => e.TipoIdentificacionCodigo).IsUnicode(false);
+
+                entity.Property(e => e.TipoProponenteCodigo).IsUnicode(false);
+
+                entity.HasOne(d => d.ProcesoSeleccion)
+                    .WithMany(p => p.ProcesoSeleccionProponente)
+                    .HasForeignKey(d => d.ProcesoSeleccionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionProponente_ProcesoSeleccion");
             });
 
             OnModelCreatingPartial(modelBuilder);
