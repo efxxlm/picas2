@@ -89,3 +89,15 @@ div.mat-select-arrow {
 .mat-form-field-appearance-legacy .mat-form-field-wrapper {
     margin-bottom: -.8em;
 }
+
+.radioInput > .mat-radio-button {
+    display: inline-block;
+    margin: 5px 1em;
+}
+
+.sub-label {
+    font-weight: 600;
+    color: var(--mainColor);
+    margin-left: 1em;
+    margin-right: .5em;
+}

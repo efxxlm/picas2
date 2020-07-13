@@ -38,6 +38,7 @@
 //        //    return await _context.Aportante.FindAsync(id);
 
 //        //}
+ 
 
 
 
@@ -178,3 +179,59 @@
 
 //    }
 //}
+        // Grilla de control? { AportanteId }
+     
+
+        //Registrar Aportante
+     
+        //Registrar Control de recursos
+        public async Task<Respuesta> ResourceControl(ControlRecurso controlRecurso)
+        {
+            Respuesta _reponse = new Respuesta();
+            try
+            {
+                var result = _context.ControlRecurso.Add(controlRecurso);
+                _context.Add(controlRecurso);
+                await _context.SaveChangesAsync();
+                _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = controlRecurso, Code = ConstantMessagesContributor.OperacionExitosa };
+            }
+            catch (Exception ex)
+            {
+                _reponse = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+            }
+
+            return _reponse;
+        }
+
+        //Registrar Registros presupuestales
+        public async Task<Respuesta> BudgetRecords(RegistroPresupuestal registroPresupuestal)
+        {
+            //Pendiente : validaciones
+            Respuesta _reponse = new Respuesta();
+            try
+            {
+                //var result = _context.RegistroPresupuestal.Add(registroPresupuestal);
+                _context.Add(registroPresupuestal);
+                await _context.SaveChangesAsync();
+                _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
+            }
+            catch (Exception ex)
+            {
+                _reponse = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+            }
+
+            return _reponse;
+        }
+
+        public Task<bool> Update(Respuesta aportante)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+}

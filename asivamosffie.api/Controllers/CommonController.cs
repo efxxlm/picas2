@@ -56,18 +56,68 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
-        public async Task<ActionResult<List<Localicacion>>> GetListDepartamento(string idDepartamento)
+        public async Task<ActionResult<List<Localicacion>>> GetListMunicipio(string idDepartamento)
         {
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
+
+        [HttpGet]
+        [Route("ListMunicipiosByIdMunicipio")]
+        public async Task<ActionResult<List<Localicacion>>> GetListMunicipioByMunicipio(string idMunicipio)
+        {
+            var result = await common.GetListMunicipioByIdMunicipio(idMunicipio);
+            return result;
+        }
+        [HttpGet]
+        [Route("ListDepartamentoByIdMunicipio")]
+        public async Task<ActionResult<List<Localicacion>>> GetListDepartamentoByMunicipio(string idMunicipio)
+        {
+            var result = await common.GetListDepartamentoByIdMunicipio(idMunicipio);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("ListDepartamentoByRegionId")]
+        public async Task<ActionResult<List<Localicacion>>> ListDepartamentoByRegionId(string idRegion)
+        {
+            var result = await common.ListDepartamentoByRegionId(idRegion);
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("ListRegion")]
+        public async Task<ActionResult<List<Localicacion>>> ListRegion(string idDepartamento)
+        {
+            var result = await common.ListRegion();
+            return result;
+        }
+
+
 
 
         [HttpGet]
         [Route("ListVigenciaAporte")]
         public async Task<ActionResult<List<int>>> GetListVigenciaAportes()
         {
-            var result = await common.GetListVigenciaAportes(_settings.Value.yearVigente , _settings.Value.yearSiguienteEsVigente);
+            var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente , _settings.Value.YearSiguienteEsVigente);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("ListIntitucionEducativaByMunicipioId")]
+        public async Task<ActionResult<List<InstitucionEducativaSede>>> ListIntitucionEducativaByMunicipioId(string idMunicipio)
+        {
+            var result = await common.ListIntitucionEducativaByMunicipioId(idMunicipio);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("ListSedeByInstitucionEducativaId")]
+        public async Task<ActionResult<List<InstitucionEducativaSede>>> ListSedeByInstitucionEducativaId(int idInstitucionEducativaId)
+        {
+            var result = await common.ListSedeByInstitucionEducativaId(idInstitucionEducativaId);
             return result;
         }
     }

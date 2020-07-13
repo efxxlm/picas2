@@ -44,14 +44,14 @@ export interface CofinanciacionAportante{
 }
 
 export interface CofinanciacionDocumento{
-  CofinanciacionDocumentoId: number,
-  CofinanciacionAportanteId: number,
-  VigenciaAporteId: number,
-  ValorDocumento: string,
-  TipoDocumentoId: number,
-  NumeroActa: string,
-  FechaActa?: Date,
-  NumeroAcuerdo?: number,
-  FechaAcuerdo: Date,
-  ValorTotalAportante: string 
+  cofinanciacionDocumentoId: number,
+  cofinanciacionAportanteId: number,
+  vigenciaAporte: number,
+  valorDocumento: string,
+  tipoDocumentoId: number,
+  numeroActa: string,
+  fechaActa?: Date,
+  numeroAcuerdo?: number,
+  fechaAcuerdo: Date,
+  valorTotalAportante: string 
 }
