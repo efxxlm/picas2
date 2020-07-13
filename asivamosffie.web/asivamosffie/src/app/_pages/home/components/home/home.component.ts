@@ -18,7 +18,10 @@ export class HomeComponent implements OnInit {
       title: 'Gestionar acuerdo de cofinanciación',
       link: '/gestionarAcueros'
     },
-    
+    {
+      title: 'Gestionar fuentes de financiación',
+      link: '/gestionarFuentes'
+    },
     {
       title: 'Crear proyecto técnico',
       link: '/crearProyecto'
