@@ -121,7 +121,7 @@ namespace asivamosffie.api
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
-
+            services.AddTransient<IProjectContractingService, ProjectContractingService>();
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
