@@ -51,7 +51,7 @@ namespace asivamosffie.services
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
             try
             {
-
+              //  string EstadoJuridicoCodigo = cons
                 IQueryable<Proyecto> ListProyectos = _context.Proyecto.Where(r => !(bool)r.Eliminado);
 
                 if (!string.IsNullOrEmpty(pTipoIntervencion))
@@ -60,8 +60,7 @@ namespace asivamosffie.services
                     ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion));
                 }
                 if (!string.IsNullOrEmpty(pLlaveMen))
-                {
-
+                { 
                     ListProyectos.Where(r => r.LlaveMen.Equals(pLlaveMen));
                 }
                 if (!string.IsNullOrEmpty(pMunicipio))
@@ -83,7 +82,7 @@ namespace asivamosffie.services
                     Localizacion municipio = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
                     Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
-              //      Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.es.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
 
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
@@ -93,7 +92,7 @@ namespace asivamosffie.services
                         InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
                         Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                         EstadoRegistro = estadoRegistro.Nombre,
-                        EstadoJuridicoPredios = ""
+                        EstadoJuridicoPredios = EstadoJuridicoPredios.Nombre
                     };
                     ListProyectoGrilla.Add(proyectoGrilla);
                 }
