@@ -39,7 +39,14 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Tipo_de_Predios = 19,
 
 		Origen_Documento_Cargue = 20,
-		Acciones = 17
+
+		Acciones = 17,
+
+		//NO se estan poniendo los Tipo Dominio ?
+		//NO se estan poniendo los Tipo Dominio ?
+		//JM
+
+		Tipo_de_Solicitud = 29
 
 
 	}
