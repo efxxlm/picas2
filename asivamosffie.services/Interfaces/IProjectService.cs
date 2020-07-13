@@ -12,7 +12,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> CreateOrEditAdministrativeProject(ProyectoAdministrativo pProyectoAdministrativo);
 
-        Task<List<ProyectoGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto);
+        Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto);
 
         Task<Respuesta> CreateOrEditProyect(Proyecto pProyecto);
 
@@ -21,10 +21,15 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
          
         Task<Proyecto> GetProyectoByProyectoId(int idProyecto);
-        Task<bool> DeleteProyectoByProyectoId(int pProyectoId);            
+
+        Task<bool> DeleteProyectoByProyectoId(int pProyectoId);    
+        
         Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto);
+
         Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId);
+
         Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId);
+
         Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId);
     }
 }

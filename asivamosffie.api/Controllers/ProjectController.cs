@@ -119,9 +119,8 @@ namespace asivamosffie.api.Controllers
 
         [Route("ListAdministrativeProject")]
         [HttpGet]
-        public async Task<List<ProyectoGrilla>> ListAdministrativeProjects()
-        {
-
+        public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProjects()
+        { 
             string pUsuarioModifico = "";
             //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.ListAdministrativeProyectos(pUsuarioModifico);
