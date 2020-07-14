@@ -43,7 +43,8 @@ export interface Cofinanciacion{
   cofinanciacionAportante: CofinanciacionAportante[],
   fechaCreacion?: Date,
   valorTotal?: number,
-  estadoRegistro?: string
+  estadoRegistro?: string,
+  eliminado?:boolean
 }
 
 export interface CofinanciacionAportante{
@@ -52,7 +53,8 @@ export interface CofinanciacionAportante{
   tipoAportanteId: any,
   nombreAportanteId?: any,
   municipioId: number,
-  cofinanciacionDocumento: CofinanciacionDocumento[]
+  cofinanciacionDocumento: CofinanciacionDocumento[],
+  eliminado?:boolean
 }
 
 export interface CofinanciacionDocumento{
@@ -65,5 +67,6 @@ export interface CofinanciacionDocumento{
   fechaActa?: Date,
   numeroAcuerdo?: number,
   fechaAcuerdo: Date,
-  valorTotalAportante: string 
+  valorTotalAportante: string,
+  eliminado?:boolean
 }
