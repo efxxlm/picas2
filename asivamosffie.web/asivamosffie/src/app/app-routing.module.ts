@@ -5,6 +5,7 @@ import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@an
 import { LayoutComponent } from './layout/layout.component';
 
 import { AuthGuard } from './_guards/auth.guard';
+import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinanciacion/components/registrar-acuerdo/registrar-acuerdo.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,10 @@ const routes: Routes = [
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
         .then(m => m.GestionarFuentesDeFinanciacionModule)
+      },
+      {
+        path: 'registrarAcuerdos/:id',
+        component: RegistrarAcuerdoComponent,
       },
       {
         path: 'cargarMasivamente',

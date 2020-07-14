@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl, FormsModule, ControlContainer } from '@angular/forms';
 import { CofinanciacionService, CofinanciacionAportante, Cofinanciacion, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
-import { Dominio, CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
+import { Dominio, CommonService, Respuesta, Localizacion } from 'src/app/core/_services/common/common.service';
 import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-registrar-acuerdo',
@@ -21,30 +23,102 @@ export class RegistrarAcuerdoComponent implements OnInit {
   tiposDocumento: Dominio[]; 
   selectTiposAportante: Dominio[];
   nombresAportante: Dominio[];
-  valorTotalAcuerdo = 85000000;
+  departamentos: Localizacion[];
+  valorTotalAcuerdo = 0;
   listaCofinancAportantes: CofinanciacionAportante[] = [];
+  id: number = 0;
+  tiposPersonaHabilitaNombre: string[] = ['3'];
 
   constructor(private fb: FormBuilder,
               private cofinanciacionService: CofinanciacionService,
               private commonService: CommonService,
-              public dialog: MatDialog,) {
+              public dialog: MatDialog,
+              private activatedRoute: ActivatedRoute
+              ) {
     this.maxDate = new Date();
+  }
 
-    /* lo paso al keyup
-    this.datosAportantes.get('numAportes').valueChanges
-    .subscribe( () => {
-      this.CambioNumeroAportantes();
-    });*/
+  datosAportantes = this.fb.group({
+    vigenciaEstado: ['', Validators.required],
+    numAportes: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+    aportantes: this.fb.array([])
+  });
+
+  EditMode(){
+    this.activatedRoute.params.subscribe( param =>{
+    
+
+       if (param['id']){
+        this.id = param['id'];
+        this.cofinanciacionService.getAcuerdoCofinanciacionById(this.id).subscribe(cof => {
+            this.datosAportantes.setControl('vigenciaEstado',this.fb.control(cof.vigenciaCofinanciacionId, Validators.required));
+            this.datosAportantes.setControl('numAportes', this.fb.control(cof.cofinanciacionAportante.length));
+
+            cof.cofinanciacionAportante.forEach( apor => {
+              let grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId, apor.nombreAportanteId, apor.cofinanciacionDocumento.length,
+                                                                apor.cofinanciacionId, apor.cofinanciacionAportanteId);   
+
+              const valorTipo = this.selectTiposAportante.find( a => a.dominioId == apor.tipoAportanteId);
+              const valorNombre = this.nombresAportante.find( a => a.dominioId == apor.nombreAportanteId);
+
+              this.commonService.listaMunicipiosByIdDepartamento(apor.municipioId.toString().substring(0,5)).subscribe( mun => {
+
+                const valorMunicipio = mun.find( a => a.localizacionId == apor.municipioId.toString());
+                const valorDepartamento = this.departamentos.find( a => a.localizacionId == apor.municipioId.toString().substring(0,5));
+
+                grupo.get('departamento').setValue(valorDepartamento);
+                grupo.get('municipios').setValue(mun);
+                grupo.get('municipio').setValue(valorMunicipio);
+                grupo.get('tipo').setValue(valorTipo);
+                grupo.get('nombre').setValue(valorNombre);
+
+                this.aportantes.push( grupo );
+              })
+
+            });
+  
+            this.listaCofinancAportantes = cof.cofinanciacionAportante;
+            this.actualizarValores();
+
+           });
+       }
+    });
+  }
+
+  actualizarValores(){
+      let valorTotal: number = 0;
+      let valorAportante: number = 0;
+      this.listaCofinancAportantes.forEach(apo =>{
+         apo.cofinanciacionDocumento.forEach( doc => {
+            valorTotal += doc.valorDocumento?parseInt(doc.valorDocumento):0;
+          })
+      });
+
+      this.valorTotalAcuerdo = valorTotal;
   }
 
   ngOnInit(): void {
+
     this.vigenciasAportante = this.cofinanciacionService.vigenciasAcuerdoCofinanciacion();
     this.vigenciaEstados = this.cofinanciacionService.vigenciasAcuerdoCofinanciacion();
     
-    this.commonService.listaTipoDocFinanciacion().subscribe( doc => { this.tiposDocumento = doc; });
-    this.commonService.listaTipoAportante().subscribe( apo => {this.selectTiposAportante = apo; });
-    this.commonService.listaNombreAportante().subscribe( nom => {this.nombresAportante = nom; });
-
+    forkJoin
+    ([
+      this.commonService.listaTipoDocFinanciacion(),
+      this.commonService.listaTipoAportante(),
+      this.commonService.listaNombreAportante(),
+      this.commonService.listaDepartamentos(),
+    ]).subscribe
+      (
+        res =>
+        {
+          this.tiposDocumento = res[0];
+          this.selectTiposAportante = res[1];
+          this.nombresAportante = res[2];
+          this.departamentos = res[3];
+          this.EditMode();
+        }
+      )
   }
 
   get aportantes() {
@@ -55,36 +129,89 @@ export class RegistrarAcuerdoComponent implements OnInit {
     return this.documentoApropiacion;
   }
 
-  datosAportantes = this.fb.group({
-    vigenciaEstado: ['', Validators.required],
-    numAportes: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
-    aportantes: this.fb.array([])
-  });
-
   // tabla de los documentos de aportantes
   documentoApropiacion:CofinanciacionDocumento[]=[];
+  
+  changeDepartamento(id){
+    this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id].get('departamento').value.localizacionId).subscribe( mun =>
+      {
+        this.aportantes.controls[id].get('municipios').setValue(mun);
+      });
+  }
+
+  changeTipoAportante(p){
+    console.log(p);
+  }
 
   CambioNumeroAportantes(){
     const FormNumAportantes = this.datosAportantes.value;
     if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 100) {
       while (this.aportantes.length < FormNumAportantes.numAportes) {
         this.aportantes.push( this.createAportante() );
-        //this.DocumentoAportantes.push( this.createDocumentoAportante() );
       }
     } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
       while (this.aportantes.length > FormNumAportantes.numAportes) {
         this.borrarAportante(this.aportantes, this.aportantes.length - 1);
-        this.borrarAportante(this.DocumentoAportantes, this.aportantes.length - 1);
+        //this.listaCofinancAportantes.pop();
       }
     }
   }
 
   createAportante(): FormGroup {
-    return this.fb.group({
+    
+    let grupo: FormGroup = this.fb.group({
       tipo: ['', Validators.required],
-      nombre: ['', Validators.required],
+      nombre: [''],
       cauntosDocumentos: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cofinanciacionId:[''],
+      cofinanciacionAportanteId:[''],
+      departamento: [''],
+      municipio: [''],
+      municipios: ['']
     });
+
+
+    let cofiApo: CofinanciacionAportante={
+      tipoAportanteId:  '',
+      nombreAportanteId:'',
+      municipioId:      0,
+      cofinanciacionId: 0,
+      cofinanciacionAportanteId:0,
+      cofinanciacionDocumento:[]
+    }
+    this.listaCofinancAportantes.push(cofiApo);
+
+    return grupo
+
+  }
+
+  createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number, pCofinanciacionId: number, pCofinanciacionAportanteId: number): FormGroup {
+    let grupo: FormGroup = this.fb.group({
+      tipo: [pTipo, Validators.required],
+      nombre: [pNombre],
+      cauntosDocumentos: [pCantidad, [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cofinanciacionId: [pCofinanciacionId],
+      cofinanciacionAportanteId: [pCofinanciacionAportanteId],
+      departamento: [''],
+      municipio: [''],
+      municipios: ['']
+    });
+
+    for (let i=0; i<pCantidad; i++)
+    {
+      let cofiApo: CofinanciacionAportante={
+        tipoAportanteId:  '',
+        nombreAportanteId:'',
+        municipioId:      0,
+        cofinanciacionId: 0,
+        cofinanciacionAportanteId:0,
+        cofinanciacionDocumento:[]
+      }
+      this.listaCofinancAportantes.push(cofiApo);
+    }
+
+    return grupo;
+
   }
 
   createDocumentoAportante(): FormGroup {
@@ -104,32 +231,13 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   borrarAportante(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
-  }
-
-  listaDocumentos( controles: FormArray )
-  {
-    let lista: CofinanciacionDocumento[] = [];
-
-    controles.controls.forEach(doc => {
-      let cofDoc: CofinanciacionDocumento;
-      //cofDoc.FechaActa = new Date;
-      cofDoc.FechaAcuerdo = new Date;
-      cofDoc.NumeroActa = '111';
-      //cofDoc.NumeroAcuerdo
-      cofDoc.TipoDocumentoId = 1;
-      cofDoc.ValorDocumento = '110011';
-      cofDoc.ValorTotalAportante = '55444';
-      cofDoc.VigenciaAporteId = 2017;
-
-      lista.push(cofDoc);
-    });
-
-    return lista;
+    const index = this.listaCofinancAportantes.indexOf(this.listaCofinancAportantes[i]);
+    this.listaCofinancAportantes.splice(index, 1);
   }
 
   listaAportantes()
   {
-    //this.listaCofinancAportantes=[];
+    let listaAportantesTemp = [];
     let i =0;
     let listaCofinancAportant:CofinanciacionAportante[] = [];
     this.aportantes.controls.forEach( control => 
@@ -143,30 +251,39 @@ export class RegistrarAcuerdoComponent implements OnInit {
           }    
         }
         let cofiApo: CofinanciacionAportante={
-          tipoAportanteId:control.get('tipo').value,
-          nombreAportanteId:control.get('nombre').value,municipioId:null,cofinanciacionId:null,
-          cofinanciacionAportanteId:null,cofinanciacionDocumento:cofinanciacionDocumento
+          tipoAportanteId:  control.get('tipo').value?      control.get('tipo').value.dominioId:null,
+          nombreAportanteId:control.get('nombre').value?    control.get('nombre').value.dominioId:null,
+          municipioId:      control.get('municipio').value? control.get('municipio').value.localizacionId:null,
+          cofinanciacionId: control.get('cofinanciacionId').value,
+          cofinanciacionAportanteId:control.get('cofinanciacionAportanteId').value,
+          cofinanciacionDocumento:cofinanciacionDocumento
         }
 
-        //cofiApo.cofinanciacionDocumento = this.listaDocumentos( control )
-                
-        listaCofinancAportant.push(cofiApo);
+        listaAportantesTemp.push(cofiApo);
+        //this.listaCofinancAportantes.push(cofiApo);
         i++;
       });    
-      this.listaCofinancAportantes=listaCofinancAportant;  
+    this.listaCofinancAportantes=listaAportantesTemp;  
+      //this.mostrarDocumentosDeApropiacion = true;
+  }
+  
+  getAportantes(){
+    return 
   }
 
-  onSubmitDatosAportantes() {
+  onSubmit() {
+    console.log("entró");
     if (this.datosAportantes.valid) {
-
+      //this.listaCofinancAportantes = [];
+      this.listaAportantes();
       let cofinanciacion: Cofinanciacion = 
       {
         vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
-        cofinanciacionAportante:this.listaCofinancAportantes,
-        cofinanciacionId:0
+        cofinanciacionAportante: this.listaCofinancAportantes,
+        cofinanciacionId: this.id
       }
 
-      //cofinanciacion.cofinanciacionAportante = this.listaAportantes();
+      console.log(cofinanciacion);
 
       this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe( 
         respuesta => 
@@ -187,18 +304,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
        });
 
       this.mostrarDocumentosDeApropiacion = true;
-      //genero los documentos de manera dinamica
-      this.aportantes.controls.forEach( control => 
-        {
-          let cantidad=control.get('cauntosDocumentos').value;
-          for(let a=0;a<cantidad;a++)
-          {
-            //this.DocumentoAportantes.push( this.createDocumentoAportante());
-          }
-        });
     }
-    
-    
   }
 
   private verificarRespuesta( respuesta: Respuesta )
@@ -222,27 +328,37 @@ export class RegistrarAcuerdoComponent implements OnInit {
     });   
   }
 
-  onSubmitDocumentosAportantes() {
-    console.log(this.listaAportantes);
-  }
-
   cantidadDocumentos(data:any,identificador:number)
   {
-    //this.documentoApropiacion=[];
-    this.listaAportantes();
+    let cantidadDocumentos: number = data.get('cauntosDocumentos').value;
+    console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length)
+    if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length 
+          && cantidadDocumentos < 100) {
+            console.log('asdas')
+      while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
     
-    let aportante = this.listaCofinancAportantes.filter(function(element) {
-      return element.tipoAportanteId == data.value.tipo && element.nombreAportanteId==data.value.nombre;
-    });
-    
-    const index = this.listaCofinancAportantes.indexOf(aportante[0], 0);
-    
-    this.listaCofinancAportantes[index].cofinanciacionDocumento=[];
-    for(let i=0;i<data.value.cauntosDocumentos;i++)
-    {
-      this.listaCofinancAportantes[index].cofinanciacionDocumento.push({CofinanciacionAportanteId:identificador,FechaAcuerdo:null,CofinanciacionDocumentoId:null,
-        NumeroActa:null,TipoDocumentoId:null,ValorDocumento:null,ValorTotalAportante:null,VigenciaAporteId:null});
+        this.listaCofinancAportantes[identificador].cofinanciacionDocumento.push(
+          {
+            cofinanciacionAportanteId:identificador,
+            fechaAcuerdo:null,
+            cofinanciacionDocumentoId:null,
+            numeroActa:null,
+            tipoDocumentoId:null,
+            valorDocumento:null,
+            valorTotalAportante:null,
+            vigenciaAporte:null
+          });
+      
+      }
+    } else if (cantidadDocumentos <= this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length 
+          && cantidadDocumentos >= 0) {
+      while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length > cantidadDocumentos) {
+        this.listaCofinancAportantes[identificador].cofinanciacionDocumento.pop();
+      }
     }
+
     
+    
+
   }
 }

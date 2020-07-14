@@ -7,9 +7,10 @@ import { RegistrarAcuerdoComponent } from './components/registrar-acuerdo/regist
 
 import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerdos.component';
 
 @NgModule({
-  declarations: [BotonRegistrarAcuerdoComponent, RegistrarAcuerdoComponent],
+  declarations: [BotonRegistrarAcuerdoComponent, RegistrarAcuerdoComponent, TablaAcuerdosComponent],
   imports: [
     CommonModule,
     GestionarAcuerdoCofinanciacionRoutingModule,
