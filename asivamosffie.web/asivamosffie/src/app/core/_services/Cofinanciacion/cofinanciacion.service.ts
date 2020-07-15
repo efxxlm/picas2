@@ -61,7 +61,7 @@ export interface CofinanciacionDocumento{
   cofinanciacionDocumentoId: number,
   cofinanciacionAportanteId: number,
   vigenciaAporte: number,
-  valorDocumento: string,
+  valorDocumento: number,
   tipoDocumentoId: number,
   numeroActa: string,
   fechaActa?: Date,

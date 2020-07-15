@@ -190,7 +190,7 @@
 <div *ngIf="mostrarDocumentosDeApropiacion">
   <div class="container text-center">
     <h2 class="title-menu--h2">
-      Valor total del acuerdo: {{valorTotalAcuerdo | currency:'':'symbol':'3.0'}}
+      Valor total del acuerdo: <div *ngIf="valorTotalAcuerdo>0">{{valorTotalAcuerdo | currency:'':'symbol':'3.0'}}</div>
     </h2>
     <p>
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
@@ -204,14 +204,16 @@
         <mat-expansion-panel class="form-apropiacion" *ngFor="let aportante of listaCofinancAportantes; let i = index">
           <mat-expansion-panel-header class="form-apropiacion--header">
             <mat-panel-title class="form-apropiacion--title">
-              Documentos de apropiación aportante {{ i + 1}}
+              Documentos de apropiación aportante {{ i + 1}} 
+              <span class="info-text" style="margin-left: 0.5em; margin-right: 0px;" [ngClass]="{'sin-diligenciar': validaCompletitud(aportante)==1, 'en-proceso':  validaCompletitud(aportante)==2, 'completo':  validaCompletitud(aportante)==3}"></span>
+              
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <mat-card class="shipping-card" *ngFor="let documento of aportante.cofinanciacionDocumento;index as a">
             <mat-card-header>
               <mat-card-title class="header-card--text">
-                Documento {{a}}
+                Documento {{a+1}}
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
@@ -271,18 +273,36 @@
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row" *ngIf="documento.tipoDocumentoId==25">
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Número de documento</label>
+                      <label class="label-left">Número de acta</label>
                     </div>
                     <div class="col d-flex align-items-center">
                       <mat-form-field class="full-width">
                         <input matInput #numeroDocumento maxlength="10" min="1000000000" required type="number"
                         [(ngModel)]="documento.numeroActa">
                       </mat-form-field>
-                      <span class="contador">{{10 - (documento.NumeroActa?documento.NumeroActa.toString().length:0)}}</span>
+                      <span class="contador">{{10 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row"  *ngIf="documento.tipoDocumentoId==25">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Fecha del acta</label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="example-full-width">
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="documento.fechaActa" [max]="maxDate">
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -292,7 +312,24 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Fecha del documento</label>
+                      <label class="label-left">Número de documento {{documento.tipoDocumentoId==25?'de acuerdo':''}}</label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="full-width">
+                        <input matInput #numeroDocumentoa maxlength="10" min="1000000000" required type="number"
+                        [(ngModel)]="documento.numeroAcuerdo">
+                      </mat-form-field>
+                      <span class="contador">{{10 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Fecha del documento {{documento.tipoDocumentoId==25?'de acuerdo':''}}</label>
                     </div>
                     <div class="col d-flex align-items-center">
                       <mat-form-field class="example-full-width">
@@ -305,6 +342,7 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="col text-right">
                   <button mat-button color="warn" type="submit" class="btn-eliminar">
                     <img src="assets/img/icon/menos.svg" alt="Eliminar documento">

@@ -16,7 +16,7 @@ import { forkJoin } from 'rxjs';
 })
 export class RegistrarAcuerdoComponent implements OnInit {
 
-  mostrarDocumentosDeApropiacion = true;
+  mostrarDocumentosDeApropiacion = false;
   maxDate: Date;
   vigenciaEstados: number[];
   vigenciasAportante: number[];
@@ -90,7 +90,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       let valorAportante: number = 0;
       this.listaCofinancAportantes.forEach(apo =>{
          apo.cofinanciacionDocumento.forEach( doc => {
-            valorTotal += doc.valorDocumento?parseInt(doc.valorDocumento):0;
+            valorTotal += doc.valorDocumento?doc.valorDocumento:0;
           })
       });
 
@@ -215,6 +215,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   createDocumentoAportante(): FormGroup {
+    
     return this.fb.group({
       vigenciaAportante: [null, Validators.required],
       valorIndicadoEnElDocumento: [null, Validators.compose([
@@ -303,7 +304,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         //console.log('terminó');
        });
 
-      this.mostrarDocumentosDeApropiacion = true;
+      
     }
   }
 
@@ -330,6 +331,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   cantidadDocumentos(data:any,identificador:number)
   {
+    this.mostrarDocumentosDeApropiacion = true;
     let cantidadDocumentos: number = data.get('cauntosDocumentos').value;
     console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length)
     if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length 
@@ -341,8 +343,10 @@ export class RegistrarAcuerdoComponent implements OnInit {
           {
             cofinanciacionAportanteId:identificador,
             fechaAcuerdo:null,
+            numeroAcuerdo:null,
             cofinanciacionDocumentoId:null,
             numeroActa:null,
+            fechaActa:null,
             tipoDocumentoId:null,
             valorDocumento:null,
             valorTotalAportante:null,
@@ -360,5 +364,40 @@ export class RegistrarAcuerdoComponent implements OnInit {
     
     
 
+  }
+
+  validaCompletitud(aportante:any)
+  {
+    console.log(aportante.cofinanciacionDocumento);
+    let retorno=0;
+    aportante.cofinanciacionDocumento.forEach(element => {
+      if(
+        element.fechaAcuerdo==null&&
+        element.numeroActa==null&&
+        element.tipoDocumentoId==null&&
+        element.valorDocumento==null&&
+        //element.valorTotalAportante==null&&
+        element.vigenciaAporte==null)
+        {
+          //retorno=0;
+          console.log("no suma");
+        }
+        else if(
+          element.fechaAcuerdo!=null&&
+          element.numeroActa!=null&&
+          element.tipoDocumentoId!=null&&
+          element.valorDocumento!=null&&
+         // element.valorTotalAportante!=null&&
+          element.vigenciaAporte!=null){
+            retorno+=2;
+            console.log("suma 2");
+        }
+        else{
+          console.log("suma 1");
+          retorno++;
+        }
+    });
+    let resultado=aportante.cofinanciacionDocumento.length*2==retorno?3:retorno==0?1:2;
+    return resultado;
   }
 }
