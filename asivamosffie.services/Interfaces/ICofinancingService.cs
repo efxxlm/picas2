@@ -17,6 +17,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion);
 
+        Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID);
+
 
     }
 }

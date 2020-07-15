@@ -36,24 +36,43 @@ export class RegistrarComponent implements OnInit {
   ngOnInit(): void {
 
     this.VigenciasAporte = this.commonService.vigenciasDesde2015();
+    this.activatedRoute.params.subscribe( param =>  {
+      this.tipoAportanteId = param['idTipoAportante'];
+      console.log(this.tipoAportanteId, param);
+
+      forkJoin([
+        this.commonService.listaNombreAportante(),
+        this.commonService.listaFuenteRecursos(),
+        this.commonService.listaBancos(),
+        this.commonService.listaDepartamentos(),
+        this.cofinanciacionService.listaAportantesByTipoAportante(this.tipoAportanteId)
+      ]).subscribe( res => {
+  
+        if (this.tipoAportante.Tercero.includes(this.tipoAportanteId.toString())){
+          let nombresAportantesTemp: Dominio[] = res[0];  
+
+          let listaTemp: Dominio[] = res[4];
+
+          listaTemp.forEach( apo => {
+            let s = nombresAportantesTemp.find( temp => temp.dominioId == apo.dominioId);
+            if(s){
+              console.log(s, listaTemp, apo.dominioId);
+              this.nombresAportantes.push(s);    
+            }
+          });
+
+        }else{
+          this.nombresAportantes = res[0];
+        }
+        
+  
+         this.fuentesDeRecursosLista = res[1];
+         this.bancos = res[2];
+         this.departamentos = res[3];
+      });
+    })
+
     
-
-    forkJoin([
-      this.commonService.listaNombreAportante(),
-      this.commonService.listaFuenteRecursos(),
-      this.commonService.listaBancos(),
-      this.commonService.listaDepartamentos(),
-    ]).subscribe( res => {
-      this.nombresAportantes = res[0];
-      this.fuentesDeRecursosLista = res[1];
-      this.bancos = res[2];
-      this.departamentos = res[3];
-
-      this.activatedRoute.params.subscribe( param =>  {
-        this.tipoAportanteId = param['idTipoAportante'];
-        console.log(this.tipoAportanteId, param);
-      })
-    });
 
     this.addressForm = this.fb.group({
       nombreAportante: [null, Validators.required],
@@ -61,6 +80,7 @@ export class RegistrarComponent implements OnInit {
       numerodocumento: [null, Validators.compose([
         Validators.required, Validators.minLength(10), Validators.maxLength(10)])
       ],
+      vigenciaAcuerdo:[],
       departamento: [],
       municipio: [],
       tieneRP: [null, Validators.required],

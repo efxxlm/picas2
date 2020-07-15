@@ -52,7 +52,6 @@ export class CommonService {
 
     return vigencias;
   }
-
 }
 
 export interface Dominio{
@@ -60,6 +59,7 @@ export interface Dominio{
   tipoDominioId: number,
   nombre: string,
   activo: boolean,
+  codigo?: string,
 }
 
 export interface Localizacion{

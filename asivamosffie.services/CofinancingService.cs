@@ -29,6 +29,7 @@ namespace asivamosffie.services
             _context = context;
         }
 
+
         public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion)
         {//con include
          //Cofinanciacion cofinanciacion = await
@@ -108,11 +109,15 @@ namespace asivamosffie.services
                         cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
                         idCofinancicacionAportante = await CreateCofinancingContributor(cofinanciacionAportante);
 
-                        foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                        //Se crear los CofinanciacionDocumento relacionados a este aportante
+                        if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
                         {
-                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionId;
-                            cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
-                            await CreateCofinancingDocuments(cofinancicacionDocumento);
+                            foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                            {
+                                cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                                cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
+                                await CreateCofinancingDocuments(cofinancicacionDocumento);
+                            }
                         }
                     }
 
@@ -230,6 +235,12 @@ namespace asivamosffie.services
 
                 throw;
             }
+        }
+
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)
+        {
+            //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
+            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
         }
     }
 }

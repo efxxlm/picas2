@@ -17,7 +17,7 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString()) && !tipoAportante.ET.includes(tipoAportanteId.toString())" >
+        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString()) || tipoAportante.Tercero.includes(tipoAportanteId.toString())" >
           <div class="pr-1">
             <label class="label-left">Nombre del aportante</label>
           </div>
@@ -90,6 +90,22 @@
             </mat-form-field>
           </div>
         </div>
+        <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="vigenciaAcuerdo" >
+                <mat-option value="0">Seleccione</mat-option>
+                <mat-option *ngFor="let vigencia of VigenciasAporte"
+                  [value]="vigencia">
+                  {{ vigencia }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
@@ -105,18 +121,6 @@
             <p><b>Vigencia del aporte: </b> 2020 </p>
             <p><b>Número de documento: </b> 000904 </p>
             <p><b>Valor: </b> $55.000.000 </p>
-          </div>
-          <div class="col-md-6">
-            <p><b>Documento de apropiación: </b> Documento 2 </p>
-            <p><b>Tipo de documento: </b> Acta y acuerdo </p>
-            <p><b>Número de documento del acta: </b> 000905 </p>
-            <p><b>Fecha del acta: </b> 30/04/2021 </p>
-          </div>
-          <div class="col-md-6">
-            <p><b>Vigencia del aporte: </b> 2021 </p>
-            <p><b>Número de documento del acuerdo: </b> 000906 </p>
-            <p><b>Fecha del acuerdo: </b> 30/04/2021</p>
-            <p><b>Valor: </b> $30.000.000 </p>
           </div>
         </div>
         <h2 class="card-subTitle var-main-gris">
