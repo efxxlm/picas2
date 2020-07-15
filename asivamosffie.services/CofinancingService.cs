@@ -258,6 +258,13 @@ namespace asivamosffie.services
             return ListCofinanicacionAportanteGrilla;
         }
 
+
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)
+        {
+            //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
+            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID && r.TipoAportanteId != 9 && r.TipoAportanteId != 10).ToListAsync();
+        }
+
         public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
         {
             return await _context.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == pAportanteID).ToListAsync();

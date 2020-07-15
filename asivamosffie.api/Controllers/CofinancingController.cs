@@ -107,5 +107,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        [Route("GetListTipoAportante")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListTipoAportante(pTipoAportanteID);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

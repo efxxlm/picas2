@@ -35,18 +35,33 @@ namespace asivamosffie.services
             return await _context.CofinanciacionAportante.FindAsync(id);
         }
 
+        //public async Task<ActionResult<List<Aportante>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        //{
+        //    List<CofinanciacionAportante> ListCofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
 
-//        //public async Task<ActionResult<List<Aportante>>> GetContributor()
-//        //{
-//        //    return await _context.Aportante.ToListAsync();
-//        //}
+        //    List<CofinanicacionAportanteGrilla> ListCofinanicacionAportanteGrilla = new List<CofinanicacionAportanteGrilla>();
 
-//        //public async Task<Aportante> GetContributorById(int id)
-//        //{
-//        //    return await _context.Aportante.FindAsync(id);
+        //    foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
+        //    {
+        //        //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
+        //        cofinanciacionAportante.CofinanciacionDocumento = await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == cofinanciacionAportante.CofinanciacionAportanteId).ToListAsync();
+        //    }
 
-//        //}
- 
+        //    return ListCofinanicacionAportanteGrilla;
+        //}
+
+
+        //        //public async Task<ActionResult<List<Aportante>>> GetContributor()
+        //        //{
+        //        //    return await _context.Aportante.ToListAsync();
+        //        //}
+
+        //        //public async Task<Aportante> GetContributorById(int id)
+        //        //{
+        //        //    return await _context.Aportante.FindAsync(id);
+
+        //        //}
+
 
         // Grilla de control? { AportanteId }
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
