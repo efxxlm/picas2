@@ -133,7 +133,7 @@ export class FormularioProyectosComponent implements OnInit  {
         this.listaCordinaciones=listas[6];
         this.listadoConvocatoria=listas[7];
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
-          console.log(respuesta.numeroActaJunta);
+          //console.log(respuesta.numeroActaJunta);
           this.proyecto=respuesta;
           //ajusto lartitud y longitud
           if(respuesta.predioPrincipal.ubicacionLatitud.indexOf('°')>1)
@@ -623,4 +623,10 @@ export class FormularioProyectosComponent implements OnInit  {
     });
   }
 
+
+  validateKeypressLlave(event: KeyboardEvent) {    
+    let alphanumeric = /[A-Za-z0-9_]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
 }

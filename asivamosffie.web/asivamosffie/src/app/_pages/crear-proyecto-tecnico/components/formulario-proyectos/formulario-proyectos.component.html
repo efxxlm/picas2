@@ -79,7 +79,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.llaveMen" maxlength="8" required type="text">
+                <input matInput [(ngModel)]="proyecto.llaveMen" maxlength="8" required type="text"  (keypress)="validateKeypressLlave($event)" >
               </mat-form-field>
               <span class="contador">{{8 - (proyecto.llaveMen?proyecto.llaveMen.length:0)}}</span>
             </div>
@@ -254,7 +254,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="2" onKeyPress="if(this.value.length>1) return false;"  onKeyPress="if(this.value.length>1) return false;"
+                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="2" onKeyPress="if(this.value.length>1) return false;"
                   min="1" max="99" required type="number">
               </mat-form-field>
               <span class="contador">{{2 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
