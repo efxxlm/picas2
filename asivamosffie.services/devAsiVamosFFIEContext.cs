@@ -64,7 +64,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
- 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AcuerdoCofinanciamiento>(entity =>

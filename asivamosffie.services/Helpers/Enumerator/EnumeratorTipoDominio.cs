@@ -49,6 +49,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Juridico_Predios = 25,
 
         Tipo_de_Solicitud = 29,
-          
-	}
+
+        Tipo_Documento = 30 
+
+    }
 }

@@ -32,8 +32,15 @@ namespace asivamosffie.api.Controllers
         public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pMunicipio, int pIdInstitucionEducativa, int pIdSede)
         {
             var respuesta = await _projectContractingService.GetListProyectsByFilters(pTipoIntervencion, pLlaveMen, pMunicipio, pIdInstitucionEducativa, pIdSede);
-            return respuesta;
+            return respuesta; 
+        }
 
+        [Route("GetListContractingByFilters")]
+        [HttpGet]
+        public async Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio)
+        {
+            var respuesta = await _projectContractingService.GetListContractingByFilters(pTipoIdentificacionCodigo, pNumeroIdentidicacion, pNombre, EsConsorcio);
+            return respuesta;
         }
 
     }

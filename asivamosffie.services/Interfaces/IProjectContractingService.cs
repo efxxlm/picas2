@@ -11,5 +11,8 @@ namespace asivamosffie.services.Interfaces
     public interface IProjectContractingService
     {
         Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pMunicipio, int pIdInstitucionEducativa, int pIdSede);
+
+        Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio);
+   
     }
 }

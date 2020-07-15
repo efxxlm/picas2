@@ -28,6 +28,7 @@ namespace asivamosffie.services
 {
     public class ProjectContractingService : IProjectContractingService
     {
+
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         private readonly devAsiVamosFFIEContext _context;
@@ -40,6 +41,47 @@ namespace asivamosffie.services
         }
 
 
+        public async Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio)
+        {
+            List<ContratistaGrilla> ListContratistaGrillas = new List<ContratistaGrilla>();
+
+            IQueryable<Contratista> contratistas = _context.Contratista.Where(
+                r => (bool)r.Activo);
+
+            if (!string.IsNullOrEmpty(pTipoIdentificacionCodigo))
+            {
+                contratistas = contratistas.Where(r => r.TipoIdentificacionCodigo.Equals(pTipoIdentificacionCodigo));
+            }
+            if (!string.IsNullOrEmpty(pNumeroIdentidicacion))
+            {
+                contratistas = contratistas.Where(r => r.NumeroIdentificacion.Contains(pNumeroIdentidicacion));
+            }
+            if (!string.IsNullOrEmpty(pNombre))
+            {
+                contratistas = contratistas.Where(r => r.Nombre.ToUpper().Contains(pNombre.ToUpper()));
+            }
+            //TODO: Validar si se compara asi los bool
+            if (EsConsorcio != null)
+            {
+                contratistas = contratistas.Where(r => r.EsConsorcio == EsConsorcio);
+            }
+
+            foreach (var contratista in contratistas)
+            {
+                ContratistaGrilla contratistaGrilla = new ContratistaGrilla
+                {
+                    IdContratista = contratista.ContratistaId,
+                    Nombre = contratista.Nombre,
+                    NumeroIdentificacion = contratista.NumeroIdentificacion,
+                    EsConsorcio = (bool)contratista.EsConsorcio,
+                    NumeroInvitacion = contratista.NumeroInvitacion,
+                    RepresentanteLegal = contratista.RepresentanteLegal
+                };
+                ListContratistaGrillas.Add(contratistaGrilla);
+            }
+            return ListContratistaGrillas;
+        }
+
         public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(
             string pTipoIntervencion,
             string pLlaveMen,
@@ -51,31 +93,40 @@ namespace asivamosffie.services
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
             try
             {
-              //  string EstadoJuridicoCodigo = cons
-                IQueryable<Proyecto> ListProyectos = _context.Proyecto.Where(r => !(bool)r.Eliminado);
+                //Listar Los proyecto segun caso de uso solo trae los ue estado
+                //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
+
+                string strCodigoEstadoJuridicoAprobado = ConstantCodigoEstadoJuridico.Aprobado;
+                string strCodigoEstadoProyectoCompleto = ConstantCodigoEstadoProyecto.Completo;
+
+                IQueryable<Proyecto> ListProyectos =
+                    _context.Proyecto.Where(
+                        r => !(bool)r.Eliminado &&
+                        r.EstadoJuridicoCodigo.Equals(strCodigoEstadoJuridicoAprobado) &&
+                        r.EstadoProyectoCodigo.Equals(strCodigoEstadoJuridicoAprobado) &&
+                        r.EstadoProyectoCodigo.Equals(strCodigoEstadoProyectoCompleto));
 
                 if (!string.IsNullOrEmpty(pTipoIntervencion))
                 {
-
-                    ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion));
+                    ListProyectos = ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion));
                 }
                 if (!string.IsNullOrEmpty(pLlaveMen))
-                { 
-                    ListProyectos.Where(r => r.LlaveMen.Equals(pLlaveMen));
+                {
+                    ListProyectos = ListProyectos.Where(r => r.LlaveMen.Equals(pLlaveMen));
                 }
                 if (!string.IsNullOrEmpty(pMunicipio))
                 {
-                    ListProyectos.Where(r => r.LocalizacionIdMunicipio.Equals(pMunicipio));
+                    ListProyectos = ListProyectos.Where(r => r.LocalizacionIdMunicipio.Equals(pMunicipio));
                 }
                 if (pIdInstitucionEducativa != null || pIdInstitucionEducativa > 0)
-                { 
-                    ListProyectos.Where(r => r.InstitucionEducativaId.Equals(pIdInstitucionEducativa));
+                {
+                    ListProyectos = ListProyectos.Where(r => r.InstitucionEducativaId.Equals(pIdInstitucionEducativa));
                 }
                 if (pIdSede != null || pIdSede > 0)
                 {
-                    ListProyectos.Where(r => r.SedeId.Equals(pIdSede));
+                    ListProyectos = ListProyectos.Where(r => r.SedeId.Equals(pIdSede));
                 }
-                 
+
 
                 foreach (var proyecto in ListProyectos)
                 {
