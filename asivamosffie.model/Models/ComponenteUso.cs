@@ -9,7 +9,6 @@ namespace asivamosffie.model.Models
         public int ComponenteAportanteId { get; set; }
         public string TipoUsoCodigo { get; set; }
         public decimal ValorUso { get; set; }
-        public int Activo { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public bool? Eliminado { get; set; }

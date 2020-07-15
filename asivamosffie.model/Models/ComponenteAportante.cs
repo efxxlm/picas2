@@ -13,7 +13,6 @@ namespace asivamosffie.model.Models
         public int ComponenteAportanteId { get; set; }
         public int ContratacionProyectoAportanteId { get; set; }
         public string TipoComponenteCodigo { get; set; }
-        public int Activo { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public bool? Eliminado { get; set; }
