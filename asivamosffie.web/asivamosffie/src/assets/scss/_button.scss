@@ -71,3 +71,12 @@ button.btn-calendario {
         height: 2.2em;
     }
 }
+
+.mat-dialog-actions {
+    justify-content: center;
+}
+
+.mat-dialog-actions button {    
+    background-color: var(--mainColor);
+    color: white;
+}

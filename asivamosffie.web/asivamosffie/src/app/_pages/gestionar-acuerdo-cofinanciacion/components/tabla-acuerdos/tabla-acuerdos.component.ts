@@ -67,8 +67,8 @@ export class TablaAcuerdosComponent implements OnInit {
   }
 
    eliminarAcuerdo(e: number) {
-    //this.openDialogSiNo("prueba", "abre", e);
-    this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
+    this.openDialogSiNo("", "<b>¿Está seguro de eliminar este registro?</b>", e);
+    /*this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
       cofi.eliminado = true;
       cofi.cofinanciacionAportante.forEach( apo => {
           apo.eliminado = true;
@@ -96,7 +96,7 @@ export class TablaAcuerdosComponent implements OnInit {
      () => {
       //console.log('terminó');
      });
-    });
+    });*/
    }
 
   private verificarRespuesta( respuesta: Respuesta )
@@ -138,6 +138,8 @@ export class TablaAcuerdosComponent implements OnInit {
                  doc.eliminado = true; 
               });
             })
+    
+            console.log(cofi);
     
         this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofi).subscribe( 
           respuesta => 
