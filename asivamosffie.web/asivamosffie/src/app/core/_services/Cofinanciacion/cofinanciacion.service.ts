@@ -34,6 +34,10 @@ export class CofinanciacionService {
   {
     return this.http.get<Cofinanciacion>(`${environment.apiUrl}/Cofinancing/GetCofinancingByIdCofinancing?IdCofinancing=${id}`);
   }
+
+  getDocumentoApropiacionByAportante(id: number){
+    return this.http.get<CofinanciacionDocumento[]>(`${environment.apiUrl}/Cofinancing/GetDocument?ContributorId=${id}`);
+  }
   
 }
 

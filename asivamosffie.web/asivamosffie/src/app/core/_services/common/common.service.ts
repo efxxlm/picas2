@@ -35,6 +35,24 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=7`);
   }
 
+  listaFuenteRecursos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
+  }
+
+  listaBancos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=22`);
+  }
+
+  vigenciasDesde2015(): number[]{
+    const fecha = new Date();
+    let vigencias: number[]=[];
+    for (let i = 2015; i < fecha.getFullYear(); i++){
+      vigencias.push(i);
+    }
+
+    return vigencias;
+  }
+
 }
 
 export interface Dominio{
@@ -57,4 +75,16 @@ export interface Respuesta{
   message: string;
   data?: any;
   token?: any;
+}
+
+interface TipoAportante{
+  FFIE: string[];
+  ET: string[];
+  Tercero: string[];
+}
+
+export const TiposAportante: TipoAportante = {
+  FFIE:   ["1"],
+  ET:     ["2"],
+  Tercero:["3"]
 }

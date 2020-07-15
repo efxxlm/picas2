@@ -6,6 +6,7 @@ import { LayoutComponent } from './layout/layout.component';
 
 import { AuthGuard } from './_guards/auth.guard';
 import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinanciacion/components/registrar-acuerdo/registrar-acuerdo.component';
+import { RegistrarComponent } from './_pages/gestionar-fuentes-de-financiacion/components/registrar/registrar.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+      },
+      {
+        path: 'registrarFuentes/:idTipoAportante',
+        component: RegistrarComponent,
       },
     ]
 
