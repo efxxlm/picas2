@@ -2,15 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { FormDescripcionDelProcesoDeSeleccionComponent } from './form-descripcion-del-proceso-de-seleccion.component';
+import { FormDatosProponentesSeleccionadosComponent } from './form-datos-proponentes-seleccionados.component';
 
-describe('FormDescripcionDelProcesoDeSeleccionComponent', () => {
-  let component: FormDescripcionDelProcesoDeSeleccionComponent;
-  let fixture: ComponentFixture<FormDescripcionDelProcesoDeSeleccionComponent>;
+describe('FormDatosProponentesSeleccionadosComponent', () => {
+  let component: FormDatosProponentesSeleccionadosComponent;
+  let fixture: ComponentFixture<FormDatosProponentesSeleccionadosComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormDescripcionDelProcesoDeSeleccionComponent ],
+      declarations: [ FormDatosProponentesSeleccionadosComponent ],
       imports: [
         NoopAnimationsModule,
         ReactiveFormsModule,
@@ -19,7 +19,7 @@ describe('FormDescripcionDelProcesoDeSeleccionComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormDescripcionDelProcesoDeSeleccionComponent);
+    fixture = TestBed.createComponent(FormDatosProponentesSeleccionadosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

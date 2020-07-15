@@ -2,15 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { FormDescripcionDelProcesoDeSeleccionComponent } from './form-descripcion-del-proceso-de-seleccion.component';
+import { FormEstudioDeMercadoComponent } from './form-estudio-de-mercado.component';
 
-describe('FormDescripcionDelProcesoDeSeleccionComponent', () => {
-  let component: FormDescripcionDelProcesoDeSeleccionComponent;
-  let fixture: ComponentFixture<FormDescripcionDelProcesoDeSeleccionComponent>;
+describe('FormEstudioDeMercadoComponent', () => {
+  let component: FormEstudioDeMercadoComponent;
+  let fixture: ComponentFixture<FormEstudioDeMercadoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormDescripcionDelProcesoDeSeleccionComponent ],
+      declarations: [ FormEstudioDeMercadoComponent ],
       imports: [
         NoopAnimationsModule,
         ReactiveFormsModule,
@@ -19,7 +19,7 @@ describe('FormDescripcionDelProcesoDeSeleccionComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormDescripcionDelProcesoDeSeleccionComponent);
+    fixture = TestBed.createComponent(FormEstudioDeMercadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

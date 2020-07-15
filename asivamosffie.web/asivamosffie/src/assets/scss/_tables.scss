@@ -16,8 +16,12 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     border-right: solid .5px;
 }
 
-th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+th.mat-header-cell:last-of-type, td.mat-footer-cell:last-of-type {
     border-right: none;
+}
+
+td.mat-cell:first-of-type {
+    border-left: 1px solid;
 }
 
 .mat-cell, .mat-footer-cell {
@@ -99,4 +103,27 @@ div.mat-paginator {
     margin: 0 4px;
     position: absolute;
     top: .5em;
+}
+
+
+.mat-table-style {
+    text-align: center;
+    border-spacing: 0;
+
+    th.mat-header-cell {
+        padding: 1em;
+    }
+
+    .mat-cell, .mat-footer-cell {
+        border-bottom: solid 1px;
+    }
+
+    .contador {
+        margin-left: 0;
+        margin-top: 0.5em;
+    }
+
+    .ql-toolbar {
+        text-align: left;
+    }
 }

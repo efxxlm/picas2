@@ -8,16 +8,37 @@
         <h1 class="title-menu--h1">
             Nuevo proceso de selección
         </h1>
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
     </div>
 
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title completo">
                     Descripción del proceso de selección
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <app-form-descripcion-del-proceso-de-seleccion></app-form-descripcion-del-proceso-de-seleccion>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Estudio de mercado
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-estudio-de-mercado></app-form-estudio-de-mercado>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Datos de proponentes seleccionados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-datos-proponentes-seleccionados></app-form-datos-proponentes-seleccionados>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

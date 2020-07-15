@@ -1,0 +1,92 @@
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="pr-1">
+          <label for="cuantasCotizaciones" class="label-left">¿Cuántos grupos?</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field class="full-width">
+            <input matInput #cuantasCotizaciones type="number" min="1" max="99" formControlName="cuantasCotizaciones" (keyup)="CambioNumeroCotizantes()">
+          </mat-form-field>
+          <span class="contador">{{2 - cuantasCotizaciones.value.length}}</span>
+        </div>
+      </div>
+
+      <div formGroupName="cotizaciones">
+        <div *ngFor="let cotizacion of cotizaciones.controls; let i = index">
+          <div [formGroupName]="i">
+            <h2 class="card-subTitle">Cotizaciones</h2>
+            <mat-card-title class="header-card--text sub-text">
+              Cotización {{ i + 1 }}
+            </mat-card-title>
+            <div class="row">
+              <div class="pr-1">
+                <label for="nombreOrganizacion" class="label-left">Nombre de la organización</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #nombreOrganizacion type="text" maxlength="500" formControlName="nombreOrganizacion">
+                </mat-form-field>
+                <span class="contador">{{500 - nombreOrganizacion.value.length}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="valor" class="label-left">Valor de la cotización</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput #valor type="number" maxlength="20" formControlName="valor">
+                    </mat-form-field>
+                    <span class="contador">{{20 - valor.value.length}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <label for="descripcion" class="label-left">Descripción</label>
+              </div>
+              <div class="col d-flex">
+                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)" formControlName="descripcion"></quill-editor>
+                <!-- <span class="contador" *ngIf="addressForm.get('descripcion').value !== null">
+                  {{3000 - addressForm.get('descripcion').value.length}}
+                </span>
+                <span class="contador" *ngIf="addressForm.get('descripcion').value === null">
+                  3000
+                </span> -->
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <label for="url" class="label-left">Url con soporte</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput type="url" formControlName="url">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-md-4 text-right" *ngIf="addressForm.value.cotizaciones.length > 1">
+              <button mat-button color="warn" type="button" class="btn-eliminar"
+                (click)="borrarArray(cotizaciones, i)">
+                <img src="assets/img/icon/menos.svg" alt="Eliminar cotización">
+                Eliminar cotización
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+  </div>
+</form>

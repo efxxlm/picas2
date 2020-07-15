@@ -10,7 +10,7 @@
     </h1>
   </div>
 
-  <form [formGroup]="datosAportantes" novalidate (ngSubmit)="onSubmitDatosAportantes()">
+  <form [formGroup]="datosAportantes" (ngSubmit)="onSubmitDatosAportantes()">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
@@ -154,7 +154,7 @@
     </p>
   </div>
   <div class="container">
-    <form [formGroup]="documentoApropiacion" novalidate (ngSubmit)="onSubmitDocumentosAportantes()">
+    <form [formGroup]="documentoApropiacion" (ngSubmit)="onSubmitDocumentosAportantes()">
       <mat-accordion>
         <mat-expansion-panel class="form-apropiacion" *ngFor="let aportante of aportantes.controls; let i = index">
           <mat-expansion-panel-header class="form-apropiacion--header">

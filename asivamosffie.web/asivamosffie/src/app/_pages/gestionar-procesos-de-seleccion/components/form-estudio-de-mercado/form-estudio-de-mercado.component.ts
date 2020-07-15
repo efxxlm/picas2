@@ -1,53 +1,37 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 
+
 @Component({
-  selector: 'app-form-descripcion-del-proceso-de-seleccion',
-  templateUrl: './form-descripcion-del-proceso-de-seleccion.component.html',
-  styleUrls: ['./form-descripcion-del-proceso-de-seleccion.component.scss']
+  selector: 'app-form-estudio-de-mercado',
+  templateUrl: './form-estudio-de-mercado.component.html',
+  styleUrls: ['./form-estudio-de-mercado.component.scss']
 })
-
-export class FormDescripcionDelProcesoDeSeleccionComponent {
-
+export class FormEstudioDeMercadoComponent {
   addressForm = this.fb.group({
-    objeto: [null, Validators.required],
-    alcanceParticular: [null, Validators.required],
-    justificacion: [null, Validators.required],
-    tipoIntervencion: [null, Validators.required],
-    tipoAlcance: [null, Validators.required],
-    distribucionEnGrupos: ['free', Validators.required],
-    cuantosGrupos: [null, Validators.compose([
-      Validators.minLength(1), Validators.maxLength(2)])
+    cuantasCotizaciones: [null, Validators.compose([
+      Validators.required, Validators.minLength(1), Validators.maxLength(2)])
     ],
-    grupos: this.fb.array([
+    cotizaciones: this.fb.array([
       this.fb.group({
-        nombreGrupo: [null, Validators.compose([
-          Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        nombreOrganizacion: [null, Validators.compose([
+          Validators.required, Validators.minLength(2), Validators.maxLength(50)])
         ],
-        tipoPresupuesto: [null, Validators.required],
-        plazoMeses: [null, Validators.compose([
-          Validators.required, Validators.minLength(1), Validators.maxLength(2)])
-        ]
-      })
-    ]),
-    cronogramas: this.fb.array([
-      this.fb.group({
+        valor: [null, Validators.compose([
+          Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+        ],
         descripcion: [null, Validators.required],
-        fechaMaxima: [null, Validators.required]
+        url: [null, Validators.required]
       })
-    ]),
+    ])
   });
 
-  get grupos() {
-    return this.addressForm.get('grupos') as FormArray;
-  }
-
-  get cronogramas() {
-    return this.addressForm.get('cronogramas') as FormArray;
+  get cotizaciones() {
+    return this.addressForm.get('cotizaciones') as FormArray;
   }
 
   editorStyle = {
-    height: '100px'
+    height: '45px'
   };
 
   config = {
@@ -121,7 +105,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent {
     {name: 'Wyoming', abbreviation: 'WY'}
   ];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -129,40 +113,34 @@ export class FormDescripcionDelProcesoDeSeleccionComponent {
     }
   }
 
-  CambioNumeroAportantes() {
-    const FormGrupos = this.addressForm.value;
-    if (FormGrupos.cuantosGrupos > this.grupos.length && FormGrupos.cuantosGrupos < 100) {
-      while (this.grupos.length < FormGrupos.cuantosGrupos) {
-        this.grupos.push( this.createGrupo() );
+  CambioNumeroCotizantes() {
+    const Formcotizaciones = this.addressForm.value;
+    if (Formcotizaciones.cuantasCotizaciones > this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones < 100) {
+      while (this.cotizaciones.length < Formcotizaciones.cuantasCotizaciones) {
+        this.cotizaciones.push( this.createCotizacion() );
       }
-    } else if (FormGrupos.cuantosGrupos <= this.grupos.length && FormGrupos.cuantosGrupos >= 0) {
-      while (this.grupos.length > FormGrupos.cuantosGrupos) {
-        this.borrarArray(this.grupos, this.grupos.length - 1);
+    } else if (Formcotizaciones.cuantasCotizaciones <= this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones >= 0) {
+      while (this.cotizaciones.length > Formcotizaciones.cuantasCotizaciones) {
+        this.borrarArray(this.cotizaciones, this.cotizaciones.length - 1);
       }
     }
   }
 
-  createGrupo(): FormGroup {
+  createCotizacion(): FormGroup {
     return this.fb.group({
-      nombreGrupo: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      nombreOrganizacion: [null, Validators.compose([
+        Validators.required, Validators.minLength(2), Validators.maxLength(50)])
       ],
-      tipoPresupuesto: [null, Validators.required],
-      plazoMeses: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(2)])
-      ]
+      valor: [null, Validators.compose([
+        Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+      ],
+      descripcion: [null, Validators.required],
+      url: [null, Validators.required]
     });
   }
 
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
-  }
-
-  agregarActividad(): FormGroup {
-    return this.fb.group({
-      descripcion: [null, Validators.required],
-        fechaMaxima: [null, Validators.required]
-      });
   }
 
   onSubmit() {
