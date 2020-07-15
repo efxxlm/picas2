@@ -9,8 +9,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueMasivoProyecto = 9,
         Proyecto = 10,
         Fuentes = 14,
-        Aportantes = 15
-
+        Aportantes = 15, 
+        Contratacion_Proyecto = 17
     }
 
     public enum enumeratorAccion
@@ -20,7 +20,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         SolicitarContraseña = 53,
         CrearActualizarCofinanciacion = 55,
         Error = 56,
-        ValidarExcel = 63, 
+        ValidarExcel = 63,
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75
     }

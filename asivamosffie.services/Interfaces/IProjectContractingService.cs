@@ -15,5 +15,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio);
 
         Task<List<Contratacion>> GetListContratacion();
+
+        Task<Respuesta> CreateContratacionProyecto(int[] idsProyectos, string tipoSolicitudCodigo, string usuarioCreacion);
     }
 }

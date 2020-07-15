@@ -19,6 +19,21 @@ namespace asivamosffie.services
             _context = context;            
         }
 
+        //TODO: Modificar como obtener el numero de contratacion
+        public async Task<string> GetNumeroSolicitudContratacion()
+        {
+            int? idContratacion = _context.Contratacion.LastOrDefault().ContratistaId;
+
+            if (idContratacion == null)
+            {
+                return "1";
+            }
+            else
+            {
+                return (idContratacion + 1).ToString();
+            }
+        }
+
         public async Task<List<Perfil>> GetProfile()
         {
             return await _context.Perfil.ToListAsync();

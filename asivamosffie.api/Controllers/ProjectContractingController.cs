@@ -51,6 +51,27 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectContractingService.GetListContratacion();
             return respuesta;
         }
- 
+
+
+
+        [Route("CreateContratacionProyecto")]
+        [HttpPost]
+        public async Task<IActionResult> CreateContratacionProyecto(int[] idsProyectos , string tipoSolicitudCodigo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                string pUsuarioModifico = " ";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
+                respuesta = await _projectContractingService.CreateContratacionProyecto(idsProyectos , tipoSolicitudCodigo , pUsuarioModifico);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return Ok(respuesta);
+            }
+        }
+
     }
 }

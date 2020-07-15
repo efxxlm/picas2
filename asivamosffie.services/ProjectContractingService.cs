@@ -40,20 +40,23 @@ namespace asivamosffie.services
             _context = context;
         }
 
+
+
         public async Task<List<Contratacion>> GetListContratacion()
         {
-            //TODO: crear Campos Auditoria para Cotratacion
+
             List<Contratacion> ListContratacion = await _context.Contratacion.ToListAsync();
 
             foreach (var Contratacion in ListContratacion)
-            { 
-                if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo)) {
+            {
+                if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
+                {
                     Contratacion.TipoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
                 }
                 if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                 {
                     Contratacion.EstadoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
-                } 
+                }
             }
             return ListContratacion;
         }
@@ -176,6 +179,75 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CreateContratacionProyecto(int[] idsProyectos, string tipoSolicitudCodigo, string usuarioCreacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
+            try
+            { 
+                foreach (var idProyecto in idsProyectos)
+                {
+                    //Crear contratacion 
+                    Contratacion contratacion = new Contratacion
+                    {
+                        //Auditoria
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = usuarioCreacion,
+                        Eliminado = false,
+
+                        //Registros
+
+                        //TODO: Poner contratistaID y los demas campos
+                        TipoSolicitudCodigo = tipoSolicitudCodigo,
+                        FechaSolicitud = DateTime.Now,
+                        NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion(),
+                        Estado = false,
+                        //Contratista = ContratistaId 
+                        //EsObligacionEspecial = (bool),
+                        //ConsideracionDescripcion = "" 
+                    };
+                    //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
+                    _context.Contratacion.Add(contratacion);
+                    _context.SaveChanges();
+
+                    //Crear contratacionProyecto
+                    ContratacionProyecto contratacionProyecto = new ContratacionProyecto
+                    { 
+                        //Auditoria
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = usuarioCreacion,
+                        Eliminado = false,
+                        //Registros
+                        ContratacionId = contratacion.ContratacionId,
+                        ProyectoId = idProyecto,
+
+                    };
+                    _context.ContratacionProyecto.Add(contratacionProyecto);
+                    _context.SaveChanges();
+                }
+                return respuesta =
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = true,
+                     Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, "")
+                 };
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                 new Respuesta
+                 {
+                     IsSuccessful = false,
+                     IsException = true,
+                     IsValidation = false,
+                     Code = ConstantMessagesProyecto.Error,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, ex.InnerException.ToString())
+                 };
+            }
+        }
     }
 }

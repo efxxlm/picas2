@@ -14,8 +14,8 @@
         public const string Listar_Fuentes_Financiacion = "10";
         public const string Crear_Proyecto = "11";
         public const string Editar_Proyecto = "12"; 
-        public const string RegistrarAportante = "13";
-
-        public const string Crear_Proyecto_Administrativo = "15";
+        public const string RegistrarAportante = "13"; 
+        public const string Crear_Proyecto_Administrativo = "15"; 
+        public const string Crear_Contratacion_Proyecto = "16";
     }
 }
