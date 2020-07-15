@@ -50,7 +50,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_de_Solicitud = 29,
 
-        Tipo_Documento = 30 
+        Tipo_Documento = 30,
+
+        Estado_Solicitud = 31
 
     }
 }

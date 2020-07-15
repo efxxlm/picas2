@@ -40,6 +40,23 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<List<Contratacion>> GetListContratacion()
+        {
+            //TODO: crear Campos Auditoria para Cotratacion
+            List<Contratacion> ListContratacion = await _context.Contratacion.ToListAsync();
+
+            foreach (var Contratacion in ListContratacion)
+            { 
+                if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo)) {
+                    Contratacion.TipoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                }
+                if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
+                {
+                    Contratacion.EstadoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                } 
+            }
+            return ListContratacion;
+        }
 
         public async Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio)
         {
@@ -112,7 +129,7 @@ namespace asivamosffie.services
                 }
                 if (!string.IsNullOrEmpty(pLlaveMen))
                 {
-                    ListProyectos = ListProyectos.Where(r => r.LlaveMen.Equals(pLlaveMen));
+                    ListProyectos = ListProyectos.Where(r => r.LlaveMen.Contains(pLlaveMen));
                 }
                 if (!string.IsNullOrEmpty(pMunicipio))
                 {

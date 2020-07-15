@@ -203,7 +203,8 @@ namespace asivamosffie.services
 
         public async Task<string> GetNombreDominioByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
-            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.Nombre).FirstOrDefaultAsync();
+            //NO se le pone el filtro de activo ya que si esta definido en algun campo y despues se deactiva no se trae
+            return await _context.Dominio.Where(r => r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.Nombre).FirstOrDefaultAsync();
         }
 
         public async Task<string> GetNombreDominioByDominioID(int pDominioID)
