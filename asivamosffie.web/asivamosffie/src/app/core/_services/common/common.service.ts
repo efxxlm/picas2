@@ -10,6 +10,7 @@ import { Observable, forkJoin } from 'rxjs';
 export class CommonService {
   
   
+  
 
   constructor(private http: HttpClient) { }
 
@@ -47,7 +48,7 @@ export class CommonService {
   }
 
   listaDepartamentosByRegionId(pIdRegion:string){
-    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamentoByRegionId?idDepartamento=${pIdRegion}`);
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamentoByRegionId?idRegion=${pIdRegion}`);
   }
 
   listaIntitucionEducativaByMunicipioId(pidMunicipio:string){
@@ -71,6 +72,10 @@ export class CommonService {
 
   listaCoordinaciones() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=6`);
+  }
+
+  listaConvocatoria() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=2`);
   }
 
   listaVigencias() {
@@ -106,7 +111,8 @@ export class CommonService {
       this.listaDocumentoAcrditacion(),
       this.listaTipoAportante(),
       this.listaInfraestructuraIntervenir(),
-      this.listaCoordinaciones()
+      this.listaCoordinaciones(),
+      this.listaConvocatoria()
     
       ]);  
   }

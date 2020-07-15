@@ -52,7 +52,7 @@ namespace asivamosffie.services
                     Localizacion municipio = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
                     Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
-                    // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
 
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
@@ -62,7 +62,8 @@ namespace asivamosffie.services
                         InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
                         Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                         EstadoRegistro = estadoRegistro.Nombre,
-                        EstadoJuridicoPredios = " "
+                        EstadoJuridicoPredios = EstadoJuridicoPredios.Nombre,
+                        Fecha=proyecto.FechaCreacion.ToString("yyyy-MM-dd")
                     };
                     ListProyectoGrilla.Add(proyectoGrilla);
                 }
@@ -172,20 +173,22 @@ namespace asivamosffie.services
                 //Aportantes
                 foreach (var aportante in pProyecto.ProyectoAportante)
                 {
-                    //aportante.
-                    if (aportante.AportanteId == null)
+                    aportante.Aportante = null;
+                    aportante.CofinanciacionDocumento = null;
+                    if (aportante.ProyectoAportanteId == null || aportante.ProyectoAportanteId == 0)
                     {
                         //Definir como llega vigencia de cofinanciacion para relacionarlo con cofinanciacionAportante
                         //Relacion cofinanciacion aportante 
 
                         // aportante.Aportante.Cofinanciacion.
                         //cofinanciacionAportante 
-                        CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
+                        /*CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
                         cofinanciacionAportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
                         cofinanciacionAportante.Eliminado = false;
                         cofinanciacionAportante.FechaCreacion = DateTime.Now;
-
+                        */
                         aportante.Eliminado = false;
+                        aportante.ProyectoId = pProyecto.ProyectoId;
                         aportante.FechaCreacion = DateTime.Now;
                         aportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
                         _context.ProyectoAportante.Add(aportante);

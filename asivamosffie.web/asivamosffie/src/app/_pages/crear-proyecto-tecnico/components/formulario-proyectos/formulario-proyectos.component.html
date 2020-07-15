@@ -44,7 +44,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.numeroActaJunta" maxlength="4" min="1" max="9999" required
+                <input matInput [(ngModel)]="proyecto.numeroActaJunta" onKeyPress="if(this.value.length>3) return false;"  maxlength="4" min="1" max="9999" required  onKeyPress="if(this.value.length>3) return false;"
                   type="number">
               </mat-form-field>
               <span class="contador">{{4 - (proyecto.numeroActaJunta?proyecto.numeroActaJunta.toString().length:0)}}</span>
@@ -62,7 +62,7 @@
               <mat-form-field class="select-width">
                 <mat-select required [(ngModel)]="proyecto.tipoIntervencionCodigo">
                   
-                  <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.dominioId">
+                  <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.codigo">
                     {{ listado.nombre }}
                   </mat-option>
                 </mat-select>
@@ -254,7 +254,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="2"
+                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="2" onKeyPress="if(this.value.length>1) return false;"  onKeyPress="if(this.value.length>1) return false;"
                   min="1" max="99" required type="number">
               </mat-form-field>
               <span class="contador">{{2 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
@@ -272,7 +272,7 @@
               <mat-form-field class="select-width">
                 <mat-select required [(ngModel)]="proyecto.tipoPredioCodigo">
                   <mat-option></mat-option>
-                  <mat-option *ngFor="let listado of listadoPredios" [value]="listado.dominioId">
+                  <mat-option *ngFor="let listado of listadoPredios" [value]="listado.codigo">
                     {{ listado.nombre }}
                   </mat-option>
                 </mat-select>
@@ -283,7 +283,7 @@
       </div>
 
       <mat-card-title class="header-card--text sub-text">
-        predio principal
+        Predio principal
       </mat-card-title>
       <div class="row">
         <div class="col-md-10">
@@ -293,35 +293,35 @@
             </div>
             <div class="col d-flex">
               <label class="label-left sub-label">
-                latitud
+                Latitud
               </label>
               <mat-form-field class="w-8em">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" maxlength="7" min="1" max="99"
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" maxlength="7" min="1" max="99" onKeyPress="if(this.value.length>6) return false;"
                   required type="number">
               </mat-form-field>
-              <span class="contador">{{7 - (proyecto.predioPrincipal.ubicacionLatitud?proyecto.predioPrincipal.ubicacionLatitud.toString().length:0)}}</span>
+              
               <label class="label-left sub-label">
                 º
               </label>
               <mat-form-field class="w-2em">
-                <input matInput required type="text" maxlength="1" #latitud class="input-string">
+                <input matInput required type="text" maxlength="1" [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud2" #latitud class="input-string">
               </mat-form-field>
-              <span class="contador">{{1 - latitud.value.length}}</span>
+              <span class="contador">{{12 - (proyecto.predioPrincipal.ubicacionLatitud?proyecto.predioPrincipal.ubicacionLatitud.toString().length:0)}}</span>
               <label class="label-left sub-label">
-                longitud
+                Longitud
               </label>
               <mat-form-field class="w-8em">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="7" min="1" max="99"
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="7" min="1" max="99" onKeyPress="if(this.value.length>6) return false;"
                   required type="number">
+              </mat-form-field>
+              
+              <label class="label-left sub-label">
+                º
+              </label>
+              <mat-form-field class="w-2em">
+                <input matInput required type="text" maxlength="1" [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud2" #longitud class="input-string">
               </mat-form-field>
               <span class="contador">{{7 - (proyecto.predioPrincipal.ubicacionLongitud?proyecto.predioPrincipal.ubicacionLongitud.toString().length:0)}}</span>
-              <label class="label-left sub-label">
-                º
-              </label>
-              <mat-form-field class="w-2em">
-                <input matInput required type="text" maxlength="1" #longitud class="input-string">
-              </mat-form-field>
-              <span class="contador">{{1 - longitud.value.length}}</span>
             </div>
           </div>
         </div>
@@ -389,7 +389,10 @@
 
       <div *ngFor="let predios of proyecto.proyectoPredio;index as i">
         <div >
-          Predio {{i+2}}
+          <mat-card-title class="header-card--text sub-text">
+            Predio {{i+2}}
+          </mat-card-title>
+          
           <div class="row">
             <div class="col-md-8">
               <div class="row">
@@ -454,7 +457,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.cantidadAportantes" (keyup)="evaluoaportantes()" maxlength="2"
+                <input matInput [(ngModel)]="proyecto.cantidadAportantes" (keyup)="evaluoaportantes()" maxlength="2" onKeyPress="if(this.value.length>1) return false;"
                   min="1" max="99" required type="number">
               </mat-form-field>
               <span class="contador">{{2 - (proyecto.cantidadAportantes?proyecto.cantidadAportantes.toString().length:0)}}</span>
@@ -533,7 +536,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="32"
+                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="32" onKeyPress="if(this.value.length>31) return false;"
                     min="1" max="999" required type="number">
                 </mat-form-field>
                 <span class="contador">{{20 - (aportantes.valorObra?aportantes.valorObra.toString().length:0)}}</span>
@@ -549,7 +552,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)"
+                  <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)" onKeyPress="if(this.value.length>31) return false;"
                     maxlength="32" min="1" max="999" required type="number">
                 </mat-form-field>
                 <span
@@ -566,7 +569,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="32" min="1" max="999" required
+                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="32" min="1" max="999" required onKeyPress="if(this.value.length>31) return false;"
                     type="number" readonly>
                 </mat-form-field>
                 <span
@@ -606,7 +609,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="infraestructura.cantidad" maxlength="2" min="1" max="999" required
+                  <input matInput [(ngModel)]="infraestructura.cantidad" maxlength="2" min="1" max="999" required onKeyPress="if(this.value.length>1) return false;"
                     type="number">
                 </mat-form-field>
                 <span
@@ -626,14 +629,14 @@
                   Mes
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="32" min="1" max="999" required
+                  <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="3" min="1" max="999" required onKeyPress="if(this.value.length>2) return false;"
                     type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
                   Día
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" maxlength="2" min="1" max="31" required
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" maxlength="2" min="1" max="31" required onKeyPress="if(this.value.length>1) return false;"
                     type="number">
                 </mat-form-field>
               </div>
@@ -651,14 +654,14 @@
                   Mes
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="999"
+                  <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="3" min="1" max="999" onKeyPress="if(this.value.length>2) return false;"
                     required type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
                   Día
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" maxlength="2" min="1" max="31"
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" maxlength="2" min="1" max="31" onKeyPress="if(this.value.length>1) return false;"
                     required type="number">
                 </mat-form-field>
               </div>

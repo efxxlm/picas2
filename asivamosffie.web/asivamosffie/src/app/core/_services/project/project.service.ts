@@ -173,6 +173,8 @@ export interface Predio{
   tipoPredioCodigo:string ,
   ubicacionLatitud:string ,
   ubicacionLongitud:string ,
+  ubicacionLatitud2?:string ,
+  ubicacionLongitud2?:string ,
   direccion:string ,
   documentoAcreditacionCodigo :string,
   numeroDocumento:string ,

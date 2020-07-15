@@ -253,7 +253,7 @@ namespace asivamosffie.services
                 CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
                 { 
                     CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
-                    Nombre = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.NombreAportanteId),
+                    Nombre = cofinanciacionAportante.NombreAportanteId!=null?await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.NombreAportanteId):"",
                     TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId)
                 };
                 ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);

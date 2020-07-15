@@ -11,6 +11,7 @@ namespace asivamosffie.model.APIModels
         public string InstitucionEducativa { get; set; }
         public string Sede { get; set; }
         public string EstadoRegistro { get; set; }
-        public string EstadoJuridicoPredios { get; set; } 
+        public string EstadoJuridicoPredios { get; set; }
+        public string Fecha { get; set; }
     }
 }

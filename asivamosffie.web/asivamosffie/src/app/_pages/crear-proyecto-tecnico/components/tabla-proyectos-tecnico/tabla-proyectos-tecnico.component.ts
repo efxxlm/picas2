@@ -107,7 +107,7 @@ export class TablaProyectosTecnicoComponent {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
       respuesta.forEach(element => {
-        datos.push({fecha:this.datepipe.transform(element.fechaCreacion, 'yyyy-MM-dd')
+        datos.push({fecha:element.fecha
           ,id:element.proyectoId,departamento:element.departamento,municipio:element.municipio,
           estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,
           institucion:element.institucionEducativa,sede:element.sede,gestion:element.proyectoId});
