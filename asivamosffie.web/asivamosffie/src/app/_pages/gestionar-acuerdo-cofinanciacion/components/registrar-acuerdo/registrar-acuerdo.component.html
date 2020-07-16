@@ -192,7 +192,7 @@
 
 <div *ngIf="mostrarDocumentosDeApropiacion">
   <div class="container text-center">
-    <h2 class="title-menu--h2">
+    <h2 class="title-menu--h2" style="color: var(--mainColor);">
       Valor total del acuerdo: <div *ngIf="valorTotalAcuerdo>0">{{valorTotalAcuerdo | currency:'':'symbol':'3.0'}}</div>
     </h2>
     <p>
@@ -288,7 +288,7 @@
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
                           <input matInput #numeroDocumento maxlength="20" min="1" required type="number" (keypress)="validateNumberKeypress($event)"
-                          [(ngModel)]="documento.numeroActa" >
+                          [(ngModel)]="documento.numeroActa"  onKeyPress="if(this.value.length>19) return false;">
                         </mat-form-field>*
                         <span class="contador">{{20 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
                       </div>
@@ -323,7 +323,7 @@
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
                           <input matInput #numeroDocumentoa maxlength="20" min="1" required type="number" (keypress)="validateNumberKeypress($event)"
-                          [(ngModel)]="documento.numeroAcuerdo" >
+                          [(ngModel)]="documento.numeroAcuerdo"  onKeyPress="if(this.value.length>19) return false;console.log(this.value==0);">
                         </mat-form-field>*
                         <span class="contador">{{20 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
                       </div>
