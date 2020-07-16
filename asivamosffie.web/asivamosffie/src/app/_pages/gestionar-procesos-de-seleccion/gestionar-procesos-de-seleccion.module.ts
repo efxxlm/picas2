@@ -14,6 +14,8 @@ import { FormDescripcionDelProcesoDeSeleccionComponent } from './components/form
 import { FormEstudioDeMercadoComponent } from './components/form-estudio-de-mercado/form-estudio-de-mercado.component';
 import { FormDatosProponentesSeleccionadosComponent } from './components/form-datos-proponentes-seleccionados/form-datos-proponentes-seleccionados.component';
 import { TablaProcesosComponent } from './components/tabla-procesos/tabla-procesos.component';
+import { InvitacionCerradaComponent } from './components/invitacion-cerrada/invitacion-cerrada.component';
+import { InvitacionAbiertaComponent } from './components/invitacion-abierta/invitacion-abierta.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { TablaProcesosComponent } from './components/tabla-procesos/tabla-proces
     FormDescripcionDelProcesoDeSeleccionComponent,
     FormEstudioDeMercadoComponent,
     FormDatosProponentesSeleccionadosComponent,
-    TablaProcesosComponent
+    TablaProcesosComponent,
+    InvitacionCerradaComponent,
+    InvitacionAbiertaComponent
   ],
   imports: [
     CommonModule,
