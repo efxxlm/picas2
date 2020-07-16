@@ -17,5 +17,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<Contratacion>> GetListContratacion();
 
         Task<Respuesta> CreateContratacionProyecto(int[] idsProyectos, string tipoSolicitudCodigo, string usuarioCreacion);
+
+        Task<List<ContratacionProyecto>> GetContratacionByContratacionId(int idContratacion);
     }
 }

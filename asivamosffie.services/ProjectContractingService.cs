@@ -23,6 +23,7 @@ using System.Globalization;
 using asivamosffie.services.Validators;
 using asivamosffie.services.Filters;
 using System.Data.Common;
+using Z.EntityFramework.Plus; 
 
 namespace asivamosffie.services
 {
@@ -40,7 +41,30 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<List<ContratacionProyecto>> GetListContratacionProyectoByContratacionId(int idContratacion)
+        {
 
+            //devuelto = array ContratacionProyecto  + proyecto + contratista + ProyectoAportante + CofinanciacionAportante
+
+            List<ContratacionProyecto> ListContratacionProyecto = new List<ContratacionProyecto>();
+
+            ListContratacionProyecto = await _context.ContratacionProyecto.
+                Where(r => !(bool)r.Eliminado && r.ContratacionId == idContratacion).
+                IncludeFilter(r =>  r.Proyecto).Where(r => !(bool)r.Eliminado).
+                IncludeFilter(r => r.Contratacion.Contratista).Where(r=> !(bool)r.Eliminado).
+                IncludeFilter(r => r.ContratacionProyectoAportante.Where(r => !(bool)r.Eliminado)).ToListAsync();
+             
+            foreach (var item in ListContratacionProyecto)
+            {
+                foreach (var ContratacionProyectoAportante in item.ContratacionProyectoAportante)
+                {
+                    ContratacionProyectoAportante.Aportante =await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == ContratacionProyectoAportante.AportanteId).FirstOrDefaultAsync();
+                }
+            }
+          return ListContratacionProyecto;
+
+
+        }
 
         public async Task<List<Contratacion>> GetListContratacion()
         {
@@ -185,7 +209,7 @@ namespace asivamosffie.services
             int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 foreach (var idProyecto in idsProyectos)
                 {
                     //Crear contratacion 
@@ -213,7 +237,7 @@ namespace asivamosffie.services
 
                     //Crear contratacionProyecto
                     ContratacionProyecto contratacionProyecto = new ContratacionProyecto
-                    { 
+                    {
                         //Auditoria
                         FechaCreacion = DateTime.Now,
                         UsuarioCreacion = usuarioCreacion,
