@@ -1006,7 +1006,7 @@ namespace asivamosffie.services
                     ProyectoAdministracionGrilla proyectoAdministrativoGrilla = new ProyectoAdministracionGrilla
                     {
                         ProyectoAdminitracionId = proyecto.ProyectoAdministrativoId,
-                        Enviado = proyecto.Enviado 
+                        Enviado = (bool)proyecto.Enviado 
                     };
                     ListProyectoAdministrativoGrilla.Add(proyectoAdministrativoGrilla);
                 } 
