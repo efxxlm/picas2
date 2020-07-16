@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<List<MenuPerfil>> GetMenuByRol(int pUserId);
+
         Task<List<Perfil>> GetProfile();
 
         Task<Template> GetTemplateByTipo(string pTipo);
