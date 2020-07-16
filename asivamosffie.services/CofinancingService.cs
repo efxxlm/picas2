@@ -110,8 +110,7 @@ namespace asivamosffie.services
                         cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
                         idCofinancicacionAportante = await CreateCofinancingContributor(cofinanciacionAportante);
 
-                        //Se crear los CofinanciacionDocumento relacionados a este aportante
-                        if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
+                        foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
                         {
                             cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId;
                             cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
