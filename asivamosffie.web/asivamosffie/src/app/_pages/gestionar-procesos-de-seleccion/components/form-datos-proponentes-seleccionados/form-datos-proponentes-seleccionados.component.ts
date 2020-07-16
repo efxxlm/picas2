@@ -16,27 +16,6 @@ export class FormDatosProponentesSeleccionadosComponent {
     {name: 'Unión Temporal o Consorcio', value: 3}
   ];
 
-
-  personaNaturalForm = this.fb.group({
-    nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
-    ],
-    numeroIdentificacion: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
-    ],
-    depaetamento: [null, Validators.required],
-    municipio: [null, Validators.required],
-    direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
-    ],
-    telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
-    ],
-    correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
-    ]
-  });
-
   states = [
     {name: 'Alabama', abbreviation: 'AL'},
     {name: 'Alaska', abbreviation: 'AK'},
@@ -99,12 +78,60 @@ export class FormDatosProponentesSeleccionadosComponent {
     {name: 'Wyoming', abbreviation: 'WY'}
   ];
 
+  personaNaturalForm = this.fb.group({
+    nombre: [null, Validators.compose([
+      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+    ],
+    numeroIdentificacion: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+    ],
+    depaetamento: [null, Validators.required],
+    municipio: [null, Validators.required],
+    direccion: [null, Validators.compose([
+      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+    ],
+    telefono: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+    ],
+    correoElectronico: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+    ]
+  });
+
   personaJuridicaIndividualForm = this.fb.group({
+    nombre: [null, Validators.compose([
+      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+    ],
+    numeroIdentificacion: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+    ],
+    representanteLegal: [null, Validators.compose([
+      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+    ],
+    cedulaRepresentanteLegal: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+    ],
+    depaetamento: [null, Validators.required],
+    municipio: [null, Validators.required],
+    direccion: [null, Validators.compose([
+      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+    ],
+    telefono: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+    ],
+    correoElectronico: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+    ]
+  });
+
+  unionTemporalForm = this.fb.group({
     cuantasEntidades: [null, Validators.compose([
       Validators.required, Validators.minLength(1), Validators.maxLength(2)])
     ],
+    nombreConsorcio: [null, Validators.compose([
+      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+    ],
     entidades: this.fb.array([]),
-
     nombre: [null, Validators.compose([
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
@@ -125,7 +152,7 @@ export class FormDatosProponentesSeleccionadosComponent {
   });
 
   get entidades() {
-    return this.personaJuridicaIndividualForm.get('entidades') as FormArray;
+    return this.unionTemporalForm.get('entidades') as FormArray;
   }
 
 
@@ -138,13 +165,13 @@ export class FormDatosProponentesSeleccionadosComponent {
   }
 
   CambioNumeroCotizantes() {
-    const formIntegrantes = this.personaJuridicaIndividualForm.value;
-    if (formIntegrantes.cuantasCotizaciones > this.entidades.length && formIntegrantes.cuantasCotizaciones < 100) {
-      while (this.entidades.length < formIntegrantes.cuantasCotizaciones) {
+    const formIntegrantes = this.unionTemporalForm.value;
+    if (formIntegrantes.cuantasEntidades > this.entidades.length && formIntegrantes.cuantasEntidades < 100) {
+      while (this.entidades.length < formIntegrantes.cuantasEntidades) {
         this.entidades.push( this.createIntegrante() );
       }
-    } else if (formIntegrantes.cuantasCotizaciones <= this.entidades.length && formIntegrantes.cuantasCotizaciones >= 0) {
-      while (this.entidades.length > formIntegrantes.cuantasCotizaciones) {
+    } else if (formIntegrantes.cuantasEntidades <= this.entidades.length && formIntegrantes.cuantasEntidades >= 0) {
+      while (this.entidades.length > formIntegrantes.cuantasEntidades) {
         this.borrarArray(this.entidades, this.entidades.length - 1);
       }
     }
@@ -172,8 +199,14 @@ export class FormDatosProponentesSeleccionadosComponent {
   }
 
   onSubmitPersonaJuridicaIndividual() {
-    if (this.personaNaturalForm.valid) {
-      console.log(this.personaNaturalForm.value);
+    if (this.personaJuridicaIndividualForm.valid) {
+      console.log(this.personaJuridicaIndividualForm.value);
+    }
+  }
+
+  onSubmitUnionTemporal() {
+    if (this.unionTemporalForm.valid) {
+      console.log(this.unionTemporalForm.value);
     }
   }
 }
