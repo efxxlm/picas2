@@ -13,6 +13,7 @@ import { SeccionPrivadaComponent } from './components/seccion-privada/seccion-pr
 import { FormDescripcionDelProcesoDeSeleccionComponent } from './components/form-descripcion-del-proceso-de-seleccion/form-descripcion-del-proceso-de-seleccion.component';
 import { FormEstudioDeMercadoComponent } from './components/form-estudio-de-mercado/form-estudio-de-mercado.component';
 import { FormDatosProponentesSeleccionadosComponent } from './components/form-datos-proponentes-seleccionados/form-datos-proponentes-seleccionados.component';
+import { TablaProcesosComponent } from './components/tabla-procesos/tabla-procesos.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { FormDatosProponentesSeleccionadosComponent } from './components/form-da
     SeccionPrivadaComponent,
     FormDescripcionDelProcesoDeSeleccionComponent,
     FormEstudioDeMercadoComponent,
-    FormDatosProponentesSeleccionadosComponent
+    FormDatosProponentesSeleccionadosComponent,
+    TablaProcesosComponent
   ],
   imports: [
     CommonModule,
