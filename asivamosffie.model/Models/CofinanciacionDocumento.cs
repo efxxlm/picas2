@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class CofinanciacionDocumento
     {
+        public CofinanciacionDocumento()
+        {
+            ProyectoAportante = new HashSet<ProyectoAportante>();
+        }
+
         public int CofinanciacionDocumentoId { get; set; }
         public int CofinanciacionAportanteId { get; set; }
         public int VigenciaAporte { get; set; }
@@ -22,5 +27,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual CofinanciacionAportante CofinanciacionAportante { get; set; }
+        public virtual Dominio TipoDocumento { get; set; }
+        public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }
     }
 }

@@ -228,7 +228,7 @@ namespace asivamosffie.services
             try
             {
                 //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
-                return await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == id).ToListAsync();
+                return await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == id).Include(x=>x.TipoDocumento).ToListAsync();
             }
             catch (Exception)
             {
