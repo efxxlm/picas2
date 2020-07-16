@@ -45,10 +45,11 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()" (change)="CambioNumeroAportantes()" maxlength="2" min="1" max="99" required type="number"
-                    formControlName="numAportes"  onKeyPress="if(this.value.length>1) return false;">
+                  <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()" 
+                  (change)="CambioNumeroAportantes()" maxlength="3" min="1" max="999" required type="number"
+                    formControlName="numAportes" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>2) return false;">
                 </mat-form-field>*
-                <span class="contador">{{2 - numAportes.value.length}}</span>
+                <span class="contador">{{3 - numAportes.value.length}}</span>
               </div>
             </div>
           </div>
@@ -154,12 +155,14 @@
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #cauntosDocumentos maxlength="2" (change)="cantidadDocumentos(aportante,i)" (keyup)="cantidadDocumentos(aportante,i)" min="1" max="99" required type="number"
-                            formControlName="cauntosDocumentos"  onKeyPress="if(this.value.length>1) return false;">
+                          <input matInput #cauntosDocumentos maxlength="3"
+                           (change)="cantidadDocumentos(aportante,i)" (keyup)="cantidadDocumentos(aportante,i)"
+                            min="1" max="999" required type="number" (keypress)="validateNumberKeypress($event)"
+                            formControlName="cauntosDocumentos"  onKeyPress="if(this.value.length>2) return false;">
                             <input formControlName="cofinanciacionId" type="hidden" >
                             <input formControlName="cofinanciacionAportanteId" type="hidden" >
                         </mat-form-field>*
-                        <span class="contador">{{2 - cauntosDocumentos.value.length}}</span>
+                        <span class="contador">{{3 - cauntosDocumentos.value.length}}</span>
                       </div>
                     </div>
                   </div>
@@ -245,7 +248,9 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
-                          <input matInput #valorIndicadoEnElDocumento (keyup)="actualizarValores()" maxlength="20" min="1" required type="number"
+                          <input matInput #valorIndicadoEnElDocumento currencyMask (keyup)="actualizarValores()" maxlength="20" min="1"
+                          max="9999999999999999999"
+                           required type="number" (keypress)="validateNumberKeypress($event)"
                           [(ngModel)]="documento.valorDocumento"  onKeyPress="if(this.value.length>19) return false;">
                         </mat-form-field>*
                         <span class="contador">{{20 - (documento.valorDocumento?documento.valorDocumento.toString().length:0)}}</span>
@@ -282,10 +287,10 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
-                          <input matInput #numeroDocumento maxlength="10" min="1000000000" required type="number"
-                          [(ngModel)]="documento.numeroActa"  onKeyPress="if(this.value.length>9) return false;">
+                          <input matInput #numeroDocumento maxlength="20" min="1" required type="number" (keypress)="validateNumberKeypress($event)"
+                          [(ngModel)]="documento.numeroActa" >
                         </mat-form-field>*
-                        <span class="contador">{{10 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
+                        <span class="contador">{{20 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -317,10 +322,10 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
-                          <input matInput #numeroDocumentoa maxlength="10" min="1000000000" required type="number"
-                          [(ngModel)]="documento.numeroAcuerdo"  onKeyPress="if(this.value.length>9) return false;">
+                          <input matInput #numeroDocumentoa maxlength="20" min="1" required type="number" (keypress)="validateNumberKeypress($event)"
+                          [(ngModel)]="documento.numeroAcuerdo" >
                         </mat-form-field>*
-                        <span class="contador">{{10 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
+                        <span class="contador">{{20 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -357,11 +362,11 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="header-card--text alineacion-titulos">Valor total del aportante</label>
+                    <label class="header-card--text" style="margin-left: -0.5em;"><b>Valor total del aportante</b></label>
                   </div>
                   <div class="col d-flex align-items-center">
                     <mat-form-field class="full-width">
-                      <input matInput readonly maxlength="20" min="1" required type="number" [(ngModel)]="aportante.valortotal">
+                      <input matInput readonly maxlength="20" min="1" currencyMask required type="number"  [(ngModel)]="aportante.valortotal">
                     </mat-form-field>*
                     <span class="contador">{{20 - (aportante.valortotal?aportante.valortotal.toString().length:0)}}</span>
                     

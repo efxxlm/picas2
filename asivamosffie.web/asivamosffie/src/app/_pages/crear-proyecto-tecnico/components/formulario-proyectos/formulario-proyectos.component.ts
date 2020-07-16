@@ -625,7 +625,7 @@ export class FormularioProyectosComponent implements OnInit  {
 
 
   validateKeypressLlave(event: KeyboardEvent) {    
-    let alphanumeric = /[A-Za-z0-9_]/;
+    let alphanumeric = /[A-Za-z0-9-]/;
     let inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }

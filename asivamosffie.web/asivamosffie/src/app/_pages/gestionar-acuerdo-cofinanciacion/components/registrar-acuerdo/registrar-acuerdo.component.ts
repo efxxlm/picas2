@@ -423,4 +423,18 @@ export class RegistrarAcuerdoComponent implements OnInit {
     }   
 
   }
+
+  //evalua tecla a tecla
+  validateNumberKeypress(event: KeyboardEvent) {    
+    let alphanumeric = /[0-9]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;    
+  }
+
+  validateNumber(event: Event,max) {    
+    console.log(event);
+    let alphanumeric = /[0-9]/;
+    //let inputChar = String.fromCharCode(event.charCode);
+    //return alphanumeric.test(inputChar) ? true : false;    
+  }
 }

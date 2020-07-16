@@ -63,7 +63,7 @@ namespace asivamosffie.services
                         Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                         EstadoRegistro = estadoRegistro.Nombre,
                         EstadoJuridicoPredios = EstadoJuridicoPredios.Nombre,
-                        Fecha=proyecto.FechaCreacion.ToString("yyyy-MM-dd")
+                        Fecha=proyecto.FechaCreacion==null? Convert.ToDateTime(proyecto.FechaCreacion).ToString("yyyy-MM-dd"):""
                     };
                     ListProyectoGrilla.Add(proyectoGrilla);
                 }

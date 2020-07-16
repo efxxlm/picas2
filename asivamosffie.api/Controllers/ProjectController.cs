@@ -37,8 +37,8 @@ namespace asivamosffie.api.Controllers
             try
             {
                  
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                //string pUsuarioModifico = " ";
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectService.CreateOrEditAdministrativeProject(pProyectoAdministrativo);
                 return Ok(respuesta);
@@ -148,9 +148,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
         {
-
-            string pUsuarioModifico = "";
-            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.ListProyectos(pUsuarioModifico);
             return respuesta;
 
