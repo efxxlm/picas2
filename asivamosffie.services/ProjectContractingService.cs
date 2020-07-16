@@ -23,7 +23,7 @@ using System.Globalization;
 using asivamosffie.services.Validators;
 using asivamosffie.services.Filters;
 using System.Data.Common;
-using Z.EntityFramework.Plus; 
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -50,18 +50,18 @@ namespace asivamosffie.services
 
             ListContratacionProyecto = await _context.ContratacionProyecto.
                 Where(r => !(bool)r.Eliminado && r.ContratacionId == idContratacion).
-                IncludeFilter(r =>  r.Proyecto).Where(r => !(bool)r.Eliminado).
-                IncludeFilter(r => r.Contratacion.Contratista).Where(r=> !(bool)r.Eliminado).
+                IncludeFilter(r => r.Proyecto).Where(r => !(bool)r.Eliminado).
+                IncludeFilter(r => r.Contratacion.Contratista).Where(r => !(bool)r.Eliminado).
                 IncludeFilter(r => r.ContratacionProyectoAportante.Where(r => !(bool)r.Eliminado)).ToListAsync();
-             
+
             foreach (var item in ListContratacionProyecto)
             {
                 foreach (var ContratacionProyectoAportante in item.ContratacionProyectoAportante)
                 {
-                    ContratacionProyectoAportante.Aportante =await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == ContratacionProyectoAportante.AportanteId).FirstOrDefaultAsync();
+                    ContratacionProyectoAportante.Aportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == ContratacionProyectoAportante.AportanteId).FirstOrDefaultAsync();
                 }
             }
-          return ListContratacionProyecto;
+            return ListContratacionProyecto;
 
 
         }
@@ -272,6 +272,61 @@ namespace asivamosffie.services
                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, ex.InnerException.ToString())
                  };
             }
+        }
+
+
+        public async Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion)
+        {
+
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            { 
+
+                if (Pcontratacion.ContratacionId == null || Pcontratacion.ContratacionId == 0)
+                {
+                    Pcontratacion.Eliminado = false; 
+                    Pcontratacion.FechaCreacion = DateTime.Now;
+                    Pcontratacion.FechaSolicitud = DateTime.Now;
+
+
+                    Pcontratacion.NumeroSolicitud =await _commonService.GetNumeroSolicitudContratacion();
+                    _context.Contratacion.Add(Pcontratacion); 
+                }
+                else
+                {
+                    Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
+
+                    contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
+                    contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
+                    _context.Update(contratacionVieja); 
+                }
+                _context.SaveChanges();
+
+                return respuesta =
+           new Respuesta
+           {
+               IsSuccessful = true,
+               IsException = false,
+               IsValidation = false,
+               Code = ConstantMessagesProyecto.Error,
+               Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, Pcontratacion.UsuarioCreacion, "")
+           };
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                           new Respuesta
+                           {
+                               IsSuccessful = false,
+                               IsException = true,
+                               IsValidation = false,
+                               Code = ConstantMessagesProyecto.Error,
+                               Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, Pcontratacion.UsuarioCreacion, ex.InnerException.ToString())
+                           };
+            }
+
         }
     }
 }

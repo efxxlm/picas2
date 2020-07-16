@@ -51,9 +51,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectContractingService.GetListContratacion();
             return respuesta;
         }
-
-
-
+         
         [Route("CreateContratacionProyecto")]
         [HttpPost]
         public async Task<IActionResult> CreateContratacionProyecto(int[] idsProyectos , string tipoSolicitudCodigo)
@@ -72,14 +70,34 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
-
-
-        [Route("GetContratacionByContratacionId")]
+         
+        [Route("GetListContratacionProyectoByContratacionId")]
         [HttpGet]
-        public async Task<List<ContratacionProyecto>> GetContratacionByContratacionId(int idContratacion)
+        public async Task<List<ContratacionProyecto>> GetListContratacionProyectoByContratacionId(int idContratacion)
         {
-            var respuesta = await _projectContractingService.GetContratacionByContratacionId(idContratacion);
+            var respuesta = await _projectContractingService.GetListContratacionProyectoByContratacionId(idContratacion);
             return respuesta;
+        }
+
+
+        [Route("CreateEditContratacion")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditContratacion(Contratacion pContratacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string pUsuarioModifico = " ";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
+                pContratacion.UsuarioCreacion = pUsuarioModifico;
+                respuesta = await _projectContractingService.CreateEditContratacion(pContratacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return Ok(respuesta);
+            }
         }
     }
 }
