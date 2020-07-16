@@ -225,12 +225,12 @@ namespace asivamosffie.services
                         //TODO: Poner contratistaID y los demas campos
                         TipoSolicitudCodigo = tipoSolicitudCodigo,
                         FechaSolicitud = DateTime.Now,
-                        NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion(),
-                        Estado = false,
+                        NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()                    
                         //Contratista = ContratistaId 
                         //EsObligacionEspecial = (bool),
                         //ConsideracionDescripcion = "" 
                     };
+                    contratacion.RegistroCompleto = ValidarEstado(contratacion);
                     //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
                     _context.Contratacion.Add(contratacion);
                     _context.SaveChanges();
@@ -290,7 +290,7 @@ namespace asivamosffie.services
                     Pcontratacion.FechaCreacion = DateTime.Now;
                     Pcontratacion.FechaSolicitud = DateTime.Now;
                     //Metodo que valida si todos los registros estan completos retorna true si completos
-                    Pcontratacion.Estado = ValidarEstado(Pcontratacion); 
+                    Pcontratacion.RegistroCompleto = ValidarEstado(Pcontratacion); 
                     Pcontratacion.NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion();
                     _context.Contratacion.Add(Pcontratacion);
                 }
@@ -299,7 +299,7 @@ namespace asivamosffie.services
                     Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
                     contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
                     contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
-                    contratacionVieja.Estado = ValidarEstado(contratacionVieja);
+                    contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
                     _context.Update(contratacionVieja);
                 }
                 _context.SaveChanges();
