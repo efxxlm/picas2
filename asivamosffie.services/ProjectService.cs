@@ -573,7 +573,7 @@ namespace asivamosffie.services
                         //-2 ya los registros comienzan desde esta fila
                         archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                         archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                        archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 3);
+                        archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
                         _context.ArchivoCargue.Update(archivoCarge);
 
 
