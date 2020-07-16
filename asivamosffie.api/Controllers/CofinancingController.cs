@@ -49,8 +49,28 @@ namespace asivamosffie.api.Controllers
             var result = await _Cofinancing.GetListCofinancing();
             return result;
         }
- 
- 
+
+
+        [Route("EliminarCofinanciacionByCofinanciacionId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta(); 
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+      
 
         [Route("GetDocument")]
         [HttpGet]
