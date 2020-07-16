@@ -130,10 +130,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("DeleteProyectoAdministrativoByProyectoId")]
         [HttpGet]
-        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
+        public async Task<IActionResult> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId);
-            return respuesta;
+            Respuesta response = new Respuesta();
+            response = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId);
+            return Ok(response);
         }
 
         

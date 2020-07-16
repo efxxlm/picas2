@@ -1019,20 +1019,35 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
+        public async Task<Respuesta> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
-            bool retorno = true;
+            ProyectoAdministrativo proyecto = await _context.ProyectoAdministrativo.FindAsync(pProyectoId);
+            Respuesta _response = new Respuesta();
+
             try
             {
-                proyecto.Eliminado = true;
-                _context.SaveChanges();
+                // Valido si tiene registros asociados.
+                var reference =  _context.ProyectoAdministrativoAportante.Include(x => x.ProyectoAdminstrativo).FirstOrDefault(x => x.ProyectoAdminstrativoId == pProyectoId);
+
+                if (reference == null)
+                {
+                    proyecto.Eliminado = true;
+                    _context.Update(proyecto);
+                    _context.SaveChanges();
+                    return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = proyecto, Code = ConstantMessagesProyecto.OperacionExitosa };
+
+                }
+
+                else { 
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesProyecto.Error, Message = "El registro tiene información que depende de él, no se puede eliminar." };
+                }
+
             }
             catch (Exception ex)
             {
-                return false;
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesProyecto.Error, Message = ex.Message.ToString() };
             }
-            return retorno;
+         
         }
 
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
