@@ -187,6 +187,12 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.CofinanciacionAportanteId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_CofinanciacionAportanteId_FK_CofinanciacionAportante_CofinanciacionAportanteId");
+
+                entity.HasOne(d => d.TipoDocumento)
+                    .WithMany(p => p.CofinanciacionDocumento)
+                    .HasForeignKey(d => d.TipoDocumentoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CofinanciacionTipo_FK_dominio");
             });
 
             modelBuilder.Entity<ComponenteAportante>(entity =>
@@ -255,7 +261,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoSolicitudCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -266,12 +271,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroSolicitud)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -760,7 +763,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.MenuPadreId).HasComment("Identificador del Menu Padre");
 
                 entity.Property(e => e.Nombre)
-                    .HasMaxLength(15)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasComment("Nombre del Menu en el sistema");
 
@@ -1201,7 +1204,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoProyectoCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -1212,28 +1214,23 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
 
                 entity.Property(e => e.LlaveMen)
-                    .IsRequired()
                     .HasColumnName("LlaveMEN")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.LocalizacionIdMunicipio)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencionCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoPredioCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -1250,25 +1247,21 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.InstitucionEducativa)
                     .WithMany(p => p.ProyectoInstitucionEducativa)
                     .HasForeignKey(d => d.InstitucionEducativaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Proyecto_InstitucionEducativaSede");
 
                 entity.HasOne(d => d.LocalizacionIdMunicipioNavigation)
                     .WithMany(p => p.Proyecto)
                     .HasForeignKey(d => d.LocalizacionIdMunicipio)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Proyecto_Localizacion");
 
                 entity.HasOne(d => d.PredioPrincipal)
                     .WithMany(p => p.Proyecto)
                     .HasForeignKey(d => d.PredioPrincipalId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Proyecto_Predio");
 
                 entity.HasOne(d => d.Sede)
                     .WithMany(p => p.ProyectoSede)
                     .HasForeignKey(d => d.SedeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Proyecto_InstitucionEducativaSede1");
             });
 

@@ -22,6 +22,16 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
+
+        [HttpGet]
+        [Route("GetMenuByRol")]
+        public async Task<ActionResult<List<MenuPerfil>>> GetMenuByRol()
+        { 
+            int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+            var result = await common.GetMenuByRol(pUserId);
+            return result;
+        }
+
         [HttpGet]
         [Route("perfiles")]
         public async Task<ActionResult<List<Perfil>>> GetProfile()
@@ -32,8 +42,8 @@ namespace asivamosffie.api.Controllers
         }
         [HttpGet]
         public async Task<ActionResult<string>> GetTest()
-        {             
-            return "ok "+_settings.Value.MailServer;
+        {
+            return "ok " + _settings.Value.MailServer;
         }
 
         [HttpGet]
@@ -44,7 +54,6 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
         [HttpGet]
         [Route("ListDepartamento")]
         public async Task<ActionResult<List<Localicacion>>> GetListDepartamento()
@@ -52,7 +61,6 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListDepartamento();
             return result;
         }
-
 
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
@@ -69,6 +77,7 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListMunicipioByIdMunicipio(idMunicipio);
             return result;
         }
+
         [HttpGet]
         [Route("ListDepartamentoByIdMunicipio")]
         public async Task<ActionResult<List<Localicacion>>> GetListDepartamentoByMunicipio(string idMunicipio)
@@ -85,7 +94,6 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
         [HttpGet]
         [Route("ListRegion")]
         public async Task<ActionResult<List<Localicacion>>> ListRegion(string idDepartamento)
@@ -94,14 +102,11 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
-
-
         [HttpGet]
         [Route("ListVigenciaAporte")]
         public async Task<ActionResult<List<int>>> GetListVigenciaAportes()
         {
-            var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente , _settings.Value.YearSiguienteEsVigente);
+            var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente, _settings.Value.YearSiguienteEsVigente);
             return result;
         }
 

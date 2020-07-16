@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
     public interface ICommonService
     {
         Task<string> GetNumeroSolicitudContratacion();
+        
+        Task<List<MenuPerfil>> GetMenuByRol(int pUserId);
 
         Task<List<Perfil>> GetProfile();
 
