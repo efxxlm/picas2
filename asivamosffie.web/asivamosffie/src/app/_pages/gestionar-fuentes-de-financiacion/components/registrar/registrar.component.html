@@ -17,21 +17,21 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="row">
+        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString()) || tipoAportante.Tercero.includes(tipoAportanteId.toString())" >
           <div class="pr-1">
             <label class="label-left">Nombre del aportante</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="nombreAportante">
-                <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes.value">
-                  {{ nombreAportantes.name }}
+              <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportante()">
+                <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
+                  {{ nombreAportantes.nombre }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -60,8 +60,148 @@
             </div>
           </div>
         </div>
+        <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label class="label-left">Departamento</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()">
+                <mat-option *ngFor="let nombreAportantes of departamentos" [value]="nombreAportantes">
+                  {{ nombreAportantes.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label class="label-left">Municipio</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="municipio" >
+                <mat-option value="0">Seleccione</mat-option>
+                <mat-option *ngFor="let municipio of municipios"
+                  [value]="municipio">
+                  {{ municipio.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="vigenciaAcuerdo" >
+                <mat-option value="0">Seleccione</mat-option>
+                <mat-option *ngFor="let vigencia of VigenciasAporte"
+                  [value]="vigencia">
+                  {{ vigencia }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
+
+    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
+      <mat-card-content>
+        <div class="row mt-1em" >
+          <div class="col-md-6">
+            <p><b>Documento de apropiación: </b> Documento 1 </p>
+            <p><b>Tipo de documento: </b> Resolución </p>
+            <p><b>Fecha: </b> 30/04/2020 </p>
+          </div>
+          <div class="col-md-6">
+            <p><b>Vigencia del aporte: </b> 2020 </p>
+            <p><b>Número de documento: </b> 000904 </p>
+            <p><b>Valor: </b> $55.000.000 </p>
+          </div>
+        </div>
+        <h2 class="card-subTitle var-main-gris">
+          <b>Valor total: </b> $85.000.000
+        </h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Registros Presupuestales
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row" >
+          <div class="pr-1">
+            <label class="label-left">¿Este aporte tiene RP?</label>
+          </div>
+          <div class="col">
+            <mat-radio-group class="radioInput" formControlName="tieneRP">
+              <mat-radio-button value="1">Sí</mat-radio-button>
+              <mat-radio-button value="0">No</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">¿Cuántos RP tiene asociados?</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #cuantosRP type="number" min="1" max="99"
+                    formControlName="cuantosRP" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()">
+                </mat-form-field>
+                <span class="contador">{{2 - cuantosRP.value.length}}</span>
+              </div>
+            </div>
+            <div formGroupName="registrosPresupuestales">
+              <div *ngFor="let registroPresupuestal of registrosPresupuestales.controls; let i = index">
+                <div [formGroupName]="i">
+                  <mat-card-title class="header-card--text sub-text">
+                    RP {{ i + 1 }}
+                  </mat-card-title>
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Número de RP</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #numeroRP type="number" formControlName="numeroRP">
+                      </mat-form-field>
+                      <span class="contador">{{50 - numeroRP.value.length}}</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Fecha</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="example-full-width">
+                        <input matInput [matDatepicker]="picker" formControlName="fecha" [max]="maxDate">
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                      </button>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </mat-card-content>
+    </mat-card>
+
     <div formGroupName="fuenteRecursosArray">
       <div *ngFor="let fuente of fuenteRecursosArray.controls; let j = index">
         <div [formGroupName]="j">
@@ -81,8 +221,8 @@
                   <mat-form-field class="select-width">
                     <mat-select formControlName="fuenteRecursos">
                       <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista"
-                        [value]="fuenteDeRecursos1.value">
-                        {{ fuenteDeRecursos1.name }}
+                        [value]="fuenteDeRecursos1">
+                        {{ fuenteDeRecursos1.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -239,8 +379,8 @@
                           <div class="col">
                             <mat-form-field class="select-width">
                               <mat-select formControlName="banco">
-                                <mat-option *ngFor="let banco of bancos" [value]="banco.value">
-                                  {{ banco.name }}
+                                <mat-option *ngFor="let banco of bancos" [value]="banco">
+                                  {{ banco.nombre }}
                                 </mat-option>
                               </mat-select>
                             </mat-form-field>

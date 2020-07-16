@@ -121,6 +121,24 @@ export class CommonService {
       this.listMunicipiosByIdMunicipio(idMunicipio),
       this.listDepartamentoByIdMunicipio(idMunicipio)
       ]);  
+    }
+    
+  listaFuenteRecursos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
+  }
+
+  listaBancos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=22`);
+  }
+
+  vigenciasDesde2015(): number[]{
+    const fecha = new Date();
+    let vigencias: number[]=[];
+    for (let i = 2015; i < fecha.getFullYear(); i++){
+      vigencias.push(i);
+    }
+
+    return vigencias;
   }
 }
 
@@ -129,7 +147,7 @@ export interface Dominio{
   tipoDominioId: number,
   nombre: string,
   activo: boolean,
-  codigo:string
+  codigo?: string,
 }
 
 export interface Localizacion{
@@ -146,4 +164,16 @@ export interface Respuesta{
   message: string;
   data?: any;
   token?: any;
+}
+
+interface TipoAportante{
+  FFIE: string[];
+  ET: string[];
+  Tercero: string[];
+}
+
+export const TiposAportante: TipoAportante = {
+  FFIE:   ["1"],
+  ET:     ["2"],
+  Tercero:["3"]
 }
