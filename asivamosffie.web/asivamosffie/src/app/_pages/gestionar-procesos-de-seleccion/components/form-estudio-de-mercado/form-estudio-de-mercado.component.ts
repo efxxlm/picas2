@@ -144,8 +144,6 @@ export class FormEstudioDeMercadoComponent {
   }
 
   onSubmit() {
-    if (this.addressForm.valid) {
-      console.log(this.addressForm.value);
-    }
+    console.log(this.addressForm.value);
   }
 }

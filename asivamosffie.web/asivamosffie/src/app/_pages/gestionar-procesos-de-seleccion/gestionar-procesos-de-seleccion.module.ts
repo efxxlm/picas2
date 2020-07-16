@@ -16,6 +16,14 @@ import { FormDatosProponentesSeleccionadosComponent } from './components/form-da
 import { TablaProcesosComponent } from './components/tabla-procesos/tabla-procesos.component';
 import { InvitacionCerradaComponent } from './components/invitacion-cerrada/invitacion-cerrada.component';
 import { InvitacionAbiertaComponent } from './components/invitacion-abierta/invitacion-abierta.component';
+import { FormSeleccionProponenteAInvitarComponent } from './components/form-seleccion-proponente-a-invitar/form-seleccion-proponente-a-invitar.component';
+import { FormEvaluacionComponent } from './components/form-evaluacion/form-evaluacion.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './components/form-datos-proponentes-seleccionados-invitacion-cerrada/form-datos-proponentes-seleccionados-invitacion-cerrada.component';
 
 
 @NgModule({
@@ -28,14 +36,22 @@ import { InvitacionAbiertaComponent } from './components/invitacion-abierta/invi
     FormDatosProponentesSeleccionadosComponent,
     TablaProcesosComponent,
     InvitacionCerradaComponent,
-    InvitacionAbiertaComponent
+    InvitacionAbiertaComponent,
+    FormSeleccionProponenteAInvitarComponent,
+    FormEvaluacionComponent,
+    FormDatosProponentesSeleccionadosInvitacionCerradaComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     GestionarProcesosDeSeleccionRoutingModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule
   ]
 })
 export class GestionarProcesosDeSeleccionModule { }

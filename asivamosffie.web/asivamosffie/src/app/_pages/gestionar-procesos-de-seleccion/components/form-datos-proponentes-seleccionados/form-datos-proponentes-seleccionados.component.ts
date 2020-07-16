@@ -193,20 +193,14 @@ export class FormDatosProponentesSeleccionadosComponent {
   }
 
   onSubmitPersonaNatural() {
-    if (this.personaNaturalForm.valid) {
-      console.log(this.personaNaturalForm.value);
-    }
+    console.log(this.personaNaturalForm.value);
   }
 
   onSubmitPersonaJuridicaIndividual() {
-    if (this.personaJuridicaIndividualForm.valid) {
-      console.log(this.personaJuridicaIndividualForm.value);
-    }
+    console.log(this.personaJuridicaIndividualForm.value);
   }
 
   onSubmitUnionTemporal() {
-    if (this.unionTemporalForm.valid) {
-      console.log(this.unionTemporalForm.value);
-    }
+    console.log(this.unionTemporalForm.value);
   }
 }
