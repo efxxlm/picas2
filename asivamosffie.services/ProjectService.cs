@@ -297,7 +297,7 @@ namespace asivamosffie.services
                         //Controlar Registros
                         //Filas <=
                         //No comienza desde 0 por lo tanto el = no es necesario
-                        for (int i = 3; i < worksheet.Dimension.Rows; i++)
+                        for (int i = 2; i < worksheet.Dimension.Rows; i++)
                         {
                             try
                             {
@@ -1022,34 +1022,44 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
+        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId,string pUsuario)
         {
+            int idAccionCrearProyectoAdministrativo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Proyecto, (int)EnumeratorTipoDominio.Acciones);
             ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
             bool retorno = true;
             try
             {
                 proyecto.Eliminado = true;
+                proyecto.UsuarioModificacion = pUsuario;
+                proyecto.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
+                //auditoria
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ELIMINACIÓN DE PROYECTO");
             }
             catch (Exception ex)
             {
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pUsuario, ex.InnerException.ToString());
                 return false;
             }
             return retorno;
         }
 
-        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
+        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario)
         {
+            int idAccionCrearProyectoAdministrativo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Proyecto, (int)EnumeratorTipoDominio.Acciones);
             ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
             bool retorno = true;
             try
             {
                 proyecto.Enviado = true;
+                proyecto.UsuarioModificacion = pUsuario;
                 proyecto.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
             }
             catch (Exception ex)
             {
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pUsuario, ex.InnerException.ToString());
                 return false;
             }
             return retorno;

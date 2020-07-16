@@ -67,6 +67,9 @@ export class TablaProyectosComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.getRangeLabel = function (page, pageSize, length) {        
+        return (page+1).toString()+" de "+length.toString();
+      };
       this.paginator._intl.previousPageLabel = 'Anterior';
     }, 
     err => {

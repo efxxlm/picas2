@@ -135,3 +135,18 @@ div.mat-paginator {
     padding-bottom: 0.5em;
     width: 100%;
 }
+.btn-table:hover {
+    background-color: var(--grayColor);
+    color: var(--mainColor);
+}
+.mat-header-cell{
+    font-style: italic;
+}
+.mat-paginator-navigation-next::after{
+    content:" Siguiente";
+    margin-left: 2.5em;
+}
+.mat-paginator-navigation-previous::after{
+    content:" Anterior";
+    margin-left: -5.5em;
+}

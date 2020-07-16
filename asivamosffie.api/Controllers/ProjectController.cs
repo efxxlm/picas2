@@ -60,8 +60,8 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
-                    //string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), " ");
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), strUsuario);
                 }
                 return Ok(respuesta);
             }
@@ -79,8 +79,8 @@ namespace asivamosffie.api.Controllers
             try
             {
                 Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = "";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                //string pUsuarioModifico = "";
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _projectService.UploadMassiveLoadProjects(pIdDocument, pUsuarioModifico);
 
                 return Ok(respuesta);
@@ -98,11 +98,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
-               
-
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            {               
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyecto.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
@@ -121,8 +118,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProjects()
         { 
-            string pUsuarioModifico = "";
-            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.ListAdministrativeProyectos(pUsuarioModifico);
             return respuesta;
 
@@ -132,7 +128,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
             return respuesta;
         }
 
@@ -142,7 +139,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
             return respuesta;
         }
 

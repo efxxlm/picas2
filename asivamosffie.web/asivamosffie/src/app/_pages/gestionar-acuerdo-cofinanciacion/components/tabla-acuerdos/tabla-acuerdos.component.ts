@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // export interface PeriodicElement {
 //   id: number;
@@ -44,7 +45,7 @@ export class TablaAcuerdosComponent implements OnInit {
 
   constructor( private cofinanciacionService: CofinanciacionService,
                private router: Router,
-               public dialog: MatDialog ) { }
+               public dialog: MatDialog,private sanitized: DomSanitizer ) { }
 
   ngOnInit(): void {
 
@@ -74,6 +75,21 @@ export class TablaAcuerdosComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
         this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = function (page, pageSize, length) {   
+          /*let pages="";
+          for(let i =0; i<=length;i++)
+          {
+            if(i==page)
+            {
+              pages="<div class='pag-actual'>"+(i+1)+"</div>";  
+            }
+            else{
+              pages="<div class='pag'>"+(i+1)+"</div>";
+            }            
+          }     
+          return this.sanitized.bypassSecurityTrustHtml(pages);*/
+          return (page+1).toString()+" de "+length.toString();
+        };
         this.paginator._intl.previousPageLabel = 'Anterior';
       } );
 

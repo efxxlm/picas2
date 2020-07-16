@@ -6,7 +6,7 @@ import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -33,7 +33,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
               private cofinanciacionService: CofinanciacionService,
               private commonService: CommonService,
               public dialog: MatDialog,
-              private activatedRoute: ActivatedRoute
+              private activatedRoute: ActivatedRoute,
+              private router: Router,
               ) {
     this.maxDate = new Date();
   }
@@ -86,12 +87,14 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   actualizarValores(){
-      let valorTotal: number = 0;
-      let valorAportante: number = 0;
-      this.listaCofinancAportantes.forEach(apo =>{
+      let valorTotal: number = 0;      
+      this.listaCofinancAportantes.forEach(apo =>{      
+        let valorAportante: number = 0;
          apo.cofinanciacionDocumento.forEach( doc => {
             valorTotal += doc.valorDocumento?doc.valorDocumento:0;
+            valorAportante += doc.valorDocumento?doc.valorDocumento:0;
           })
+          apo.valortotal=valorAportante;
       });
 
       this.valorTotalAcuerdo = valorTotal;
@@ -315,7 +318,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       this.openDialog('', respuesta.message);
       if (respuesta.isValidation) // have validations
       {
-        
+        this.router.navigate(['/gestionarAcueros']);
       }
      }else{
       this.openDialog('', respuesta.message);
@@ -368,36 +371,56 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   validaCompletitud(aportante:any)
   {
-    console.log(aportante.cofinanciacionDocumento);
+    
     let retorno=0;
     aportante.cofinanciacionDocumento.forEach(element => {
       if(
         element.fechaAcuerdo==null&&
-        element.numeroActa==null&&
+        element.numeroAcuerdo==null&&
         element.tipoDocumentoId==null&&
         element.valorDocumento==null&&
         //element.valorTotalAportante==null&&
         element.vigenciaAporte==null)
         {
           //retorno=0;
-          console.log("no suma");
         }
         else if(
           element.fechaAcuerdo!=null&&
-          element.numeroActa!=null&&
+          element.numeroAcuerdo!=null&&
           element.tipoDocumentoId!=null&&
           element.valorDocumento!=null&&
          // element.valorTotalAportante!=null&&
           element.vigenciaAporte!=null){
-            retorno+=2;
-            console.log("suma 2");
+            retorno+=2;            
         }
         else{
-          console.log("suma 1");
           retorno++;
         }
     });
     let resultado=aportante.cofinanciacionDocumento.length*2==retorno?3:retorno==0?1:2;
     return resultado;
+  }
+  getTotalAportante(aportante:any)
+  {
+    let retorno=0;
+    aportante.cofinanciacionDocumento.forEach(element => {
+      if(element)
+      {
+        retorno+=element.valorDocumento;
+      }
+      
+    });    
+    return retorno;
+  }
+  eliminadoc(aportante:any,documento:any)
+  {
+    console.log(aportante);
+    console.log(documento);
+    const index = aportante.cofinanciacionDocumento.indexOf(documento, 0);
+    if (index > -1) {
+      aportante.cofinanciacionDocumento.splice(index, 1);
+      aportante.cauntosDocumentos--;
+    }   
+
   }
 }

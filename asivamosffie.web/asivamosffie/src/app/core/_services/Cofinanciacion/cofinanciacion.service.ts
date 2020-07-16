@@ -54,7 +54,8 @@ export interface CofinanciacionAportante{
   nombreAportanteId?: any,
   municipioId: number,
   cofinanciacionDocumento: CofinanciacionDocumento[],
-  eliminado?:boolean
+  eliminado?:boolean,
+  valortotal?:number//just for view form
 }
 
 export interface CofinanciacionDocumento{
