@@ -39,6 +39,25 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public bool ValidarRegistroCompleto(Proyecto proyecto)
+        {
+
+            if (
+                !string.IsNullOrEmpty(proyecto.FechaSesionJunta.ToString())
+                || !string.IsNullOrEmpty(proyecto.NumeroActaJunta.ToString())
+                || !string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo.ToString())
+                || !string.IsNullOrEmpty(proyecto.LlaveMen.ToString())
+                || !string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio.ToString())
+                || !string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
+                || !string.IsNullOrEmpty(proyecto.SedeId.ToString())
+                || !string.IsNullOrEmpty(proyecto.EnConvocatoria.ToString())
+                || !string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
+                ) { }
+
+            return false;
+
+        }
+
         public async Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto)
         {
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
@@ -63,7 +82,7 @@ namespace asivamosffie.services
                         Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                         EstadoRegistro = estadoRegistro.Nombre,
                         EstadoJuridicoPredios = EstadoJuridicoPredios.Nombre,
-                        Fecha=proyecto.FechaCreacion.ToString("yyyy-MM-dd")
+                        Fecha = proyecto.FechaCreacion == null ? Convert.ToDateTime(proyecto.FechaCreacion).ToString("yyyy-MM-dd") : ""
                     };
                     ListProyectoGrilla.Add(proyectoGrilla);
                 }
@@ -207,7 +226,7 @@ namespace asivamosffie.services
                     //TODO:
                     //Validar SI el proyecto viene completo o como es?
                     pProyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Completo;
-                   //pProyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Incompleto;
+                    //pProyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Incompleto;
 
 
                     //si el tipo de intervancion es nuevo el estado juridico es sin revision 
@@ -463,7 +482,8 @@ namespace asivamosffie.services
                                     //#26
                                     //Tipo de aportante 3
                                     if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text))
-                                    {   temporalProyecto.TipoAportanteId3 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 26].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
+                                    {
+                                        temporalProyecto.TipoAportanteId3 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 26].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
 
                                         //#27
                                         //Aportante 3
@@ -573,7 +593,7 @@ namespace asivamosffie.services
                         //-2 ya los registros comienzan desde esta fila
                         archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                         archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                        archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 3);
+                        archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
                         _context.ArchivoCargue.Update(archivoCarge);
 
 
@@ -634,7 +654,7 @@ namespace asivamosffie.services
 
                 int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == OrigenId && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == 1 && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
 
                 List<TemporalProyecto> ListTemporalProyecto = await _context.TemporalProyecto.Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado).ToListAsync();
 
@@ -990,7 +1010,7 @@ namespace asivamosffie.services
                      };
             }
         }
-         
+
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto)
         {
             List<ProyectoAdministracionGrilla> ListProyectoAdministrativoGrilla = new List<ProyectoAdministracionGrilla>();
@@ -1009,11 +1029,11 @@ namespace asivamosffie.services
                     ProyectoAdministracionGrilla proyectoAdministrativoGrilla = new ProyectoAdministracionGrilla
                     {
                         ProyectoAdminitracionId = proyecto.ProyectoAdministrativoId,
-                        Enviado = (bool)proyecto.Enviado 
+                        Enviado = (bool)proyecto.Enviado
                     };
                     ListProyectoAdministrativoGrilla.Add(proyectoAdministrativoGrilla);
-                } 
-                return ListProyectoAdministrativoGrilla; 
+                }
+                return ListProyectoAdministrativoGrilla;
             }
             catch (Exception ex)
             {
@@ -1022,7 +1042,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId,string pUsuario)
+        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario)
         {
             int idAccionCrearProyectoAdministrativo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Proyecto, (int)EnumeratorTipoDominio.Acciones);
             ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);

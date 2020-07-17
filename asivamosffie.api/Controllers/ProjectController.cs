@@ -37,8 +37,8 @@ namespace asivamosffie.api.Controllers
             try
             {
                  
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                //string pUsuarioModifico = " ";
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectService.CreateOrEditAdministrativeProject(pProyectoAdministrativo);
                 return Ok(respuesta);
@@ -60,6 +60,7 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
+                    //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
                     respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), strUsuario);
                 }
@@ -79,8 +80,8 @@ namespace asivamosffie.api.Controllers
             try
             {
                 Respuesta respuesta = new Respuesta();
-                //string pUsuarioModifico = "";
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                string pUsuarioModifico = "";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _projectService.UploadMassiveLoadProjects(pIdDocument, pUsuarioModifico);
 
                 return Ok(respuesta);
@@ -148,9 +149,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
         {
-
-            string pUsuarioModifico = "";
-            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.ListProyectos(pUsuarioModifico);
             return respuesta;
 

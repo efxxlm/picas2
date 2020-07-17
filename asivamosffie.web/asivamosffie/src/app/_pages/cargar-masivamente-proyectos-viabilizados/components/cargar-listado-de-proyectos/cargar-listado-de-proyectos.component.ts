@@ -97,12 +97,17 @@ export class CargarListadoDeProyectosComponent implements OnInit {
           {
             strOpciones="<br><b>¿Desea realizar el cargue de los proyectos validos?</b><br>";
             this.idProject=respuestaCargue.llaveConsulta;
-          }
-          this.openDialogSiNo('Validación de registro', 
+            this.openDialogSiNo('Validación de registro', 
           "<br>Número de registros en el archivo:<b>"+respuestaCargue.cantidadDeRegistros+"</b><br>"+
           "Número de registros validos: <b>"+respuestaCargue.cantidadDeRegistrosValidos+"</b><br>"+
           "Número de registros inválidos: <b>"+respuestaCargue.cantidadDeRegistrosInvalidos+"</b><br>"+
           strOpciones
+          );
+          }
+          this.openDialog('Validación de registro', 
+          "<br>Número de registros en el archivo:<b>"+respuestaCargue.cantidadDeRegistros+"</b><br>"+
+          "Número de registros validos: <b>"+respuestaCargue.cantidadDeRegistrosValidos+"</b><br>"+
+          "Número de registros inválidos: <b>"+respuestaCargue.cantidadDeRegistrosInvalidos+"</b><br>"
           );  
          
         },

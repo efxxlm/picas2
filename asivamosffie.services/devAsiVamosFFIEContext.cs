@@ -1615,6 +1615,18 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioPerfilId).ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.Perfil)
+                    .WithMany()
+                    .HasForeignKey(d => d.PerfilId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKPerfil");
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany()
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_usuario");
             });
 
             modelBuilder.Entity<VigenciaAporte>(entity =>

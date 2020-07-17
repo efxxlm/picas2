@@ -19,7 +19,22 @@ import { SafePipe } from './_pipes/safe.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-
+import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
+ 
+export const customCurrencyMaskConfig = {
+    align: "right",
+    allowNegative: true,
+    allowZero: true,
+    decimal: ",",
+    precision: 0,
+    prefix: "$ ",
+    suffix: "",
+    thousands: ".",
+    nullable: true,
+    min: null,
+    max: null,
+    inputMode: CurrencyMaskInputMode.FINANCIAL
+};
 
 
 
@@ -38,7 +53,8 @@ import { DatePipe } from '@angular/common';
     CoreModule,
     BrowserAnimationsModule,
     MatTableModule,
-    FormsModule
+    FormsModule,
+    NgxCurrencyModule.forRoot(customCurrencyMaskConfig)
   ],    
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true },DatePipe],
   bootstrap: [AppComponent]

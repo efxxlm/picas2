@@ -116,7 +116,7 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
 
 
@@ -136,12 +136,12 @@ export class FormularioProyectosComponent implements OnInit {
           this.proyecto = respuesta;
           //ajusto lartitud y longitud
           if (respuesta.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
-            let lat = respuesta.predioPrincipal.ubicacionLatitud.split('°');
+            const lat = respuesta.predioPrincipal.ubicacionLatitud.split('°');
             this.proyecto.predioPrincipal.ubicacionLatitud = lat[0];
             this.proyecto.predioPrincipal.ubicacionLatitud2 = lat[1];
           }
           if (respuesta.predioPrincipal.ubicacionLongitud.indexOf('°') > 1) {
-            let lon = respuesta.predioPrincipal.ubicacionLongitud.split('°');
+            const lon = respuesta.predioPrincipal.ubicacionLongitud.split('°');
             this.proyecto.predioPrincipal.ubicacionLongitud = lon[0];
             this.proyecto.predioPrincipal.ubicacionLongitud2 = lon[1];
           }
@@ -631,7 +631,7 @@ export class FormularioProyectosComponent implements OnInit {
 
 
   validateKeypressLlave(event: KeyboardEvent) {
-    const alphanumeric = /[A-Za-z0-9_-]/;
+    const alphanumeric = /[A-Za-z0-9-]/;
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }

@@ -30,6 +30,46 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<Respuesta> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId, string pUsuarioModifico)
+        {
+            //Julian Martinez
+            Respuesta respuesta = new Respuesta();
+            int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+
+                Cofinanciacion cofinanciacion = _context.Cofinanciacion.Find(pCofinancicacionId);
+                cofinanciacion.Eliminado = true;
+                cofinanciacion.UsuarioModificacion = pUsuarioModifico;
+                cofinanciacion.FechaModificacion = DateTime.Now;
+                //Si falla descomentar el de abajo
+                // _context.Update(cofinanciacion);
+                _context.SaveChanges();
+
+                return respuesta =
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesCofinanciacion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.OperacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesProyecto.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccionEliminarCofinanciacion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
+
+        }
 
         public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion)
         {//con include
@@ -252,9 +292,9 @@ namespace asivamosffie.services
             foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
             {
                 CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
-                { 
+                {
                     CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
-                    Nombre = cofinanciacionAportante.NombreAportanteId!=null?await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.NombreAportanteId):"",
+                    Nombre = cofinanciacionAportante.NombreAportanteId != null ? await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.NombreAportanteId) : "",
                     TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId)
                 };
                 ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);

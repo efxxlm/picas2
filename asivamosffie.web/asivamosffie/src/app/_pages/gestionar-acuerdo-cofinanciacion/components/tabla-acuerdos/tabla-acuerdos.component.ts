@@ -48,7 +48,9 @@ export class TablaAcuerdosComponent implements OnInit {
                public dialog: MatDialog,private sanitized: DomSanitizer ) { }
 
   ngOnInit(): void {
-
+    this.inicializarTabla();        
+  }
+  inicializarTabla(){
     this.cofinanciacionService.listaAcuerdosCofinanciacion().subscribe( cof => 
       {
          this.listaCofinanciacion = cof; 
@@ -88,12 +90,19 @@ export class TablaAcuerdosComponent implements OnInit {
             }            
           }     
           return this.sanitized.bypassSecurityTrustHtml(pages);*/
-          return (page+1).toString()+" de "+length.toString();
+          if (length === 0 || pageSize === 0) {
+            return '0 de ' + length;
+          }
+          length = Math.max(length, 0);
+          const startIndex = page * pageSize;
+          // If the start index exceeds the list length, do not try and fix the end index to the end.
+          const endIndex = startIndex < length ?
+            Math.min(startIndex + pageSize, length) :
+            startIndex + pageSize;
+          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
         };
         this.paginator._intl.previousPageLabel = 'Anterior';
       } );
-
-    
   }
 
   editarAcuerdo(e: number) {
@@ -137,8 +146,9 @@ export class TablaAcuerdosComponent implements OnInit {
   {
     if (respuesta.isSuccessful) // Response witout errors
     {
+      this.inicializarTabla();
       this.openDialog('', respuesta.message);
-      this.ngOnInit();
+      
       if (respuesta.isValidation) // have validations
       {
         
@@ -164,20 +174,8 @@ export class TablaAcuerdosComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
       if(result)
       {
-        this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
-          cofi.eliminado = true;
-          cofi.cofinanciacionAportante.forEach( apo => {
-              apo.eliminado = true;
-              apo.cofinanciacionDocumento.forEach( doc => {
-                 doc.eliminado = true; 
-              });
-            })
-    
-            console.log(cofi);
-    
-        this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofi).subscribe( 
-          respuesta => 
-          {
+        this.cofinanciacionService.EliminarCofinanciacionByCofinanciacionId(e).subscribe(respuesta => {
+            console.log(respuesta);
             this.verificarRespuesta( respuesta );
           },
           err => {
@@ -192,7 +190,6 @@ export class TablaAcuerdosComponent implements OnInit {
          () => {
           //console.log('terminó');
          });
-        });
       }           
     });
   }

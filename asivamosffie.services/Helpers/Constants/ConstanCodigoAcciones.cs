@@ -17,5 +17,6 @@
         public const string RegistrarAportante = "13";
 
         public const string Crear_Proyecto_Administrativo = "15";
+        public const string Eliminar_Cofinanciacion = "17 ";
     }
 }
