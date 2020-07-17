@@ -52,10 +52,18 @@ namespace asivamosffie.services
                 || !string.IsNullOrEmpty(proyecto.SedeId.ToString())
                 || !string.IsNullOrEmpty(proyecto.EnConvocatoria.ToString())
                 || !string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
-                ) { }
-
-            return false;
-
+                || !string.IsNullOrEmpty(proyecto.CantPrediosPostulados.ToString())
+                || !string.IsNullOrEmpty(proyecto.TipoPredioCodigo.ToString())
+                || !string.IsNullOrEmpty(proyecto.PredioPrincipalId.ToString())
+                || !string.IsNullOrEmpty(proyecto.ValorObra.ToString())
+                || !string.IsNullOrEmpty(proyecto.ValorInterventoria.ToString())
+                || !string.IsNullOrEmpty(proyecto.ValorTotal.ToString())
+                || !string.IsNullOrEmpty(proyecto.EstadoProyectoCodigo.ToString())
+                || !string.IsNullOrEmpty(proyecto.EstadoJuridicoCodigo.ToString())
+                ) { 
+                return true;
+            } 
+            return false; 
         }
 
         public async Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto)
@@ -241,6 +249,7 @@ namespace asivamosffie.services
                     //pProyecto.InfraestructuraIntervenirProyecto = null;
                     pProyecto.Eliminado = false;
                     pProyecto.FechaCreacion = DateTime.Now;
+                    pProyecto.RegistroCompleto = ValidarRegistroCompleto(pProyecto);
                     _context.Proyecto.Add(pProyecto);
                 }
                 else
@@ -708,12 +717,21 @@ namespace asivamosffie.services
                         proyecto.ValorTotal = temporalProyecto.ValorTotal;
                         proyecto.EstadoProyectoCodigo = " ";
                         proyecto.TipoPredioCodigo = temporalProyecto.EspacioIntervenirId.ToString();
-                        //
+ 
+                        //si el tipo de intervancion es nuevo el estado juridico es sin revision 
+                        if (proyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))
+                        {
+                            proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Sin_Revision;
+                        }
+                        else
+                        {
+                            proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
+                        }
+   
+                        proyecto.RegistroCompleto = ValidarRegistroCompleto(proyecto);
                         _context.Proyecto.Add(proyecto);
                         _context.SaveChanges();
-
-
-
+                         
                         //ProyectoPredio
                         //Proyecto  Auditoria
                         ProyectoPredio proyectoPredio = new ProyectoPredio();
@@ -927,6 +945,7 @@ namespace asivamosffie.services
                 //Auditoria
                 pProyectoAdministrativo.Eliminado = false;
                 pProyectoAdministrativo.FechaCreado = DateTime.Now;
+                pProyectoAdministrativo.RegistroCompleto = ValidarRegistroCompletoProyectoAdministrativo(pProyectoAdministrativo);
                 _context.ProyectoAdministrativo.Add(pProyectoAdministrativo);
                 _context.SaveChanges();
 
@@ -1009,6 +1028,14 @@ namespace asivamosffie.services
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pProyectoAdministrativo.UsuarioCreacion, ex.InnerException.ToString())
                      };
             }
+        }
+       
+        public  bool ValidarRegistroCompletoProyectoAdministrativo(ProyectoAdministrativo pProyectoAdministrativo) {
+
+            if (pProyectoAdministrativo.Enviado != null) {
+                return true;
+            }
+            return false;
         }
 
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto)
