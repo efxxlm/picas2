@@ -48,7 +48,9 @@ export class TablaAcuerdosComponent implements OnInit {
                public dialog: MatDialog,private sanitized: DomSanitizer ) { }
 
   ngOnInit(): void {
-
+    this.inicializarTabla();        
+  }
+  inicializarTabla(){
     this.cofinanciacionService.listaAcuerdosCofinanciacion().subscribe( cof => 
       {
          this.listaCofinanciacion = cof; 
@@ -101,8 +103,6 @@ export class TablaAcuerdosComponent implements OnInit {
         };
         this.paginator._intl.previousPageLabel = 'Anterior';
       } );
-
-    
   }
 
   editarAcuerdo(e: number) {
@@ -146,8 +146,9 @@ export class TablaAcuerdosComponent implements OnInit {
   {
     if (respuesta.isSuccessful) // Response witout errors
     {
+      this.inicializarTabla();
       this.openDialog('', respuesta.message);
-      this.ngOnInit();
+      
       if (respuesta.isValidation) // have validations
       {
         
