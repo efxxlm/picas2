@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.api.Responses;
+using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -66,6 +67,25 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> update(FuenteFinanciacion fuentefinanciacion)
+        {
+            Respuesta _response = new Respuesta();
+
+            try
+            {
+                _response = await _sourceFunding.Update(fuentefinanciacion);
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.Data = ex.ToString();
+                return Ok(_response);
+            }
+        }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

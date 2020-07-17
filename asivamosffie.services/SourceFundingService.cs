@@ -44,7 +44,7 @@ namespace asivamosffie.services
             {
                 if (fuentefinanciacion != null)
                 {
-                    fuentefinanciacion.UsuarioCreacion = "forozco";
+                    fuentefinanciacion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
                     fuentefinanciacion.FechaCreacion = DateTime.Now;
                     _context.Add(fuentefinanciacion);
                     await _context.SaveChangesAsync();
@@ -81,9 +81,27 @@ namespace asivamosffie.services
         }
 
 
-        public Task<bool> Update(FuenteFinanciacion fuentefinanciacion)
+        public async Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion)
         {
-            throw new NotImplementedException();
+            Respuesta _response = new Respuesta();
+
+            try
+            {
+                FuenteFinanciacion updateObj = await _context.FuenteFinanciacion.FindAsync(fuentefinanciacion.FuenteFinanciacionId);
+
+                updateObj.AportanteId = fuentefinanciacion.AportanteId;
+                updateObj.FuenteRecursosCodigo = fuentefinanciacion.FuenteRecursosCodigo;
+                updateObj.ValorFuente = fuentefinanciacion.ValorFuente;
+
+                _context.Update(updateObj); 
+                 await _context.SaveChangesAsync();
+
+                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesSourceFunding.EditadoCorrrectamente };
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false,  Data = null,  Code = ConstantMessagesSourceFunding.Error, Message = ex.Message };
+            }
         }
     }
 }

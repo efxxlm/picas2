@@ -37,49 +37,57 @@ namespace asivamosffie.services
         }
         public async Task<Respuesta> Insert(CuentaBancaria cuentaBancaria)
         {
-            Respuesta _reponse = new Respuesta();
-           // int IdAccionCrearCuentaBancaria = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.CrearCuentaBancaria)).Select(x => x.DominioId).First();
+            Respuesta _response = new Respuesta();
             try
             {
                 if (cuentaBancaria != null)
                 {
+                    cuentaBancaria.FechaCreacion = DateTime.Now;
+                    cuentaBancaria.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+
                     _context.Add(cuentaBancaria);
                     await _context.SaveChangesAsync();
 
-                    return _reponse = new Respuesta
-                    {
-                        IsSuccessful = true, IsValidation = false,
-                        Data = cuentaBancaria,  Code = ConstantMessagesContributor.OperacionExitosa,
-                  //      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion.ToString(), ConstantMessagesContributor.OperacionExitosa)
-                    };
+                    return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = cuentaBancaria, Code = ConstantMessagesBankAccount.OperacionExitosa };
                 }
                 else
                 {
-                    return _reponse = new Respuesta
-                    {
-                        IsSuccessful = false,  IsValidation = false,
-                        Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado,
-//Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.RecursoNoEncontrado, IdAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion.ToString(), ConstantMessagesContributor.RecursoNoEncontrado)
-                    };
+                    return _response = new Respuesta { IsSuccessful = false,  IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
                 }
 
             }
             catch (Exception ex)
             {
-                return _reponse = new Respuesta
-                {
-                    IsSuccessful = false, IsValidation = false,
-                    Data = null, Code = ConstantMessagesContributor.ErrorInterno,
-               //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
-
-                };
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno };
             }
 
         }
 
-        public Task<bool> Update(CuentaBancaria cuentaBancaria)
+        public async Task<Respuesta> Update(CuentaBancaria cuentaBancaria)
         {
-            throw new NotImplementedException();
+            Respuesta _response = new Respuesta();
+
+            try
+            {
+                CuentaBancaria updateObj = await _context.CuentaBancaria.FindAsync(cuentaBancaria.CuentaBancariaId);
+
+                updateObj.FuenteFinanciacionId = cuentaBancaria.FuenteFinanciacionId;
+                updateObj.NumeroCuentaBanco = cuentaBancaria.NumeroCuentaBanco;
+                updateObj.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco;
+                updateObj.CodigoSifi = cuentaBancaria.CodigoSifi;
+                updateObj.TipoCuentaCodigo = cuentaBancaria.TipoCuentaCodigo;
+                updateObj.BancoCodigo = cuentaBancaria.BancoCodigo;
+                updateObj.Exenta = cuentaBancaria.Exenta;
+
+                _context.Update(updateObj);
+                await _context.SaveChangesAsync();
+
+                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesBankAccount.EditadoCorrrectamente };
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesBankAccount.Error, Message = ex.Message };
+            }
         }
 
         public async Task<bool> Delete(int id)
