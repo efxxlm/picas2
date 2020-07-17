@@ -12,10 +12,7 @@
         public const string Descargar_Excel_Proyectos = "8";
         public const string Listar_Proyectos = "9";
         public const string Listar_Fuentes_Financiacion = "10";
-        public const string Crear_Proyecto = "11";
-        public const string Editar_Proyecto = "12"; 
-        public const string RegistrarAportante = "13";
-
-        public const string Crear_Proyecto_Administrativo = "15";
+        public const string RegistrarAportante = "11";
+        public const string CrearCuentaBancaria = "12";
     }
 }
