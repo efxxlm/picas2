@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
+  
+  
 
   constructor(private http: HttpClient) { }
 
@@ -35,22 +38,83 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=7`);
   }
 
-  listaFuenteRecursos(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
+  listaTipoIntervencion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=1`);
   }
 
-  listaBancos(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=22`);
+  listaRegion(){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListRegion`);
   }
 
-  vigenciasDesde2015(): number[]{
-    const fecha = new Date();
-    let vigencias: number[]=[];
-    for (let i = 2015; i < fecha.getFullYear(); i++){
-      vigencias.push(i);
-    }
+  listaDepartamentosByRegionId(pIdRegion:string){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamentoByRegionId?idDepartamento=${pIdRegion}`);
+  }
 
-    return vigencias;
+  listaIntitucionEducativaByMunicipioId(pidMunicipio:string){
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/ListIntitucionEducativaByMunicipioId?idMunicipio=${pidMunicipio}`);
+  }
+
+  listaSedeByInstitucionEducativaId(pidInstitucionEducativaId:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/ListSedeByInstitucionEducativaId?idInstitucionEducativaId=${pidInstitucionEducativaId}`);
+  }
+  listaTipoPredios() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=19`);
+  }
+
+  listaDocumentoAcrditacion() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=15`);
+  }
+  
+  listaInfraestructuraIntervenir() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=5`);
+  }
+
+  listaCoordinaciones() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=6`);
+  }
+
+  listaVigencias() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/ListVigenciaAporte`);
+  }
+  
+  listaAportanteByTipoAportanteId(pTipoAportanteID:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
+  }
+
+  listaDocumentoByAportanteId(pAportanteID:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListDocumentoByAportanteId?pAportanteID=${pAportanteID}`);
+  }
+
+  listMunicipiosByIdMunicipio(idMunicipio:string){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdMunicipio?idMunicipio=${idMunicipio}`);
+  }
+  
+
+  listDepartamentoByIdMunicipio(idMunicipio:string){
+    return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/listDepartamentoByIdMunicipio?idMunicipio=${idMunicipio}`);
+  }
+  
+  
+
+
+  public forkProject():Observable<any[]>
+  {
+    return forkJoin([
+      this.listaTipoIntervencion(),
+      this.listaRegion(),
+      this.listaTipoPredios(),
+      this.listaDocumentoAcrditacion(),
+      this.listaTipoAportante(),
+      this.listaInfraestructuraIntervenir(),
+      this.listaCoordinaciones()
+    
+      ]);  
+  }
+  forkDepartamentoMunicipio(idMunicipio:string){
+    return forkJoin([
+      this.listMunicipiosByIdMunicipio(idMunicipio),
+      this.listDepartamentoByIdMunicipio(idMunicipio)
+      ]);  
   }
 }
 
@@ -59,12 +123,13 @@ export interface Dominio{
   tipoDominioId: number,
   nombre: string,
   activo: boolean,
-  codigo?: string,
+  codigo:string
 }
 
 export interface Localizacion{
   localizacionId: string,
-  descripcion: string
+  descripcion: string,
+  idPadre:string
 }
 
 export interface Respuesta{
@@ -75,16 +140,4 @@ export interface Respuesta{
   message: string;
   data?: any;
   token?: any;
-}
-
-interface TipoAportante{
-  FFIE: string[];
-  ET: string[];
-  Tercero: string[];
-}
-
-export const TiposAportante: TipoAportante = {
-  FFIE:   ["1"],
-  ET:     ["2"],
-  Tercero:["3"]
 }

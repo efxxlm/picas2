@@ -117,5 +117,129 @@ namespace asivamosffie.services.Helpers.Constant
 
     }
 
-   
+    public class ConstantMessagesCargueProyecto
+    {
+
+        #region Mensajes Informativos
+
+
+        public const string NoExitenArchivos = "100";
+
+        public const string CamposVacios = "101";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        public const string DescargaExcelExitosa = "201";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+ 
+        #region 
+        public const string Error = "500";
+        public const string ErrorDescargarArchivo = "501";
+        #endregion
+    }
+     
+    public class ConstantMessagesProyecto
+    {
+
+        #region Mensajes Informativos
+
+         
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+          
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesSourceFunding
+    {
+
+        #region Mensajes Informativos
+        public const string EditadoCorrrectamente = "102";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesBankAccount
+    {
+
+        #region Mensajes Informativos
+        public const string EditadoCorrrectamente = "102";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesResourceControl
+    {
+
+        #region Mensajes Informativos
+        public const string EditadoCorrrectamente = "102";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+ 
 }

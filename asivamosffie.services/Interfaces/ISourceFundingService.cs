@@ -14,7 +14,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> Insert(FuenteFinanciacion fuentefinanciacion);
 
-        Task<bool> Update(FuenteFinanciacion fuentefinanciacion);
+        Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion);
 
         Task<bool> Delete(int id);
     }

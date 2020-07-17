@@ -16,6 +16,9 @@ import { TestComponent } from './_pages/test/test.component';
 import { LayoutComponent } from './layout/layout.component';
 import { JwtInterceptorInterceptor } from './_helpers/jwt-interceptor.interceptor';
 import { SafePipe } from './_pipes/safe.pipe';
+import { MatTableModule } from '@angular/material/table';
+import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -33,9 +36,11 @@ import { SafePipe } from './_pipes/safe.pipe';
     HttpClientModule,
     SharedModule,
     CoreModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatTableModule,
+    FormsModule
   ],    
-  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true }],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true },DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

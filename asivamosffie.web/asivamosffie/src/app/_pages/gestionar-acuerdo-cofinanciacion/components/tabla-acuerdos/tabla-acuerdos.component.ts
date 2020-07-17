@@ -4,9 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CofinanciacionService, Cofinanciacion } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { Router } from '@angular/router';
-import { Respuesta } from 'src/app/core/_services/common/common.service';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 
 // export interface PeriodicElement {
 //   id: number;
@@ -43,8 +40,7 @@ export class TablaAcuerdosComponent implements OnInit {
   }
 
   constructor( private cofinanciacionService: CofinanciacionService,
-               private router: Router,
-               public dialog: MatDialog ) { }
+               private router: Router ) { }
 
   ngOnInit(): void {
 
@@ -52,112 +48,20 @@ export class TablaAcuerdosComponent implements OnInit {
       {
          this.listaCofinanciacion = cof; 
          this.dataSource.data = this.listaCofinanciacion;
+         this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.previousPageLabel = 'Anterior';
       } );
 
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    
   }
 
   editarAcuerdo(e: number) {
-    this.router.navigate(['/registrarAcuerdos', e ]);
+    this.router.navigate([`/gestionarAcueros/resgistrarAcuerdos`,{ id: e }]);
   }
-
-   eliminarAcuerdo(e: number) {
-    //this.openDialogSiNo("prueba", "abre", e);
-    this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
-      cofi.eliminado = true;
-      cofi.cofinanciacionAportante.forEach( apo => {
-          apo.eliminado = true;
-          apo.cofinanciacionDocumento.forEach( doc => {
-             doc.eliminado = true; 
-          });
-        })
-
-        console.log(cofi);
-
-    this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofi).subscribe( 
-      respuesta => 
-      {
-        this.verificarRespuesta( respuesta );
-      },
-      err => {
-        let mensaje: string;
-        if (err.error.message){
-          mensaje = err.error.message;
-        }else {
-          mensaje = err.message;
-        }
-        this.openDialog('Error', mensaje);
-     },
-     () => {
-      //console.log('terminó');
-     });
-    });
-   }
-
-  private verificarRespuesta( respuesta: Respuesta )
-  {
-    if (respuesta.isSuccessful) // Response witout errors
-    {
-      this.openDialog('', respuesta.message);
-      this.ngOnInit();
-      if (respuesta.isValidation) // have validations
-      {
-        
-      }
-     }else{
-      this.openDialog('', respuesta.message);
-    }
-  }
-
-  openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText }
-    });   
-  }
-
-  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText, siNoBoton:true }
-    });   
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      if(result)
-      {
-        this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
-          cofi.eliminado = true;
-          cofi.cofinanciacionAportante.forEach( apo => {
-              apo.eliminado = true;
-              apo.cofinanciacionDocumento.forEach( doc => {
-                 doc.eliminado = true; 
-              });
-            })
-    
-        this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofi).subscribe( 
-          respuesta => 
-          {
-            this.verificarRespuesta( respuesta );
-          },
-          err => {
-            let mensaje: string;
-            if (err.error.message){
-              mensaje = err.error.message;
-            }else {
-              mensaje = err.message;
-            }
-            this.openDialog('Error', mensaje);
-         },
-         () => {
-          //console.log('terminó');
-         });
-        });
-      }           
-    });
+  eliminarAcuerdo(e: number) {
   }
 
 }

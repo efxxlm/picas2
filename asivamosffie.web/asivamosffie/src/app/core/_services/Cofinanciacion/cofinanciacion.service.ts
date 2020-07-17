@@ -28,7 +28,7 @@ export class CofinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/CreateorUpdateCofinancing`,cofinanciacion);
   }
 
-  listaAcuerdosCofinanciacion(){
+  listaAcuerdosCofinanciacion(){ 
     return this.http.get<Cofinanciacion[]>(`${environment.apiUrl}/Cofinancing/GetListCofinancing`);
   }
 

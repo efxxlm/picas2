@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public FuenteFinanciacion()
         {
+            AportanteFuenteFinanciacion = new HashSet<AportanteFuenteFinanciacion>();
             ControlRecurso = new HashSet<ControlRecurso>();
             CuentaBancaria = new HashSet<CuentaBancaria>();
             VigenciaAporte = new HashSet<VigenciaAporte>();
@@ -20,7 +21,8 @@ namespace asivamosffie.model.Models
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
 
-        public virtual Aportante Aportante { get; set; }
+        public virtual CofinanciacionAportante Aportante { get; set; }
+        public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
         public virtual ICollection<CuentaBancaria> CuentaBancaria { get; set; }
         public virtual ICollection<VigenciaAporte> VigenciaAporte { get; set; }

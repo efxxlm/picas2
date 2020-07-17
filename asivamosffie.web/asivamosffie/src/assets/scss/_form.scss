@@ -90,10 +90,14 @@ div.mat-select-arrow {
     margin-bottom: -.8em;
 }
 
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: var(--mainColor);
+.radioInput > .mat-radio-button {
+    display: inline-block;
+    margin: 5px 1em;
 }
 
-.mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
-    background-color: var(--mainColor);
+.sub-label {
+    font-weight: 600;
+    color: var(--mainColor);
+    margin-left: 1em;
+    margin-right: .5em;
 }

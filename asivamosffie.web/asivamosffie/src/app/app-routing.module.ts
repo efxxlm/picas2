@@ -5,8 +5,6 @@ import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@an
 import { LayoutComponent } from './layout/layout.component';
 
 import { AuthGuard } from './_guards/auth.guard';
-import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinanciacion/components/registrar-acuerdo/registrar-acuerdo.component';
-import { RegistrarComponent } from './_pages/gestionar-fuentes-de-financiacion/components/registrar/registrar.component';
 
 const routes: Routes = [
   {
@@ -32,18 +30,33 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
       },
       {
+        path: 'cargarMasivamente',
+        // tslint:disable-next-line: max-line-length
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
+          .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+      },
+      {
         path: 'gestionarAcueros',
         loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
-        .then(m => m.GestionarAcuerdoCofinanciacionModule)
-      },
+          .then(m => m.GestionarAcuerdoCofinanciacionModule)
+      }
+      ,
+      {
+        path: 'crearProyecto',
+        loadChildren: () => import('./_pages/crear-proyecto-tecnico/crear-proyecto-tecnico.module')
+          .then(m => m.CrearProyectoTecnicoModule)
+      }
+      ,
+      {
+        path: 'crearProyectoAdministrativo',
+        loadChildren: () => import('./_pages/crear-proyecto-admin/crear-proyecto-admin.module')
+          .then(m => m.CrearProyectoAdminModule)
+      }
+      ,
       {
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
         .then(m => m.GestionarFuentesDeFinanciacionModule)
-      },
-      {
-        path: 'registrarAcuerdos/:id',
-        component: RegistrarAcuerdoComponent,
       },
       {
         path: 'cargarMasivamente',
@@ -51,9 +64,10 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
-        path: 'registrarFuentes/:idTipoAportante',
-        component: RegistrarComponent,
-      },
+        path: 'gestionarFuentes',
+        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
+        .then(m => m.GestionarFuentesDeFinanciacionModule)
+      }
     ]
 
   },
