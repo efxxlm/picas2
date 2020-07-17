@@ -33,20 +33,12 @@ namespace asivamosffie.services
         public async Task<CofinanciacionAportante> GetContributorById(int id)
         {
             return await _context.CofinanciacionAportante.FindAsync(id);
+
         }
 
 
-//        //public async Task<ActionResult<List<Aportante>>> GetContributor()
-//        //{
-//        //    return await _context.Aportante.ToListAsync();
-//        //}
 
-//        //public async Task<Aportante> GetContributorById(int id)
-//        //{
-//        //    return await _context.Aportante.FindAsync(id);
 
-//        //}
- 
 
         // Grilla de control? { AportanteId }
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
@@ -54,10 +46,6 @@ namespace asivamosffie.services
             return await _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == ContributorId).ToListAsync();
         }
 
-        //        //        if (result == null)
-        //        //        {
-        //        //            return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
-        //        //        }
 
         //Registrar Aportante
         public async Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
@@ -110,7 +98,9 @@ namespace asivamosffie.services
 
                 };
             }
+
         }
+
 
         //Registrar Control de recursos
         public async Task<Respuesta> ResourceControl(ControlRecurso controlRecurso)

@@ -248,7 +248,7 @@ export class RegistrarComponent implements OnInit {
 
   onSubmit() {
     if (this.addressForm.valid) {
-      
+      alert('Thanks!');
     }
   }
 }

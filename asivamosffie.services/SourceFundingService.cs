@@ -39,14 +39,31 @@ namespace asivamosffie.services
         public async Task<Respuesta> Insert(FuenteFinanciacion fuentefinanciacion)
         {
             Respuesta respuesta = new Respuesta();
+            var contributor = await _context.FuenteFinanciacion.Where(r => r.AportanteId == fuentefinanciacion.AportanteId).ToListAsync();
+            //Pendiente, No mostrar la fuente que ya fue utilizada
+            if (contributor != null)
+            { 
+            
+            }
 
+            Console.WriteLine(contributor);
+         
             try
             {
                 if (fuentefinanciacion != null)
                 {
-                    fuentefinanciacion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                    fuentefinanciacion.FechaCreacion = DateTime.Now;
-                    _context.Add(fuentefinanciacion);
+                  var SF = new FuenteFinanciacion()
+                    {
+                       //CantVigencias = fuentefinanciacion.CantVigencias,
+                       //FechaCreacion = fuentefinanciacion.FechaCreacion,
+                       //UsuarioCreacion = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.UsuarioCreacion),
+                       //FuenteRecursosCodigo = Helpers.Helpers.ConvertToUpercase(fuentefinanciacion.FuenteRecursosCodigo),
+                       //ValorFuente = fuentefinanciacion.ValorFuente,
+                       //FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId,
+                       
+
+                  };
+                    _context.Add(SF);
                     await _context.SaveChangesAsync();
                     respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = fuentefinanciacion, Code = ConstantMessagesContributor.OperacionExitosa };
                 }
@@ -81,27 +98,9 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion)
+        public Task<bool> Update(FuenteFinanciacion fuentefinanciacion)
         {
-            Respuesta _response = new Respuesta();
-
-            try
-            {
-                FuenteFinanciacion updateObj = await _context.FuenteFinanciacion.FindAsync(fuentefinanciacion.FuenteFinanciacionId);
-
-                updateObj.AportanteId = fuentefinanciacion.AportanteId;
-                updateObj.FuenteRecursosCodigo = fuentefinanciacion.FuenteRecursosCodigo;
-                updateObj.ValorFuente = fuentefinanciacion.ValorFuente;
-
-                _context.Update(updateObj); 
-                 await _context.SaveChangesAsync();
-
-                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesSourceFunding.EditadoCorrrectamente };
-            }
-            catch (Exception ex)
-            {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false,  Data = null,  Code = ConstantMessagesSourceFunding.Error, Message = ex.Message };
-            }
+            throw new NotImplementedException();
         }
     }
 }
