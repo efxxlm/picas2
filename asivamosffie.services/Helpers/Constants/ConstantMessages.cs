@@ -241,5 +241,28 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
- 
+    public class ConstantMessagesRegisterBudget
+    {
+
+        #region Mensajes Informativos
+        public const string EditadoCorrrectamente = "102";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    
 }
