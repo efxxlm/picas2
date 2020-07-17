@@ -16,7 +16,8 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId);
         Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante);
         Task<bool> Update(Respuesta aportante);
+
         Task<bool> Delete(int id);
+
     }
 }
-

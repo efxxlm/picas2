@@ -10,7 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerdos.component';
 
 @NgModule({
-  declarations: [BotonRegistrarAcuerdoComponent, RegistrarAcuerdoComponent,TablaAcuerdosComponent],
+  declarations: [BotonRegistrarAcuerdoComponent, RegistrarAcuerdoComponent, TablaAcuerdosComponent],
   imports: [
     CommonModule,
     GestionarAcuerdoCofinanciacionRoutingModule,

@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         }
 
         public int CofinanciacionId { get; set; }
-        public int? VigenciaCofinanciacionId { get; set; }
+        public int VigenciaCofinanciacionId { get; set; }
         public bool Eliminado { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
