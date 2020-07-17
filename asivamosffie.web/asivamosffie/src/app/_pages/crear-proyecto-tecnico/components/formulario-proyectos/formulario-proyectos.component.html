@@ -615,7 +615,7 @@
                   Mes
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="2" min="1" max="12" required (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="2" min="1" max="99" required (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
@@ -640,7 +640,7 @@
                   Mes
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="12" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="99" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     required type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
