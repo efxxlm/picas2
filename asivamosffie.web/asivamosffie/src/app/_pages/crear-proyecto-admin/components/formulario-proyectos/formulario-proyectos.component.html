@@ -1,8 +1,8 @@
 <div class="container text-center">
   <div class="text-right">
-      <a routerLink="/crearProyectoAdministrativo" mat-button color="primary" class="btn-regresar">
-          <img src="assets/img/icon/regresar.svg" alt="Regresar">
-      </a>
+    <a routerLink="/crearProyectoAdministrativo" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
   </div>
   <h1 class="title-menu--h1">
     Administrativo
@@ -45,7 +45,7 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="row" >
+            <div class="row">
               <div class="col-md-12">
                 <div class="row">
                   <div class="pr-1">
@@ -60,61 +60,59 @@
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
-                  </div>                  
+                  </div>
                 </div>
               </div>
               <div class="col-md-12">
                 <div class="row">
                   <div class="pr-1">
                     <label class="label-left">Valor de la fuente</label>
-                  </div>                  
+                  </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput [(ngModel)]="fuente.valorFuente" id="numAportes" maxlength="20" min="1" max="99999999999999999999" required type="number">
-                    </mat-form-field>                    
+                      <input matInput [(ngModel)]="fuente.valorFuente" id="numAportes" maxlength="20" min="1"
+                        max="99999999999999999999" required type="number" (keypress)="blockNumber($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    </mat-form-field>
                     <span class="contador">{{20 - fuente.valorFuente.toString().length}}</span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              
+
               <div class="col text-right">
                 <button mat-button color="warn" type="button" *ngIf="i<=aportantes.fuenteFinanciacion.length"
-                  class="btn-eliminar"  (click)="deleteFont(fuente,aportantes)">
+                  class="btn-eliminar" (click)="deleteFont(fuente,aportantes)">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente">
                   Eliminar fuente
                 </button>
-                <button mat-button color="warn" type="button"
-                  class="btn-eliminar"  (click)="addFont(aportantes)">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="addFont(aportantes)">
                   <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente">
                   Agregar otra fuente
                 </button>
               </div>
-            </div>            
+            </div>
           </mat-card-content>
-        </div>        
+        </div>
       </div>
     </mat-card>
     <div class="row">
       <div class="col text-right">
-        <button mat-button color="warn" type="button" *ngIf="proyectoAdmin.Aportante.length>1"
-          class="btn-eliminar"  (click)="deleteAportant(aportantes)">
+        <button mat-button color="warn" type="button" *ngIf="proyectoAdmin.Aportante.length>1" class="btn-eliminar"
+          (click)="deleteAportant(aportantes)">
           <img src="assets/img/icon/menos.svg" alt="Eliminar otro aportante">
           Eliminar aportante
         </button>
-        <button mat-button color="warn" type="button"
-          class="btn-eliminar"  (click)="addAportant()">
+        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="addAportant()">
           <img src="assets/img/icon/mas.svg" alt="Agregar otro aportante">
           Agregar otro aportante
         </button>
-      </div>    
-    </div>    
-</div>
-<div class="text-center animatedOpacity">
-  <button mat-button color="warn" class="btn-guardar"
-   *ngIf="proyectoAdmin.Aportante[0].fuenteFinanciacion[0].valorFuente>0" type="button"
-   (click)="onSubmit()">
-    <img src="assets/img/icon/guardar.svg" alt="Regresar">
-  </button>
-</div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center animatedOpacity">
+    <button mat-button color="warn" class="btn-guardar"
+      *ngIf="proyectoAdmin.Aportante[0].fuenteFinanciacion[0].valorFuente>0" type="button" (click)="onSubmit()">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+  </div>
