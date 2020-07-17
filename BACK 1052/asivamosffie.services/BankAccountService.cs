@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.services
 {
-    public class BankAccountService : IBankAccountService
+    public class BankAccountService: IBankAccountService
     {
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
@@ -52,7 +52,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
+                    return _response = new Respuesta { IsSuccessful = false,  IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
                 }
 
             }

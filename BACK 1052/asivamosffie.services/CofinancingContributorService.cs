@@ -56,7 +56,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
         {
             Respuesta _reponse = new Respuesta();
-            //Error:  //int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
+           //Error:  //int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
 
             try
             {
@@ -178,5 +178,6 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
             }
         }
+
     }
 }
