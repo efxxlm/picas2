@@ -146,7 +146,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRegisterBudgetById(int id)
         {
-            //Update
+            //update v2
             try
             {
                 var result = await _contributor.GetRegisterBudgetById(id);
