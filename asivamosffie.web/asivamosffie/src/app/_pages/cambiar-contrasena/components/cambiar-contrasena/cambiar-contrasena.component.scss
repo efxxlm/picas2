@@ -17,6 +17,7 @@
     &::before {
         content: '';
         display: inline-block;
+        background-color: #d21e18;
         background-color: var(--secondaryColor);
         height: 1em;
         width: 1em;
