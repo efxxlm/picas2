@@ -270,38 +270,34 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('entró');
-    if (this.datosAportantes.valid) {
-      // this.listaCofinancAportantes = [];
-      this.listaAportantes();
-      const cofinanciacion: Cofinanciacion =
-      {
-        vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
-        cofinanciacionAportante: this.listaCofinancAportantes,
-        cofinanciacionId: this.id
-      };
+    // console.log('entró');
+    // this.listaCofinancAportantes = [];
+    this.listaAportantes();
+    const cofinanciacion: Cofinanciacion =
+    {
+      vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
+      cofinanciacionAportante: this.listaCofinancAportantes,
+      cofinanciacionId: this.id
+    };
 
-      console.log(cofinanciacion);
+    console.log(cofinanciacion);
 
-      this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
-        respuesta => {
-          this.verificarRespuesta(respuesta);
-        },
-        err => {
-          let mensaje: string;
-          if (err.error.message) {
-            mensaje = err.error.message;
-          } else {
-            mensaje = err.message;
-          }
-          this.openDialog('Error', mensaje);
-        },
-        () => {
-          // console.log('terminó');
-        });
-
-
-    }
+    this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
+      respuesta => {
+        this.verificarRespuesta(respuesta);
+      },
+      err => {
+        let mensaje: string;
+        if (err.error.message) {
+          mensaje = err.error.message;
+        } else {
+          mensaje = err.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        // console.log('terminó');
+      });
   }
 
   private verificarRespuesta(respuesta: Respuesta) {
