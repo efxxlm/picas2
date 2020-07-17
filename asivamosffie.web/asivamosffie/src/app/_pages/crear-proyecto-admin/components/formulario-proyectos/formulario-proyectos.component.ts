@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { FuenteFinanciacion, Aportante, ProyectoAdministrativo, Listados, ProjectService } from 'src/app/core/_services/project/project.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -11,28 +11,26 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './formulario-proyectos.component.html',
   styleUrls: ['./formulario-proyectos.component.scss']
 })
-export class FormularioProyectosComponent {
+export class FormularioProyectosComponent implements OnInit {
 
 
-  proyectoAdmin:ProyectoAdministrativo;
-  listadoAportantes:Dominio[];
-  listadoFuentes:Dominio[];
+  proyectoAdmin: ProyectoAdministrativo;
+  listadoAportantes: Dominio[];
+  listadoFuentes: Dominio[];
 
-  addFont(aportante:Aportante) {
-    aportante.fuenteFinanciacion.push({valorFuente:0,fuenteRecursosCodigo:""});
+  addFont(aportante: Aportante) {
+    aportante.fuenteFinanciacion.push({ valorFuente: 0, fuenteRecursosCodigo: '' });
   }
 
-  deleteFont(key:FuenteFinanciacion,aportante:Aportante)
-  {
+  deleteFont(key: FuenteFinanciacion, aportante: Aportante) {
     const index = this.proyectoAdmin.Aportante.indexOf(aportante, 0);
     const index2 = this.proyectoAdmin.Aportante[index].fuenteFinanciacion.indexOf(key, 0);
     if (index2 > -1) {
       this.proyectoAdmin.Aportante[index].fuenteFinanciacion.splice(index2, 1);
-    } 
+    }
   }
 
-  onchangeFont(i:number)
-  {
+  onchangeFont(i: number) {
     console.log(this.proyectoAdmin);
     console.log(i);
     this.projectServices.listaFuentes(this.proyectoAdmin.Aportante[i].aportanteId).subscribe(respuesta => {
@@ -53,14 +51,19 @@ export class FormularioProyectosComponent {
         // console.log('terminó');
       });
   }
-  ngOnInit()
-  {
+
+  ngOnInit() {
     this.projectServices.ListAdministrativeProject().subscribe(respuesta => {
-      let id=0;
+      let id = 0;
       respuesta.forEach(element => {
-        id=element.proyectoId
+        id = element.proyectoId;
       });
-      this.proyectoAdmin={identificador:(id+1).toString(),Aportante:[{aportanteId:0,nombreAportanteId:0,tipoAportanteId:0,fuenteFinanciacion:[{valorFuente:0,fuenteRecursosCodigo:""}]}]};    
+      this.proyectoAdmin = { identificador: (id + 1).toString(), Aportante: [{
+        aportanteId: 0,
+        nombreAportanteId: 0,
+        tipoAportanteId: 0,
+        fuenteFinanciacion: [{ valorFuente: 0, fuenteRecursosCodigo: '' }]
+      }] };
     },
       err => {
         let mensaje: string;
@@ -76,8 +79,8 @@ export class FormularioProyectosComponent {
       () => {
         // console.log('terminó');
       });
-    
-    //this.listadoAportantes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
+
+    // this.listadoAportantes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
     this.commonServices.listaNombreAportante().subscribe(respuesta => {
       this.listadoAportantes = respuesta;
     },
@@ -96,30 +99,51 @@ export class FormularioProyectosComponent {
         // console.log('terminó');
       });
 
-      
-    //this.listadoFuentes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
-    
+
+    // this.listadoFuentes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
+
   }
-  
-  addAportant()
-  {       
-    this.proyectoAdmin.Aportante.push({aportanteId:0,nombreAportanteId:0,tipoAportanteId:0,fuenteFinanciacion:[{valorFuente:0,fuenteRecursosCodigo:""}]});
+
+  blockNumber(e: { keyCode: any; }) {
+    const tecla = e.keyCode;
+    if (tecla === 8 ) { return true; } // Tecla de retroceso (para poder borrar)
+    if (tecla === 48) { return true; } // 0
+    if (tecla === 49) { return true; } // 1
+    if (tecla === 50) { return true; } // 2
+    if (tecla === 51) { return true; } // 3
+    if (tecla === 52) { return true; } // 4
+    if (tecla === 53) { return true; } // 5
+    if (tecla === 54) { return true; } // 6
+    if (tecla === 55) { return true; } // 7
+    if (tecla === 56) { return true; } // 8
+    if (tecla === 57) { return true; } // 9
+    const patron = /1/; // ver nota
+    const te = String.fromCharCode(tecla);
+    return patron.test(te);
   }
-  deleteAportant(key:Aportante)
-  {
+
+  addAportant() {
+    this.proyectoAdmin.Aportante.push({
+      aportanteId: 0,
+      nombreAportanteId: 0,
+      tipoAportanteId: 0,
+      fuenteFinanciacion: [{ valorFuente: 0, fuenteRecursosCodigo: '' }]
+    });
+  }
+  deleteAportant(key: Aportante) {
     const index = this.proyectoAdmin.Aportante.indexOf(key, 0);
     if (index > -1) {
       this.proyectoAdmin.Aportante.splice(index, 1);
-    }    
+    }
   }
 
 
   constructor(private fb: FormBuilder,
-    public commonServices: CommonService,
-    public dialog: MatDialog,
-    public projectServices: ProjectService,
-    private route: ActivatedRoute,
-    private router: Router) {}
+              public commonServices: CommonService,
+              public dialog: MatDialog,
+              public projectServices: ProjectService,
+              private route: ActivatedRoute,
+              private router: Router) { }
 
   onSubmit() {
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
