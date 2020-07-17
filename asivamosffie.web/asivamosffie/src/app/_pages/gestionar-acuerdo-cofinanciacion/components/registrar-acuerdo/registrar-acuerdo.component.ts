@@ -52,6 +52,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
        if (param['id']){
         this.id = param['id'];
         this.cofinanciacionService.getAcuerdoCofinanciacionById(this.id).subscribe(cof => {
+          this.mostrarDocumentosDeApropiacion=true;
             this.datosAportantes.setControl('vigenciaEstado',this.fb.control(cof.vigenciaCofinanciacionId, Validators.required));
             this.datosAportantes.setControl('numAportes', this.fb.control(cof.cofinanciacionAportante.length));
 

@@ -28,6 +28,11 @@ export class CofinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/CreateorUpdateCofinancing`,cofinanciacion);
   }
 
+  EliminarCofinanciacionByCofinanciacionId(idcof:number)
+  {    
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarCofinanciacionByCofinanciacionId?pCofinancicacionId=${idcof}`,null);
+  }
+
   listaAcuerdosCofinanciacion(){ 
     return this.http.get<Cofinanciacion[]>(`${environment.apiUrl}/Cofinancing/GetListCofinancing`);
   }

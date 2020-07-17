@@ -654,7 +654,7 @@ namespace asivamosffie.services
 
                 int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == OrigenId && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == 1 && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
 
                 List<TemporalProyecto> ListTemporalProyecto = await _context.TemporalProyecto.Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado).ToListAsync();
 
