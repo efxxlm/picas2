@@ -131,13 +131,15 @@ div.mat-paginator {
     top: .5em;
 }
 
-.btn-table {
-    margin: .5em;
+.btn-table,
+.btn-table.mat-raised-button.mat-accent {
+    margin: .5em auto !important;
     line-height: 1;
     display: block;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     width: 100%;
+    max-width: 9em;
 }
 .btn-table:hover {
     background-color: #d1d1d1;
