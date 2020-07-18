@@ -19,6 +19,7 @@
         public const string Crear_Contratacion_Proyecto = "16";
 
         public const string Crear_Editar_Contratacion_Proyecto = "18";
+        public const string Crear_Editar_Contratacion_Proyecto_Aportante = "19";
 
 
     }
