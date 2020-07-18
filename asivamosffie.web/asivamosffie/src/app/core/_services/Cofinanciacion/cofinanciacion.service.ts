@@ -5,6 +5,7 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Dominio } from '../common/common.service';
+import { RegistroPresupuestal } from '../fuenteFinanciacion/fuente-financiacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -42,22 +43,23 @@ export class CofinanciacionService {
   }
 
   listaAportantesByTipoAportante(pTipoAportanteID: number){
-    return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`).
-            pipe( map( apo => {
-                let lista: Dominio[] = [];
-                apo.forEach( a => {
-                  let dom: Dominio = {
-                    dominioId: a.nombreAportanteId,
-                    tipoDominioId: 0,
-                    nombre: '',
-                    codigo: '0',
-                    activo: true
-                  }
-                  lista.push(dom);
-                })
+    return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`);
+    
+            // pipe( map( apo => {
+            //     let lista: Dominio[] = [];
+            //     apo.forEach( a => {
+            //       let dom: Dominio = {
+            //         dominioId: a.nombreAportanteId,
+            //         tipoDominioId: 0,
+            //         nombre: '',
+            //         codigo: '0',
+            //         activo: true
+            //       }
+            //       lista.push(dom);
+            //     })
 
-                return lista;
-            }) )
+            //     return lista;
+            // }) )
   }
 }
 
@@ -78,7 +80,9 @@ export interface CofinanciacionAportante{
   nombreAportanteId?: any,
   municipioId: number,
   cofinanciacionDocumento: CofinanciacionDocumento[],
-  eliminado?:boolean
+  eliminado?:boolean,
+  nombreAportante?: string,
+  registroPresupuestal?: RegistroPresupuestal[],
 }
 
 export interface CofinanciacionDocumento{
@@ -92,5 +96,6 @@ export interface CofinanciacionDocumento{
   numeroAcuerdo?: number,
   fechaAcuerdo: Date,
   valorTotalAportante: string,
-  eliminado?:boolean
+  eliminado?:boolean,
+  tipoDocumento?: Dominio
 }

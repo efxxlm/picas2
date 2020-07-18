@@ -17,7 +17,7 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString()) || tipoAportante.Tercero.includes(tipoAportanteId.toString())" >
+        <div class="row" >
           <div class="pr-1">
             <label class="label-left">Nombre del aportante</label>
           </div>
@@ -25,7 +25,7 @@
             <mat-form-field class="select-width">
               <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportante()">
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
-                  {{ nombreAportantes.nombre }}
+                  {{ nombreAportantes.nombreAportante }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -223,6 +223,7 @@
                       <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista"
                         [value]="fuenteDeRecursos1">
                         {{ fuenteDeRecursos1.nombre }}
+                        <input formControlName="fuenteFinanciacionId" type="hidden" >
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -396,8 +397,8 @@
                           </div>
                           <div class="col">
                             <mat-radio-group class="radioInput" formControlName="extra">
-                              <mat-radio-button value="no">Sí</mat-radio-button>
-                              <mat-radio-button value="si">No</mat-radio-button>
+                              <mat-radio-button value="true">Sí</mat-radio-button>
+                              <mat-radio-button value="false">No</mat-radio-button>
                             </mat-radio-group>
                           </div>
                         </div>
@@ -442,6 +443,7 @@
   </form>
 
   <pre>
-    {{addressForm.value | json}}
+    -- {{addressForm.value | json}} 
+    {{ data | json }}
   </pre>
 </div>

@@ -34,8 +34,8 @@ export class BtnRegistrarComponent implements OnInit {
   onSubmit() {
     if (this.regitrarAporteForm.valid) {
       let idTipoAportante: number;
-      idTipoAportante = this.regitrarAporteForm.get('tipoAportante').value.codigo
-      this.router.navigate(['./registrarFuentes', idTipoAportante]);
+      idTipoAportante = this.regitrarAporteForm.get('tipoAportante').value.dominioId
+      this.router.navigate(['./registrarFuentes', idTipoAportante,0]);
     }
   }
 

@@ -84,7 +84,7 @@ interface TipoAportante{
 }
 
 export const TiposAportante: TipoAportante = {
-  FFIE:   ["1"],
-  ET:     ["2"],
-  Tercero:["3"]
+  FFIE:   ["6"],
+  ET:     ["9"],
+  Tercero:["10"]
 }

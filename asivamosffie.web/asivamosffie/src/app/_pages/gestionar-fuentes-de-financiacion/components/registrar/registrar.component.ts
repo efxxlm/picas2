@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
-import { CofinanciacionService } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
+import { CofinanciacionService, CofinanciacionAportante } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute } from '@angular/router'
+import { FuenteFinanciacionService, FuenteFinanciacion, CuentaBancaria, RegistroPresupuestal, VigenciaAporte } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CuentaBancariaService } from 'src/app/core/_services/cuentaBancaria/cuenta-bancaria.service';
 
 @Component({
   selector: 'app-registrar',
@@ -14,7 +18,7 @@ export class RegistrarComponent implements OnInit {
   addressForm: FormGroup;
 
   maxDate: Date;
-  nombresAportantes: Dominio[] = [];
+  nombresAportantes: CofinanciacionAportante[] = [];
   fuentesDeRecursosLista: Dominio[] = [];
   bancos: Dominio[] = [];
   VigenciasAporte = [];
@@ -22,103 +26,169 @@ export class RegistrarComponent implements OnInit {
   municipios: Localizacion[] = []
   tipoAportanteId: number = 0;
   tipoAportante = TiposAportante;
-  
+  idAportante: number = 0;
+  listaFuentes: FuenteFinanciacion[] = [];
+
+  data;
   
   constructor(private fb: FormBuilder,
               private commonService: CommonService,
               private cofinanciacionService: CofinanciacionService,
-              private activatedRoute: ActivatedRoute
+              private activatedRoute: ActivatedRoute,
+              public dialog: MatDialog,
+              private fuenteFinanciacionService: FuenteFinanciacionService
               ) 
               { 
                 this.maxDate = new Date();
               }
+
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  }
+
+  EditMode(){
+
+    this.fuenteRecursosArray.clear();
+
+    let aportante = this.nombresAportantes.find( nom => nom.cofinanciacionAportanteId == this.idAportante );
+    this.addressForm.get('nombreAportante').setValue(aportante);
+    this.changeNombreAportante();
+
+    let i =0;
+    this.listaFuentes.filter( f => f.aportanteId == this.idAportante).forEach( ff => {
+      
+      let grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
+      let fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find( f => f.codigo == ff.fuenteRecursosCodigo );
+      //let vigenciasSeleccionada = this.VigenciasAporte.find() 
+      
+      grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
+      grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
+
+      let listaVigencias = grupo.get('vigencias') as FormArray;
+      let listaCuentas = grupo.get('cuentasBancaria') as FormArray; 
+
+      ff.vigenciaAporte.forEach( v =>  {
+        
+        listaVigencias.push(this.createVigencia());
+
+      })
+
+
+      ff.cuentaBancaria.forEach( ba => {
+      //   let controlBanco: FormGroup;
+      //   let bancoSeleccionado: Dominio = this.bancos.find( b => b.codigo == ba.bancoCodigo ) ;
+
+      //   controlBanco = this.createCuentaBancariaEdit(ba.numeroCuentaBanco, ba.nombreCuentaBanco, ba.codigoSifi,
+      //                                                 ba.tipoCuentaCodigo, bancoSeleccionado, ba.exenta)
+
+         listaCuentas.push(this.createCuentaBancaria());
+         console.log(listaCuentas);
+       })
+      //grupo.get('cuentasBancaria').setValue(listaCuentas);
+      
+      this.fuenteRecursosArray.push(grupo);
+      //this.CambioNumerovigencia(i);      
+      i++;
+    });
+
+  }
+
+  createCuentaBancariaEdit(pNumeroCuenta: string, pNombreCuenta: string, pCodigoSIFI: string, 
+                          pTipoCuenta: string, pBanco: Dominio, pExtra: boolean): FormGroup {
+    return this.fb.group({
+      numeroCuenta: [null, Validators.compose([
+        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+      ],
+      nombreCuenta: [null, Validators.compose([
+        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      ],
+      codigoSIFI: [null, Validators.compose([
+        Validators.required, Validators.minLength(6), Validators.maxLength(6)])
+      ],
+      tipoCuenta: ['free', Validators.required],
+      banco: [null, Validators.required],
+      extra: ['free', Validators.required]
+    });
+  }
+
+  crearFuenteEdit(pValorFuenteRecursos: number): FormGroup {
+    return this.fb.group({
+      fuenteRecursos: [null, Validators.required],
+      valorFuenteRecursos: [pValorFuenteRecursos, Validators.compose([
+        Validators.required, Validators.minLength(2), Validators.maxLength(2)])
+      ],
+      cuantasVigencias: [1, Validators.required],
+      vigencias: this.fb.array([]),
+      fuenteFinanciacionId: [null],
+      cuentasBancaria: this.fb.array([
+      ]),
+    });
+  }
 
   ngOnInit(): void {
 
     this.VigenciasAporte = this.commonService.vigenciasDesde2015();
     this.activatedRoute.params.subscribe( param =>  {
       this.tipoAportanteId = param['idTipoAportante'];
-      console.log(this.tipoAportanteId, param);
+      this.idAportante = param['idAportante'];
+
+      //console.log(this.tipoAportanteId, param);
 
       forkJoin([
         this.commonService.listaNombreAportante(),
         this.commonService.listaFuenteRecursos(),
         this.commonService.listaBancos(),
         this.commonService.listaDepartamentos(),
-        this.cofinanciacionService.listaAportantesByTipoAportante(this.tipoAportanteId)
+        this.cofinanciacionService.listaAportantesByTipoAportante(this.tipoAportanteId),
+        this.fuenteFinanciacionService.listaFuenteFinanciacion()
       ]).subscribe( res => {
   
-        if (this.tipoAportante.Tercero.includes(this.tipoAportanteId.toString())){
-          let nombresAportantesTemp: Dominio[] = res[0];  
+        this.nombresAportantes = res[4];
 
-          let listaTemp: Dominio[] = res[4];
+        let nombresAportantesTemp: Dominio[] = res[0];
 
-          listaTemp.forEach( apo => {
-            let s = nombresAportantesTemp.find( temp => temp.dominioId == apo.dominioId);
-            if(s){
-              console.log(s, listaTemp, apo.dominioId);
-              this.nombresAportantes.push(s);    
-            }
-          });
+        this.nombresAportantes.forEach( nom => {
+          let s = nombresAportantesTemp.find( nomTemp => nomTemp.dominioId == nom.nombreAportanteId )
+          if (s){
+            nom.nombreAportante = s.nombre;
+          }
+        });
 
-        }else{
-          this.nombresAportantes = res[0];
-        }
-        
-  
          this.fuentesDeRecursosLista = res[1];
          this.bancos = res[2];
          this.departamentos = res[3];
+         this.listaFuentes = res[5];
+
+         if (this.idAportante > 0)
+          this.EditMode();
+
       });
     })
 
     
 
     this.addressForm = this.fb.group({
-      nombreAportante: [null, Validators.required],
-      documentoApropiacion: [null, Validators.required],
+      nombreAportante: [null],
+      documentoApropiacion: [null],
       numerodocumento: [null, Validators.compose([
-        Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+        Validators.minLength(10), Validators.maxLength(10)])
       ],
       vigenciaAcuerdo:[],
       departamento: [],
       municipio: [],
-      tieneRP: [null, Validators.required],
+      tieneRP: [null],
       cuantosRP: [null,Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])]
-      ,registrosPresupuestales: this.fb.array([
-        // this.fb.group({
-        //   numeroRP:[null],
-        //   fecha: [null]
-        // })
-      ])
-      ,fuenteRecursosArray: this.fb.array([
-        this.fb.group({
-          fuenteRecursos: [null, Validators.required],
-          valorFuenteRecursos: [null, Validators.compose([
-            Validators.required, Validators.minLength(2), Validators.maxLength(2)])
-          ],
-          cuantasVigencias: [null, Validators.required],
-          vigencias: this.fb.array([]),
-          cuentasBancaria: this.fb.array([
-            this.fb.group({
-              numeroCuenta: [null, Validators.compose([
-                Validators.required, Validators.minLength(5), Validators.maxLength(50)])
-              ],
-              nombreCuenta: [null, Validators.compose([
-                Validators.required, Validators.minLength(5), Validators.maxLength(100)])
-              ],
-              codigoSIFI: [null, Validators.compose([
-                Validators.required, Validators.minLength(6), Validators.maxLength(6)])
-              ],
-              tipoCuenta: ['free', Validators.required],
-              banco: [null, Validators.required],
-              extra: ['free', Validators.required]
-            })
-          ]),
-        })]),
+          Validators.minLength(5), Validators.maxLength(50)])]
+      ,registrosPresupuestales: this.fb.array([])
+      ,fuenteRecursosArray: this.fb.array([]),
     });
-    console.log(this.addressForm);
+
+    let fuentes = this.addressForm.get('fuenteRecursosArray') as FormArray;
+    fuentes.push(this.crearFuente());
   }
 
   CambioNumeroRP(){
@@ -146,9 +216,21 @@ export class RegistrarComponent implements OnInit {
   }
   
   changeNombreAportante(){
-    this.cofinanciacionService.getDocumentoApropiacionByAportante(45).subscribe( listDoc => {
-      this.addressForm.get('documentoApropiacion').setValue(listDoc[0].numeroActa);
-    });
+
+    if (this.addressForm.get('nombreAportante').value){
+
+      this.idAportante = this.addressForm.get('nombreAportante').value.cofinanciacionAportanteId;
+      
+      this.cofinanciacionService.getDocumentoApropiacionByAportante(this.idAportante).subscribe( listDoc => {
+        if (listDoc.length > 0)
+        {
+          this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
+          this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
+        }
+        else
+          this.openDialog("Validacion","No tiene documentos de apropiacion");
+      });
+    }
   }
 
   get fuenteRecursosArray() {
@@ -214,6 +296,13 @@ export class RegistrarComponent implements OnInit {
       ],
       cuantasVigencias: [null, Validators.required],
       vigencias: this.fb.array([]),
+      fuenteFinanciacionId: [null],
+      departamento: [],
+      municipio: [],
+      tieneRP: [null],
+      cuantosRP: [null,Validators.compose([
+          Validators.minLength(5), Validators.maxLength(50)])]
+      ,registrosPresupuestales: this.fb.array([]),
       cuentasBancaria: this.fb.array([
         this.fb.group({
           numeroCuenta: [null, Validators.compose([
@@ -247,7 +336,98 @@ export class RegistrarComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.addressForm.valid) {
+
+  if (this.addressForm.valid) {
+
+      let lista: FuenteFinanciacion[] = [];
+      let listaRP: RegistroPresupuestal[] = []; 
+
+      let usuario = '';
+      if (localStorage.getItem('actualUser')){
+        usuario = localStorage.getItem('actualUser'); 
+        usuario = JSON.parse(usuario).email;
+      }     
+
+      this.fuenteRecursosArray.controls.forEach( controlFR => {
+        let fuente: FuenteFinanciacion = {
+          aportanteId: this.idAportante,
+          fuenteRecursosCodigo: controlFR.get('fuenteRecursos').value.codigo,
+          valorFuente: controlFR.get('valorFuenteRecursos').value,
+          cantVigencias: controlFR.get('cuantasVigencias').value,
+          cuentaBancaria: [],
+          vigenciaAporte:[],
+          
+        }
+
+        let vigencias = controlFR.get('vigencias') as FormArray;
+
+        if (vigencias){
+          vigencias.controls.forEach( controlVi => {
+            let vigenciaAporte: VigenciaAporte = {
+              fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
+              tipoVigenciaCodigo: controlVi.get('vigenciaAportante').value,
+              valorAporte: controlVi.get('valorVigencia').value,
+              vigenciaAporteId:0, 
+              fechaCreacion: new Date,
+              usuarioCreacion: usuario
+            }
+
+            fuente.vigenciaAporte.push(vigenciaAporte);
+
+            })
+          }
+
+        let cuentas = controlFR.get('cuentasBancaria') as FormArray;
+        cuentas.controls.forEach(controlBa => {
+          let cuentaBancaria: CuentaBancaria = {
+            cuentaBancariaId: 0,
+            bancoCodigo: controlBa.get('banco').value.codigo,
+            codigoSifi: controlBa.get('codigoSIFI').value,
+            exenta: controlBa.get('extra').value,
+            fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
+            nombreCuentaBanco: controlBa.get('nombreCuenta').value,
+            numeroCuentaBanco: controlBa.get('numeroCuenta').value,
+            tipoCuentaCodigo: controlBa.get('tipoCuenta').value,
+            fechaCreacion: new Date,
+            usuarioCreacion: usuario
+          };
+          
+          fuente.cuentaBancaria.push(cuentaBancaria); 
+        });
+
+        let registrosPresupuestales = controlFR.get('registrosPresupuestales') as FormArray;
+        if (registrosPresupuestales)
+            {
+              registrosPresupuestales.controls.forEach( controlRP => {
+                let registroPresupuestal: RegistroPresupuestal = {
+                  aportanteId: this.idAportante,
+                  fechaRp: controlRP.get('numeroRP').value,
+                  numeroRp: controlRP.get('fecha').value,
+                  registroPresupuestalId: 0,
+                  fechaCreacion: new Date,
+                  usuarioCreacion: usuario
+                }
+                listaRP.push(registroPresupuestal);
+              })
+            }
+
+        lista.push(fuente);
+      });
+     
+     
+
+      lista.forEach( ff => {
+        if (ff.fuenteFinanciacionId > 0)
+          this.fuenteFinanciacionService.registrarFuenteFinanciacion(ff).subscribe( respuesta => {
+          });
+        else
+          this.fuenteFinanciacionService.modificarFuenteFinanciacion(ff).subscribe( respuesta => {
+            
+          }) 
+      })
+
+      this.data = lista;
+
       alert('Thanks!');
     }
   }
