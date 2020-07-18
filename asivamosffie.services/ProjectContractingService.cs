@@ -225,7 +225,7 @@ namespace asivamosffie.services
                         //TODO: Poner contratistaID y los demas campos
                         TipoSolicitudCodigo = tipoSolicitudCodigo,
                         FechaSolicitud = DateTime.Now,
-                        NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()                    
+                        NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
                         //Contratista = ContratistaId 
                         //EsObligacionEspecial = (bool),
                         //ConsideracionDescripcion = "" 
@@ -290,7 +290,7 @@ namespace asivamosffie.services
                     Pcontratacion.FechaCreacion = DateTime.Now;
                     Pcontratacion.FechaSolicitud = DateTime.Now;
                     //Metodo que valida si todos los registros estan completos retorna true si completos
-                    Pcontratacion.RegistroCompleto = ValidarEstado(Pcontratacion); 
+                    Pcontratacion.RegistroCompleto = ValidarEstado(Pcontratacion);
                     Pcontratacion.NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion();
                     _context.Contratacion.Add(Pcontratacion);
                 }
@@ -329,8 +329,6 @@ namespace asivamosffie.services
 
         }
 
-
-
         public bool ValidarEstado(Contratacion contratacion)
         {
 
@@ -341,12 +339,77 @@ namespace asivamosffie.services
              || (contratacion.EsObligacionEspecial != null)
              || !string.IsNullOrEmpty(contratacion.ConsideracionDescripcion))
             {
-                return  true;
+                return true;
             }
-            else
+            return false;
+        }
+
+
+        public async Task<Respuesta> CreateEditContratacionProyecto(ContratacionProyecto contratacionProyecto)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+            string strAccion = " ";
+
+            try
             {
-                return  false;
-            } 
+
+                if (contratacionProyecto.ContratacionProyectoId != null || contratacionProyecto.ContratacionProyectoId == 0)
+                {
+                    strAccion = "CREAR CONTRATACION PROYECTO";
+
+                    //Auditoria No guardo usuario Creacion Porque ya viene desde el controller
+
+                    contratacionProyecto.FechaCreacion = DateTime.Now;
+                    contratacionProyecto.Eliminado = false;
+
+                    _context.ContratacionProyecto.Add(contratacionProyecto);
+                    _context.SaveChanges();
+                }
+
+                else
+                {
+                    strAccion = "EDITAR CONTRATACION PROYECTO";
+
+                    ContratacionProyecto contratacionProyectoAntiguo = _context.ContratacionProyecto.Find(contratacionProyecto.ContratacionProyectoId); 
+                    //Auditoria 
+                    contratacionProyectoAntiguo.FechaModificacion = DateTime.Now;
+                    contratacionProyectoAntiguo.UsuarioModificacion = contratacionProyecto.UsuarioCreacion;
+
+                    //registros
+                    contratacionProyectoAntiguo.ContratacionId = contratacionProyecto.ContratacionId;
+                    contratacionProyectoAntiguo.ProyectoId = contratacionProyecto.ProyectoId;
+                    contratacionProyectoAntiguo.EsReasignacion = contratacionProyecto.EsReasignacion;
+                    contratacionProyectoAntiguo.EsAvanceObra = contratacionProyecto.EsAvanceObra;
+
+                    contratacionProyectoAntiguo.RequiereLicencia = contratacionProyecto.RequiereLicencia;
+                    contratacionProyectoAntiguo.LicenciaVigente = contratacionProyecto.LicenciaVigente;
+                    contratacionProyectoAntiguo.NumeroLicencia = contratacionProyecto.NumeroLicencia;
+                    contratacionProyectoAntiguo.FechaVigencia = contratacionProyecto.FechaVigencia;
+                     
+                    _context.SaveChanges();
+                }
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesProyecto.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionContrataicionProyecto, contratacionProyecto.UsuarioCreacion, strAccion)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesProyecto.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionContrataicionProyecto, contratacionProyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
         }
     }
 }
