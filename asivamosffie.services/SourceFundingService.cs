@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -26,8 +28,54 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetISourceFunding()
         {
-            return await _context.FuenteFinanciacion.ToListAsync();
+            return await _context.FuenteFinanciacion.Include(x => x.ControlRecurso).Include(x => x.CuentaBancaria).IncludeFilter(x => x.VigenciaAporte.Where(r => !(bool)r.Eliminado)).ToListAsync();
         }
+
+        public async Task<List<FuenteFinanciacion>> GetSourceFundingByIdAportante(int idAportante)
+        {
+            return await _context.FuenteFinanciacion.Where(r => r.AportanteId == idAportante).ToListAsync();
+
+        }
+        public async Task<List<SourceFundingGrid>> GetSourceFundingGrid()
+        {
+            List<SourceFundingGrid> ListSourceFundingGrid = new List<SourceFundingGrid>();
+
+            try
+            {
+                List<CofinanciacionAportante> Listsource = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).Include(r => r.FuenteFinanciacion).Include(r => r.AportanteFuenteFinanciacion).Distinct().ToListAsync();
+
+                foreach (var source in Listsource)
+                {
+                    //  Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+                    Dominio ap = await _commonService.GetDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_aportante);
+                    Dominio fr = await _commonService.GetDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+
+                    SourceFundingGrid SourceGrid = new SourceFundingGrid
+                    {
+                        TipoAportanteId = source.TipoAportanteId,
+                        TipoAportante = ap.Nombre
+                        //NombreAportante = source.
+                        //FuenteRecurso = fr.Nombre
+ 
+                    };
+                    ListSourceFundingGrid.Add(SourceGrid);
+                }
+
+                return ListSourceFundingGrid;
+
+
+            }
+            catch (Exception ex)
+            {
+                return ListSourceFundingGrid;
+
+            }
+
+
+
+        }
+
+
 
         public async Task<FuenteFinanciacion> GetISourceFundingById(int id)
         {

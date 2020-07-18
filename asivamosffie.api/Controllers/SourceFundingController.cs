@@ -37,6 +37,10 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -52,6 +56,27 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetSourceFundingGrid")]
+        [HttpGet]
+        public async Task<List<SourceFundingGrid>> GetSourceFundingGrid()
+        {
+
+            string pUsuarioModifico = "";
+            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _sourceFunding.GetSourceFundingGrid();
+            return respuesta;
+
+        }
+
+        [Route("GetSourceFundingByIdAportante")]
+        [HttpGet]
+        public async Task<List<FuenteFinanciacion>> GetSourceFundingByIdAportante(int idAportante)
+        {
+
+            var response = await _sourceFunding.GetSourceFundingByIdAportante(idAportante);
+            return response;
+
+        }
 
         // Agregar Fuente de recursos
         [HttpPost]
