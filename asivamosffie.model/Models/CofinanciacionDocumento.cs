@@ -27,6 +27,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual CofinanciacionAportante CofinanciacionAportante { get; set; }
+        public virtual Dominio TipoDocumento { get; set; }
         public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace asivamosffie.model.Models
         public string LocalizacionIdMunicipio { get; set; }
         public int InstitucionEducativaId { get; set; }
         public int SedeId { get; set; }
-        public bool? EnConvocatoria { get; set; }
+        public bool EnConvocatoria { get; set; }
         public int? ConvocatoriaId { get; set; }
         public int CantPrediosPostulados { get; set; }
         public string TipoPredioCodigo { get; set; }

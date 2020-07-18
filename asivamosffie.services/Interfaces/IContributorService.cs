@@ -15,8 +15,14 @@ namespace asivamosffie.services.Interfaces
         Task<CofinanciacionAportante> GetContributorById(int id);
         Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId);
         Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante);
-        Task<bool> Update(Respuesta aportante);
-        Task<bool> Delete(int id);
+        Task<Respuesta> Update(CofinanciacionAportante CofnaAportante);
+
+
+        Task<ActionResult<List<RegistroPresupuestal>>> GetRegisterBudget();
+        Task<RegistroPresupuestal> GetRegisterBudgetById(int id);
+        Task<Respuesta> BudgetRecords(RegistroPresupuestal registroPresupuestal);
+
+        Task<Respuesta> UpdateBudgetRegister(RegistroPresupuestal registroPresupuestal);
+
     }
 }
-

@@ -67,6 +67,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        [HttpPut]
+        public async Task<IActionResult> put(FuenteFinanciacion fuentefinanciacion)
+        {
+            try
+            {
+                var result = await _sourceFunding.Update(fuentefinanciacion);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
