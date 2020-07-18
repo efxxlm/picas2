@@ -1,10 +1,12 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,6 +33,54 @@ namespace asivamosffie.services
             return await _context.ControlRecurso.FindAsync(id);
         }
 
+
+        public async Task<List<ResourceControlGrid>> GetResourceControlBySourceId(int idFuente)
+        {
+            List<ResourceControlGrid> ListResourceControlGrid = new List<ResourceControlGrid>();
+
+            try// List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r => r.ProyectoPredio).Distinct().ToListAsync();
+            {
+                List<ControlRecurso> ListControlRecurso = await _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == idFuente).ToListAsync();
+
+                foreach (var Recurso in ListControlRecurso)
+                {
+
+                    Dominio ff = await _commonService.GetDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+                    Dominio cb = await _commonService.GetDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+                    // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+
+                    ResourceControlGrid grid = new ResourceControlGrid
+                    {
+                        ControlRecursoId = Recurso.ControlRecursoId,
+                        FuenteFinanciacionId = Recurso.FuenteFinanciacionId,
+                        FuenteFinanciacionText = ff.Nombre,
+                        //CuentaBancariaText = ff.
+                        //RegistroPresupuestalText
+                        //VigenciaAporteText
+                        //FechaConsignacion
+                        //ValorConsignacion
+
+                    };
+
+                    ListResourceControlGrid.Add(grid);
+                }
+
+                return ListResourceControlGrid;
+
+
+            }
+            catch (Exception ex)
+            {
+                return ListResourceControlGrid;
+
+            }
+        }
+
+
+        //public async Task<List<ControlRecurso>> GetResourceControlBySourceId(int idFuente)
+        //{
+        //    return await _context.ControlRecurso.Include(x => x.FuenteFinanciacion).Where(r => r.FuenteFinanciacionId == idFuente).ToListAsync();
+        //}
 
         public async Task<List<ControlRecurso>> GetResourceControlGrid()
         {

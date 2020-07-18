@@ -11,7 +11,8 @@ namespace asivamosffie.services.Interfaces
     {
         Task<List<FuenteFinanciacion>> GetISourceFunding();
         Task<FuenteFinanciacion> GetISourceFundingById(int id);
-
+        Task<List<FuenteFinanciacion>> GetSourceFundingByIdAportante(int idAportante);
+        Task<List<SourceFundingGrid>> GetSourceFundingGrid(int fuenteId);
         Task<Respuesta> Insert(FuenteFinanciacion fuentefinanciacion);
 
         Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion);

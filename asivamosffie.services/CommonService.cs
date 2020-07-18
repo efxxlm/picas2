@@ -39,6 +39,13 @@ namespace asivamosffie.services
             return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync(); 
         }
 
+        
+        public async Task<Dominio> GetDominioByIdTipoDominio(int pIdTipoDominio)
+        {
+            return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).FirstOrDefaultAsync();
+        }
+
+
         public async Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenu, string pCodigo, int pAccionId, string pUsuario, string pObservaciones)
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
@@ -185,7 +192,7 @@ namespace asivamosffie.services
             }).ToListAsync();
         }
 
-
+        
         public async Task<Dominio> GetDominioByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();

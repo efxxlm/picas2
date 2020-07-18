@@ -7,6 +7,7 @@ namespace asivamosffie.model.APIModels
     public class ResourceControlGrid
     {
         public int ControlRecursoId { get; set; }
+        public int FuenteFinanciacionId { get; set; }
         public string FuenteFinanciacionText { get; set; }
         public string CuentaBancariaText { get; set; }
         public string RegistroPresupuestalText { get; set; }

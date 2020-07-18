@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<List<ControlRecurso>> GetResourceControl();
         Task<ControlRecurso> GetResourceControlById(int id);
-
+        Task<List<ResourceControlGrid>> GetResourceControlBySourceId(int idFuente);
         Task<List<ControlRecurso>> GetResourceControlGrid();
         Task<Respuesta> Insert(ControlRecurso controlRecurso);
 

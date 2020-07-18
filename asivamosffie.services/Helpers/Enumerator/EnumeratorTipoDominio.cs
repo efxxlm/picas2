@@ -18,7 +18,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Tipo_de_documento_cofinanciacion = 7,
 
-		Fuentes_de_financiación = 8,
+		Fuentes_de_financiacion = 8,
 
 		Tipo_de_alcance = 9,
 

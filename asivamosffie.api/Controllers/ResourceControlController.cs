@@ -29,13 +29,20 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpGet]
+        [Route("GetResourceControlBySourceId")]
+        public async Task<List<ResourceControlGrid>> GetResourceControlBySourceId(int idFuente)
+        {
+            var result = await _resourceControlService.GetResourceControlBySourceId(idFuente);
+            return result;
+        }
+
+        [HttpGet]
         [Route("GetResourceControlGrid")]
         public async Task<List<ControlRecurso>> GetResourceControlGrid()
         {
             var result = await _resourceControlService.GetResourceControlGrid();
             return result;
         }
-
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)

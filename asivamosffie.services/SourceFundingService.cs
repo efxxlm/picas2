@@ -36,7 +36,7 @@ namespace asivamosffie.services
             return await _context.FuenteFinanciacion.Where(r => r.AportanteId == idAportante).ToListAsync();
 
         }
-        public async Task<List<SourceFundingGrid>> GetSourceFundingGrid()
+        public async Task<List<SourceFundingGrid>> GetSourceFundingGrid(int fuenteId)
         {
             List<SourceFundingGrid> ListSourceFundingGrid = new List<SourceFundingGrid>();
 
@@ -70,9 +70,6 @@ namespace asivamosffie.services
                 return ListSourceFundingGrid;
 
             }
-
-
-
         }
 
 
