@@ -28,6 +28,38 @@ button.mat-raised-button {
     padding: 0 1.5em;
 }
 
+.btn-descargar {
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    &--img {
+        height: 1.5em;
+        margin-right: .2em;
+    }
+}
+
+.input-file {
+    margin-top: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
+    color: var(--mainColor);
+
+    &--text {
+        border: solid .5px;
+        padding: .5em;
+        border-radius: .7em;
+        height: 20px;
+        width: 40em;
+        max-width: calc(100% - 9em);
+        margin-right: 0.5em;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
 
 .btn-guardar {
     img {

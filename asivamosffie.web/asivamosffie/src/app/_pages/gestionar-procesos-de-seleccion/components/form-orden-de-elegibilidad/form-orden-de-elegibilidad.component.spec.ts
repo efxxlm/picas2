@@ -2,15 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { FormEvaluacionComponent } from './form-evaluacion.component';
+import { FormOrdenDeElegibilidadComponent } from './form-orden-de-elegibilidad.component';
 
-describe('FormEvaluacionComponent', () => {
-  let component: FormEvaluacionComponent;
-  let fixture: ComponentFixture<FormEvaluacionComponent>;
+describe('FormOrdenDeElegibilidadComponent', () => {
+  let component: FormOrdenDeElegibilidadComponent;
+  let fixture: ComponentFixture<FormOrdenDeElegibilidadComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormEvaluacionComponent ],
+      declarations: [ FormOrdenDeElegibilidadComponent ],
       imports: [
         NoopAnimationsModule,
         ReactiveFormsModule
@@ -19,7 +19,7 @@ describe('FormEvaluacionComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormEvaluacionComponent);
+    fixture = TestBed.createComponent(FormOrdenDeElegibilidadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

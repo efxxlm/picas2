@@ -18,12 +18,10 @@ import { InvitacionCerradaComponent } from './components/invitacion-cerrada/invi
 import { InvitacionAbiertaComponent } from './components/invitacion-abierta/invitacion-abierta.component';
 import { FormSeleccionProponenteAInvitarComponent } from './components/form-seleccion-proponente-a-invitar/form-seleccion-proponente-a-invitar.component';
 import { FormEvaluacionComponent } from './components/form-evaluacion/form-evaluacion.component';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatCardModule } from '@angular/material/card';
 import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './components/form-datos-proponentes-seleccionados-invitacion-cerrada/form-datos-proponentes-seleccionados-invitacion-cerrada.component';
+import { FormOrdenDeElegibilidadComponent } from './components/form-orden-de-elegibilidad/form-orden-de-elegibilidad.component';
+import { CargarOrdenDeElegibilidadComponent } from './components/cargar-orden-de-elegibilidad/cargar-orden-de-elegibilidad.component';
+import { TablaOrdenDeElegibilidadComponent } from './components/tabla-orden-de-elegibilidad/tabla-orden-de-elegibilidad.component';
 
 
 @NgModule({
@@ -39,19 +37,17 @@ import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './c
     InvitacionAbiertaComponent,
     FormSeleccionProponenteAInvitarComponent,
     FormEvaluacionComponent,
-    FormDatosProponentesSeleccionadosInvitacionCerradaComponent
+    FormDatosProponentesSeleccionadosInvitacionCerradaComponent,
+    FormOrdenDeElegibilidadComponent,
+    CargarOrdenDeElegibilidadComponent,
+    TablaOrdenDeElegibilidadComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     GestionarProcesosDeSeleccionRoutingModule,
-    QuillModule.forRoot(),
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatCardModule
+    QuillModule.forRoot()
   ]
 })
 export class GestionarProcesosDeSeleccionModule { }
