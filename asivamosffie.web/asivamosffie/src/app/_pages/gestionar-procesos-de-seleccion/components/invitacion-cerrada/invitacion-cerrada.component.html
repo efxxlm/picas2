@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="text-right">
+        <a routerLink="/seleccion/nuevo" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Invitación Cerrada
+        </h1>
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title completo">
+                    Descripción de la invitación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-descripcion-del-proceso-de-seleccion></app-form-descripcion-del-proceso-de-seleccion>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Estudio de mercado
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-estudio-de-mercado></app-form-estudio-de-mercado>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Selección de proponentes a invitar
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-seleccion-proponente-a-invitar></app-form-seleccion-proponente-a-invitar>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Evaluación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-evaluacion></app-form-evaluacion>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Datos de proponentes seleccionados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-datos-proponentes-seleccionados></app-form-datos-proponentes-seleccionados>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

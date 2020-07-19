@@ -1,0 +1,22 @@
+<h1 class="title-menu--h1">
+    Gestionar proceso {{ data.numero }}
+</h1>
+
+<div class="d-flex justify-content-center mt-2em">
+    <span class="mr-2em">{{ data.fechaCreacion }}</span>
+    <span class="mr-2em">{{ data.tipo }}</span>
+    <span class="mr-2em">{{ data.etapa }}</span>
+    <span class="mr-2em info-text completo">{{ data.estadoDelRegistro }}</span>
+    <span>{{ data.estadoDelProceso }}</span>
+</div>
+
+<div class="dialog-btn">
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Ver detalle / Editar</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Eliminar</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Monitorear cronograma</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Presentar evaluación a comité</button>
+</div>
+
+<p>
+    Presente evaluación a comité
+</p>

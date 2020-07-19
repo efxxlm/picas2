@@ -29,8 +29,6 @@ export class CargarListadoDeProyectosComponent implements OnInit {
   }
 
   enviarListaProyectos() {
-    if (this.fileListaProyectos.valid) {
-      console.log(this.fileListaProyectos.value);
-    }
+    console.log(this.fileListaProyectos.value);
   }
 }

@@ -1,4 +1,5 @@
-body {
+body,
+.fontColor {
     color: var(--fontColor);
 }
 
@@ -41,7 +42,7 @@ body {
         text-align: center;
         color: var(--mainColor);
         font-weight: 500;
-        margin-top: 1.5em;
+        // margin-top: 1.5em;
         margin-bottom: 0;
         display: inline-block;
 
@@ -62,6 +63,16 @@ body {
 
 .mt-1em {
     margin-top: 1em;
+.text-1-2em {
+    font-size: 1.2em;
+}
+
+.mt-2em {
+    margin-top: 2em;
+}
+
+.mr-2em {
+    margin-right: 2em;
 }
 
 .pr-0 {
