@@ -51,7 +51,7 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
-        path: 'registrarFuentes/:idTipoAportante',
+        path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
     ]
