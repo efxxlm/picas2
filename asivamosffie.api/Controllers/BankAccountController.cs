@@ -49,8 +49,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+         
         [HttpPost]
         public async Task<IActionResult> post(CuentaBancaria cuentabancaria)
         {
@@ -64,9 +63,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
-
+         
         [HttpGet]
         [Route("GetFuentesFinanciacionByAportanteId")]
         public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
