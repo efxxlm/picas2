@@ -16,5 +16,6 @@
         public const string CrearCuentaBancaria = "12";
 
         public const string Crear_Editar_Fuentes_Financiacion= "20";
+        public const string Eliminar_Fuentes_Financiacion = "21";
     }
 }

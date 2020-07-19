@@ -57,7 +57,10 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> post(FuenteFinanciacion fuentefinanciacion)
         {
             try
-            {
+            { 
+                string UserId =   HttpContext.User.FindFirst("User").Value;
+                fuentefinanciacion.UsuarioModificacion = UserId;
+
                 var result = await _sourceFunding.Insert(fuentefinanciacion);
                 return Ok(result);
             }
@@ -73,6 +76,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
+                string UserId = HttpContext.User.FindFirst("User").Value;
+            //    fuentefinanciacion.usu = UserId;
                 var result = await _sourceFunding.Update(fuentefinanciacion);
                 return Ok(result);
             }
@@ -85,9 +90,15 @@ namespace asivamosffie.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _sourceFunding.Delete(id);
-            var response = new ApiResponse<bool>(result);
-            return Ok(response);
+            try
+            { 
+                var result = await _sourceFunding.Delete(id , HttpContext.User.FindFirst("User").Value);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpGet]
