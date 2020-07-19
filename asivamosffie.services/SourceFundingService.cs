@@ -103,5 +103,16 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesSourceFunding.Error, Message = ex.Message };
             }
         }
+
+        public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
+        { 
+            return await _context.FuenteFinanciacion.Where(r => r.AportanteId == AportanteId).ToListAsync(); 
+        }
+         
+        public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
+        {
+            return await _context.FuenteFinanciacion.Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
+        }
+
     }
 }

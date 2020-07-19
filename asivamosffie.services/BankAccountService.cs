@@ -103,17 +103,5 @@ namespace asivamosffie.services
                 return false;
             }
         }
-
-
-
-        public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
-        { 
-            return await _context.FuenteFinanciacion.Where(r => r.AportanteId == AportanteId).ToListAsync(); 
-        }
-         
-        public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
-        {
-            return await _context.FuenteFinanciacion.Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
-        }
     }
 }
