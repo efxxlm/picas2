@@ -6,6 +6,8 @@ using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using asivamosffie.services.Helpers.Enumerator;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -15,7 +17,13 @@ namespace asivamosffie.services
 
         public CommonService(devAsiVamosFFIEContext context)
         {
-            _context = context;            
+            _context = context;
+        }
+
+        public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
+        {
+            int IdPerfil =await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync(); 
+            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
         }
 
         public async Task<List<Perfil>> GetProfile()
@@ -113,5 +121,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r=> r.DominioId == pDominioID).Select(r => r.Nombre).FirstOrDefaultAsync();
         }
+
+      
     }
 }

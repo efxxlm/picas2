@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public Dominio()
         {
             Auditoria = new HashSet<Auditoria>();
+            CofinanciacionDocumento = new HashSet<CofinanciacionDocumento>();
         }
 
         public int DominioId { get; set; }
@@ -23,7 +24,6 @@ namespace asivamosffie.model.Models
 
         public virtual TipoDominio TipoDominio { get; set; }
         public virtual ICollection<Auditoria> Auditoria { get; set; }
-
-        public virtual ICollection<CofinanciacionDocumento> CofinanciacionDocumento {get; set;}
+        public virtual ICollection<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
     }
 }
