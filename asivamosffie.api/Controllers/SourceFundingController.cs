@@ -7,6 +7,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -54,47 +55,57 @@ namespace asivamosffie.api.Controllers
 
         // Agregar Fuente de recursos
         [HttpPost]
-        public async Task<IActionResult> post(FuenteFinanciacion fuentefinanciacion)
+        [Route("CreateFuentesFinanciacion")]
+        public async Task<IActionResult> CreateFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
+            Respuesta respuesta = new Respuesta();
             try
-            {  
-                fuentefinanciacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value; 
-                var result = await _sourceFunding.Insert(fuentefinanciacion);
-                return Ok(result);
+            {
+                fuentefinanciacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _sourceFunding.CreateFuentesFinanciacion(fuentefinanciacion);
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
 
 
-        [HttpPut]
-        public async Task<IActionResult> put(FuenteFinanciacion fuentefinanciacion)
+        [HttpPost]
+        [Route("EditFuentesFinanciacion")]
+        public async Task<IActionResult> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
+            Respuesta respuesta = new Respuesta();
             try
             {
-                fuentefinanciacion.UsuarioCreacion =  HttpContext.User.FindFirst("User").Value; 
-                var result = await _sourceFunding.Update(fuentefinanciacion);
-                return Ok(result);
+                fuentefinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _sourceFunding.EditFuentesFinanciacion(fuentefinanciacion);
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+
+        [HttpPost]
+        [Route("EliminarFuentesFinanciacion")]
+        public async Task<IActionResult> EliminarFuentesFinanciacion(int id)
         {
+            Respuesta respuesta = new Respuesta();  
             try
-            { 
-                var result = await _sourceFunding.Delete(id , HttpContext.User.FindFirst("User").Value);
-                return Ok(result);
+            {
+                respuesta = await _sourceFunding.EliminarFuentesFinanciacion(id, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
 
@@ -105,7 +116,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 var result = await _sourceFunding.GetFuentesFinanciacionByAportanteId(AportanteId);
-                return result; 
+                return result;
             }
             catch (Exception ex)
             {

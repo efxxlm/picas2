@@ -35,7 +35,7 @@ namespace asivamosffie.services
             //return await _context.FuenteFinanciacion.Where(r => r.AportanteId == id).ToListAsync();
         }
 
-        public async Task<Respuesta> Insert(FuenteFinanciacion fuentefinanciacion)
+        public async Task<Respuesta> CreateFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
@@ -77,7 +77,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> Delete(int id, string UsuarioModifico)
+        public async Task<Respuesta> EliminarFuentesFinanciacion(int id, string UsuarioModifico)
         {
             Respuesta respuesta = new Respuesta();
 
@@ -117,7 +117,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion)
+        public async Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);

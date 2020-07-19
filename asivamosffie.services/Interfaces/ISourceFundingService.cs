@@ -12,11 +12,11 @@ namespace asivamosffie.services.Interfaces
         Task<List<FuenteFinanciacion>> GetISourceFunding();
         Task<FuenteFinanciacion> GetISourceFundingById(int id);
 
-        Task<Respuesta> Insert(FuenteFinanciacion fuentefinanciacion);
+        Task<Respuesta> CreateFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
 
-        Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion);
+        Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
 
-        Task<Respuesta> Delete(int id , string UsuarioModifico);
+        Task<Respuesta> EliminarFuentesFinanciacion(int id , string UsuarioModifico);
 
         Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId);
 
