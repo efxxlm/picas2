@@ -58,43 +58,47 @@ export class RegistrarComponent implements OnInit {
     this.addressForm.get('nombreAportante').setValue(aportante);
     this.changeNombreAportante();
 
-    let i =0;
-    this.listaFuentes.filter( f => f.aportanteId == this.idAportante).forEach( ff => {
+    this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
+      lista.forEach( ff => {
       
-      let grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
-      let fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find( f => f.codigo == ff.fuenteRecursosCodigo );
-      //let vigenciasSeleccionada = this.VigenciasAporte.find() 
-      
-      grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
-      grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
-
-      let listaVigencias = grupo.get('vigencias') as FormArray;
-      let listaCuentas = grupo.get('cuentasBancaria') as FormArray; 
-
-      ff.vigenciaAporte.forEach( v =>  {
+        let grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
+        let fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find( f => f.codigo == ff.fuenteRecursosCodigo );
+        let listaVigencias = grupo.get('vigencias') as FormArray;
+        let listaCuentas = grupo.get('cuentasBancaria') as FormArray; 
         
-        listaVigencias.push(this.createVigencia());
+        grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
+        grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
+  
+        // Vigencias
+        ff.vigenciaAporte.forEach( v =>  {
+          let grupoVigencia = this.createVigencia();
+          let vigenciaSeleccionada = this.VigenciasAporte.find( vtemp => vtemp == v.tipoVigenciaCodigo );
 
-      })
+          grupoVigencia.get('vigenciaAportante').setValue(vigenciaSeleccionada);
+          grupoVigencia.get('valorVigencia').setValue(v.valorAporte);
 
+          listaVigencias.push(grupoVigencia);
+        })
+  
+        // Cuentas bancarias
+        ff.cuentaBancaria.forEach( ba => {
+          let grupoCuenta = this.createCuentaBancaria();
+          let bancoSeleccionado: Dominio = this.bancos.find( b => b.codigo == ba.bancoCodigo ) ;
 
-      ff.cuentaBancaria.forEach( ba => {
-      //   let controlBanco: FormGroup;
-      //   let bancoSeleccionado: Dominio = this.bancos.find( b => b.codigo == ba.bancoCodigo ) ;
-
-      //   controlBanco = this.createCuentaBancariaEdit(ba.numeroCuentaBanco, ba.nombreCuentaBanco, ba.codigoSifi,
-      //                                                 ba.tipoCuentaCodigo, bancoSeleccionado, ba.exenta)
-
-         listaCuentas.push(this.createCuentaBancaria());
-         console.log(listaCuentas);
-       })
-      //grupo.get('cuentasBancaria').setValue(listaCuentas);
-      
-      this.fuenteRecursosArray.push(grupo);
-      //this.CambioNumerovigencia(i);      
-      i++;
-    });
-
+          grupoCuenta.get('numeroCuenta').setValue(ba.numeroCuentaBanco);
+          grupoCuenta.get('nombreCuenta').setValue(ba.nombreCuentaBanco);
+          grupoCuenta.get('codigoSIFI').setValue(ba.codigoSifi);
+          grupoCuenta.get('tipoCuenta').setValue(ba.tipoCuentaCodigo);
+          grupoCuenta.get('banco').setValue(bancoSeleccionado);
+          grupoCuenta.get('extra').setValue(ba.exenta.toString());
+        
+          listaCuentas.push(grupoCuenta);
+          console.log(listaCuentas);
+         })
+        
+        this.fuenteRecursosArray.push(grupo);
+      });
+    })
   }
 
   createCuentaBancariaEdit(pNumeroCuenta: string, pNombreCuenta: string, pCodigoSIFI: string, 

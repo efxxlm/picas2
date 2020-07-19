@@ -21,6 +21,10 @@ export class FuenteFinanciacionService {
 
   }
 
+  listaFuenteFinanciacionByAportante(id: number){
+    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetFuentesFinanciacionByAportanteId?AportanteId=${id}`);
+  }
+
   modificarFuenteFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
     return this.http.put(`${environment.apiUrl}/SourceFunding`, fuenteFinanciacion);
   }
