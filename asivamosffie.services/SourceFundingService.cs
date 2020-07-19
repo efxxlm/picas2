@@ -34,8 +34,7 @@ namespace asivamosffie.services
             return await _context.FuenteFinanciacion.FindAsync(id);
             //return await _context.FuenteFinanciacion.Where(r => r.AportanteId == id).ToListAsync();
         }
-
-
+         
         public async Task<Respuesta> Insert(FuenteFinanciacion fuentefinanciacion)
         {
             Respuesta respuesta = new Respuesta();
@@ -62,8 +61,7 @@ namespace asivamosffie.services
             }
             return respuesta;
         }
-
-
+         
         public async Task<bool> Delete(int id)
         {
             try
@@ -79,8 +77,7 @@ namespace asivamosffie.services
                 return false;
             }
         }
-
-
+         
         public async Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion)
         {
             Respuesta _response = new Respuesta();

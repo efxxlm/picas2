@@ -19,6 +19,8 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
+
+
         public BankAccountService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
 
@@ -34,7 +36,8 @@ namespace asivamosffie.services
         public async Task<CuentaBancaria> GetBankAccountById(int id)
         {
             return await _context.CuentaBancaria.FindAsync(id);
-        }
+        } 
+
         public async Task<Respuesta> Insert(CuentaBancaria cuentaBancaria)
         {
             Respuesta _response = new Respuesta();

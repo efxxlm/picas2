@@ -49,8 +49,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+         
         [HttpPost]
         public async Task<IActionResult> post(CuentaBancaria cuentabancaria)
         {
@@ -64,9 +63,5 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
-
-         
     }
 }
