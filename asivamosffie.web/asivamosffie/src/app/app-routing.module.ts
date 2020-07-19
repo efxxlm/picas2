@@ -67,6 +67,11 @@ const routes: Routes = [
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
         .then(m => m.GestionarFuentesDeFinanciacionModule)
+      },
+      {
+        path: 'solicitarContratacion',
+        loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
+        .then(m => m.SolicitarContratacionModule)
       }
     ]
 
