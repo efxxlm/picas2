@@ -103,5 +103,15 @@ namespace asivamosffie.services
                 throw;
             } 
         }
+
+        public async Task<string> GetNombreDominioByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
+        {
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.Nombre).FirstOrDefaultAsync();
+        }
+
+        public async Task<string> GetNombreDominioByDominioID(int pDominioID)
+        {
+            return await _context.Dominio.Where(r=> r.DominioId == pDominioID).Select(r => r.Nombre).FirstOrDefaultAsync();
+        }
     }
 }

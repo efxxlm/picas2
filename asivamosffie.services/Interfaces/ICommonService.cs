@@ -27,5 +27,9 @@ namespace asivamosffie.services.Interfaces
 
 
         Task<List<int>> GetListVigenciaAportes(string pYearVigente , bool yearSiguienteEsVigente);
+
+        Task<string> GetNombreDominioByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId);
+
+        Task<string> GetNombreDominioByDominioID(int pDominioID);
     }
 }

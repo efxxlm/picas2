@@ -244,11 +244,34 @@ namespace asivamosffie.services
             return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID && r.TipoAportanteId != 9 && r.TipoAportanteId != 10).ToListAsync();
         }
 
-        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
-        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)
+        public async Task<List<CofinanciacionAportante>> GetListAportante()
         {
-            //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
-            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).ToListAsync();
+        }
+
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            List<CofinanciacionAportante> ListCofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+
+            List<CofinanicacionAportanteGrilla> ListCofinanicacionAportanteGrilla = new List<CofinanicacionAportanteGrilla>();
+
+            foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
+            {
+                CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
+                { 
+                    CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
+                    Nombre = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.NombreAportanteId),
+                    TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId)
+                };
+                ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
+            }
+
+            return ListCofinanicacionAportanteGrilla;
+        }
+
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
+        {
+            return await _context.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == pAportanteID).ToListAsync();
         }
     }
 }

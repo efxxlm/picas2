@@ -113,8 +113,8 @@ namespace asivamosffie.api
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
-            services.AddTransient<IDocumentService, DocumentService>();
-            services.AddTransient<IProjectService, ProjectService>();
+            // services.AddTransient<IDocumentService, DocumentService>();
+            // services.AddTransient<IProjectService, ProjectService>();
             //services.AddTransient<IContributorService, ContributorService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
