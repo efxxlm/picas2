@@ -1,8 +1,7 @@
-import { Component, ViewChild, OnInit, Inject } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface ProcesosElement {
   id: number;
@@ -40,7 +39,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(public dialog: MatDialog) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -50,35 +49,8 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogVerDetalle);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
-
-  verDetalle(e: number): void {
-    console.log(ELEMENT_DATA[e]);
-    const dialogRef = this.dialog.open(DialogVerDetalle, {
-      data: ELEMENT_DATA[e]
-    });
-  }
-
-}
-
-@Component({
-  selector: 'dialog-ver-detalle-dialog',
-  templateUrl: 'dialog-ver-detalle-dialog.html',
-})
-export class DialogVerDetalle {
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogVerDetalle>,
-    @Inject(MAT_DIALOG_DATA) public data: ProcesosElement) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
+  verDetalle(e: number) {
+    console.log(e);
   }
 
 }

@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+
+import { VerDetalleTablaProcesosComponent } from "../ver-detalle-tabla-procesos/ver-detalle-tabla-procesos.component";
 
 export interface ProcesosElement {
   id: number;
@@ -15,7 +18,7 @@ export interface ProcesosElement {
 
 const ELEMENT_DATA: ProcesosElement[] = [
   {
-    id: 1,
+    id: 0,
     fechaCreacion: '01/06/2020',
     tipo: 'Selección privada',
     numero: 'SP 0007-2020',
@@ -43,7 +46,7 @@ export class TablaProcesosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -54,7 +57,25 @@ export class TablaProcesosComponent implements OnInit {
   }
 
   verMas(e: number) {
-    console.log(e);
+    console.log(ELEMENT_DATA[e]);
+    const dialogRef = this.dialog.open(VerDetalleTablaProcesosComponent, {
+      data: ELEMENT_DATA[e]
+    });
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(VerDetalleTablaProcesosComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  verDetalle(e: number): void {
+    console.log(ELEMENT_DATA[e]);
+    const dialogRef = this.dialog.open(VerDetalleTablaProcesosComponent, {
+      data: ELEMENT_DATA[e]
+    });
   }
 
 }

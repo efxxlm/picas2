@@ -22,6 +22,7 @@ import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './c
 import { FormOrdenDeElegibilidadComponent } from './components/form-orden-de-elegibilidad/form-orden-de-elegibilidad.component';
 import { CargarOrdenDeElegibilidadComponent } from './components/cargar-orden-de-elegibilidad/cargar-orden-de-elegibilidad.component';
 import { TablaOrdenDeElegibilidadComponent } from './components/tabla-orden-de-elegibilidad/tabla-orden-de-elegibilidad.component';
+import { VerDetalleTablaProcesosComponent } from './components/ver-detalle-tabla-procesos/ver-detalle-tabla-procesos.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { TablaOrdenDeElegibilidadComponent } from './components/tabla-orden-de-e
     FormDatosProponentesSeleccionadosInvitacionCerradaComponent,
     FormOrdenDeElegibilidadComponent,
     CargarOrdenDeElegibilidadComponent,
-    TablaOrdenDeElegibilidadComponent
+    TablaOrdenDeElegibilidadComponent,
+    VerDetalleTablaProcesosComponent
   ],
   imports: [
     CommonModule,
