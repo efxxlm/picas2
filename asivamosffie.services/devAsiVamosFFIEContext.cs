@@ -415,30 +415,38 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.FechaConsignacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.ValorConsignacion).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.CuentaBancaria)
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.CuentaBancariaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ControlRecurso_CuentaBancaria");
 
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ControlRecurso_FuenteFinanciacion");
 
                 entity.HasOne(d => d.RegistroPresupuestal)
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.RegistroPresupuestalId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ControlRecurso_RegistroPresupuestal");
 
                 entity.HasOne(d => d.VigenciaAporte)
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.VigenciaAporteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ControlRecurso_VigenciaAporte");
             });
 
@@ -476,7 +484,6 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<CuentaBancaria>(entity =>
             {
                 entity.Property(e => e.BancoCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -487,30 +494,31 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.NombreCuentaBanco)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroCuentaBanco)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoCuentaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.CuentaBancaria)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CuentaBancaria_FuenteFinanciacion");
             });
 
@@ -570,6 +578,8 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.FuenteRecursosCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -577,6 +587,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -1374,25 +1388,28 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaRp)
                     .HasColumnName("FechaRP")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroRp)
-                    .IsRequired()
                     .HasColumnName("NumeroRP")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.RegistroPresupuestal)
                     .HasForeignKey(d => d.AportanteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RegistroPresupuestal_Aportante");
             });
 
