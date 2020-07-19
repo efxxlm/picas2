@@ -57,10 +57,8 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> post(FuenteFinanciacion fuentefinanciacion)
         {
             try
-            { 
-                string UserId =   HttpContext.User.FindFirst("User").Value;
-                fuentefinanciacion.UsuarioModificacion = UserId;
-
+            {  
+                fuentefinanciacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value; 
                 var result = await _sourceFunding.Insert(fuentefinanciacion);
                 return Ok(result);
             }
@@ -76,8 +74,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                string UserId = HttpContext.User.FindFirst("User").Value;
-            //    fuentefinanciacion.usu = UserId;
+                fuentefinanciacion.UsuarioCreacion =  HttpContext.User.FindFirst("User").Value; 
                 var result = await _sourceFunding.Update(fuentefinanciacion);
                 return Ok(result);
             }
