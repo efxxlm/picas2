@@ -8,15 +8,26 @@ import { TablaFuentesComponent } from './components/tabla-fuentes/tabla-fuentes.
 
 import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ControlDeRecursosComponent } from './components/control-de-recursos/control-de-recursos.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
-  declarations: [BtnRegistrarComponent, RegistrarComponent, TablaFuentesComponent],
+  declarations: [BtnRegistrarComponent, RegistrarComponent, TablaFuentesComponent, ControlDeRecursosComponent],
   imports: [
     CommonModule,
     GestionarFuentesDeFinanciacionRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule,
   ]
 })
 export class GestionarFuentesDeFinanciacionModule { }
