@@ -21,5 +21,9 @@ namespace asivamosffie.services.Interfaces
         Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId);
 
         Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion();
+
+        Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria);
+
+        Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte);
     }
 }

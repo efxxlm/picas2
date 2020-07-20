@@ -23,6 +23,43 @@ namespace asivamosffie.api.Controllers
             _sourceFunding = sourceFunding;
         }
 
+        [HttpPost]
+        [Route("CreateEditarCuentasBancarias")]
+        public async Task<IActionResult> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _sourceFunding.CreateEditarCuentasBancarias(cuentaBancaria);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditarVigenciaAporte")]
+        public async Task<IActionResult> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                vigenciaAporte.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _sourceFunding.CreateEditarVigenciaAporte(vigenciaAporte);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+           
         [HttpGet]
         public async Task<List<FuenteFinanciacion>> Get()
         {
