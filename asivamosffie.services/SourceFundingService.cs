@@ -45,7 +45,6 @@ namespace asivamosffie.services
                 fuentefinanciacion.Eliminado = false;
                 _context.Add(fuentefinanciacion);
                 await _context.SaveChangesAsync();
-                respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = fuentefinanciacion, Code = ConstantMessagesContributor.OperacionExitosa };
 
                 //No se puede saber que datos estan incompletos si solo se valida el objeto y no campo a campo  
                 //else
@@ -89,7 +88,7 @@ namespace asivamosffie.services
                 entity.FechaModificacion = DateTime.Now;
                 entity.UsuarioModificacion = UsuarioModifico;
                 entity.Eliminado = true;
-                  
+
                 _context.Update(entity);
                 await _context.SaveChangesAsync();
 
@@ -121,7 +120,7 @@ namespace asivamosffie.services
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 FuenteFinanciacion updateObj = await _context.FuenteFinanciacion.FindAsync(fuentefinanciacion.FuenteFinanciacionId);
@@ -171,7 +170,126 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
         {
-            return await _context.FuenteFinanciacion.Where(r=> !(bool)r.Eliminado ).Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
+            return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
+        }
+
+        public async Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearCuentaBancaria = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Cuenta_Bancaria, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+
+            try
+            {
+
+                if (cuentaBancaria.CuentaBancariaId != null || cuentaBancaria.CuentaBancariaId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR CUENTA BANCARIA";
+                    cuentaBancaria.FechaCreacion = DateTime.Now;
+                    cuentaBancaria.Eliminado = false;
+
+                    _context.CuentaBancaria.Add(cuentaBancaria);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT CUENTA BANCARIA";
+                    CuentaBancaria cuentaBancariaAntigua = _context.CuentaBancaria.Find(cuentaBancaria.CuentaBancariaId);
+                    //Auditoria
+                    cuentaBancariaAntigua.UsuarioModificacion = cuentaBancaria.UsuarioCreacion;
+                    cuentaBancariaAntigua.FechaModificacion = DateTime.Now;
+                    //Registros
+                    cuentaBancariaAntigua.FuenteFinanciacion = cuentaBancaria.FuenteFinanciacion;
+                    cuentaBancariaAntigua.NumeroCuentaBanco = cuentaBancaria.NumeroCuentaBanco;
+                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco;
+                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi;
+                    cuentaBancariaAntigua.TipoCuentaCodigo = cuentaBancaria.TipoCuentaCodigo;
+                    cuentaBancariaAntigua.BancoCodigo = cuentaBancaria.BancoCodigo;
+                    cuentaBancariaAntigua.Exenta = cuentaBancaria.Exenta;
+
+                    _context.CuentaBancaria.Update(cuentaBancariaAntigua);
+                }
+                await _context.SaveChangesAsync();
+
+                return respuesta =
+               new Respuesta
+               {
+                   IsSuccessful = true,
+                   IsException = false,
+                   IsValidation = false,
+                   Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
+                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion, strCrearEditar)
+               };
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                       new Respuesta
+                       {
+                           IsSuccessful = false,
+                           IsException = true,
+                           IsValidation = false,
+                           Code = ConstantMessagesFuentesFinanciacion.Error,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.Error, idAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                       };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearVigenciaAporte = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Vigencia_Aporte, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+
+            try
+            {
+
+                if (vigenciaAporte.VigenciaAporteId != null || vigenciaAporte.VigenciaAporteId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR VIGENCIA APORTE";
+                    vigenciaAporte.FechaCreacion = DateTime.Now;
+                    vigenciaAporte.Eliminado = false;
+                    _context.VigenciaAporte.Add(vigenciaAporte);
+                }
+                else
+                {
+                    strCrearEditar = "EDITAR VIGENCIA APORTE";
+                    VigenciaAporte VigenciaAporteAntigua = _context.VigenciaAporte.Find(vigenciaAporte.VigenciaAporteId);
+                    //Auditoria
+                    VigenciaAporteAntigua.UsuarioModificacion = vigenciaAporte.UsuarioCreacion;
+                    VigenciaAporteAntigua.FechaModificacion = DateTime.Now;
+                    //Registros
+                    VigenciaAporteAntigua.FuenteFinanciacion = vigenciaAporte.FuenteFinanciacion;
+                    VigenciaAporteAntigua.TipoVigenciaCodigo = vigenciaAporte.TipoVigenciaCodigo;
+                    VigenciaAporteAntigua.ValorAporte = vigenciaAporte.ValorAporte;
+
+                    _context.VigenciaAporte.Update(VigenciaAporteAntigua);
+                }
+                await _context.SaveChangesAsync();
+
+                return respuesta =
+               new Respuesta
+               {
+                   IsSuccessful = true,
+                   IsException = false,
+                   IsValidation = false,
+                   Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
+                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionCrearVigenciaAporte, vigenciaAporte.UsuarioCreacion, strCrearEditar)
+               };
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                       new Respuesta
+                       {
+                           IsSuccessful = false,
+                           IsException = true,
+                           IsValidation = false,
+                           Code = ConstantMessagesFuentesFinanciacion.Error,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.Error, idAccionCrearVigenciaAporte, vigenciaAporte.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                       };
+            }
         }
 
     }
