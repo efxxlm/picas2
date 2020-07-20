@@ -119,7 +119,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesProcessSchedule.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProyecto.Error, AccionId, procesoSeleccion.UsuarioCreacion, " ")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, AccionId, procesoSeleccion.UsuarioCreacion, " ")
 
 
                 };
@@ -175,4 +175,4 @@ namespace asivamosffie.services
         }
     }
 }
-}
+
