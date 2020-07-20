@@ -101,28 +101,36 @@
           </div>
         </div>
         <div class="row">
-          <div class="pr-1">
-            <label class="label-left" class="fechaConsignacion">Fecha de consignación</label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="example-full-width">
-              <input matInput [matDatepicker]="picker" formControlName="fechaConsignacion" readonly (click)="picker.open()">
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
-              <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-            </button>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" class="fechaConsignacion">Fecha de consignación</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="picker" formControlName="fechaConsignacion" readonly (click)="picker.open()">
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="pr-1">
-            <label class="label-left" for="numeroCuenta">Valor de consignación</label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input matInput #valorConsignacion type="number" maxlength="50" formControlName="numeroCuenta" keypress="if(this.value.length >= this.maxlength) return false">
-            </mat-form-field>
-            <span class="contador">{{50 - valorConsignacion.value.length}}</span>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="numeroCuenta">Valor de consignación</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #valorConsignacion type="number" maxlength="50" formControlName="numeroCuenta" keypress="if(this.value.length >= this.maxlength) return false">
+                </mat-form-field>
+                <span class="contador">{{50 - valorConsignacion.value.length}}</span>
+              </div>
+            </div>
           </div>
         </div>
 
