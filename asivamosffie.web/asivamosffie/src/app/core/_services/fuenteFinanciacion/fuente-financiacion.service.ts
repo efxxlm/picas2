@@ -13,11 +13,11 @@ export class FuenteFinanciacionService {
   ) { }
 
   registrarFuenteFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
-    return this.http.post(`${environment.apiUrl}/SourceFunding`, fuenteFinanciacion);
+    return this.http.post(`${environment.apiUrl}/SourceFunding/CreateFuentesFinanciacion/`, fuenteFinanciacion);
   }  
 
   listaFuenteFinanciacion(){
-    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding`);
+    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacion`);
 
   }
 
@@ -26,7 +26,15 @@ export class FuenteFinanciacionService {
   }
 
   modificarFuenteFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
-    return this.http.put(`${environment.apiUrl}/SourceFunding`, fuenteFinanciacion);
+    return this.http.put(`${environment.apiUrl}/SourceFunding/EditFuentesFinanciacion/`, fuenteFinanciacion);
+  }
+
+  registrarRegistroPresupuestal(registroPresupuestal: RegistroPresupuestal ){
+    return this.http.post(`${environment.apiUrl}/CofinancingContributor/SaveBudgetRegister/`, registroPresupuestal);
+  }
+
+  modificarRegistroPresupuestal(registroPresupuestal: RegistroPresupuestal ){
+    return this.http.post(`${environment.apiUrl}/CofinancingContributor/UpdateRegisterBudget/`, registroPresupuestal);
   }
 
 }

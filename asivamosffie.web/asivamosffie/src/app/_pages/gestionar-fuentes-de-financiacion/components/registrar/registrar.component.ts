@@ -57,6 +57,7 @@ export class RegistrarComponent implements OnInit {
     let aportante = this.nombresAportantes.find( nom => nom.cofinanciacionAportanteId == this.idAportante );
     this.addressForm.get('nombreAportante').setValue(aportante);
     this.changeNombreAportante();
+    let listaRegistrosP = this.addressForm.get('registrosPresupuestales') as FormArray; 
 
     this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
       lista.forEach( ff => {
@@ -68,12 +69,14 @@ export class RegistrarComponent implements OnInit {
         
         grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
         grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
+        grupo.get('fuenteFinanciacionId').setValue(ff.fuenteFinanciacionId);
   
         // Vigencias
         ff.vigenciaAporte.forEach( v =>  {
           let grupoVigencia = this.createVigencia();
           let vigenciaSeleccionada = this.VigenciasAporte.find( vtemp => vtemp == v.tipoVigenciaCodigo );
 
+          grupoVigencia.get('vigenciaAporteId').setValue(v.vigenciaAporteId);
           grupoVigencia.get('vigenciaAportante').setValue(vigenciaSeleccionada);
           grupoVigencia.get('valorVigencia').setValue(v.valorAporte);
 
@@ -85,6 +88,7 @@ export class RegistrarComponent implements OnInit {
           let grupoCuenta = this.createCuentaBancaria();
           let bancoSeleccionado: Dominio = this.bancos.find( b => b.codigo == ba.bancoCodigo ) ;
 
+          grupoCuenta.get('cuentaBancariaId').setValue(ba.cuentaBancariaId);
           grupoCuenta.get('numeroCuenta').setValue(ba.numeroCuentaBanco);
           grupoCuenta.get('nombreCuenta').setValue(ba.nombreCuentaBanco);
           grupoCuenta.get('codigoSIFI').setValue(ba.codigoSifi);
@@ -95,28 +99,23 @@ export class RegistrarComponent implements OnInit {
           listaCuentas.push(grupoCuenta);
           console.log(listaCuentas);
          })
+         // Registro Presupuestal
+         ff.aportante.registroPresupuestal.forEach( rp => {
+          let grupoRegistroP = this.createRP();
+
+          grupoRegistroP.get('registroPresupuestalId').setValue( rp.registroPresupuestalId );
+          grupoRegistroP.get('numeroRP').setValue( rp.numeroRp );
+          grupoRegistroP.get('fecha').setValue( rp.fechaRp );
+
+          this.addressForm.get('cuantosRP').setValue(ff.aportante.registroPresupuestal.length);
+
+          listaRegistrosP.push(grupoRegistroP);
+
+         })
         
         this.fuenteRecursosArray.push(grupo);
       });
     })
-  }
-
-  createCuentaBancariaEdit(pNumeroCuenta: string, pNombreCuenta: string, pCodigoSIFI: string, 
-                          pTipoCuenta: string, pBanco: Dominio, pExtra: boolean): FormGroup {
-    return this.fb.group({
-      numeroCuenta: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
-      ],
-      nombreCuenta: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
-      ],
-      codigoSIFI: [null, Validators.compose([
-        Validators.required, Validators.minLength(6), Validators.maxLength(6)])
-      ],
-      tipoCuenta: ['free', Validators.required],
-      banco: [null, Validators.required],
-      extra: ['free', Validators.required]
-    });
   }
 
   crearFuenteEdit(pValorFuenteRecursos: number): FormGroup {
@@ -130,6 +129,10 @@ export class RegistrarComponent implements OnInit {
       fuenteFinanciacionId: [null],
       cuentasBancaria: this.fb.array([
       ]),
+      tieneRP: [null],
+      cuantosRP: [null,Validators.compose([
+          Validators.minLength(5), Validators.maxLength(50)])]
+      ,registrosPresupuestales: this.fb.array([])
     });
   }
 
@@ -195,15 +198,20 @@ export class RegistrarComponent implements OnInit {
     fuentes.push(this.crearFuente());
   }
 
+  createRP(){
+    return this.fb.group({ 
+      registroPresupuestalId: [],
+      numeroRP:[null],
+      fecha: [null]
+    });
+  }
+
   CambioNumeroRP(){
     const FormNumRP = this.addressForm.get('cuantosRP').value;
     console.log(FormNumRP);
      if (FormNumRP > this.registrosPresupuestales.length && FormNumRP < 100) {
        while (this.registrosPresupuestales.length < FormNumRP) {
-        this.registrosPresupuestales.push(this.fb.group({ 
-            numeroRP:[null],
-            fecha: [null]
-        }))
+        this.registrosPresupuestales.push(this.createRP());
        }
      } else if (FormNumRP <= this.registrosPresupuestales.length && FormNumRP >= 0) {
        while (this.registrosPresupuestales.length > FormNumRP) {
@@ -277,6 +285,7 @@ export class RegistrarComponent implements OnInit {
 
   createCuentaBancaria(): FormGroup {
     return this.fb.group({
+      cuentaBancariaId: [],
       numeroCuenta: [null, Validators.compose([
         Validators.required, Validators.minLength(5), Validators.maxLength(50)])
       ],
@@ -309,6 +318,7 @@ export class RegistrarComponent implements OnInit {
       ,registrosPresupuestales: this.fb.array([]),
       cuentasBancaria: this.fb.array([
         this.fb.group({
+          cuentaBancariaId: [],
           numeroCuenta: [null, Validators.compose([
             Validators.required, Validators.minLength(5), Validators.maxLength(50)])
           ],
@@ -328,6 +338,7 @@ export class RegistrarComponent implements OnInit {
 
   createVigencia(): FormGroup {
     return this.fb.group({
+      vigenciaAporteId: [],
       vigenciaAportante: [null, Validators.required],
       valorVigencia: [null, Validators.compose([
         Validators.required, Validators.minLength(10), Validators.maxLength(10)])
@@ -354,6 +365,7 @@ export class RegistrarComponent implements OnInit {
 
       this.fuenteRecursosArray.controls.forEach( controlFR => {
         let fuente: FuenteFinanciacion = {
+          fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
           aportanteId: this.idAportante,
           fuenteRecursosCodigo: controlFR.get('fuenteRecursos').value.codigo,
           valorFuente: controlFR.get('valorFuenteRecursos').value,
@@ -368,10 +380,10 @@ export class RegistrarComponent implements OnInit {
         if (vigencias){
           vigencias.controls.forEach( controlVi => {
             let vigenciaAporte: VigenciaAporte = {
+              vigenciaAporteId: controlVi.get('vigenciaAporteId').value,
               fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
               tipoVigenciaCodigo: controlVi.get('vigenciaAportante').value,
               valorAporte: controlVi.get('valorVigencia').value,
-              vigenciaAporteId:0, 
               fechaCreacion: new Date,
               usuarioCreacion: usuario
             }
@@ -384,7 +396,7 @@ export class RegistrarComponent implements OnInit {
         let cuentas = controlFR.get('cuentasBancaria') as FormArray;
         cuentas.controls.forEach(controlBa => {
           let cuentaBancaria: CuentaBancaria = {
-            cuentaBancariaId: 0,
+            cuentaBancariaId: controlBa.get('cuentaBancariaId').value,
             bancoCodigo: controlBa.get('banco').value.codigo,
             codigoSifi: controlBa.get('codigoSIFI').value,
             exenta: controlBa.get('extra').value,
@@ -421,13 +433,29 @@ export class RegistrarComponent implements OnInit {
      
 
       lista.forEach( ff => {
+        console.log(ff.fuenteFinanciacionId > 0);
         if (ff.fuenteFinanciacionId > 0)
-          this.fuenteFinanciacionService.registrarFuenteFinanciacion(ff).subscribe( respuesta => {
+          this.fuenteFinanciacionService.modificarFuenteFinanciacion(ff).subscribe( respuesta => {
+
+            ff.vigenciaAporte.forEach( vi => {
+              
+            })
+
+           });
+         else
+           this.fuenteFinanciacionService.registrarFuenteFinanciacion(ff).subscribe( respuesta => {
+           }); 
+      })
+
+      listaRP.forEach( rp => {
+        if (rp.registroPresupuestalId > 0)
+          this.fuenteFinanciacionService.modificarRegistroPresupuestal(rp).subscribe( respuesta => {
+
           });
         else
-          this.fuenteFinanciacionService.modificarFuenteFinanciacion(ff).subscribe( respuesta => {
-            
-          }) 
+          this.fuenteFinanciacionService.registrarRegistroPresupuestal(rp).subscribe( respuesta => {
+
+          });
       })
 
       this.data = lista;

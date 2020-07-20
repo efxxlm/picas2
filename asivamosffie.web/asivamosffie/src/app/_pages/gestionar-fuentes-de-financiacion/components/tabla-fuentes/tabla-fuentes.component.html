@@ -12,7 +12,7 @@
 
         <ng-container matColumnDef="fechaCreacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion}}</b> </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion | date:'dd/MM/yyyy'}}</b> </td>
         </ng-container>
 
         <ng-container matColumnDef="tipoAportante">
@@ -22,7 +22,7 @@
 
         <ng-container matColumnDef="aportante">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Aportante </th>
-            <td mat-cell *matCellDef="let element"> {{element.aportante}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.nombreAportante}} </td>
         </ng-container>
 
         <ng-container matColumnDef="vigencia">
@@ -37,12 +37,12 @@
 
         <ng-container matColumnDef="valorAporteFuenteDeRecursos">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor aporte fuente de recursos </th>
-            <td mat-cell *matCellDef="let element"> {{element.valorFuente}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.valorFuente | currency:'COP'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="valorAporteEnCuenta">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor aportes en cuenta </th>
-            <td mat-cell *matCellDef="let element"> {{element.valorAporteEnCuenta}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.valorAporteEnCuenta | currency:'COP'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="estado">
@@ -53,9 +53,9 @@
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="accent" class="btn-table" (click)="editarFuente(6,element.aportanteId)">Ver detalle/<br>Editar</button>
-                <button mat-raised-button color="accent" class="btn-table" (click)="eliminarFuente(6,element.aportanteId)">Eliminar</button>
-                <button mat-raised-button color="accent" class="btn-table" (click)="controlRecursosFuente(6,element.aportanteId)">Eliminar</button>
+                <button mat-raised-button color="accent" class="btn-table" (click)="editarFuente( element.aportante.tipoAportanteId, element.aportanteId )">Ver detalle/<br>Editar</button>
+                <button mat-raised-button color="accent" class="btn-table" (click)="eliminarFuente(element.aportanteId )">Eliminar</button>
+                <button mat-raised-button color="accent" class="btn-table" (click)="controlRecursosFuente(element.aportanteId )">Control de recursos</button>
             </td>
         </ng-container>
 

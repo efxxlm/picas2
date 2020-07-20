@@ -159,7 +159,14 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
         {
-            return await _context.FuenteFinanciacion.Where(r=> !(bool)r.Eliminado).Where(r => r.AportanteId == AportanteId).Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
+            return await _context.FuenteFinanciacion.Where(r=> !(bool)r.Eliminado)
+                        .Where(r => r.AportanteId == AportanteId)
+                        .Include(r => r.ControlRecurso)
+                        .Include(r => r.CuentaBancaria)
+                        .Include(r => r.VigenciaAporte)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(r => r.RegistroPresupuestal)
+                        .ToListAsync();
         }
 
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()

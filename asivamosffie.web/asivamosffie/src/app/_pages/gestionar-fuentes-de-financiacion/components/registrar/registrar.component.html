@@ -174,6 +174,7 @@
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
                         <input matInput #numeroRP type="number" formControlName="numeroRP">
+                        <input type="hidden" formControlName="registroPresupuestalId">
                       </mat-form-field>
                       <span class="contador">{{50 - numeroRP.value.length}}</span>
                     </div>
@@ -337,6 +338,7 @@
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
                           <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta">
+                          <input type="hidden" formControlName="cuentaBancariaId">
                         </mat-form-field>
                         <span class="contador">{{100 - nombreCuenta.value.length}}</span>
                       </div>
