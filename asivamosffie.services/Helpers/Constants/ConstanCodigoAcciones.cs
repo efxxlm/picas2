@@ -14,5 +14,7 @@
         public const string Listar_Fuentes_Financiacion = "10";
         public const string RegistrarAportante = "11";
         public const string CrearCuentaBancaria = "12";
+
+        public const string Crear_Proceso_Seleccion = "18";
     }
 }

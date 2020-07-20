@@ -1,11 +1,13 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services
@@ -24,29 +26,56 @@ namespace asivamosffie.services
 
         public async Task<ActionResult<List<ProcesoSeleccion>>> GetSelectionProcess()
         {
-            return await _context.ProcesoSeleccion.ToListAsync();
+            try
+            {
+                return await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public async Task<ProcesoSeleccion> GetSelectionProcessById(int id)
         {
-            return await _context.ProcesoSeleccion.FindAsync(id);
+            try
+            {
+                return await _context.ProcesoSeleccion.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public async Task<Respuesta> Insert(ProcesoSeleccion procesoSeleccion)
         {
             Respuesta _response = new Respuesta();
+            int AccionId = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+
             try
             {
                 if (procesoSeleccion != null)
                 {
+                    procesoSeleccion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                    procesoSeleccion.FechaCreacion = DateTime.Now;
                     _context.Add(procesoSeleccion);
                     await _context.SaveChangesAsync();
 
-                    return _response = new Respuesta {  IsSuccessful = true, IsValidation = false, Data = procesoSeleccion, Code = ConstantMessagesProcesoSeleccion.OperacionExitosa };
+                    return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = procesoSeleccion, Code = ConstantMessagesProcesoSeleccion.OperacionExitosa };
                 }
                 else
                 {
-                    return _response = new Respuesta  { IsSuccessful = false, IsValidation = false,  Data = null, Code = ConstantMessagesProcesoSeleccion.RecursoNoEncontrado };
+                    return _response = new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesProcesoSeleccion.RecursoNoEncontrado,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, AccionId, procesoSeleccion.UsuarioCreacion, " ")
+                    };
                 }
 
             }
@@ -58,6 +87,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, AccionId, procesoSeleccion.UsuarioCreacion, " ")
 
                 };
             }
@@ -66,7 +96,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> Update(ProcesoSeleccion procesoSeleccion)
         {
             Respuesta _response = new Respuesta();
-
+            int AccionId = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
             try
             {
                 ProcesoSeleccion updateObj = GetObj(procesoSeleccion);
@@ -89,6 +119,8 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesProcessSchedule.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProyecto.Error, AccionId, procesoSeleccion.UsuarioCreacion, " ")
+
 
                 };
             }
@@ -96,7 +128,7 @@ namespace asivamosffie.services
 
         public ProcesoSeleccion GetObj(ProcesoSeleccion procesoSeleccion)
         {
-            ProcesoSeleccion updateObj =  _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
+            ProcesoSeleccion updateObj = _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
             updateObj.NumeroProceso = procesoSeleccion.NumeroProceso;
             updateObj.Objeto = procesoSeleccion.Objeto;
             updateObj.AlcanceParticular = procesoSeleccion.AlcanceParticular;
@@ -133,6 +165,7 @@ namespace asivamosffie.services
             {
                 ProcesoSeleccion entity = await GetSelectionProcessById(id);
                 _context.ProcesoSeleccion.Remove(entity);
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -141,4 +174,5 @@ namespace asivamosffie.services
             }
         }
     }
+}
 }
