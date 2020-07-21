@@ -60,6 +60,10 @@ body {
     }
 }
 
+.mt-1em {
+    margin-top: 1em;
+}
+
 .pr-0 {
     padding-right: 0;
 }
@@ -76,33 +80,6 @@ body {
     align-items: center;
 }
 
-.busqueda {
-    display: flex;
+.justify-content-center {
     justify-content: center;
-    align-items: center;
-
-    &--input {
-        width: 30em;
-    }
-    &--img {
-        margin-bottom: 1em;
-        margin-left: .5em;
-        padding: .5em;
-        min-width: 0;
-
-        img {
-            height: 2.5em;
-        }
-    }
-}
-
-.m1{
-    margin: 1em;
-}
-
-.m05_important{
-    margin: 0.5em !important;
-  }
-.opaco{
-    opacity: 0.6;
 }

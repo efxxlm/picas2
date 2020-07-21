@@ -1648,15 +1648,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<VigenciaAporte>(entity =>
             {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.TipoVigenciaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -1665,7 +1671,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.VigenciaAporte)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VigenciaAporte_FuenteFinanciacion");
             });
 
