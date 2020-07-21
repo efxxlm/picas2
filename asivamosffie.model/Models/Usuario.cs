@@ -25,5 +25,6 @@ namespace asivamosffie.model.Models
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string NumeroIdentificacion { get; set; }
+        
     }
 }
