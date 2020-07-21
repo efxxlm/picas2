@@ -76,6 +76,10 @@ body {
     align-items: center;
 }
 
+.justify-content-center {
+    justify-content: center;
+}
+
 .busqueda {
     display: flex;
     justify-content: center;
@@ -98,6 +102,10 @@ body {
 
 .m1{
     margin: 1em;
+}
+
+.mb-2em {
+    margin-bottom: 2em;
 }
 
 .m05_important{

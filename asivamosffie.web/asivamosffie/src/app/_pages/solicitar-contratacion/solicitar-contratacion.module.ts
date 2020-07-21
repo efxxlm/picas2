@@ -12,10 +12,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TablaResultadosComponent } from './components/tabla-resultados/tabla-resultados.component';
 
 
 @NgModule({
-  declarations: [SolicitarContratacionComponent, FormSolicitarContratacionComponent],
+  declarations: [SolicitarContratacionComponent, FormSolicitarContratacionComponent, TablaResultadosComponent],
   imports: [
     CommonModule,
     SolicitarContratacionRoutingModule,

@@ -13,6 +13,16 @@ label.mat-form-field-label {
     color: var(--mainColor);
 }
 
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: var(--mainColor);
+}
+
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
+.mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+    background-color: var(--mainColor);
+}
+
 input.mat-input-element {
     text-align: center;
     font-weight: 300;
@@ -91,8 +101,8 @@ div.mat-select-arrow {
 }
 
 .radioInput > .mat-radio-button {
-    display: inline-block;
-    margin: 5px 1em;
+    display: inline-block !important;
+    margin: 5px 1em !important;
 }
 
 .sub-label {

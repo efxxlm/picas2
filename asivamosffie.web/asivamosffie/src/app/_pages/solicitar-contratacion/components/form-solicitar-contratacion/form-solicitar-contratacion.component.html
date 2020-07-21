@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mb-2em">
   <div class="text-right">
     <a routerLink="/solicitarContratacion" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -11,104 +11,167 @@
   </div>
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-    <mat-card class="shipping-card">
-      <mat-card-header>
-        <mat-card-title>Shipping Information</mat-card-title>
+
+    <div class="row justify-content-center m1">
+      <div class="pr-1">
+        <label class="label-left" for="esMultiple">¿Es multi proyecto?</label>
+      </div>
+      <mat-radio-group class="radioInput" formControlName="esMultiple">
+        <mat-radio-button value="si">Sí</mat-radio-button>
+        <mat-radio-button value="no">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="text-center">
+      <button mat-raised-button color="primary" class="btn-cargar-proyecto" (click)="verBusqueda = !verBusqueda">Gestionar busqueda de proyectos</button>
+    </div>
+
+    <mat-card class="shipping-card animatedDown" *ngIf="verBusqueda">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Filtro de busqueda
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="row">
-          <div class="col">
-            <mat-form-field class="full-width">
-              <input matInput placeholder="Company" formControlName="company">
-            </mat-form-field>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="tipoInterventor">Tipo de intervención</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="tipoInterventor">
+                    <mat-option ></mat-option>
+                    <mat-option *ngFor="let tipoInterventor of selectTipoInterventor" [value]="tipoInterventor.value">
+                      {{ tipoInterventor.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <mat-form-field class="full-width">
-              <input matInput placeholder="First name" formControlName="firstName">
-              <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
-                First name is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col">
-            <mat-form-field class="full-width">
-              <input matInput placeholder="Last name" formControlName="lastName">
-              <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
-                Last name is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <mat-form-field class="full-width">
-              <textarea matInput placeholder="Address" formControlName="address"></textarea>
-              <mat-error *ngIf="addressForm.controls['address'].hasError('required')">
-                Address is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row" *ngIf="!hasUnitNumber">
-          <div class="col">
-            <button mat-button type="button" (click)="hasUnitNumber = !hasUnitNumber">
-              + Add C/O, Apt, Suite, Unit
-            </button>
-          </div>
-        </div>
-        <div class="row" *ngIf="hasUnitNumber">
-          <div class="col">
-            <mat-form-field class="full-width">
-              <textarea matInput placeholder="Address 2" formControlName="address2"></textarea>
-            </mat-form-field>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="llaveMEN">Llave MEN</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #llaveMEN type="number" maxlength="12" formControlName="llaveMEN"
+                    (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador">{{12 - llaveMEN.value.length}}</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <mat-form-field class="full-width">
-              <input matInput placeholder="City" formControlName="city">
-              <mat-error *ngIf="addressForm.controls['city'].hasError('required')">
-                City is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col">
-            <mat-form-field class="full-width">
-              <mat-select placeholder="State" formControlName="state">
-                <mat-option *ngFor="let state of states" [value]="state.abbreviation">
-                  {{ state.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="addressForm.controls['state'].hasError('required')">
-                State is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="region">Región</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="region">
+                    <mat-option ></mat-option>
+                    <mat-option *ngFor="let region of selectRegion" [value]="region.value">
+                      {{ region.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <mat-form-field class="full-width">
-              <input matInput #postalCode maxlength="5" placeholder="Postal Code" type="number" formControlName="postalCode">
-              <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-            </mat-form-field>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="departamento">Departamento</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="departamento">
+                    <mat-option ></mat-option>
+                    <mat-option *ngFor="let departamento of selectDepartamento" [value]="departamento.value">
+                      {{ departamento.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <mat-radio-group formControlName="shipping">
-              <mat-radio-button value="free">Free Shipping</mat-radio-button>
-              <mat-radio-button value="priority">Priority Shipping</mat-radio-button>
-              <mat-radio-button value="nextday">Next Day Shipping</mat-radio-button>
-            </mat-radio-group>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="municipio">Municipio</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="municipio">
+                    <mat-option ></mat-option>
+                    <mat-option *ngFor="let municipio of selectMunicipio" [value]="municipio.value">
+                      {{ municipio.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="institucionEducativa">Institución Educativa</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="institucionEducativa">
+                    <mat-option ></mat-option>
+                    <mat-option *ngFor="let institucionEducativa of selectinstitucionEducativa"
+                      [value]="institucionEducativa.value">
+                      {{ institucionEducativa.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="sede">Sede</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="sede">
+                    <mat-option ></mat-option>
+                    <mat-option *ngFor="let sede of selectSede" [value]="sede.value">
+                      {{ sede.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
       </mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button color="primary" type="submit">Submit</button>
+      <mat-card-actions class="text-center">
+        <button mat-button color="primary" class="btn-buscar" type="submit" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
+          <img src="assets/img/icon/lupa.svg" alt="buscar"> Buscar
+        </button>
       </mat-card-actions>
     </mat-card>
   </form>
 </div>
-
+<app-tabla-resultados></app-tabla-resultados>
