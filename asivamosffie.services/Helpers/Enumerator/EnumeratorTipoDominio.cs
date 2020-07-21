@@ -36,11 +36,22 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Fases = 16,
 
+		Acciones = 17,
+
+		Fuente_de_Recurso = 18,
+
 		Tipo_de_Predios = 19,
 
 		Origen_Documento_Cargue = 20,
-		Acciones = 17
 
+		//???????????
+
+		//???????????
+
+		//Es igual a estado Proyecto
+		Estado_Registro = 23,
+
+		Estado_Juridico_Predios = 25
 
 	}
 }

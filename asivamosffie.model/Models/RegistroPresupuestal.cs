@@ -11,14 +11,11 @@ namespace asivamosffie.model.Models
         }
 
         public int RegistroPresupuestalId { get; set; }
-        public int? AportanteId { get; set; }
+        public int AportanteId { get; set; }
         public string NumeroRp { get; set; }
-        public DateTime? FechaRp { get; set; }
-        public DateTime? FechaCreacion { get; set; }
+        public DateTime FechaRp { get; set; }
+        public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
-        public DateTime? FechaModificacion { get; set; }
-        public string UsuarioModificacion { get; set; }
-        public bool? Eliminado { get; set; }
 
         public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }

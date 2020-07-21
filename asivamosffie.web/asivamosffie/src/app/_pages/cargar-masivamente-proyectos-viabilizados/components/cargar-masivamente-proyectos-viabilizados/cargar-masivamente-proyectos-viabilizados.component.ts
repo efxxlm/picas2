@@ -13,5 +13,8 @@ export class CargarMasivamenteProyectosViabilizadosComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  descargaPlantilla()
+  {
+    location.href ="./assets/files/Formato_Cargue masivo de proyectos_FFIE.xlsx";
+  }
 }

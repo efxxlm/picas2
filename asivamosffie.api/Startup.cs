@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using asivamosffie.services.Filters;
+using FluentValidation.AspNetCore;
 using System;
 using System.Text;
 
@@ -113,10 +115,13 @@ namespace asivamosffie.api
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
+            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IContributorService, ContributorService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<IResourceControlService, ResourceControlService>();
+
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

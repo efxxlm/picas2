@@ -7,6 +7,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Cofinanciacion = 2,
         CambioContraseña = 6,
         CargueMasivoProyecto = 9,
+        Proyecto = 10,
         Fuentes = 14,
         Aportantes = 15
 
@@ -19,8 +20,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         SolicitarContraseña = 53,
         CrearActualizarCofinanciacion = 55,
         Error = 56,
-        ValidarExcel = 63,
-        CargueProyectosMasivos = 69
+        ValidarExcel = 63, 
+        CargueProyectosMasivos = 69,
+        DescargarExcelProyectos = 75
     }
 
 }
