@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -66,31 +67,54 @@ namespace asivamosffie.services
         public async Task<Respuesta> Insert(ControlRecurso controlRecurso)
         {
             Respuesta _response = new Respuesta();
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
             try
             {
+                
                 if (controlRecurso != null)
                 {
                     _context.Add(controlRecurso);
                     await _context.SaveChangesAsync();
-
-                    return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = controlRecurso, Code = ConstantMessagesResourceControl.OperacionExitosa };
+                    return new Respuesta
+                       {
+                           IsSuccessful = false,
+                           IsException = true,
+                           IsValidation = false,
+                           Code = ConstantMessagesResourceControl.OperacionExitosa,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "Crear Control")
+                       };
+                    
                 }
                 else
-                {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesResourceControl.Error };
+                {                    
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantMessagesResourceControl.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "Crear Control")
+                    };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false,  Data = null,  Code = ConstantMessagesResourceControl.Error, Message = ex.Message };
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, ex.Message)
+                };                
             }
         }
 
         public async Task<Respuesta> Update(ControlRecurso controlRecurso)
         {
             Respuesta _response = new Respuesta();
-
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
             try
             {
                 ControlRecurso updateObj = await _context.ControlRecurso.FindAsync(controlRecurso.ControlRecursoId);
@@ -104,18 +128,68 @@ namespace asivamosffie.services
 
                 _context.Update(updateObj);
                 await _context.SaveChangesAsync();
-
-                return _response = new Respuesta  { IsSuccessful = true, IsValidation = false,  Data = updateObj, Code = ConstantMessagesResourceControl.EditadoCorrrectamente };
+                
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.EditadoCorrrectamente,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioModificacion, "Editar ")
+                };
             }
             catch (Exception ex)
-            {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesResourceControl.Error, Message = ex.Message};
+            {                
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioModificacion, ex.Message)
+                };
             }
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id, string pUsuario)
         {
-            throw new NotImplementedException();
+            Respuesta _response = new Respuesta();
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                ControlRecurso updateObj = await _context.ControlRecurso.FindAsync(id);
+
+                updateObj.Eliminado = true;
+                updateObj.UsuarioModificacion = pUsuario;
+                updateObj.FechaModificacion = DateTime.Now;
+
+                _context.Update(updateObj);
+                await _context.SaveChangesAsync();
+
+                
+                var response= new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, pUsuario, "Eliminado")
+                };
+                return true;
+            }
+            catch (Exception ex)
+            {
+                
+                var response = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, pUsuario, ex.Message)
+                };
+                return false;
+            }
         }
 
     }

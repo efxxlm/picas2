@@ -104,6 +104,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("DeleteResourceFundingBySourceFunding")]
+        public async Task<bool> DeleteResourceFundingBySourceFunding(int id)
+        {
+            try
+            {
+
+                var result = await _resource.Delete(id, HttpContext.User.FindFirst("User").Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 
 

@@ -21,7 +21,10 @@
         public const string Crear_Editar_Cuenta_Bancaria = "23";
         public const string Crear_Editar_Vigencia_Aporte = "24";
 
+        public const string Crear_Editar_Recursos_Control = "25";
+        public const string Eliminar_Editar_Recursos_Control = "26";
 
-        
+
+
     }
 }

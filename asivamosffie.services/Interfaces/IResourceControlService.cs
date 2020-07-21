@@ -17,7 +17,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> Update(ControlRecurso controlRecurso);
 
-        Task<bool> Delete(int id);
+        Task<bool> Delete(int id, string pUsuario);
 
     }
 }
