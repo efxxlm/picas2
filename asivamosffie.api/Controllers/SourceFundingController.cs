@@ -111,7 +111,7 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [HttpPost]
+        [HttpDelete]
         [Route("EliminarFuentesFinanciacion")]
         public async Task<IActionResult> EliminarFuentesFinanciacion(int id)
         {

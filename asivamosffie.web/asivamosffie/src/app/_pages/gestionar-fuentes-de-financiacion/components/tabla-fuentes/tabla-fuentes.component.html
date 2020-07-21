@@ -54,7 +54,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="accent" class="btn-table" (click)="editarFuente( element.aportante.tipoAportanteId, element.aportanteId )">Ver detalle/<br>Editar</button>
-                <button mat-raised-button color="accent" class="btn-table" (click)="eliminarFuente(element.aportanteId )">Eliminar</button>
+                <button mat-raised-button color="accent" class="btn-table" (click)="eliminarFuente(element.fuenteFinanciacionId )">Eliminar</button>
                 <button mat-raised-button color="accent" class="btn-table" (click)="controlRecursosFuente(element.aportanteId )">Control de recursos</button>
             </td>
         </ng-container>

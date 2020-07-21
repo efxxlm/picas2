@@ -48,6 +48,10 @@ export class FuenteFinanciacionService {
     return this.http.post(`${environment.apiUrl}/CofinancingContributor/CreateEditBudgetRecords/`, registroPresupuestal);
   }
 
+  eliminarFuentesFinanciacion( id: number ){
+    return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacion?id=${id}`);
+  }
+
 }
 
 export interface FuenteFinanciacion{

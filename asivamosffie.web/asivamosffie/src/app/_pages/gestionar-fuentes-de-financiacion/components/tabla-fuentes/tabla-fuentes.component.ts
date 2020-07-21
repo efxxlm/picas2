@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ViewFlags } from '@angular/compiler/src/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 @Component({
@@ -36,7 +38,8 @@ export class TablaFuentesComponent implements OnInit {
   constructor(
                 private fuenteFinanciacionService: FuenteFinanciacionService,
                 private commonService: CommonService,
-                private router: Router
+                private router: Router,
+                public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -83,10 +86,39 @@ export class TablaFuentesComponent implements OnInit {
     this.router.navigate(['/registrarFuentes',e,idTipo]);
   }
   eliminarFuente(e: number) {
-    
+    this.openDialogSiNo('','¿Está seguro de eliminar este registro?',e)
   }
+
   controlRecursosFuente(e: number) {
     this.router.navigate(['/gestionarFuentes/controlRecursos',e])
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        this.eliminarRegistro(e);
+      }           
+    });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  }
+
+  eliminarRegistro(e: number){
+    this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe( resultado => {
+      this.openDialog('Fuente Financiacion', resultado.message);
+      this.ngOnInit();
+    })
   }
 
 }
