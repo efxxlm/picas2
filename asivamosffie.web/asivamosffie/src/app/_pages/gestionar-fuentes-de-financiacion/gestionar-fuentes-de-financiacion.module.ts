@@ -9,10 +9,11 @@ import { ControlDeRecursosComponent } from './components/control-de-recursos/con
 
 import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TableControlRecursosComponent } from './components/table-control-recursos/table-control-recursos.component';
 
 
 @NgModule({
-  declarations: [BtnRegistrarComponent, RegistrarComponent, TablaFuentesComponent, ControlDeRecursosComponent],
+  declarations: [BtnRegistrarComponent, RegistrarComponent, TablaFuentesComponent, ControlDeRecursosComponent, TableControlRecursosComponent],
   imports: [
     CommonModule,
     GestionarFuentesDeFinanciacionRoutingModule,
