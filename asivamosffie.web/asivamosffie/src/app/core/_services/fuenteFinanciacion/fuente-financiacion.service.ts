@@ -52,6 +52,10 @@ export class FuenteFinanciacionService {
     return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacion?id=${id}`);
   }
 
+  getFuenteFinanciacion( id: number ){
+    return this.http.get<FuenteFinanciacion>(`${environment.apiUrl}/SourceFunding/${id}`);
+  }
+
 }
 
 export interface FuenteFinanciacion{

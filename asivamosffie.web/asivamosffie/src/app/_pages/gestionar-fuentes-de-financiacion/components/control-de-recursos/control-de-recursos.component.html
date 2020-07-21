@@ -18,13 +18,13 @@
         </mat-card-header>
         <mat-card-content>
           <p><strong>Nombre del aportante:</strong>
-            Gobernación de Atlántico</p>
+            {{ nombreAportante }}</p>
           <p><strong>Departamento:</strong>
-            Atlántico</p>
+            {{ departamento }}</p>
           <p><strong>Municipio:</strong>
-            Malambo</p>
+            {{ municipio }}</p>
           <p><strong>Vigencia del acuerdo de cofinanciación:</strong>
-            2020</p>
+            {{ vigencia }}</p>
         </mat-card-content>
       </mat-card>
       <mat-card class="shipping-card var-main-gris">
@@ -35,9 +35,9 @@
         </mat-card-header>
         <mat-card-content>
           <p><strong>Fuente de recursos:</strong>
-            Recursos propios</p>
+            {{ nombreFuente }}</p>
           <p><strong>Valor aporte fuente de recursos:</strong>
-            $55.000.000</p>
+            {{ valorFuente | currency }}</p>
         </mat-card-content>
       </mat-card>
       <mat-card class="shipping-card">

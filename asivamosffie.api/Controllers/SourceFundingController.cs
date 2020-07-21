@@ -57,12 +57,12 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<FuenteFinanciacion> GetById(int id)
         {
             try
             {
                 var result = await _sourceFunding.GetISourceFundingById(id);
-                return Ok(result);
+                return result;
             }
             catch (Exception ex)
             {
