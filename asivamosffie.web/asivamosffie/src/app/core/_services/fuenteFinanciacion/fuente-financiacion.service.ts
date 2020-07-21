@@ -56,6 +56,10 @@ export class FuenteFinanciacionService {
     return this.http.get<FuenteFinanciacion>(`${environment.apiUrl}/SourceFunding/${id}`);
   }
 
+  registrarControlRecurso( controlRecurso: ControlRecurso ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ResourceControl/CreateControlRecurso`, controlRecurso);
+  }
+
 }
 
 export interface FuenteFinanciacion{

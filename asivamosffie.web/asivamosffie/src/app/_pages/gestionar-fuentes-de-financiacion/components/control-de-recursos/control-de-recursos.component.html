@@ -95,8 +95,8 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="vigencia">
-                      <mat-option *ngFor="let documento of listaVigencias" [value]="documento">
-                        {{ documento.vigenciaAporte }}
+                      <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                        {{ vigencia.tipoVigenciaCodigo }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

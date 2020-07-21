@@ -74,37 +74,37 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateControlRecurso")]
-        public async Task<IActionResult> CreateControlRecurso(ControlRecurso controlRecurso)
+        public async Task<Respuesta> CreateControlRecurso(ControlRecurso controlRecurso)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 controlRecurso.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _resource.Insert(controlRecurso);
-                return Ok(respuesta);
+                return respuesta;
             }
             catch (Exception ex)
             {
                 respuesta.Data = ex.InnerException.ToString();
-                return BadRequest(respuesta);
+                return respuesta;
             }
         }
 
         [HttpPost]
         [Route("updateControlRecurso")]
-        public async Task<IActionResult> UpdateControlRecurso(ControlRecurso controlRecurso)
+        public async Task<Respuesta> UpdateControlRecurso(ControlRecurso controlRecurso)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 controlRecurso.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _resource.Update(controlRecurso);
-                return Ok(respuesta);
+                return respuesta;
             }
             catch (Exception ex)
             {
                 respuesta.Data = ex.InnerException.ToString();
-                return BadRequest(respuesta);
+                return respuesta;
             }
         }
 
