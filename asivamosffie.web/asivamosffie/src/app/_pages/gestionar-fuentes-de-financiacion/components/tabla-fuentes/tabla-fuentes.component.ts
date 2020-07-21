@@ -10,6 +10,7 @@ import { CommonService, Dominio } from 'src/app/core/_services/common/common.ser
 import { ViewFlags } from '@angular/compiler/src/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 
 
 @Component({
@@ -116,7 +117,8 @@ export class TablaFuentesComponent implements OnInit {
 
   eliminarRegistro(e: number){
     this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe( resultado => {
-      this.openDialog('Fuente Financiacion', resultado.message);
+      let res = resultado as Respuesta;
+      this.openDialog('Fuente Financiacion', res.message);
       this.ngOnInit();
     })
   }

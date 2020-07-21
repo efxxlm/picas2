@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CuentaBancariaService } from 'src/app/core/_services/cuentaBancaria/cuenta-bancaria.service';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
+import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 
 @Component({
   selector: 'app-registrar',
@@ -515,8 +516,9 @@ export class RegistrarComponent implements OnInit {
                 toArray()),
           ])
           .subscribe( respuesta => {
-            if (respuesta[0][0].code == "200")
-              this.openDialog("Fuente Financiación",respuesta[0][0].message);    
+            let res = respuesta[0][0] as Respuesta
+            if (res.code == "200")
+              this.openDialog("Fuente Financiación",res.message);    
               console.log(respuesta);        
           })
         

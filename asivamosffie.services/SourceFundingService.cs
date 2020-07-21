@@ -31,8 +31,17 @@ namespace asivamosffie.services
 
         public async Task<FuenteFinanciacion> GetISourceFundingById(int id)
         {
-            return await _context.FuenteFinanciacion.FindAsync(id);
-            //return await _context.FuenteFinanciacion.Where(r => r.AportanteId == id).ToListAsync();
+            return await _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == id)
+                        .Include(r => r.ControlRecurso)
+                        .Include(r => r.CuentaBancaria)
+                        .Include(r => r.VigenciaAporte)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(apo => apo.RegistroPresupuestal)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(apo => apo.Cofinanciacion)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(apo => apo.CofinanciacionDocumento)
+                        .FirstOrDefaultAsync(); 
         }
 
         public async Task<Respuesta> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)

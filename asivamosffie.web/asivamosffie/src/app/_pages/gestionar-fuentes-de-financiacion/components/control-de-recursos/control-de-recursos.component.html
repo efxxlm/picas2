@@ -17,6 +17,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
+          <input type="hidden" formControlName="controlRecursoId">
           <p><strong>Nombre del aportante:</strong>
             {{ nombreAportante }}</p>
           <p><strong>Departamento:</strong>
@@ -48,9 +49,9 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="nombreCuenta">
-                  <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre.value">
-                    {{ Nombre.name }}
+                <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()">
+                  <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre">
+                    {{ Nombre.nombreCuentaBanco }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -62,7 +63,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput type="number" formControlName="numeroCuenta">
+                <input matInput type="number" formControlName="numeroCuenta" readonly >
               </mat-form-field>
               <!-- <span class="contador">{{10 - numDocumento.value.length}}</span> -->
             </div>
@@ -78,8 +79,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="rp">
-                  <mat-option *ngFor="let rp of rpArray" [value]="rp.value">
-                    {{ rp.name }}
+                  <mat-option *ngFor="let rp of rpArray" [value]="rp">
+                    {{ rp.numeroRp }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -91,11 +92,14 @@
                 <div class="pr-1">
                   <label class="label-left" for="vigencia">Vigencia</label>
                 </div>
-                <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input matInput type="text" formControlName="vigencia">
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="vigencia">
+                      <mat-option *ngFor="let documento of listaVigencias" [value]="documento">
+                        {{ documento.vigenciaAporte }}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
-                  <!-- <span class="contador">{{10 - numDocumento.value.length}}</span> -->
                 </div>
               </div>
             </div>
@@ -126,7 +130,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorConsignacion type="number" maxlength="50" formControlName="numeroCuenta" keypress="if(this.value.length >= this.maxlength) return false">
+                    <input matInput #valorConsignacion type="number" maxlength="50" formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false">
                   </mat-form-field>
                   <span class="contador">{{50 - valorConsignacion.value.length}}</span>
                 </div>
@@ -143,4 +147,8 @@
       </div>
     </form>
   </div>
+
+  <pre>
+    {{addressForm.value | json}} 
+  </pre>
   

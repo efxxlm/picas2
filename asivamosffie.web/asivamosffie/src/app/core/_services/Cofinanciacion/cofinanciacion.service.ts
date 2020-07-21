@@ -45,7 +45,7 @@ export class CofinanciacionService {
   listaAportantesByTipoAportante(pTipoAportanteID: number){
     return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`);
   }
-  
+
 }
 
 export interface Cofinanciacion{
@@ -68,6 +68,7 @@ export interface CofinanciacionAportante{
   eliminado?:boolean,
   nombreAportante?: string,
   registroPresupuestal?: RegistroPresupuestal[],
+  cofinanciacion: Cofinanciacion
 }
 
 export interface CofinanciacionDocumento{
