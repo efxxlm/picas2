@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
-import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -152,8 +151,7 @@ export interface Dominio{
 
 export interface Localizacion{
   localizacionId: string,
-  descripcion: string,
-  idPadre:string
+  descripcion: string
 }
 
 export interface Respuesta{
@@ -173,7 +171,7 @@ interface TipoAportante{
 }
 
 export const TiposAportante: TipoAportante = {
-  FFIE:   ["1"],
-  ET:     ["2"],
-  Tercero:["3"]
+  FFIE:   ["6"],
+  ET:     ["9"],
+  Tercero:["10"]
 }

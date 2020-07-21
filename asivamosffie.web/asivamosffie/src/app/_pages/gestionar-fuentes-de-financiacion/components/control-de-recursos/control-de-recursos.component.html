@@ -1,0 +1,157 @@
+<div class="container">
+    <div class="text-right">
+      <a routerLink="/gestionarFuentes" mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <div class="text-center">
+      <h1 class="title-menu--h1">
+        Control de recursos
+      </h1>
+    </div>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Aportante
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <input type="hidden" formControlName="controlRecursoId">
+          <p><strong>Nombre del aportante:</strong>
+            {{ nombreAportante }}</p>
+            <div *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
+              <p ><strong>Departamento:</strong>
+                {{ departamento }}</p>
+              <p><strong>Municipio:</strong>
+                {{ municipio }}</p>
+          </div>
+          <p><strong>Vigencia del acuerdo de cofinanciación:</strong>
+            {{ vigencia }}</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Datos de la fuente
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Fuente de recursos:</strong>
+            {{ nombreFuente }}</p>
+          <p><strong>Valor aporte fuente de recursos:</strong>
+            {{ valorFuente | currency }}</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="shipping-card">
+        <mat-card-content>
+          <div class="row" >
+            <div class="pr-1">
+              <label class="label-left" for="nombreCuenta">Nombre de la cuenta</label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()">
+                  <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre">
+                    {{ Nombre.nombreCuentaBanco }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="numeroCuenta">Número de cuenta</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput type="number" formControlName="numeroCuenta" readonly >
+              </mat-form-field>
+              <!-- <span class="contador">{{10 - numDocumento.value.length}}</span> -->
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="shipping-card">
+        <mat-card-content>
+          <div class="row" >
+            <div class="pr-1">
+              <label class="label-left" for="rp">RP</label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="rp">
+                  <mat-option *ngFor="let rp of rpArray" [value]="rp">
+                    {{ rp.numeroRp }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="vigencia">Vigencia</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="vigencia">
+                      <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                        {{ vigencia.tipoVigenciaCodigo }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" class="fechaConsignacion">Fecha de consignación</label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="example-full-width">
+                    <input matInput [matDatepicker]="picker" formControlName="fechaConsignacion" readonly (click)="picker.open()">
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                  <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="numeroCuenta">Valor de consignación</label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #valorConsignacion type="number" maxlength="50" formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false">
+                  </mat-form-field>
+                  <span class="contador">{{50 - valorConsignacion.value.length}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+        </mat-card-content>
+      </mat-card>
+      <div class="text-center">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+          <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <pre>
+    <!-- {{addressForm.value | json}}  -->
+  </pre>
+
+<app-table-control-recursos></app-table-control-recursos>

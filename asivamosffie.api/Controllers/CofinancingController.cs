@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -87,7 +86,8 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-         
+
+
         [Route("GetCofinancingByIdCofinancing")]
         [HttpGet]
         public async Task<Cofinanciacion> GetCofinancing(int IdCofinancing)
