@@ -12,7 +12,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<FuenteFinanciacion>> GetISourceFunding();
         Task<FuenteFinanciacion> GetISourceFundingById(int id);
 
-        Task<Respuesta> CreateFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
+        Task<Respuesta> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
 
         Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
 
@@ -22,8 +22,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion();
 
-        Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria);
-
         Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte);
+
     }
 }

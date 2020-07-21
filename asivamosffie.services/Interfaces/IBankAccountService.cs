@@ -18,6 +18,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> Update(CuentaBancaria cuentaBancaria);
 
         Task<bool> Delete(int id);
+
+        Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria);
        
     }
 }

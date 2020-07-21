@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CofinanciacionAportante } from '../Cofinanciacion/cofinanciacion.service';
 import { environment } from 'src/environments/environment';
+import { Respuesta } from '../common/common.service';
+import { forkJoin, from } from 'rxjs';
+import { mergeMap, tap, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +15,8 @@ export class FuenteFinanciacionService {
 
   ) { }
 
-  registrarFuenteFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
-    return this.http.post(`${environment.apiUrl}/SourceFunding/CreateFuentesFinanciacion/`, fuenteFinanciacion);
+  createEditFuentesFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
+    return this.http.post(`${environment.apiUrl}/SourceFunding/CreateEditFuentesFinanciacion/`, fuenteFinanciacion);
   }  
 
   listaFuenteFinanciacion(){
@@ -21,20 +24,28 @@ export class FuenteFinanciacionService {
 
   }
 
-  listaFuenteFinanciacionByAportante(id: number){
+  listaFuenteFinanciacionByAportante( id: number ){
     return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetFuentesFinanciacionByAportanteId?AportanteId=${id}`);
   }
 
-  modificarFuenteFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
-    return this.http.put(`${environment.apiUrl}/SourceFunding/EditFuentesFinanciacion/`, fuenteFinanciacion);
-  }
-
-  registrarRegistroPresupuestal(registroPresupuestal: RegistroPresupuestal ){
+  registrarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){
     return this.http.post(`${environment.apiUrl}/CofinancingContributor/SaveBudgetRegister/`, registroPresupuestal);
   }
 
-  modificarRegistroPresupuestal(registroPresupuestal: RegistroPresupuestal ){
-    return this.http.post(`${environment.apiUrl}/CofinancingContributor/UpdateRegisterBudget/`, registroPresupuestal);
+  modificarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){
+    return this.http.put(`${environment.apiUrl}/CofinancingContributor/UpdateRegisterBudget/`, registroPresupuestal);
+  }
+
+  crearModificarVigenciaAporte( vigenciaAporte: VigenciaAporte ){
+    return this.http.post(`${environment.apiUrl}/SourceFunding/CreateEditarVigenciaAporte/`, vigenciaAporte);
+  }
+
+  crearModificarCuentaBancaria( cuentaBancaria: CuentaBancaria ){
+    return this.http.post(`${environment.apiUrl}/BankAccount/CreateEditarCuentasBancarias/`, cuentaBancaria);
+  }
+
+  createEditBudgetRecords( registroPresupuestal: RegistroPresupuestal ){
+    return this.http.post(`${environment.apiUrl}/CofinancingContributor/CreateEditBudgetRecords/`, registroPresupuestal);
   }
 
 }
@@ -92,5 +103,5 @@ export interface RegistroPresupuestal{
   numeroRp: string,
   fechaRp: Date,
   fechaCreacion?: Date,
-  usuarioCreacion?: string
+  usuarioCreacion?: string,
 }

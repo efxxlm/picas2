@@ -24,24 +24,6 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateEditarCuentasBancarias")]
-        public async Task<IActionResult> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            { 
-                cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _sourceFunding.CreateEditarCuentasBancarias(cuentaBancaria);
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.InnerException.ToString();
-                return BadRequest(respuesta);
-            }
-        }
-
-        [HttpPost]
         [Route("CreateEditarVigenciaAporte")]
         public async Task<IActionResult> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)
         {
@@ -92,14 +74,14 @@ namespace asivamosffie.api.Controllers
 
         // Agregar Fuente de recursos
         [HttpPost]
-        [Route("CreateFuentesFinanciacion")]
-        public async Task<IActionResult> CreateFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
+        [Route("CreateEditFuentesFinanciacion")]
+        public async Task<IActionResult> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 fuentefinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _sourceFunding.CreateFuentesFinanciacion(fuentefinanciacion);
+                respuesta = await _sourceFunding.CreateEditFuentesFinanciacion(fuentefinanciacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)

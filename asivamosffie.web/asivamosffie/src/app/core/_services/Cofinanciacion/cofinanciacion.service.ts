@@ -44,23 +44,8 @@ export class CofinanciacionService {
 
   listaAportantesByTipoAportante(pTipoAportanteID: number){
     return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`);
-    
-            // pipe( map( apo => {
-            //     let lista: Dominio[] = [];
-            //     apo.forEach( a => {
-            //       let dom: Dominio = {
-            //         dominioId: a.nombreAportanteId,
-            //         tipoDominioId: 0,
-            //         nombre: '',
-            //         codigo: '0',
-            //         activo: true
-            //       }
-            //       lista.push(dom);
-            //     })
-
-            //     return lista;
-            // }) )
   }
+  
 }
 
 export interface Cofinanciacion{

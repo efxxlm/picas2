@@ -156,5 +156,20 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("CreateEditBudgetRecords")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal)
+        {
+            try
+            {
+                var result = await _contributor.CreateEditBudgetRecords(registroPresupuestal);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

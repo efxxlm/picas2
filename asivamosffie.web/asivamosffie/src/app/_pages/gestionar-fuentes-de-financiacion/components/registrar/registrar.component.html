@@ -39,7 +39,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="full-width">
-                  <input matInput formControlName="documentoApropiacion">
+                  <input matInput formControlName="documentoApropiacion" readonly>
                 </mat-form-field>
               </div>
             </div>
@@ -53,7 +53,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numDocumento type="number" formControlName="numerodocumento">
+                  <input matInput #numDocumento type="number" formControlName="numerodocumento" readonly>
                 </mat-form-field>
                 <span class="contador">{{10 - numDocumento.value.length}}</span>
               </div>
@@ -65,8 +65,8 @@
             <label class="label-left">Departamento</label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width">
-              <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()">
+            <mat-form-field class="select-width" style="pointer-events: none;">
+              <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" >
                 <mat-option *ngFor="let nombreAportantes of departamentos" [value]="nombreAportantes">
                   {{ nombreAportantes.descripcion }}
                 </mat-option>
@@ -79,7 +79,7 @@
             <label class="label-left">Municipio</label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width">
+            <mat-form-field class="select-width" style="pointer-events: none;">
               <mat-select formControlName="municipio" >
                 <mat-option value="0">Seleccione</mat-option>
                 <mat-option *ngFor="let municipio of municipios"
@@ -95,7 +95,7 @@
             <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width">
+            <mat-form-field class="select-width" style="pointer-events: none;">
               <mat-select formControlName="vigenciaAcuerdo" >
                 <mat-option value="0">Seleccione</mat-option>
                 <mat-option *ngFor="let vigencia of VigenciasAporte"
@@ -109,27 +109,27 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
+    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
       <mat-card-content>
-        <div class="row mt-1em" >
+        <div class="row mt-1em" *ngFor="let documento of listaDocumentos; let i = index" >
           <div class="col-md-6">
-            <p><b>Documento de apropiación: </b> Documento 1 </p>
-            <p><b>Tipo de documento: </b> Resolución </p>
-            <p><b>Fecha: </b> 30/04/2020 </p>
+            <p><b>Documento de apropiación: </b> Documento {{ i + 1}} </p>
+            <p><b>Tipo de documento: </b>{{ documento.tipoDocumento.nombre }} </p>
+            <p><b>Fecha: </b> {{ documento.fechaAcuerdo | date }} </p>
           </div>
           <div class="col-md-6">
-            <p><b>Vigencia del aporte: </b> 2020 </p>
-            <p><b>Número de documento: </b> 000904 </p>
-            <p><b>Valor: </b> $55.000.000 </p>
+            <p><b>Vigencia del aporte: </b> {{ documento.vigenciaAporte }} </p>
+            <p><b>Número de documento: </b> {{ documento.numeroActa }} </p>
+            <p><b>Valor: </b> {{ documento.valorDocumento | currency }} </p>
           </div>
         </div>
         <h2 class="card-subTitle var-main-gris">
-          <b>Valor total: </b> $85.000.000
+          <b>Valor total: </b> {{ valorTotal | currency }}
         </h2>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
+    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
           Registros Presupuestales
@@ -245,8 +245,8 @@
                   </div>
                 </div>
               </div>
-              <h2 class="card-subTitle">Vigencias</h2>
-              <div class="row">
+              <h2 class="card-subTitle" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">Vigencias</h2>
+              <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
@@ -262,7 +262,7 @@
                   </div>
                 </div>
               </div>
-              <div formGroupName="vigencias">
+              <div formGroupName="vigencias" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
 
                 <div *ngFor="let vigencia of vigencias1.controls; let i = index">
                   <div [formGroupName]="i">

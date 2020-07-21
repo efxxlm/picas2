@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -51,16 +52,20 @@ namespace asivamosffie.api.Controllers
         }
          
         [HttpPost]
-        public async Task<IActionResult> post(CuentaBancaria cuentabancaria)
+        [Route("CreateEditarCuentasBancarias")]
+        public async Task<IActionResult> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
         {
+            Respuesta respuesta = new Respuesta();
             try
-            {
-                var result = await _bankAccount.Insert(cuentabancaria);
-                return Ok(result);
+            { 
+                cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _bankAccount.CreateEditarCuentasBancarias(cuentaBancaria);
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
     }

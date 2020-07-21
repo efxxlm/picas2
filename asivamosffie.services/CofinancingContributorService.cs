@@ -138,6 +138,28 @@ namespace asivamosffie.services
 
 
         //Registrar Registros presupuestales
+        public async Task<Respuesta> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal)
+        {
+            Respuesta _reponse = new Respuesta();
+            try
+            {
+                if (registroPresupuestal.RegistroPresupuestalId == null || registroPresupuestal.RegistroPresupuestalId == 0)
+                    await this.BudgetRecords(registroPresupuestal);
+                else
+                    await this.UpdateBudgetRegister(registroPresupuestal);
+
+                await _context.SaveChangesAsync();
+                _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
+            }
+            catch (Exception ex)
+            {
+                _reponse = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+            }
+
+            return _reponse;
+        }
+
+
         public async Task<Respuesta> BudgetRecords(RegistroPresupuestal registroPresupuestal)
         {
             Respuesta _reponse = new Respuesta();
@@ -146,7 +168,7 @@ namespace asivamosffie.services
                 registroPresupuestal.FechaCreacion = DateTime.Now;
                 registroPresupuestal.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
                 _context.Add(registroPresupuestal);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
                 _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
             }
             catch (Exception ex)
@@ -169,7 +191,7 @@ namespace asivamosffie.services
                 updateObj.NumeroRp = registroPresupuestal.NumeroRp;
                 updateObj.FechaRp = registroPresupuestal.FechaRp;
                 _context.Update(updateObj);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
             }
