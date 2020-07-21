@@ -60,6 +60,8 @@ export class TablaResultadosComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  elementosSelecciondos:any[]=[];
+
   constructor() { }
 
   ngOnInit(): void {
@@ -70,4 +72,9 @@ export class TablaResultadosComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
+  addElement(event:any,elemento:any)
+  {
+    console.log(event);
+    this.elementosSelecciondos.push(elemento);
+  }
 }
