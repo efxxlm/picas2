@@ -91,7 +91,7 @@ export class TablaFuentesComponent implements OnInit {
   }
 
   controlRecursosFuente(e: number) {
-    this.router.navigate(['/gestionarFuentes/controlRecursos',e])
+    this.router.navigate(['/gestionarFuentes/controlRecursos',e,0])
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e:number) {

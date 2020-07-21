@@ -24,12 +24,26 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-
         public async Task<List<ControlRecurso>> Get()
         {
             try
             {
                 var result = await _resource.GetResourceControl();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetResourceFundingBySourceFunding/{id}")]
+        public async Task<List<ControlRecurso>> GetSourceFundingBySourceFunding(int id)
+        {
+            try
+            {
+                var result = await _resource.GetResourceControlGridBySourceFunding( id );
                 return result;
             }
             catch (Exception ex)
@@ -54,24 +68,6 @@ namespace asivamosffie.api.Controllers
         }
 
         
-        [HttpGet]
-        [Route("GetResourceControlGrid")]
-        public async Task<List<ControlRecurso>> GetResourceControlGrid()
-        {
-            try
-            {
-                var result = await _resource.GetResourceControlGrid();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-
-
         [HttpPost]
         [Route("CreateControlRecurso")]
         public async Task<Respuesta> CreateControlRecurso(ControlRecurso controlRecurso)

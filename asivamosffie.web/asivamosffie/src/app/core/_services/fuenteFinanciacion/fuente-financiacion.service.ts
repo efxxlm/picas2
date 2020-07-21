@@ -60,6 +60,18 @@ export class FuenteFinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/ResourceControl/CreateControlRecurso`, controlRecurso);
   }
 
+  getSourceFundingBySourceFunding( id: number ){
+    return this.http.get<ControlRecurso[]>(`${environment.apiUrl}/ResourceControl/GetResourceFundingBySourceFunding/${id}`);
+  }
+
+  getResourceControlById( id: number){
+    return this.http.get<ControlRecurso>(`${environment.apiUrl}/ResourceControl/GetResourceControlById?pId=${id}`);
+  }
+
+  updateControlRecurso( controlRecurso: ControlRecurso){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ResourceControl/updateControlRecurso`, controlRecurso);
+  }
+
 }
 
 export interface FuenteFinanciacion{
@@ -106,6 +118,7 @@ export interface ControlRecurso{
   vigenciaAporteId: number,
   fechaConsignacion: Date,
   valorConsignacion: number,
+  fechaCreacion?: Date,
 
 }
 

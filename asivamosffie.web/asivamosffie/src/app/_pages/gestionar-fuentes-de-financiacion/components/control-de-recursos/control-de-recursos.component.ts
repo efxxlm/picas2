@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { TiposAportante, CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { TiposAportante, CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
 import { ActivatedRoute } from '@angular/router';
 import { FuenteFinanciacion, FuenteFinanciacionService, CuentaBancaria, RegistroPresupuestal, ControlRecurso, VigenciaAporte } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { forkJoin } from 'rxjs';
@@ -25,11 +25,14 @@ export class ControlDeRecursosComponent implements OnInit {
   nombreFuente: string = '';
   valorFuente: number = 0;
   idFuente: number = 0;
+  idControl: number = 0;
   listaNombres: Dominio[] = [];
   listaFuentes: Dominio[] = [];
+  listaDepartamentos: Localizacion[] = [];
   listaVigencias: VigenciaAporte[] = [];
   fuente: FuenteFinanciacion;
   fuenteFinaciacionId: number = 0;
+  tipoAportanteId: string = '';
 
   NombresDeLaCuenta: CuentaBancaria[] = [] ;
 
@@ -58,22 +61,38 @@ export class ControlDeRecursosComponent implements OnInit {
     });
 
     this.activatedRoute.params.subscribe( param => {
-      this.idFuente = param['id'];
+      this.idFuente = param['idFuente'];
+      this.idControl = param['idControl'];
 
       forkJoin([
         this.fuenteFinanciacionServices.getFuenteFinanciacion( this.idFuente ),
         this.commonService.listaNombreAportante(),
         this.commonService.listaFuenteRecursos(),
-        this.commonService.listaDepartamentos(),  
+        this.commonService.listaDepartamentos()
+        
       ]).subscribe( respuesta => {
         this.fuente = respuesta[0];
         this.listaNombres = respuesta[1];
         this.listaFuentes = respuesta[2];
-
+        this.listaDepartamentos = respuesta[3];
+        
+        let valorDepartamento = this.listaDepartamentos.find( de => de.localizacionId.toString() == 
+                                                                    this.fuente.aportante.municipioId.toString().substring(0,5) )
         let valorNombre = this.listaNombres.find( nom => nom.dominioId == this.fuente.aportante.nombreAportanteId );
         let valorFuente = this.listaFuentes.find( fue => fue.codigo == this.fuente.fuenteRecursosCodigo );
+        let valorMunicipio: string = '';
+        if (valorDepartamento){
+          this.commonService.listaMunicipiosByIdDepartamento( valorDepartamento.localizacionId ).subscribe( mun => {
+            if (mun){
+              let valorMunicipio = mun.find( m => m.localizacionId == this.fuente.aportante.municipioId.toString() )
+              this.municipio = valorMunicipio.descripcion;
+            }
+          })
+        }
 
+        this.tipoAportanteId = this.fuente.aportante.tipoAportanteId;
         this.nombreAportante = valorNombre.nombre;
+        this.departamento = valorDepartamento?valorDepartamento.descripcion:null;
         this.nombreFuente = valorFuente.nombre;
         this.valorFuente = this.fuente.valorFuente;
         this.fuenteFinaciacionId = this.fuente.fuenteFinanciacionId;
@@ -82,9 +101,28 @@ export class ControlDeRecursosComponent implements OnInit {
         this.rpArray = this.fuente.aportante.registroPresupuestal;
         this.listaVigencias = this.fuente.vigenciaAporte;
 
+        if (this.idControl > 0 )
+          this.editMode();
+
       })
     })
 
+  }
+
+  editMode(){
+    this.fuenteFinanciacionServices.getResourceControlById( this.idControl ).subscribe( cr => {
+      let cuentaSeleccionada = this.NombresDeLaCuenta.find( c => c.cuentaBancariaId == cr.cuentaBancariaId )
+      let rpSeleccionado = this.rpArray.find( rp => rp.registroPresupuestalId == cr.registroPresupuestalId )
+      let vigenciaSeleccionada = this.listaVigencias.find( vi => vi.vigenciaAporteId == cr.vigenciaAporteId )
+
+      this.addressForm.get('nombreCuenta').setValue(cuentaSeleccionada);
+      this.addressForm.get('rp').setValue(rpSeleccionado);
+      this.addressForm.get('controlRecursoId').setValue(cr.controlRecursoId);
+      this.addressForm.get('vigencia').setValue(vigenciaSeleccionada);
+      this.addressForm.get('fechaConsignacion').setValue(cr.fechaConsignacion);
+      this.addressForm.get('valorConsignacion').setValue(cr.valorConsignacion);
+      this.changeNombreCuenta();
+    })
   }
 
   changeNombreCuenta(){
@@ -114,10 +152,14 @@ export class ControlDeRecursosComponent implements OnInit {
         vigenciaAporteId: this.addressForm.get('vigencia').value.vigenciaAporteId
       }
 
-      this.fuenteFinanciacionServices.registrarControlRecurso( control ).subscribe( respuesta => {
-        this.openDialog( '', respuesta.message );
-      })
-      console.log(control);
+      if (control.controlRecursoId > 0)
+        this.fuenteFinanciacionServices.updateControlRecurso( control ).subscribe( respuesta => {
+          this.openDialog( '', respuesta.message );
+        })  
+      else
+        this.fuenteFinanciacionServices.registrarControlRecurso( control ).subscribe( respuesta => {
+          this.openDialog( '', respuesta.message );
+        })
 
     }
   }

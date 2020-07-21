@@ -20,10 +20,12 @@
           <input type="hidden" formControlName="controlRecursoId">
           <p><strong>Nombre del aportante:</strong>
             {{ nombreAportante }}</p>
-          <p><strong>Departamento:</strong>
-            {{ departamento }}</p>
-          <p><strong>Municipio:</strong>
-            {{ municipio }}</p>
+            <div *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
+              <p ><strong>Departamento:</strong>
+                {{ departamento }}</p>
+              <p><strong>Municipio:</strong>
+                {{ municipio }}</p>
+          </div>
           <p><strong>Vigencia del acuerdo de cofinanciación:</strong>
             {{ vigencia }}</p>
         </mat-card-content>
@@ -149,7 +151,7 @@
   </div>
 
   <pre>
-    {{addressForm.value | json}} 
+    <!-- {{addressForm.value | json}}  -->
   </pre>
 
 <app-table-control-recursos></app-table-control-recursos>

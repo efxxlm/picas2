@@ -5,6 +5,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,16 +33,24 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<List<ControlRecurso>> GetResourceControlGrid()
+        public async Task<List<ControlRecurso>> GetResourceControlGridBySourceFunding(int id)
         {
             List<ControlRecurso> ControlGrid = new List<ControlRecurso>();
             try
             {
                 ControlGrid = await _context.ControlRecurso
+                .Where( cr => cr.FuenteFinanciacionId == id)
                     .Include(RC => RC.FuenteFinanciacion)
+                    .ThenInclude(FF => FF.Aportante)
+                    .ThenInclude(APO => APO.Cofinanciacion)
                     .Include(RC => RC.CuentaBancaria)
                     .Include(RC => RC.RegistroPresupuestal)
-                    .Include(RC => RC.VigenciaAporte).ToListAsync();
+                    .Include(RC => RC.VigenciaAporte)
+                    .Include(RC => RC.FuenteFinanciacion)
+                    .Include(RC => RC.FuenteFinanciacion)
+                    .ThenInclude(FF => FF.Aportante)
+                    
+                    .ToListAsync();
 
                 return ControlGrid;
 
