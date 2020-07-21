@@ -25,3 +25,12 @@
 .col:last-child {
   margin-right: 0;
 }
+
+.text-info--close.mat-icon-button {
+  margin-right: 1em;
+  img {
+    height: 1.6em;
+    width: 1.6em;
+    margin-top: -14px;
+  }
+}

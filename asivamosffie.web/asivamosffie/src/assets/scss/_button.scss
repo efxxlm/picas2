@@ -82,3 +82,15 @@ button.btn-calendario {
         height: 2.2em;
     }
 }
+
+.cantidad-seleccionados {
+    &--button {
+        position: absolute;
+    }
+}
+.mat-tooltip.cantidad-seleccionados--tooltip-accent {
+    background-color: var(--tertiaryColor);
+    color: var(--tertiaryColorFont);
+    font-weight: 500;
+    border-radius: 2em;
+}

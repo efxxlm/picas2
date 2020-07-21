@@ -32,6 +32,10 @@ table {
     width: 100%;
 }
 
+.table-responsive {
+    overflow-x: auto;
+}
+
 .busqueda {
     display: flex;
     justify-content: center;
@@ -64,12 +68,16 @@ table {
 div.mat-paginator {
     &-page-size {
         order: 2;
+        padding-right: 2em;
+        @media only screen and (min-width: 48em) {
+            position: absolute;
+        }
     }
 
     &-range-actions {
         order: 1;
         margin: auto;
-        padding-left: 9.6em;
+        // padding-left: 9.6em;
     }
 
     &-range-label {

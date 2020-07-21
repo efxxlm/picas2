@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-form-solicitar-contratacion',
@@ -8,10 +8,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class FormSolicitarContratacionComponent {
 
+  esMultiple: FormControl;
+
   verBusqueda = false;
 
   addressForm = this.fb.group({
-    esMultiple: ['free', Validators.required],
     tipoInterventor: [null],
     llaveMEN: [null],
     region: [null],
@@ -51,7 +52,13 @@ export class FormSolicitarContratacionComponent {
     value: 1
   }];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.declararEsMultiple();
+  }
+
+  private declararEsMultiple() {
+    this.esMultiple = new FormControl(['free', Validators.required]);
+  }
 
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
