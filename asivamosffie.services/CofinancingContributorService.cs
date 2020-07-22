@@ -56,15 +56,13 @@ namespace asivamosffie.services
         public async Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
         {
             Respuesta _reponse = new Respuesta();
-            //Error:  //int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
+            int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
 
             try
             {
                 if (CofnaAportante != null)
                 {
-                    //var AP = Helpers.Helpers.ConvertToUpercase(aportante);
-                    CofnaAportante.FechaCreacion = DateTime.Now;
-                    CofnaAportante.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                    //var AP = Helpers.Helpers.ConvertToUpercase(aportante);                   
                     _context.Add(CofnaAportante);
                     await _context.SaveChangesAsync();
 
@@ -76,7 +74,7 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Data = CofnaAportante,
                         Code = ConstantMessagesContributor.OperacionExitosa,
-                        //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.OperacionExitosa)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.OperacionExitosa)
                     };
                 }
                 else
@@ -88,7 +86,7 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Data = null,
                         Code = ConstantMessagesContributor.RecursoNoEncontrado,
-                        //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.RecursoNoEncontrado)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.OperacionExitosa, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ConstantMessagesContributor.RecursoNoEncontrado)
                     };
                 }
 
@@ -101,7 +99,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesContributor.RecursoNoEncontrado,
-                    //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Aportantes, ConstantMessagesContributor.ErrorInterno, IdAccionCRegistrarAportante, CofnaAportante.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
 
                 };
             }
@@ -122,7 +120,7 @@ namespace asivamosffie.services
                 updateObj.MunicipioId = CofnaAportante.MunicipioId;
                 updateObj.Eliminado = false;
                 updateObj.FechaModificacion = DateTime.Now;
-                updateObj.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                
 
                 _context.Update(updateObj);
                 await _context.SaveChangesAsync();

@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 using Z.EntityFramework.Plus;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace asivamosffie.services
 {
     public class CofinancingService : ICofinancingService
@@ -71,6 +70,8 @@ namespace asivamosffie.services
 
         }
 
+
+
         public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion)
         {//con include
          //Cofinanciacion cofinanciacion = await
@@ -84,7 +85,7 @@ namespace asivamosffie.services
 
             //includefilter
             Cofinanciacion cofinanciacion = new Cofinanciacion();
-            cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
+             cofinanciacion =  _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
 
             if (cofinanciacion != null)
             {
@@ -143,18 +144,22 @@ namespace asivamosffie.services
                         respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente };
                     }
 
-                    await _context.SaveChangesAsync();
+
                     foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                     {
                         cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
                         cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
                         idCofinancicacionAportante = await CreateCofinancingContributor(cofinanciacionAportante);
 
-                        foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                        //Se crear los CofinanciacionDocumento relacionados a este aportante
+                        if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
                         {
-                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId;
-                            cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
-                            await CreateCofinancingDocuments(cofinancicacionDocumento);
+                            foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                            {
+                                cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                                cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
+                                await CreateCofinancingDocuments(cofinancicacionDocumento);
+                            }
                         }
                     }
 
@@ -250,11 +255,11 @@ namespace asivamosffie.services
         public async Task<List<Cofinanciacion>> GetListCofinancing()
         {
             List<Cofinanciacion> Listcofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado).ToListAsync();
-
+             
             foreach (var item in Listcofinanciacion)
             {
-                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
-            }
+                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r=> r.CofinanciacionDocumento.Where(r=> !(bool)r.Eliminado)).ToListAsync();
+             } 
             return Listcofinanciacion;
         }
 
@@ -263,20 +268,6 @@ namespace asivamosffie.services
             return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).ToListAsync();
         }
 
-        //public async Task<ActionResult<List<DocumentoApropiacion>>> GetDocument(int ContributorId)
-        //{
-
-        //    try
-        //    {
-        //        //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
-        //        return await _context.DocumentoApropiacion.Where(x => x.AportanteId == ContributorId).ToListAsync();
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
         public async Task<List<CofinanciacionAportante>> GetListAportante()
         {
 
@@ -311,8 +302,7 @@ namespace asivamosffie.services
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)
         {
             //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
-            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).ToListAsync();
         }
     }
-
 }

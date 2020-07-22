@@ -36,7 +36,7 @@ namespace asivamosffie.services.Helpers.Constant
     public class ConstantMessagesContrasena
     {
         #region Mensajes Informativos
-       
+
         //cambio de contraseña
         public const string ErrorContrasenaAntigua = "101";
         public const string ErrorSesion = "102";
@@ -62,7 +62,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CreadoCorrrectamente = "103";
         public const string RecursoNoEncontrado = "104";
 
-        
+
 
         #endregion Mensajes Informativos
 
@@ -77,7 +77,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string DirecCambioContrasena = "301";
 
         #endregion Mensajes Redireccion
-        
+
     }
 
     public class ConstantMessagesContributor
@@ -214,7 +214,7 @@ namespace asivamosffie.services.Helpers.Constant
     {
 
         #region Mensajes Informativos
-        
+
 
         #endregion Mensajes Informativos
 
@@ -233,4 +233,58 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
+    public class ConstantMessagesCargueProyecto
+    {
+
+        #region Mensajes Informativos
+
+
+        public const string NoExitenArchivos = "100";
+
+        public const string CamposVacios = "101";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        public const string DescargaExcelExitosa = "201";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        public const string ErrorDescargarArchivo = "501";
+        #endregion
+    }
+
+    public class ConstantMessagesProyecto
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
 }
