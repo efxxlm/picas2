@@ -86,6 +86,7 @@ export class InicioComponent implements OnInit {
 
   private verificarRespuesta( respuesta: Respuesta )
   {
+    
     if (respuesta.isSuccessful) // Response witout errors
     {
       if (respuesta.isValidation) // have validations
