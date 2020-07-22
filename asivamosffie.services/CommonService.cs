@@ -220,6 +220,7 @@ namespace asivamosffie.services
             return await _context.Dominio.Where(r => r.DominioId == pDominioID).Select(r => r.Nombre).FirstOrDefaultAsync();
         }
 
+<<<<<<< Updated upstream
         public async Task<List<Localicacion>> GetListMunicipioByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -245,5 +246,34 @@ namespace asivamosffie.services
                  //IdPadre = x.IdPadre
              }).ToListAsync();
         }
+=======
+        //public async Task<List<Localicacion>> GetListMunicipioByIdMunicipio(string idMunicipio)
+        //{
+        //    var munactual = _context.Localizacion.Find(idMunicipio);
+        //    return await _context.Localizacion.Where(r => r.Nivel == 2 && r.IdPadre == munactual.IdPadre)
+        //     .Select(x => new Localicacion
+        //     {
+        //         LocalizacionId = x.LocalizacionId,
+        //         Descripcion = x.Descripcion,
+        //         IdPadre=x.IdPadre
+        //     }).ToListAsync();
+        //}
+
+        //public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
+        //{
+        //    var munactual = _context.Localizacion.Find(idMunicipio);
+        //    var depactual = _context.Localizacion.Find(munactual.IdPadre);
+        //    //var regactual = _context.Localizacion.Find(depactual.IdPadre);
+        //    return await _context.Localizacion.Where(r => r.Nivel == 1 && r.IdPadre == depactual.IdPadre)
+        //     .Select(x => new Localicacion
+        //     {
+        //         LocalizacionId = x.LocalizacionId,
+        //         Descripcion = x.Descripcion,
+        //         IdPadre = x.IdPadre
+        //     }).ToListAsync();
+        //}
+
+      
+>>>>>>> Stashed changes
     }
 }
