@@ -5,6 +5,7 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Dominio } from '../common/common.service';
+import { RegistroPresupuestal } from '../fuenteFinanciacion/fuente-financiacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -47,22 +48,7 @@ export class CofinanciacionService {
   }
 
   listaAportantesByTipoAportante(pTipoAportanteID: number){
-    return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`).
-            pipe( map( apo => {
-                let lista: Dominio[] = [];
-                apo.forEach( a => {
-                  let dom: Dominio = {
-                    dominioId: a.nombreAportanteId,
-                    tipoDominioId: 0,
-                    nombre: '',
-                    codigo: '0',
-                    activo: true
-                  }
-                  lista.push(dom);
-                })
-
-                return lista;
-            }) )
+    return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`);
   }
 }
 
@@ -85,6 +71,9 @@ export interface CofinanciacionAportante{
   cofinanciacionDocumento: CofinanciacionDocumento[],
   eliminado?:boolean,
   valortotal?:number//just for view form
+  nombreAportante?: string,
+  registroPresupuestal?: RegistroPresupuestal[],
+  cofinanciacion?: Cofinanciacion
 }
 
 export interface CofinanciacionDocumento{
@@ -98,5 +87,6 @@ export interface CofinanciacionDocumento{
   numeroAcuerdo?: number,
   fechaAcuerdo: Date,
   valorTotalAportante: string,
-  eliminado?:boolean
+  eliminado?:boolean,
+  tipoDocumento?: Dominio
 }

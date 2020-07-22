@@ -40,9 +40,8 @@ const routes: Routes = [
       {
         path: 'gestionarAcueros',
         loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
-          .then(m => m.GestionarAcuerdoCofinanciacionModule)
-      }
-      ,
+        .then(m => m.GestionarAcuerdoCofinanciacionModule)
+      },
       {
         path: 'crearProyecto',
         loadChildren: () => import('./_pages/crear-proyecto-tecnico/crear-proyecto-tecnico.module')
@@ -75,7 +74,7 @@ const routes: Routes = [
         .then(m => m.GestionarFuentesDeFinanciacionModule)
       },
       {
-        path: 'registrarFuentes/:idTipoAportante',
+        path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
     ]

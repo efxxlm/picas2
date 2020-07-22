@@ -8,7 +8,7 @@ namespace asivamosffie.services.Validators
     {
         public ProjectValidator()
         {
-            RuleFor(x => x.FechaSesionJunta)
+            /*RuleFor(x => x.FechaSesionJunta)
                   .NotEmpty().WithMessage("Debe ingresar una fecha no superior a la fecha actual.")
                   .LessThan(p => DateTime.Now).WithMessage("No puede ser superior a la fecha actual.");
 
@@ -43,7 +43,7 @@ namespace asivamosffie.services.Validators
                 .NotEmpty().WithMessage("Debe ingresar cantidad de predios.")
                 .InclusiveBetween(0,3).WithMessage("El rango es de 1 hasta 3 predios");
                //Ojo maximo 3 
-
+               */
           //  RuleFor(r=> r.pres)
 
         }

@@ -261,7 +261,7 @@ export class RegistrarComponent implements OnInit {
           codigo: doc.tipoDocumento.codigo
         }
 
-        this.valorTotal = this.valorTotal + parseInt(cofinanciacionDocumento.valorDocumento);
+        this.valorTotal = this.valorTotal + cofinanciacionDocumento.valorDocumento;
         this.listaDocumentos.push(cofinanciacionDocumento);
 
       })
