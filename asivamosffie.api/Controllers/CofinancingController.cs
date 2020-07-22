@@ -51,27 +51,6 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("EliminarCofinanciacionByCofinanciacionId")]
-        [HttpPost]
-        public async Task<IActionResult> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId)
-        {
-            try
-            {
-                Respuesta respuesta = new Respuesta(); 
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
-
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-        }
-
-
-      
-
         [Route("GetDocument")]
         [HttpGet]
         public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int ContributorId)
@@ -87,7 +66,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-         
+        [Route("GetListAportanteByTipoAportanteId")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListAportanteByTipoAportanteId(pTipoAportanteID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("GetCofinancingByIdCofinancing")]
         [HttpGet]
         public async Task<Cofinanciacion> GetCofinancing(int IdCofinancing)
@@ -96,19 +88,21 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
-
-        [Route("GetListAportanteByTipoAportanteId")]
-        [HttpGet]
-        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        [Route("EliminarCofinanciacionByCofinanciacionId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId)
         {
             try
             {
-                return await _Cofinancing.GetListAportanteByTipoAportanteId(pTipoAportanteID); 
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
+
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                return BadRequest(ex.ToString());
             }
         }
 
@@ -126,6 +120,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+        
 
         [Route("GetAportantesByTipoAportante")]
         [HttpGet]

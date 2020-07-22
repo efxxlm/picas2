@@ -36,17 +36,16 @@ namespace asivamosffie.services
         }
 
 
-//        //public async Task<ActionResult<List<Aportante>>> GetContributor()
-//        //{
-//        //    return await _context.Aportante.ToListAsync();
-//        //}
+        public async Task<ActionResult<List<RegistroPresupuestal>>> GetRegisterBudget()
+        {
+            return await _context.RegistroPresupuestal.ToListAsync();
+        }
 
-//        //public async Task<Aportante> GetContributorById(int id)
-//        //{
-//        //    return await _context.Aportante.FindAsync(id);
+        public async Task<RegistroPresupuestal> GetRegisterBudgetById(int id)
+        {
+            return await _context.RegistroPresupuestal.FindAsync(id);
+        }
 
-//        //}
- 
 
         // Grilla de control? { AportanteId }
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
@@ -54,12 +53,6 @@ namespace asivamosffie.services
             return await _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == ContributorId).ToListAsync();
         }
 
-        //        //        if (result == null)
-        //        //        {
-        //        //            return null; // _reponse = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
-        //        //        }
-
-        //Registrar Aportante
         public async Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
         {
             Respuesta _reponse = new Respuesta();
@@ -69,7 +62,7 @@ namespace asivamosffie.services
             {
                 if (CofnaAportante != null)
                 {
-                    //var AP = Helpers.Helpers.ConvertToUpercase(aportante);
+                    //var AP = Helpers.Helpers.ConvertToUpercase(aportante);                   
                     _context.Add(CofnaAportante);
                     await _context.SaveChangesAsync();
 
@@ -112,34 +105,47 @@ namespace asivamosffie.services
             }
         }
 
-        //Registrar Control de recursos
-        public async Task<Respuesta> ResourceControl(ControlRecurso controlRecurso)
+
+        public async Task<Respuesta> Update(CofinanciacionAportante CofnaAportante)
         {
-            Respuesta _reponse = new Respuesta();
+            Respuesta _response = new Respuesta();
+
             try
             {
-                var result = _context.ControlRecurso.Add(controlRecurso);
-                _context.Add(controlRecurso);
+                CofinanciacionAportante updateObj = await _context.CofinanciacionAportante.FindAsync(CofnaAportante.CofinanciacionAportanteId);
+
+                updateObj.CofinanciacionId = CofnaAportante.CofinanciacionId;
+                updateObj.TipoAportanteId = CofnaAportante.TipoAportanteId;
+                updateObj.NombreAportanteId = CofnaAportante.NombreAportanteId;
+                updateObj.MunicipioId = CofnaAportante.MunicipioId;
+                updateObj.Eliminado = false;
+                updateObj.FechaModificacion = DateTime.Now;
+                
+
+                _context.Update(updateObj);
                 await _context.SaveChangesAsync();
-                _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = controlRecurso, Code = ConstantMessagesContributor.OperacionExitosa };
+
+                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
             }
             catch (Exception ex)
             {
-                _reponse = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
             }
-
-            return _reponse;
         }
 
+
+
         //Registrar Registros presupuestales
-        public async Task<Respuesta> BudgetRecords(RegistroPresupuestal registroPresupuestal)
+        public async Task<Respuesta> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal)
         {
-            //Pendiente : validaciones
             Respuesta _reponse = new Respuesta();
             try
             {
-                //var result = _context.RegistroPresupuestal.Add(registroPresupuestal);
-                _context.Add(registroPresupuestal);
+                if (registroPresupuestal.RegistroPresupuestalId == null || registroPresupuestal.RegistroPresupuestalId == 0)
+                    await this.BudgetRecords(registroPresupuestal);
+                else
+                    await this.UpdateBudgetRegister(registroPresupuestal);
+
                 await _context.SaveChangesAsync();
                 _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
             }
@@ -151,14 +157,46 @@ namespace asivamosffie.services
             return _reponse;
         }
 
-        public Task<bool> Update(Respuesta aportante)
+
+        public async Task<Respuesta> BudgetRecords(RegistroPresupuestal registroPresupuestal)
         {
-            throw new NotImplementedException();
+            Respuesta _reponse = new Respuesta();
+            try
+            {
+                registroPresupuestal.FechaCreacion = DateTime.Now;
+                registroPresupuestal.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                _context.Add(registroPresupuestal);
+                //await _context.SaveChangesAsync();
+                _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
+            }
+            catch (Exception ex)
+            {
+                _reponse = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+            }
+
+            return _reponse;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<Respuesta> UpdateBudgetRegister(RegistroPresupuestal registroPresupuestal)
         {
-            throw new NotImplementedException();
+            Respuesta _response = new Respuesta();
+
+            try
+            {
+                RegistroPresupuestal updateObj = await _context.RegistroPresupuestal.FindAsync(registroPresupuestal.RegistroPresupuestalId);
+
+                updateObj.AportanteId = registroPresupuestal.AportanteId;
+                updateObj.NumeroRp = registroPresupuestal.NumeroRp;
+                updateObj.FechaRp = registroPresupuestal.FechaRp;
+                _context.Update(updateObj);
+                //await _context.SaveChangesAsync();
+
+                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
+            }
         }
     }
 }

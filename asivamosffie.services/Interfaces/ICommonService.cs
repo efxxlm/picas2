@@ -10,19 +10,17 @@ namespace asivamosffie.services.Interfaces
     public interface ICommonService
     {
         Task<List<MenuPerfil>> GetMenuByRol(int pUserId);
-
         Task<List<Perfil>> GetProfile();
 
-        Task<Template> GetTemplateByTipo(string pTipo);
+        Task <Template> GetTemplateByTipo(string pTipo);
 
         Task<Template> GetTemplateById(int pId);
 
-        Task<List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio);
-
+        Task <List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio);
+         
         Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenuId, string pCodigo, int pAccionId, string pUsuario, string pObservaciones);
 
         Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId);
-
         Task<int> GetDominioIdByNombreDominioAndTipoDominio(string pNombre, int pTipoDominioId);
 
         Task<int> GetLocalizacionIdByName(string pNombre, string pIdDepartamento);
@@ -30,7 +28,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<Localicacion>> GetListDepartamento();
 
         Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento);
-
         Task<List<int>> GetListVigenciaAportes(string pYearVigente, bool yearSiguienteEsVigente);
 
         Task<int> getInstitucionEducativaIdByName(string pNombre);
@@ -60,5 +57,7 @@ namespace asivamosffie.services.Interfaces
         Task<string> GetNombreDominioByDominioID(int pDominioID);
         Task<List<Localicacion>> GetListMunicipioByIdMunicipio(string idMunicipio);
         Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio);
+
+        //Task<List<int>> GetListVigenciaAportes(string pYearVigente , bool yearSiguienteEsVigente);
     }
 }
