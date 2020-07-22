@@ -12,7 +12,7 @@ namespace asivamosffie.model.Models
         }
 
         public int PredioId { get; set; }
-        public int InstitucionEducativaSedeId { get; set; }
+        public int? InstitucionEducativaSedeId { get; set; }
         public string TipoPredioCodigo { get; set; }
         public string UbicacionLatitud { get; set; }
         public string UbicacionLongitud { get; set; }

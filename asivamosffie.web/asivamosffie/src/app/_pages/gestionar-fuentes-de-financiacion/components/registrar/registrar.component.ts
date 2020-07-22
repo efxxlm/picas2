@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
-import { CofinanciacionService, CofinanciacionAportante } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
-import { forkJoin } from 'rxjs';
+import { CofinanciacionService, CofinanciacionAportante, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
+import { forkJoin, from } from 'rxjs';
 import { ActivatedRoute } from '@angular/router'
 import { FuenteFinanciacionService, FuenteFinanciacion, CuentaBancaria, RegistroPresupuestal, VigenciaAporte } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CuentaBancariaService } from 'src/app/core/_services/cuentaBancaria/cuenta-bancaria.service';
+import { mergeMap, tap, toArray } from 'rxjs/operators';
+import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 
 @Component({
   selector: 'app-registrar',
@@ -28,6 +30,8 @@ export class RegistrarComponent implements OnInit {
   tipoAportante = TiposAportante;
   idAportante: number = 0;
   listaFuentes: FuenteFinanciacion[] = [];
+  listaDocumentos: CofinanciacionDocumento[] = []; 
+  valorTotal: number = 0;
 
   data;
   
@@ -57,62 +61,65 @@ export class RegistrarComponent implements OnInit {
     let aportante = this.nombresAportantes.find( nom => nom.cofinanciacionAportanteId == this.idAportante );
     this.addressForm.get('nombreAportante').setValue(aportante);
     this.changeNombreAportante();
+    let listaRegistrosP = this.addressForm.get('registrosPresupuestales') as FormArray; 
 
-    let i =0;
-    this.listaFuentes.filter( f => f.aportanteId == this.idAportante).forEach( ff => {
+    this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
+      lista.forEach( ff => {
       
-      let grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
-      let fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find( f => f.codigo == ff.fuenteRecursosCodigo );
-      //let vigenciasSeleccionada = this.VigenciasAporte.find() 
-      
-      grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
-      grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
-
-      let listaVigencias = grupo.get('vigencias') as FormArray;
-      let listaCuentas = grupo.get('cuentasBancaria') as FormArray; 
-
-      ff.vigenciaAporte.forEach( v =>  {
+        let grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
+        let fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find( f => f.codigo == ff.fuenteRecursosCodigo );
+        let listaVigencias = grupo.get('vigencias') as FormArray;
+        let listaCuentas = grupo.get('cuentasBancaria') as FormArray; 
         
-        listaVigencias.push(this.createVigencia());
+        grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
+        grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
+        grupo.get('fuenteFinanciacionId').setValue(ff.fuenteFinanciacionId);
+  
+        // Vigencias
+        ff.vigenciaAporte.forEach( v =>  {
+          let grupoVigencia = this.createVigencia();
+          let vigenciaSeleccionada = this.VigenciasAporte.find( vtemp => vtemp == v.tipoVigenciaCodigo );
 
-      })
+          grupoVigencia.get('vigenciaAporteId').setValue(v.vigenciaAporteId);
+          grupoVigencia.get('vigenciaAportante').setValue(vigenciaSeleccionada);
+          grupoVigencia.get('valorVigencia').setValue(v.valorAporte);
 
+          listaVigencias.push(grupoVigencia);
+        })
+  
+        // Cuentas bancarias
+        ff.cuentaBancaria.forEach( ba => {
+          let grupoCuenta = this.createCuentaBancaria();
+          let bancoSeleccionado: Dominio = this.bancos.find( b => b.codigo == ba.bancoCodigo ) ;
 
-      ff.cuentaBancaria.forEach( ba => {
-      //   let controlBanco: FormGroup;
-      //   let bancoSeleccionado: Dominio = this.bancos.find( b => b.codigo == ba.bancoCodigo ) ;
+          grupoCuenta.get('cuentaBancariaId').setValue(ba.cuentaBancariaId);
+          grupoCuenta.get('numeroCuenta').setValue(ba.numeroCuentaBanco);
+          grupoCuenta.get('nombreCuenta').setValue(ba.nombreCuentaBanco);
+          grupoCuenta.get('codigoSIFI').setValue(ba.codigoSifi);
+          grupoCuenta.get('tipoCuenta').setValue(ba.tipoCuentaCodigo);
+          grupoCuenta.get('banco').setValue(bancoSeleccionado);
+          grupoCuenta.get('extra').setValue(ba.exenta.toString());
+        
+          listaCuentas.push(grupoCuenta);
+          console.log(listaCuentas);
+         })
+         // Registro Presupuestal
+         ff.aportante.registroPresupuestal.forEach( rp => {
+          let grupoRegistroP = this.createRP();
 
-      //   controlBanco = this.createCuentaBancariaEdit(ba.numeroCuentaBanco, ba.nombreCuentaBanco, ba.codigoSifi,
-      //                                                 ba.tipoCuentaCodigo, bancoSeleccionado, ba.exenta)
+          grupoRegistroP.get('registroPresupuestalId').setValue( rp.registroPresupuestalId );
+          grupoRegistroP.get('numeroRP').setValue( rp.numeroRp );
+          grupoRegistroP.get('fecha').setValue( rp.fechaRp );
 
-         listaCuentas.push(this.createCuentaBancaria());
-         console.log(listaCuentas);
-       })
-      //grupo.get('cuentasBancaria').setValue(listaCuentas);
-      
-      this.fuenteRecursosArray.push(grupo);
-      //this.CambioNumerovigencia(i);      
-      i++;
-    });
+          this.addressForm.get('cuantosRP').setValue(ff.aportante.registroPresupuestal.length);
 
-  }
+          listaRegistrosP.push(grupoRegistroP);
 
-  createCuentaBancariaEdit(pNumeroCuenta: string, pNombreCuenta: string, pCodigoSIFI: string, 
-                          pTipoCuenta: string, pBanco: Dominio, pExtra: boolean): FormGroup {
-    return this.fb.group({
-      numeroCuenta: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
-      ],
-      nombreCuenta: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
-      ],
-      codigoSIFI: [null, Validators.compose([
-        Validators.required, Validators.minLength(6), Validators.maxLength(6)])
-      ],
-      tipoCuenta: ['free', Validators.required],
-      banco: [null, Validators.required],
-      extra: ['free', Validators.required]
-    });
+         })
+        
+        this.fuenteRecursosArray.push(grupo);
+      });
+    })
   }
 
   crearFuenteEdit(pValorFuenteRecursos: number): FormGroup {
@@ -121,11 +128,15 @@ export class RegistrarComponent implements OnInit {
       valorFuenteRecursos: [pValorFuenteRecursos, Validators.compose([
         Validators.required, Validators.minLength(2), Validators.maxLength(2)])
       ],
-      cuantasVigencias: [1, Validators.required],
+      cuantasVigencias: [1],
       vigencias: this.fb.array([]),
       fuenteFinanciacionId: [null],
       cuentasBancaria: this.fb.array([
       ]),
+      tieneRP: [null],
+      cuantosRP: [null,Validators.compose([
+          Validators.minLength(5), Validators.maxLength(50)])]
+      
     });
   }
 
@@ -156,15 +167,16 @@ export class RegistrarComponent implements OnInit {
           if (s){
             nom.nombreAportante = s.nombre;
           }
+
         });
 
-         this.fuentesDeRecursosLista = res[1];
-         this.bancos = res[2];
-         this.departamentos = res[3];
-         this.listaFuentes = res[5];
+        this.fuentesDeRecursosLista = res[1];
+        this.bancos = res[2];
+        this.departamentos = res[3];
+        this.listaFuentes = res[5];
 
-         if (this.idAportante > 0)
-          this.EditMode();
+        if (this.idAportante > 0)
+        this.EditMode();
 
       });
     })
@@ -191,15 +203,20 @@ export class RegistrarComponent implements OnInit {
     fuentes.push(this.crearFuente());
   }
 
+  createRP(){
+    return this.fb.group({ 
+      registroPresupuestalId: [],
+      numeroRP:[null],
+      fecha: [null]
+    });
+  }
+
   CambioNumeroRP(){
     const FormNumRP = this.addressForm.get('cuantosRP').value;
     console.log(FormNumRP);
      if (FormNumRP > this.registrosPresupuestales.length && FormNumRP < 100) {
        while (this.registrosPresupuestales.length < FormNumRP) {
-        this.registrosPresupuestales.push(this.fb.group({ 
-            numeroRP:[null],
-            fecha: [null]
-        }))
+        this.registrosPresupuestales.push(this.createRP());
        }
      } else if (FormNumRP <= this.registrosPresupuestales.length && FormNumRP >= 0) {
        while (this.registrosPresupuestales.length > FormNumRP) {
@@ -214,6 +231,42 @@ export class RegistrarComponent implements OnInit {
       this.municipios = mun;
     });
   }
+
+  cargarDocumentos(){
+    this.listaDocumentos = [];
+    this.valorTotal = 0;
+
+    this.cofinanciacionService.getDocumentoApropiacionByAportante(this.idAportante).subscribe( listDoc => {
+      if (listDoc.length == 0)
+        this.openDialog("Validacion","No tiene documentos de apropiacion");
+
+      
+      listDoc.forEach( doc => {
+        let cofinanciacionDocumento: CofinanciacionDocumento = {
+          cofinanciacionAportanteId: doc.cofinanciacionAportanteId,
+          cofinanciacionDocumentoId: doc.cofinanciacionDocumentoId,
+          fechaAcuerdo: doc.fechaAcuerdo,
+          numeroActa: doc.numeroActa,
+          tipoDocumentoId: doc.tipoDocumentoId,
+          valorDocumento: doc.valorDocumento,
+          valorTotalAportante: doc.valorTotalAportante,
+          vigenciaAporte: doc.vigenciaAporte,
+        }
+
+        cofinanciacionDocumento.tipoDocumento = {
+          activo: doc.tipoDocumento.activo,
+          dominioId: doc.tipoDocumento.dominioId,
+          nombre: doc.tipoDocumento.nombre,
+          tipoDominioId: doc.tipoDocumento.tipoDominioId,
+          codigo: doc.tipoDocumento.codigo
+        }
+
+        this.valorTotal = this.valorTotal + parseInt(cofinanciacionDocumento.valorDocumento);
+        this.listaDocumentos.push(cofinanciacionDocumento);
+
+      })
+    });
+  }
   
   changeNombreAportante(){
 
@@ -221,15 +274,48 @@ export class RegistrarComponent implements OnInit {
 
       this.idAportante = this.addressForm.get('nombreAportante').value.cofinanciacionAportanteId;
       
-      this.cofinanciacionService.getDocumentoApropiacionByAportante(this.idAportante).subscribe( listDoc => {
-        if (listDoc.length > 0)
-        {
-          this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
-          this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
-        }
-        else
-          this.openDialog("Validacion","No tiene documentos de apropiacion");
-      });
+
+      // tercero
+      if ( this.tipoAportante.Tercero.includes(this.tipoAportanteId.toString())){
+        let vigenciaSeleccionada = this.addressForm.get('nombreAportante').value.cofinanciacion.vigenciaCofinanciacionId;
+        let vigenciaRegistro = this.VigenciasAporte.find( vtemp => vtemp == vigenciaSeleccionada );
+        this.addressForm.get('vigenciaAcuerdo').setValue(vigenciaRegistro);
+        
+        this.cargarDocumentos();
+      }
+
+      // FFIE
+      if ( this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())){
+        this.cofinanciacionService.getDocumentoApropiacionByAportante(this.idAportante).subscribe( listDoc => {
+          if (listDoc.length > 0)
+          {
+            this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
+            this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
+          }
+          else
+            this.openDialog("Validacion","No tiene documentos de apropiacion");
+        });
+      }
+
+      //ET
+      if ( this.tipoAportante.ET.includes(this.tipoAportanteId.toString())){
+        let vigenciaSeleccionada = this.addressForm.get('nombreAportante').value.cofinanciacion.vigenciaCofinanciacionId;
+        let idMunicipio = this.addressForm.get('nombreAportante').value.municipioId;
+        let vigenciaRegistro = this.VigenciasAporte.find( vtemp => vtemp == vigenciaSeleccionada );
+
+        this.addressForm.get('vigenciaAcuerdo').setValue(vigenciaRegistro);
+        
+        this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.toString().substring(0,5)).subscribe( mun => {
+          const valorMunicipio = mun.find( a => a.localizacionId == idMunicipio.toString());
+          const valorDepartamento = this.departamentos.find( a => a.localizacionId == idMunicipio.toString().substring(0,5));
+
+          this.municipios = mun;
+          this.addressForm.get('municipio').setValue(valorMunicipio);
+          this.addressForm.get('departamento').setValue(valorDepartamento);
+        });
+
+        this.cargarDocumentos();
+      }
     }
   }
 
@@ -273,6 +359,7 @@ export class RegistrarComponent implements OnInit {
 
   createCuentaBancaria(): FormGroup {
     return this.fb.group({
+      cuentaBancariaId: [],
       numeroCuenta: [null, Validators.compose([
         Validators.required, Validators.minLength(5), Validators.maxLength(50)])
       ],
@@ -294,7 +381,7 @@ export class RegistrarComponent implements OnInit {
       valorFuenteRecursos: [null, Validators.compose([
         Validators.required, Validators.minLength(2), Validators.maxLength(2)])
       ],
-      cuantasVigencias: [null, Validators.required],
+      cuantasVigencias: [null],
       vigencias: this.fb.array([]),
       fuenteFinanciacionId: [null],
       departamento: [],
@@ -302,9 +389,9 @@ export class RegistrarComponent implements OnInit {
       tieneRP: [null],
       cuantosRP: [null,Validators.compose([
           Validators.minLength(5), Validators.maxLength(50)])]
-      ,registrosPresupuestales: this.fb.array([]),
-      cuentasBancaria: this.fb.array([
+      ,cuentasBancaria: this.fb.array([
         this.fb.group({
+          cuentaBancariaId: [],
           numeroCuenta: [null, Validators.compose([
             Validators.required, Validators.minLength(5), Validators.maxLength(50)])
           ],
@@ -324,9 +411,10 @@ export class RegistrarComponent implements OnInit {
 
   createVigencia(): FormGroup {
     return this.fb.group({
-      vigenciaAportante: [null, Validators.required],
+      vigenciaAporteId: [],
+      vigenciaAportante: [null],
       valorVigencia: [null, Validators.compose([
-        Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+        Validators.minLength(10), Validators.maxLength(10)])
       ]
     });
   }
@@ -336,7 +424,7 @@ export class RegistrarComponent implements OnInit {
   }
 
   onSubmit() {
-
+    console.log(this.addressForm);
   if (this.addressForm.valid) {
 
       let lista: FuenteFinanciacion[] = [];
@@ -350,6 +438,7 @@ export class RegistrarComponent implements OnInit {
 
       this.fuenteRecursosArray.controls.forEach( controlFR => {
         let fuente: FuenteFinanciacion = {
+          fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
           aportanteId: this.idAportante,
           fuenteRecursosCodigo: controlFR.get('fuenteRecursos').value.codigo,
           valorFuente: controlFR.get('valorFuenteRecursos').value,
@@ -364,12 +453,11 @@ export class RegistrarComponent implements OnInit {
         if (vigencias){
           vigencias.controls.forEach( controlVi => {
             let vigenciaAporte: VigenciaAporte = {
+              vigenciaAporteId: controlVi.get('vigenciaAporteId').value,
               fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
               tipoVigenciaCodigo: controlVi.get('vigenciaAportante').value,
               valorAporte: controlVi.get('valorVigencia').value,
-              vigenciaAporteId:0, 
-              fechaCreacion: new Date,
-              usuarioCreacion: usuario
+              
             }
 
             fuente.vigenciaAporte.push(vigenciaAporte);
@@ -380,7 +468,7 @@ export class RegistrarComponent implements OnInit {
         let cuentas = controlFR.get('cuentasBancaria') as FormArray;
         cuentas.controls.forEach(controlBa => {
           let cuentaBancaria: CuentaBancaria = {
-            cuentaBancariaId: 0,
+            cuentaBancariaId: controlBa.get('cuentaBancariaId').value,
             bancoCodigo: controlBa.get('banco').value.codigo,
             codigoSifi: controlBa.get('codigoSIFI').value,
             exenta: controlBa.get('extra').value,
@@ -388,24 +476,21 @@ export class RegistrarComponent implements OnInit {
             nombreCuentaBanco: controlBa.get('nombreCuenta').value,
             numeroCuentaBanco: controlBa.get('numeroCuenta').value,
             tipoCuentaCodigo: controlBa.get('tipoCuenta').value,
-            fechaCreacion: new Date,
-            usuarioCreacion: usuario
+
           };
           
           fuente.cuentaBancaria.push(cuentaBancaria); 
         });
 
-        let registrosPresupuestales = controlFR.get('registrosPresupuestales') as FormArray;
+        let registrosPresupuestales = this.addressForm.get('registrosPresupuestales') as FormArray;
         if (registrosPresupuestales)
             {
               registrosPresupuestales.controls.forEach( controlRP => {
                 let registroPresupuestal: RegistroPresupuestal = {
                   aportanteId: this.idAportante,
-                  fechaRp: controlRP.get('numeroRP').value,
-                  numeroRp: controlRP.get('fecha').value,
-                  registroPresupuestalId: 0,
-                  fechaCreacion: new Date,
-                  usuarioCreacion: usuario
+                  fechaRp: controlRP.get('fecha').value,
+                  numeroRp: controlRP.get('numeroRP').value,
+                  registroPresupuestalId: controlRP.get('registroPresupuestalId').value,
                 }
                 listaRP.push(registroPresupuestal);
               })
@@ -414,21 +499,33 @@ export class RegistrarComponent implements OnInit {
         lista.push(fuente);
       });
      
+           forkJoin([
+             from(lista)
+                 .pipe( mergeMap(ff => this.fuenteFinanciacionService.createEditFuentesFinanciacion( ff )
+                     .pipe(  
+                         tap()
+                     )
+                 ),
+               toArray()),
+             from(listaRP)
+                 .pipe( mergeMap(cb => this.fuenteFinanciacionService.createEditBudgetRecords( cb )
+                   .pipe(
+                     tap()
+                   )
+                 ),
+                toArray()),
+          ])
+          .subscribe( respuesta => {
+            let res = respuesta[0][0] as Respuesta
+            if (res.code == "200")
+              this.openDialog("Fuente Financiación",res.message);    
+              console.log(respuesta);        
+          })
+        
+
      
-
-      lista.forEach( ff => {
-        if (ff.fuenteFinanciacionId > 0)
-          this.fuenteFinanciacionService.registrarFuenteFinanciacion(ff).subscribe( respuesta => {
-          });
-        else
-          this.fuenteFinanciacionService.modificarFuenteFinanciacion(ff).subscribe( respuesta => {
-            
-          }) 
-      })
-
       this.data = lista;
 
-      alert('Thanks!');
     }
   }
 }

@@ -1,4 +1,5 @@
 mat-card.mat-card:not([class*=mat-elevation-z]) {
+    border: solid 1px #174193;;
     border: solid 1px var(--mainColor);
     border-radius: 1.5em;
     padding: 1em 4em;
@@ -15,15 +16,18 @@ mat-card.mat-card:not([class*=mat-elevation-z]) {
     background-color: #fff;
     padding-left: .5em;
     padding-right: .5em;
+    color: #174193;;
     color: var(--mainColor);
 
     &.sub-text {
         margin-top: 1em !important;
+        margin-left: -1em;
     }
 }
 
 .card-subTitle,
 h2.card-subTitle {
+    background-color: #174193;;
     background-color: var(--mainColor);
     font-size: 1rem;
     margin: 1.5em -3.5em;

@@ -5,7 +5,6 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Dominio } from '../common/common.service';
-import { RegistroPresupuestal } from '../fuenteFinanciacion/fuente-financiacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +28,12 @@ export class CofinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/CreateorUpdateCofinancing`,cofinanciacion);
   }
 
-  listaAcuerdosCofinanciacion(){
+  EliminarCofinanciacionByCofinanciacionId(idcof:number)
+  {    
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarCofinanciacionByCofinanciacionId?pCofinancicacionId=${idcof}`,null);
+  }
+
+  listaAcuerdosCofinanciacion(){ 
     return this.http.get<Cofinanciacion[]>(`${environment.apiUrl}/Cofinancing/GetListCofinancing`);
   }
 
@@ -43,23 +47,22 @@ export class CofinanciacionService {
   }
 
   listaAportantesByTipoAportante(pTipoAportanteID: number){
-    return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`);
-    
-            // pipe( map( apo => {
-            //     let lista: Dominio[] = [];
-            //     apo.forEach( a => {
-            //       let dom: Dominio = {
-            //         dominioId: a.nombreAportanteId,
-            //         tipoDominioId: 0,
-            //         nombre: '',
-            //         codigo: '0',
-            //         activo: true
-            //       }
-            //       lista.push(dom);
-            //     })
+    return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`).
+            pipe( map( apo => {
+                let lista: Dominio[] = [];
+                apo.forEach( a => {
+                  let dom: Dominio = {
+                    dominioId: a.nombreAportanteId,
+                    tipoDominioId: 0,
+                    nombre: '',
+                    codigo: '0',
+                    activo: true
+                  }
+                  lista.push(dom);
+                })
 
-            //     return lista;
-            // }) )
+                return lista;
+            }) )
   }
 }
 
@@ -81,21 +84,19 @@ export interface CofinanciacionAportante{
   municipioId: number,
   cofinanciacionDocumento: CofinanciacionDocumento[],
   eliminado?:boolean,
-  nombreAportante?: string,
-  registroPresupuestal?: RegistroPresupuestal[],
+  valortotal?:number//just for view form
 }
 
 export interface CofinanciacionDocumento{
   cofinanciacionDocumentoId: number,
   cofinanciacionAportanteId: number,
   vigenciaAporte: number,
-  valorDocumento: string,
+  valorDocumento: number,
   tipoDocumentoId: number,
   numeroActa: string,
   fechaActa?: Date,
   numeroAcuerdo?: number,
   fechaAcuerdo: Date,
   valorTotalAportante: string,
-  eliminado?:boolean,
-  tipoDocumento?: Dominio
+  eliminado?:boolean
 }

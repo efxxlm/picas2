@@ -14,7 +14,7 @@ const routes: Routes = [
     component: RegistrarComponent
   },
   {
-    path: 'control',
+    path: 'controlRecursos/:idFuente/:idControl',
     component: ControlDeRecursosComponent
   }
 ];

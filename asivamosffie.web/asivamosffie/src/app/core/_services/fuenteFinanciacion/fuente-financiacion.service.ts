@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CofinanciacionAportante } from '../Cofinanciacion/cofinanciacion.service';
 import { environment } from 'src/environments/environment';
+import { Respuesta } from '../common/common.service';
+import { forkJoin, from } from 'rxjs';
+import { mergeMap, tap, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +15,61 @@ export class FuenteFinanciacionService {
 
   ) { }
 
-  registrarFuenteFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
-    return this.http.post(`${environment.apiUrl}/SourceFunding`, fuenteFinanciacion);
+  createEditFuentesFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
+    return this.http.post(`${environment.apiUrl}/SourceFunding/CreateEditFuentesFinanciacion/`, fuenteFinanciacion);
   }  
 
   listaFuenteFinanciacion(){
-    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding`);
+    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacion`);
 
   }
 
-  modificarFuenteFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
-    return this.http.put(`${environment.apiUrl}/SourceFunding`, fuenteFinanciacion);
+  listaFuenteFinanciacionByAportante( id: number ){
+    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetFuentesFinanciacionByAportanteId?AportanteId=${id}`);
+  }
+
+  registrarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){
+    return this.http.post(`${environment.apiUrl}/CofinancingContributor/SaveBudgetRegister/`, registroPresupuestal);
+  }
+
+  modificarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){
+    return this.http.put(`${environment.apiUrl}/CofinancingContributor/UpdateRegisterBudget/`, registroPresupuestal);
+  }
+
+  crearModificarVigenciaAporte( vigenciaAporte: VigenciaAporte ){
+    return this.http.post(`${environment.apiUrl}/SourceFunding/CreateEditarVigenciaAporte/`, vigenciaAporte);
+  }
+
+  crearModificarCuentaBancaria( cuentaBancaria: CuentaBancaria ){
+    return this.http.post(`${environment.apiUrl}/BankAccount/CreateEditarCuentasBancarias/`, cuentaBancaria);
+  }
+
+  createEditBudgetRecords( registroPresupuestal: RegistroPresupuestal ){
+    return this.http.post(`${environment.apiUrl}/CofinancingContributor/CreateEditBudgetRecords/`, registroPresupuestal);
+  }
+
+  eliminarFuentesFinanciacion( id: number ){
+    return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacion?id=${id}`);
+  }
+
+  getFuenteFinanciacion( id: number ){
+    return this.http.get<FuenteFinanciacion>(`${environment.apiUrl}/SourceFunding/${id}`);
+  }
+
+  registrarControlRecurso( controlRecurso: ControlRecurso ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ResourceControl/CreateControlRecurso`, controlRecurso);
+  }
+
+  getSourceFundingBySourceFunding( id: number ){
+    return this.http.get<ControlRecurso[]>(`${environment.apiUrl}/ResourceControl/GetResourceFundingBySourceFunding/${id}`);
+  }
+
+  getResourceControlById( id: number){
+    return this.http.get<ControlRecurso>(`${environment.apiUrl}/ResourceControl/GetResourceControlById?pId=${id}`);
+  }
+
+  updateControlRecurso( controlRecurso: ControlRecurso){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ResourceControl/updateControlRecurso`, controlRecurso);
   }
 
 }
@@ -71,6 +118,7 @@ export interface ControlRecurso{
   vigenciaAporteId: number,
   fechaConsignacion: Date,
   valorConsignacion: number,
+  fechaCreacion?: Date,
 
 }
 
@@ -80,5 +128,5 @@ export interface RegistroPresupuestal{
   numeroRp: string,
   fechaRp: Date,
   fechaCreacion?: Date,
-  usuarioCreacion?: string
+  usuarioCreacion?: string,
 }

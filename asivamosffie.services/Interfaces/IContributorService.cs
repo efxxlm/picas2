@@ -24,5 +24,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> UpdateBudgetRegister(RegistroPresupuestal registroPresupuestal);
 
+        Task<Respuesta> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal);
+
     }
 }

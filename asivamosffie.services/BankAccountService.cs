@@ -19,6 +19,8 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
+
+
         public BankAccountService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
 
@@ -34,7 +36,8 @@ namespace asivamosffie.services
         public async Task<CuentaBancaria> GetBankAccountById(int id)
         {
             return await _context.CuentaBancaria.FindAsync(id);
-        }
+        } 
+
         public async Task<Respuesta> Insert(CuentaBancaria cuentaBancaria)
         {
             Respuesta _response = new Respuesta();
@@ -104,5 +107,66 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearCuentaBancaria = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Cuenta_Bancaria, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+
+            try
+            {
+
+                if (cuentaBancaria.CuentaBancariaId == null || cuentaBancaria.CuentaBancariaId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR CUENTA BANCARIA";
+                    cuentaBancaria.FechaCreacion = DateTime.Now;
+                    cuentaBancaria.Eliminado = false;
+
+                    _context.CuentaBancaria.Add(cuentaBancaria);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT CUENTA BANCARIA";
+                    CuentaBancaria cuentaBancariaAntigua = _context.CuentaBancaria.Find(cuentaBancaria.CuentaBancariaId);
+                    //Auditoria
+                    cuentaBancariaAntigua.UsuarioModificacion = cuentaBancaria.UsuarioCreacion;
+                    cuentaBancariaAntigua.FechaModificacion = DateTime.Now;
+                    //Registros
+                    cuentaBancariaAntigua.NumeroCuentaBanco = cuentaBancaria.NumeroCuentaBanco;
+                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco;
+                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi;
+                    cuentaBancariaAntigua.TipoCuentaCodigo = cuentaBancaria.TipoCuentaCodigo;
+                    cuentaBancariaAntigua.BancoCodigo = cuentaBancaria.BancoCodigo;
+                    cuentaBancariaAntigua.Exenta = cuentaBancaria.Exenta;
+                    cuentaBancariaAntigua.FuenteFinanciacionId = cuentaBancaria.FuenteFinanciacionId;
+
+                    //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
+                }
+                //await _context.SaveChangesAsync();
+
+                return respuesta =
+               new Respuesta
+               {
+                   IsSuccessful = true,
+                   IsException = false,
+                   IsValidation = false,
+                   Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
+                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion, strCrearEditar)
+               };
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                       new Respuesta
+                       {
+                           IsSuccessful = false,
+                           IsException = true,
+                           IsValidation = false,
+                           Code = ConstantMessagesFuentesFinanciacion.Error,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.Error, idAccionCrearCuentaBancaria, cuentaBancaria.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                       };
+            }
+        }
     }
 }

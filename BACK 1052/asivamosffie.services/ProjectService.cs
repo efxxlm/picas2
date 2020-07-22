@@ -39,6 +39,33 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public bool ValidarRegistroCompleto(Proyecto proyecto)
+        {
+
+            if (
+                !string.IsNullOrEmpty(proyecto.FechaSesionJunta.ToString())
+                || !string.IsNullOrEmpty(proyecto.NumeroActaJunta.ToString())
+                || !string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo.ToString())
+                || !string.IsNullOrEmpty(proyecto.LlaveMen.ToString())
+                || !string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio.ToString())
+                || !string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
+                || !string.IsNullOrEmpty(proyecto.SedeId.ToString())
+                || !string.IsNullOrEmpty(proyecto.EnConvocatoria.ToString())
+                || !string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
+                || !string.IsNullOrEmpty(proyecto.CantPrediosPostulados.ToString())
+                || !string.IsNullOrEmpty(proyecto.TipoPredioCodigo.ToString())
+                || !string.IsNullOrEmpty(proyecto.PredioPrincipalId.ToString())
+                || !string.IsNullOrEmpty(proyecto.ValorObra.ToString())
+                || !string.IsNullOrEmpty(proyecto.ValorInterventoria.ToString())
+                || !string.IsNullOrEmpty(proyecto.ValorTotal.ToString())
+                || !string.IsNullOrEmpty(proyecto.EstadoProyectoCodigo.ToString())
+                || !string.IsNullOrEmpty(proyecto.EstadoJuridicoCodigo.ToString())
+                ) { 
+                return true;
+            } 
+            return false; 
+        }
+
         public async Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto)
         {
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
@@ -52,7 +79,7 @@ namespace asivamosffie.services
                     Localizacion municipio = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
                     Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
-                    // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
+                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
 
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
@@ -62,7 +89,8 @@ namespace asivamosffie.services
                         InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
                         Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                         EstadoRegistro = estadoRegistro.Nombre,
-                        EstadoJuridicoPredios = " "
+                        EstadoJuridicoPredios = EstadoJuridicoPredios.Nombre,
+                        Fecha = proyecto.FechaCreacion == null ? Convert.ToDateTime(proyecto.FechaCreacion).ToString("yyyy-MM-dd") : ""
                     };
                     ListProyectoGrilla.Add(proyectoGrilla);
                 }
@@ -172,20 +200,22 @@ namespace asivamosffie.services
                 //Aportantes
                 foreach (var aportante in pProyecto.ProyectoAportante)
                 {
-                    //aportante.
-                    if (aportante.AportanteId == null)
+                    aportante.Aportante = null;
+                    aportante.CofinanciacionDocumento = null;
+                    if (aportante.ProyectoAportanteId == null || aportante.ProyectoAportanteId == 0)
                     {
                         //Definir como llega vigencia de cofinanciacion para relacionarlo con cofinanciacionAportante
                         //Relacion cofinanciacion aportante 
 
                         // aportante.Aportante.Cofinanciacion.
                         //cofinanciacionAportante 
-                        CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
+                        /*CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
                         cofinanciacionAportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
                         cofinanciacionAportante.Eliminado = false;
                         cofinanciacionAportante.FechaCreacion = DateTime.Now;
-
+                        */
                         aportante.Eliminado = false;
+                        aportante.ProyectoId = pProyecto.ProyectoId;
                         aportante.FechaCreacion = DateTime.Now;
                         aportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
                         _context.ProyectoAportante.Add(aportante);
@@ -204,7 +234,7 @@ namespace asivamosffie.services
                     //TODO:
                     //Validar SI el proyecto viene completo o como es?
                     pProyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Completo;
-                   //pProyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Incompleto;
+                    //pProyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Incompleto;
 
 
                     //si el tipo de intervancion es nuevo el estado juridico es sin revision 
@@ -219,6 +249,7 @@ namespace asivamosffie.services
                     //pProyecto.InfraestructuraIntervenirProyecto = null;
                     pProyecto.Eliminado = false;
                     pProyecto.FechaCreacion = DateTime.Now;
+                    pProyecto.RegistroCompleto = ValidarRegistroCompleto(pProyecto);
                     _context.Proyecto.Add(pProyecto);
                 }
                 else
@@ -294,7 +325,7 @@ namespace asivamosffie.services
                         //Controlar Registros
                         //Filas <=
                         //No comienza desde 0 por lo tanto el = no es necesario
-                        for (int i = 3; i < worksheet.Dimension.Rows; i++)
+                        for (int i = 2; i < worksheet.Dimension.Rows; i++)
                         {
                             try
                             {
@@ -460,7 +491,8 @@ namespace asivamosffie.services
                                     //#26
                                     //Tipo de aportante 3
                                     if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text))
-                                    {   temporalProyecto.TipoAportanteId3 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 26].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
+                                    {
+                                        temporalProyecto.TipoAportanteId3 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 26].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
 
                                         //#27
                                         //Aportante 3
@@ -570,7 +602,7 @@ namespace asivamosffie.services
                         //-2 ya los registros comienzan desde esta fila
                         archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                         archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                        archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 3);
+                        archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
                         _context.ArchivoCargue.Update(archivoCarge);
 
 
@@ -631,7 +663,7 @@ namespace asivamosffie.services
 
                 int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == OrigenId && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == 1 && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
 
                 List<TemporalProyecto> ListTemporalProyecto = await _context.TemporalProyecto.Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado).ToListAsync();
 
@@ -685,12 +717,21 @@ namespace asivamosffie.services
                         proyecto.ValorTotal = temporalProyecto.ValorTotal;
                         proyecto.EstadoProyectoCodigo = " ";
                         proyecto.TipoPredioCodigo = temporalProyecto.EspacioIntervenirId.ToString();
-                        //
+ 
+                        //si el tipo de intervancion es nuevo el estado juridico es sin revision 
+                        if (proyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))
+                        {
+                            proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Sin_Revision;
+                        }
+                        else
+                        {
+                            proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
+                        }
+   
+                        proyecto.RegistroCompleto = ValidarRegistroCompleto(proyecto);
                         _context.Proyecto.Add(proyecto);
                         _context.SaveChanges();
-
-
-
+                         
                         //ProyectoPredio
                         //Proyecto  Auditoria
                         ProyectoPredio proyectoPredio = new ProyectoPredio();
@@ -904,6 +945,7 @@ namespace asivamosffie.services
                 //Auditoria
                 pProyectoAdministrativo.Eliminado = false;
                 pProyectoAdministrativo.FechaCreado = DateTime.Now;
+                pProyectoAdministrativo.RegistroCompleto = ValidarRegistroCompletoProyectoAdministrativo(pProyectoAdministrativo);
                 _context.ProyectoAdministrativo.Add(pProyectoAdministrativo);
                 _context.SaveChanges();
 
@@ -987,7 +1029,15 @@ namespace asivamosffie.services
                      };
             }
         }
-         
+       
+        public  bool ValidarRegistroCompletoProyectoAdministrativo(ProyectoAdministrativo pProyectoAdministrativo) {
+
+            if (pProyectoAdministrativo.Enviado != null) {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto)
         {
             List<ProyectoAdministracionGrilla> ListProyectoAdministrativoGrilla = new List<ProyectoAdministracionGrilla>();
@@ -1006,11 +1056,11 @@ namespace asivamosffie.services
                     ProyectoAdministracionGrilla proyectoAdministrativoGrilla = new ProyectoAdministracionGrilla
                     {
                         ProyectoAdminitracionId = proyecto.ProyectoAdministrativoId,
-                        Enviado = proyecto.Enviado 
+                        Enviado = (bool)proyecto.Enviado
                     };
                     ListProyectoAdministrativoGrilla.Add(proyectoAdministrativoGrilla);
-                } 
-                return ListProyectoAdministrativoGrilla; 
+                }
+                return ListProyectoAdministrativoGrilla;
             }
             catch (Exception ex)
             {
@@ -1019,49 +1069,44 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
+        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario)
         {
-            ProyectoAdministrativo proyecto = await _context.ProyectoAdministrativo.FindAsync(pProyectoId);
-            Respuesta _response = new Respuesta();
-
+            int idAccionCrearProyectoAdministrativo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+            ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
+            bool retorno = true;
             try
             {
-                // Valido si tiene registros asociados.
-                var reference =  _context.ProyectoAdministrativoAportante.Include(x => x.ProyectoAdminstrativo).FirstOrDefault(x => x.ProyectoAdminstrativoId == pProyectoId);
-
-                if (reference == null)
-                {
-                    proyecto.Eliminado = true;
-                    _context.Update(proyecto);
-                    _context.SaveChanges();
-                    return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = proyecto, Code = ConstantMessagesProyecto.OperacionExitosa };
-
-                }
-
-                else { 
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesProyecto.Error, Message = "El registro tiene información que depende de él, no se puede eliminar." };
-                }
-
+                proyecto.Eliminado = true;
+                proyecto.UsuarioModificacion = pUsuario;
+                proyecto.FechaModificacion = DateTime.Now;
+                _context.SaveChanges();
+                //auditoria
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ELIMINACIÓN DE PROYECTO");
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesProyecto.Error, Message = ex.Message.ToString() };
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pUsuario, ex.InnerException.ToString());
+                return false;
             }
-         
+            return retorno;
         }
 
-        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
+        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario)
         {
+            int idAccionCrearProyectoAdministrativo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Proyecto, (int)EnumeratorTipoDominio.Acciones);
             ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
             bool retorno = true;
             try
             {
                 proyecto.Enviado = true;
+                proyecto.UsuarioModificacion = pUsuario;
                 proyecto.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
             }
             catch (Exception ex)
             {
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pUsuario, ex.InnerException.ToString());
                 return false;
             }
             return retorno;
