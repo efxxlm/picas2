@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // export interface PeriodicElement {
 //   id: number;
@@ -44,21 +45,64 @@ export class TablaAcuerdosComponent implements OnInit {
 
   constructor( private cofinanciacionService: CofinanciacionService,
                private router: Router,
-               public dialog: MatDialog ) { }
+               public dialog: MatDialog,private sanitized: DomSanitizer ) { }
 
   ngOnInit(): void {
-
+    this.inicializarTabla();        
+  }
+  inicializarTabla(){
     this.cofinanciacionService.listaAcuerdosCofinanciacion().subscribe( cof => 
       {
          this.listaCofinanciacion = cof; 
+         this.listaCofinanciacion.forEach(element => {
+           element.valorTotal=0;
+           element.estadoRegistro="Completo";
+           if(element.cofinanciacionAportante.length==0)
+           {
+            element.estadoRegistro="Incompleto";
+           }
+           element.cofinanciacionAportante.forEach(elementaportante => {
+            if(elementaportante.cofinanciacionDocumento.length==0)
+            {
+             element.estadoRegistro="Incompleto";
+            }
+            elementaportante.cofinanciacionDocumento.forEach(documento => {
+               element.valorTotal+=documento.valorDocumento;
+             });
+           });
+           
+         });
          this.dataSource.data = this.listaCofinanciacion;
+         this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = function (page, pageSize, length) {   
+          /*let pages="";
+          for(let i =0; i<=length;i++)
+          {
+            if(i==page)
+            {
+              pages="<div class='pag-actual'>"+(i+1)+"</div>";  
+            }
+            else{
+              pages="<div class='pag'>"+(i+1)+"</div>";
+            }            
+          }     
+          return this.sanitized.bypassSecurityTrustHtml(pages);*/
+          if (length === 0 || pageSize === 0) {
+            return '0 de ' + length;
+          }
+          length = Math.max(length, 0);
+          const startIndex = page * pageSize;
+          // If the start index exceeds the list length, do not try and fix the end index to the end.
+          const endIndex = startIndex < length ?
+            Math.min(startIndex + pageSize, length) :
+            startIndex + pageSize;
+          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
       } );
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   editarAcuerdo(e: number) {
@@ -66,8 +110,8 @@ export class TablaAcuerdosComponent implements OnInit {
   }
 
    eliminarAcuerdo(e: number) {
-    //this.openDialogSiNo("prueba", "abre", e);
-    this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
+    this.openDialogSiNo("", "<b>¿Está seguro de eliminar este registro?</b>", e);
+    /*this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
       cofi.eliminado = true;
       cofi.cofinanciacionAportante.forEach( apo => {
           apo.eliminado = true;
@@ -95,15 +139,16 @@ export class TablaAcuerdosComponent implements OnInit {
      () => {
       //console.log('terminó');
      });
-    });
+    });*/
    }
 
   private verificarRespuesta( respuesta: Respuesta )
   {
     if (respuesta.isSuccessful) // Response witout errors
     {
+      this.inicializarTabla();
       this.openDialog('', respuesta.message);
-      this.ngOnInit();
+      
       if (respuesta.isValidation) // have validations
       {
         
@@ -129,18 +174,8 @@ export class TablaAcuerdosComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
       if(result)
       {
-        this.cofinanciacionService.getAcuerdoCofinanciacionById(e).subscribe(cofi => {
-          cofi.eliminado = true;
-          cofi.cofinanciacionAportante.forEach( apo => {
-              apo.eliminado = true;
-              apo.cofinanciacionDocumento.forEach( doc => {
-                 doc.eliminado = true; 
-              });
-            })
-    
-        this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofi).subscribe( 
-          respuesta => 
-          {
+        this.cofinanciacionService.EliminarCofinanciacionByCofinanciacionId(e).subscribe(respuesta => {
+            console.log(respuesta);
             this.verificarRespuesta( respuesta );
           },
           err => {
@@ -155,7 +190,6 @@ export class TablaAcuerdosComponent implements OnInit {
          () => {
           //console.log('terminó');
          });
-        });
       }           
     });
   }

@@ -1,4 +1,5 @@
 th.mat-header-cell {
+    background-color: #174193;;
     background-color: var(--mainColor);
     color: #fff;
     text-align: center;
@@ -21,10 +22,12 @@ th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:la
 }
 
 .mat-cell, .mat-footer-cell {
+    color: #174193;;
     color: var(--mainColor);
 }
 
 mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-bottom-color: #174193;;
     border-bottom-color: var(--mainColor);
 }
 
@@ -119,10 +122,39 @@ div.mat-paginator {
 
 %botones-paginador {
     content: "";
+    color: #174193;;
     color: var(--mainColor);
     border-top: 1em solid transparent;
     border-bottom: 1em solid transparent;
     margin: 0 4px;
     position: absolute;
     top: .5em;
+}
+
+.btn-table,
+.btn-table.mat-raised-button.mat-accent {
+    margin: .5em auto !important;
+    line-height: 1;
+    display: block;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    width: 100%;
+    max-width: 9em;
+}
+.btn-table:hover {
+    background-color: #d1d1d1;
+    background-color: var(--grayColor);
+    color: #174193;;
+    color: var(--mainColor);
+}
+.mat-header-cell{
+    font-style: italic;
+}
+.mat-paginator-navigation-next::after{
+    content:" Siguiente";
+    margin-left: 2.5em;
+}
+.mat-paginator-navigation-previous::after{
+    content:" Anterior";
+    margin-left: -5.5em;
 }

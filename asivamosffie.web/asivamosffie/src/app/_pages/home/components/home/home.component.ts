@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
   actualUser: any;
   ngOnInit(): void {
     this.authe.actualUser$.subscribe(user => { 
+      console.log(this.actualUser);
       if(user==null)
       {
         console.log("iniciando");

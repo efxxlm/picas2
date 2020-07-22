@@ -37,8 +37,8 @@ namespace asivamosffie.api.Controllers
             try
             {
                  
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                //string pUsuarioModifico = " ";
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectService.CreateOrEditAdministrativeProject(pProyectoAdministrativo);
                 return Ok(respuesta);
@@ -60,8 +60,9 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
-                    //string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), " ");
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), strUsuario);
                 }
                 return Ok(respuesta);
             }
@@ -98,11 +99,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
-               
-
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            {               
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyecto.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
@@ -121,8 +119,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProjects()
         { 
-            string pUsuarioModifico = "";
-            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.ListAdministrativeProyectos(pUsuarioModifico);
             return respuesta;
 
@@ -130,11 +127,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("DeleteProyectoAdministrativoByProyectoId")]
         [HttpGet]
-        public async Task<IActionResult> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
+        public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            Respuesta response = new Respuesta();
-            response = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId);
-            return Ok(response);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
+            return respuesta;
         }
 
         
@@ -143,7 +140,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
             return respuesta;
         }
 
@@ -151,9 +149,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
         {
-
-            string pUsuarioModifico = "";
-            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.ListProyectos(pUsuarioModifico);
             return respuesta;
 

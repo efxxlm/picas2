@@ -75,6 +75,7 @@
     }
   }
   &--title {
+    background-color: #174193;;
     background-color: var(--mainColor);
     color: #fff;
     justify-content: center;
@@ -86,4 +87,29 @@
 
 .btn-guardar {
   margin-bottom: 2em;
+}
+
+.alineacion-titulos {
+  margin-left: -35px;
+}
+.alineacion-titulos2 {
+  margin-left: -19px;
+}
+/*
+.mat-select-required:after {
+  content:" *";
+  color: var(--color-info);
+}
+
+input:required
+{
+  content:" *";
+  color: var(--color-info);
+}*/
+
+.valor-total {
+    font-size: 20px;
+    color: #174193;
+    color: var(--mainColor);
+    font-weight: 500;
 }
