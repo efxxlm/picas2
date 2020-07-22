@@ -41,7 +41,7 @@ namespace asivamosffie.services
                         .ThenInclude(apo => apo.Cofinanciacion)
                         .Include(r => r.Aportante)
                         .ThenInclude(apo => apo.CofinanciacionDocumento)
-                        .FirstOrDefaultAsync(); 
+                        .FirstOrDefaultAsync();
         }
 
         public async Task<Respuesta> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
@@ -56,22 +56,26 @@ namespace asivamosffie.services
                     fuentefinanciacion.FechaCreacion = DateTime.Now;
                     fuentefinanciacion.Eliminado = false;
                     _context.Add(fuentefinanciacion);
-                }else{
-                    FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find( fuentefinanciacion.FuenteFinanciacionId );
+                }
+                else
+                {
+                    FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(fuentefinanciacion.FuenteFinanciacionId);
                     fuente.FechaModificacion = DateTime.Now;
                     fuente.ValorFuente = fuentefinanciacion.ValorFuente;
                 }
-                
-                foreach( VigenciaAporte vi in fuentefinanciacion.VigenciaAporte) {
+
+                foreach (VigenciaAporte vi in fuentefinanciacion.VigenciaAporte)
+                {
                     vi.FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId;
-                    await this.CreateEditarVigenciaAporte( vi );
+                    await this.CreateEditarVigenciaAporte(vi);
                 };
 
-                foreach( CuentaBancaria cb in fuentefinanciacion.CuentaBancaria) {
-                    await bankAccountService.CreateEditarCuentasBancarias( cb );
+                foreach (CuentaBancaria cb in fuentefinanciacion.CuentaBancaria)
+                {
+                    await bankAccountService.CreateEditarCuentasBancarias(cb);
                 };
 
-                
+
                 await _context.SaveChangesAsync();
 
 
@@ -181,7 +185,7 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
         {
-            return await _context.FuenteFinanciacion.Where(r=> !(bool)r.Eliminado)
+            return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
                         .Where(r => r.AportanteId == AportanteId)
                         .Include(r => r.ControlRecurso)
                         .Include(r => r.CuentaBancaria)
@@ -195,7 +199,7 @@ namespace asivamosffie.services
         {
             return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
         }
-        
+
 
         public async Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)
         {

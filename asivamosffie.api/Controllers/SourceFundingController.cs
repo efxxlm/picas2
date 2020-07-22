@@ -41,7 +41,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-           
+
         [HttpGet]
         public async Task<List<FuenteFinanciacion>> Get()
         {
@@ -115,7 +115,7 @@ namespace asivamosffie.api.Controllers
         [Route("EliminarFuentesFinanciacion")]
         public async Task<IActionResult> EliminarFuentesFinanciacion(int id)
         {
-            Respuesta respuesta = new Respuesta();  
+            Respuesta respuesta = new Respuesta();
             try
             {
                 respuesta = await _sourceFunding.EliminarFuentesFinanciacion(id, HttpContext.User.FindFirst("User").Value);
