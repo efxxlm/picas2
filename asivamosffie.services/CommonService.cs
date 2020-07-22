@@ -17,7 +17,7 @@ namespace asivamosffie.services
 
         public CommonService(devAsiVamosFFIEContext context)
         {
-            _context = context;            
+            _context = context;
         }
 
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
@@ -33,7 +33,7 @@ namespace asivamosffie.services
 
         public async Task<Template> GetTemplateById(int pId)
         {
-            return await _context.Template.Where(r=> r.TemplateId==pId && (bool)r.Activo).FirstOrDefaultAsync();
+            return await _context.Template.Where(r => r.TemplateId == pId && (bool)r.Activo).FirstOrDefaultAsync();
         }
 
         public async Task<Template> GetTemplateByTipo(string ptipo)
@@ -42,33 +42,33 @@ namespace asivamosffie.services
         }
 
         public async Task<List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio)
-        { 
-            return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync(); 
+        {
+            return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync();
         }
 
         public async Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenu, string pCodigo, int pAccionId, string pUsuario, string pObservaciones)
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
-            _context.Auditoria.Add(new Auditoria{AccionId=pAccionId,MensajesValidacionesId=retorno.MensajesValidacionesId,Usuario=pUsuario, Observacion= pObservaciones.ToUpper(),Fecha=DateTime.Now });
+            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario, Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
             _context.SaveChanges();
             return retorno.Mensaje;
-        } 
+        }
 
         public async Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
-            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.DominioId).FirstOrDefaultAsync();
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
         }
 
         public async Task<List<Localicacion>> GetListDepartamento()
-        { 
-             return await _context.Localizacion.Where(r => r.Nivel == 1)
-             .Select(x => new Localicacion
-             {
-                 LocalizacionId = x.LocalizacionId,
-                 Descripcion = x.Descripcion
-             }).ToListAsync();
-         }
+        {
+            return await _context.Localizacion.Where(r => r.Nivel == 1)
+            .Select(x => new Localicacion
+            {
+                LocalizacionId = x.LocalizacionId,
+                Descripcion = x.Descripcion
+            }).ToListAsync();
+        }
 
         public async Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento)
         {
@@ -80,22 +80,23 @@ namespace asivamosffie.services
                     Descripcion = x.Descripcion
                 }).ToListAsync();
             }
-            else {
+            else
+            {
                 return await _context.Localizacion.Where(r => r.Nivel == 2).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
                     Descripcion = x.Descripcion
                 }).ToListAsync();
             }
-   
+
         }
 
         public async Task<List<int>> GetListVigenciaAportes(string pYearVigente, bool yearSiguienteEsVigente)
         {
             try
-            { 
+            {
                 List<int> YearVigencia = new List<int>();
-      
+
                 int intYearDesde = Int32.Parse(pYearVigente);
                 int yearHasta = (yearSiguienteEsVigente) ? DateTime.Now.AddYears(1).Year : DateTime.Now.Year;
 
@@ -107,9 +108,9 @@ namespace asivamosffie.services
                 return YearVigencia;
             }
             catch (Exception)
-            { 
+            {
                 throw;
-            } 
+            }
         }
 
         public async Task<int> GetDominioIdByNombreDominioAndTipoDominio(string pNombreDominio, int pTipoDominioId)
