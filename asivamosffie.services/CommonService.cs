@@ -227,7 +227,7 @@ namespace asivamosffie.services
              {
                  LocalizacionId = x.LocalizacionId,
                  Descripcion = x.Descripcion,
-                 IdPadre = x.IdPadre
+                 //IdPadre = x.IdPadre
              }).ToListAsync();
         }
 
@@ -241,7 +241,7 @@ namespace asivamosffie.services
              {
                  LocalizacionId = x.LocalizacionId,
                  Descripcion = x.Descripcion,
-                 IdPadre = x.IdPadre
+                 //IdPadre = x.IdPadre
              }).ToListAsync();
         }
     }
