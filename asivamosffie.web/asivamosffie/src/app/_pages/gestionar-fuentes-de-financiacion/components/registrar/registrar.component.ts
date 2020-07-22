@@ -269,7 +269,7 @@ export class RegistrarComponent implements OnInit {
   }
   
   changeNombreAportante(){
-
+    console.log("aqui el cambio");
     if (this.addressForm.get('nombreAportante').value){
 
       this.idAportante = this.addressForm.get('nombreAportante').value.cofinanciacionAportanteId;
