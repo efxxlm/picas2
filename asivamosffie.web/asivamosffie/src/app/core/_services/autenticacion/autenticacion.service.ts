@@ -97,6 +97,6 @@ export interface Respuesta{
   isException: boolean;
   code: string;
   message: string;
-  data?: any;
+  data?: Usuario;
   token?: any;
 }
