@@ -52,6 +52,52 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetSelectionProcessSchedule")]
+        public async Task<IActionResult> GetSelectionProcessSchedule()
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetSelectionProcessSchedule();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        [Route("GetSelectionProcessScheduleById")]
+        public async Task<IActionResult> GetSelectionProcessSchedule(int id)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetSelectionProcessScheduleById(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [Route("GetRecordActivities")]
+        public async Task<IActionResult> GetRecordActivities(int ProcesoSeleccionId)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetRecordActivities(ProcesoSeleccionId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        
         [HttpPost]
         [Route("CreateEditarProcesoSeleccion")]
         public async Task<IActionResult> CreateEditarProcesoSeleccion([FromBody] ProcesoSeleccion procesoSeleccion)
