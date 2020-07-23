@@ -144,7 +144,102 @@ namespace asivamosffie.services
 
         #endregion
 
-        #region Servicios Proceso Seleccion;
+
+
+
+        #region Servicios Cronograma;
+        public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule()
+        {
+            return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado).ToListAsync();
+        }
+
+        public async Task<ProcesoSeleccionCronograma> GetSelectionProcessScheduleById(int id)
+        {
+            return await _context.ProcesoSeleccionCronograma.FindAsync(id);
+        }
+
+        //Listados de actvidades creadas
+        public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetRecordActivities(int ProcesoSeleccionId)
+        {
+            return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == ProcesoSeleccionId).Include(x => x.ProcesoSeleccion).ToListAsync();
+        }
+
+        public async Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+            ProcesoSeleccionCronograma procesoSeleccionCronogramaAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(procesoSeleccionCronograma.ProcesoSeleccionCronogramaId.ToString()) || procesoSeleccionCronograma.ProcesoSeleccionCronogramaId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR PROCESO SELECCION CRONOGRAMA";
+                    procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
+                    procesoSeleccionCronograma.Eliminado = false;
+
+                    _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = procesoSeleccionCronograma,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+                    };
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT PROCESO SELECCION CRONOGRAMA";
+                    procesoSeleccionCronogramaAntiguo = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCronograma.ProcesoSeleccionCronogramaId);
+                    //Auditoria
+                    //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioModificacion;
+                    procesoSeleccionCronogramaAntiguo.FechaModificacion = DateTime.Now;
+
+                    //Registros
+                    procesoSeleccionCronogramaAntiguo.ProcesoSeleccionId = procesoSeleccionCronograma.ProcesoSeleccionId;
+
+                    procesoSeleccionCronogramaAntiguo.NumeroActividad = procesoSeleccionCronograma.NumeroActividad;
+                    procesoSeleccionCronogramaAntiguo.Descripcion = procesoSeleccionCronograma.Descripcion;
+                    procesoSeleccionCronogramaAntiguo.FechaMaxima = procesoSeleccionCronograma.FechaMaxima;
+                    procesoSeleccionCronogramaAntiguo.EstadoActividadCodigo = procesoSeleccionCronograma.EstadoActividadCodigo;
+                    procesoSeleccionCronogramaAntiguo.FechaCreacion = procesoSeleccionCronograma.FechaCreacion;
+                    procesoSeleccionCronogramaAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
+                    procesoSeleccionCronogramaAntiguo.Eliminado = false;
+                    procesoSeleccionCronogramaAntiguo.FechaModificacion = DateTime.Now;
+
+                    _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = procesoSeleccionCronogramaAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, procesoSeleccionCronograma.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
 
         #endregion
 
