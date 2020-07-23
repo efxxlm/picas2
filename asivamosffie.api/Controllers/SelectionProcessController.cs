@@ -53,27 +53,24 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> post([FromBody] ProcesoSeleccion procesoSeleccion)
+        [Route("CreateEditarProcesoSeleccion")]
+        public async Task<IActionResult> CreateEditarProcesoSeleccion([FromBody] ProcesoSeleccion procesoSeleccion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
-                string usermodified = " ";
-                //string usermodified = HttpContext.User.FindFirst("User").Value;
-                procesoSeleccion.UsuarioCreacion = usermodified;
-                respuesta = await _selectionProcessService.Insert(procesoSeleccion);
+                procesoSeleccion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccion(procesoSeleccion);
                 return Ok(respuesta);
+                //
             }
             catch (Exception ex)
             {
-                respuesta.Data = ex.ToString();
-                return Ok(respuesta);
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
-        
-        
-       
 
     }
 }
