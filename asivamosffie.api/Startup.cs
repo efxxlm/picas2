@@ -120,14 +120,12 @@ namespace asivamosffie.api
             services.AddTransient<IContributorService, ContributorService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
-<<<<<<< Updated upstream
-            services.AddTransient<IBankAccountService, BankAccountService>();            
-
-=======
+ 
+            services.AddTransient<IBankAccountService, BankAccountService>();        
             services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
->>>>>>> Stashed changes
+ 
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
