@@ -24,8 +24,11 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
+        #region "Servicios Proceso Seleccion";
+
         public async Task<ActionResult<List<ProcesoSeleccion>>> GetSelectionProcess()
         {
+
             try
             {
                 return await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado).ToListAsync();
@@ -35,6 +38,7 @@ namespace asivamosffie.services
 
                 throw ex;
             }
+
         }
 
         public async Task<ProcesoSeleccion> GetSelectionProcessById(int id)
@@ -50,115 +54,103 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> Insert(ProcesoSeleccion procesoSeleccion)
+        public async Task<Respuesta> CreateEditarProcesoSeleccion(ProcesoSeleccion procesoSeleccion)
         {
-            Respuesta _response = new Respuesta();
-            int AccionId = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
-
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+            ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
-                if (procesoSeleccion != null)
-                {
-                    procesoSeleccion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                    procesoSeleccion.FechaCreacion = DateTime.Now;
-                    _context.Add(procesoSeleccion);
-                    await _context.SaveChangesAsync();
 
-                    return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = procesoSeleccion, Code = ConstantMessagesProcesoSeleccion.OperacionExitosa };
+                if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR CUENTA BANCARIA";
+                    procesoSeleccion.FechaCreacion = DateTime.Now;
+                    procesoSeleccion.Eliminado = false;
+
+                    _context.ProcesoSeleccion.Add(procesoSeleccion);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true, IsException = false,
+                        IsValidation = false, Data = procesoSeleccion,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
+                    };
+                   
                 }
                 else
                 {
-                    return _response = new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsValidation = false,
-                        Data = null,
-                        Code = ConstantMessagesProcesoSeleccion.RecursoNoEncontrado,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, AccionId, procesoSeleccion.UsuarioCreacion, " ")
-                    };
+                    strCrearEditar = "EDIT PROCESO CELECCION";
+                    ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
+                    //Auditoria
+                    //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioModificacion;
+                    ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+
+                    //Registros
+                    ProcesoSeleccionAntiguo.NumeroProceso = procesoSeleccion.NumeroProceso;
+                    ProcesoSeleccionAntiguo.Objeto = procesoSeleccion.Objeto;
+                    ProcesoSeleccionAntiguo.AlcanceParticular = procesoSeleccion.AlcanceParticular;
+                    ProcesoSeleccionAntiguo.Justificacion = procesoSeleccion.Justificacion;
+                    ProcesoSeleccionAntiguo.CriteriosSeleccion = procesoSeleccion.CriteriosSeleccion;
+                    ProcesoSeleccionAntiguo.TipoIntervencionCodigo = procesoSeleccion.TipoIntervencionCodigo;
+                    ProcesoSeleccionAntiguo.TipoAlcanceCodigo = procesoSeleccion.TipoAlcanceCodigo;
+                    ProcesoSeleccionAntiguo.TipoProcesoCodigo = procesoSeleccion.TipoProcesoCodigo;
+                    ProcesoSeleccionAntiguo.EsDistribucionGrupos = procesoSeleccion.EsDistribucionGrupos;
+                    ProcesoSeleccionAntiguo.CantGrupos = procesoSeleccion.CantGrupos;
+                    ProcesoSeleccionAntiguo.ResponsableTecnicoUsuarioId = procesoSeleccion.ResponsableTecnicoUsuarioId;
+                    ProcesoSeleccionAntiguo.ResponsableEstructuradorUsuarioid = procesoSeleccion.ResponsableEstructuradorUsuarioid;
+                    ProcesoSeleccionAntiguo.CondicionesJuridicasHabilitantes = procesoSeleccion.CondicionesJuridicasHabilitantes;
+                    ProcesoSeleccionAntiguo.CondicionesFinancierasHabilitantes = procesoSeleccion.CondicionesFinancierasHabilitantes;
+                    ProcesoSeleccionAntiguo.CondicionesTecnicasHabilitantes = procesoSeleccion.CondicionesTecnicasHabilitantes;
+                    ProcesoSeleccionAntiguo.CondicionesAsignacionPuntaje = procesoSeleccion.CondicionesAsignacionPuntaje;
+                    ProcesoSeleccionAntiguo.CantidadCotizaciones = procesoSeleccion.CantidadCotizaciones;
+                    ProcesoSeleccionAntiguo.CantidadProponentes = procesoSeleccion.CantidadProponentes;
+                    ProcesoSeleccionAntiguo.EsCompleto = procesoSeleccion.EsCompleto;
+                    ProcesoSeleccionAntiguo.EstadoProcesoSeleccionCodigo = procesoSeleccion.EstadoProcesoSeleccionCodigo;
+                    ProcesoSeleccionAntiguo.EtapaProcesoSeleccionCodigo = procesoSeleccion.EtapaProcesoSeleccionCodigo;
+                    ProcesoSeleccionAntiguo.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
+                    ProcesoSeleccionAntiguo.UrlSoporteEvaluacion = procesoSeleccion.UrlSoporteEvaluacion;
+                    ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
+                    ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
+                    ProcesoSeleccionAntiguo.Eliminado = false;
+                    ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+
+                    _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 }
 
-            }
-            catch (Exception ex)
-            {
-                return _response = new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, AccionId, procesoSeleccion.UsuarioCreacion, " ")
-
-                };
-            }
-        }
-
-        public async Task<Respuesta> Update(ProcesoSeleccion procesoSeleccion)
-        {
-            Respuesta _response = new Respuesta();
-            int AccionId = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
-            try
-            {
-                ProcesoSeleccion updateObj = GetObj(procesoSeleccion);
-                _context.Update(updateObj);
                 await _context.SaveChangesAsync();
-                return _response = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsValidation = false,
-                    Data = updateObj,
-                    Code = ConstantMessagesProcessSchedule.EditadoCorrrectamente,
 
-                };
+                return respuesta = new Respuesta
+                       {
+                           IsSuccessful = true,IsException = false,
+                           IsValidation = false, Data = ProcesoSeleccionAntiguo,
+                           Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
+                       };
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesProcessSchedule.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, AccionId, procesoSeleccion.UsuarioCreacion, " ")
-
-
-                };
+                return respuesta = new Respuesta
+                       {
+                           IsSuccessful = false, IsException = true,
+                           IsValidation = false, Data = null,
+                           Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                       };
             }
         }
 
-        public ProcesoSeleccion GetObj(ProcesoSeleccion procesoSeleccion)
-        {
-            ProcesoSeleccion updateObj = _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
-            updateObj.NumeroProceso = procesoSeleccion.NumeroProceso;
-            updateObj.Objeto = procesoSeleccion.Objeto;
-            updateObj.AlcanceParticular = procesoSeleccion.AlcanceParticular;
-            updateObj.Justificacion = procesoSeleccion.Justificacion;
-            updateObj.CriteriosSeleccion = procesoSeleccion.CriteriosSeleccion;
-            updateObj.TipoIntervencionCodigo = procesoSeleccion.TipoIntervencionCodigo;
-            updateObj.TipoAlcanceCodigo = procesoSeleccion.TipoAlcanceCodigo;
-            updateObj.TipoProcesoCodigo = procesoSeleccion.TipoProcesoCodigo;
-            updateObj.EsDistribucionGrupos = procesoSeleccion.EsDistribucionGrupos;
-            updateObj.CantGrupos = procesoSeleccion.CantGrupos;
-            updateObj.ResponsableTecnicoUsuarioId = procesoSeleccion.ResponsableTecnicoUsuarioId;
-            updateObj.ResponsableEstructuradorUsuarioid = procesoSeleccion.ResponsableEstructuradorUsuarioid;
-            updateObj.CondicionesJuridicasHabilitantes = procesoSeleccion.CondicionesJuridicasHabilitantes;
-            updateObj.CondicionesFinancierasHabilitantes = procesoSeleccion.CondicionesFinancierasHabilitantes;
-            updateObj.CondicionesTecnicasHabilitantes = procesoSeleccion.CondicionesTecnicasHabilitantes;
-            updateObj.CondicionesAsignacionPuntaje = procesoSeleccion.CondicionesAsignacionPuntaje;
-            updateObj.CantidadCotizaciones = procesoSeleccion.CantidadCotizaciones;
-            updateObj.CantidadProponentes = procesoSeleccion.CantidadProponentes;
-            updateObj.EsCompleto = procesoSeleccion.EsCompleto;
-            updateObj.EstadoProcesoSeleccionCodigo = procesoSeleccion.EstadoProcesoSeleccionCodigo;
-            updateObj.EtapaProcesoSeleccionCodigo = procesoSeleccion.EtapaProcesoSeleccionCodigo;
-            updateObj.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
-            updateObj.UrlSoporteEvaluacion = procesoSeleccion.UrlSoporteEvaluacion;
-            updateObj.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
-            updateObj.CantGrupos = procesoSeleccion.CantGrupos;
-            updateObj.FechaModificacion = DateTime.Now;
+        #endregion
 
-            return updateObj;
+        #region Servicios Proceso Seleccion;
 
-        }
+        #endregion
+
+
+
+
         public async Task<bool> Delete(int id)
         {
             try
@@ -175,4 +167,3 @@ namespace asivamosffie.services
         }
     }
 }
-
