@@ -39,7 +39,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Tipo_de_Predios = 19,
 
 		Origen_Documento_Cargue = 20,
-		Acciones = 17
+		Acciones = 17,
+
+		Estado_Registro = 23,
 
 
 	}

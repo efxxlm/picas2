@@ -14,9 +14,6 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using System.IO;
-using System.Text;
-using ClosedXML.Excel;
-using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using System.Globalization;
@@ -210,6 +207,7 @@ namespace asivamosffie.services
                     //si el tipo de intervancion es nuevo el estado juridico es sin revision 
                     if (pProyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))
                     {
+                        
                         pProyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Sin_Revision;
                     }
                     else
@@ -275,7 +273,7 @@ namespace asivamosffie.services
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
             Respuesta respuesta = new Respuesta();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
