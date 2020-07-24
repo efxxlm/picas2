@@ -23,3 +23,8 @@ $titleColor: $mainColor;
     --fontColor: #474747;
     --titleColor: var(--mainColor);
 }
+
+.var-main-gris {
+    --mainColor: var(--fontColor);
+
+}

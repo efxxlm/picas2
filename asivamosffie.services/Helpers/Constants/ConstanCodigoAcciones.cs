@@ -21,6 +21,18 @@
         public const string Crear_Editar_Contratacion_Proyecto = "18";
         public const string Crear_Editar_Contratacion_Proyecto_Aportante = "19";
 
+        public const string Crear_Editar_Fuentes_Financiacion= "20";
+        public const string Eliminar_Fuentes_Financiacion = "21";
+
+        public const string Crear_Editar_Cuenta_Bancaria = "23";
+        public const string Crear_Editar_Vigencia_Aporte = "24";
+
+        public const string Crear_Editar_Recursos_Control = "25";
+        public const string Eliminar_Editar_Recursos_Control = "26";
+
+
+
+
 
     }
 }
