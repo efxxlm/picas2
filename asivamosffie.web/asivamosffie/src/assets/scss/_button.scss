@@ -83,11 +83,6 @@ button.btn-calendario {
     }
 }
 
-.cantidad-seleccionados {
-    &--button {
-        position: absolute;
-    }
-}
 .mat-tooltip.cantidad-seleccionados--tooltip-accent {
     background-color: var(--tertiaryColor);
     color: var(--tertiaryColorFont);

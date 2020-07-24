@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CofinanciacionService, Cofinanciacion } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { Router } from '@angular/router';
 
-// export interface PeriodicElement {
+// export interface TableElement {
 //   id: number;
 //   fechaCreacion: string;
 //   numeroAcuerdo: string;
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 //   estadoRegistro: string;
 // }
 
-// const ELEMENT_DATA: PeriodicElement[] = [
+// const ELEMENT_DATA: TableElement[] = [
 //   {id: 1, fechaCreacion: '26/05/2020', numeroAcuerdo: '000001', vigenciaAcuerdo: 2020, valorTotal: 85000000, estadoRegistro: 'Completo'},
 //   {id: 2, fechaCreacion: '26/05/2020', numeroAcuerdo: '000001', vigenciaAcuerdo: 2020, valorTotal: 85000000, estadoRegistro: 'Completo'},
 //   {id: 3, fechaCreacion: '26/05/2020', numeroAcuerdo: '000001', vigenciaAcuerdo: 2020, valorTotal: 85000000, estadoRegistro: 'Completo'},

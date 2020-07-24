@@ -3,6 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SolicitarContratacionComponent } from './components/solicitar-contratacion/solicitar-contratacion.component';
 import { FormSolicitarContratacionComponent } from './components/form-solicitar-contratacion/form-solicitar-contratacion.component';
+import { ExpansionPanelDetallarSolicitudComponent } from './components/expansion-panel-detallar-solicitud/expansion-panel-detallar-solicitud.component';
+import { DefinirCaracteristicasComponent } from './components/definir-caracteristicas/definir-caracteristicas.component';
+import { DefinirFuentesYUsosComponent } from './components/definir-fuentes-y-usos/definir-fuentes-y-usos.component';
 
 const routes: Routes = [
   {
@@ -12,6 +15,18 @@ const routes: Routes = [
   {
     path: 'solicitar',
     component: FormSolicitarContratacionComponent
+  },
+  {
+    path: 'solicitud/:id',
+    component: ExpansionPanelDetallarSolicitudComponent
+  },
+  {
+    path: 'definir-caracteristicas/:id',
+    component: DefinirCaracteristicasComponent
+  },
+  {
+    path: 'definir-fuentes/:id',
+    component: DefinirFuentesYUsosComponent
   }
 ];
 

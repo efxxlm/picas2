@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-export interface PeriodicElement {
+export interface TableElement {
   id: number;
   fechaCreacion: string;
   tipoAportante: string;
@@ -15,7 +15,7 @@ export interface PeriodicElement {
   estado: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
+const ELEMENT_DATA: TableElement[] = [
   {
     id: 1,
     fechaCreacion: '24/03/2020',
