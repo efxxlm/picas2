@@ -98,6 +98,21 @@ namespace asivamosffie.api.Controllers
             }
         }
         
+        [Route("GetControlGridSchedule")]
+        public async Task<IActionResult> GetControlGridSchedule()
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetControlGridSchedule();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         [HttpPost]
         [Route("CreateEditarProcesoSeleccion")]
         public async Task<IActionResult> CreateEditarProcesoSeleccion([FromBody] ProcesoSeleccion procesoSeleccion)
