@@ -11,6 +11,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Fuentes = 14,
         Aportantes = 15,
         Procesos_Seleccion = 18,
+        Procesos_Seleccion_Cronograma = 20,
          Procesos_Seleccion_Grupo = 21
 
     }
