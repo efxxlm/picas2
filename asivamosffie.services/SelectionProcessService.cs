@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -23,6 +24,7 @@ namespace asivamosffie.services
             _context = context;
             _commonService = commonService;
         }
+
 
         #region "Servicios Proceso Seleccion";
 
@@ -145,9 +147,9 @@ namespace asivamosffie.services
         #endregion
 
 
-
-
         #region Servicios Cronograma;
+
+
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule()
         {
             return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado).ToListAsync();
@@ -158,11 +160,17 @@ namespace asivamosffie.services
             return await _context.ProcesoSeleccionCronograma.FindAsync(id);
         }
 
-        //Listados de actvidades creadas
+        public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetScheduleBySelectionProcessId(int ProcesoSeleccionId)
+        {
+            return await _context.ProcesoSeleccionCronograma.Where(x => !(bool)x.Eliminado && x.ProcesoSeleccionId == ProcesoSeleccionId).ToListAsync();
+        }
+
+        //Listados de actvidades/Cronograma creadas
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetRecordActivities(int ProcesoSeleccionId)
         {
-            return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == ProcesoSeleccionId).Include(x => x.ProcesoSeleccion).ToListAsync();
+            return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == ProcesoSeleccionId).ToListAsync();
         }
+
         //Grilla de control Ajuste del cronograma
         public async Task<ActionResult<List<GrillaControlCronograma>>> GetControlGridSchedule()
         {
@@ -185,17 +193,19 @@ namespace asivamosffie.services
                     EstadoProcesoSeleccionText = ProcesoSeleccion.EstadoProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EstadoProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Estado_Proceso_Seleccion) : "",
                     EsCompleto = ProcesoSeleccion.EsCompleto,
                     EsCompletoText = ProcesoSeleccion.EsCompleto ? await  _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToInt32(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Registro) : "Incompleto",
-
                 };
                 ListGrillaControlCronograma.Add(ControlCronogramaGrilla);
             }
 
             return ListGrillaControlCronograma;
         }
+
         public async Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_ProcesoSeleccion_Cronograma, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
+
             string strCrearEditar = "";
             ProcesoSeleccionCronograma procesoSeleccionCronogramaAntiguo = null;
             try
@@ -207,6 +217,8 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION CRONOGRAMA";
                     procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
                     procesoSeleccionCronograma.Eliminado = false;
+                    procesoSeleccionCronograma.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
                     return respuesta = new Respuesta
@@ -216,7 +228,7 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Data = procesoSeleccionCronograma,
                         Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
                     };
 
                 }
@@ -252,7 +264,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = procesoSeleccionCronogramaAntiguo,
                     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
                 };
             }
             catch (Exception ex)
@@ -264,7 +276,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, procesoSeleccionCronograma.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, procesoSeleccionCronograma.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
@@ -350,7 +362,6 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
 
 
         public async Task<bool> Delete(int id)
