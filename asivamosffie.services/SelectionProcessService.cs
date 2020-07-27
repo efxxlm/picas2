@@ -68,7 +68,7 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
                     //Auditoria
-                    strCrearEditar = "CREAR CUENTA BANCARIA";
+                    strCrearEditar = "CREAR PPROCESO SELECCION";
                     procesoSeleccion.FechaCreacion = DateTime.Now;
                     procesoSeleccion.Eliminado = false;
 
