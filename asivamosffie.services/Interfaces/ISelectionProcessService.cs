@@ -19,6 +19,7 @@ namespace asivamosffie.services.Interfaces
         Task<ProcesoSeleccionCronograma> GetSelectionProcessScheduleById(int id);
         Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetRecordActivities(int ProcesoSeleccionId);
         Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetScheduleBySelectionProcessId(int ProcesoSeleccionId);
+        Task<Respuesta> CreateEditarProcesoSeleccionGrupo(ProcesoSeleccionGrupo procesoSeleccionGrupo);
 
         Task<bool> Delete(int id);
     }
