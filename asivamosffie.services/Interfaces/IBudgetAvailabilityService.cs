@@ -10,6 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IBudgetAvailabilityService
     {
-   
+
+        Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestal();
     }
 }

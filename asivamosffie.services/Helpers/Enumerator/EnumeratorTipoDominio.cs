@@ -51,7 +51,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 		//Es igual a estado Proyecto
 		Estado_Registro = 23,
 
-		Estado_Juridico_Predios = 25
+		Estado_Juridico_Predios = 25,
+
+     	Estado_Solicitud_Presupuestal = 33
 
 	}
 }
