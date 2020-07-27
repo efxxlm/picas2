@@ -32,7 +32,7 @@ namespace asivamosffie.api.Controllers
             { 
                 HttpContext.Connection.RemoteIpAddress.ToString();
                // pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                Task<object> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
+                Task<Respuesta> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }

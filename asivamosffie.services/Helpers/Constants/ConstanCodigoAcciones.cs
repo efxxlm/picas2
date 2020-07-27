@@ -26,6 +26,6 @@
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
 
-
+        public const string Crear_Editar_Cofinanciacion = "31";
     }
 }

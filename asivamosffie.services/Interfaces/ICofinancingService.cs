@@ -10,7 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICofinancingService
     { 
-        Task<object> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion);
+        Task<Respuesta> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion);
 
         Task<Respuesta> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId, string pUsuarioModifico);
 
@@ -22,6 +22,7 @@ namespace asivamosffie.services.Interfaces
         Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion);
 
         Task<List<CofinanciacionAportante>> GetListAportante();
+
         Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID);
 
         Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID);
