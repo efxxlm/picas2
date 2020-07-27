@@ -10,7 +10,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Proyecto = 10,
         Fuentes = 14,
         Aportantes = 15,
-        Procesos_Seleccion = 18
+        Procesos_Seleccion = 18,
+         Procesos_Seleccion_Grupo = 21
 
     }
 
