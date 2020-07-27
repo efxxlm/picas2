@@ -271,6 +271,85 @@ namespace asivamosffie.services
 
         #endregion
 
+        #region Servicios Proceso Seleccion Grupo;
+        public async Task<Respuesta> CreateEditarProcesoSeleccionGrupo(ProcesoSeleccionGrupo procesoSeleccionGrupo)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_ProcesoSeleccion_Grupo, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
+
+            string strCrearEditar = "";
+            ProcesoSeleccionGrupo ProcesoSeleccionGrupoAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(procesoSeleccionGrupo.ProcesoSeleccionGrupoId.ToString()) || procesoSeleccionGrupo.ProcesoSeleccionGrupoId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR PROCESO SELECCION GRUPO";
+                    procesoSeleccionGrupo.FechaCreacion = DateTime.Now;
+                    procesoSeleccionGrupo.Eliminado = false;
+                    _context.ProcesoSeleccionGrupo.Add(procesoSeleccionGrupo);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = procesoSeleccionGrupo,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionGrupo.UsuarioCreacion, strCrearEditar)
+                    };
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT PROCESO SELECCION GRUPO";
+                    ProcesoSeleccionGrupoAntiguo = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupo.ProcesoSeleccionGrupoId);
+                    //Auditoria
+                    ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = "forozco";  //HttpContext.User.FindFirst("User").Value;
+                    ProcesoSeleccionGrupoAntiguo.FechaModificacion = DateTime.Now;
+
+
+                    //Registros
+
+                    ProcesoSeleccionGrupoAntiguo.ProcesoSeleccionId = procesoSeleccionGrupo.ProcesoSeleccionId;
+                    ProcesoSeleccionGrupoAntiguo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo;
+                    ProcesoSeleccionGrupoAntiguo.TipoPresupuestoCodigo = procesoSeleccionGrupo.TipoPresupuestoCodigo;
+                    ProcesoSeleccionGrupoAntiguo.Valor = procesoSeleccionGrupo.Valor;
+                    ProcesoSeleccionGrupoAntiguo.ValorMinimoCategoria = procesoSeleccionGrupo.ValorMinimoCategoria;
+                    ProcesoSeleccionGrupoAntiguo.ValorMaximoCategoria = procesoSeleccionGrupo.ValorMaximoCategoria;
+                    ProcesoSeleccionGrupoAntiguo.PlazoMeses = procesoSeleccionGrupo.PlazoMeses;
+                    ProcesoSeleccionGrupoAntiguo.Eliminado = false;
+
+                    _context.ProcesoSeleccionGrupo.Update(ProcesoSeleccionGrupoAntiguo);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = ProcesoSeleccionGrupoAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, ProcesoSeleccionGrupoAntiguo.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, ProcesoSeleccionGrupoAntiguo.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+        #endregion
 
 
 
