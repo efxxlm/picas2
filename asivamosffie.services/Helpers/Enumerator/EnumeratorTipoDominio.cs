@@ -42,6 +42,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Acciones = 17,
 
 		Estado_Registro = 23,
+		Tipo_Proceso_Seleccion = 27,
+		Etapa_Proceso_Seleccion = 34,
+
+		Estado_Proceso_Seleccion = 35
 
 
 	}
