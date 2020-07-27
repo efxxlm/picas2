@@ -184,7 +184,8 @@ namespace asivamosffie.services
                     EstadoProcesoSeleccionCodigo = ProcesoSeleccion.EstadoProcesoSeleccionCodigo,
                     EstadoProcesoSeleccionText = ProcesoSeleccion.EstadoProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EstadoProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Estado_Proceso_Seleccion) : "",
                     EsCompleto = ProcesoSeleccion.EsCompleto,
-                    EsCompletoText = ProcesoSeleccion.EsCompleto ? await  _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToString(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Proceso_Seleccion) : "",
+                    EsCompletoText = ProcesoSeleccion.EsCompleto ? await  _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToInt32(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Registro) : "Incompleto",
+
                 };
                 ListGrillaControlCronograma.Add(ControlCronogramaGrilla);
             }
