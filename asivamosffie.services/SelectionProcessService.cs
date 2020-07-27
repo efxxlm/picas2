@@ -163,7 +163,34 @@ namespace asivamosffie.services
         {
             return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == ProcesoSeleccionId).Include(x => x.ProcesoSeleccion).ToListAsync();
         }
+        //Grilla de control Ajuste del cronograma
+        public async Task<ActionResult<List<GrillaControlCronograma>>> GetControlGridSchedule()
+        {
+            List<ProcesoSeleccion> ListProcesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado).ToListAsync();
 
+            List<GrillaControlCronograma> ListGrillaControlCronograma = new List<GrillaControlCronograma>();
+
+            foreach (var ProcesoSeleccion in ListProcesoSeleccion)
+            {
+                GrillaControlCronograma ControlCronogramaGrilla = new GrillaControlCronograma
+                {
+                    ProcesoSeleccionId = ProcesoSeleccion.ProcesoSeleccionId,
+                    FechaCreacion = ProcesoSeleccion.FechaCreacion,
+                    TipoProcesoCodigo = ProcesoSeleccion.TipoProcesoCodigo,
+                    TipoProcesoCodigoText = ProcesoSeleccion.TipoProcesoCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.TipoProcesoCodigo,(int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion) : "",
+                    NumeroProceso = ProcesoSeleccion.NumeroProceso,
+                    EtapaProcesoSeleccionCodigo = ProcesoSeleccion.EtapaProcesoSeleccionCodigo,
+                    EEtapaProcesoSeleccionText = ProcesoSeleccion.EtapaProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EtapaProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Etapa_Proceso_Seleccion) : "",
+                    EstadoProcesoSeleccionCodigo = ProcesoSeleccion.EstadoProcesoSeleccionCodigo,
+                    EstadoProcesoSeleccionText = ProcesoSeleccion.EstadoProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EstadoProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Estado_Proceso_Seleccion) : "",
+                    EsCompleto = ProcesoSeleccion.EsCompleto,
+                    EsCompletoText = ProcesoSeleccion.EsCompleto ? await  _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToString(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Proceso_Seleccion) : "",
+                };
+                ListGrillaControlCronograma.Add(ControlCronogramaGrilla);
+            }
+
+            return ListGrillaControlCronograma;
+        }
         public async Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma)
         {
             Respuesta respuesta = new Respuesta();
