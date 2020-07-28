@@ -301,6 +301,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION GRUPO";
                     procesoSeleccionGrupo.FechaCreacion = DateTime.Now;
                     procesoSeleccionGrupo.Eliminado = false;
+                    procesoSeleccionGrupo.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                     _context.ProcesoSeleccionGrupo.Add(procesoSeleccionGrupo);
                     return respuesta = new Respuesta
                     {
@@ -318,7 +319,7 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO SELECCION GRUPO";
                     ProcesoSeleccionGrupoAntiguo = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupo.ProcesoSeleccionGrupoId);
                     //Auditoria
-                    ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = "forozco";  //HttpContext.User.FindFirst("User").Value;
+                    ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                     ProcesoSeleccionGrupoAntiguo.FechaModificacion = DateTime.Now;
 
 
