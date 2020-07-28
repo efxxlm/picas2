@@ -32,11 +32,9 @@ namespace asivamosffie.services
         public async Task<Respuesta> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId, string pUsuarioModifico)
         {
             //Julian Martinez
-            Respuesta respuesta = new Respuesta();
             int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
             try
             {
-
                 Cofinanciacion cofinanciacion = _context.Cofinanciacion.Find(pCofinancicacionId);
                 cofinanciacion.Eliminado = true;
                 cofinanciacion.UsuarioModificacion = pUsuarioModifico;
@@ -45,7 +43,7 @@ namespace asivamosffie.services
                 // _context.Update(cofinanciacion);
                 _context.SaveChanges();
 
-                return respuesta =
+                return 
                 new Respuesta
                 {
                     IsSuccessful = true,
@@ -57,7 +55,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return respuesta =
+                return  
                              new Respuesta
                              {
                                  IsSuccessful = true,

@@ -43,7 +43,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _resource.GetResourceControlGridBySourceFunding( id );
+                var result = await _resource.GetResourceControlGridBySourceFunding(id);
                 return result;
             }
             catch (Exception ex)
@@ -67,7 +67,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Route("CreateControlRecurso")]
         public async Task<Respuesta> CreateControlRecurso(ControlRecurso controlRecurso)
@@ -106,17 +106,18 @@ namespace asivamosffie.api.Controllers
 
         [HttpPut]
         [Route("DeleteResourceFundingBySourceFunding")]
-        public async Task<bool> DeleteResourceFundingBySourceFunding(int id)
+        public async Task<Respuesta> DeleteResourceFundingBySourceFunding(int id)
         {
+            Respuesta respuesta = new Respuesta();
             try
             {
-
-                var result = await _resource.Delete(id, HttpContext.User.FindFirst("User").Value);
-                return result;
+                respuesta = await _resource.Delete(id, HttpContext.User.FindFirst("User").Value);
+                return respuesta;
             }
             catch (Exception ex)
             {
-                throw ex;
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
             }
         }
 
