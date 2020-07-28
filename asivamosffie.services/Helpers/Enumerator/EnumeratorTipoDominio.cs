@@ -49,7 +49,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Tipo_Proceso_Seleccion = 27,
 		Etapa_Proceso_Seleccion = 34,
 
-		Estado_Proceso_Seleccion = 35
+		Estado_Proceso_Seleccion = 35,
 		Estado_Juridico_Predios = 25
 
 	}
