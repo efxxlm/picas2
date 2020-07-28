@@ -136,6 +136,10 @@ div.mat-paginator {
     padding-bottom: 0.5em;
     width: 100%;
     max-width: 9em;
+
+    span {
+        white-space: break-spaces;
+    }
 }
 .btn-table:hover {
     background-color: #d1d1d1;

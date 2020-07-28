@@ -77,6 +77,11 @@ const routes: Routes = [
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
+      {
+        path: 'solicitar-disponibilidad-presupuestal',
+        loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
+          .then(m => m.SolicitarDisponibilidadPresupuestalModule)
+      },
     ]
 
   },
