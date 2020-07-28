@@ -73,13 +73,13 @@ namespace asivamosffie.services
                     procesoSeleccion.Eliminado = false;
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true, IsException = false,
-                        IsValidation = false, Data = procesoSeleccion,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
-                    };
+                    // return respuesta = new Respuesta
+                    // {
+                    //     IsSuccessful = true, IsException = false,
+                    //     IsValidation = false, Data = procesoSeleccion,
+                    //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
+                    // };
                    
                 }
                 else
@@ -120,6 +120,18 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
+                }
+
+                foreach( ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo )
+                {
+                    //grupo.ProcesoSeleccionId = ProcesoSeleccionAntiguo.ProcesoSeleccionId;
+                    await this.CreateEditarProcesoSeleccionGrupo( grupo );
+                }
+
+                foreach( ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma )
+                {
+                    //cronograma.ProcesoSeleccionId = ProcesoSeleccionAntiguo.ProcesoSeleccionId;
+                    await this.CreateEditarProcesoSeleccionCronograma( cronograma );
                 }
 
                 await _context.SaveChangesAsync();
@@ -191,8 +203,8 @@ namespace asivamosffie.services
                     EEtapaProcesoSeleccionText = ProcesoSeleccion.EtapaProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EtapaProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Etapa_Proceso_Seleccion) : "",
                     EstadoProcesoSeleccionCodigo = ProcesoSeleccion.EstadoProcesoSeleccionCodigo,
                     EstadoProcesoSeleccionText = ProcesoSeleccion.EstadoProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EstadoProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Estado_Proceso_Seleccion) : "",
-                    EsCompleto = ProcesoSeleccion.EsCompleto,
-                    EsCompletoText = ProcesoSeleccion.EsCompleto ? await  _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToInt32(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Registro) : "Incompleto",
+                    EsCompleto = ProcesoSeleccion.EsCompleto.HasValue ? ProcesoSeleccion.EsCompleto.Value : false,
+                    EsCompletoText = ProcesoSeleccion.EsCompleto.Value ? await  _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToInt32(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Registro) : "Incompleto",
                 };
                 ListGrillaControlCronograma.Add(ControlCronogramaGrilla);
             }
@@ -221,15 +233,15 @@ namespace asivamosffie.services
 
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = procesoSeleccionCronograma,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
-                    };
+                    // return respuesta = new Respuesta
+                    // {
+                    //     IsSuccessful = true,
+                    //     IsException = false,
+                    //     IsValidation = false,
+                    //     Data = procesoSeleccionCronograma,
+                    //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+                    // };
 
                 }
                 else
@@ -255,17 +267,20 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
                 }
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = procesoSeleccionCronogramaAntiguo,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
-                };
+                // return respuesta = new Respuesta
+                // {
+                //     IsSuccessful = true,
+                //     IsException = false,
+                //     IsValidation = false,
+                //     Data = procesoSeleccionCronogramaAntiguo,
+                //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+                // };
+
+                return respuesta;
+
             }
             catch (Exception ex)
             {
@@ -302,15 +317,15 @@ namespace asivamosffie.services
                     procesoSeleccionGrupo.FechaCreacion = DateTime.Now;
                     procesoSeleccionGrupo.Eliminado = false;
                     _context.ProcesoSeleccionGrupo.Add(procesoSeleccionGrupo);
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = procesoSeleccionGrupo,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionGrupo.UsuarioCreacion, strCrearEditar)
-                    };
+                    // return respuesta = new Respuesta
+                    // {
+                    //     IsSuccessful = true,
+                    //     IsException = false,
+                    //     IsValidation = false,
+                    //     Data = procesoSeleccionGrupo,
+                    //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionGrupo.UsuarioCreacion, strCrearEditar)
+                    // };
 
                 }
                 else
@@ -336,17 +351,20 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionGrupo.Update(ProcesoSeleccionGrupoAntiguo);
                 }
 
-                await _context.SaveChangesAsync();
 
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = ProcesoSeleccionGrupoAntiguo,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, ProcesoSeleccionGrupoAntiguo.UsuarioCreacion, strCrearEditar)
-                };
+
+                //await _context.SaveChangesAsync();
+
+                // return respuesta = new Respuesta
+                // {
+                //     IsSuccessful = true,
+                //     IsException = false,
+                //     IsValidation = false,
+                //     Data = ProcesoSeleccionGrupoAntiguo,
+                //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, ProcesoSeleccionGrupoAntiguo.UsuarioCreacion, strCrearEditar)
+                // };
+                return respuesta;
             }
             catch (Exception ex)
             {

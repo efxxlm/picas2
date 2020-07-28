@@ -169,35 +169,35 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     
     this.procesoSeleccion.procesoSeleccionGrupo = [];
 
-    // listaGrupos.controls.forEach(control => {
-    //   let grupo: ProcesoSeleccionGrupo = {
-    //     nombreGrupo: control.get('nombreGrupo').value,
-    //     plazoMeses: control.get('plazoMeses').value,
-    //     procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
-    //     procesoSeleccionGrupoId: control.get('procesoSeleccionGrupoId').value,
-    //     tipoPresupuestoCodigo: control.get('tipoPresupuesto').value ? control.get('tipoPresupuesto').value.codigo : null,
-    //     valor: control.get('valor').value,        
-    //     valorMinimoCategoria: control.get('valorMinimoCategoria').value,
-    //     valorMaximoCategoria: control.get('valorMaximoCategoria').value,
-    //   }
-    //   this.procesoSeleccion.procesoSeleccionGrupo.push( grupo );
-    // });
+     listaGrupos.controls.forEach(control => {
+      let grupo: ProcesoSeleccionGrupo = {
+        nombreGrupo: control.get('nombreGrupo').value,
+        plazoMeses: control.get('plazoMeses').value,
+        procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
+        procesoSeleccionGrupoId: control.get('procesoSeleccionGrupoId').value,
+        tipoPresupuestoCodigo: control.get('tipoPresupuesto').value ? control.get('tipoPresupuesto').value.codigo : null,
+        valor: control.get('valor').value,        
+        valorMinimoCategoria: control.get('valorMinimoCategoria').value,
+        valorMaximoCategoria: control.get('valorMaximoCategoria').value,
+      }
+      this.procesoSeleccion.procesoSeleccionGrupo.push( grupo );
+    });
 
-    // this.procesoSeleccion.procesoSeleccionCronograma= [];
+    this.procesoSeleccion.procesoSeleccionCronograma= [];
 
-    // let posicion = 1;
-    // listaCronogramas.controls.forEach( control => {
-    //   let cronograma: ProcesoSeleccionCronograma = {
-    //     descripcion: control.get('descripcion').value,
-    //     fechaMaxima: control.get('fechaMaxima').value,
-    //     numeroActividad: posicion,
-    //     procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
-    //     procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
-    //     estadoActividadCodigo: null,
-    //   }
-    //   this.procesoSeleccion.procesoSeleccionCronograma.push(cronograma);
-    //   posicion++;
-    // })
+    let posicion = 1;
+    listaCronogramas.controls.forEach( control => {
+      let cronograma: ProcesoSeleccionCronograma = {
+        descripcion: control.get('descripcion').value,
+        fechaMaxima: control.get('fechaMaxima').value,
+        numeroActividad: posicion,
+        procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
+        procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
+        estadoActividadCodigo: null,
+      }
+      this.procesoSeleccion.procesoSeleccionCronograma.push(cronograma);
+      posicion++;
+    })
 
     //console.log(procesoS);
     this.guardar.emit(null);

@@ -15,7 +15,7 @@ namespace asivamosffie.model.APIModels
         public string EEtapaProcesoSeleccionText { get; set; }
         public string EstadoProcesoSeleccionCodigo { get; set; }
         public string EstadoProcesoSeleccionText { get; set; }
-        public bool EsCompleto { get; set; }
+        public bool? EsCompleto { get; set; }
         public string EsCompletoText { get; set; }
 
 
