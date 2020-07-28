@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AutenticacionService } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { UrlResolver } from '@angular/compiler';
 import { Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 // import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -18,11 +19,19 @@ export class HomeComponent implements OnInit {
       title: 'Gestionar acuerdo de cofinanciación',
       link: '/gestionarAcueros'
     },
-    
     {
-      title: 'Crear proyecto',
-      link: '/#'
+      title: 'Gestionar fuentes de financiación',
+      link: '/gestionarFuentes'
     },
+    {
+      title: 'Crear proyecto técnico',
+      link: '/crearProyecto'
+    },
+    {
+      title: 'Crear proyecto administrativo',
+      link: '/crearProyectoAdministrativo'
+     
+    }, 
     {
       title: 'Registrar proyectos postulados',
       link: '/#'
@@ -32,21 +41,23 @@ export class HomeComponent implements OnInit {
       link: '/cargarMasivamente'
     },
   ];
+  menu: any[]=[];
 
-  constructor(private authe: AutenticacionService,private router: Router) {
+  constructor(private authe: AutenticacionService,private common: CommonService,private router: Router) {
     this.actualUser = this.authe.actualUser;
   }
 
   actualUser: any;
   ngOnInit(): void {
     this.authe.actualUser$.subscribe(user => { 
-      console.log(this.actualUser);
+      console.log(user);
       if(user==null)
       {
-        console.log("iniciando");
+        console.log("iniciando");        
       }
       else{
         this.actualUser = user;         
+        this.getMenu();
         if(user.fechaUltimoIngreso==null || user.cambiarContrasena)
         {        
           this.router.navigate(['/cambiarContrasena']);
@@ -54,9 +65,15 @@ export class HomeComponent implements OnInit {
       }      
     });
   }
-  probarconsumo()
+  getMenu()
   {
-    this.authe.consumoePrueba().subscribe(data => { this.data = data; });
+    this.common.loadMenu().subscribe(data => { 
+      data.forEach(element => {
+        //console.log(element);
+        this.menu.push({title:element.menu.nombre,link:element.menu.rutaFormulario});
+      });
+      console.log(this.menu);    
+    });
   }
 
 }

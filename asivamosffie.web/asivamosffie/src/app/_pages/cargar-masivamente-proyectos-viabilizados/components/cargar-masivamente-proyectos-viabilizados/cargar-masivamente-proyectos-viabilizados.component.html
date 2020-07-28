@@ -19,7 +19,7 @@
     </div>
 
     <a routerLink="/cargarMasivamente/cargarProyecto" mat-raised-button color="accent" class="btn-cargar-proyecto">Cargar listado de proyectos</a><br>
-    <button mat-button color="warn" class="btn-descargar-plantilla">
+    <button mat-button color="warn" class="btn-descargar-plantilla" (click)="descargaPlantilla()">
         <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
         Descargar plantilla cargue masivo de proyectos
     </button>

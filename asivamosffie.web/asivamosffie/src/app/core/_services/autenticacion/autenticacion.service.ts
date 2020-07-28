@@ -28,10 +28,13 @@ export class AutenticacionService {
 
       if (user && user.token) {
               // store user details and jwt token in local storage to keep user logged in between page refreshes
-              user.data.token = user.token;
-              localStorage.setItem('actualUser', JSON.stringify(user.data));
-              this.actualUser = user.data;
-              this.actualUserSubject.next(user.data);
+              user.data.datausuario.token = user.token;
+              let usuariocompleto=user.data.datausuario;
+              usuariocompleto.rol=user.data.dataperfiles;
+              //usuariocompleto.token=user.token;
+              localStorage.setItem('actualUser', JSON.stringify(usuariocompleto));
+              this.actualUser = usuariocompleto;
+              this.actualUserSubject.next(usuariocompleto);
       }
       //console.log(user);
       return user;
@@ -89,6 +92,7 @@ export interface Usuario{
   token?:any;
   fechaUltimoIngreso?:Date;
   cambiarContrasena?:boolean;
+  rol?:any[];
 }
 
 export interface Respuesta{
@@ -97,6 +101,6 @@ export interface Respuesta{
   isException: boolean;
   code: string;
   message: string;
-  data?: Usuario;
+  data?: any;
   token?: any;
 }

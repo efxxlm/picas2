@@ -19,6 +19,11 @@ export class CommonService {
     return retorno;
   }
 
+  public loadMenu() {
+    const retorno = this.http.get<any[]>(`${environment.apiUrl}/common/GetMenuByRol`);
+    return retorno;
+  }
+
   listaTipoAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
@@ -182,7 +187,7 @@ interface TipoAportante{
 }
 
 export const TiposAportante: TipoAportante = {
-  FFIE:   ["1"],
-  ET:     ["2"],
-  Tercero:["3"]
+  FFIE:   ["6"],
+  ET:     ["9"],
+  Tercero:["10"]
 }
