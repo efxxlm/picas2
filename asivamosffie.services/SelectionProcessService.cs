@@ -73,21 +73,14 @@ namespace asivamosffie.services
                     procesoSeleccion.Eliminado = false;
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
-                    // return respuesta = new Respuesta
-                    // {
-                    //     IsSuccessful = true, IsException = false,
-                    //     IsValidation = false, Data = procesoSeleccion,
-                    //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
-                    // };
-                   
+                    
                 }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO CELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
                     //Auditoria
-                    //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioModificacion;
+                    //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioCreacion;
                     ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     //Registros
@@ -115,22 +108,22 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
                     ProcesoSeleccionAntiguo.UrlSoporteEvaluacion = procesoSeleccion.UrlSoporteEvaluacion;
                     ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
-                    ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
+                    //ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     ProcesoSeleccionAntiguo.Eliminado = false;
-                    ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+                    //ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 }
 
                 foreach( ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo )
                 {
-                    //grupo.ProcesoSeleccionId = ProcesoSeleccionAntiguo.ProcesoSeleccionId;
+                    grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
                     await this.CreateEditarProcesoSeleccionGrupo( grupo );
                 }
 
                 foreach( ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma )
                 {
-                    //cronograma.ProcesoSeleccionId = ProcesoSeleccionAntiguo.ProcesoSeleccionId;
+                    cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
                     await this.CreateEditarProcesoSeleccionCronograma( cronograma );
                 }
 
@@ -139,9 +132,10 @@ namespace asivamosffie.services
                 return respuesta = new Respuesta
                        {
                            IsSuccessful = true,IsException = false,
-                           IsValidation = false, Data = ProcesoSeleccionAntiguo,
+                           IsValidation = false, Data = procesoSeleccion,
                            Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
+
                        };
             }
             catch (Exception ex)
@@ -249,7 +243,7 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO SELECCION CRONOGRAMA";
                     procesoSeleccionCronogramaAntiguo = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCronograma.ProcesoSeleccionCronogramaId);
                     //Auditoria
-                    //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioModificacion;
+                    procesoSeleccionCronogramaAntiguo.UsuarioModificacion = procesoSeleccionCronograma.UsuarioCreacion;
                     procesoSeleccionCronogramaAntiguo.FechaModificacion = DateTime.Now;
 
                     //Registros
@@ -316,25 +310,14 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION GRUPO";
                     procesoSeleccionGrupo.FechaCreacion = DateTime.Now;
                     procesoSeleccionGrupo.Eliminado = false;
-                    procesoSeleccionGrupo.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                     _context.ProcesoSeleccionGrupo.Add(procesoSeleccionGrupo);
-                    // return respuesta = new Respuesta
-                    // {
-                    //     IsSuccessful = true,
-                    //     IsException = false,
-                    //     IsValidation = false,
-                    //     Data = procesoSeleccionGrupo,
-                    //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionGrupo.UsuarioCreacion, strCrearEditar)
-                    // };
-
                 }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO SELECCION GRUPO";
                     ProcesoSeleccionGrupoAntiguo = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupo.ProcesoSeleccionGrupoId);
                     //Auditoria
-                    ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                    ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = procesoSeleccionGrupo.UsuarioCreacion;
                     ProcesoSeleccionGrupoAntiguo.FechaModificacion = DateTime.Now;
 
 

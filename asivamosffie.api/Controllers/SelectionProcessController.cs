@@ -121,7 +121,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                procesoSeleccion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                procesoSeleccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccion(procesoSeleccion);
                 return Ok(respuesta);
                 //
