@@ -14,8 +14,8 @@
         <div class="col">
             <mat-form-field class="select-width">
                 <mat-select [formControl]="tipoDeProceso" required>
-                    <mat-option *ngFor="let proceso of procesos" [value]="proceso.value">
-                        {{ proceso.name }}
+                    <mat-option *ngFor="let proceso of procesos" [value]="proceso">
+                        {{ proceso.nombre }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

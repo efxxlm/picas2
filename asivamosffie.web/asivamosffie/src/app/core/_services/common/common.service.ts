@@ -94,12 +94,21 @@ export class CommonService {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdMunicipio?idMunicipio=${idMunicipio}`);
   }
   
-
   listDepartamentoByIdMunicipio(idMunicipio:string){
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/listDepartamentoByIdMunicipio?idMunicipio=${idMunicipio}`);
   }
   
-  
+  listaTipoAlcance(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=9`);
+  }
+
+  listaTipoProcesoSeleccion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=27`);
+  }
+
+  listaPresupuestoProcesoSeleccion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=10`);
+  }
 
 
   public forkProject():Observable<any[]>

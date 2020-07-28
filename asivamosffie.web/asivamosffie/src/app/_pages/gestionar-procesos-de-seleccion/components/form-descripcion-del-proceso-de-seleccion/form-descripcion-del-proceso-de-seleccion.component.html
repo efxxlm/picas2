@@ -53,8 +53,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="tipoIntervencion" required>
-                  <mat-option *ngFor="let state of states" [value]="state.abbreviation">
-                    {{ state.name }}
+                  <mat-option *ngFor="let tipoI of listaTipoIntervencion" [value]="tipoI">
+                    {{ tipoI.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -71,8 +71,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="tipoAlcance" required>
-                  <mat-option *ngFor="let state of states" [value]="state.abbreviation">
-                    {{ state.name }}
+                  <mat-option *ngFor="let tipoA of listaTipoAlcance" [value]="tipoA">
+                    {{ tipoA.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -88,14 +88,14 @@
             </div>
             <div class="col">
               <mat-radio-group class="radioInput" formControlName="distribucionEnGrupos">
-                <mat-radio-button value="si">Sí</mat-radio-button>
-                <mat-radio-button value="no">No</mat-radio-button>
+                <mat-radio-button value="true">Sí</mat-radio-button>
+                <mat-radio-button value="false">No</mat-radio-button>
               </mat-radio-group>
             </div>
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="addressForm.get('distribucionEnGrupos').value === 'si'">
+      <div class="row" *ngIf="addressForm.get('distribucionEnGrupos').value === 'true'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -125,6 +125,8 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #nombreGrupo type="text" maxlength="100" formControlName="nombreGrupo">
+                  <input type="hidden" formControlName="procesoSeleccionGrupoId">
+                  
                 </mat-form-field>
                 <span class="contador">{{100 - nombreGrupo.value.length}}</span>
               </div>
@@ -138,10 +140,10 @@
                   <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="tipoPresupuesto" required>
-                        <mat-option *ngFor="let state of states" [value]="state.abbreviation">
-                          {{ state.name }}
+                        <mat-option *ngFor="let tipoPresupuesto of listatipoPresupuesto" [value]="tipoPresupuesto">
+                          {{ tipoPresupuesto.nombre }}
                         </mat-option>
-                      </mat-select>
+                      </mat-select> 
                     </mat-form-field>
                   </div>
                 </div>
@@ -173,66 +175,66 @@
         </div>
       </div>
 
-      <div>
-        <h2 class="card-subTitle">Cronograma</h2>
-        <table class="mat-table cdk-table mat-sort mat-table-style">
-          <thead>
-            <tr class="mat-header-row cdk-header-row ng-star-inserted">
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Actividad
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Descripción
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Fecha máxima
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Gestión
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <b class="text-1-2em">
-                  1
-                </b>
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <div class="d-flex justify-content-center">
-                  <!-- <span class="contador" *ngIf="addressForm.get('cronogramas')[i].value.get('descripcion').value!== null">
-                    {{500 - addressForm.get('cronogramas')[i].value.get('descripcion').value.length}}
-                  </span>
-                  <span class="contador" *ngIf="addressForm.get('cronogramas')[i].value.get('descripcion').value === null">
-                    500
-                  </span> -->
-                </div>
-                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                  (onContentChanged)="maxLength($event, 500)"></quill-editor>
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
-                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                </button>
-                <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="picker">
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <button mat-raised-button color="accent">Eliminar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="text-right">
-          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarActividad()">
-            <img src="assets/img/icon/mas.svg" alt="Agregar otra actividad">
-            Agregar otra actividad
-          </button>
-        </div>
+      <div formGroupName="cronogramas">
+          <div>
+            <h2 class="card-subTitle">Cronograma</h2>
+            <table class="mat-table cdk-table mat-sort mat-table-style">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Actividad
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Descripción
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Fecha máxima
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Gestión
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cronograma of cronogramas.controls; let i = index" [formGroupName]="i" >
+                  
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b class="text-1-2em">
+                      1
+                    </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <div class="d-flex justify-content-center">
+                    </div>
+                    <input type="hidden" formControlName="procesoSeleccionCronogramaId">
+                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                      (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" >
+                    </button>
+                    <mat-form-field class="example-full-width">
+                      <input matInput [matDatepicker]="picker" formControlName="fechaMaxima">
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <button mat-raised-button color="accent">Eliminar</button>
+                  </td>
+                
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-right">
+              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarActividad()">
+                <img src="assets/img/icon/mas.svg" alt="Agregar otra actividad">
+                Agregar otra actividad
+              </button>
+            </div>
+          </div>
       </div>
+    
     </mat-card-content>
   </mat-card>
 
@@ -244,5 +246,5 @@
 </form>
 
 <!-- <pre>
-  {{addressForm.value | json}}
+  {{ addressForm.value | json }}
 </pre> -->
