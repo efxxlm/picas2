@@ -46,7 +46,6 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
-            Respuesta respuesta = new Respuesta();
             BankAccountService bankAccountService = new BankAccountService(_context, _commonService);
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
             try
@@ -79,7 +78,7 @@ namespace asivamosffie.services
                 await _context.SaveChangesAsync();
 
 
-                return respuesta =
+                return 
                new Respuesta
                {
                    IsSuccessful = true,
@@ -91,7 +90,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return respuesta =
+                return 
                        new Respuesta
                        {
                            IsSuccessful = false,
@@ -105,8 +104,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> EliminarFuentesFinanciacion(int id, string UsuarioModifico)
         {
-            Respuesta respuesta = new Respuesta();
-
+        
             int idAccionEliminarFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -119,7 +117,7 @@ namespace asivamosffie.services
                 _context.Update(entity);
                 await _context.SaveChangesAsync();
 
-                return respuesta =
+                return 
                       new Respuesta
                       {
                           IsSuccessful = true,
@@ -131,7 +129,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return respuesta =
+                return 
                  new Respuesta
                  {
                      IsSuccessful = false,
@@ -145,7 +143,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
-            Respuesta respuesta = new Respuesta();
+        
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -159,7 +157,7 @@ namespace asivamosffie.services
                 _context.Update(updateObj);
                 await _context.SaveChangesAsync();
 
-                return respuesta =
+                return 
                     new Respuesta
                     {
                         IsSuccessful = true,
@@ -171,7 +169,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return respuesta =
+                return 
                     new Respuesta
                     {
                         IsSuccessful = false,
@@ -200,16 +198,14 @@ namespace asivamosffie.services
             return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
         }
 
-
         public async Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)
         {
-            Respuesta respuesta = new Respuesta();
+ 
             int idAccionCrearVigenciaAporte = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Vigencia_Aporte, (int)EnumeratorTipoDominio.Acciones);
-            string strCrearEditar = "";
-
             try
             {
 
+                string strCrearEditar;
                 if (vigenciaAporte.VigenciaAporteId == null || vigenciaAporte.VigenciaAporteId == 0)
                 {
                     //Auditoria
@@ -234,7 +230,7 @@ namespace asivamosffie.services
                 }
                 //await _context.SaveChangesAsync();
 
-                return respuesta =
+                return 
                new Respuesta
                {
                    IsSuccessful = true,
@@ -246,7 +242,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return respuesta =
+                return 
                        new Respuesta
                        {
                            IsSuccessful = false,
