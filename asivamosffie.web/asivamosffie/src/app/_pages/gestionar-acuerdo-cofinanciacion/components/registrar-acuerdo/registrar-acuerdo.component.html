@@ -1,3 +1,7 @@
+<div class="loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>
+
 <div class="container">
   <div class="text-right">
     <a routerLink="/gestionarAcueros" mat-button color="primary" class="btn-regresar">
@@ -22,7 +26,10 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
+                <label class="label-left"
+                  [ngClass]="{'color-secondaryColor' : datosAportantes.controls.vigenciaEstado.invalid && datosAportantes.controls.vigenciaEstado.dirty}">
+                  Vigencia del acuerdo de cofinanciación
+                </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
@@ -41,7 +48,10 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">¿Cuántos aportantes tiene el acuerdo?</label>
+                <label class="label-left"
+                [ngClass]="{'color-secondaryColor' : datosAportantes.controls.numAportes.invalid && datosAportantes.controls.numAportes.dirty}">
+                  ¿Cuántos aportantes tiene el acuerdo?
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
@@ -71,11 +81,15 @@
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left">Tipo de aportante</label>
+                        <label class="label-left"
+                        [ngClass]="{'color-secondaryColor' : true}"
+                        >
+                        Tipo de aportante
+                      </label>
                       </div>
                       <div class="col">
                         <mat-form-field class="select-width">
-                          <mat-select formControlName="tipo"
+                          <mat-select formControlName="tipo" required
                             (selectionChange)="changeTipoAportante(aportantes.controls[i].get('tipo').value.codigo)">
                             <mat-option value="0">Seleccione</mat-option>
                             <mat-option *ngFor="let selectTipoAportante of selectTiposAportante"
@@ -205,13 +219,11 @@
   <div class="container">
     <div>
       <mat-accordion>
-        <mat-expansion-panel class="form-apropiacion" *ngFor="let aportante of listaCofinancAportantes; let i = index">
-          <mat-expansion-panel-header class="form-apropiacion--header">
-            <mat-panel-title class="form-apropiacion--title">
+        <mat-expansion-panel class="expansion-style" *ngFor="let aportante of listaCofinancAportantes; let i = index">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"
+              [ngClass]="{'sin-diligenciar': validaCompletitud(aportante)==1, 'en-proceso':  validaCompletitud(aportante)==2, 'completo':  validaCompletitud(aportante)==3}">
               Documentos de apropiación aportante {{ i + 1}}
-              <span class="info-text" style="margin-left: 0.5em; margin-right: 0px;"
-                [ngClass]="{'sin-diligenciar': validaCompletitud(aportante)==1, 'en-proceso':  validaCompletitud(aportante)==2, 'completo':  validaCompletitud(aportante)==3}"></span>
-
             </mat-panel-title>
           </mat-expansion-panel-header>
 
@@ -350,8 +362,9 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="example-full-width">
-                          <input matInput [matDatepicker]="picker" [(ngModel)]="documento.fechaAcuerdo" [max]="maxDate"
-                            readonly (click)="picker.open()">
+                          <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA"
+                            [(ngModel)]="documento.fechaAcuerdo" [max]="maxDate" required readonly
+                            (click)="picker.open()">
                           <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">

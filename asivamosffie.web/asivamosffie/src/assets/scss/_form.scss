@@ -124,3 +124,14 @@ div.mat-select-arrow {
     font-weight: 600;
     top: 25%;
 }
+
+.mat-placeholder-required {
+    display: none;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-label {
+    text-align: center;
+}
+.mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    opacity: 0;
+}

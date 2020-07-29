@@ -1,8 +1,9 @@
 <app-header></app-header>
-<app-navbar *ngIf="true"></app-navbar>
+<app-navbar *ngIf="actualUser"></app-navbar>
 
 <main>
     <router-outlet></router-outlet>
+    <app-spinner-loading></app-spinner-loading>
 </main>
 
 <app-footer></app-footer>

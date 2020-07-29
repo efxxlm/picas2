@@ -9,6 +9,8 @@ import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerdos.component';
 
+import { CurrencyPipe } from '@angular/common';
+
 @NgModule({
   declarations: [BotonRegistrarAcuerdoComponent, RegistrarAcuerdoComponent,TablaAcuerdosComponent],
   imports: [
@@ -17,6 +19,7 @@ import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerd
     MaterialModule,
     ReactiveFormsModule,
     FormsModule
-  ]
+  ],
+  providers: [CurrencyPipe]
 })
 export class GestionarAcuerdoCofinanciacionModule { }

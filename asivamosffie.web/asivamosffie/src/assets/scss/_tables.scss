@@ -21,10 +21,12 @@ th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:la
 }
 
 .mat-cell, .mat-footer-cell {
+    color: #174193;
     color: var(--mainColor);
 }
 
 mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-bottom-color: #174193;
     border-bottom-color: var(--mainColor);
 }
 
@@ -42,9 +44,9 @@ table {
     }
     &--img {
         margin-bottom: 1em !important;
-        margin-left: .5em;
-        padding: .5em;
-        min-width: 0;
+        margin-left: .5em !important;
+        padding: .5em !important;
+        min-width: 0 !important;
 
         img {
             height: 2.5em;
@@ -119,6 +121,7 @@ div.mat-paginator {
 
 %botones-paginador {
     content: "";
+    color: #174193;
     color: var(--mainColor);
     border-top: 1em solid transparent;
     border-bottom: 1em solid transparent;

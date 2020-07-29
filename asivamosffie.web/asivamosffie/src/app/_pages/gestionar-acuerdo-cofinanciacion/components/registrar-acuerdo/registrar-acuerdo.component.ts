@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-registrar-acuerdo',
@@ -16,12 +17,15 @@ import { forkJoin } from 'rxjs';
 })
 export class RegistrarAcuerdoComponent implements OnInit {
 
+  loading = false;
+
   constructor(private fb: FormBuilder,
               private cofinanciacionService: CofinanciacionService,
               private commonService: CommonService,
               public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private router: Router,
+              private currencyPipe: CurrencyPipe
   ) {
     this.maxDate = new Date();
   }
@@ -68,16 +72,19 @@ export class RegistrarAcuerdoComponent implements OnInit {
           this.datosAportantes.setControl('numAportes', this.fb.control(cof.cofinanciacionAportante.length));
 
           cof.cofinanciacionAportante.forEach(apor => {
-            const grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId, apor.nombreAportanteId, apor.cofinanciacionDocumento.length,
-              apor.cofinanciacionId, apor.cofinanciacionAportanteId);
+            const grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId,
+                                                                apor.nombreAportanteId,
+                                                                apor.cofinanciacionDocumento.length,
+                                                                apor.cofinanciacionId,
+                                                                apor.cofinanciacionAportanteId);
 
-            const valorTipo = this.selectTiposAportante.find(a => a.dominioId == apor.tipoAportanteId);
-            const valorNombre = this.nombresAportante.find(a => a.dominioId == apor.nombreAportanteId);
+            const valorTipo = this.selectTiposAportante.find(a => a.dominioId === apor.tipoAportanteId);
+            const valorNombre = this.nombresAportante.find(a => a.dominioId === apor.nombreAportanteId);
 
             this.commonService.listaMunicipiosByIdDepartamento(apor.municipioId.toString().substring(0, 5)).subscribe(mun => {
 
-              const valorMunicipio = mun.find(a => a.localizacionId == apor.municipioId.toString());
-              const valorDepartamento = this.departamentos.find(a => a.localizacionId == apor.municipioId.toString().substring(0, 5));
+              const valorMunicipio = mun.find(a => a.localizacionId === apor.municipioId.toString());
+              const valorDepartamento = this.departamentos.find(a => a.localizacionId === apor.municipioId.toString().substring(0, 5));
 
               grupo.get('departamento').setValue(valorDepartamento);
               grupo.get('municipios').setValue(mun);
@@ -135,10 +142,11 @@ export class RegistrarAcuerdoComponent implements OnInit {
       );
   }
 
-  changeDepartamento(id) {
-    this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id].get('departamento').value.localizacionId).subscribe(mun => {
-      this.aportantes.controls[id].get('municipios').setValue(mun);
-    });
+  changeDepartamento(id: string | number) {
+    this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id]
+      .get('departamento').value.localizacionId).subscribe(mun => {
+        this.aportantes.controls[id].get('municipios').setValue(mun);
+      });
   }
 
   changeTipoAportante(p) {
@@ -187,7 +195,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   }
 
-  createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number, pCofinanciacionId: number, pCofinanciacionAportanteId: number): FormGroup {
+  createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number, pCofinanciacionId: number, pCofinanciacionAportanteId: number)
+  : FormGroup {
     const grupo: FormGroup = this.fb.group({
       tipo: [pTipo, Validators.required],
       nombre: [pNombre],
@@ -270,6 +279,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     // console.log('entró');
     // this.listaCofinancAportantes = [];
     this.listaAportantes();
@@ -293,10 +303,12 @@ export class RegistrarAcuerdoComponent implements OnInit {
         } else {
           mensaje = err.message;
         }
+        this.loading = false;
         this.openDialog('Error', mensaje);
       },
       () => {
         // console.log('terminó');
+        this.loading = false;
       });
   }
 
@@ -419,4 +431,14 @@ export class RegistrarAcuerdoComponent implements OnInit {
     // let inputChar = String.fromCharCode(event.charCode);
     // return alphanumeric.test(inputChar) ? true : false;
   }
+
+
+  // Algo así arregla lo del separador de miles, pero no encuentro como suscribirme a un ngModel dentro del ciclo
+  // this.form.valorDocumento.valueChanges.suscribe( from => {
+  //   if (form.valorDocumento) {
+  //     this.myForm.patchValue({
+  //       valorDocumento: this.currencyPipe.transform(form.valorDocumento.replace(/\D/g, '').replace(/^0+/, ''), 'USD', 'symbol', '1.0-0')
+  //     }, {emitEvent: false});
+  //   }
+  // });
 }
