@@ -127,6 +127,23 @@ namespace asivamosffie.services
                     CreadoEditado = "CREAR COFINANCIACIÓN ";
                     cofinanciacion.Eliminado = false;
                     cofinanciacion.FechaCreacion = DateTime.Now;
+
+
+                    //Foreach para poner campos de auditoria en las tablas relacionadas !
+
+                    foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
+                    {
+                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                        cofinanciacionAportante.FechaCreacion = DateTime.Now;
+                        cofinanciacionAportante.Eliminado = false;
+
+                        foreach (var documentoAportante in cofinanciacionAportante.CofinanciacionDocumento)
+                        {
+                            documentoAportante.Eliminado = false;
+                            documentoAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                            documentoAportante.FechaCreacion = DateTime.Now;
+                        }
+                    }
                     _context.Cofinanciacion.Add(cofinanciacion);
                 }
                 else
@@ -137,17 +154,17 @@ namespace asivamosffie.services
                     cofinanciacionEdit.FechaModificacion = DateTime.Now;
 
                 }
-            
+
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                 {
-                 
+
                     if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
                     {
                         cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
                         cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
                         int idCofinancicacionAportante = EditCofinancingContributor(cofinanciacionAportante);
 
-                     
+
                         if (idCofinancicacionAportante > 0)
                         {
                             foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
@@ -164,9 +181,9 @@ namespace asivamosffie.services
                             }
                         }
                     }
-                } 
+                }
                 await _context.SaveChangesAsync();
-                 
+
                 return
                        new Respuesta
                        {
@@ -218,19 +235,19 @@ namespace asivamosffie.services
         public int CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento)
         {
             try
-            { 
-                    CofinanciacionDocumento cofinanciacionDocumentoEdit = _context.CofinanciacionDocumento.Find(pCofinanciacionDocumento.CofinanciacionDocumentoId);
+            {
+                CofinanciacionDocumento cofinanciacionDocumentoEdit = _context.CofinanciacionDocumento.Find(pCofinanciacionDocumento.CofinanciacionDocumentoId);
 
-                    cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion;
-                    cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
-                    cofinanciacionDocumentoEdit.FechaActa = pCofinanciacionDocumento.FechaActa;
-                    cofinanciacionDocumentoEdit.FechaAcuerdo = pCofinanciacionDocumento.FechaAcuerdo;
-                    cofinanciacionDocumentoEdit.NumeroActa = pCofinanciacionDocumento.NumeroActa;
-                    cofinanciacionDocumentoEdit.TipoDocumentoId = pCofinanciacionDocumento.TipoDocumentoId;
-                    cofinanciacionDocumentoEdit.ValorDocumento = pCofinanciacionDocumento.ValorDocumento;
-                    cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante;
-               
-            
+                cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion;
+                cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
+                cofinanciacionDocumentoEdit.FechaActa = pCofinanciacionDocumento.FechaActa;
+                cofinanciacionDocumentoEdit.FechaAcuerdo = pCofinanciacionDocumento.FechaAcuerdo;
+                cofinanciacionDocumentoEdit.NumeroActa = pCofinanciacionDocumento.NumeroActa;
+                cofinanciacionDocumentoEdit.TipoDocumentoId = pCofinanciacionDocumento.TipoDocumentoId;
+                cofinanciacionDocumentoEdit.ValorDocumento = pCofinanciacionDocumento.ValorDocumento;
+                cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante;
+
+
                 return pCofinanciacionDocumento.CofinanciacionDocumentoId;
             }
             catch (Exception)
