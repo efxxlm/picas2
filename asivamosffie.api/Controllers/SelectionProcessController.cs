@@ -208,5 +208,60 @@ namespace asivamosffie.api.Controllers
 
         #endregion
 
+
+         #region Proceso Seleccion Proponente
+
+
+        [Route("GetProcesoSeleccionProponenteById")]
+        public async Task<IActionResult> GetProcesoSeleccionProponenteById(int Id)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetProcesoSeleccionProponenteById(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        [Route("GetGridProcesoSeleccionProponente")]
+        public async Task<IActionResult> GetGridProcesoSeleccionProponente(int? ProcesoSeleccionId)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetGridProcesoSeleccionProponente(ProcesoSeleccionId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditarProcesoSeleccionProponente")]
+        public async Task<IActionResult> CreateEditarProcesoSeleccionProponente([FromBody] ProcesoSeleccionProponente procesoSeleccionProponente)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionProponente(procesoSeleccionProponente);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        #endregion
+
     }
 }
