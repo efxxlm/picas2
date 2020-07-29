@@ -432,6 +432,118 @@ namespace asivamosffie.services
         #endregion
 
 
+          #region Servicios Proceso Seleccion Proponente;
+
+        public async Task<ProcesoSeleccionCronograma> GetProcesoSeleccionProponenteById(int id)
+        {
+            return await _context.ProcesoSeleccionCronograma.FindAsync(id);
+        }
+
+        public async Task<ActionResult<List<GrillaProcesoSeleccionProponente>>> GetGridProcesoSeleccionProponente(int? procesoSeleccionId)
+        {
+            List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente =
+                (procesoSeleccionId != null  ? await _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccionId).ToListAsync()
+                : await _context.ProcesoSeleccionProponente.ToListAsync());
+
+
+            List <GrillaProcesoSeleccionProponente> ListGrillaProcesoSeleccionProponente = new List<GrillaProcesoSeleccionProponente>();
+
+            foreach (var PSP in ListProcesoSeleccionProponente)
+            {
+                GrillaProcesoSeleccionProponente ProcesoSeleccionProponenteGrilla = new GrillaProcesoSeleccionProponente
+                {
+                    ProcesoSeleccionProponenteId = PSP.ProcesoSeleccionProponenteId,
+                    TipoProponenteCodigo = PSP.TipoProponenteCodigo,
+                    TipoProponenteText = PSP.TipoProponenteCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(PSP.TipoProponenteCodigo, (int)EnumeratorTipoDominio.Tipo_Proponente) : "",
+                    NombreProponente = PSP.NombreProponente != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(PSP.TipoProponenteCodigo, (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante) : "",
+                    TipoIdentificacionCodigo = PSP.TipoIdentificacionCodigo,
+                    TipoIdentificaciontext = PSP.TipoIdentificacionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(PSP.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento) : "",
+                    NumeroIdentificacion = PSP.NumeroIdentificacion,
+                    LocalizacionIdMunicipio = PSP.LocalizacionIdMunicipio,
+                    DireccionProponente = PSP.DireccionProponente,
+                    TelefonoProponente = PSP.TelefonoProponente,
+                    EmailProponente = PSP.EmailProponente
+                };
+
+                ListGrillaProcesoSeleccionProponente.Add(ProcesoSeleccionProponenteGrilla);
+            }
+
+            return ListGrillaProcesoSeleccionProponente;
+        }
+
+        public async Task<Respuesta> CreateEditarProcesoSeleccionProponente(ProcesoSeleccionProponente procesoSeleccionProponente)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
+
+            string strCrearEditar = "";
+            string userAction = "jsorozcof";//httpContext.User.FindFirst("User").Value;
+            ProcesoSeleccionProponente ProcesoSeleccionProponenteAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(procesoSeleccionProponente.ProcesoSeleccionProponenteId.ToString()) || procesoSeleccionProponente.ProcesoSeleccionProponenteId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR PROCESO SELECCION PROPONENTE";
+                    _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = procesoSeleccionProponente,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, "", strCrearEditar)
+                    };
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT PROCESO SELECCION PROPONENTE";
+                    ProcesoSeleccionProponenteAntiguo = _context.ProcesoSeleccionProponente.Find(procesoSeleccionProponente.ProcesoSeleccionProponenteId);
+
+                    //Registros
+
+                    ProcesoSeleccionProponenteAntiguo.ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId;
+                    ProcesoSeleccionProponenteAntiguo.TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo;
+                    ProcesoSeleccionProponenteAntiguo.NombreProponente = procesoSeleccionProponente.NombreProponente;
+                    ProcesoSeleccionProponenteAntiguo.TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo;
+                    ProcesoSeleccionProponenteAntiguo.NumeroIdentificacion = procesoSeleccionProponente.NumeroIdentificacion;
+                    ProcesoSeleccionProponenteAntiguo.LocalizacionIdMunicipio = procesoSeleccionProponente.LocalizacionIdMunicipio;
+                    ProcesoSeleccionProponenteAntiguo.DireccionProponente = procesoSeleccionProponente.DireccionProponente;
+                    ProcesoSeleccionProponenteAntiguo.TelefonoProponente = procesoSeleccionProponente.TelefonoProponente;
+                    ProcesoSeleccionProponenteAntiguo.EmailProponente = procesoSeleccionProponente.EmailProponente;
+                    _context.ProcesoSeleccionProponente.Update(ProcesoSeleccionProponenteAntiguo);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = ProcesoSeleccionProponenteAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, userAction, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, userAction, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+        #endregion
 
 
         public async Task<bool> Delete(int id)
