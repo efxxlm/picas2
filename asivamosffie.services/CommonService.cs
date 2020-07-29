@@ -244,5 +244,10 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
+
+        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
+        {
+            return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
+        }
     }
 }
