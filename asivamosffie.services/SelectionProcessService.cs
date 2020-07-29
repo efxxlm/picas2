@@ -435,7 +435,7 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO SELECCION COTIZACION";
                     ProcesoSeleccionCotizacionAntiguo = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId);
                     //Auditoria
-                    ProcesoSeleccionCotizacionAntiguo.UsuarioModificacion = "forozco";  //HttpContext.User.FindFirst("User").Value;
+                    ProcesoSeleccionCotizacionAntiguo.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                     ProcesoSeleccionCotizacionAntiguo.FechaModificacion = DateTime.Now;
 
 
