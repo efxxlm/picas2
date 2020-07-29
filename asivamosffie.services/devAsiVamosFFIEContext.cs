@@ -1647,6 +1647,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProyectoAportante>(entity =>
             {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
