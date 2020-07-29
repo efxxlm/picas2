@@ -29,6 +29,7 @@
         public const string Crear_Proceso_Seleccion = "18";
          public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
+        public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
     }
 }
