@@ -150,13 +150,12 @@ namespace asivamosffie.services
                         //Aportantes 
                         foreach (var aportante in pProyecto.ProyectoAportante)
                         {
-                            if (aportante.ProyectoAportanteId == 0)
-                            {
+                             
                                 aportante.Eliminado = false;
                                 aportante.FechaCreacion = DateTime.Now;
                                 aportante.UsuarioCreacion = pProyecto.UsuarioCreacion;
-                                _context.ProyectoAportante.Add(aportante);
-                            }
+                               // _context.ProyectoAportante.Add(aportante);
+                           
 
                         }
 
