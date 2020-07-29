@@ -246,6 +246,9 @@ namespace asivamosffie.services
              }).ToListAsync();
         }
 
-      
+        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
+        {
+            return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
+        }
     }
 }
