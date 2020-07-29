@@ -133,5 +133,80 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+
+         #region Cotizacion
+
+        [Route("GetProcesoSeleccionCotizacion")]
+        public async Task<IActionResult> GetProcesoSeleccionCotizacion()
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetProcesoSeleccionCotizacion();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+
+        [Route("GetProcesoSeleccionCotizacionById")]
+        public async Task<IActionResult> GetProcesoSeleccionCotizacionById(int Id)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetProcesoSeleccionCotizacionById(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        [Route("GetCotizacionByProcesoSeleccionId")]
+        public async Task<IActionResult> GetCotizacionByProcesoSeleccionId(int ProcesoSeleccionId)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetCotizacionByProcesoSeleccionId(ProcesoSeleccionId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditarProcesoSeleccionCotizacion")]
+        public async Task<IActionResult> CreateEditarProcesoSeleccionCotizacion([FromBody] ProcesoSeleccionCotizacion procesoSeleccionCotizacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                procesoSeleccionCotizacion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCotizacion(procesoSeleccionCotizacion);
+                return Ok(respuesta);
+                //
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        #endregion
+
     }
 }
