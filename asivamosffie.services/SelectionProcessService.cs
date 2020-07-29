@@ -366,6 +366,119 @@ namespace asivamosffie.services
         #endregion
 
 
+           #region Servicios Proceso Seleccion Cotizacion;
+
+
+        public async Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetProcesoSeleccionCotizacion()
+        {
+
+            try
+            {
+                return await _context.ProcesoSeleccionCotizacion.Where(r => !(bool)r.Eliminado).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public async Task<ProcesoSeleccionCotizacion> GetProcesoSeleccionCotizacionById(int id)
+        {
+            return await _context.ProcesoSeleccionCotizacion.FindAsync(id);
+        }
+        public async Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetCotizacionByProcesoSeleccionId(int ProcesoSeleccionId)
+        {
+            try
+            {
+                return await _context.ProcesoSeleccionCotizacion.Where(x => !(bool)x.Eliminado && x.ProcesoSeleccionId == ProcesoSeleccionId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<Respuesta> CreateEditarProcesoSeleccionCotizacion(ProcesoSeleccionCotizacion procesoSeleccionCotizacion)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
+
+            string strCrearEditar = "";
+            ProcesoSeleccionCotizacion ProcesoSeleccionCotizacionAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId.ToString()) || procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR PROCESO SELECCION COTIZACION";
+                    procesoSeleccionCotizacion.FechaCreacion = DateTime.Now;
+                    procesoSeleccionCotizacion.Eliminado = false;
+                    _context.ProcesoSeleccionCotizacion.Add(procesoSeleccionCotizacion);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = procesoSeleccionCotizacion,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCotizacion.UsuarioCreacion, strCrearEditar)
+                    };
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT PROCESO SELECCION COTIZACION";
+                    ProcesoSeleccionCotizacionAntiguo = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId);
+                    //Auditoria
+                    ProcesoSeleccionCotizacionAntiguo.UsuarioModificacion = "forozco";  //HttpContext.User.FindFirst("User").Value;
+                    ProcesoSeleccionCotizacionAntiguo.FechaModificacion = DateTime.Now;
+
+
+                    //Registros
+
+                    ProcesoSeleccionCotizacionAntiguo.ProcesoSeleccionCotizacionId = procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId;
+
+
+                    ProcesoSeleccionCotizacionAntiguo.Eliminado = false;
+
+                    _context.ProcesoSeleccionCotizacion.Update(ProcesoSeleccionCotizacionAntiguo);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = ProcesoSeleccionCotizacionAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, ProcesoSeleccionCotizacionAntiguo.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, ProcesoSeleccionCotizacionAntiguo.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+        #endregion
+
+
+
+
         public async Task<bool> Delete(int id)
         {
             try
