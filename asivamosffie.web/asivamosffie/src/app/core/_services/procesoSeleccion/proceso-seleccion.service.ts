@@ -39,7 +39,8 @@ export interface ProcesoSeleccion{
   responsableTecnicoUsuarioId?: number,
   responsableEstructuradorUsuarioid?: number,
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],
-  procesoSeleccionCronograma?: ProcesoSeleccionCronograma[]
+  procesoSeleccionCronograma?: ProcesoSeleccionCronograma[],
+  procesoSeleccionCotizacion?: ProcesoSeleccionCotizacion[],
 }
 
 export interface ProcesoSeleccionGrupo{
@@ -62,4 +63,14 @@ export interface ProcesoSeleccionCronograma{
   fechaMaxima?: Date,
   estadoActividadCodigo?: string,
   procesoSeleccion?: ProcesoSeleccion
+}
+
+export interface ProcesoSeleccionCotizacion {
+  procesoSeleccionCotizacionId: number,
+  procesoSeleccionId?: number,
+  nombreOrganizacion?: string,
+  valorCotizacion?: number,
+  descripcion?: string,
+  urlSoporte?: string,
+  procesoSeleccion?: ProcesoSeleccion,
 }

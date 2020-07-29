@@ -27,6 +27,7 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #nombreOrganizacion type="text" maxlength="500" formControlName="nombreOrganizacion">
+                  <input type="hidden" formControlName="procesoSeleccionCotizacionId">
                 </mat-form-field>
                 <span class="contador">{{500 - nombreOrganizacion.value.length}}</span>
               </div>

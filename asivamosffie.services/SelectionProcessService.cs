@@ -126,6 +126,12 @@ namespace asivamosffie.services
                     cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
                     await this.CreateEditarProcesoSeleccionCronograma( cronograma );
                 }
+                
+                foreach( ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion )
+                {
+                    cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    await this.CreateEditarProcesoSeleccionCotizacion( cotizacion );
+                }
 
                 await _context.SaveChangesAsync();
 
@@ -227,17 +233,8 @@ namespace asivamosffie.services
 
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
-                    // return respuesta = new Respuesta
-                    // {
-                    //     IsSuccessful = true,
-                    //     IsException = false,
-                    //     IsValidation = false,
-                    //     Data = procesoSeleccionCronograma,
-                    //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
-                    // };
-
-                }
+                    
+                    }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO SELECCION CRONOGRAMA";
@@ -260,18 +257,6 @@ namespace asivamosffie.services
 
                     _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
                 }
-
-                //await _context.SaveChangesAsync();
-
-                // return respuesta = new Respuesta
-                // {
-                //     IsSuccessful = true,
-                //     IsException = false,
-                //     IsValidation = false,
-                //     Data = procesoSeleccionCronogramaAntiguo,
-                //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
-                // };
 
                 return respuesta;
 
@@ -335,19 +320,6 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionGrupo.Update(ProcesoSeleccionGrupoAntiguo);
                 }
 
-
-
-                //await _context.SaveChangesAsync();
-
-                // return respuesta = new Respuesta
-                // {
-                //     IsSuccessful = true,
-                //     IsException = false,
-                //     IsValidation = false,
-                //     Data = ProcesoSeleccionGrupoAntiguo,
-                //     Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                //     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, ProcesoSeleccionGrupoAntiguo.UsuarioCreacion, strCrearEditar)
-                // };
                 return respuesta;
             }
             catch (Exception ex)
@@ -419,23 +391,14 @@ namespace asivamosffie.services
                     procesoSeleccionCotizacion.FechaCreacion = DateTime.Now;
                     procesoSeleccionCotizacion.Eliminado = false;
                     _context.ProcesoSeleccionCotizacion.Add(procesoSeleccionCotizacion);
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = procesoSeleccionCotizacion,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCotizacion.UsuarioCreacion, strCrearEditar)
-                    };
-
+                    
                 }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO SELECCION COTIZACION";
                     ProcesoSeleccionCotizacionAntiguo = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId);
                     //Auditoria
-                    ProcesoSeleccionCotizacionAntiguo.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                    ProcesoSeleccionCotizacionAntiguo.UsuarioModificacion = procesoSeleccionCotizacion.UsuarioCreacion;
                     ProcesoSeleccionCotizacionAntiguo.FechaModificacion = DateTime.Now;
 
 
@@ -449,17 +412,9 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionCotizacion.Update(ProcesoSeleccionCotizacionAntiguo);
                 }
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = ProcesoSeleccionCotizacionAntiguo,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, ProcesoSeleccionCotizacionAntiguo.UsuarioCreacion, strCrearEditar)
-                };
+                return respuesta;
             }
             catch (Exception ex)
             {
