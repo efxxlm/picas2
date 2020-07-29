@@ -204,13 +204,11 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.CofinanciacionDocumento)
                     .HasForeignKey(d => d.CofinanciacionAportanteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_CofinanciacionAportanteId_FK_CofinanciacionAportante_CofinanciacionAportanteId");
 
                 entity.HasOne(d => d.TipoDocumento)
                     .WithMany(p => p.CofinanciacionDocumento)
                     .HasForeignKey(d => d.TipoDocumentoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CofinanciacionTipo_FK_dominio");
             });
 

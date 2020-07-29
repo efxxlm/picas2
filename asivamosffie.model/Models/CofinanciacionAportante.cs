@@ -18,10 +18,10 @@ namespace asivamosffie.model.Models
 
         public int CofinanciacionAportanteId { get; set; }
         public int? CofinanciacionId { get; set; }
-        public int TipoAportanteId { get; set; }
+        public int? TipoAportanteId { get; set; }
         public int? NombreAportanteId { get; set; }
         public int? MunicipioId { get; set; }
-        public bool Eliminado { get; set; }
+        public bool? Eliminado { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }

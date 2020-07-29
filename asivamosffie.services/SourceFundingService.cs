@@ -195,7 +195,7 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
         {
-            return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
+            return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Distinct().Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
         }
 
         public async Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)
