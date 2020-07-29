@@ -193,7 +193,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                procesoSeleccionCotizacion.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                procesoSeleccionCotizacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCotizacion(procesoSeleccionCotizacion);
                 return Ok(respuesta);
                 //
