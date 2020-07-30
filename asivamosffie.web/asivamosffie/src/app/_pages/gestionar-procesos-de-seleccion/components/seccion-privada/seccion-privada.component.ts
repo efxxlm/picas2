@@ -43,7 +43,7 @@ export class SeccionPrivadaComponent implements OnInit {
 
   onSubmit(){
     this.procesoSeleccionService.guardarEditarProcesoSeleccion(this.procesoSeleccion).subscribe( respuesta => {
-      console.log( respuesta );
+      console.log('respuesta',  respuesta );
     })
   }
 

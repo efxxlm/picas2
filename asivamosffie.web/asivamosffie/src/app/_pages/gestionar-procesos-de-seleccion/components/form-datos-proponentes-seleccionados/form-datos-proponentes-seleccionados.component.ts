@@ -1,84 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { ProcesoSeleccion, ProcesoSeleccionProponente, ProcesoSeleccionIntegrante } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { Dominio, Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-form-datos-proponentes-seleccionados',
   templateUrl: './form-datos-proponentes-seleccionados.component.html',
   styleUrls: ['./form-datos-proponentes-seleccionados.component.scss']
 })
-export class FormDatosProponentesSeleccionadosComponent {
+export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
+  @Input() procesoSeleccion: ProcesoSeleccion;
+  @Output() guardar: EventEmitter<any> = new EventEmitter(); 
+
+  listaDepartamentos: Localizacion[] = [];
+  listaMunicipios: Localizacion[] = [];
+  listaProponentes: Dominio[] = [];
   tipoProponente: FormControl;
 
-  proponentes = [
-    {name: 'Persona natural', value: 1},
-    {name: 'Persona jurídica - individual', value: 2},
-    {name: 'Unión Temporal o Consorcio', value: 3}
-  ];
-
-  states = [
-    {name: 'Alabama', abbreviation: 'AL'},
-    {name: 'Alaska', abbreviation: 'AK'},
-    {name: 'American Samoa', abbreviation: 'AS'},
-    {name: 'Arizona', abbreviation: 'AZ'},
-    {name: 'Arkansas', abbreviation: 'AR'},
-    {name: 'California', abbreviation: 'CA'},
-    {name: 'Colorado', abbreviation: 'CO'},
-    {name: 'Connecticut', abbreviation: 'CT'},
-    {name: 'Delaware', abbreviation: 'DE'},
-    {name: 'District Of Columbia', abbreviation: 'DC'},
-    {name: 'Federated States Of Micronesia', abbreviation: 'FM'},
-    {name: 'Florida', abbreviation: 'FL'},
-    {name: 'Georgia', abbreviation: 'GA'},
-    {name: 'Guam', abbreviation: 'GU'},
-    {name: 'Hawaii', abbreviation: 'HI'},
-    {name: 'Idaho', abbreviation: 'ID'},
-    {name: 'Illinois', abbreviation: 'IL'},
-    {name: 'Indiana', abbreviation: 'IN'},
-    {name: 'Iowa', abbreviation: 'IA'},
-    {name: 'Kansas', abbreviation: 'KS'},
-    {name: 'Kentucky', abbreviation: 'KY'},
-    {name: 'Louisiana', abbreviation: 'LA'},
-    {name: 'Maine', abbreviation: 'ME'},
-    {name: 'Marshall Islands', abbreviation: 'MH'},
-    {name: 'Maryland', abbreviation: 'MD'},
-    {name: 'Massachusetts', abbreviation: 'MA'},
-    {name: 'Michigan', abbreviation: 'MI'},
-    {name: 'Minnesota', abbreviation: 'MN'},
-    {name: 'Mississippi', abbreviation: 'MS'},
-    {name: 'Missouri', abbreviation: 'MO'},
-    {name: 'Montana', abbreviation: 'MT'},
-    {name: 'Nebraska', abbreviation: 'NE'},
-    {name: 'Nevada', abbreviation: 'NV'},
-    {name: 'New Hampshire', abbreviation: 'NH'},
-    {name: 'New Jersey', abbreviation: 'NJ'},
-    {name: 'New Mexico', abbreviation: 'NM'},
-    {name: 'New York', abbreviation: 'NY'},
-    {name: 'North Carolina', abbreviation: 'NC'},
-    {name: 'North Dakota', abbreviation: 'ND'},
-    {name: 'Northern Mariana Islands', abbreviation: 'MP'},
-    {name: 'Ohio', abbreviation: 'OH'},
-    {name: 'Oklahoma', abbreviation: 'OK'},
-    {name: 'Oregon', abbreviation: 'OR'},
-    {name: 'Palau', abbreviation: 'PW'},
-    {name: 'Pennsylvania', abbreviation: 'PA'},
-    {name: 'Puerto Rico', abbreviation: 'PR'},
-    {name: 'Rhode Island', abbreviation: 'RI'},
-    {name: 'South Carolina', abbreviation: 'SC'},
-    {name: 'South Dakota', abbreviation: 'SD'},
-    {name: 'Tennessee', abbreviation: 'TN'},
-    {name: 'Texas', abbreviation: 'TX'},
-    {name: 'Utah', abbreviation: 'UT'},
-    {name: 'Vermont', abbreviation: 'VT'},
-    {name: 'Virgin Islands', abbreviation: 'VI'},
-    {name: 'Virginia', abbreviation: 'VA'},
-    {name: 'Washington', abbreviation: 'WA'},
-    {name: 'West Virginia', abbreviation: 'WV'},
-    {name: 'Wisconsin', abbreviation: 'WI'},
-    {name: 'Wyoming', abbreviation: 'WY'}
-  ];
 
   personaNaturalForm = this.fb.group({
+    procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
@@ -99,6 +42,7 @@ export class FormDatosProponentesSeleccionadosComponent {
   });
 
   personaJuridicaIndividualForm = this.fb.group({
+    procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
@@ -125,6 +69,7 @@ export class FormDatosProponentesSeleccionadosComponent {
   });
 
   unionTemporalForm = this.fb.group({
+    procesoSeleccionProponenteId: [],
     cuantasEntidades: [null, Validators.compose([
       Validators.required, Validators.minLength(1), Validators.maxLength(2)])
     ],
@@ -136,6 +81,9 @@ export class FormDatosProponentesSeleccionadosComponent {
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
     numeroIdentificacion: [null, Validators.compose([
+      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+    ],
+    cedulaRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
     ],
     depaetamento: [null, Validators.required],
@@ -156,8 +104,40 @@ export class FormDatosProponentesSeleccionadosComponent {
   }
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+              private fb: FormBuilder,
+              private commonService: CommonService,
+
+             ) 
+  {
     this.declararSelect();
+  }
+  ngOnInit(): void {
+    
+    forkJoin([
+      
+      this.commonService.listaTipoProponente(),
+      this.commonService.listaDepartamentos(),
+
+    ]).subscribe( respuesta => {
+      this.listaProponentes = respuesta[0];
+      this.listaDepartamentos = respuesta[1];
+    })
+
+  }
+
+  changeDepartamento(){
+    let idDepartamento: string;
+
+    switch( this.tipoProponente.value.codigo ){
+      case '1': idDepartamento = this.personaNaturalForm.get('depaetamento').value.localizacionId; break;
+      case '2': idDepartamento = this.personaJuridicaIndividualForm.get('depaetamento').value.localizacionId; break;
+      case '4': idDepartamento = this.unionTemporalForm.get('depaetamento').value.localizacionId; break;
+    }
+
+    this.commonService.listaMunicipiosByIdDepartamento( idDepartamento ).subscribe( listMun => {
+      this.listaMunicipios = listMun;
+    })
   }
 
   private declararSelect() {
@@ -179,6 +159,7 @@ export class FormDatosProponentesSeleccionadosComponent {
 
   createIntegrante(): FormGroup {
     return this.fb.group({
+      procesoSeleccionIntegranteId: [],
       nombre: [null, Validators.compose([
         Validators.required, Validators.minLength(2), Validators.maxLength(100)])
       ],
@@ -193,14 +174,90 @@ export class FormDatosProponentesSeleccionadosComponent {
   }
 
   onSubmitPersonaNatural() {
-    console.log(this.personaNaturalForm.value);
+
+    this.procesoSeleccion.procesoSeleccionProponente = [];
+    let proponente: ProcesoSeleccionProponente = {
+      procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
+      direccionProponente: this.personaNaturalForm.get('direccion').value,
+      emailProponente: this.personaNaturalForm.get('correoElectronico').value,
+      localizacionIdMunicipio: this.personaNaturalForm.get('municipio').value ? this.personaNaturalForm.get('municipio').value.localizacionId : null,
+      nombreProponente: this.personaNaturalForm.get('nombre').value,
+      numeroIdentificacion: this.personaNaturalForm.get('numeroIdentificacion').value,
+      procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
+      telefonoProponente: this.personaNaturalForm.get('telefono').value,
+      tipoProponenteCodigo: this.tipoProponente.value ? this.tipoProponente.value.codigo : null,
+      //tipoIdentificacionCodigo: 
+    }
+
+    this.procesoSeleccion.procesoSeleccionProponente.push( proponente );
+    
+    this.guardar.emit(null);
+    //console.log(this.personaNaturalForm.value);
   }
 
   onSubmitPersonaJuridicaIndividual() {
-    console.log(this.personaJuridicaIndividualForm.value);
+
+    this.procesoSeleccion.procesoSeleccionProponente = [];
+    let proponente: ProcesoSeleccionProponente = {
+
+      procesoSeleccionProponenteId: this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').value,
+      procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
+      tipoProponenteCodigo: this.tipoProponente.value ? this.tipoProponente.value.codigo : null,
+
+      nombreProponente: this.personaJuridicaIndividualForm.get('nombre').value,
+      numeroIdentificacion: this.personaJuridicaIndividualForm.get('numeroIdentificacion').value,
+      nombreRepresentanteLegal: this.personaJuridicaIndividualForm.get('representanteLegal').value,
+      cedulaRepresentanteLegal: this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').value,
+      localizacionIdMunicipio: this.personaJuridicaIndividualForm.get('municipio').value ? this.personaJuridicaIndividualForm.get('municipio').value.localizacionId : null,
+      direccionProponente: this.personaJuridicaIndividualForm.get('direccion').value,
+      telefonoProponente: this.personaJuridicaIndividualForm.get('telefono').value,
+      emailProponente: this.personaJuridicaIndividualForm.get('correoElectronico').value,
+      
+    }
+
+    this.procesoSeleccion.procesoSeleccionProponente.push( proponente );
+    
+    this.guardar.emit(null);
+    //console.log(this.personaNaturalForm.value);
   }
 
   onSubmitUnionTemporal() {
-    console.log(this.unionTemporalForm.value);
+    this.procesoSeleccion.procesoSeleccionProponente = [];
+    this.procesoSeleccion.procesoSeleccionIntegrante = [];
+
+    let listaIntegrantes =  this.unionTemporalForm.get('entidades') as FormArray;
+
+    let proponente: ProcesoSeleccionProponente = {
+
+      procesoSeleccionProponenteId: this.unionTemporalForm.get('procesoSeleccionProponenteId').value,
+      procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
+      tipoProponenteCodigo: this.tipoProponente.value ? this.tipoProponente.value.codigo : null,
+
+      nombreProponente: this.unionTemporalForm.get('nombreConsorcio').value,
+      numeroIdentificacion: this.unionTemporalForm.get('numeroIdentificacion').value,
+      nombreRepresentanteLegal: this.unionTemporalForm.get('nombre').value,
+      cedulaRepresentanteLegal: this.unionTemporalForm.get('cedulaRepresentanteLegal').value,
+      localizacionIdMunicipio: this.unionTemporalForm.get('municipio').value ? this.unionTemporalForm.get('municipio').value.localizacionId : null,
+      direccionProponente: this.unionTemporalForm.get('direccion').value,
+      telefonoProponente: this.unionTemporalForm.get('telefono').value,
+      emailProponente: this.unionTemporalForm.get('correoElectronico').value,
+      
+    }
+
+    listaIntegrantes.controls.forEach( control => {
+      let integrante: ProcesoSeleccionIntegrante = {
+        nombreIntegrante: control.get('nombre').value,
+        porcentajeParticipacion: control.get('porcentaje').value,
+        procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
+        procesoSeleccionIntegranteId: control.get('procesoSeleccionIntegranteId').value,
+
+      }
+      this.procesoSeleccion.procesoSeleccionIntegrante.push( integrante );
+    })
+
+
+    this.procesoSeleccion.procesoSeleccionProponente.push( proponente );
+    
+    this.guardar.emit(null);
   }
 }

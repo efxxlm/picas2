@@ -25,7 +25,7 @@ export class ProcesoSeleccionService implements OnInit {
 }
 
 export interface ProcesoSeleccion{
-  procesoSeleccionId: number,
+  procesoSeleccionId?: number,
   numeroProceso?: string,
   objeto?: string,
   alcanceParticular?: string,
@@ -41,10 +41,13 @@ export interface ProcesoSeleccion{
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma[],
   procesoSeleccionCotizacion?: ProcesoSeleccionCotizacion[],
+  procesoSeleccionProponente?: ProcesoSeleccionProponente[],
+  procesoSeleccionIntegrante?: ProcesoSeleccionIntegrante[],
+
 }
 
 export interface ProcesoSeleccionGrupo{
-  procesoSeleccionGrupoId: string,
+  procesoSeleccionGrupoId?: string,
   procesoSeleccionId?: number,
   nombreGrupo?: string,
   tipoPresupuestoCodigo?: string,
@@ -56,7 +59,7 @@ export interface ProcesoSeleccionGrupo{
 }
 
 export interface ProcesoSeleccionCronograma{
-  procesoSeleccionCronogramaId: number,
+  procesoSeleccionCronogramaId?: number,
   procesoSeleccionId?: number,
   numeroActividad?: number,
   descripcion?: string,
@@ -66,11 +69,37 @@ export interface ProcesoSeleccionCronograma{
 }
 
 export interface ProcesoSeleccionCotizacion {
-  procesoSeleccionCotizacionId: number,
+  procesoSeleccionCotizacionId?: number,
   procesoSeleccionId?: number,
   nombreOrganizacion?: string,
   valorCotizacion?: number,
   descripcion?: string,
   urlSoporte?: string,
   procesoSeleccion?: ProcesoSeleccion,
+}
+
+export interface ProcesoSeleccionProponente {
+  procesoSeleccionProponenteId?: string,
+  procesoSeleccionId?: number,
+  tipoProponenteCodigo?: string,
+  nombreProponente?: string,
+  tipoIdentificacionCodigo?: string,
+  numeroIdentificacion?: string,
+  localizacionIdMunicipio?: string,
+  direccionProponente?: string,
+  telefonoProponente?: string,
+  emailProponente?: string,
+  nombreRepresentanteLegal?: string,
+  cedulaRepresentanteLegal?: string,
+  procesoSeleccion?: ProcesoSeleccion,
+  
+}
+
+export interface ProcesoSeleccionIntegrante {
+  procesoSeleccionIntegranteId?: number,
+  procesoSeleccionId?: number,
+  porcentajeParticipacion?: number,
+  nombreIntegrante?: string,
+  procesoSeleccion?: ProcesoSeleccion,
+
 }

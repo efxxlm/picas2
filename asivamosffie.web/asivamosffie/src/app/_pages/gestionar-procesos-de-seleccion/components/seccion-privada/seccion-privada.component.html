@@ -43,7 +43,9 @@
                     Datos de proponentes seleccionados
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-datos-proponentes-seleccionados></app-form-datos-proponentes-seleccionados>
+            <app-form-datos-proponentes-seleccionados
+                [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+            </app-form-datos-proponentes-seleccionados>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

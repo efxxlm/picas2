@@ -133,6 +133,18 @@ namespace asivamosffie.services
                     await this.CreateEditarProcesoSeleccionCotizacion( cotizacion );
                 }
 
+                foreach( ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente )
+                {
+                    //proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    await this.CreateEditarProcesoSeleccionProponente( proponente );
+                }
+
+                foreach( ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante )
+                {
+                    integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    await this.CreateEditarProcesoSeleccionIntegrante( integrante );
+                }
+
                 await _context.SaveChangesAsync();
 
                 return respuesta = new Respuesta
@@ -488,16 +500,6 @@ namespace asivamosffie.services
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION PROPONENTE";
                     _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = procesoSeleccionProponente,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, "", strCrearEditar)
-                    };
-
                 }
                 else
                 {
@@ -518,17 +520,7 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionProponente.Update(ProcesoSeleccionProponenteAntiguo);
                 }
 
-                await _context.SaveChangesAsync();
-
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = ProcesoSeleccionProponenteAntiguo,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, userAction, strCrearEditar)
-                };
+                return respuesta;
             }
             catch (Exception ex)
             {
@@ -600,15 +592,6 @@ namespace asivamosffie.services
                     procesoSeleccionIntegrante.Eliminado = false;
 
                     _context.ProcesoSeleccionIntegrante.Add(procesoSeleccionIntegrante);
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = procesoSeleccionIntegrante,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionIntegrante.UsuarioCreacion, strCrearEditar)
-                    };
 
                 }
                 else
@@ -630,17 +613,7 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionIntegrante.Update(procesoSeleccionIntegranteAntiguo);
                 }
 
-                await _context.SaveChangesAsync();
-
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = procesoSeleccionIntegranteAntiguo,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionIntegrante.UsuarioCreacion, strCrearEditar)
-                };
+                return respuesta;
             }
             catch (Exception ex)
             {

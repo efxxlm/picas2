@@ -115,6 +115,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=10`);
   }
 
+  listaTipoProponente(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=28`);
+  }
+
 
   public forkProject():Observable<any[]>
   {

@@ -11,7 +11,7 @@ namespace asivamosffie.model.APIModels
         public string NombreIntegrante { get; set; }
         public string TipoProcesoSeleccion { get; set; }
         public int ProcesoSeleccionId { get; set; }
-        public int PorcentajeParticipacion { get; set; }
+        public int? PorcentajeParticipacion { get; set; }
         public DateTime FechaCreacion { get; set; }
 
     }
