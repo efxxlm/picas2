@@ -29,6 +29,54 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public static bool ValidarRegistroCompleto(Cofinanciacion cofinanciacion)
+        {
+
+            bool RegistroCompleto;
+
+            if (string.IsNullOrEmpty(cofinanciacion.VigenciaCofinanciacionId.ToString()))
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
+                { 
+                    if ( string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString())
+                        || string.IsNullOrEmpty(cofinanciacionAportante.NombreAportanteId.ToString())
+                        || string.IsNullOrEmpty(cofinanciacionAportante.MunicipioId.ToString())
+                        )
+
+                    {
+                        return false; 
+                    }
+                    else
+                    {
+                        foreach (var CofinanciacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                        {
+
+                            if (string.IsNullOrEmpty(CofinanciacionDocumento.VigenciaAporte.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.ValorDocumento.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.TipoDocumentoId.ToString()) 
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.NumeroActa.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.FechaActa.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.NumeroAcuerdo.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.FechaAcuerdo.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.ValorTotalAportante.ToString())) {  
+                            return false;
+                            } 
+                        }
+                    }
+
+                }
+
+                return true;
+            }
+
+
+
+        }
+
         public async Task<Respuesta> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId, string pUsuarioModifico)
         {
             //Julian Martinez
@@ -127,6 +175,17 @@ namespace asivamosffie.services
                     CreadoEditado = "CREAR COFINANCIACIÓN ";
                     cofinanciacion.Eliminado = false;
                     cofinanciacion.FechaCreacion = DateTime.Now;
+                    cofinanciacion.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
+
+                    //Validar Registro Completo
+                    if (string.IsNullOrEmpty(cofinanciacion.VigenciaCofinanciacionId.ToString()))
+                    {
+                        cofinanciacion.RegistroCompleto = false;
+                    }
+                    else
+                    {
+                        cofinanciacion.RegistroCompleto = true;
+                    }
 
 
                     //Foreach para poner campos de auditoria en las tablas relacionadas !
@@ -147,12 +206,13 @@ namespace asivamosffie.services
                     _context.Cofinanciacion.Add(cofinanciacion);
                 }
                 else
-                {
+                { 
                     CreadoEditado = "EDITAR COFINANCIACIÓN";
                     Cofinanciacion cofinanciacionEdit = _context.Cofinanciacion.Find(cofinanciacion.CofinanciacionId);
+                    cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
                     cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
                     cofinanciacionEdit.FechaModificacion = DateTime.Now;
-
+                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion;
                 }
 
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
@@ -265,7 +325,7 @@ namespace asivamosffie.services
             {
                 item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
             }
-            return Listcofinanciacion.OrderByDescending(r=> r.CofinanciacionId).ToList();
+            return Listcofinanciacion.OrderByDescending(r => r.CofinanciacionId).ToList();
         }
 
         public async Task<List<CofinanciacionDocumento>> GetDocument(int ContributorId)
