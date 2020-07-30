@@ -46,7 +46,7 @@ const routes: Routes = [
           .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
-        path: 'gestionarAcueros',
+        path: 'gestionarAcuerdos',
         loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
         .then(m => m.GestionarAcuerdoCofinanciacionModule)
       },
