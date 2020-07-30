@@ -40,14 +40,17 @@ namespace asivamosffie.services
         {
             try
             {
-                ArchivoCargue archivoCargue = new ArchivoCargue();
                 Guid g = Guid.NewGuid();
-                archivoCargue.OrigenId = OrigenId;  
-                archivoCargue.Activo = true;
-                archivoCargue.FechaCreacion = DateTime.Now;
-                archivoCargue.Ruta = pFilePatch;
-                archivoCargue.Nombre = g.ToString();
-                archivoCargue.Tamano = pFile.Length.ToString();
+
+                ArchivoCargue archivoCargue = new ArchivoCargue
+                {
+                    OrigenId = OrigenId,
+                    Activo = true,
+                    FechaCreacion = DateTime.Now,
+                    Ruta = pFilePatch,
+                    Nombre = g.ToString(),
+                    Tamano = pFile.Length.ToString()
+                };
                 if (!Directory.Exists(pFilePatch))
                 {
                     Directory.CreateDirectory(pFilePatch);
@@ -61,19 +64,16 @@ namespace asivamosffie.services
                     return archivoCargue;
                 }
             }
-            catch (Exception e)
-            {
-                ArchivoCargue archivoCargue = new ArchivoCargue();
-                return archivoCargue;
+            catch (Exception )
+            { 
+                return new ArchivoCargue();
             }
 
         }
 
-        public async  Task <List<ArchivoCargue>> GetListloadedDocuments () {
-
-            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals(OrigenArchivoCargue.Proyecto) && (bool)r.Activo).ToListAsync();
-        
-        
+        public async  Task <List<ArchivoCargue>> GetListloadedDocuments ()
+        {
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals(OrigenArchivoCargue.Proyecto) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
         }
 
         public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser) {

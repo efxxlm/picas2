@@ -17,7 +17,7 @@ namespace asivamosffie.model.Models
         public decimal? Valor { get; set; }
         public decimal? ValorMinimoCategoria { get; set; }
         public decimal? ValorMaximoCategoria { get; set; }
-        public int PlazoMeses { get; set; }
+        public int? PlazoMeses { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public bool? Eliminado { get; set; }

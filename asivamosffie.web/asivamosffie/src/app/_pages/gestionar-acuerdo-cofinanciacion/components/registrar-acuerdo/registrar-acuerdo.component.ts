@@ -316,7 +316,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     if (respuesta.isSuccessful) // Response witout errors
     {
       this.openDialog('', respuesta.message);
-      if (respuesta.isValidation) // have validations
+      if (!respuesta.isValidation) // have validations
       {
         this.router.navigate(['/gestionarAcueros']);
       }

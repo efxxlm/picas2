@@ -25,20 +25,21 @@ namespace asivamosffie.services
 
         public async Task<List<ControlRecurso>> GetResourceControl()
         {
-            return await _context.ControlRecurso.ToListAsync();
+            return await _context.ControlRecurso.Where(r=> !(bool)r.Eliminado).ToListAsync();
         }
 
         public async Task<ControlRecurso> GetResourceControlById(int id)
         {
             return await _context.ControlRecurso.FindAsync(id);
         }
-
-
+         
         public async Task<List<ControlRecurso>> GetResourceControlGridBySourceFunding(int id)
         {
-            List<ControlRecurso> ControlGrid = new List<ControlRecurso>();
+     
             try
             {
+                //TODO: Faber Revisar todos los include ya que no se esta validando si esta eliminado
+                List<ControlRecurso> ControlGrid = new List<ControlRecurso>();
                 ControlGrid = await _context.ControlRecurso
                 .Where( cr => cr.FuenteFinanciacionId == id)
                     .Include(RC => RC.FuenteFinanciacion)
@@ -56,32 +57,28 @@ namespace asivamosffie.services
                 return ControlGrid;
 
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return null;
             }
         }
-
-
-
+         
         public async Task<Respuesta> Insert(ControlRecurso controlRecurso)
-        {
-            Respuesta _response = new Respuesta();
+        { 
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
             try
-            {
-                
+            { 
                 if (controlRecurso != null)
                 {
                     _context.Add(controlRecurso);
                     await _context.SaveChangesAsync();
                     return new Respuesta
                        {
-                           IsSuccessful = false,
-                           IsException = true,
+                           IsSuccessful = true,
+                           IsException = false,
                            IsValidation = false,
                            Code = ConstantMessagesResourceControl.OperacionExitosa,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "Crear Control")
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "CREAR CONTROL RECURSO")
                        };
                     
                 }
@@ -90,10 +87,10 @@ namespace asivamosffie.services
                     return new Respuesta
                     {
                         IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
+                        IsException = false,
+                        IsValidation = true,
                         Code = ConstantMessagesResourceControl.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "Crear Control")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "ERROR CREAR CONTROL")
                     };
                 }
 
@@ -106,14 +103,13 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Code = ConstantMessagesResourceControl.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, ex.Message)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, ex.InnerException.ToString().Substring(0,500))
                 };                
             }
         }
 
         public async Task<Respuesta> Update(ControlRecurso controlRecurso)
-        {
-            Respuesta _response = new Respuesta();
+        { 
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
             try
             {
@@ -127,15 +123,16 @@ namespace asivamosffie.services
                 updateObj.ValorConsignacion = controlRecurso.ValorConsignacion;
 
                 _context.Update(updateObj);
+
                 await _context.SaveChangesAsync();
                 
                 return new Respuesta
                 {
-                    IsSuccessful = false,
-                    IsException = true,
+                    IsSuccessful = true,
+                    IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesResourceControl.EditadoCorrrectamente,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioModificacion, "Editar ")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioModificacion, "EDITAR FUENTES DE FINANCIACIÓN")
                 };
             }
             catch (Exception ex)
@@ -151,9 +148,8 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<bool> Delete(int id, string pUsuario)
-        {
-            Respuesta _response = new Respuesta();
+        public async Task<Respuesta> Delete(int id, string pUsuario)
+        {  
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
             try
             {
@@ -165,9 +161,8 @@ namespace asivamosffie.services
 
                 _context.Update(updateObj);
                 await _context.SaveChangesAsync();
-
-                
-                var response= new Respuesta
+                 
+                return new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
@@ -175,20 +170,18 @@ namespace asivamosffie.services
                     Code = ConstantMessagesResourceControl.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, pUsuario, "Eliminado")
                 };
-                return true;
+               
             }
             catch (Exception ex)
             {
-                
-                var response = new Respuesta
+                return new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
                     IsValidation = false,
                     Code = ConstantMessagesResourceControl.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, pUsuario, ex.Message)
-                };
-                return false;
+                }; 
             }
         }
 
