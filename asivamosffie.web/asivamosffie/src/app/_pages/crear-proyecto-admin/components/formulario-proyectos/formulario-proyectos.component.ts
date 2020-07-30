@@ -56,7 +56,7 @@ export class FormularioProyectosComponent implements OnInit {
     this.projectServices.ListAdministrativeProject().subscribe(respuesta => {
       let id = 0;
       respuesta.forEach(element => {
-        id = element.proyectoId;
+        id = element.proyectoAdminitracionId;
       });
       this.proyectoAdmin = { identificador: (id + 1).toString(), Aportante: [{
         aportanteId: 0,
