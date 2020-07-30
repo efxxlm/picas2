@@ -206,12 +206,12 @@ namespace asivamosffie.services
                     _context.Cofinanciacion.Add(cofinanciacion);
                 }
                 else
-                {
+                { 
                     CreadoEditado = "EDITAR COFINANCIACIÓN";
                     Cofinanciacion cofinanciacionEdit = _context.Cofinanciacion.Find(cofinanciacion.CofinanciacionId);
+                    cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
                     cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
-                    cofinanciacionEdit.FechaModificacion = DateTime.Now;
-
+                    cofinanciacionEdit.FechaModificacion = DateTime.Now; 
                 }
 
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
