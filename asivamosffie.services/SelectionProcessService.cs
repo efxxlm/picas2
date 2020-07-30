@@ -546,6 +546,120 @@ namespace asivamosffie.services
         #endregion
 
 
+
+  #region Servicios Proceso Seleccion Integrante;
+
+        public async Task<ProcesoSeleccionIntegrante> GetProcesoSeleccionIntegranteById(int id)
+        {
+            return await _context.ProcesoSeleccionIntegrante.FindAsync(id);
+        }
+
+        public async Task<ActionResult<List<GrillaProcesoSeleccionIntegrante>>> GetGridProcesoSeleccionIntegrante(int? procesoSeleccionId)
+        {
+            List<ProcesoSeleccionIntegrante> ListProcesoSeleccionIntegrante =
+                (procesoSeleccionId != null ? await _context.ProcesoSeleccionIntegrante.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == procesoSeleccionId).ToListAsync()
+                : await _context.ProcesoSeleccionIntegrante.Where(r => !(bool)r.Eliminado).ToListAsync());
+
+
+            List<GrillaProcesoSeleccionIntegrante> ListGrillaProcesoSeleccionIntegrante = new List<GrillaProcesoSeleccionIntegrante>();
+
+            foreach (var PSI in ListProcesoSeleccionIntegrante)
+            {
+                GrillaProcesoSeleccionIntegrante ProcesoSeleccionIntegranteGrilla = new GrillaProcesoSeleccionIntegrante
+                {
+                    ProcesoSeleccionIntegranteId = PSI.ProcesoSeleccionIntegranteId,
+                    ProcesoSeleccionId = PSI.ProcesoSeleccionId,
+                    PorcentajeParticipacion = PSI.PorcentajeParticipacion,
+                    NombreIntegrante = PSI.NombreIntegrante,
+                    FechaCreacion = PSI.FechaCreacion,
+                };
+
+                ListGrillaProcesoSeleccionIntegrante.Add(ProcesoSeleccionIntegranteGrilla);
+            }
+
+            return ListGrillaProcesoSeleccionIntegrante;
+        }
+
+        public async Task<Respuesta> CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
+
+            string strCrearEditar = "";
+            ProcesoSeleccionIntegrante procesoSeleccionIntegranteAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId.ToString()) || procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR PROCESO SELECCION INTEGRANTE";
+                    procesoSeleccionIntegrante.FechaCreacion = DateTime.Now;
+                    procesoSeleccionIntegrante.UsuarioCreacion = procesoSeleccionIntegrante.UsuarioCreacion;
+                    procesoSeleccionIntegrante.Eliminado = false;
+
+                    _context.ProcesoSeleccionIntegrante.Add(procesoSeleccionIntegrante);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = procesoSeleccionIntegrante,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionIntegrante.UsuarioCreacion, strCrearEditar)
+                    };
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT PROCESO SELECCION INTEGRANTE";
+                    procesoSeleccionIntegranteAntiguo = _context.ProcesoSeleccionIntegrante.Find(procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId);
+
+                    //Registros
+
+                    procesoSeleccionIntegranteAntiguo.ProcesoSeleccionId = procesoSeleccionIntegrante.ProcesoSeleccionId;
+                    procesoSeleccionIntegranteAntiguo.ProcesoSeleccionId = procesoSeleccionIntegrante.ProcesoSeleccionId;
+                    procesoSeleccionIntegranteAntiguo.PorcentajeParticipacion = procesoSeleccionIntegrante.PorcentajeParticipacion;
+                    procesoSeleccionIntegranteAntiguo.NombreIntegrante = procesoSeleccionIntegrante.NombreIntegrante;
+                    procesoSeleccionIntegranteAntiguo.Eliminado = false;
+                    procesoSeleccionIntegranteAntiguo.FechaModificacion = DateTime.Now;
+                    procesoSeleccionIntegranteAntiguo.UsuarioModificacion = procesoSeleccionIntegrante.UsuarioModificacion;
+
+
+                    _context.ProcesoSeleccionIntegrante.Update(procesoSeleccionIntegranteAntiguo);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = procesoSeleccionIntegranteAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionIntegrante.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, procesoSeleccionIntegrante.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+        #endregion
+
+
+
+
         public async Task<bool> Delete(int id)
         {
             try
