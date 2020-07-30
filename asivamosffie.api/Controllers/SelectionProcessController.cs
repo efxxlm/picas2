@@ -263,5 +263,62 @@ namespace asivamosffie.api.Controllers
 
         #endregion
 
+
+
+        #region Proceso Seleccion Integrante
+
+
+        [Route("GetProcesoSeleccionIntegranteById")]
+        public async Task<IActionResult> GetProcesoSeleccionIntegranteById(int Id)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetProcesoSeleccionIntegranteById(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        [Route("GetGridProcesoSeleccionIntegrante")]
+        public async Task<IActionResult> GetGridProcesoSeleccionIntegrante(int? procesoSeleccionId)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetGridProcesoSeleccionIntegrante(procesoSeleccionId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditarProcesoSeleccionIntegrante")]
+        public async Task<IActionResult> CreateEditarProcesoSeleccionIntegrante([FromBody] ProcesoSeleccionIntegrante procesoSeleccionIntegrante)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                procesoSeleccionIntegrante.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionIntegrante(procesoSeleccionIntegrante);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        #endregion
+
     }
 }
