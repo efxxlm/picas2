@@ -13,7 +13,7 @@
   <mat-card class="shipping-card">
     <mat-card-header class="header-card">
       <mat-card-title class="header-card--text">
-        Información basica
+        Información básica
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -44,10 +44,12 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.numeroActaJunta" maxlength="4" min="1" max="9999" required (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                <input matInput [(ngModel)]="proyecto.numeroActaJunta" maxlength="4" min="1" max="9999" required
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   type="number">
               </mat-form-field>
-              <span class="contador">{{4 - (proyecto.numeroActaJunta?proyecto.numeroActaJunta.toString().length:0)}}</span>
+              <span
+                class="contador">{{4 - (proyecto.numeroActaJunta?proyecto.numeroActaJunta.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -78,7 +80,8 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.llaveMen" maxlength="8" required type="text"  (keypress)="validateKeypressLlave($event)" >
+                <input matInput [(ngModel)]="proyecto.llaveMen" maxlength="8" required type="text"
+                  (keypress)="validateKeypressLlave($event)">
               </mat-form-field>
               <span class="contador">{{8 - (proyecto.llaveMen?proyecto.llaveMen.length:0)}}</span>
             </div>
@@ -166,7 +169,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput maxlength="15" required type="text" value="{{CodigoDaneIE}}">
+                <input matInput maxlength="15" type="text" value="{{CodigoDaneIE}}">
               </mat-form-field>
             </div>
           </div>
@@ -198,7 +201,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput value="{{codigoDaneSede}}" maxlength="15" required type="text" required>
+                <input matInput value="{{codigoDaneSede}}" maxlength="15" type="text" required>
               </mat-form-field>
             </div>
           </div>
@@ -216,6 +219,7 @@
                 <mat-radio-button class="radio-button" [value]="true">Si</mat-radio-button>
                 <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
               </mat-radio-group>
+              <span class="required-form-group">*</span>
             </div>
           </div>
         </div>
@@ -247,10 +251,12 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="2" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  min="1" max="99" required type="number">
+                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="2"
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
+                  max="99" required type="number">
               </mat-form-field>
-              <span class="contador">{{2 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
+              <span
+                class="contador">{{2 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -288,32 +294,38 @@
                 Latitud
               </label>
               <mat-form-field class="w-8em">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" maxlength="7" min="1" max="99" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  required type="number">
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" maxlength="7" min="1" max="99"
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" required
+                  type="number">
               </mat-form-field>
-              
+
               <label class="label-left sub-label">
                 º
               </label>
               <mat-form-field class="w-2em">
-                <input matInput required type="text" maxlength="1" [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud2" #latitud class="input-string">
+                <input matInput required type="text" maxlength="1"
+                  [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud2" #latitud class="input-string">
               </mat-form-field>
-              <span class="contador">{{12 - (proyecto.predioPrincipal.ubicacionLatitud?proyecto.predioPrincipal.ubicacionLatitud.toString().length:0)}}</span>
+              <span
+                class="contador">{{7 - (proyecto.predioPrincipal.ubicacionLatitud?proyecto.predioPrincipal.ubicacionLatitud.toString().length:0)}}</span>
               <label class="label-left sub-label">
                 Longitud
               </label>
               <mat-form-field class="w-8em">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="7" min="1" max="99" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  required type="number">
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="7" min="1" max="99"
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" required
+                  type="number">
               </mat-form-field>
-              
+
               <label class="label-left sub-label">
                 º
               </label>
               <mat-form-field class="w-2em">
-                <input matInput required type="text" maxlength="1" [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud2" #longitud class="input-string">
+                <input matInput required type="text" maxlength="1"
+                  [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud2" #longitud class="input-string">
               </mat-form-field>
-              <span class="contador">{{7 - (proyecto.predioPrincipal.ubicacionLongitud?proyecto.predioPrincipal.ubicacionLongitud.toString().length:0)}}</span>
+              <span
+                class="contador">{{7 - (proyecto.predioPrincipal.ubicacionLongitud?proyecto.predioPrincipal.ubicacionLongitud.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -355,7 +367,8 @@
                 <input matInput [(ngModel)]="proyecto.predioPrincipal.numeroDocumento" maxlength="20" required
                   type="text">
               </mat-form-field>
-              <span class="contador">{{20 - (proyecto.predioPrincipal.numeroDocumento?proyecto.predioPrincipal.numeroDocumento.length:0)}}</span>
+              <span
+                class="contador">{{20 - (proyecto.predioPrincipal.numeroDocumento?proyecto.predioPrincipal.numeroDocumento.length:0)}}</span>
             </div>
           </div>
         </div>
@@ -371,7 +384,8 @@
                 <input matInput [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral" maxlength="20" required
                   type="text">
               </mat-form-field>
-              <span class="contador">{{20 - (proyecto.predioPrincipal.cedulaCatastral?proyecto.predioPrincipal.cedulaCatastral.toString().length:0)}}</span>
+              <span
+                class="contador">{{20 - (proyecto.predioPrincipal.cedulaCatastral?proyecto.predioPrincipal.cedulaCatastral.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -379,11 +393,11 @@
 
 
       <div *ngFor="let predios of proyecto.proyectoPredio;index as i">
-        <div >
+        <div>
           <mat-card-title class="header-card--text sub-text">
             Predio {{i+2}}
           </mat-card-title>
-          
+
           <div class="row">
             <div class="col-md-8">
               <div class="row">
@@ -447,10 +461,12 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.cantidadAportantes" (keyup)="evaluoaportantes()" maxlength="2" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  min="1" max="99" required type="number">
+                <input matInput [(ngModel)]="proyecto.cantidadAportantes" (keyup)="evaluoaportantes()" maxlength="2"
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
+                  max="99" required type="number">
               </mat-form-field>
-              <span class="contador">{{2 - (proyecto.cantidadAportantes?proyecto.cantidadAportantes.toString().length:0)}}</span>
+              <span
+                class="contador">{{2 - (proyecto.cantidadAportantes?proyecto.cantidadAportantes.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -468,7 +484,8 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required (selectionChange)="getAportante($event,ii)" [(ngModel)]="aportantes.aportante.tipoAportanteId" >
+                  <mat-select required (selectionChange)="getAportante($event,ii)"
+                    [(ngModel)]="aportantes.aportante.tipoAportanteId">
                     <mat-option *ngFor="let listado of listaTipoAportante" [value]="listado.dominioId">
                       {{ listado.nombre }}
                     </mat-option>
@@ -503,7 +520,7 @@
                 <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="select-width" >
+                <mat-form-field class="select-width">
                   <mat-select required [(ngModel)]="aportantes.cofinanciacionDocumentoId">
                     <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionDocumentoId">
                       {{ listado.vigenciaAporte }}
@@ -523,8 +540,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="32" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    min="1" max="999" required type="number">
+                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="32"
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
+                    max="999" required type="number">
                 </mat-form-field>
                 <span class="contador">{{20 - (aportantes.valorObra?aportantes.valorObra.toString().length:0)}}</span>
               </div>
@@ -539,7 +557,8 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)"
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     maxlength="32" min="1" max="999" required type="number">
                 </mat-form-field>
                 <span
@@ -556,7 +575,8 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="32" min="1" max="999" required (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="32" min="1" max="999" required
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     type="number" readonly>
                 </mat-form-field>
                 <span
@@ -566,7 +586,7 @@
           </div>
         </div>
       </div>
-      
+
       <h2 class="card-subTitle">Alcance</h2>
       <div *ngFor="let infraestructura of proyecto.infraestructuraIntervenirProyecto;index as i">
 
@@ -595,7 +615,8 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="infraestructura.cantidad" maxlength="4" min="1" max="9999" required (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  <input matInput [(ngModel)]="infraestructura.cantidad" maxlength="4" min="1" max="9999" required
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     type="number">
                 </mat-form-field>
                 <span
@@ -615,14 +636,17 @@
                   Mes
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="2" min="1" max="99" required (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="2" min="1" max="99" required
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
                   Día
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" maxlength="2" min="1" max="31" required (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" maxlength="2" min="1" max="31" required
+                    (keypress)="number($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                     type="number">
                 </mat-form-field>
               </div>
@@ -640,14 +664,17 @@
                   Mes
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="99" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="99"
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     required type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
                   Día
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" maxlength="2" min="1" max="31" (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" maxlength="2" min="1" max="31"
+                    (keypress)="number($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                     required type="number">
                 </mat-form-field>
               </div>

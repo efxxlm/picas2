@@ -93,9 +93,15 @@ body {
     margin: 1em;
 }
 
+.mt-2em,
+.card-subTitle.var-main-gris.mt-2em {
+    margin-top: 2em;
+}
+
 .m05_important{
     margin: 0.5em !important;
-  }
+}
+
 .opaco{
     opacity: 0.6;
 }
@@ -118,5 +124,8 @@ input[type=number]::-webkit-outer-spin-button {
     justify-content: center;
     align-items: center;
     background-color: #ffffff80;
-    z-index: 10;
+    z-index: 100;
+
+    animation-duration: .3s;
+    animation-name: animatedOpacity;
 }

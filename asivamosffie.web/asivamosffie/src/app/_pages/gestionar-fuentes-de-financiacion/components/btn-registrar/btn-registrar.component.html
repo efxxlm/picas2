@@ -26,7 +26,6 @@
             <div class="col">
                 <mat-form-field class="select-width">
                     <mat-select formControlName="tipoAportante" required>
-                        <mat-option></mat-option>
                         <mat-option *ngFor="let tipoAportante of tiposAportante" [value]="tipoAportante">
                             {{ tipoAportante.nombre }}
                         </mat-option>

@@ -135,3 +135,18 @@ div.mat-select-arrow {
 .mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
     opacity: 0;
 }
+
+.required-form-group {
+    font-weight: 600;
+    margin-left: -.5em;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+    background-color: #174193;
+    background-color: var(--mainColor);
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #174193;
+    border-color: var(--mainColor);
+}

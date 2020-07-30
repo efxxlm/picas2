@@ -1,3 +1,7 @@
+<div class="loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>
+
 <div class="container">
   <div class="text-right">
     <a routerLink="/gestionarFuentes" mat-button color="primary" class="btn-regresar">
@@ -17,13 +21,13 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="row" >
+        <div class="row">
           <div class="pr-1">
             <label class="label-left">Nombre del aportante</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportante()">
+              <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportante()" required>
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
                   {{ nombreAportantes.nombreAportante }}
                 </mat-option>
@@ -39,7 +43,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="full-width">
-                  <input matInput formControlName="documentoApropiacion" readonly>
+                  <input matInput formControlName="documentoApropiacion" readonly required>
                 </mat-form-field>
               </div>
             </div>
@@ -53,7 +57,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numDocumento type="number" formControlName="numerodocumento" readonly>
+                  <input matInput #numDocumento type="number" formControlName="numerodocumento" maxlength="10" readonly
+                    required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
                 <span class="contador">{{10 - numDocumento.value.length}}</span>
               </div>
@@ -66,7 +72,7 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width" style="pointer-events: none;">
-              <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" >
+              <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" required>
                 <mat-option *ngFor="let nombreAportantes of departamentos" [value]="nombreAportantes">
                   {{ nombreAportantes.descripcion }}
                 </mat-option>
@@ -80,10 +86,9 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width" style="pointer-events: none;">
-              <mat-select formControlName="municipio" >
+              <mat-select formControlName="municipio" required>
                 <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let municipio of municipios"
-                  [value]="municipio">
+                <mat-option *ngFor="let municipio of municipios" [value]="municipio">
                   {{ municipio.descripcion }}
                 </mat-option>
               </mat-select>
@@ -96,10 +101,9 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width" style="pointer-events: none;">
-              <mat-select formControlName="vigenciaAcuerdo" >
+              <mat-select formControlName="vigenciaAcuerdo" required>
                 <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let vigencia of VigenciasAporte"
-                  [value]="vigencia">
+                <mat-option *ngFor="let vigencia of VigenciasAporte" [value]="vigencia">
                   {{ vigencia }}
                 </mat-option>
               </mat-select>
@@ -109,9 +113,10 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
+    <mat-card class="shipping-card"
+      *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
       <mat-card-content>
-        <div class="row mt-1em" *ngFor="let documento of listaDocumentos; let i = index" >
+        <div class="row mt-1em" *ngFor="let documento of listaDocumentos; let i = index">
           <div class="col-md-6">
             <p><b>Documento de apropiación: </b> Documento {{ i + 1}} </p>
             <p><b>Tipo de documento: </b>{{ documento.tipoDocumento.nombre }} </p>
@@ -123,20 +128,21 @@
             <p><b>Valor: </b> {{ documento.valorDocumento | currency }} </p>
           </div>
         </div>
-        <h2 class="card-subTitle var-main-gris">
+        <h2 class="card-subTitle var-main-gris mt-2em">
           <b>Valor total: </b> {{ valorTotal | currency }}
         </h2>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="shipping-card" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
+    <mat-card class="shipping-card"
+      *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
           Registros Presupuestales
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="row" >
+        <div class="row">
           <div class="pr-1">
             <label class="label-left">¿Este aporte tiene RP?</label>
           </div>
@@ -147,7 +153,7 @@
             </mat-radio-group>
           </div>
         </div>
-        <div class="row" >
+        <div class="row">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -155,8 +161,10 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #cuantosRP type="number" min="1" max="99"
-                    formControlName="cuantosRP" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()">
+                  <input matInput #cuantosRP type="number" min="1" max="99" required formControlName="cuantosRP"
+                    maxlength="20" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()"
+                    (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
                 <span class="contador">{{2 - cuantosRP.value.length}}</span>
               </div>
@@ -173,7 +181,9 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #numeroRP type="number" formControlName="numeroRP">
+                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50" required
+                          (keypress)="validateNumberKeypress($event)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         <input type="hidden" formControlName="registroPresupuestalId">
                       </mat-form-field>
                       <span class="contador">{{50 - numeroRP.value.length}}</span>
@@ -185,20 +195,20 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="picker" formControlName="fecha" [max]="maxDate">
+                        <input matInput [matDatepicker]="picker" formControlName="fecha" [max]="maxDate" (click)="picker.open()" readonly required>
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                       <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
-                      
+
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
         </div>
       </mat-card-content>
     </mat-card>
@@ -220,11 +230,10 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="fuenteRecursos">
-                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista"
-                        [value]="fuenteDeRecursos1">
+                    <mat-select formControlName="fuenteRecursos" required>
+                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista" [value]="fuenteDeRecursos1">
                         {{ fuenteDeRecursos1.nombre }}
-                        <input formControlName="fuenteFinanciacionId" type="hidden" >
+                        <input formControlName="fuenteFinanciacionId" type="hidden">
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -238,7 +247,9 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #valorAporte type="number" formControlName="valorFuenteRecursos">
+                        <input matInput #valorAporte type="number" formControlName="valorFuenteRecursos" maxlength="20"
+                          required (keypress)="validateNumberKeypress($event)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
                       <span class="contador">{{20 - valorAporte.value.length}}</span>
                     </div>
@@ -254,8 +265,10 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #cuantasVigencias type="number" min="1" max="99"
-                          formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)">
+                        <input matInput #cuantasVigencias type="number" min="1" max="99" maxlength="2"
+                          formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)" required
+                          (keypress)="validateNumberKeypress($event)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
                       <span class="contador">{{2 - cuantasVigencias.value.length}}</span>
                     </div>
@@ -277,7 +290,7 @@
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
-                              <mat-select formControlName="vigenciaAportante">
+                              <mat-select formControlName="vigenciaAportante" required>
                                 <mat-option *ngFor="let VigenciaAporte of VigenciasAporte" [value]="VigenciaAporte">
                                   {{ VigenciaAporte }}
                                 </mat-option>
@@ -295,7 +308,9 @@
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width">
-                              <input matInput #valorVigencia type="number" formControlName="valorVigencia">
+                              <input matInput #valorVigencia type="number" formControlName="valorVigencia"
+                                maxlength="20" required (keypress)="validateNumberKeypress($event)"
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;">
                             </mat-form-field>
                             <span class="contador">{{20 - valorVigencia.value.length}}</span>
                           </div>
@@ -326,7 +341,9 @@
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #numeroCuemta type="number" formControlName="numeroCuenta">
+                          <input matInput #numeroCuemta type="number" formControlName="numeroCuenta" maxlength="50"
+                            required (keypress)="validateNumberKeypress($event)"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
                         <span class="contador">{{50 - numeroCuemta.value.length}}</span>
                       </div>
@@ -337,7 +354,8 @@
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta">
+                          <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta"
+                            required>
                           <input type="hidden" formControlName="cuentaBancariaId">
                         </mat-form-field>
                         <span class="contador">{{100 - nombreCuenta.value.length}}</span>
@@ -351,7 +369,7 @@
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width">
-                              <input matInput #codigoSIFI type="text" formControlName="codigoSIFI">
+                              <input matInput #codigoSIFI type="text" formControlName="codigoSIFI" maxlength="6" required>
                             </mat-form-field>
                             <span class="contador">{{6 - codigoSIFI.value.length}}</span>
                           </div>
@@ -369,6 +387,7 @@
                               <mat-radio-button value="ahorros">Ahorros</mat-radio-button>
                               <mat-radio-button value="corriente">Corriente</mat-radio-button>
                             </mat-radio-group>
+                            <span class="required-form-group">*</span>
                           </div>
                         </div>
                       </div>
@@ -381,7 +400,7 @@
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
-                              <mat-select formControlName="banco">
+                              <mat-select formControlName="banco" required>
                                 <mat-option *ngFor="let banco of bancos" [value]="banco">
                                   {{ banco.nombre }}
                                 </mat-option>
@@ -402,6 +421,7 @@
                               <mat-radio-button value="true">Sí</mat-radio-button>
                               <mat-radio-button value="false">No</mat-radio-button>
                             </mat-radio-group>
+                            <span class="required-form-group">*</span>
                           </div>
                         </div>
                       </div>
@@ -439,13 +459,8 @@
     </div>
     <div class="text-center">
       <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
       </button>
     </div>
   </form>
-
-  <pre>
-    <!-- {{addressForm.value | json}}  -->
-    <!-- {{ data | json }} -->
-  </pre>
 </div>
