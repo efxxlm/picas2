@@ -264,9 +264,9 @@
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
                           <input matInput #valorIndicadoEnElDocumento currencyMask (keyup)="actualizarValores()"
-                            maxlength="20" min="1" max="9999999999999999999" required type="number"
-                            (keypress)="validateNumberKeypress($event)" [(ngModel)]="documento.valorDocumento"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                            required [(ngModel)]="documento.valorDocumento" maxLength="27"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
                         </mat-form-field>
                         <span
                           class="contador">{{20 - (documento.valorDocumento?documento.valorDocumento.toString().length:0)}}</span>
@@ -394,8 +394,9 @@
                   </div>
                   <div class="col d-flex align-items-center">
                     <mat-form-field class="full-width">
-                      <input matInput readonly maxlength="20" min="1" currencyMask required type="number"
-                        [(ngModel)]="aportante.valortotal">
+                      <input matInput readonly maxlength="20" min="1" currencyMask required
+                        [(ngModel)]="aportante.valortotal"
+                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
                     </mat-form-field>
                     <span
                       class="contador">{{20 - (aportante.valortotal?aportante.valortotal.toString().length:0)}}</span>

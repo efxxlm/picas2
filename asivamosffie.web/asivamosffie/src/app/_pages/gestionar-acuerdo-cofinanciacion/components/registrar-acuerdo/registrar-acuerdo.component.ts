@@ -8,7 +8,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-registrar-acuerdo',
@@ -25,7 +24,6 @@ export class RegistrarAcuerdoComponent implements OnInit {
               public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private currencyPipe: CurrencyPipe
   ) {
     this.maxDate = new Date();
   }
@@ -430,14 +428,4 @@ export class RegistrarAcuerdoComponent implements OnInit {
     // let inputChar = String.fromCharCode(event.charCode);
     // return alphanumeric.test(inputChar) ? true : false;
   }
-
-
-  // Algo así arregla lo del separador de miles, pero no encuentro como suscribirme a un ngModel dentro del ciclo
-  // this.form.valorDocumento.valueChanges.suscribe( from => {
-  //   if (form.valorDocumento) {
-  //     this.myForm.patchValue({
-  //       valorDocumento: this.currencyPipe.transform(form.valorDocumento.replace(/\D/g, '').replace(/^0+/, ''), 'USD', 'symbol', '1.0-0')
-  //     }, {emitEvent: false});
-  //   }
-  // });
 }
