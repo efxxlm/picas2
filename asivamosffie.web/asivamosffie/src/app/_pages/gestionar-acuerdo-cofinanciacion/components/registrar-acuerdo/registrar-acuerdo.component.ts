@@ -25,7 +25,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
               public dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private currencyPipe: CurrencyPipe
+              //private currencyPipe: CurrencyPipe
   ) {
     this.maxDate = new Date();
   }
