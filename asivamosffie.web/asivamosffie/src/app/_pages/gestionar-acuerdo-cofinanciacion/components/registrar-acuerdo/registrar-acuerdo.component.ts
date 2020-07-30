@@ -318,7 +318,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       this.openDialog('', respuesta.message);
       if (!respuesta.isValidation) // have validations
       {
-        this.router.navigate(['/gestionarAcueros']);
+        this.router.navigate(['/gestionarAcuerdos']);
       }
     } else {
       this.openDialog('', respuesta.message);

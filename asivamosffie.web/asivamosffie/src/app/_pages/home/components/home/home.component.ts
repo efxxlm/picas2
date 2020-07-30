@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   optionsMenu = [
     {
       title: 'Gestionar acuerdo de cofinanciación',
-      link: '/gestionarAcueros'
+      link: '/gestionarAcuerdos'
     },
     {
       title: 'Gestionar fuentes de financiación',
