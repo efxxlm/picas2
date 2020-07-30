@@ -276,7 +276,7 @@
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
                           <input matInput #valorIndicadoEnElDocumento currencyMask (keyup)="actualizarValores()"
-                            required [(ngModel)]="documento.valorDocumento" maxLength="27"
+                            required [(ngModel)]="documento.valorDocumento" maxLength="28"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
                         </mat-form-field>
