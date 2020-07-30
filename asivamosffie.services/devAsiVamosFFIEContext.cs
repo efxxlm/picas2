@@ -1535,6 +1535,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionProponente>(entity =>
             {
+                entity.Property(e => e.CedulaRepresentanteLegal)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DireccionProponente)
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -1548,6 +1552,10 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NombreProponente)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreRepresentanteLegal)
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 

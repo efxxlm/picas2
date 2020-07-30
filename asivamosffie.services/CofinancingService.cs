@@ -40,8 +40,7 @@ namespace asivamosffie.services
             {
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                 {
-                    if (string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString())
-
+                    if (string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString()) 
                         || string.IsNullOrEmpty(cofinanciacionAportante.MunicipioId.ToString())
                         )
 
