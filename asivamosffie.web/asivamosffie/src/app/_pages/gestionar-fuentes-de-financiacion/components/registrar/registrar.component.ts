@@ -103,7 +103,6 @@ export class RegistrarComponent implements OnInit {
           grupoCuenta.get('extra').setValue(ba.exenta.toString());
 
           listaCuentas.push(grupoCuenta);
-          console.log(listaCuentas);
         });
         // Registro Presupuestal
         ff.aportante.registroPresupuestal.forEach(rp => {
@@ -148,8 +147,6 @@ export class RegistrarComponent implements OnInit {
     this.activatedRoute.params.subscribe(param => {
       this.tipoAportanteId = param.idTipoAportante;
       this.idAportante = param.idAportante;
-
-      // console.log(this.tipoAportanteId, param);
 
       forkJoin([
         this.commonService.listaNombreAportante(),
@@ -216,7 +213,6 @@ export class RegistrarComponent implements OnInit {
 
   CambioNumeroRP() {
     const FormNumRP = this.addressForm.get('cuantosRP').value;
-    console.log(FormNumRP);
     if (FormNumRP > this.registrosPresupuestales.length && FormNumRP < 100) {
       while (this.registrosPresupuestales.length < FormNumRP) {
         this.registrosPresupuestales.push(this.createRP());
@@ -272,7 +268,6 @@ export class RegistrarComponent implements OnInit {
   }
 
   changeNombreAportante() {
-    console.log('aqui el cambio');
     if (this.addressForm.get('nombreAportante').value) {
 
       this.idAportante = this.addressForm.get('nombreAportante').value.cofinanciacionAportanteId;
@@ -329,9 +324,9 @@ export class RegistrarComponent implements OnInit {
     const control = this.addressForm.get('fuenteRecursosArray') as FormArray;
     return control.controls[0].get('vigencias') as FormArray;
   }
-  get cuentasBancaria() {
+  cuentasBancaria(i: number) {
     const control = this.addressForm.get('fuenteRecursosArray') as FormArray;
-    return control.controls[0].get('cuentasBancaria') as FormArray;
+    return control.controls[i].get('cuentasBancaria') as FormArray;
   }
 
   get registrosPresupuestales() {
@@ -352,8 +347,11 @@ export class RegistrarComponent implements OnInit {
     }
   }
 
-  agregarCuentaBancaria() {
-    this.cuentasBancaria.push(this.createCuentaBancaria());
+  agregarCuentaBancaria(i) {
+    let listaFuentes = this.addressForm.get('fuenteRecursosArray') as FormArray;
+    let listabancos = listaFuentes.controls[i].get('cuentasBancaria') as FormArray;
+
+    this.cuentasBancaria(i).push(this.createCuentaBancaria());
   }
 
   agregaFuente() {
@@ -434,7 +432,6 @@ export class RegistrarComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.addressForm);
     if (this.addressForm.valid) {
 
       const lista: FuenteFinanciacion[] = [];

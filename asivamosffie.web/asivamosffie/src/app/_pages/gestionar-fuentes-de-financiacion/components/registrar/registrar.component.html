@@ -330,7 +330,7 @@
 
               <div formGroupName="cuentasBancaria">
                 <h2 class="card-subTitle">Cuentas bancarias</h2>
-                <div *ngFor="let cuentaBancaria of cuentasBancaria.controls; let i = index">
+                <div *ngFor="let cuentaBancaria of cuentasBancaria(j).controls; let i = index">
                   <div [formGroupName]="i">
                     <mat-card-title class="header-card--text sub-text">
                       Cuenta bancaria {{ i + 1 }}
@@ -440,7 +440,7 @@
             </mat-card-content>
           </mat-card>
           <div class="text-right">
-            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarCuentaBancaria()">
+            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarCuentaBancaria(j)">
               <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria">
               Agregar otra cuenta bancaria
             </button>
