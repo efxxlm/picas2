@@ -32,8 +32,6 @@ namespace asivamosffie.services
         public static bool ValidarRegistroCompleto(Cofinanciacion cofinanciacion)
         {
 
-            bool RegistroCompleto;
-
             if (string.IsNullOrEmpty(cofinanciacion.VigenciaCofinanciacionId.ToString()))
             {
                 return false;
@@ -41,14 +39,14 @@ namespace asivamosffie.services
             else
             {
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
-                { 
-                    if ( string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString())
-                        || string.IsNullOrEmpty(cofinanciacionAportante.NombreAportanteId.ToString())
+                {
+                    if (string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString())
+
                         || string.IsNullOrEmpty(cofinanciacionAportante.MunicipioId.ToString())
                         )
 
                     {
-                        return false; 
+                        return false;
                     }
                     else
                     {
@@ -57,14 +55,16 @@ namespace asivamosffie.services
 
                             if (string.IsNullOrEmpty(CofinanciacionDocumento.VigenciaAporte.ToString())
                                            || string.IsNullOrEmpty(CofinanciacionDocumento.ValorDocumento.ToString())
-                                           || string.IsNullOrEmpty(CofinanciacionDocumento.TipoDocumentoId.ToString()) 
-                                           || string.IsNullOrEmpty(CofinanciacionDocumento.NumeroActa.ToString())
-                                           || string.IsNullOrEmpty(CofinanciacionDocumento.FechaActa.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.TipoDocumentoId.ToString())
+                                           //|| string.IsNullOrEmpty(CofinanciacionDocumento.NumeroActa.ToString())
+                                           //|| string.IsNullOrEmpty(CofinanciacionDocumento.FechaActa.ToString())
+                                           //|| string.IsNullOrEmpty(CofinanciacionDocumento.ValorTotalAportante.ToString())
                                            || string.IsNullOrEmpty(CofinanciacionDocumento.NumeroAcuerdo.ToString())
                                            || string.IsNullOrEmpty(CofinanciacionDocumento.FechaAcuerdo.ToString())
-                                           || string.IsNullOrEmpty(CofinanciacionDocumento.ValorTotalAportante.ToString())) {  
-                            return false;
-                            } 
+                                        )
+                            {
+                                return false;
+                            }
                         }
                     }
 
@@ -206,7 +206,7 @@ namespace asivamosffie.services
                     _context.Cofinanciacion.Add(cofinanciacion);
                 }
                 else
-                { 
+                {
                     CreadoEditado = "EDITAR COFINANCIACIÓN";
                     Cofinanciacion cofinanciacionEdit = _context.Cofinanciacion.Find(cofinanciacion.CofinanciacionId);
                     cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
