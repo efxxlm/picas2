@@ -53,7 +53,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   datosAportantes = this.fb.group({
     vigenciaEstado: ['', Validators.required],
-    numAportes: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+    numAportes: ['', [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
     aportantes: this.fb.array([])
   });
 
@@ -153,15 +153,15 @@ export class RegistrarAcuerdoComponent implements OnInit {
     console.log(p);
   }
 
-  CambioNumeroAportantes() {
+  CambioNumeroAportantes() {    
     const FormNumAportantes = this.datosAportantes.value;
-    if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 100) {
+    if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
       while (this.aportantes.length < FormNumAportantes.numAportes) {
-        this.aportantes.push(this.createAportante());
+        this.aportantes.push(this.createAportante());  
       }
     } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
       while (this.aportantes.length > FormNumAportantes.numAportes) {
-        this.borrarAportante(this.aportantes, this.aportantes.length - 1);
+        //this.borrarAportante(this.aportantes, this.aportantes.length - 1);
         // this.listaCofinancAportantes.pop();
       }
     }
@@ -172,7 +172,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const grupo: FormGroup = this.fb.group({
       tipo: ['', Validators.required],
       nombre: [''],
-      cauntosDocumentos: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cauntosDocumentos: ['', [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
       cofinanciacionId: [''],
       cofinanciacionAportanteId: [''],
       departamento: [''],
@@ -200,7 +200,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const grupo: FormGroup = this.fb.group({
       tipo: [pTipo, Validators.required],
       nombre: [pNombre],
-      cauntosDocumentos: [pCantidad, [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cauntosDocumentos: [pCantidad, [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
       cofinanciacionId: [pCofinanciacionId],
       cofinanciacionAportanteId: [pCofinanciacionAportanteId],
       departamento: [''],
@@ -337,8 +337,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const cantidadDocumentos: number = data.get('cauntosDocumentos').value;
     console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
     if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
-      && cantidadDocumentos < 100) {
-      console.log('asdas');
+      && cantidadDocumentos < 1000) {
       while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
 
         this.listaCofinancAportantes[identificador].cofinanciacionDocumento.push(

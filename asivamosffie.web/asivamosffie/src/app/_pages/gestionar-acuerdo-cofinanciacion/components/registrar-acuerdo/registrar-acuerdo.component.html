@@ -56,7 +56,7 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
-                    (change)="CambioNumeroAportantes()" maxlength="3" min="1" max="999" required type="number"
+                    (change)="CambioNumeroAportantes()" maxlength="4" min="1" max="999" required type="number"
                     formControlName="numAportes" (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
@@ -67,7 +67,7 @@
         </div>
 
         <div class="animatedDown" formGroupName="aportantes"
-          *ngIf="datosAportantes.value.aportantes.length > 0 && numAportes.value < 100">
+          *ngIf="datosAportantes.value.aportantes.length > 0 && numAportes.value < 1000">
           <h2 class="card-subTitle">Aportantes</h2>
           <div>
             <div *ngFor="let aportante of aportantes.controls; let i = index">
@@ -170,7 +170,7 @@
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #cauntosDocumentos maxlength="3" (change)="cantidadDocumentos(aportante,i)"
+                          <input matInput #cauntosDocumentos maxlength="4" (change)="cantidadDocumentos(aportante,i)"
                             (keyup)="cantidadDocumentos(aportante,i)" min="1" max="999" required type="number"
                             (keypress)="validateNumberKeypress($event)" formControlName="cauntosDocumentos"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
