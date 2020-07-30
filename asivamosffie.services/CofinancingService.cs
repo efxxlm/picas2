@@ -211,7 +211,8 @@ namespace asivamosffie.services
                     Cofinanciacion cofinanciacionEdit = _context.Cofinanciacion.Find(cofinanciacion.CofinanciacionId);
                     cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
                     cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
-                    cofinanciacionEdit.FechaModificacion = DateTime.Now; 
+                    cofinanciacionEdit.FechaModificacion = DateTime.Now;
+                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion;
                 }
 
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
