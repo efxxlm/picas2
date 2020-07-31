@@ -407,7 +407,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="predios.DocumentoAcreditacionCodigo">
+                    <mat-select required [(ngModel)]="predios.Predio.DocumentoAcreditacionCodigo">
                       <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
                         {{ listado.nombre }}
                       </mat-option>
@@ -425,10 +425,10 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.NumeroDocumento" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.Predio.NumeroDocumento" maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.NumeroDocumento?predios.NumeroDocumento.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.Predio.NumeroDocumento?predios.Predio.NumeroDocumento.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
@@ -441,10 +441,10 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.CedulaCatastral" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.Predio.CedulaCatastral" maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.CedulaCatastral?predios.CedulaCatastral.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.Predio.CedulaCatastral?predios.Predio.CedulaCatastral.toString().length:0)}}</span>
                 </div>
               </div>
             </div>

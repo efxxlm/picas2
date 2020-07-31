@@ -217,7 +217,7 @@ export interface ProyectoPredio{
   ProyectoPredioId:number ,
   ProyectoId?:number ,
   PredioId? :number,
-  EstadoJuridicoCodigo :string,
+  //EstadoJuridicoCodigo :string,
   Activo?:boolean ,
   FechaCreacion?:Date ,
   UsuarioCreacion:string ,

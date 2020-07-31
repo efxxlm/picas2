@@ -470,7 +470,7 @@ export class FormularioProyectosComponent implements OnInit {
           this.proyecto.proyectoPredio = [];
           for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
             this.proyecto.proyectoPredio.push({
-              ProyectoPredioId: 0, EstadoJuridicoCodigo: "", UsuarioCreacion: "",
+              ProyectoPredioId: 0,  UsuarioCreacion: "",
               Predio: {
                 cedulaCatastral: "", direccion: "", documentoAcreditacionCodigo: "",
                 fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: "",
@@ -484,7 +484,7 @@ export class FormularioProyectosComponent implements OnInit {
 
             for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
               this.proyecto.proyectoPredio.push({
-                ProyectoPredioId: 0, EstadoJuridicoCodigo: "", UsuarioCreacion: "",
+                ProyectoPredioId: 0,  UsuarioCreacion: "",
                 Predio: {
                   cedulaCatastral: "", direccion: "", documentoAcreditacionCodigo: "",
                   fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: "",
