@@ -109,9 +109,7 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
-
-
-        
+         
 
         [Route("ListAdministrativeProject")]
         [HttpGet]
@@ -146,10 +144,8 @@ namespace asivamosffie.api.Controllers
         [Route("ListProject")]
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
-        {
-            
-            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            var respuesta = await _projectService.ListProyectos(pUsuarioModifico);
+        { 
+            var respuesta = await _projectService.ListProyectos();
             return respuesta;
 
         }
