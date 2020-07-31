@@ -78,11 +78,12 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
             const valorTipo = this.selectTiposAportante.find(a => a.dominioId === apor.tipoAportanteId);
             const valorNombre = this.nombresAportante.find(a => a.dominioId === apor.nombreAportanteId);
+            const idMunicipio = apor.municipioId ? apor.municipioId.toString() : "00000";
 
-            this.commonService.listaMunicipiosByIdDepartamento(apor.municipioId.toString().substring(0, 5)).subscribe(mun => {
+            this.commonService.listaMunicipiosByIdDepartamento( idMunicipio.substring(0, 5) ).subscribe(mun => {
 
-              const valorMunicipio = mun.find(a => a.localizacionId === apor.municipioId.toString());
-              const valorDepartamento = this.departamentos.find(a => a.localizacionId === apor.municipioId.toString().substring(0, 5));
+              const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio);
+              const valorDepartamento = this.departamentos.find(a => a.localizacionId === idMunicipio.substring(0, 5));
 
               grupo.get('departamento').setValue(valorDepartamento);
               grupo.get('municipios').setValue(mun);
@@ -276,11 +277,10 @@ export class RegistrarAcuerdoComponent implements OnInit {
     return;
   }
 
-  onSubmit() {
+  onSave( parcial: boolean ) {
     this.loading = true;
-    // console.log('entró');
-    // this.listaCofinancAportantes = [];
     this.listaAportantes();
+
     const cofinanciacion: Cofinanciacion =
     {
       vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
@@ -292,7 +292,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
     this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
       respuesta => {
-        this.verificarRespuesta(respuesta);
+        this.verificarRespuesta(respuesta, parcial);
       },
       err => {
         let mensaje: string;
@@ -310,13 +310,18 @@ export class RegistrarAcuerdoComponent implements OnInit {
       });
   }
 
-  private verificarRespuesta(respuesta: Respuesta) {
+  private verificarRespuesta(respuesta: Respuesta, parcial: boolean) {
     if (respuesta.isSuccessful) // Response witout errors
     {
       this.openDialog('', respuesta.message);
       if (!respuesta.isValidation) // have validations
       {
-        this.router.navigate(['/gestionarAcuerdos']);
+        console.log(respuesta);
+        if (parcial){
+          this.router.navigate([`/registrarAcuerdos/${ respuesta.data.cofinanciacionId }`]);
+        } else {
+          this.router.navigate(['/gestionarAcuerdos']);
+        }
       }
     } else {
       this.openDialog('', respuesta.message);

@@ -14,7 +14,7 @@
     </h1>
   </div>
 
-  <form [formGroup]="datosAportantes" novalidate (ngSubmit)="onSubmit()">
+  <form [formGroup]="datosAportantes" novalidate (ngSubmit)="onSave(true)">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
@@ -433,7 +433,7 @@
       </mat-accordion>
       <div class="text-center">
         <button mat-button color="warn" class="btn-guardar" type="button">
-          <img src="assets/img/icon/guardar.svg" alt="Regresar" (click)="onSubmit()">
+          <img src="assets/img/icon/guardar.svg" alt="Regresar" (click)="onSave(false)">
         </button>
       </div>
     </div>
