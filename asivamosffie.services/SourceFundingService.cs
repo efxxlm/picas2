@@ -57,9 +57,21 @@ namespace asivamosffie.services
                     fuentefinanciacion.Eliminado = false;
                     _context.Add(fuentefinanciacion);
                 }else{
-                    FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find( fuentefinanciacion.FuenteFinanciacionId );
+                    //FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find( fuentefinanciacion.FuenteFinanciacionId );
+                    //fuente.FechaModificacion = DateTime.Now;
+                    //fuente.ValorFuente = fuentefinanciacion.ValorFuente;
+                    FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(fuentefinanciacion.FuenteFinanciacionId);
+                    Console.WriteLine(fuente);
+                  
+
                     fuente.FechaModificacion = DateTime.Now;
                     fuente.ValorFuente = fuentefinanciacion.ValorFuente;
+                    fuente.FuenteRecursosCodigo = fuentefinanciacion.FuenteRecursosCodigo;
+                    fuente.CantVigencias = fuentefinanciacion.CantVigencias;
+                    bool EstadoRegistro = (fuente.FuenteRecursosCodigo != string.Empty && fuente.ValorFuente != 0 && fuente.CantVigencias != 0 ? true : false);
+                    fuente.RegistroCompleto = EstadoRegistro;
+
+                    _context.Update(fuente);
                 }
                 
                 foreach( VigenciaAporte vi in fuentefinanciacion.VigenciaAporte) {
