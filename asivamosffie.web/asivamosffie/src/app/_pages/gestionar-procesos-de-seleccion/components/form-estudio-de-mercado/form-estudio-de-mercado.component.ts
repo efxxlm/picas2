@@ -80,6 +80,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   createCotizacion(): FormGroup {
     return this.fb.group({
+      procesoSeleccionCotizacionId: [],
       nombreOrganizacion: [null, Validators.compose([
         Validators.required, Validators.minLength(2), Validators.maxLength(50)])
       ],
@@ -98,14 +99,14 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   onSubmit() {
 
     let listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray;
-
+    
     this.procesoSeleccion.procesoSeleccionCotizacion = [];
 
     listaCotizaciones.controls.forEach( control => {
       let cotizacion: ProcesoSeleccionCotizacion = {
         descripcion: control.get('descripcion').value,
         procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
-        nombreOrganizacion: control.get('descripcion').value,
+        nombreOrganizacion: control.get('nombreOrganizacion').value,
         procesoSeleccionCotizacionId: control.get('procesoSeleccionCotizacionId').value,
         urlSoporte: control.get('url').value,
         valorCotizacion: control.get('valor').value,
@@ -113,6 +114,34 @@ export class FormEstudioDeMercadoComponent implements OnInit {
       this.procesoSeleccion.procesoSeleccionCotizacion.push( cotizacion );
     })
 
+    this.procesoSeleccion.cantidadCotizaciones = listaCotizaciones.length;
+
     this.guardar.emit(null);
+  }
+
+  cargarRegistro(){
+    console.log('cargarRegistro');
+    setTimeout( () => 
+        { 
+          let listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray
+
+          listaCotizaciones.clear();
+          this.addressForm.get('cuantasCotizaciones').setValue( this.procesoSeleccion.cantidadCotizaciones )
+
+          this.procesoSeleccion.procesoSeleccionCotizacion.forEach( cotizacion => {
+            let control = this.createCotizacion();
+
+            control.get('descripcion').setValue( cotizacion.descripcion ),
+            control.get('nombreOrganizacion').setValue( cotizacion.nombreOrganizacion ),
+            control.get('procesoSeleccionCotizacionId').setValue( cotizacion.procesoSeleccionCotizacionId ),
+            control.get('url').setValue( cotizacion.urlSoporte ),
+            control.get('valor').setValue( cotizacion.valorCotizacion ),
+
+            listaCotizaciones.push( control );
+          })
+
+          console.log('entro')
+          
+        }, 1000 );
   }
 }

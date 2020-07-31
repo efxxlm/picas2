@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, timer } from 'rxjs';
 import { ProcesoSeleccion, ProcesoSeleccionGrupo, ProcesoSeleccionCronograma, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { delay } from 'rxjs/operators';
 
 
 @Component({
@@ -150,6 +151,14 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
   }
 
+  createCronograma(){
+    return this.fb.group({
+      procesoSeleccionCronogramaId: [],
+      descripcion: [null, Validators.required],
+      fechaMaxima: [null, Validators.required]
+    })
+  }
+
   
 
   onSubmit() {
@@ -201,5 +210,50 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
     //console.log(procesoS);
     this.guardar.emit(null);
+  }
+
+  cargarRegistro(){
+    console.log('cargarRegistro');
+    setTimeout( () => 
+        { 
+          let tipoIntervencion = this.listaTipoIntervencion.find( t => t.codigo == this.procesoSeleccion.tipoIntervencionCodigo );
+          let tipoAlcance = this.listaTipoAlcance.find( a => a.codigo == this.procesoSeleccion.tipoAlcanceCodigo );
+          let listaGrupo = this.addressForm.get('grupos') as FormArray
+          let listaCronograma = this.addressForm.get('cronogramas') as FormArray
+
+          listaGrupo.clear();
+          listaCronograma.clear();
+
+          this.addressForm.get('objeto').setValue( this.procesoSeleccion.objeto );
+          this.addressForm.get('alcanceParticular').setValue( this.procesoSeleccion.alcanceParticular );
+          this.addressForm.get('justificacion').setValue( this.procesoSeleccion.justificacion );
+          this.addressForm.get('tipoIntervencion').setValue( tipoIntervencion );
+          this.addressForm.get('tipoAlcance').setValue( tipoAlcance );
+          this.addressForm.get('distribucionEnGrupos').setValue( this.procesoSeleccion.esDistribucionGrupos.toString() );
+
+          this.procesoSeleccion.procesoSeleccionGrupo.forEach( grupo => {
+            let control = this.createGrupo();
+            control.get('nombreGrupo').setValue( grupo.nombreGrupo );
+            control.get('plazoMeses').setValue( grupo.plazoMeses );
+            control.get('procesoSeleccionGrupoId').setValue( grupo.procesoSeleccionGrupoId );
+            control.get('tipoPresupuesto').setValue( grupo.tipoPresupuestoCodigo );
+            control.get('valor').setValue( grupo.valor );
+            control.get('valorMinimoCategoria').setValue( grupo.valorMinimoCategoria );
+            control.get('valorMaximoCategoria').setValue( grupo.valorMaximoCategoria );
+
+            listaGrupo.push( control );
+          })
+
+          this.procesoSeleccion.procesoSeleccionCronograma.forEach( cronograma => {
+            let control = this.createCronograma();
+
+            control.get('descripcion').setValue( cronograma.descripcion ),
+            control.get('fechaMaxima').setValue( cronograma.fechaMaxima ),
+            control.get('procesoSeleccionCronogramaId').setValue( cronograma.procesoSeleccionCronogramaId );
+
+            listaCronograma.push( control );
+          })
+
+        }, 1000 );
   }
 }

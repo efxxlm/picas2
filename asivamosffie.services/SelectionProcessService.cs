@@ -33,7 +33,15 @@ namespace asivamosffie.services
 
             try
             {
-                return await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado).ToListAsync();
+                return await _context.ProcesoSeleccion
+                                            .Where(r => !(bool)r.Eliminado)
+                                            .Include(r => r.ProcesoSeleccionIntegrante)
+                                            .Include(r => r.ProcesoSeleccionObservacion)
+                                            .Include(r => r.ProcesoSeleccionProponente)
+                                            .Include(r => r.ProcesoSeleccionCotizacion)
+                                            .Include(r => r.ProcesoSeleccionCronograma)
+                                            .Include(r => r.ProcesoSeleccionGrupo)
+                                            .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -47,7 +55,14 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _context.ProcesoSeleccion.FindAsync(id);
+                return await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
+                                            .Include(r => r.ProcesoSeleccionIntegrante)
+                                            .Include(r => r.ProcesoSeleccionObservacion)
+                                            .Include(r => r.ProcesoSeleccionProponente)
+                                            .Include(r => r.ProcesoSeleccionCotizacion)
+                                            .Include(r => r.ProcesoSeleccionCronograma)
+                                            .Include(r => r.ProcesoSeleccionGrupo)
+                                            .FirstOrDefaultAsync( proceso => proceso.ProcesoSeleccionId == id );
             }
             catch (Exception ex)
             {

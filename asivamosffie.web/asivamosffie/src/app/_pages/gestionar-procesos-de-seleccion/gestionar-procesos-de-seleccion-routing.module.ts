@@ -17,17 +17,18 @@ const routes: Routes = [
     component: RegistrarNuevoComponent
   },
   {
-    path: 'seccionPrivada',
+    path: 'seccionPrivada/:tipoProceso/:id',
     component: SeccionPrivadaComponent
   },
   {
-    path: 'invitacionCerrada',
+    path: 'invitacionCerrada/:tipoProceso/:id',
     component: InvitacionCerradaComponent
   },
   {
-    path: 'invitacionAbierta',
+    path: 'invitacionAbierta/:tipoProceso/:id',
     component: InvitacionAbiertaComponent
   },
+  
 ];
 
 @NgModule({

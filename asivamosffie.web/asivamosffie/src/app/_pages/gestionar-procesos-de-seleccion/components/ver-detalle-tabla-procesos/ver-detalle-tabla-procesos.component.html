@@ -3,15 +3,15 @@
 </h1>
 
 <div class="d-flex justify-content-center mt-2em">
-    <span class="mr-2em">{{ data.fechaCreacion }}</span>
-    <span class="mr-2em">{{ data.tipo }}</span>
-    <span class="mr-2em">{{ data.etapa }}</span>
-    <span class="mr-2em info-text completo">{{ data.estadoDelRegistro }}</span>
+    <span class="mr-2em">{{ data.fechaCreacion | date:'dd/MM/yyyy' }}</span>
+    <span class="mr-2em">{{ data.tipoProcesoNombre }}</span>
+    <span class="mr-2em">{{ data.etapaProcesoSeleccionNombre }}</span>
+    <span class="mr-2em info-text completo">{{ data.esCompleto }}</span>
     <span>{{ data.estadoDelProceso }}</span>
 </div>
 
 <div class="dialog-btn">
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Ver detalle / Editar</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onEditar()">Ver detalle / Editar</button>
     <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Eliminar</button>
     <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Monitorear cronograma</button>
     <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Presentar evaluación a comité</button>

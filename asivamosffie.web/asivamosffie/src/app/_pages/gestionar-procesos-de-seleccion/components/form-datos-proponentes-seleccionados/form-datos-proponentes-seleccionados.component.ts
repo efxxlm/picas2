@@ -260,4 +260,107 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     
     this.guardar.emit(null);
   }
+
+  cargarRegistro(){
+
+    setTimeout( () => 
+        { 
+          let tipoProponente = this.listaProponentes.find( p => p.codigo == this.procesoSeleccion.tipoProcesoCodigo )
+          if (tipoProponente) this.tipoProponente.setValue( tipoProponente );
+
+          this.procesoSeleccion.procesoSeleccionProponente.forEach( proponente => {
+            let idMunicipio = proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio.toString() : "00000";
+            let departamentoSeleccionado = this.listaDepartamentos.find( d => d.localizacionId == idMunicipio.substring(0,5) );
+            
+
+            this.commonService.listaMunicipiosByIdDepartamento( idMunicipio.substring(0,5) ).subscribe( listMun => {
+              this.listaMunicipios = listMun;
+              let municipio = listMun.find( m => m.localizacionId == proponente.localizacionIdMunicipio )
+
+              switch (proponente.tipoProponenteCodigo)
+            {
+              case "1": {
+
+                this.personaNaturalForm.get('municipio').setValue( municipio );
+                this.personaNaturalForm.get('depaetamento').setValue( departamentoSeleccionado );
+                this.personaNaturalForm.get('procesoSeleccionProponenteId').setValue( proponente.procesoSeleccionProponenteId );
+                this.personaNaturalForm.get('direccion').setValue( proponente.direccionProponente );
+                this.personaNaturalForm.get('correoElectronico').setValue( proponente.emailProponente );
+
+                this.personaNaturalForm.get('municipio').setValue( proponente.localizacionIdMunicipio );
+
+                this.personaNaturalForm.get('nombre').setValue( proponente.nombreProponente );
+                this.personaNaturalForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
+                this.personaNaturalForm.get('telefono').setValue( proponente.telefonoProponente );
+                
+              }
+              case "2": {
+                this.personaJuridicaIndividualForm.get('depaetamento').setValue( departamentoSeleccionado );
+                this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').setValue( proponente.procesoSeleccionProponenteId );
+                this.personaJuridicaIndividualForm.get('nombre').setValue( proponente.nombreProponente );
+                this.personaJuridicaIndividualForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
+                this.personaJuridicaIndividualForm.get('representanteLegal').setValue( proponente.nombreRepresentanteLegal );
+                this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').setValue( proponente.cedulaRepresentanteLegal );
+                this.personaJuridicaIndividualForm.get('municipio').setValue( municipio );                
+                this.personaJuridicaIndividualForm.get('direccion').setValue( proponente.direccionProponente );
+                this.personaJuridicaIndividualForm.get('telefono').setValue( proponente.telefonoProponente );
+                this.personaJuridicaIndividualForm.get('correoElectronico').setValue( proponente.emailProponente );
+              }
+              case "4": {
+
+                let listaIntegrantes =  this.unionTemporalForm.get('entidades') as FormArray;
+                
+                this.unionTemporalForm.get('depaetamento').setValue( departamentoSeleccionado );
+                this.unionTemporalForm.get('procesoSeleccionProponenteId').setValue( proponente.procesoSeleccionProponenteId ),
+                this.unionTemporalForm.get('nombreConsorcio').setValue( proponente.nombreProponente );
+                this.unionTemporalForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
+                this.unionTemporalForm.get('nombre').setValue( proponente.nombreRepresentanteLegal );
+                this.unionTemporalForm.get('cedulaRepresentanteLegal').setValue( proponente.cedulaRepresentanteLegal );
+                this.unionTemporalForm.get('municipio').setValue( municipio );
+                this.unionTemporalForm.get('direccion').setValue( proponente.direccionProponente );
+                this.unionTemporalForm.get('telefono').setValue( proponente.telefonoProponente );
+                this.unionTemporalForm.get('correoElectronico').setValue( proponente.emailProponente );
+
+                this.procesoSeleccion.procesoSeleccionIntegrante.forEach( integrante => {
+                  let control = this.createIntegrante();
+                  control.get('nombre').setValue( integrante.nombreIntegrante );
+                  control.get('porcentaje').setValue( integrante.porcentajeParticipacion );
+                  control.get('procesoSeleccionIntegranteId').setValue( integrante.procesoSeleccionIntegranteId );
+
+                  listaIntegrantes.push( control );  
+
+                })
+
+                this.unionTemporalForm.get('cuantasEntidades').setValue( listaIntegrantes.length ); 
+              }
+            }
+
+              
+
+            })
+
+            
+          })
+
+            // let listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray
+
+            // listaCotizaciones.clear();
+            // this.addressForm.get('cuantasCotizaciones').setValue( this.procesoSeleccion.cantidadCotizaciones )
+
+            // this.procesoSeleccion.procesoSeleccionCotizacion.forEach( cotizacion => {
+            //   let control = this.createCotizacion();
+
+            //   control.get('descripcion').setValue( cotizacion.descripcion ),
+            //   control.get('nombreOrganizacion').setValue( cotizacion.nombreOrganizacion ),
+            //   control.get('procesoSeleccionCotizacionId').setValue( cotizacion.procesoSeleccionCotizacionId ),
+            //   control.get('url').setValue( cotizacion.urlSoporte ),
+            //   control.get('valor').setValue( cotizacion.valorCotizacion ),
+
+            //   listaCotizaciones.push( control );
+            // })
+
+            // console.log('entro')
+          
+        }, 1000 );
+  }
 }

@@ -119,6 +119,14 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=28`);
   }
 
+  listaEtapaProcesoSeleccion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=34`);
+  }
+
+  listaEstadoProcesoSeleccion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
+  }
+
 
   public forkProject():Observable<any[]>
   {

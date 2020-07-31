@@ -22,6 +22,14 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarProcesoSeleccion`, procesoSeleccion);
   }
 
+  listaProcesosSeleccion(){
+    return this.http.get<ProcesoSeleccion[]>(`${environment.apiUrl}/SelectionProcess/`);
+  }
+
+  getProcesoSeleccionById( id: number ){
+    return this.http.get<ProcesoSeleccion>(`${environment.apiUrl}/SelectionProcess/${id}`);
+  }
+
 }
 
 export interface ProcesoSeleccion{
@@ -34,10 +42,27 @@ export interface ProcesoSeleccion{
   tipoIntervencionCodigo?: string,
   tipoAlcanceCodigo?: string,
   tipoProcesoCodigo?: string,
+  tipoProcesoNombre?: string,
   esDistribucionGrupos?: boolean,
   cantGrupos?: number,
   responsableTecnicoUsuarioId?: number,
   responsableEstructuradorUsuarioid?: number,
+
+  condicionesJuridicasHabilitantes?: string,
+  condicionesFinancierasHabilitantes?: string,
+  condicionesTecnicasHabilitantes?: string,
+  condicionesAsignacionPuntaje?: string,
+  cantidadCotizaciones?: number,
+  cantidadProponentes?: number,
+  esCompleto?: Boolean,
+  estadoProcesoSeleccionCodigo?: string,
+  estadoProcesoSeleccionNombre?: string,
+  etapaProcesoSeleccionCodigo?: string,
+  etapaProcesoSeleccionNombre?: string,
+  evaluacionDescripcion?: string,
+  urlSoporteEvaluacion?: string,
+  tipoOrdenEligibilidadCodigo?: string,
+
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma[],
   procesoSeleccionCotizacion?: ProcesoSeleccionCotizacion[],
