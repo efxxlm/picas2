@@ -59,7 +59,7 @@ namespace asivamosffie.services
                     EstadoRegistro = (fuentefinanciacion.FuenteRecursosCodigo != string.Empty && fuentefinanciacion.ValorFuente != 0 && fuentefinanciacion.CantVigencias != 0 ? true : false);
                     fuentefinanciacion.RegistroCompleto = EstadoRegistro;
                     _context.Add(fuentefinanciacion);
-                    
+
                 }else{
                     //FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find( fuentefinanciacion.FuenteFinanciacionId );
                     //fuente.FechaModificacion = DateTime.Now;
@@ -72,7 +72,7 @@ namespace asivamosffie.services
                     fuente.ValorFuente = fuentefinanciacion.ValorFuente;
                     fuente.FuenteRecursosCodigo = fuentefinanciacion.FuenteRecursosCodigo;
                     fuente.CantVigencias = fuentefinanciacion.CantVigencias;
-                    bool EstadoRegistro = (fuente.FuenteRecursosCodigo != string.Empty && fuente.ValorFuente != 0 && fuente.CantVigencias != 0 ? true : false);
+                    EstadoRegistro = (fuente.FuenteRecursosCodigo != string.Empty && fuente.ValorFuente != 0 && fuente.CantVigencias != 0 ? true : false);
                     fuente.RegistroCompleto = EstadoRegistro;
 
                     _context.Update(fuente);
