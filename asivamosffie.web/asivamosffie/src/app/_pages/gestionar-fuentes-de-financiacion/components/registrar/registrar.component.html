@@ -198,7 +198,7 @@
                         <input matInput [matDatepicker]="picker" formControlName="fecha" [max]="maxDate" (click)="picker.open()" readonly required>
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
-                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                      <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
 
