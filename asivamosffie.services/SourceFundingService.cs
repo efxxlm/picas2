@@ -49,13 +49,17 @@ namespace asivamosffie.services
             Respuesta respuesta = new Respuesta();
             BankAccountService bankAccountService = new BankAccountService(_context, _commonService);
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
+            bool EstadoRegistro = false;
             try
             {
                 if (fuentefinanciacion.FuenteFinanciacionId == null || fuentefinanciacion.FuenteFinanciacionId == 0)
                 {
                     fuentefinanciacion.FechaCreacion = DateTime.Now;
                     fuentefinanciacion.Eliminado = false;
+                    EstadoRegistro = (fuentefinanciacion.FuenteRecursosCodigo != string.Empty && fuentefinanciacion.ValorFuente != 0 && fuentefinanciacion.CantVigencias != 0 ? true : false);
+                    fuentefinanciacion.RegistroCompleto = EstadoRegistro;
                     _context.Add(fuentefinanciacion);
+                    
                 }else{
                     //FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find( fuentefinanciacion.FuenteFinanciacionId );
                     //fuente.FechaModificacion = DateTime.Now;
