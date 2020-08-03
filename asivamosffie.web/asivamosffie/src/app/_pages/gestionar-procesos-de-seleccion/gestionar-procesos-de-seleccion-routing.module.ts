@@ -17,15 +17,15 @@ const routes: Routes = [
     component: RegistrarNuevoComponent
   },
   {
-    path: 'seccionPrivada/:tipoProceso/:id',
+    path: 'seccionPrivada/:id',
     component: SeccionPrivadaComponent
   },
   {
-    path: 'invitacionCerrada/:tipoProceso/:id',
+    path: 'invitacionCerrada/:id',
     component: InvitacionCerradaComponent
   },
   {
-    path: 'invitacionAbierta/:tipoProceso/:id',
+    path: 'invitacionAbierta/:id',
     component: InvitacionAbiertaComponent
   },
   

@@ -6,10 +6,10 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 2000)" formControlName="objeto"></quill-editor>
     </div>
-    <span class="contador" *ngIf="addressForm.get('objeto').value !== null">
+    <span class="contador" *ngIf="addressForm.get('objeto').value">
       {{2000 - addressForm.get('objeto').value.length}}
     </span>
-    <span class="contador" *ngIf="addressForm.get('objeto').value === null">
+    <span class="contador" *ngIf="addressForm.get('objeto').value">
       2000
     </span>
   </div>
@@ -20,10 +20,10 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 3000)" formControlName="alcanceParticular"></quill-editor>
     </div>
-    <span class="contador" *ngIf="addressForm.get('alcanceParticular').value !== null">
+    <span class="contador" *ngIf="addressForm.get('alcanceParticular').value">
       {{3000 - addressForm.get('alcanceParticular').value.length}}
     </span>
-    <span class="contador" *ngIf="addressForm.get('alcanceParticular').value === null">
+    <span class="contador" *ngIf="addressForm.get('alcanceParticular').value">
       3000
     </span>
   </div>
@@ -34,7 +34,7 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 3000)" formControlName="justificacion"></quill-editor>
     </div>
-    <span class="contador" *ngIf="addressForm.get('justificacion').value !== null">
+    <span class="contador" *ngIf="addressForm.get('justificacion').value">
       {{3000 - addressForm.get('justificacion').value.length}}
     </span>
     <span class="contador" *ngIf="addressForm.get('justificacion').value === null">

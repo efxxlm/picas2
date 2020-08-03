@@ -29,9 +29,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionCotizacion">
               <td class="mat-cell cdk-cell ng-star-inserted">
-                Constructora del Atlántico S.A
+                {{ proponente.nombreOrganizacion }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="example-section">

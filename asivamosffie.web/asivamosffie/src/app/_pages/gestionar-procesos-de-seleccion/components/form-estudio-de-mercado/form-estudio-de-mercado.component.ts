@@ -120,28 +120,24 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   }
 
   cargarRegistro(){
-    console.log('cargarRegistro');
-    setTimeout( () => 
-        { 
-          let listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray
-
-          listaCotizaciones.clear();
-          this.addressForm.get('cuantasCotizaciones').setValue( this.procesoSeleccion.cantidadCotizaciones )
-
-          this.procesoSeleccion.procesoSeleccionCotizacion.forEach( cotizacion => {
-            let control = this.createCotizacion();
-
-            control.get('descripcion').setValue( cotizacion.descripcion ),
-            control.get('nombreOrganizacion').setValue( cotizacion.nombreOrganizacion ),
-            control.get('procesoSeleccionCotizacionId').setValue( cotizacion.procesoSeleccionCotizacionId ),
-            control.get('url').setValue( cotizacion.urlSoporte ),
-            control.get('valor').setValue( cotizacion.valorCotizacion ),
-
-            listaCotizaciones.push( control );
-          })
-
-          console.log('entro')
           
-        }, 1000 );
+    let listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray
+
+    listaCotizaciones.clear();
+    this.addressForm.get('cuantasCotizaciones').setValue( this.procesoSeleccion.cantidadCotizaciones )
+
+    console.log(this.procesoSeleccion);
+
+    this.procesoSeleccion.procesoSeleccionCotizacion.forEach( cotizacion => {
+      let control = this.createCotizacion();
+
+      control.get('descripcion').setValue( cotizacion.descripcion ),
+      control.get('nombreOrganizacion').setValue( cotizacion.nombreOrganizacion ),
+      control.get('procesoSeleccionCotizacionId').setValue( cotizacion.procesoSeleccionCotizacionId ),
+      control.get('url').setValue( cotizacion.urlSoporte ),
+      control.get('valor').setValue( cotizacion.valorCotizacion ),
+
+      listaCotizaciones.push( control );
+    })
   }
 }

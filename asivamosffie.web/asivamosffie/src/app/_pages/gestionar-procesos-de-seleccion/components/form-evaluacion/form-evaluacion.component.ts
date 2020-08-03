@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 
 @Component({
   selector: 'app-form-evaluacion',
@@ -7,7 +8,12 @@ import { FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./form-evaluacion.component.scss']
 })
 export class FormEvaluacionComponent {
+
+  @Input() procesoSeleccion: ProcesoSeleccion;
+  @Output() guardar: EventEmitter<any> = new EventEmitter(); 
+
   addressForm = this.fb.group({
+    procesoSeleccionId: [],
     descricion: [null, Validators.required],
     url: [null, Validators.required]
   });
@@ -35,5 +41,21 @@ export class FormEvaluacionComponent {
 
   onSubmit() {
     console.log(this.addressForm.value);
+
+    this.procesoSeleccion.procesoSeleccionId = this.addressForm.get('procesoSeleccionId').value,
+    this.procesoSeleccion.evaluacionDescripcion = this.addressForm.get('descricion').value,
+    this.procesoSeleccion.urlSoporteEvaluacion = this.addressForm.get('url').value,
+    
+    //console.log(procesoS);
+    this.guardar.emit(null);
+  }
+
+  cargarRegistro(){
+    
+
+    this.addressForm.get('procesoSeleccionId').setValue( this.procesoSeleccion.procesoSeleccionId );
+    this.addressForm.get('descricion').setValue( this.procesoSeleccion.evaluacionDescripcion );
+    this.addressForm.get('url').setValue( this.procesoSeleccion.urlSoporteEvaluacion );
+
   }
 }

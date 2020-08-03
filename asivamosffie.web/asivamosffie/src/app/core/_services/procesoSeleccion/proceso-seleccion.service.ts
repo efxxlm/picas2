@@ -128,3 +128,15 @@ export interface ProcesoSeleccionIntegrante {
   procesoSeleccion?: ProcesoSeleccion,
 
 }
+
+interface TipoProcesoSeleccion{
+  Privada: string;
+  Cerrada: string;
+  Abierta: string;
+}
+
+export const TiposProcesoSeleccion: TipoProcesoSeleccion = {
+  Privada:  "1",
+  Cerrada:  "2",
+  Abierta:  "3"
+}

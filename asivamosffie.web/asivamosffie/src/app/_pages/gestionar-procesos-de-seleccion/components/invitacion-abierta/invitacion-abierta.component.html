@@ -22,7 +22,11 @@
                     Descripción de la invitación
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-descripcion-del-proceso-de-seleccion></app-form-descripcion-del-proceso-de-seleccion>
+            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>
+            <app-form-descripcion-del-proceso-de-seleccion 
+                #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
+                >
+            </app-form-descripcion-del-proceso-de-seleccion>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -30,7 +34,10 @@
                     Evaluación
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-evaluacion></app-form-evaluacion>
+            <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()" id="botonevaluacion"></button>
+            <app-form-evaluacion
+            #evaluacion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" >
+        </app-form-evaluacion>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">

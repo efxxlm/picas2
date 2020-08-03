@@ -112,17 +112,20 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   {
     this.declararSelect();
   }
-  ngOnInit(): void {
+  ngOnInit() {
     
-    forkJoin([
-      
-      this.commonService.listaTipoProponente(),
-      this.commonService.listaDepartamentos(),
+    return new Promise( resolve => {
+      forkJoin([
+        
+        this.commonService.listaTipoProponente(),
+        this.commonService.listaDepartamentos(),
 
-    ]).subscribe( respuesta => {
-      this.listaProponentes = respuesta[0];
-      this.listaDepartamentos = respuesta[1];
-    })
+      ]).subscribe( respuesta => {
+        this.listaProponentes = respuesta[0];
+        this.listaDepartamentos = respuesta[1];
+        resolve();
+      })
+  })
 
   }
 
@@ -263,12 +266,12 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   cargarRegistro(){
 
-    setTimeout( () => 
+    this.ngOnInit().then( () => 
         { 
-          let tipoProponente = this.listaProponentes.find( p => p.codigo == this.procesoSeleccion.tipoProcesoCodigo )
-          if (tipoProponente) this.tipoProponente.setValue( tipoProponente );
-
           this.procesoSeleccion.procesoSeleccionProponente.forEach( proponente => {
+            let tipoProponente = this.listaProponentes.find( p => p.codigo == proponente.tipoProponenteCodigo )
+            if (tipoProponente) this.tipoProponente.setValue( tipoProponente );
+
             let idMunicipio = proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio.toString() : "00000";
             let departamentoSeleccionado = this.listaDepartamentos.find( d => d.localizacionId == idMunicipio.substring(0,5) );
             
@@ -334,33 +337,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
                 this.unionTemporalForm.get('cuantasEntidades').setValue( listaIntegrantes.length ); 
               }
             }
-
-              
-
             })
-
-            
           })
-
-            // let listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray
-
-            // listaCotizaciones.clear();
-            // this.addressForm.get('cuantasCotizaciones').setValue( this.procesoSeleccion.cantidadCotizaciones )
-
-            // this.procesoSeleccion.procesoSeleccionCotizacion.forEach( cotizacion => {
-            //   let control = this.createCotizacion();
-
-            //   control.get('descripcion').setValue( cotizacion.descripcion ),
-            //   control.get('nombreOrganizacion').setValue( cotizacion.nombreOrganizacion ),
-            //   control.get('procesoSeleccionCotizacionId').setValue( cotizacion.procesoSeleccionCotizacionId ),
-            //   control.get('url').setValue( cotizacion.urlSoporte ),
-            //   control.get('valor').setValue( cotizacion.valorCotizacion ),
-
-            //   listaCotizaciones.push( control );
-            // })
-
-            // console.log('entro')
-          
-        }, 1000 );
+        });
   }
 }

@@ -4,6 +4,8 @@ import { CommonService, Dominio } from 'src/app/core/_services/common/common.ser
 import { forkJoin, timer } from 'rxjs';
 import { ProcesoSeleccion, ProcesoSeleccionGrupo, ProcesoSeleccionCronograma, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { delay } from 'rxjs/operators';
+import { promise } from 'protractor';
+import { resolve } from 'dns';
 
 
 @Component({
@@ -28,23 +30,29 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
    ) 
     { }
 
-  ngOnInit(): void {
-
-    forkJoin([
-
-      this.commonService.listaTipoIntervencion(),
-      this.commonService.listaTipoAlcance(),
-      this.commonService.listaPresupuestoProcesoSeleccion(),
-
-    ]).subscribe( respuesta => {
-      
-      this.listaTipoIntervencion = respuesta[0];
-      this.listaTipoAlcance = respuesta[1];
-      this.listatipoPresupuesto = respuesta[2];
-
-    })
-
+  ngOnInit() {
+    
     this.addressForm = this.crearFormulario();
+
+    return new Promise( resolve => {
+      forkJoin([
+
+        this.commonService.listaTipoIntervencion(),
+        this.commonService.listaTipoAlcance(),
+        this.commonService.listaPresupuestoProcesoSeleccion(),
+  
+      ]).subscribe( respuesta => {
+        
+        this.listaTipoIntervencion = respuesta[0];
+        this.listaTipoAlcance = respuesta[1];
+        this.listatipoPresupuesto = respuesta[2];
+        resolve();
+  
+      })
+    })
+    
+
+    
   }
 
     get grupos() {
@@ -213,8 +221,9 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   cargarRegistro(){
-    console.log('cargarRegistro');
-    setTimeout( () => 
+    
+
+    this.ngOnInit().then(() =>       
         { 
           let tipoIntervencion = this.listaTipoIntervencion.find( t => t.codigo == this.procesoSeleccion.tipoIntervencionCodigo );
           let tipoAlcance = this.listaTipoAlcance.find( a => a.codigo == this.procesoSeleccion.tipoAlcanceCodigo );
@@ -229,7 +238,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
           this.addressForm.get('justificacion').setValue( this.procesoSeleccion.justificacion );
           this.addressForm.get('tipoIntervencion').setValue( tipoIntervencion );
           this.addressForm.get('tipoAlcance').setValue( tipoAlcance );
-          this.addressForm.get('distribucionEnGrupos').setValue( this.procesoSeleccion.esDistribucionGrupos.toString() );
+          this.addressForm.get('distribucionEnGrupos').setValue( this.procesoSeleccion.esDistribucionGrupos ? this.procesoSeleccion.esDistribucionGrupos.toString() : null );
 
           this.procesoSeleccion.procesoSeleccionGrupo.forEach( grupo => {
             let control = this.createGrupo();
@@ -253,7 +262,6 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
             listaCronograma.push( control );
           })
-
-        }, 1000 );
+        });
   }
 }

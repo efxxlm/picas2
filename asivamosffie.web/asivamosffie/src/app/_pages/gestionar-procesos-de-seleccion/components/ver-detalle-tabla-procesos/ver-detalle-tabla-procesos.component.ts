@@ -32,7 +32,19 @@ export class VerDetalleTablaProcesosComponent {
   }
 
   onEditar(){
-    this.router.navigate(['/seleccion/seccionPrivada', this.data.tipoProcesoCodigo, this.data.procesoSeleccionId ]);
+console.log(this.data.tipoProcesoCodigo)
+    switch (this.data.tipoProcesoCodigo)
+    {
+      case "1": { this.router.navigate(['/seleccion/seccionPrivada', this.data.procesoSeleccionId ]); } break;
+      case "2": { this.router.navigate(['/seleccion/invitacionCerrada', this.data.procesoSeleccionId ]); } break;
+      case "3": { this.router.navigate(['/seleccion/invitacionAbierta', this.data.procesoSeleccionId ]); } break;
+    }
+
+    
     this.dialogRef.close();
+  }
+
+  onNoClick(){
+    
   }
 }

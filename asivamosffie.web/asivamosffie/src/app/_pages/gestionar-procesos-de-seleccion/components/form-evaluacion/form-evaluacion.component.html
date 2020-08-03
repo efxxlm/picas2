@@ -4,11 +4,12 @@
       <label for="descricion" class="text-area-quill--label">Descripción</label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 3000)" formControlName="descricion"></quill-editor>
+        <input type="hidden" formControlName="procesoSeleccionId">
     </div>
-    <span class="contador" *ngIf="addressForm.get('descricion').value !== null">
+    <span class="contador" *ngIf="addressForm.get('descricion').value">
       {{3000 - addressForm.get('descricion').value.length}}
     </span>
-    <span class="contador" *ngIf="addressForm.get('descricion').value === null">
+    <span class="contador" *ngIf="addressForm.get('descricion').value">
       3000
     </span>
   </div>

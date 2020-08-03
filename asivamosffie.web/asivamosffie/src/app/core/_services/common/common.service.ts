@@ -203,3 +203,5 @@ export const TiposAportante: TipoAportante = {
   ET:     ["9"],
   Tercero:["10"]
 }
+
+

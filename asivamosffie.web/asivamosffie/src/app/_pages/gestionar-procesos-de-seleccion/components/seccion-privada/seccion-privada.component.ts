@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
-import { ProcesoSeleccionService, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccionService, ProcesoSeleccion, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { FormDescripcionDelProcesoDeSeleccionComponent } from '../form-descripcion-del-proceso-de-seleccion/form-descripcion-del-proceso-de-seleccion.component';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class SeccionPrivadaComponent implements OnInit {
 
   listaTipoIntervencion: Dominio[] = [];
+  tiposProcesoSeleccion = TiposProcesoSeleccion; 
   
   procesoSeleccion: ProcesoSeleccion = {
     alcanceParticular: '',
@@ -43,10 +44,11 @@ export class SeccionPrivadaComponent implements OnInit {
              ) 
   { }
 
-  ngOnInit(): void {
-    this.activatedRoute.params.subscribe( parametro => {
-      this.procesoSeleccion.tipoProcesoCodigo = parametro['tipoProceso'];
+  ngOnInit() {
+    this.activatedRoute.params.subscribe( async parametro => {
+      //this.procesoSeleccion.tipoProcesoCodigo = parametro['tipoProceso'];
       this.procesoSeleccion.procesoSeleccionId = parametro['id'];
+      this.procesoSeleccion.tipoProcesoCodigo = this.tiposProcesoSeleccion.Privada;
 
       if (this.procesoSeleccion.procesoSeleccionId > 0)
         this.editMode();
@@ -54,20 +56,35 @@ export class SeccionPrivadaComponent implements OnInit {
     })
   }
 
-  editMode(){
-    this.procesoSeleccionService.getProcesoSeleccionById( this.procesoSeleccion.procesoSeleccionId ).subscribe( proceso => {
-      
-      this.procesoSeleccion = proceso;
-      console.log(this.procesoSeleccion);
-      let botonDescripcion = document.getElementById('botonDescripcion');
-      let botonEstudio = document.getElementById('botonEstudio')
-      let botonProponente = document.getElementById('botonProponente')
-      
-      botonDescripcion.click();
-      botonEstudio.click();
-      botonProponente.click();
+  async cargarRegistro(){
+    
+    return new Promise( resolve => {
 
-    })
+      forkJoin([
+        this.procesoSeleccionService.getProcesoSeleccionById( this.procesoSeleccion.procesoSeleccionId )
+      ]).subscribe( proceso => {
+          this.procesoSeleccion = proceso[0];
+          setTimeout(() => { resolve(); },1000)
+      });
+    });
+
+  }
+
+  async editMode(){
+    
+    
+    this.cargarRegistro().then(() => 
+    { 
+
+        let botonDescripcion = document.getElementById('botonDescripcion');
+        let botonEstudio = document.getElementById('botonEstudio')
+        let botonProponente = document.getElementById('botonProponente')
+        
+        botonDescripcion.click();
+        botonEstudio.click();
+        botonProponente.click();
+    });
+
   }
 
   openDialog(modalTitle: string, modalText: string) {

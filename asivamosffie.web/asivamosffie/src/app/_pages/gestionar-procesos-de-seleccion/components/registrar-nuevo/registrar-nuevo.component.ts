@@ -34,13 +34,13 @@ export class RegistrarNuevoComponent implements OnInit {
     .subscribe( (e) => {
       switch (e.codigo) {
         case "1":
-          this.router.navigate([`/seleccion/seccionPrivada/${e.codigo}/0`]);
+          this.router.navigate([`/seleccion/seccionPrivada/0`]);
           break;
         case "2":
-          this.router.navigate([`/seleccion/invitacionCerrada/${e.codigo}/0`]);
+          this.router.navigate([`/seleccion/invitacionCerrada/0`]);
           break;
         case "3":
-          this.router.navigate([`/seleccion/invitacionAbierta/${e.codigo}/0`]);
+          this.router.navigate([`/seleccion/invitacionAbierta/0`]);
           break;
       }
     });
