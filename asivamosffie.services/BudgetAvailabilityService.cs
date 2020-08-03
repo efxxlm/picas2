@@ -32,10 +32,9 @@ namespace asivamosffie.services
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestal()
         {
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).ToListAsync();
-           
+
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
-
-
+             
             foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
             {
                 string strEstadoRegistro = "";
@@ -45,31 +44,106 @@ namespace asivamosffie.services
                 {
                     strEstadoRegistro = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
                 }
-                 
+
                 if (string.IsNullOrEmpty(DisponibilidadPresupuestal.TipoSolicitudCodigo))
                 {
                     strTipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
                 }
 
-                DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla {
+                DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
+                {
 
                     FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString(),
                     EstadoRegistro = strEstadoRegistro,
                     TipoSolicitud = strTipoSolicitud,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
-                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud 
+                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud
                 };
 
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
             }
 
-            return ListDisponibilidadPresupuestalGrilla.OrderBy(r=> r.DisponibilidadPresupuestalId).ToList();
+            return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.EstadoRegistro).ToList();
         }
 
 
-         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int pDisponibilidadPresupuestalId) { 
-            return await _context.DisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == pDisponibilidadPresupuestalId).Include(r=> r.DisponibilidadPresupuestalProyecto).FirstOrDefaultAsync();
-        
+        public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int pDisponibilidadPresupuestalId)
+        {
+            //las tabla DisponibilidadPresupuestalProyecto no tiene campos de auditoria
+            return await _context.DisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == pDisponibilidadPresupuestalId).Include(r => r.DisponibilidadPresupuestalProyecto).FirstOrDefaultAsync();
+
         }
+
+
+        public async Task<FuenteFinanciacion> GetFuenteFinanciacionByIdAportanteId(int pAportanteId)
+        { 
+            return await _context.FuenteFinanciacion.Where(r => r.AportanteId == pAportanteId).IncludeFilter(r => r.GestionFuenteFinanciacion.Where(r => !(bool)r.Eliminado)).FirstOrDefaultAsync();
+        }
+
+
+        public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud) {
+
+            List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado && r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud)).ToListAsync();
+
+            List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
+
+            foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
+            {
+                string strEstadoRegistro = "";
+                string strTipoSolicitud = ""; 
+                if (string.IsNullOrEmpty(DisponibilidadPresupuestal.EstadoSolicitudCodigo))
+                {
+                    strEstadoRegistro = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
+                }
+
+                if (string.IsNullOrEmpty(DisponibilidadPresupuestal.TipoSolicitudCodigo))
+                {
+                    strTipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
+                }
+
+                DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
+                {
+
+                    FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString(),
+                    EstadoRegistro = strEstadoRegistro,
+                    TipoSolicitud = strTipoSolicitud,
+                    DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
+                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud
+                }; 
+                ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
+            } 
+            return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.DisponibilidadPresupuestalId).ToList();
+
+        } 
+
+        //    public async Task<Respuesta> CreateEditDisponibilidadPresupuestal(DisponibilidadPresupuestal pDisponibilidadPresupuestal) {
+
+        //        try
+        //        {
+        //            return
+        //          new Respuesta
+        //          {
+        //              IsSuccessful = true,
+        //              IsException = false,
+        //              IsValidation = true,
+        //              Code = ConstantMessagesProyecto.OperacionExitosa,
+        //              Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyecto, pProyecto.UsuarioCreacion, "CREAR PROYECTO")
+        //          };
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return
+        //      new Respuesta
+        //      {
+        //          IsSuccessful = false,
+        //          IsException = true,
+        //          IsValidation = false,
+        //          Code = ConstantMessagesProyecto.Error,
+        //          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyecto, pProyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+        //      };
+        //        }
+
+        //    }
+
     }
 }

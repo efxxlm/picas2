@@ -34,7 +34,25 @@ namespace asivamosffie.api.Controllers
             return respuesta; 
         }
 
+        [Route("GetFuenteFinanciacionByIdAportanteId")]
+        [HttpGet]
+        public async Task<FuenteFinanciacion> GetFuenteFinanciacionByIdAportanteId(int pAportanteId)
+        {
+            // string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _budgetAvailabilityService.GetFuenteFinanciacionByIdAportanteId(pAportanteId);
+            return respuesta;
+        }
+
+        [Route("GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud")]
+        [HttpGet]
+        public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
+        {
+          
+            var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(pCodigoEstadoSolicitud);
+            return respuesta;
+        }
 
 
+ 
     }
 }
