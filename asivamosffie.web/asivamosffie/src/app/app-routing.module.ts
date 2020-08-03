@@ -1,6 +1,14 @@
 import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@angular/router';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import { LayoutComponent } from './layout/layout.component';
 
@@ -38,7 +46,7 @@ const routes: Routes = [
           .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
-        path: 'gestionarAcueros',
+        path: 'gestionarAcuerdos',
         loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
         .then(m => m.GestionarAcuerdoCofinanciacionModule)
       },
@@ -89,7 +97,12 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
     preloadingStrategy: PreloadAllModules
-  })],
-  exports: [RouterModule]
+  }),
+  MatMomentDateModule,
+  MatDatepickerModule],
+  exports: [RouterModule],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es'}
+  ]
 })
 export class AppRoutingModule { }

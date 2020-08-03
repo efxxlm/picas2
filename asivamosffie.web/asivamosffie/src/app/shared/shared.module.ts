@@ -9,6 +9,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { SpinnerLoadingComponent } from './components/spinner-loading/spinner-loading.component';
 
 @NgModule({
   declarations: [
@@ -16,12 +17,14 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     FooterComponent,
     ModalDialogComponent,
     NavbarComponent,
+    SpinnerLoadingComponent
   ],
   exports: [
     HeaderComponent,
     FooterComponent,
     ModalDialogComponent,
     NavbarComponent,
+    SpinnerLoadingComponent
   ],
   imports: [
     CommonModule,

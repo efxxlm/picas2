@@ -9,15 +9,15 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using asivamosffie.model.APIModels;
+
+
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
     {
-
-        private readonly IDocumentService _documentService;
+ 
         private readonly IProjectService _projectService;
         private readonly IOptions<AppSettings> _settings;
 
@@ -26,7 +26,7 @@ namespace asivamosffie.api.Controllers
         {
             _projectService = projectService;
             _settings = settings;
-            _documentService = documentService;
+        
         }
 
         [Route("CreateOrEditAdministrativeProject")]
@@ -35,8 +35,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
-                 
+            { 
                 //string pUsuarioModifico = " ";
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
@@ -99,9 +98,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {               
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                pProyecto.UsuarioCreacion = pUsuarioModifico;
+            { 
+                pProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
             }
@@ -111,9 +109,7 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
-
-
-        
+         
 
         [Route("ListAdministrativeProject")]
         [HttpGet]
@@ -148,10 +144,8 @@ namespace asivamosffie.api.Controllers
         [Route("ListProject")]
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
-        {
-            
-            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            var respuesta = await _projectService.ListProyectos(pUsuarioModifico);
+        { 
+            var respuesta = await _projectService.ListProyectos();
             return respuesta;
 
         }

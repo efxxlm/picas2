@@ -24,7 +24,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<bool> DeleteProyectoByProyectoId(int pProyectoId);    
         
-        Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto);
+        Task<List<ProyectoGrilla>> ListProyectos();
 
         Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId,string usuario);
 

@@ -35,11 +35,11 @@ namespace asivamosffie.services
          
         public async Task<List<ControlRecurso>> GetResourceControlGridBySourceFunding(int id)
         {
-            //TODO:
-            //Faber Revisar todos los include ya que no se esta validando si esta eliminado
-            List<ControlRecurso> ControlGrid = new List<ControlRecurso>();
+     
             try
             {
+                //TODO: Faber Revisar todos los include ya que no se esta validando si esta eliminado
+                List<ControlRecurso> ControlGrid = new List<ControlRecurso>();
                 ControlGrid = await _context.ControlRecurso
                 .Where( cr => cr.FuenteFinanciacionId == id)
                     .Include(RC => RC.FuenteFinanciacion)
@@ -57,7 +57,7 @@ namespace asivamosffie.services
                 return ControlGrid;
 
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return null;
             }

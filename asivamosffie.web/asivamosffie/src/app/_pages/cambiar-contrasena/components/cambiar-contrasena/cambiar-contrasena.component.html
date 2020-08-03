@@ -8,7 +8,7 @@
         <div class="text-clean">*Debe tener en cuenta que la contraseña debe contener letras mayúsculas, letras minúsculas, números y caracteres especiales, con un tamaño mínimo de 8 caracteres y máximo 15 caracteres.</div>
     <!--</div>-->
 
-    <form [formGroup]="formChangePassword" (ngSubmit)="cambiarContrasena($event)">
+    <form [formGroup]="formChangePassword" novalidate (ngSubmit)="cambiarContrasena($event)">
         <mat-form-field appearance="outline" class="form-input">
             <mat-label>Contraseña Actual</mat-label>
             <input matInput [type]="verClaveActual ? 'password' : 'text'"

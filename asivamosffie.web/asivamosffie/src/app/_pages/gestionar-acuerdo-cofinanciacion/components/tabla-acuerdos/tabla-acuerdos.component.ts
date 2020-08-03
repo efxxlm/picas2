@@ -56,16 +56,16 @@ export class TablaAcuerdosComponent implements OnInit {
          this.listaCofinanciacion = cof; 
          this.listaCofinanciacion.forEach(element => {
            element.valorTotal=0;
-           element.estadoRegistro="Completo";
+           /*element.estadoRegistro="Completo";
            if(element.cofinanciacionAportante.length==0)
            {
             element.estadoRegistro="Incompleto";
-           }
+           }*/
            element.cofinanciacionAportante.forEach(elementaportante => {
-            if(elementaportante.cofinanciacionDocumento.length==0)
+            /*if(elementaportante.cofinanciacionDocumento.length==0)
             {
              element.estadoRegistro="Incompleto";
-            }
+            }*/
             elementaportante.cofinanciacionDocumento.forEach(documento => {
                element.valorTotal+=documento.valorDocumento;
              });

@@ -86,8 +86,11 @@ export class FormularioProyectosComponent implements OnInit {
     //ajusto latitud y longitud de predios
     this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' + this.proyecto.predioPrincipal.ubicacionLatitud2;
     this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' + this.proyecto.predioPrincipal.ubicacionLongitud2;
+    this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId.institucionEducativaSedeId;
+    this.proyecto.sedeId = this.proyecto.sedeId.institucionEducativaSedeId
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(respuesta => {
       this.openDialog('', respuesta.message);
+      this.router.navigate(["/crearProyecto"]); 
     },
       err => {
         let mensaje: string;
@@ -407,11 +410,17 @@ export class FormularioProyectosComponent implements OnInit {
         // console.log('terminó');
       });
   }
+  
+  getCodigoDane(){
+    this.codigoDaneSede = this.proyecto.sedeId.codigoDane;
+  }
 
   getSede() {
-    // console.log(this.proyecto);
-    this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId).subscribe(respuesta => {
+     //console.log(this.proyecto.institucionEducativaId);
+     this.CodigoDaneIE = this.proyecto.institucionEducativaId.codigoDane;
+    this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId.institucionEducativaSedeId).subscribe(respuesta => {
       this.listadoSede = respuesta;
+      
     },
       err => {
         let mensaje: string;
@@ -461,7 +470,7 @@ export class FormularioProyectosComponent implements OnInit {
           this.proyecto.proyectoPredio = [];
           for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
             this.proyecto.proyectoPredio.push({
-              ProyectoPredioId: 0, EstadoJuridicoCodigo: "", UsuarioCreacion: "",
+              ProyectoPredioId: 0,  UsuarioCreacion: "",
               Predio: {
                 cedulaCatastral: "", direccion: "", documentoAcreditacionCodigo: "",
                 fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: "",
@@ -475,7 +484,7 @@ export class FormularioProyectosComponent implements OnInit {
 
             for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
               this.proyecto.proyectoPredio.push({
-                ProyectoPredioId: 0, EstadoJuridicoCodigo: "", UsuarioCreacion: "",
+                ProyectoPredioId: 0,  UsuarioCreacion: "",
                 Predio: {
                   cedulaCatastral: "", direccion: "", documentoAcreditacionCodigo: "",
                   fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: "",
