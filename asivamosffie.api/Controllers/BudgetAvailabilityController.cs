@@ -46,8 +46,7 @@ namespace asivamosffie.api.Controllers
         [Route("GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud")]
         [HttpGet]
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
-        {
-          
+        { 
             var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(pCodigoEstadoSolicitud);
             return respuesta;
         }
