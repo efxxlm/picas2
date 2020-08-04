@@ -29,10 +29,10 @@ export class TituloComponent implements OnInit {
   crearSolicitud() {
     switch (this.tipoDisponibilidad.value) {
       case 1:
-        this.router.navigate(['/solicitar-disponibilidad-presupuestal/crear-solicitud-tradicional']);
+        this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
         break;
       case 2:
-        this.router.navigate(['/solicitar-disponibilidad-presupuestal/crear-solicitud-especial']);
+        this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial']);
         break;
     }
   }

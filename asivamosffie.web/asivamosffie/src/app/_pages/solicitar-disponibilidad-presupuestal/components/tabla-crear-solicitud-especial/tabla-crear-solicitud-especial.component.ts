@@ -6,50 +6,36 @@ import { MatTableDataSource } from '@angular/material/table';
 export interface Solicitudes {
   id: number;
   fecha: string;
-  tipo: string;
   numero: string;
-  opcionPorContratar: string;
   valorSolicitado: number;
-  estado: string;
+  estadoSolicitud: string;
+  estadoRegistro: string;
 }
 
 const ELEMENT_DATA: Solicitudes[] = [
   {
     id: 1,
-    fecha: '22/06/2020',
-    tipo: 'Contratación',
-    numero: 'PI_002',
-    opcionPorContratar: 'Obra',
-    valorSolicitado: 400000000,
-    estado: 'Sin registrar'
+    fecha: '08/07/2020',
+    numero: 'DE_001',
+    valorSolicitado: 7500000,
+    estadoSolicitud: 'Sin registrar',
+    estadoRegistro: 'Completo'
   },
-  {
-    id: 2,
-    fecha: '23/06/2020',
-    tipo: 'Modificación contractual ',
-    numero: 'CO_001',
-    opcionPorContratar: 'Obra',
-    valorSolicitado: 60000000,
-    estado: 'Sin registrar'
-  }
 ];
 
 @Component({
-  selector: 'app-tabla-crear-solicitud-tradicional',
-  templateUrl: './tabla-crear-solicitud-tradicional.component.html',
-  styleUrls: ['./tabla-crear-solicitud-tradicional.component.scss']
+  selector: 'app-tabla-crear-solicitud-especial',
+  templateUrl: './tabla-crear-solicitud-especial.component.html',
+  styleUrls: ['./tabla-crear-solicitud-especial.component.scss']
 })
-export class TablaCrearSolicitudTradicionalComponent implements OnInit {
-
-  verAyuda = false;
+export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
   displayedColumns: string[] = [
     'fecha',
-    'tipo',
     'numero',
-    'opcionPorContratar',
     'valorSolicitado',
-    'estado',
+    'estadoSolicitud',
+    'estadoRegistro',
     'id'
   ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -83,11 +69,11 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
     console.log(e);
   }
 
-  verDetalle(e: number) {
+  editar(e: number) {
     console.log(e);
   }
 
-  registrarInformacion(e: number) {
+  eliminar(e: number) {
     console.log(e);
   }
 

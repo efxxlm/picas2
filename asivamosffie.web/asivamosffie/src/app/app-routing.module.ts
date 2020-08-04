@@ -78,7 +78,7 @@ const routes: Routes = [
         component: RegistrarComponent,
       },
       {
-        path: 'solicitar-disponibilidad-presupuestal',
+        path: 'solicitarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
           .then(m => m.SolicitarDisponibilidadPresupuestalModule)
       },
@@ -87,8 +87,8 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/inicio',
-    // loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    // redirectTo: '/inicio',
+    loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 @NgModule({

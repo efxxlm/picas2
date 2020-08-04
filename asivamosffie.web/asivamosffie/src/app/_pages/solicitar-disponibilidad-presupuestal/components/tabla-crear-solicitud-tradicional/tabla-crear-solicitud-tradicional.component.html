@@ -1,6 +1,6 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/solicitarDisponibilidadPresupuestal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -64,7 +64,7 @@
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element.id)">Enviar Solicitud</button>
                 <button mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.id)">Ver detalle /Editar</button>
-                <button mat-raised-button color="accent" class="btn-table" (click)="registrarInformacion(element.id)">Registrar información adicional</button>
+                <a mat-raised-button color="accent" class="btn-table" [routerLink]="['./registrar',element.id]">Registrar información adicional</a>
             </td>
         </ng-container>
 

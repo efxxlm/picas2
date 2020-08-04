@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-registrar-informacion-adicional',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegistrarInformacionAdicionalComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe((params: Params) => {
+      console.log(params);
+      const id = params.id;
+      // const a = this.service.getService(id;
+      // console.log(a);
+    });
   }
 
 }

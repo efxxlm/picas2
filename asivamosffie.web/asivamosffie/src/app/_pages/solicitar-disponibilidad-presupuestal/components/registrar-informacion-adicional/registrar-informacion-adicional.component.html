@@ -1,14 +1,26 @@
-<div class="container text-center">
+<div class="container">
     <div class="text-right">
-        <a routerLink="/solicitar-disponibilidad-presupuestal/crear-solicitud-tradicional" mat-button color="primary"
+        <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional" mat-button color="primary"
             class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">
-        Registrar información adicional solucitud CO_001
-    </h1>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Registrar información adicional solucitud CO_001
+        </h1>
+    </div>
 
+    <div class="d-flex justify-content-center">
+        <p class="solicitud">
+            <strong>Tipo de solicitud: </strong>
+            Modificación contractual
+        </p>
+        <p class="solicitud">
+            <strong>Fecha de comité técnico:</strong>
+            24/06/2020
+        </p>
+    </div>
 
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
@@ -20,29 +32,64 @@
     </mat-card>
 
     <mat-accordion>
-        <mat-expansion-panel class="form-apropiacion">
-            <mat-expansion-panel-header class="form-apropiacion--header">
-                <mat-panel-title class="form-apropiacion--title">
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
                     LL987654 - I.E Juan Bosco - Sede Simón Bolivar
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
+            <p class="text-center color-mainColor departamento">Atlántico/Sabanagrande</p>
             <mat-card class="shipping-card var-main-gris">
                 <mat-card-header class="header-card">
                     <mat-card-title class="header-card--text">
-                      Información basica
+                        Aportantes
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <p><b>DDP:</b>DDP_PI_007</p>
-                    <p><b>Valor DDP:</b> $60.000.000</p>
-                    <p><b>Detalle de la modificación:</b></p>
-                    <p>Se realiza adición de recursos para obras complementarias</p>
+                    <div class="row">
+                        <div class="col-md-6 mb-1em">
+                            <p class="mb1-em"><b>Aportante 1</b></p>
+
+                            <p>
+                                <b>Tipo de aportante:</b>
+                                FFIE
+                            </p>
+                            <p>
+                                <b>Aportante:</b>
+                                FFIE
+                            </p>
+                            <p>
+                                <b>Valor del aportante:</b>
+                                $60.000.000
+                            </p>
+                        </div>
+                    </div>
                 </mat-card-content>
             </mat-card>
 
         </mat-expansion-panel>
 
     </mat-accordion>
+
+    <div class="d-flex align-items-center">
+        <div class="text-area-quill">
+            <label for="objeto" class="text-area-quill--label">Objeto</label>
+            <!-- <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" formControlName="objeto">
+            </quill-editor> -->
+        </div>
+        <!-- <span class="contador" *ngIf="addressForm.get('objeto').value !== null">
+            {{1000 - addressForm.get('objeto').value.length}}
+        </span>
+        <span class="contador" *ngIf="addressForm.get('objeto').value === null">
+            1000
+        </span> -->
+    </div>
+    <div class="text-center">
+        <button mat-button color="warn" class="btn-guardar" type="button">
+            <img src="assets/img/icon/guardar.svg" alt="Guardar">
+        </button>
+    </div>
 
 </div>

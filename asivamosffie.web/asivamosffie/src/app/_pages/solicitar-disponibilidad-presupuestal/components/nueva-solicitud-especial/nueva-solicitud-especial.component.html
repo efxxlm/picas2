@@ -1,0 +1,273 @@
+<div class="container">
+    <div class="text-right">
+        <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial" mat-button color="primary"
+            class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Nueva solicitud DDP especial
+        </h1>
+    </div>
+
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <mat-card class="shipping-card">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text">
+                    DDP especial
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="tipo">Tipo de solicitud DDP especial</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="tipo">
+                                        <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
+                                            [value]="tipoSolicitud.value">
+                                            {{ tipoSolicitud.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-flex align-items-center">
+                        <div class="text-area-quill">
+                            <label for="objeto" class="text-area-quill--label">Objeto</label>
+                            <!-- <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)" formControlName="objeto">
+                            </quill-editor> -->
+                        </div>
+                        <!-- <span class="contador" *ngIf="addressForm.get('objeto').value !== null">
+                            {{1000 - addressForm.get('objeto').value.length}}
+                        </span>
+                        <span class="contador" *ngIf="addressForm.get('objeto').value === null">
+                            1000
+                        </span> -->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="numeroRadicado">Número de radicado de la
+                                    solicitud</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #numeroRadicado type="text" maxlength="15"
+                                        formControlName="numeroRadicado">
+                                </mat-form-field>
+                                <span class="contador">{{15 - numeroRadicado.value.length}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value === 1">
+                    <h2 class="card-subTitle">Expensas</h2>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="cartaAutorizacionET">¿Cuenta con carta de
+                                        autorización de la ET?</label>
+                                </div>
+                                <div class="col">
+                                    <mat-radio-group class="radioInput" formControlName="cartaAutorizacionET">
+                                        <mat-radio-button value="si">Sí</mat-radio-button>
+                                        <mat-radio-button value="no">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="departemento">Departamento</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="departemento">
+                                            <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
+                                                [value]="tipoSolicitud.value">
+                                                {{ tipoSolicitud.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="municipio">Municipio</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="municipio">
+                                            <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
+                                                [value]="tipoSolicitud.value">
+                                                {{ tipoSolicitud.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="llaveMEN">Llave MEN</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN">
+                                    </mat-form-field>
+                                    <span class="contador">{{8 - llaveMEN.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value === 2">
+                    <h2 class="card-subTitle">Otros costos/Servicios</h2>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="numeroContrato">Número de contrato</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #numeroContrato type="text" maxlength="10" formControlName="numeroContrato">
+                                    </mat-form-field>
+                                    <span class="contador">{{10 - numeroContrato.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="shipping-card var-main-gris animatedDown">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text">
+                    LL45231
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                    <b>Tipo de intervención:</b>
+                    Reconstrucción
+                </p>
+                <p>
+                    <b>Nombre de la I.E:</b>
+                    Colegio Juan XXIII
+                </p>
+                <p>
+                    <b>Sede:</b>
+                    Única sede
+                </p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="shipping-card animatedDown">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text">
+                    Aportante
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="tipoAportante">Tipo de aportante</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="tipoAportante">
+                                        <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
+                                            [value]="tipoSolicitud.value">
+                                            {{ tipoSolicitud.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="nombreAportante">Nombre del aportante</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="nombreAportante">
+                                        <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
+                                            [value]="tipoSolicitud.value">
+                                            {{ tipoSolicitud.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="valor">Valor</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #valor type="text" maxlength="20"
+                                        formControlName="valor">
+                                </mat-form-field>
+                                <span class="contador">{{20 - valor.value.length}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <div class="row px-5em animatedDown">
+            <div class="pr-1">
+                <label class="label-left" for="url">Url con soporte</label>
+            </div>
+            <div class="col">
+                <mat-form-field class="full-width">
+                    <input matInput type="url" formControlName="url">
+                </mat-form-field>
+                <span class="info-url">Indique la ruta del soporte de esta información</span>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+        </div>
+    </form>
+</div>
