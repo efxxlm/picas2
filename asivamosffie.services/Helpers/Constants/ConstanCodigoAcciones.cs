@@ -2,6 +2,7 @@
 {
     public class ConstantCodigoAcciones
     {
+
         public const string Inicio_de_sesion = "1";
         public const string Cambio_de_contrasena = "2";
         public const string Solicitud_de_contrasena = "3";
@@ -25,7 +26,9 @@
 
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
-
+        public const string Crear_Editar_Disponibilidad_Presupuestal = "30";
+        public const string Eliminar_Disponibilidad_Presupuestal = "33";
+        public const string Crear_Editar_DP_Proyecto = "33"; // Crear_Editar Disponibilidad Presupuestal Proyecto
 
     }
 }
