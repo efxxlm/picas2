@@ -1,0 +1,58 @@
+<div class="container">
+    <div class="text-right">
+        <a routerLink="/seleccion/nuevo" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Nuevo proceso de selección
+        </h1>
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title completo">
+                    Descripción del proceso de selección
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>
+            <app-form-descripcion-del-proceso-de-seleccion 
+                #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
+                >
+            </app-form-descripcion-del-proceso-de-seleccion>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Estudio de mercado
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="estudio.cargarRegistro()" id="botonEstudio"></button>
+            <app-form-estudio-de-mercado
+            #estudio [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+        </app-form-estudio-de-mercado>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Datos de proponentes seleccionados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>
+            <app-form-datos-proponentes-seleccionados
+               #proponente [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+            </app-form-datos-proponentes-seleccionados>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+
+<pre>
+    {{ procesoSeleccion | json }}
+  </pre>

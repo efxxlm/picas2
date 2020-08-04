@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace asivamosffie.model.Models
 {
@@ -10,6 +12,7 @@ namespace asivamosffie.model.Models
             AportanteFuenteFinanciacion = new HashSet<AportanteFuenteFinanciacion>();
             ControlRecurso = new HashSet<ControlRecurso>();
             CuentaBancaria = new HashSet<CuentaBancaria>();
+            GestionFuenteFinanciacion = new HashSet<GestionFuenteFinanciacion>();
             VigenciaAporte = new HashSet<VigenciaAporte>();
         }
 
@@ -23,11 +26,27 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
-
+        [NotMapped]
+        public decimal ValorAporteEnCuenta
+        {
+            get
+            {
+                try
+                {
+                    
+                    return this.ControlRecurso.Sum(e => (decimal)e.ValorConsignacion);
+                }
+                catch
+                {
+                    throw new Exception("Error calculado en valor aporte en cuenta");
+                }
+            }
+        }
         public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
         public virtual ICollection<CuentaBancaria> CuentaBancaria { get; set; }
+        public virtual ICollection<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }
         public virtual ICollection<VigenciaAporte> VigenciaAporte { get; set; }
     }
 }

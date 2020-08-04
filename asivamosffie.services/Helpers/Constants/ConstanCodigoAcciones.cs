@@ -18,6 +18,7 @@
         public const string RegistrarAportante = "13";
         public const string Crear_Proyecto_Administrativo = "15";
         public const string Eliminar_Cofinanciacion = "17 ";
+        public const string Crear_Proceso_Seleccion = "18";
         public const string Crear_Editar_Fuentes_Financiacion = "20";
         public const string Eliminar_Fuentes_Financiacion = "21";
 
@@ -26,9 +27,14 @@
 
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
-        public const string Crear_Editar_Disponibilidad_Presupuestal = "30";
+        public const string Crear_Editar_Proceso_Seleccion = "27";	
+        
+         public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
+        public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
+        public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
+        public const string Crear_Editar_Cofinanciacion = "31";
+        public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
         public const string Eliminar_Disponibilidad_Presupuestal = "33";
-        public const string Crear_Editar_DP_Proyecto = "33"; // Crear_Editar Disponibilidad Presupuestal Proyecto
-
+        public const string Crear_Editar_DP_Proyecto = "34"; // Crear_Editar Disponibilidad Presupuestal Proyecto
     }
 }

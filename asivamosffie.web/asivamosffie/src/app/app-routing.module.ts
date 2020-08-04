@@ -1,3 +1,4 @@
+import { GestionarAcuerdoCofinanciacionRoutingModule } from './_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion-routing.module';
 import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@angular/router';
@@ -81,6 +82,11 @@ const routes: Routes = [
         path: 'solicitarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
           .then(m => m.SolicitarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'seleccion',
+        loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
+        .then(m => m.GestionarProcesosDeSeleccionModule)
       },
     ]
 

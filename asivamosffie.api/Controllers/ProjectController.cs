@@ -99,9 +99,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {               
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                pProyecto.UsuarioCreacion = pUsuarioModifico;
+            {                
+                pProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
             }

@@ -117,11 +117,11 @@ namespace asivamosffie.api
             services.AddTransient<ICofinancingService, CofinancingService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IContributorService, ContributorService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
+            services.AddTransient<ISelectionProcessService, SelectionProcessService>();
 
             
 

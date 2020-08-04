@@ -31,8 +31,8 @@ namespace asivamosffie.api.Controllers
             try
             { 
                 HttpContext.Connection.RemoteIpAddress.ToString();
-               // pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                Task<object> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
+                pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }

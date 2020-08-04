@@ -3,7 +3,6 @@ import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, Fo
 import { CofinanciacionService, CofinanciacionAportante, Cofinanciacion, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { Dominio, CommonService, Respuesta, Localizacion } from 'src/app/core/_services/common/common.service';
 import { ClassGetter } from '@angular/compiler/src/output/output_ast';
-
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';

@@ -125,5 +125,13 @@ namespace asivamosffie.api.Controllers
             var result = await common.ListSedeByInstitucionEducativaId(idInstitucionEducativaId);
             return result;
         }
+
+        [HttpGet]
+        [Route("GetInstitucionEducativaById")]
+        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int idInstitucionEducativaId)
+        {
+            var result = await common.GetInstitucionEducativaById(idInstitucionEducativaId);
+            return result;
+        }
     }
 }

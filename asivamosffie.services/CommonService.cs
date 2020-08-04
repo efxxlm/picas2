@@ -26,6 +26,7 @@ namespace asivamosffie.services
             return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
         }
 
+
         public async Task<List<Perfil>> GetProfile()
         {
             return await _context.Perfil.ToListAsync();
@@ -43,7 +44,11 @@ namespace asivamosffie.services
 
         public async Task<List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio)
         { 
-            return await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync(); 
+            //JMARTINEZ
+            List<Dominio> listDominio = await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync();
+            //Vuelve todo mayuscula
+            listDominio.ForEach(r => r.Nombre.ToUpper());
+            return listDominio;
         }
 
         public async Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenu, string pCodigo, int pAccionId, string pUsuario, string pObservaciones)
@@ -136,15 +141,13 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Nombre.Trim().ToUpper().Equals(pCodigo.Trim().ToUpper()) && r.TipoDominioId == pTipoDominioId).Select(r => r.Codigo).FirstOrDefaultAsync();
         }
-
-
+         
         public async Task<int> getSedeInstitucionEducativaIdByNameAndInstitucionPadre(string pNombre, int pIdPadre)
         {
 
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == pIdPadre && r.Nombre.Equals(pNombre)).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
-
-
+         
         public async Task<int> getInstitucionEducativaIdByCodigoDane(int pCodigoDane)
         {
 
@@ -152,8 +155,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Localizacion> GetLocalizacionByLocalizacionId(string pLocalizacionId)
-        {
-
+        { 
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
         }
 
@@ -192,8 +194,7 @@ namespace asivamosffie.services
                 Descripcion = x.Descripcion
             }).ToListAsync();
         }
-
-
+         
         public async Task<Dominio> GetDominioByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
@@ -243,6 +244,11 @@ namespace asivamosffie.services
                  Descripcion = x.Descripcion,
                  IdPadre = x.IdPadre
              }).ToListAsync();
+        }
+
+        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
+        {
+            return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
     }
 }
