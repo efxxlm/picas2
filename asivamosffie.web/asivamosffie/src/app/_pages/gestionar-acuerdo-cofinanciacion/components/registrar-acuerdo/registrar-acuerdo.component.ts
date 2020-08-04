@@ -15,6 +15,8 @@ import { forkJoin } from 'rxjs';
 })
 export class RegistrarAcuerdoComponent implements OnInit {
 
+  loading = false;
+
   constructor(private fb: FormBuilder,
               private cofinanciacionService: CofinanciacionService,
               private commonService: CommonService,
@@ -48,7 +50,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   datosAportantes = this.fb.group({
     vigenciaEstado: ['', Validators.required],
-    numAportes: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+    numAportes: ['', [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
     aportantes: this.fb.array([])
   });
 
@@ -67,16 +69,20 @@ export class RegistrarAcuerdoComponent implements OnInit {
           this.datosAportantes.setControl('numAportes', this.fb.control(cof.cofinanciacionAportante.length));
 
           cof.cofinanciacionAportante.forEach(apor => {
-            const grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId, apor.nombreAportanteId, apor.cofinanciacionDocumento.length,
-              apor.cofinanciacionId, apor.cofinanciacionAportanteId);
+            const grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId,
+                                                                apor.nombreAportanteId,
+                                                                apor.cofinanciacionDocumento.length,
+                                                                apor.cofinanciacionId,
+                                                                apor.cofinanciacionAportanteId);
 
-            const valorTipo = this.selectTiposAportante.find(a => a.dominioId == apor.tipoAportanteId);
-            const valorNombre = this.nombresAportante.find(a => a.dominioId == apor.nombreAportanteId);
+            const valorTipo = this.selectTiposAportante.find(a => a.dominioId === apor.tipoAportanteId);
+            const valorNombre = this.nombresAportante.find(a => a.dominioId === apor.nombreAportanteId);
+            const idMunicipio = apor.municipioId ? apor.municipioId.toString() : "00000";
 
-            this.commonService.listaMunicipiosByIdDepartamento(apor.municipioId.toString().substring(0, 5)).subscribe(mun => {
+            this.commonService.listaMunicipiosByIdDepartamento( idMunicipio.substring(0, 5) ).subscribe(mun => {
 
-              const valorMunicipio = mun.find(a => a.localizacionId == apor.municipioId.toString());
-              const valorDepartamento = this.departamentos.find(a => a.localizacionId == apor.municipioId.toString().substring(0, 5));
+              const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio);
+              const valorDepartamento = this.departamentos.find(a => a.localizacionId === idMunicipio.substring(0, 5));
 
               grupo.get('departamento').setValue(valorDepartamento);
               grupo.get('municipios').setValue(mun);
@@ -134,25 +140,26 @@ export class RegistrarAcuerdoComponent implements OnInit {
       );
   }
 
-  changeDepartamento(id) {
-    this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id].get('departamento').value.localizacionId).subscribe(mun => {
-      this.aportantes.controls[id].get('municipios').setValue(mun);
-    });
+  changeDepartamento(id: string | number) {
+    this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id]
+      .get('departamento').value.localizacionId).subscribe(mun => {
+        this.aportantes.controls[id].get('municipios').setValue(mun);
+      });
   }
 
   changeTipoAportante(p) {
     console.log(p);
   }
 
-  CambioNumeroAportantes() {
+  CambioNumeroAportantes() {    
     const FormNumAportantes = this.datosAportantes.value;
-    if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 100) {
+    if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
       while (this.aportantes.length < FormNumAportantes.numAportes) {
-        this.aportantes.push(this.createAportante());
+        this.aportantes.push(this.createAportante());  
       }
     } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
       while (this.aportantes.length > FormNumAportantes.numAportes) {
-        this.borrarAportante(this.aportantes, this.aportantes.length - 1);
+        //this.borrarAportante(this.aportantes, this.aportantes.length - 1);
         // this.listaCofinancAportantes.pop();
       }
     }
@@ -163,7 +170,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const grupo: FormGroup = this.fb.group({
       tipo: ['', Validators.required],
       nombre: [''],
-      cauntosDocumentos: ['', [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cauntosDocumentos: ['', [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
       cofinanciacionId: [''],
       cofinanciacionAportanteId: [''],
       departamento: [''],
@@ -186,11 +193,12 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   }
 
-  createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number, pCofinanciacionId: number, pCofinanciacionAportanteId: number): FormGroup {
+  createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number, pCofinanciacionId: number, pCofinanciacionAportanteId: number)
+  : FormGroup {
     const grupo: FormGroup = this.fb.group({
       tipo: [pTipo, Validators.required],
       nombre: [pNombre],
-      cauntosDocumentos: [pCantidad, [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(99)]],
+      cauntosDocumentos: [pCantidad, [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
       cofinanciacionId: [pCofinanciacionId],
       cofinanciacionAportanteId: [pCofinanciacionAportanteId],
       departamento: [''],
@@ -268,10 +276,10 @@ export class RegistrarAcuerdoComponent implements OnInit {
     return;
   }
 
-  onSubmit() {
-    // console.log('entró');
-    // this.listaCofinancAportantes = [];
+  onSave( parcial: boolean ) {
+    this.loading = true;
     this.listaAportantes();
+
     const cofinanciacion: Cofinanciacion =
     {
       vigenciaCofinanciacionId: this.datosAportantes.get('vigenciaEstado').value,
@@ -283,7 +291,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
     this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
       respuesta => {
-        this.verificarRespuesta(respuesta);
+        this.verificarRespuesta(respuesta, parcial);
       },
       err => {
         let mensaje: string;
@@ -292,20 +300,27 @@ export class RegistrarAcuerdoComponent implements OnInit {
         } else {
           mensaje = err.message;
         }
+        this.loading = false;
         this.openDialog('Error', mensaje);
       },
       () => {
         // console.log('terminó');
+        this.loading = false;
       });
   }
 
-  private verificarRespuesta(respuesta: Respuesta) {
+  private verificarRespuesta(respuesta: Respuesta, parcial: boolean) {
     if (respuesta.isSuccessful) // Response witout errors
     {
       this.openDialog('', respuesta.message);
-      if (respuesta.isValidation) // have validations
+      if (!respuesta.isValidation) // have validations
       {
-        this.router.navigate(['/gestionarAcueros']);
+        console.log(respuesta);
+        if (parcial){
+          this.router.navigate([`/registrarAcuerdos/${ respuesta.data.cofinanciacionId }`]);
+        } else {
+          this.router.navigate(['/gestionarAcuerdos']);
+        }
       }
     } else {
       this.openDialog('', respuesta.message);
@@ -324,8 +339,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const cantidadDocumentos: number = data.get('cauntosDocumentos').value;
     console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
     if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
-      && cantidadDocumentos < 100) {
-      console.log('asdas');
+      && cantidadDocumentos < 1000) {
       while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
 
         this.listaCofinancAportantes[identificador].cofinanciacionDocumento.push(

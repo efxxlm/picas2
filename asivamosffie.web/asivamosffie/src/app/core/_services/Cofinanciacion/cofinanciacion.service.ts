@@ -17,7 +17,7 @@ export class CofinanciacionService {
   vigenciasAcuerdoCofinanciacion(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];
-    for (let i = 2015; i < fecha.getFullYear(); i++){
+    for (let i = 2015; i <= fecha.getFullYear(); i++){
       vigencias.push(i);
     }
 

@@ -1253,7 +1253,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Direccion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -1263,27 +1262,29 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.NumeroDocumento)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoPredioCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UbicacionLatitud)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UbicacionLongitud)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -1535,6 +1536,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionProponente>(entity =>
             {
+                entity.Property(e => e.CedulaRepresentanteLegal)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DireccionProponente)
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -1548,6 +1553,10 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NombreProponente)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreRepresentanteLegal)
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
@@ -1692,7 +1701,13 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 

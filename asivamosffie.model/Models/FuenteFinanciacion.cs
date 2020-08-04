@@ -42,6 +42,8 @@ namespace asivamosffie.model.Models
                 }
             }
         }
+        public bool? RegistroCompleto { get; set; }
+
         public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }

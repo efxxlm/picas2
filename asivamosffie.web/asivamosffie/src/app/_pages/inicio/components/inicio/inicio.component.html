@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-6 iniciarSesion--form">
         <mat-card class="iniciarSesion--form--contain">
-            <form [formGroup]="formLogin" (ngSubmit)="login($event)">
+            <form [formGroup]="formLogin" novalidate (ngSubmit)="login($event)">
                 <h1>Iniciar Sesión</h1>
                 <hr>
                 <mat-form-field appearance="outline">

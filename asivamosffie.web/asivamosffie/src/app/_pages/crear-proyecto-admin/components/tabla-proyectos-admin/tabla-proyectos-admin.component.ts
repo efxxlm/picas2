@@ -105,7 +105,7 @@ export class TablaProyectosAdminComponent {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
       respuesta.forEach(element => {
-        datos.push({id:element.proyectoId,estado:element.estadoRegistro,consecutivo:element.proyectoId});
+        datos.push({id:element.proyectoAdminitracionId,estado:element.enviado?"Completo":"Incompleto",consecutivo:element.proyectoAdminitracionId});
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;

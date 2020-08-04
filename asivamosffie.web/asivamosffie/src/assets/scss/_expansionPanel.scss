@@ -64,3 +64,14 @@
 
     }
 }
+
+span.mat-expansion-indicator::after {
+    color: #174193;
+    color: var(--mainColor);
+    border-left: .5em solid transparent;
+    border-right: .5em solid transparent;
+    border-top: 1em solid;
+    border-bottom: 0;
+    transform: rotate(0deg);
+    padding: 1px;
+}

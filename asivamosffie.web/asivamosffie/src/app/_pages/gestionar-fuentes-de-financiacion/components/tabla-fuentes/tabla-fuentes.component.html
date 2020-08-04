@@ -37,12 +37,12 @@
 
         <ng-container matColumnDef="valorAporteFuenteDeRecursos">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor aporte fuente de recursos </th>
-            <td mat-cell *matCellDef="let element"> {{element.valorFuente | currency:'COP'}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.valorFuente | currency:'':'symbol':'3.0'}} </td> 
         </ng-container>
 
         <ng-container matColumnDef="valorAporteEnCuenta">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor aportes en cuenta </th>
-            <td mat-cell *matCellDef="let element"> {{element.valorAporteEnCuenta | currency:'COP'}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.valorAporteEnCuenta | currency:'':'symbol':'3.0'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="estado">
