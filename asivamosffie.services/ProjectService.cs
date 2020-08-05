@@ -844,7 +844,7 @@ namespace asivamosffie.services
                             //#11
                             //Código DANE SEDE 
                             //          temporalProyecto.CodigoDaneSede = Int32.Parse(worksheet.Cells[i, 11].Text);
-
+                              
                             //#12
                             //¿Se encuentra dentro de una convocatoria? 
                             if ((worksheet.Cells[i, 12].Text).ToString().ToUpper().Contains("SI") || Int32.Parse(worksheet.Cells[i, 12].Text).ToString().ToUpper().Contains("VERDADERO"))
