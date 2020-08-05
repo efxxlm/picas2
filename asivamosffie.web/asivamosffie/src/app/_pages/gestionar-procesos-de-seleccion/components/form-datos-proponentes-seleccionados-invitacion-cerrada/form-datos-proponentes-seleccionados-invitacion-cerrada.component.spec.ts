@@ -25,6 +25,6 @@ describe('FormDatosProponentesSeleccionadosInvitacionCerradaComponent', () => {
   });
 
   it('should compile', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeTruthy(); 
   });
 });
