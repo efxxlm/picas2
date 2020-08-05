@@ -23,6 +23,8 @@ import { FormOrdenDeElegibilidadComponent } from './components/form-orden-de-ele
 import { CargarOrdenDeElegibilidadComponent } from './components/cargar-orden-de-elegibilidad/cargar-orden-de-elegibilidad.component';
 import { TablaOrdenDeElegibilidadComponent } from './components/tabla-orden-de-elegibilidad/tabla-orden-de-elegibilidad.component';
 import { VerDetalleTablaProcesosComponent } from './components/ver-detalle-tabla-procesos/ver-detalle-tabla-procesos.component';
+import { MonitorearCronogramaComponent } from './components/monitorear-cronograma/monitorear-cronograma.component';
+import { TablaCronogramaComponent } from './components/tabla-cronograma/tabla-cronograma.component';
 
 
 @NgModule({
@@ -42,7 +44,9 @@ import { VerDetalleTablaProcesosComponent } from './components/ver-detalle-tabla
     FormOrdenDeElegibilidadComponent,
     CargarOrdenDeElegibilidadComponent,
     TablaOrdenDeElegibilidadComponent,
-    VerDetalleTablaProcesosComponent
+    VerDetalleTablaProcesosComponent,
+    MonitorearCronogramaComponent,
+    TablaCronogramaComponent
   ],
   imports: [
     CommonModule,
