@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-titulo',
@@ -11,15 +12,21 @@ export class TituloComponent implements OnInit {
 
   tipoDisponibilidad: FormControl;
 
-  selectDisponibilidad = [
-    { name: 'DDP tradicional', value: 1 },
-    { name: 'DDP especial', value: 2 }
-  ];
-
-  constructor(private router: Router) { }
+  selectDisponibilidad: Dominio[] = [];
+    
+  constructor(
+              private router: Router,
+              private commonService: CommonService
+             ) 
+  { }
 
   ngOnInit(): void {
     this.declararSelect();
+    
+    this.commonService.listaTipoDisponibilidadPresupuestal().subscribe( respuesta =>  {
+      this.selectDisponibilidad = respuesta;
+    })
+
   }
 
   private declararSelect() {
@@ -27,11 +34,12 @@ export class TituloComponent implements OnInit {
   }
 
   crearSolicitud() {
-    switch (this.tipoDisponibilidad.value) {
-      case 1:
+    
+    switch (this.tipoDisponibilidad.value.codigo) {
+      case "1":
         this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
         break;
-      case 2:
+      case "2":
         this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial']);
         break;
     }

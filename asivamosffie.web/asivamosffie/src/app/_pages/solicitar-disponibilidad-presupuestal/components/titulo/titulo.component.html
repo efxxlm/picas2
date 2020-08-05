@@ -14,8 +14,8 @@
         <div class="col">
             <mat-form-field class="select-width">
                 <mat-select [formControl]="tipoDisponibilidad" required>
-                    <mat-option *ngFor="let control of selectDisponibilidad" [value]="control.value">
-                        {{ control.name }}
+                    <mat-option *ngFor="let control of selectDisponibilidad" [value]="control">
+                        {{ control.nombre }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

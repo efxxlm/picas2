@@ -127,6 +127,9 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
   }
 
+  listaTipoDisponibilidadPresupuestal(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);
+  }
 
   public forkProject():Observable<any[]>
   {
