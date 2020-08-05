@@ -1,11 +1,232 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
-    <mat-card-header>
-      <mat-card-title>Shipping Information</mat-card-title>
-    </mat-card-header>
-    <mat-card-content></mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
-    </mat-card-actions>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el proceso?</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #cuantosProponentes type="number" maxlength="2" formControlName="cuantosProponentes"
+                  required>
+              </mat-form-field>
+              <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label for="nombresProponentes" class="label-left">Nombres de proponentes</label>
+        </div>
+        <div class="col">
+          <mat-form-field class="select-width">
+            <mat-select formControlName="nombresProponentes" multiple required>
+              <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
+                {{ nombreProponente }}
+              </mat-option>
+              <mat-option value="Nuevo"> Nuevo </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="pt-1em">
+        <mat-card-title class="header-card--text">
+          Proponente 1
+        </mat-card-title>
+        <p>
+          <strong>Nombre del proponente:</strong>
+          Andres Montealegre
+        </p>
+        <p>
+          <strong>Número de identificación del proponente:</strong>
+          1083456734
+        </p>
+        <p>
+          <strong>Departamento del domicilio del proponente:</strong>
+          Atlántico
+        </p>
+        <p>
+          <strong>Municipio del domicilio del proponente:</strong>
+          Malambo
+        </p>
+        <p>
+          <strong>Dirección del proponente:</strong>
+          Diagonal 27 sur #34-56
+        </p>
+        <p>
+          <strong>Teléfono del proponente</strong>
+          3189947677
+        </p>
+        <p>
+          <strong>Correo electrónico del proponente:</strong>
+          andres.montealegre.malambo@yahoo.com
+        </p>
+      </div>
+
+      <div class="pt-1em" *ngIf="true">
+        <mat-card-title class="header-card--text">
+          Proponente 2 (Nuevo)
+        </mat-card-title>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="tipoProponente" class="label-left">Tipo de proponente</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="tipoProponente" required>
+                    <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
+                      {{ nombreProponente }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label for="nombre" class="label-left">Nombre</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #nombre type="text" maxlength="100" formControlName="nombre"
+                required>
+            </mat-form-field>
+            <span class="contador">{{100 - nombre.value.length}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="numeroIdentificacon" class="label-left">Número de identificación tributaria (NIT)</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #numeroIdentificacon type="text" maxlength="12" formControlName="numeroIdentificacon"
+                    required>
+                </mat-form-field>
+                <span class="contador">{{12 - numeroIdentificacon.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label for="representanteLegal" class="label-left">Representante legal</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #representanteLegal type="text" maxlength="100" formControlName="representanteLegal"
+                required>
+            </mat-form-field>
+            <span class="contador">{{100 - representanteLegal.value.length}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="cedulaRepresentanteLegal" class="label-left">Cédula del representante legal</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #cedulaRepresentanteLegal type="text" maxlength="12" formControlName="cedulaRepresentanteLegal"
+                    required>
+                </mat-form-field>
+                <span class="contador">{{12 - cedulaRepresentanteLegal.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="departamentoRepresentanteLegal" class="label-left">Departamento del domicilio del representante legal</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="departamentoRepresentanteLegal" required>
+                    <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
+                      {{ nombreProponente }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="municipioRepresentanteLegal" class="label-left">Municipio del domicilio del representante legal</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="municipioRepresentanteLegal" required>
+                    <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
+                      {{ nombreProponente }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="direccionPrincipalRepresentanteLegal" class="label-left">Dirección principal del representante legal</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #direccionPrincipalRepresentanteLegal type="text" maxlength="100" formControlName="direccionPrincipalRepresentanteLegal"
+                    required>
+                </mat-form-field>
+                <span class="contador">{{100 - direccionPrincipalRepresentanteLegal.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label for="telefonoRepresentanteLegal" class="label-left">Teléfono del representante legal</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #telefonoRepresentanteLegal type="number" maxlength="10" formControlName="telefonoRepresentanteLegal"
+                required>
+            </mat-form-field>
+            <span class="contador">{{10 - telefonoRepresentanteLegal.value.length}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label for="correoRepresentanteLegal" class="label-left">Correo electrónico del representante legal</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #correoRepresentanteLegal type="number" maxlength="100" formControlName="correoRepresentanteLegal"
+                required>
+            </mat-form-field>
+            <span class="contador">{{100 - correoRepresentanteLegal.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
   </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+  </div>
 </form>
