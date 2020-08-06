@@ -37,6 +37,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<GrillaProcesoSeleccionIntegrante>>> GetGridProcesoSeleccionIntegrante(int? procesoSeleccionId);
         Task<Respuesta> CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante);
         
-        Task<bool> Delete(int id);
+         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
+         Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico);
     }
 }
