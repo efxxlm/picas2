@@ -80,6 +80,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+        public virtual DbSet<TempOrdenLegibilidad> TempOrdenLegibilidad { get; set; }
+
 
         //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {
@@ -2356,6 +2358,47 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.VigenciaAporte)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
                     .HasConstraintName("FK_VigenciaAporte_FuenteFinanciacion");
+            });
+
+            modelBuilder.Entity<TempOrdenLegibilidad>(entity =>
+            {
+                entity.Property(e => e.Correo).IsUnicode(false);
+
+                entity.Property(e => e.CorreoRl).IsUnicode(false);
+
+                entity.Property(e => e.CorreoRlutoConsorcio).IsUnicode(false);
+
+                entity.Property(e => e.Direccion).IsUnicode(false);
+
+                entity.Property(e => e.DireccionRl).IsUnicode(false);
+
+                entity.Property(e => e.DireccionRlutoConsorcio).IsUnicode(false);
+
+                entity.Property(e => e.Legal).IsUnicode(false);
+
+                entity.Property(e => e.NombreEntidad).IsUnicode(false);
+
+                entity.Property(e => e.NombreIntegrante).IsUnicode(false);
+
+                entity.Property(e => e.NombreOtoConsorcio).IsUnicode(false);
+
+                entity.Property(e => e.NombreProponente).IsUnicode(false);
+
+                entity.Property(e => e.NombreRlutoConsorcio).IsUnicode(false);
+
+                entity.Property(e => e.NumeroIddentificacionProponente).IsUnicode(false);
+
+                entity.Property(e => e.RepresentanteLegal).IsUnicode(false);
+
+                entity.Property(e => e.Telefono).IsUnicode(false);
+
+                entity.Property(e => e.TelefonoRl).IsUnicode(false);
+
+                entity.Property(e => e.TelefonoRlutoConsorcio).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);
