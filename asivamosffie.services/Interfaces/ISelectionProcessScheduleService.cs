@@ -8,6 +8,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ISelectionProcessScheduleService
     {
+        Task<List<ProcesoSeleccionCronograma>> GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(int pProcesoSeleccionId);
+
 
         Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule();
         Task<ProcesoSeleccionCronograma> GetSelectionProcessScheduleById(int id);

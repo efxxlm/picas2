@@ -24,6 +24,20 @@ namespace asivamosffie.api.Controllers
 
         }
 
+        [Route("GetListProcesoSeleccionCronogramaByProcesoSeleccionId")]
+        [HttpGet]
+        public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(int pProcesoSeleccionId)
+        {
+            try
+            {
+                return await _selectionProcessScheduleService.GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(pProcesoSeleccionId);
+             }
+            catch (Exception ex)
+            { 
+                throw ex;
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> Get()
         {
