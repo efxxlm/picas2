@@ -4,17 +4,19 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
-    public class BudgetAvailabilityService: IBudgetAvailabilityService
+    public class BudgetAvailabilityService : IBudgetAvailabilityService
     {
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
@@ -24,6 +26,43 @@ namespace asivamosffie.services
             _context = context;
             _commonService = commonService;
         }
+
+        public async Task<List<GrillaDisponibilidadPresupuestal2>> GetGrillaDisponibilidadPresupuestal2(string pConnectionStrings)
+        {
+            List<GrillaDisponibilidadPresupuestal2> ListaGrillaDisponibilidadPresupuestal = new List<GrillaDisponibilidadPresupuestal2>();
+     
+            using (SqlConnection sql = new SqlConnection(pConnectionStrings))
+            {
+                using SqlCommand cmd = new SqlCommand("sp_GetGrillaDisponibilidadPresupuestal", sql)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+                }; 
+                await sql.OpenAsync();
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                { 
+                    while (await reader.ReadAsync())
+                    {
+                        ListaGrillaDisponibilidadPresupuestal.Add(await MapRespuestaAsync(reader));
+                    }
+                }
+                await sql.CloseAsync();
+            } 
+            return ListaGrillaDisponibilidadPresupuestal;
+        }
+
+        private async Task<GrillaDisponibilidadPresupuestal2> MapRespuestaAsync(SqlDataReader reader)
+        {
+            return new GrillaDisponibilidadPresupuestal2()
+            {
+                // Id = (int)reader["Id"],
+                ValorUso = reader["ValorUso"].ToString(),
+                FechaSolicitud = reader["FechaSolicitud"].ToString() != null ? Convert.ToDateTime(reader["FechaSolicitud"].ToString()).ToString("yyyy-MM-dd") : " ",
+                NumeroSolicitud = reader["NumeroSolicitud"].ToString(),
+                TipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(reader["TipoSolicitudCodigo"].ToString(), (int)EnumeratorTipoDominio.Tipo_Solicitud)
+            };
+        }
+
 
         #region "Servicios Disponibilidad Presupuestal";
         public async Task<List<DisponibilidadPresupuestal>> GetBudgetAvailability()
@@ -52,14 +91,13 @@ namespace asivamosffie.services
             }
         }
 
-
         /**
          * Listado de las solitudes de sesión de comité técnico:  En estado (APROBADA POR COMITÉ TECNICO)
          */
         public async Task<ActionResult<List<GrillaDisponibilidadPresupuestal>>> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId)
         {
-            
-            List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = 
+
+            List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal =
                DisponibilidadPresupuestalId != null ? await _context.DisponibilidadPresupuestal.Where(x => x.DisponibilidadPresupuestalId == DisponibilidadPresupuestalId).ToListAsync()
                : await _context.DisponibilidadPresupuestal.OrderByDescending(a => a.FechaSolicitud).ToListAsync();
 
@@ -79,7 +117,7 @@ namespace asivamosffie.services
                     ValorSolicitado = dp.ValorSolicitud,
                     EstadoSolicitudCodigo = string.Empty, // Pendiente hacer la validacion
                     EstadoRegistro = dp.RegistroCompleto.Equals(true) ? "Completo" : ""
-                    
+
                 };
 
                 ListGrillaControlCronograma.Add(DisponibilidadPresupuestalGrilla);
@@ -87,7 +125,6 @@ namespace asivamosffie.services
 
             return ListGrillaControlCronograma;
         }
-
 
         public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(DisponibilidadPresupuestal DP)
         {
@@ -103,14 +140,14 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(DP.DisponibilidadPresupuestalId.ToString()) || DP.DisponibilidadPresupuestalId == 0)
                 {
                     //Concecutivo
-                     var LastRegister = _context.DisponibilidadPresupuestal.OrderByDescending(x => x.DisponibilidadPresupuestalId).First().DisponibilidadPresupuestalId;
+                    var LastRegister = _context.DisponibilidadPresupuestal.OrderByDescending(x => x.DisponibilidadPresupuestalId).First().DisponibilidadPresupuestalId;
 
 
                     //Auditoria
                     strCrearEditar = "CREAR DISPONIBILIDAD PRESUPUESTAL";
                     DP.FechaCreacion = DateTime.Now;
                     DP.Eliminado = false;
-                    
+
                     //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
                     DP.EstadoSolicitudCodigo = "4"; // Sin registrar
 
@@ -177,7 +214,6 @@ namespace asivamosffie.services
             }
         }
 
-
         public async Task<Respuesta> DeleteBudgetAvailability(int id, string UsuarioModifico)
         {
 
@@ -217,11 +253,7 @@ namespace asivamosffie.services
             }
         }
 
-
-
         #endregion
-
-
 
         #region "Servicios Disponibilidad Presupuestal Proyecto";
 
@@ -245,7 +277,7 @@ namespace asivamosffie.services
                     dpProyecto.UsuarioCreacion = dpProyecto.UsuarioCreacion;
                     dpProyecto.Eliminado = false;
 
-                  
+
 
                     _context.DisponibilidadPresupuestalProyecto.Add(dpProyecto);
                     return respuesta = new Respuesta
@@ -313,7 +345,7 @@ namespace asivamosffie.services
         public async Task<List<DisponibilidadPresupuestalProyecto>> GetAssociatedProjects(int ProyectoId)
         {
             try
-            {  
+            {
                 return await _context.DisponibilidadPresupuestalProyecto.Where(p => p.ProyectoId == ProyectoId && !(bool)p.Eliminado)
                     .Include(p => p.DisponibilidadPresupuestal).IncludeFilter(p => p.Proyecto).Where(p => p.ProyectoId == ProyectoId && !(bool)p.Eliminado).ToListAsync();
             }

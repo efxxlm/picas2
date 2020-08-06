@@ -24,6 +24,14 @@ namespace asivamosffie.api.Controllers
 
         }
 
+        [Route("GetGrillaDisponibilidadPresupuestal")]
+        [HttpGet]
+        public async Task<ActionResult<List<GrillaDisponibilidadPresupuestal2>>> GetGrillaDisponibilidadPresupuestal2()
+        {
+            return await _budgetAvailabilityService.GetGrillaDisponibilidadPresupuestal2(_settings.Value.asivamosffieDatabase);
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<List<DisponibilidadPresupuestal>>> Get()
         {

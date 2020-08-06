@@ -34,5 +34,7 @@
 
         public bool YearSiguienteEsVigente { get; set; }
 
+        public string asivamosffieDatabase { get; set; }
+
     }
 }

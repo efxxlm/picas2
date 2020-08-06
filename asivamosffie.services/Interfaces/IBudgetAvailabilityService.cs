@@ -29,5 +29,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditarDPProyecto(DisponibilidadPresupuestalProyecto dpProyecto);
 
         #endregion
+         
+        Task<List<GrillaDisponibilidadPresupuestal2>> GetGrillaDisponibilidadPresupuestal2(string pConnectionStrings);
     }
 }
