@@ -26,6 +26,8 @@ namespace asivamosffie.api
         {
             Configuration = configuration;
         }
+
+
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 

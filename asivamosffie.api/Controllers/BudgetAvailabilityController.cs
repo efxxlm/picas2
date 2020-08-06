@@ -7,6 +7,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
@@ -17,10 +18,14 @@ namespace asivamosffie.api.Controllers
     {
         private readonly IBudgetAvailabilityService _budgetAvailabilityService;
         private readonly IOptions<AppSettings> _settings;
-        public BudgetAvailabilityController(IOptions<AppSettings> settings, IBudgetAvailabilityService budgetAvailabilityService)
+        private   IConfiguration _configuration { get; }
+
+
+        public BudgetAvailabilityController(IOptions<AppSettings> settings, IConfiguration configuration, IBudgetAvailabilityService budgetAvailabilityService)
         {
             _budgetAvailabilityService = budgetAvailabilityService;
             _settings = settings;
+            _configuration = configuration;
 
         }
 
@@ -28,7 +33,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<GrillaDisponibilidadPresupuestal2>>> GetGrillaDisponibilidadPresupuestal2()
         {
-            return await _budgetAvailabilityService.GetGrillaDisponibilidadPresupuestal2(_settings.Value.asivamosffieDatabase);
+            return await _budgetAvailabilityService.GetGrillaDisponibilidadPresupuestal2(_configuration.GetConnectionString("asivamosffieDatabase"));
         }
 
 
