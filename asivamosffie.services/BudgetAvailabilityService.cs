@@ -55,7 +55,7 @@ namespace asivamosffie.services
         {
             return new GrillaDisponibilidadPresupuestal2()
             {
-                // Id = (int)reader["Id"],
+                SesionComiteTecnicoId = (int)reader["SesionComiteTecnicoId"],
                 ValorUso = reader["ValorUso"].ToString(),
                 FechaSolicitud = reader["FechaSolicitud"].ToString() != null ? Convert.ToDateTime(reader["FechaSolicitud"].ToString()).ToString("yyyy-MM-dd") : " ",
                 NumeroSolicitud = reader["NumeroSolicitud"].ToString(),

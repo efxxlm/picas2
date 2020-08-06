@@ -6,7 +6,7 @@ namespace asivamosffie.model.APIModels
 {
     public class GrillaDisponibilidadPresupuestal2
     {
-        public int Id { get; set; }
+        public int SesionComiteTecnicoId { get; set; }
         public string ValorUso { get; set; }
         public string FechaSolicitud { get; set; }
         public string TipoSolicitud { get; set; }
