@@ -25,6 +25,13 @@ import { TablaOrdenDeElegibilidadComponent } from './components/tabla-orden-de-e
 import { VerDetalleTablaProcesosComponent } from './components/ver-detalle-tabla-procesos/ver-detalle-tabla-procesos.component';
 import { MonitorearCronogramaComponent } from './components/monitorear-cronograma/monitorear-cronograma.component';
 import { TablaCronogramaComponent } from './components/tabla-cronograma/tabla-cronograma.component';
+import { TablaDetalleCronogramaComponent } from './components/tabla-detalle-cronograma/tabla-detalle-cronograma.component';
+import { RegistrarSeguimientoCronogramaComponent } from './components/registrar-seguimiento-cronograma/registrar-seguimiento-cronograma.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -46,14 +53,21 @@ import { TablaCronogramaComponent } from './components/tabla-cronograma/tabla-cr
     TablaOrdenDeElegibilidadComponent,
     VerDetalleTablaProcesosComponent,
     MonitorearCronogramaComponent,
-    TablaCronogramaComponent
+    TablaCronogramaComponent,
+    TablaDetalleCronogramaComponent,
+    RegistrarSeguimientoCronogramaComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     GestionarProcesosDeSeleccionRoutingModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule
   ]
 })
 export class GestionarProcesosDeSeleccionModule { }

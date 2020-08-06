@@ -8,19 +8,18 @@ import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 })
 export class TablaCronogramaComponent implements OnInit {
 
-  addressForm = this.fb.group(
-    this.fb.array([
+  addressForm = this.fb.array([
       this.fb.group({
         descripcion: [null, Validators.compose([
           Validators.required, Validators.minLength(5), Validators.maxLength(500)
         ])],
         fecha: [null, Validators.required]
       })
-    ])
-  );
+    ]);
 
   editorStyle = {
-    height: '100px'
+    height: '100px',
+    width: '600px'
   };
 
   config = {
@@ -34,10 +33,6 @@ export class TablaCronogramaComponent implements OnInit {
 
   maxDate: Date;
 
-  get cronogramas() {
-    return this.addressForm.get('cronogramas') as FormArray;
-  }
-
   constructor(
     private fb: FormBuilder
   ) {
@@ -47,10 +42,27 @@ export class TablaCronogramaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  agregaFuente() {
+    this.addressForm.push(this.crearActividad());
+  }
+
+  crearActividad(): FormGroup {
+    return this.fb.group({
+      descripcion: [null, Validators.compose([
+        Validators.required, Validators.minLength(5), Validators.maxLength(500)
+      ])],
+      fecha: [null, Validators.required]
+    });
+  }
+
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
+  }
+
+  borrarArray(borrarForm: any, i: number) {
+    borrarForm.removeAt(i);
   }
 
   onSubmit() {

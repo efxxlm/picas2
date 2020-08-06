@@ -129,7 +129,7 @@ div.mat-paginator {
 
 .btn-table,
 .btn-table.mat-raised-button.mat-accent {
-    margin: .5em auto !important;
+    margin: .5em .2em !important;
     line-height: 1;
     display: block;
     padding-top: 0.5em;
@@ -153,4 +153,47 @@ div.mat-paginator {
 .mat-paginator-navigation-previous::after{
     content:" Anterior";
     margin-left: -5.5em;
+}
+
+.table-form {
+    td.mat-cell {
+        border-bottom: 1px solid;
+    }
+    td.mat-cell:first-child {
+        border-left: 1px solid;
+    }
+    td.mat-cell:last-child {
+        border-right: 1px solid;
+    }
+    .mat-form-field-appearance-legacy .mat-form-field-underline {
+        height: 0;
+        background-color: transparent;
+    }
+    th.mat-header-cell {
+        padding: 1em;
+    }
+
+    .mat-form-field {
+        display: block;
+        width: 10em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &--2 {
+        .ql-toolbar,
+        .ql-container {
+            width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+    &--3 {
+        .ql-toolbar,
+        .ql-container {
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
 }

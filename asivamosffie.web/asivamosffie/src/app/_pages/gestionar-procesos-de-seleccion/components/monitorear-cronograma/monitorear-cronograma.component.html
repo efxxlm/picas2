@@ -27,13 +27,20 @@
     </div>
 
     <div class="ajsutar-cronograma--actions">
-        <button mat-raised-button color="accent" class="ajsutar-cronograma--btn" (click)="ajustarCronograma = true; registrarSeguimiento = false">
+        <button mat-raised-button color="accent" class="ajsutar-cronograma--btn"
+            [ngClass]="{'active': ajustarCronograma === true}"
+            (click)="ajustarCronograma = true; registrarSeguimiento = false">
             Ajustar Cronograma
         </button>
-        <button mat-raised-button color="accent" class="ajsutar-cronograma--btn" (click)="registrarSeguimiento = true; ajustarCronograma = false">
+        <button mat-raised-button color="accent" class="ajsutar-cronograma--btn"
+            [ngClass]="{'active': registrarSeguimiento === true}"
+            (click)="registrarSeguimiento = true; ajustarCronograma = false">
             Registrar seguimiento a cronograma
         </button>
     </div>
 
     <app-tabla-cronograma *ngIf="ajustarCronograma"></app-tabla-cronograma>
+    <app-tabla-detalle-cronograma *ngIf="ajustarCronograma"></app-tabla-detalle-cronograma>
+
+    <app-registrar-seguimiento-cronograma *ngIf="registrarSeguimiento"></app-registrar-seguimiento-cronograma>
 </div>
