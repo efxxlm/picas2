@@ -9,6 +9,6 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
- 
+        Task<dynamic> GetListSolicitudesContractuales();
     }
 }

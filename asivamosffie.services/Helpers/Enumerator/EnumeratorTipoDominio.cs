@@ -1,8 +1,8 @@
 ﻿
 namespace asivamosffie.services.Helpers.Enumerator
 {
-    public enum EnumeratorTipoDominio : int
-    {
+	public enum EnumeratorTipoDominio : int
+	{
 		Tipo_de_Intervencion = 1,
 
 		Convocatoria = 2,
@@ -44,14 +44,27 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Origen_Documento_Cargue = 20,
 
-		//???????????
-
-		//???????????
-
 		//Es igual a estado Proyecto
 		Estado_Registro = 23,
 
-		Estado_Juridico_Predios = 25
+		Estado_Juridico_Predios = 25,
+
+		Tipo_Proceso_Seleccion = 27,
+
+		Tipo_Proponente = 28,
+
+		Tipo_Solicitud = 29,
+
+		Tipo_Documento = 30,
+
+		// Para disponibilidad presupuestal
+
+		Etapa_Proceso_Seleccion = 34,
+
+		Estado_Proceso_Seleccion = 35,
+
+		Opcion_Por_Contratar = 37
+
 
 	}
 }
