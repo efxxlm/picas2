@@ -316,6 +316,45 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+        [Route("SetValidateMassiveLoadElegibilidad")]
+        [HttpPost]
+        public async Task<IActionResult> SetValidateMassiveLoadElegibilidad(IFormFile file)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (file.Length > 0 && file.FileName.Contains(".xls"))
+                {
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _selectionProcessService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario);
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("UploadMassiveLoadElegibilidad")]
+        [HttpPost]
+        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _selectionProcessService.UploadMassiveLoadElegibilidad(pIdDocument, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
 
 
         #endregion
