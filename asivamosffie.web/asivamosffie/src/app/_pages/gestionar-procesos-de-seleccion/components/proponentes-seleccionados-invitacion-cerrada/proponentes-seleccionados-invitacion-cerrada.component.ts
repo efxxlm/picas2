@@ -3,8 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-form-datos-proponentes-seleccionados-invitacion-cerrada',
-  templateUrl: './form-datos-proponentes-seleccionados-invitacion-cerrada.component.html',
-  styleUrls: ['./form-datos-proponentes-seleccionados-invitacion-cerrada.component.scss']
+  templateUrl: './proponentes-seleccionados-invitacion-cerrada.component.html',
+  styleUrls: ['./proponentes-seleccionados-invitacion-cerrada.component.scss']
 })
 export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent {
 
