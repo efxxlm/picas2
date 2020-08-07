@@ -2401,6 +2401,21 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
             });
 
+            modelBuilder.Entity<CronogramaSeguimiento>(entity =>
+            {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.EstadoActividadFinalCodigo).IsUnicode(false);
+
+                entity.Property(e => e.EstadoActividadInicialCodigo).IsUnicode(false);
+
+                entity.Property(e => e.Observacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 
