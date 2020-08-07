@@ -12,8 +12,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Aportantes = 15,
         Procesos_Seleccion = 18,
         Procesos_Seleccion_Cronograma = 20,
-         Procesos_Seleccion_Grupo = 21,
-           CargueMasivoOrdenes = 22,
+        Procesos_Seleccion_Grupo = 21,
+        CargueMasivoOrdenes = 22,
+        CronogramaSeguimiento = 23
 
     }
 
