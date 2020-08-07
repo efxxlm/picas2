@@ -37,6 +37,10 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<GrillaProcesoSeleccionIntegrante>>> GetGridProcesoSeleccionIntegrante(int? procesoSeleccionId);
         Task<Respuesta> CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante);
         
+        Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento);
+        Task<ActionResult<List<GrillaCronogramaSeguimiento>>> GetViewSchedules(int? ProcesoSeleccionCronogramaId);
+
+
          Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
          Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico);
     }
