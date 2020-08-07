@@ -645,6 +645,119 @@ namespace asivamosffie.services
         }
         #endregion
 
+
+       //Registrar Seguimiento cronograma
+        public async Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Cronograma_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+            CronogramaSeguimiento cronogramaSeguimientoAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(cronogramaSeguimiento.CronogramaSeguimientoId.ToString()) || cronogramaSeguimiento.CronogramaSeguimientoId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR CRONOGRAMA SEGUIMIENTO";
+                    cronogramaSeguimiento.FechaCreacion = DateTime.Now;
+                    cronogramaSeguimiento.Eliminado = false;
+                    cronogramaSeguimiento.UsuarioCreacion = cronogramaSeguimiento.UsuarioCreacion;
+
+
+                    _context.CronogramaSeguimiento.Add(cronogramaSeguimiento);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = cronogramaSeguimiento,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, cronogramaSeguimiento.UsuarioCreacion, strCrearEditar)
+                    };
+
+                }
+                else
+                {
+                    strCrearEditar = "EDITAR CRONOGRAMA SEGUIMIENTO";
+                    cronogramaSeguimientoAntiguo = _context.CronogramaSeguimiento.Find(cronogramaSeguimiento.CronogramaSeguimientoId);
+                    //Auditoria
+                    cronogramaSeguimientoAntiguo.UsuarioModificacion = cronogramaSeguimiento.UsuarioModificacion;
+                    cronogramaSeguimientoAntiguo.FechaModificacion = DateTime.Now;
+                    cronogramaSeguimientoAntiguo.Eliminado = false;
+
+
+                    //Registros
+                    cronogramaSeguimientoAntiguo.ProcesoSeleccionCronogramaId = cronogramaSeguimiento.ProcesoSeleccionCronogramaId;
+                    cronogramaSeguimientoAntiguo.EstadoActividadInicialCodigo = cronogramaSeguimiento.EstadoActividadInicialCodigo;
+                    cronogramaSeguimientoAntiguo.EstadoActividadFinalCodigo = cronogramaSeguimiento.EstadoActividadFinalCodigo;
+                    cronogramaSeguimientoAntiguo.Observacion = cronogramaSeguimiento.Observacion;
+
+                    _context.CronogramaSeguimiento.Update(cronogramaSeguimientoAntiguo);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = cronogramaSeguimientoAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, cronogramaSeguimiento.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, cronogramaSeguimiento.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+
+
+
+        //Grilla Seguimiento a cronograma
+        public async Task<ActionResult<List<GrillaCronogramaSeguimiento>>> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
+        {
+            List<CronogramaSeguimiento> ListCronogramaSeguimiento = (ProcesoSeleccionCronogramaId != null ? await _context.CronogramaSeguimiento.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionCronogramaId == ProcesoSeleccionCronogramaId).ToListAsync()
+              : await _context.CronogramaSeguimiento.Where(r => !(bool)r.Eliminado).ToListAsync());
+
+
+            List<GrillaCronogramaSeguimiento> ListGrillaCronogramaSeguimiento = new List<GrillaCronogramaSeguimiento>();
+
+            foreach (var cronogramaSeguimiento in ListCronogramaSeguimiento)
+            {
+                GrillaCronogramaSeguimiento CronogramaSeguimiento = new GrillaCronogramaSeguimiento
+                {
+                    CronogramaSeguimientoId = cronogramaSeguimiento.CronogramaSeguimientoId,
+                    ProcesoSeleccionCronogramaId = cronogramaSeguimiento.ProcesoSeleccionCronogramaId,
+                    EstadoActividadInicialCodigo = cronogramaSeguimiento.EstadoActividadInicialCodigo,
+                    EstadoActividadInicialText = cronogramaSeguimiento.EstadoActividadInicialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(cronogramaSeguimiento.EstadoActividadInicialCodigo, (int)EnumeratorTipoDominio.Estado_Cronograma_Seguimiento) : "",
+                    EstadoActividadFinalCodigo = cronogramaSeguimiento.EstadoActividadFinalCodigo,
+                    EstadoActividadFinalText = cronogramaSeguimiento.EstadoActividadFinalCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(cronogramaSeguimiento.EstadoActividadFinalCodigo, (int)EnumeratorTipoDominio.Estado_Cronograma_Seguimiento) : "",
+                    Observacion = cronogramaSeguimiento.Observacion,
+                    FechaCreacion = cronogramaSeguimiento.FechaCreacion,
+
+                };
+                ListGrillaCronogramaSeguimiento.Add(CronogramaSeguimiento);
+            }
+
+            return ListGrillaCronogramaSeguimiento;
+        }
+
+
+
      public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
         {
             int CantidadRegistrosVacios = 0;
