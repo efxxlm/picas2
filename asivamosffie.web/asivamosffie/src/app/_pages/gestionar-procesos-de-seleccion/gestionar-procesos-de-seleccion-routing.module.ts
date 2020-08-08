@@ -30,7 +30,7 @@ const routes: Routes = [
     component: InvitacionAbiertaComponent
   },
   {
-    path: 'monitorearCronograma',
+    path: 'monitorearCronograma/:id',
     component: MonitorearCronogramaComponent
   }
 ];

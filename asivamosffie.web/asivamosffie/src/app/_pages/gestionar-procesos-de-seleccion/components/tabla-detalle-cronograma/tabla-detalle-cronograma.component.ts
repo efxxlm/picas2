@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ProcesoSeleccionService, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ActivatedRoute } from '@angular/router';
 
 export interface ProcesosElement {
   id: number;
@@ -30,8 +32,11 @@ const ELEMENT_DATA: ProcesosElement[] = [
 })
 export class TablaDetalleCronogramaComponent implements OnInit {
 
+  @Input() editMode: any = {};
+  idProcesoseleccion: number = 0;
+
   displayedColumns: string[] = [ 'tipo', 'numero', 'fechaSolicitud', 'numeroSolicitud', 'estadoDelSolicitud', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -41,14 +46,40 @@ export class TablaDetalleCronogramaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+                private procesoSeleccionService: ProcesoSeleccionService,
+                private activatedRoute: ActivatedRoute,
+
+             ) 
+  { }
 
   ngOnInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.activatedRoute.params.subscribe( parametros => {
+      this.idProcesoseleccion = parametros['id'];
+
+      let listaProcesos: ProcesoSeleccion[] = []; 
+      this.procesoSeleccionService.getProcesoSeleccionById( this.idProcesoseleccion ).subscribe( proceso => {
+        
+        listaProcesos.push( proceso );
+        console.log( proceso );
+        this.dataSource = new MatTableDataSource( listaProcesos );
+
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      })
+
+    })
+
+    
+  }
+
+  onDetalle(){
+    this.editMode.valor = !this.editMode.valor;
+    console.log( this.editMode.valor );
   }
 
 }

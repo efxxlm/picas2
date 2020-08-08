@@ -12,17 +12,17 @@
 
         <ng-container matColumnDef="tipo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de proceso </th>
-            <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.tipoProcesoNombre}} </td>
         </ng-container>
 
         <ng-container matColumnDef="numero">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de proceso </th>
-            <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.numeroProceso}} </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaSolicitud">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.fechaSolicitud}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date}} </td>
         </ng-container>
 
         <ng-container matColumnDef="numeroSolicitud">
@@ -32,13 +32,13 @@
 
         <ng-container matColumnDef="estadoDelSolicitud">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.estadoDelSolicitud}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.estadoProcesoSeleccionNombre}} </td>
         </ng-container>
 
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="accent" class="btn-table">Ver detalle/ Edita</button>
+                <button mat-raised-button color="accent" class="btn-table" (click)="onDetalle()">Ver detalle/ Edita</button>
                 <button mat-raised-button color="accent" class="btn-table">Enviar solicitud a comité</button>
                 <button mat-raised-button color="accent" class="btn-table">Eliminar</button>
             </td>

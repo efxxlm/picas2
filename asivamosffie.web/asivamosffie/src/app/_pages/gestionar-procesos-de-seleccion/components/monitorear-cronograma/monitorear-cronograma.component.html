@@ -39,8 +39,9 @@
         </button>
     </div>
 
-    <app-tabla-cronograma *ngIf="ajustarCronograma"></app-tabla-cronograma>
-    <app-tabla-detalle-cronograma *ngIf="ajustarCronograma"></app-tabla-detalle-cronograma>
+    <app-tabla-cronograma [editMode]="editMode" *ngIf="ajustarCronograma"></app-tabla-cronograma>
+    <app-tabla-detalle-cronograma [editMode]="editMode" *ngIf="ajustarCronograma && !editMode.valor"></app-tabla-detalle-cronograma>
 
     <app-registrar-seguimiento-cronograma *ngIf="registrarSeguimiento"></app-registrar-seguimiento-cronograma>
+    
 </div>

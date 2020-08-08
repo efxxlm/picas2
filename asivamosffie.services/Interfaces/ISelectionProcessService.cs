@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<ProcesoSeleccion>>> GetSelectionProcess();
         Task<ProcesoSeleccion> GetSelectionProcessById(int id);
         Task<Respuesta> CreateEditarProcesoSeleccion(ProcesoSeleccion procesoSeleccion);
-        Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma);
+        Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma, bool esTransaccion);
         Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule();
         Task<ActionResult<List<GrillaControlCronograma>>> GetControlGridSchedule();
         Task<ProcesoSeleccionCronograma> GetSelectionProcessScheduleById(int id);
@@ -38,5 +38,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante);
         
         Task<bool> Delete(int id);
+
     }
 }

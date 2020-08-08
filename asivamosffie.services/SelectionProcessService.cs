@@ -139,7 +139,7 @@ namespace asivamosffie.services
                 foreach( ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma )
                 {
                     cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
-                    await this.CreateEditarProcesoSeleccionCronograma( cronograma );
+                    await this.CreateEditarProcesoSeleccionCronograma( cronograma, true );
                 }
                 
                 foreach( ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion )
@@ -239,7 +239,7 @@ namespace asivamosffie.services
             return ListGrillaControlCronograma;
         }
 
-        public async Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma)
+        public async Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma, bool esTransaccion)
         {
             Respuesta respuesta = new Respuesta();
 
@@ -285,8 +285,22 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
                 }
 
-                return respuesta;
+                if( esTransaccion )
+                    return respuesta;
+                else{
 
+                    await _context.SaveChangesAsync();
+
+                    return respuesta = new Respuesta
+                        {
+                            IsSuccessful = true,IsException = false,
+                            IsValidation = false, Data = procesoSeleccionCronograma,
+                            Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+
+                        };
+
+                }
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-monitorear-cronograma',
@@ -11,6 +11,7 @@ export class MonitorearCronogramaComponent implements OnInit {
 
   ajustarCronograma = false;
   registrarSeguimiento = false;
+  editMode = { valor: true };
 
   constructor() { }
 

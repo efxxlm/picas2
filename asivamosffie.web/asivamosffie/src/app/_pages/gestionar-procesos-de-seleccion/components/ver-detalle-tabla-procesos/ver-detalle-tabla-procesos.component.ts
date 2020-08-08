@@ -47,4 +47,9 @@ console.log(this.data.tipoProcesoCodigo)
   onNoClick(){
     
   }
+
+  onMonitorearCronograma(){
+    this.router.navigate(['/seleccion/monitorearCronograma', this.data.procesoSeleccionId ]);
+    this.dialogRef.close();
+  }
 }

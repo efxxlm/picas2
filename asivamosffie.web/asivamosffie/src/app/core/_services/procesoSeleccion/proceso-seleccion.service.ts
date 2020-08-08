@@ -30,6 +30,14 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.get<ProcesoSeleccion>(`${environment.apiUrl}/SelectionProcess/${id}`);
   }
 
+  listaActividadesByIdProcesoSeleccion( id: number ){
+    return this.http.get<ProcesoSeleccionCronograma[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);
+  }
+
+  createEditarProcesoSeleccionCronograma( cronograma: ProcesoSeleccionCronograma ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarProcesoSeleccionCronograma`, cronograma );
+  }
+
 }
 
 export interface ProcesoSeleccion{

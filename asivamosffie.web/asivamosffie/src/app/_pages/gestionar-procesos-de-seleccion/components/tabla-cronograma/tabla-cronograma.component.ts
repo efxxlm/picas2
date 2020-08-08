@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { ProcesoSeleccionService, ProcesoSeleccionCronograma } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ActivatedRoute } from '@angular/router';
+import { from } from 'rxjs';
+import { mergeMap, tap, toArray } from 'rxjs/operators';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tabla-cronograma',
@@ -8,14 +15,12 @@ import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 })
 export class TablaCronogramaComponent implements OnInit {
 
-  addressForm = this.fb.array([
-      this.fb.group({
-        descripcion: [null, Validators.compose([
-          Validators.required, Validators.minLength(5), Validators.maxLength(500)
-        ])],
-        fecha: [null, Validators.required]
-      })
-    ]);
+  @Input() editMode: any = {};
+
+  addressForm = this.fb.array([]);
+  maxDate: Date;
+  listaCronograma: ProcesoSeleccionCronograma[] = [];
+  idProcesoSeleccion: number = 0;
 
   editorStyle = {
     height: '100px',
@@ -31,15 +36,45 @@ export class TablaCronogramaComponent implements OnInit {
     ]
   };
 
-  maxDate: Date;
+  
 
   constructor(
-    private fb: FormBuilder
-  ) {
+              private fb: FormBuilder,
+              private procesoSeleccionService: ProcesoSeleccionService,
+              private activatedRoute: ActivatedRoute,
+              public dialog: MatDialog,
+
+             ) 
+  {
     this.maxDate = new Date();
   }
 
   ngOnInit(): void {
+
+    this.activatedRoute.params.subscribe( parametro =>{
+      this.idProcesoSeleccion = parametro['id'];
+
+      this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion( this.idProcesoSeleccion ).subscribe( lista => {
+
+        let listaActividades = this.addressForm as FormArray;
+        this.listaCronograma = lista;
+
+        console.log( lista );
+        
+        lista.forEach( cronograma => {
+          let grupo = this.crearActividad();
+          
+          grupo.get('procesoSeleccionCronogramaId').setValue( cronograma.procesoSeleccionCronogramaId );
+          grupo.get('descripcion').setValue( cronograma.descripcion );
+          grupo.get('fecha').setValue( cronograma.fechaMaxima );
+
+          listaActividades.push( grupo );
+
+        })
+
+      })
+
+    })
   }
 
   agregaFuente() {
@@ -48,6 +83,7 @@ export class TablaCronogramaComponent implements OnInit {
 
   crearActividad(): FormGroup {
     return this.fb.group({
+      procesoSeleccionCronogramaId: [],
       descripcion: [null, Validators.compose([
         Validators.required, Validators.minLength(5), Validators.maxLength(500)
       ])],
@@ -66,7 +102,46 @@ export class TablaCronogramaComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('--');
+
+    let listaActividades = this.addressForm as FormArray;
+    this.listaCronograma = [];
+
+    let i=0;
+    listaActividades.controls.forEach( control => {
+      let procesoSeleccionCronograma: ProcesoSeleccionCronograma = {
+        procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
+        descripcion: control.get('descripcion').value,
+        fechaMaxima: control.get('fecha').value,
+        procesoSeleccionId: this.idProcesoSeleccion,
+        numeroActividad: i,
+
+      }
+      this.listaCronograma.push( procesoSeleccionCronograma );
+      i++
+    })
+
+    from( this.listaCronograma )
+      .pipe( mergeMap(cronograma => this.procesoSeleccionService.createEditarProcesoSeleccionCronograma( cronograma )
+          .pipe(  
+              tap()
+          )
+      ),
+    toArray())
+    .subscribe( respuesta => {
+      let res = respuesta[0] as Respuesta
+      if (res.code == "200")
+        this.openDialog("Cronograma", res.message);    
+        console.log(respuesta);       
+        this.editMode.valor = false; 
+    })
+
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   }
 
 }
