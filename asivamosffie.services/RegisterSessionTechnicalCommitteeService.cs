@@ -6,11 +6,11 @@ using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.api.Controllers;
-using AuthorizationTest.JwtHelpers; 
+using AuthorizationTest.JwtHelpers;
 using System.IO;
 using System.Text;
 using ClosedXML.Excel;
@@ -23,6 +23,8 @@ using asivamosffie.services.Filters;
 using System.Data.Common;
 using Z.EntityFramework.Plus;
 using System.Threading.Tasks;
+using System.Data.Entity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace asivamosffie.services
 {
@@ -33,26 +35,58 @@ namespace asivamosffie.services
 
         public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
-            _commonService = commonService; 
+            _commonService = commonService;
             _context = context;
         }
 
 
         public async Task<dynamic> GetListSolicitudesContractuales()
-        { 
-            dynamic dynamicList = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).Select(x => new {
+        {
+
+            dynamic dynamicList = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).Select(x => new
+            {
                 x.ComiteTecnicoId,
-                FechaSolicitud  = x.FechaCreacion.ToString(),
+                FechaSolicitud = x.FechaCreacion.ToString(),
                 TipoSolicitud = x.TipoSolicitudCodigo,
                 x.NumeroSolicitud
-            }).Distinct().OrderByDescending(r=> r.ComiteTecnicoId).ToListAsync();
+            }).Distinct().OrderByDescending(r => r.ComiteTecnicoId).ToListAsync();
 
             foreach (var item in dynamicList)
             {
                 item.TipoSolicitud2 = _commonService.GetNombreDominioByCodigoAndTipoDominio(item.TipoSolicitud, (int)EnumeratorTipoDominio.Tipo_Solicitud);
 
-            } 
+            }
+
             return dynamicList;
-        } 
+        }
+
+
+
+        public async Task<bool> EjemploTransaction()
+        {
+            using (DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var standard = _context.ArchivoCargue.Add(new ArchivoCargue() { Activo = true});
+
+                    _context.Usuario.Add(new Usuario()
+                    {
+                        NombreMaquina = "Rama",
+                        Nombres = "Julian"
+                    });
+                    _context.SaveChanges();
+                    // throw exectiopn to test roll back transaction
+                     
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    Console.WriteLine("Error occurred.");
+                }
+            }
+            return false;
+        }
     }
 }
