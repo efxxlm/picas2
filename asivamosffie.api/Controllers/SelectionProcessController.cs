@@ -334,6 +334,88 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+        [Route("SetValidateMassiveLoadElegibilidad")]
+        [HttpPost]
+        public async Task<IActionResult> SetValidateMassiveLoadElegibilidad(IFormFile file)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (file.Length > 0 && file.FileName.Contains(".xls"))
+                {
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _selectionProcessService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario);
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditarCronogramaSeguimiento")]
+        public async Task<IActionResult> CreateEditarCronogramaSeguimiento([FromBody] CronogramaSeguimiento cronogramaSeguimiento)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                cronogramaSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _selectionProcessService.CreateEditarCronogramaSeguimiento(cronogramaSeguimiento);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("GetViewSchedules")]
+        public async Task<IActionResult> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
+        {
+            try
+            {
+                var result = await _selectionProcessService.GetViewSchedules(ProcesoSeleccionCronogramaId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        [Route("UploadMassiveLoadElegibilidad")]
+        [HttpPost]
+        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _selectionProcessService.UploadMassiveLoadElegibilidad(pIdDocument, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
 
 
         #endregion
