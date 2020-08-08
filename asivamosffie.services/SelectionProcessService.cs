@@ -3,10 +3,13 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
@@ -742,33 +745,33 @@ namespace asivamosffie.services
 
 
         //Grilla Seguimiento a cronograma
-        public async Task<ActionResult<List<GrillaCronogramaSeguimiento>>> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
-        {
-            List<CronogramaSeguimiento> ListCronogramaSeguimiento = (ProcesoSeleccionCronogramaId != null ? await _context.CronogramaSeguimiento.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionCronogramaId == ProcesoSeleccionCronogramaId).ToListAsync()
-              : await _context.CronogramaSeguimiento.Where(r => !(bool)r.Eliminado).ToListAsync());
+        // public async Task<ActionResult<List<GrillaCronogramaSeguimiento>>> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
+        // {
+        //     List<CronogramaSeguimiento> ListCronogramaSeguimiento = (ProcesoSeleccionCronogramaId != null ? await _context.CronogramaSeguimiento.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionCronogramaId == ProcesoSeleccionCronogramaId).ToListAsync()
+        //       : await _context.CronogramaSeguimiento.Where(r => !(bool)r.Eliminado).ToListAsync());
 
 
-            List<GrillaCronogramaSeguimiento> ListGrillaCronogramaSeguimiento = new List<GrillaCronogramaSeguimiento>();
+        //     List<GrillaCronogramaSeguimiento> ListGrillaCronogramaSeguimiento = new List<GrillaCronogramaSeguimiento>();
 
-            foreach (var cronogramaSeguimiento in ListCronogramaSeguimiento)
-            {
-                GrillaCronogramaSeguimiento CronogramaSeguimiento = new GrillaCronogramaSeguimiento
-                {
-                    CronogramaSeguimientoId = cronogramaSeguimiento.CronogramaSeguimientoId,
-                    ProcesoSeleccionCronogramaId = cronogramaSeguimiento.ProcesoSeleccionCronogramaId,
-                    EstadoActividadInicialCodigo = cronogramaSeguimiento.EstadoActividadInicialCodigo,
-                    EstadoActividadInicialText = cronogramaSeguimiento.EstadoActividadInicialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(cronogramaSeguimiento.EstadoActividadInicialCodigo, (int)EnumeratorTipoDominio.Estado_Cronograma_Seguimiento) : "",
-                    EstadoActividadFinalCodigo = cronogramaSeguimiento.EstadoActividadFinalCodigo,
-                    EstadoActividadFinalText = cronogramaSeguimiento.EstadoActividadFinalCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(cronogramaSeguimiento.EstadoActividadFinalCodigo, (int)EnumeratorTipoDominio.Estado_Cronograma_Seguimiento) : "",
-                    Observacion = cronogramaSeguimiento.Observacion,
-                    FechaCreacion = cronogramaSeguimiento.FechaCreacion,
+        //     foreach (var cronogramaSeguimiento in ListCronogramaSeguimiento)
+        //     {
+        //         GrillaCronogramaSeguimiento CronogramaSeguimiento = new GrillaCronogramaSeguimiento
+        //         {
+        //             CronogramaSeguimientoId = cronogramaSeguimiento.CronogramaSeguimientoId,
+        //             ProcesoSeleccionCronogramaId = cronogramaSeguimiento.ProcesoSeleccionCronogramaId,
+        //             EstadoActividadInicialCodigo = cronogramaSeguimiento.EstadoActividadInicialCodigo,
+        //             EstadoActividadInicialText = cronogramaSeguimiento.EstadoActividadInicialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(cronogramaSeguimiento.EstadoActividadInicialCodigo, (int)EnumeratorTipoDominio.Estado_Cronograma_Seguimiento) : "",
+        //             EstadoActividadFinalCodigo = cronogramaSeguimiento.EstadoActividadFinalCodigo,
+        //             EstadoActividadFinalText = cronogramaSeguimiento.EstadoActividadFinalCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(cronogramaSeguimiento.EstadoActividadFinalCodigo, (int)EnumeratorTipoDominio.Estado_Cronograma_Seguimiento) : "",
+        //             Observacion = cronogramaSeguimiento.Observacion,
+        //             FechaCreacion = cronogramaSeguimiento.FechaCreacion,
 
-                };
-                ListGrillaCronogramaSeguimiento.Add(CronogramaSeguimiento);
-            }
+        //         };
+        //         ListGrillaCronogramaSeguimiento.Add(CronogramaSeguimiento);
+        //     }
 
-            return ListGrillaCronogramaSeguimiento;
-        }
+        //     return ListGrillaCronogramaSeguimiento;
+        // }
 
 
 
@@ -781,6 +784,7 @@ namespace asivamosffie.services
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+            DocumentService _documentService = new DocumentService(_context, _commonService);
 
             ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.Proyecto));
 

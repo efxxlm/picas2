@@ -17,5 +17,7 @@ namespace asivamosffie.model.Models
         public string EmailProponente { get; set; }
 
         public virtual ProcesoSeleccion ProcesoSeleccion { get; set; }
+        public string NombreRepresentanteLegal { get; set; }
+        public string CedulaRepresentanteLegal { get; set; }
     }
 }

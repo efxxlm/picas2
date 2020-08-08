@@ -1,10 +1,12 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
@@ -374,20 +376,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("GetViewSchedules")]
-        public async Task<IActionResult> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
-        {
-            try
-            {
-                var result = await _selectionProcessService.GetViewSchedules(ProcesoSeleccionCronogramaId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        // [Route("GetViewSchedules")]
+        // public async Task<IActionResult> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
+        // {
+        //     try
+        //     {
+        //         var result = await _selectionProcessService.GetViewSchedules(ProcesoSeleccionCronogramaId);
+        //         return Ok(result);
+        //     }
+        //     catch (Exception ex)
+        //     {
 
-                throw ex;
-            }
-        }
+        //         throw ex;
+        //     }
+        // }
 
 
 
