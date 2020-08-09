@@ -10,8 +10,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="tipoIntervencion" required>
-                  <mat-option *ngFor="let state of states" [value]="state.value">
-                    {{ state.name }}
+                  <mat-option *ngFor="let tipo of listaTipoIntervencion" [value]="tipo">
+                    {{ tipo.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -29,8 +29,10 @@
           <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
               <img src="assets/img/icon/lupa.svg" alt="Buscar">
           </button>
-      </div>
-        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--3">
+      </div >
+        <table formGroupName="actividades"
+        class="mat-table cdk-table mat-sort mat-table-style table-form table-form--3"
+                >
           <thead>
             <tr class="mat-header-row cdk-header-row ng-star-inserted">
               <th class="mat-header-cell cdk-header-cell ng-star-inserted">
@@ -43,24 +45,29 @@
                 Fecha de monitoreo
               </th>
               <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
-                GestiónEstado de la actividadEstado de la actividad
+                Estado de la actividad
               </th>
               <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
                 Observación
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let form of addressForm.controls; let i = index" [formGroupName]="i">
+          <tbody *ngIf="actividades.length > 0">
+            <tr 
+            *ngFor="let form of actividades.controls; let i = index" [formGroupName]="i">
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <p>
-                  Realizar visita al terreno y tomar
-                  medidas del área que se trabajara.
+                  <quill-editor class="quill-editor-style" 
+                                [styles]="editorStyle" 
+                                [modules]="config"
+                                formControlName="descripcion" 
+                                readOnly="true" >
+                  </quill-editor>
                 </p>
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <p>
-                  10/06/20
+                  <input type="text" formControlName="fechaMaxima" readonly style="border:0">
                 </p>
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
@@ -68,13 +75,20 @@
                   <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                 </button>
                 <mat-form-field class="example-full-width calendar-class">
-                  <input matInput [matDatepicker]="picker" [max]="maxDate" readonly (click)="picker.open()">
+                  <input matInput [matDatepicker]="picker" formControlName="fechaMonitoreo" [max]="maxDate" readonly (click)="picker.open()">
+                  <input formControlName="procesoSeleccionCronogramaId" type="hidden">
+                  <input formControlName="estadoActividadInicialCodigo" type="hidden">
+                  
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <p>
-                  10/06/20
+                  <mat-select formControlName="estadoActividad" required>
+                    <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
+                      {{ tipo.nombre }}
+                    </mat-option>
+                  </mat-select>
                 </p>
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
@@ -87,7 +101,7 @@
                           </span> -->
                 </div>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                  (onContentChanged)="maxLength($event, 500)"></quill-editor>
+                  (onContentChanged)="maxLength($event, 500)" formControlName="observacion"></quill-editor>
               </td>
             </tr>
           </tbody>
@@ -101,3 +115,5 @@
     </button>
 </div>
 </form>
+
+{{ addressForm.value | json }}

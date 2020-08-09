@@ -47,6 +47,10 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.put<Respuesta>(`${environment.apiUrl}/SelectionProcess/ChangeStateProcesoSeleccion`, procesoSeleccion);
   }
 
+  createEditarCronogramaSeguimiento( cronograma: CronogramaSeguimiento ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarCronogramaSeguimiento`, cronograma );
+  }
+
 }
 
 export interface ProcesoSeleccion{
@@ -143,6 +147,16 @@ export interface ProcesoSeleccionIntegrante {
   porcentajeParticipacion?: number,
   nombreIntegrante?: string,
   procesoSeleccion?: ProcesoSeleccion,
+
+}
+
+export interface CronogramaSeguimiento{
+  cronogramaSeguimientoId?: number,
+  procesoSeleccionCronogramaId?: number,
+  estadoActividadInicialCodigo?: string,
+  estadoActividadFinalCodigo?: string,
+  observacion?: string,
+  procesoSeleccionCronograma?: ProcesoSeleccionCronograma
 
 }
 

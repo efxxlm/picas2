@@ -127,6 +127,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
   }
 
+  listaEstadoCronogramaSeguimiento(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=40`);
+  }
+
 
   public forkProject():Observable<any[]>
   {
