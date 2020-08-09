@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { environment } from 'src/environments/environment';
+import { pid } from 'process';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,14 @@ export class ProcesoSeleccionService implements OnInit {
 
   createEditarProcesoSeleccionCronograma( cronograma: ProcesoSeleccionCronograma ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarProcesoSeleccionCronograma`, cronograma );
+  }
+
+  deleteProcesoSeleccion( pId: number ){
+    return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccion?pId=${ pId }`);
+  }
+
+  changeStateProcesoSeleccion( procesoSeleccion: ProcesoSeleccion ){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/SelectionProcess/ChangeStateProcesoSeleccion`, procesoSeleccion);
   }
 
 }
@@ -148,3 +157,20 @@ export const TiposProcesoSeleccion: TipoProcesoSeleccion = {
   Cerrada:  "2",
   Abierta:  "3"
 }
+
+interface EstadoProcesoSeleccion{
+  Creado: string;
+  AperturaEntramite: string;
+  DevueltaAperturaPorComiteTecnico: string;
+  EnProcesoDeSeleccion: string;
+  RechazadaSeleccionPorComiteTecnico: string;      
+}
+
+export const EstadosProcesoSeleccion: EstadoProcesoSeleccion = {
+  Creado: "1",
+  AperturaEntramite: "2",
+  DevueltaAperturaPorComiteTecnico: "3",
+  EnProcesoDeSeleccion: "4",
+  RechazadaSeleccionPorComiteTecnico: "5",
+}
+

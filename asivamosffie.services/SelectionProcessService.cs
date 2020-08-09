@@ -186,6 +186,94 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> DeleteProcesoSeleccion( int pId, string pUsuarioModificacion )
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+            ProcesoSeleccion ProcesoSeleccionAntiguo = null;
+            try
+            {
+                    strCrearEditar = "ELIMINAR PROCESO CELECCION";
+                    ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
+                    //Auditoria
+                    //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                    ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+
+                    //Registros
+                    ProcesoSeleccionAntiguo.Eliminado = true;
+
+                    _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
+
+                
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                       {
+                           IsSuccessful = true,IsException = false,
+                           IsValidation = false, Data = null,
+                           Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, pUsuarioModificacion, strCrearEditar)
+
+                       };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                       {
+                           IsSuccessful = false, IsException = true,
+                           IsValidation = false, Data = null,
+                           Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                       };
+            }
+        }
+
+        public async Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado )
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+            ProcesoSeleccion ProcesoSeleccionAntiguo = null;
+            try
+            {
+                    strCrearEditar = "CAMBIAR ESTADO PROCESO SELECCION";
+                    ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
+                    //Auditoria
+                    //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                    ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+
+                    //Registros
+                    ProcesoSeleccionAntiguo.EstadoProcesoSeleccionCodigo = pCodigoEstado;
+
+                    _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
+
+                
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                       {
+                           IsSuccessful = true,IsException = false,
+                           IsValidation = false, Data = null,
+                           Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, pUsuarioModificacion, strCrearEditar)
+
+                       };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                       {
+                           IsSuccessful = false, IsException = true,
+                           IsValidation = false, Data = null,
+                           Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                       };
+            }
+        }
+
         #endregion
 
 

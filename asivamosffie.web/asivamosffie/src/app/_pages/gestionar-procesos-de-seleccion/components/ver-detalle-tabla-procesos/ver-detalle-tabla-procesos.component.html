@@ -12,9 +12,9 @@
 
 <div class="dialog-btn">
     <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onEditar()">Ver detalle / Editar</button>
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Eliminar</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onEliminar( data.procesoSeleccionId )">Eliminar</button>
     <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onMonitorearCronograma()">Monitorear cronograma</button>
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Presentar evaluación a comité</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onCerrarProceso( data.procesoSeleccionId )">Cerrar proceso</button>
 </div>
 
 <p>
