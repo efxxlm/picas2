@@ -62,7 +62,8 @@ export class ProcesoSeleccionService implements OnInit {
   }
 
   uploadMassiveLoadElegibilidad( pId: string ){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad`, pId);
+    let objeto = { pIdDocument: pId }
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad?pIdDocument=${ pId }`, null);
   }
   
 }

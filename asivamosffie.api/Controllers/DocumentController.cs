@@ -30,9 +30,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListloadedDocuments")]
-        public async Task<ActionResult<List<ArchivoCargue>>> GetListloadedDocuments()
+        public async Task<ActionResult<List<ArchivoCargue>>> GetListloadedDocuments(string pOrigenId = "1")
         {
-            var result = await _documentService.GetListloadedDocuments();
+            var result = await _documentService.GetListloadedDocuments(pOrigenId);
             return result;
         }
 
