@@ -51,6 +51,10 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarCronogramaSeguimiento`, cronograma );
   }
 
+  getProcesoSeleccionProponentes(){
+    return this.http.get<ProcesoSeleccionProponente[]>(`${environment.apiUrl}/SelectionProcess/getProcesoSeleccionProponentes`);
+  }
+
 }
 
 export interface ProcesoSeleccion{

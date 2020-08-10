@@ -316,6 +316,12 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetProcesoSeleccionProponentes")]
+        public async Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes(){
+            return await _selectionProcessService.GetProcesoSeleccionProponentes();
+        }
+
 
         #endregion
 
@@ -396,19 +402,19 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditarCronogramaSeguimiento")]
-        public async Task<IActionResult> CreateEditarCronogramaSeguimiento([FromBody] CronogramaSeguimiento cronogramaSeguimiento)
+        public async Task<Respuesta> CreateEditarCronogramaSeguimiento([FromBody] CronogramaSeguimiento cronogramaSeguimiento)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 cronogramaSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.CreateEditarCronogramaSeguimiento(cronogramaSeguimiento);
-                return Ok(respuesta);
+                return respuesta;
             }
             catch (Exception ex)
             {
                 respuesta.Data = ex.InnerException.ToString();
-                return BadRequest(respuesta);
+                return respuesta;
             }
         }
 

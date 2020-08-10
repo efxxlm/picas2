@@ -42,5 +42,6 @@ namespace asivamosffie.services.Interfaces
          Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico);
          Task<Respuesta> DeleteProcesoSeleccion( int pId, string pUsuarioModificacion );
          Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado );
+         Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes();
     }
 }

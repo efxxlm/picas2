@@ -160,6 +160,8 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
         this.router.navigate(["/seleccion"]);
 
       }
+    }, error => {
+      this.openDialog("Cronograma", error.message); 
     })
 
   }

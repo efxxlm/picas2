@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ProcesoSeleccionService, ProcesoSeleccionProponente, ProcesoSeleccion, ProcesoSeleccionIntegrante } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 
 @Component({
   selector: 'app-form-datos-proponentes-seleccionados-invitacion-cerrada',
   templateUrl: './proponentes-seleccionados-invitacion-cerrada.component.html',
   styleUrls: ['./proponentes-seleccionados-invitacion-cerrada.component.scss']
 })
-export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent {
+export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent implements OnInit {
 
-  nombresProponentesList: string[] = ['Nathalia Aranda', 'Andres Montealegre', 'Ana Sandoval'];
+  @Input() procesoSeleccion: ProcesoSeleccion;
+  @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
+  nombresProponentesList: ProcesoSeleccionProponente[] = [];
+  idProponenteExistente: string;
+  
   addressForm = this.fb.group({
     cuantosProponentes: [null, Validators.compose([
       Validators.required, Validators.minLength(1), Validators.maxLength(2)])
@@ -45,9 +50,71 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent {
     ]],
   });
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+              private fb: FormBuilder,
+              private procesoSeleccionService: ProcesoSeleccionService
+             ) 
+  {
+
+  }
+  ngOnInit(){
+    return new Promise( resolve => {
+      this.procesoSeleccionService.getProcesoSeleccionProponentes().subscribe( lista => {
+
+        if (!this.procesoSeleccion.procesoSeleccionProponente)
+          this.procesoSeleccion.procesoSeleccionProponente = [];
+          
+        for ( let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++ ){ 
+            lista = lista.filter( p => p.numeroIdentificacion != this.procesoSeleccion.procesoSeleccionProponente[i].numeroIdentificacion )
+        }
+        
+        for ( let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++ ){ 
+          lista = lista.filter( p => p.numeroIdentificacion != this.procesoSeleccion.procesoSeleccionProponente[i].numeroIdentificacion )
+        }
+
+        this.nombresProponentesList = lista;
+        resolve();
+      })
+    })
+  }
+
+  changeProponente(){
+    console.log(this.addressForm.get('nombresProponentes').value);
+    
+    if (!this.procesoSeleccion.procesoSeleccionProponente)
+      this.procesoSeleccion.procesoSeleccionProponente = [];
+    
+    for( let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++)
+    {
+      if ( this.procesoSeleccion.procesoSeleccionProponente[i].procesoSeleccionProponenteId == "0" )
+        this.procesoSeleccion.procesoSeleccionProponente.splice( i, 1);    
+        
+    }
+
+    if ( this.addressForm.get('nombresProponentes').value != 'Nuevo' ){
+      let elemento: ProcesoSeleccionProponente = this.addressForm.get('nombresProponentes').value;
+      elemento.procesoSeleccionProponenteId = "0";
+      elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;
+      this.procesoSeleccion.procesoSeleccionProponente.push( elemento );    
+      this.idProponenteExistente = this.addressForm.get('nombresProponentes').value.procesoSeleccionProponenteId; 
+    }
+  }
+
+  cargarRegistro(){
+    
+
+    this.ngOnInit().then(() =>       
+        { 
+          
+        });
+  }
 
   onSubmit() {
-    alert('Thanks!');
+    this.guardar.emit(null);
   }
+
+  onSubmitNuevoProponente(){
+    this.guardar.emit(null);
+  }
+
 }

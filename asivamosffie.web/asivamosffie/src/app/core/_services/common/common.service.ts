@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
+import { Usuario } from '../autenticacion/autenticacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -129,6 +130,10 @@ export class CommonService {
 
   listaEstadoCronogramaSeguimiento(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=40`);
+  }
+
+  getUsuariosByPerfil( pIdPerfil: number ){
+    return this.http.get<Usuario[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
   }
 
 

@@ -571,6 +571,11 @@ namespace asivamosffie.services
             return await _context.ProcesoSeleccionCronograma.FindAsync(id);
         }
 
+        public async Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes()
+        {
+            return await _context.ProcesoSeleccionProponente.Where( p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId ).ToListAsync();
+        }
+
         public async Task<ActionResult<List<GrillaProcesoSeleccionProponente>>> GetGridProcesoSeleccionProponente(int? procesoSeleccionId)
         {
             List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente =

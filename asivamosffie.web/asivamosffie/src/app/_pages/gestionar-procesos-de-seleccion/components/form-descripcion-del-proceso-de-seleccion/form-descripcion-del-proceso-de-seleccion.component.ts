@@ -6,6 +6,7 @@ import { ProcesoSeleccion, ProcesoSeleccionGrupo, ProcesoSeleccionCronograma, Pr
 import { delay } from 'rxjs/operators';
 import { promise } from 'protractor';
 import { resolve } from 'dns';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   listaTipoIntervencion: Dominio[];
   listaTipoAlcance: Dominio[];
   listatipoPresupuesto: Dominio[];
+  listaResponsables: Usuario[];
   addressForm = this.fb.group({});
 
   constructor(
@@ -40,12 +42,14 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.commonService.listaTipoIntervencion(),
         this.commonService.listaTipoAlcance(),
         this.commonService.listaPresupuestoProcesoSeleccion(),
+        this.commonService.getUsuariosByPerfil( 2 ),
   
       ]).subscribe( respuesta => {
         
         this.listaTipoIntervencion = respuesta[0];
         this.listaTipoAlcance = respuesta[1];
         this.listatipoPresupuesto = respuesta[2];
+        this.listaResponsables = respuesta[3];
         resolve();
   
       })
@@ -134,6 +138,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       cuantosGrupos: [null, Validators.compose([
         Validators.minLength(1), Validators.maxLength(2)])
       ],
+      responsableEquipoTecnico: [],
+      responsableEquipoestructurado: [],
       grupos: this.fb.array([
         this.fb.group({
           procesoSeleccionGrupoId: [],
@@ -181,9 +187,11 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     this.procesoSeleccion.tipoIntervencionCodigo = this.addressForm.get('tipoIntervencion').value ? this.addressForm.get('tipoIntervencion').value.codigo : null,
     this.procesoSeleccion.tipoAlcanceCodigo = this.addressForm.get('tipoAlcance').value ? this.addressForm.get('tipoAlcance').value.codigo : null,
     this.procesoSeleccion.esDistribucionGrupos = this.addressForm.get('distribucionEnGrupos').value ? this.addressForm.get('distribucionEnGrupos').value.codigo : null,
+    this.procesoSeleccion.responsableTecnicoUsuarioId = this.addressForm.get('responsableEquipoTecnico').value ? this.addressForm.get('responsableEquipoTecnico').value.usuarioId : null,
+    this.procesoSeleccion.responsableEstructuradorUsuarioid = this.addressForm.get('responsableEquipoestructurado').value ? this.addressForm.get('responsableEquipoestructurado').value.usuarioId : null,
     this.procesoSeleccion.procesoSeleccionGrupo  =[],
     this.procesoSeleccion.procesoSeleccionCronograma = []
-    
+
     this.procesoSeleccion.procesoSeleccionGrupo = [];
 
      listaGrupos.controls.forEach(control => {
@@ -216,7 +224,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       posicion++;
     })
 
-    //console.log(procesoS);
+    console.log(this.procesoSeleccion);
     this.guardar.emit(null);
   }
 
@@ -227,6 +235,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         { 
           let tipoIntervencion = this.listaTipoIntervencion.find( t => t.codigo == this.procesoSeleccion.tipoIntervencionCodigo );
           let tipoAlcance = this.listaTipoAlcance.find( a => a.codigo == this.procesoSeleccion.tipoAlcanceCodigo );
+          let responsableEquipoTecnico = this.listaResponsables.find( a => a.usuarioId == this.procesoSeleccion.responsableTecnicoUsuarioId );
+          let responsableEquipoestructurado = this.listaResponsables.find( a => a.usuarioId == this.procesoSeleccion.responsableEstructuradorUsuarioid );
           let listaGrupo = this.addressForm.get('grupos') as FormArray
           let listaCronograma = this.addressForm.get('cronogramas') as FormArray
 
@@ -239,6 +249,9 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
           this.addressForm.get('tipoIntervencion').setValue( tipoIntervencion );
           this.addressForm.get('tipoAlcance').setValue( tipoAlcance );
           this.addressForm.get('distribucionEnGrupos').setValue( this.procesoSeleccion.esDistribucionGrupos ? this.procesoSeleccion.esDistribucionGrupos.toString() : null );
+
+          this.addressForm.get('responsableEquipoTecnico').setValue( responsableEquipoTecnico );
+          this.addressForm.get('responsableEquipoestructurado').setValue( responsableEquipoestructurado );
 
           this.procesoSeleccion.procesoSeleccionGrupo.forEach( grupo => {
             let control = this.createGrupo();

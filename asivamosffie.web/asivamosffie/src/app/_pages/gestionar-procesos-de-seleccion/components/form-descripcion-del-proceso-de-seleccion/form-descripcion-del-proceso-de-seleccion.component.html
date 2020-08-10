@@ -234,6 +234,49 @@
             </div>
           </div>
       </div>
+
+      <div>
+        <div>
+          <h2 class="card-subTitle">Responsables</h2>
+
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="responsableEquipoTecnico" class="label-left">Responsable del equipo técnico</label>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="responsableEquipoTecnico" required>
+                        <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
+                          {{ responsable.nombres }} {{ responsable.apellidos }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="responsableEquipoestructurado" class="label-left">Responsable del equipo estructurador</label>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="responsableEquipoestructurado" required>
+                        <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
+                          {{ responsable.nombres }} {{ responsable.apellidos }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
     
     </mat-card-content>
   </mat-card>
