@@ -55,6 +55,16 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.get<ProcesoSeleccionProponente[]>(`${environment.apiUrl}/SelectionProcess/getProcesoSeleccionProponentes`);
   }
 
+  setValidateMassiveLoadElegibilidad( archivoParaSubir: File ){
+    const formData = new FormData(); 
+    formData.append('file', archivoParaSubir, archivoParaSubir.name);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/setValidateMassiveLoadElegibilidad`, formData);
+  }
+
+  uploadMassiveLoadElegibilidad( pId: string ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad`, pId);
+  }
+  
 }
 
 export interface ProcesoSeleccion{
