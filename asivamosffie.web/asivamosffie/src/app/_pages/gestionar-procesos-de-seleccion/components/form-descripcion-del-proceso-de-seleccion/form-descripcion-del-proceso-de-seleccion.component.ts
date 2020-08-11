@@ -197,6 +197,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
      listaGrupos.controls.forEach(control => {
       let grupo: ProcesoSeleccionGrupo = {
         nombreGrupo: control.get('nombreGrupo').value,
+
         plazoMeses: control.get('plazoMeses').value,
         procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
         procesoSeleccionGrupoId: control.get('procesoSeleccionGrupoId').value,
@@ -255,10 +256,12 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
           this.procesoSeleccion.procesoSeleccionGrupo.forEach( grupo => {
             let control = this.createGrupo();
+            let tipoPresupuestoValor = this.listatipoPresupuesto.find( p => p.codigo == grupo.tipoPresupuestoCodigo );
+
             control.get('nombreGrupo').setValue( grupo.nombreGrupo );
             control.get('plazoMeses').setValue( grupo.plazoMeses );
             control.get('procesoSeleccionGrupoId').setValue( grupo.procesoSeleccionGrupoId );
-            control.get('tipoPresupuesto').setValue( grupo.tipoPresupuestoCodigo );
+            control.get('tipoPresupuesto').setValue( tipoPresupuestoValor );
             control.get('valor').setValue( grupo.valor );
             control.get('valorMinimoCategoria').setValue( grupo.valorMinimoCategoria );
             control.get('valorMaximoCategoria').setValue( grupo.valorMaximoCategoria );
