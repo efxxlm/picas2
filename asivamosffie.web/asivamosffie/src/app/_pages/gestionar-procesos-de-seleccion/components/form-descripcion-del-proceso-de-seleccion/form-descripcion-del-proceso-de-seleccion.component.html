@@ -149,6 +149,39 @@
                 </div>
               </div>
             </div>
+            <div class="row" *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '1' ">
+              <div class="pr-1">
+                <label for="valor" class="label-left">Valor</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #valor type="number" maxlength="20" formControlName="valor">
+                </mat-form-field>
+                <span class="contador">{{20 - valor.value.length}}</span>
+              </div>
+            </div>
+            <div class="row" *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
+              <div class="pr-1">
+                <label for="valorMinimoCategoria" class="label-left">Valor mínimo categoría de ejecución</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #valorMinimoCategoria type="number" maxlength="20" formControlName="valorMinimoCategoria">
+                </mat-form-field>
+                <span class="contador">{{20 - valorMinimoCategoria.value.length}}</span>
+              </div>
+            </div>
+            <div class="row" *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
+              <div class="pr-1">
+                <label for="valorMaximoCategoria" class="label-left">Valor máximo categoría de ejecución</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #valorMaximoCategoria type="number" maxlength="20" formControlName="valorMaximoCategoria">
+                </mat-form-field>
+                <span class="contador">{{20 - valorMaximoCategoria.value.length}}</span>
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-8">
                 <div class="row">
