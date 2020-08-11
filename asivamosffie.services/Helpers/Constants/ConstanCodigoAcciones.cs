@@ -16,12 +16,8 @@
         public const string Editar_Proyecto = "12";
         public const string RegistrarAportante = "13";
         public const string Crear_Proyecto_Administrativo = "15";
-        public const string Crear_Contratacion_Proyecto = "16";
-
-        public const string Crear_Editar_Contratacion_Proyecto = "18";
-        public const string Crear_Editar_Contratacion_Proyecto_Aportante = "19";
-
-        public const string Crear_Editar_Fuentes_Financiacion= "20";
+        public const string Eliminar_Cofinanciacion = "17 ";
+        public const string Crear_Editar_Fuentes_Financiacion = "20";
         public const string Eliminar_Fuentes_Financiacion = "21";
 
         public const string Crear_Editar_Cuenta_Bancaria = "23";
@@ -30,8 +26,12 @@
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
 
-
-
+        public const string Crear_Proceso_Seleccion = "18";
+         public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
+        public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
+        public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
+        public const string Crear_Editar_Cofinanciacion = "31";
+        public const string Crear_Editar_Cronograma_Seguimiento = "37";
 
 
     }

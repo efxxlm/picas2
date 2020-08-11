@@ -9,6 +9,8 @@ import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerdos.component';
 
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+
 @NgModule({
   declarations: [BotonRegistrarAcuerdoComponent, RegistrarAcuerdoComponent, TablaAcuerdosComponent],
   imports: [
@@ -16,7 +18,8 @@ import { TablaAcuerdosComponent } from './components/tabla-acuerdos/tabla-acuerd
     GestionarAcuerdoCofinanciacionRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    CurrencyMaskModule
   ]
 })
 export class GestionarAcuerdoCofinanciacionModule { }

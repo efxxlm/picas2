@@ -1,5 +1,7 @@
 .header {
+    border-top: solid 1em #174193;;
     border-top: solid 1em var(--mainColor);
+    border-bottom: solid 0.5em #174193;;
     border-bottom: solid 0.5em var(--mainColor);
     padding: 1em;
     display: flex;
@@ -25,11 +27,13 @@
     &--aside{
         text-align: center;
         line-height: 1.2;
+        color: #174193;;
         color: var(--mainColor);
         @media only screen and (min-width: 48em) {
             position: absolute;
-            right: 2em;
-            top: calc(50% - 16px);
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         &--usuario {

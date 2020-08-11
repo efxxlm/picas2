@@ -13,6 +13,7 @@ using asivamosffie.services.Helpers;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
+using Newtonsoft.Json;
 
 namespace asivamosffie.services
 {
@@ -36,8 +37,10 @@ namespace asivamosffie.services
             {
 
                 Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
-
                 Usuario usuario = await result;
+                List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
+
+               
 
                 // User doesn't exist
                 if (usuario == null)
@@ -60,12 +63,12 @@ namespace asivamosffie.services
                 }
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
                 {                                   
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };                    
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = new { datausuario=usuario, dataperfiles=perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };                    
                 }
                 else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = new { datausuario = usuario, dataperfiles = perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };
                   
                 }
 
@@ -79,7 +82,9 @@ namespace asivamosffie.services
             }
         }
 
-        private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser)
+        
+
+        private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser, List<UsuarioPerfil> prmPerfiles)
         {
             var token = new JwtTokenBuilder()
             .AddSecurityKey(JwtSecurityKey.Create(prmSecret))
@@ -89,7 +94,7 @@ namespace asivamosffie.services
             //.AddClaim("Name", result.Primernombre+" "+result.Primerapellido)
             .AddClaim("User", prmUser.Email)
             .AddClaim("UserId", prmUser.UsuarioId.ToString())
-            //.AddClaim("Title", result.Cargo)
+            .AddClaim("Rol", JsonConvert.SerializeObject(prmPerfiles))
             //.AddRole(result.IdrolNavigation.Nombre)
             .Build();
             return token;
@@ -99,7 +104,7 @@ namespace asivamosffie.services
             try
             {
                 Usuario usuario = await _context.Usuario.Where(u => u.Email == pMail
-                                                 && u.Eliminado.Value == false).SingleOrDefaultAsync();
+                                                 && u.Eliminado.Value == false).SingleOrDefaultAsync();              
                 return usuario;
 
             }

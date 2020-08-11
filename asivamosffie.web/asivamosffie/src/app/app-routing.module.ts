@@ -1,6 +1,15 @@
+import { GestionarAcuerdoCofinanciacionRoutingModule } from './_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion-routing.module';
 import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@angular/router';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import { LayoutComponent } from './layout/layout.component';
 
@@ -32,10 +41,28 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
       },
       {
-        path: 'gestionarAcueros',
+        path: 'cargarMasivamente',
+        // tslint:disable-next-line: max-line-length
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
+          .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+      },
+      {
+        path: 'gestionarAcuerdos',
         loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
         .then(m => m.GestionarAcuerdoCofinanciacionModule)
       },
+      {
+        path: 'crearProyecto',
+        loadChildren: () => import('./_pages/crear-proyecto-tecnico/crear-proyecto-tecnico.module')
+          .then(m => m.CrearProyectoTecnicoModule)
+      }
+      ,
+      {
+        path: 'crearProyectoAdministrativo',
+        loadChildren: () => import('./_pages/crear-proyecto-admin/crear-proyecto-admin.module')
+          .then(m => m.CrearProyectoAdminModule)
+      }
+      ,
       {
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
@@ -51,8 +78,18 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
+        path: 'gestionarFuentes',
+        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
+        .then(m => m.GestionarFuentesDeFinanciacionModule)
+      },
+      {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
+      },
+      {
+        path: 'seleccion',
+        loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
+        .then(m => m.GestionarProcesosDeSeleccionModule)
       },
     ]
 
@@ -66,7 +103,12 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
     preloadingStrategy: PreloadAllModules
-  })],
-  exports: [RouterModule]
+  }),
+  MatMomentDateModule,
+  MatDatepickerModule],
+  exports: [RouterModule],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es'}
+  ]
 })
 export class AppRoutingModule { }

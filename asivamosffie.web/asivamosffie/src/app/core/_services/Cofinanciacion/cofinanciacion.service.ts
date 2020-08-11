@@ -17,7 +17,7 @@ export class CofinanciacionService {
   vigenciasAcuerdoCofinanciacion(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];
-    for (let i = 2015; i < fecha.getFullYear(); i++){
+    for (let i = 2015; i <= fecha.getFullYear(); i++){
       vigencias.push(i);
     }
 
@@ -29,7 +29,12 @@ export class CofinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/CreateorUpdateCofinancing`,cofinanciacion);
   }
 
-  listaAcuerdosCofinanciacion(){
+  EliminarCofinanciacionByCofinanciacionId(idcof:number)
+  {    
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarCofinanciacionByCofinanciacionId?pCofinancicacionId=${idcof}`,null);
+  }
+
+  listaAcuerdosCofinanciacion(){ 
     return this.http.get<Cofinanciacion[]>(`${environment.apiUrl}/Cofinancing/GetListCofinancing`);
   }
 
@@ -45,7 +50,6 @@ export class CofinanciacionService {
   listaAportantesByTipoAportante(pTipoAportanteID: number){
     return this.http.get<CofinanciacionAportante[]>(`${environment.apiUrl}/Cofinancing/GetAportantesByTipoAportante?pTipoAportanteID=${pTipoAportanteID}`);
   }
-
 }
 
 export interface Cofinanciacion{
@@ -66,6 +70,7 @@ export interface CofinanciacionAportante{
   municipioId: number,
   cofinanciacionDocumento: CofinanciacionDocumento[],
   eliminado?:boolean,
+  valortotal?:number//just for view form
   nombreAportante?: string,
   registroPresupuestal?: RegistroPresupuestal[],
   cofinanciacion?: Cofinanciacion
@@ -75,7 +80,7 @@ export interface CofinanciacionDocumento{
   cofinanciacionDocumentoId: number,
   cofinanciacionAportanteId: number,
   vigenciaAporte: number,
-  valorDocumento: string,
+  valorDocumento: number,
   tipoDocumentoId: number,
   numeroActa: string,
   fechaActa?: Date,

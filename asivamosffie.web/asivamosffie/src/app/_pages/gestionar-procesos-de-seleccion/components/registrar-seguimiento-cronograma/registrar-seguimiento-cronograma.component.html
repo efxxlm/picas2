@@ -1,0 +1,119 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label for="tipoIntervencion" class="label-left">Tipo de Intervención</label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="tipoIntervencion" required>
+                  <mat-option *ngFor="let tipo of listaTipoIntervencion" [value]="tipo">
+                    {{ tipo.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <div class="busqueda mt-1em">
+          <mat-form-field appearance="outline" class="busqueda--input">
+              <mat-label>Buscador / Filtro</mat-label>
+              <input matInput #filtro>
+          </mat-form-field>
+          <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+              <img src="assets/img/icon/lupa.svg" alt="Buscar">
+          </button>
+      </div >
+        <table formGroupName="actividades"
+        class="mat-table cdk-table mat-sort mat-table-style table-form table-form--3"
+                >
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Actividad
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Fecha máxima
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Fecha de monitoreo
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
+                Estado de la actividad
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
+                Observación
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="actividades.length > 0">
+            <tr 
+            *ngFor="let form of actividades.controls; let i = index" [formGroupName]="i">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <p>
+                  <quill-editor class="quill-editor-style" 
+                                [styles]="editorStyle" 
+                                [modules]="config"
+                                formControlName="descripcion" 
+                                readOnly="true" >
+                  </quill-editor>
+                </p>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <p>
+                  <input type="text" formControlName="fechaMaxima" readonly style="border:0">
+                </p>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+                <mat-form-field class="example-full-width calendar-class">
+                  <input matInput [matDatepicker]="picker" formControlName="fechaMonitoreo" [max]="maxDate" readonly (click)="picker.open()">
+                  <input formControlName="procesoSeleccionCronogramaId" type="hidden">
+                  <input formControlName="estadoActividadInicialCodigo" type="hidden">
+                  
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <p>
+                  <mat-select formControlName="estadoActividad" required>
+                    <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
+                      {{ tipo.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </p>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <div class="d-flex justify-content-center">
+                  <!-- <span class="contador" *ngIf="addressForm.get(i).get('descripcion').value">
+                              {{500 - addressForm.get(i).get('descripcion').value.length}}
+                          </span>
+                          <span class="contador" *ngIf="addressForm.get(i).get('descripcion').value">
+                              500
+                          </span> -->
+                </div>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                  (onContentChanged)="maxLength($event, 500)" formControlName="observacion"></quill-editor>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+</div>
+</form>
+
+{{ addressForm.value | json }}

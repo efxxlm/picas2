@@ -12,7 +12,7 @@
 
         <ng-container matColumnDef="fechaCreacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
-            <td mat-cell *matCellDef="let element"> {{element.fechaCreacion}} </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion | date:'dd/MM/yyyy'}}</b> </td>
         </ng-container>
 
         <ng-container matColumnDef="numeroAcuerdo">
@@ -27,12 +27,12 @@
 
         <ng-container matColumnDef="valorTotal">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Total del acuerdo </th>
-            <td mat-cell *matCellDef="let element"> {{element.valorTotal}} </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.valorTotal| currency:'USD':'symbol':'1.0'}}</b> </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoRegistro">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element"> {{element.estadoRegistro}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.registroCompleto?"Completo":"Incompleto"}} </td>
         </ng-container>
 
         <ng-container matColumnDef="id">

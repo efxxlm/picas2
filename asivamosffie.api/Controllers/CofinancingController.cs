@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -30,8 +31,8 @@ namespace asivamosffie.api.Controllers
             try
             { 
                 HttpContext.Connection.RemoteIpAddress.ToString();
-               // pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                Task<object> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
+                pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -65,7 +66,19 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
+        [Route("GetListAportanteByTipoAportanteId")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListAportanteByTipoAportanteId(pTipoAportanteID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [Route("GetCofinancingByIdCofinancing")]
         [HttpGet]
@@ -74,6 +87,40 @@ namespace asivamosffie.api.Controllers
             var result = await _Cofinancing.GetCofinanciacionByIdCofinanciacion(IdCofinancing);
             return result;
         }
+
+        [Route("EliminarCofinanciacionByCofinanciacionId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("GetListDocumentoByAportanteId")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListDocumentoByAportanteId(pAportanteID);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
 
         [Route("GetAportantesByTipoAportante")]
         [HttpGet]

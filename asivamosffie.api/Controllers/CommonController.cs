@@ -64,7 +64,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
-        public async Task<ActionResult<List<Localicacion>>> GetListDepartamento(string idDepartamento)
+        public async Task<ActionResult<List<Localicacion>>> GetListMunicipio(string idDepartamento)
         {
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
@@ -126,6 +126,21 @@ namespace asivamosffie.api.Controllers
         public async Task<ActionResult<List<InstitucionEducativaSede>>> ListSedeByInstitucionEducativaId(int idInstitucionEducativaId)
         {
             var result = await common.ListSedeByInstitucionEducativaId(idInstitucionEducativaId);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetInstitucionEducativaById")]
+        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int idInstitucionEducativaId)
+        {
+            var result = await common.GetInstitucionEducativaById(idInstitucionEducativaId);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetUsuariosByPerfil")]
+        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil ){
+            var result = await common.GetUsuariosByPerfil(pIdPerfil);
             return result;
         }
     }

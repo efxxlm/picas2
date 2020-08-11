@@ -12,10 +12,10 @@
     <!-- <button (click)="probarconsumo()">para ver el otro asunto</button> -->
     <!-- {{data|json}} -->
 
-    <section class="menu">
-        <a *ngFor="let optionMenu of optionsMenu"
-        [routerLink]="optionMenu.link"
+    <section class="menu" >
+        <a *ngFor="let men of menu"
+        [routerLink]="men.link"
         mat-button class="menu--link"
-        >{{optionMenu.title}}</a>
+        >{{men.title}}</a>
     </section>
 </div>

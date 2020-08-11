@@ -5,8 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class DocumentoApropiacion
     {
-
-
         public int DocumentoApropiacionId { get; set; }
         public int AportanteId { get; set; }
         public string VigenciaAporteCodigo { get; set; }
@@ -18,6 +16,5 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
 
         public virtual Aportante Aportante { get; set; }
-
     }
 }

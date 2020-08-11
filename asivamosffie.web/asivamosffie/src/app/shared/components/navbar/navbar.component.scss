@@ -1,4 +1,5 @@
 .navbar {
+    background-color: #174193;;
     background-color: var(--mainColor);
     margin-top: -.5em;
     color: #fff;
@@ -7,6 +8,7 @@
     .mat-button {
         color: #fff;
         &.active {
+            color: #fdc101;
             color: var(--tertiaryColor);
             // position: relative;
 
@@ -18,6 +20,7 @@
                 width: calc(100% - 5em);
                 left: calc(100% - (100% - 2.5em));
                 bottom: .5em;
+                background-color: #fdc101;
                 background-color: var(--tertiaryColor);
                 animation-name: linkActive;
                 animation-duration: .3s;

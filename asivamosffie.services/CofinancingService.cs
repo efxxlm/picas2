@@ -29,6 +29,91 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public static bool ValidarRegistroCompleto(Cofinanciacion cofinanciacion)
+        {
+
+            if (string.IsNullOrEmpty(cofinanciacion.VigenciaCofinanciacionId.ToString()))
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
+                {
+                    if (string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString()) 
+                        || string.IsNullOrEmpty(cofinanciacionAportante.MunicipioId.ToString())
+                        )
+
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        foreach (var CofinanciacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                        {
+
+                            if (string.IsNullOrEmpty(CofinanciacionDocumento.VigenciaAporte.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.ValorDocumento.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.TipoDocumentoId.ToString())
+                                           //|| string.IsNullOrEmpty(CofinanciacionDocumento.NumeroActa.ToString())
+                                           //|| string.IsNullOrEmpty(CofinanciacionDocumento.FechaActa.ToString())
+                                           //|| string.IsNullOrEmpty(CofinanciacionDocumento.ValorTotalAportante.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.NumeroAcuerdo.ToString())
+                                           || string.IsNullOrEmpty(CofinanciacionDocumento.FechaAcuerdo.ToString())
+                                        )
+                            {
+                                return false;
+                            }
+                        }
+                    }
+
+                }
+
+                return true;
+            }
+
+
+
+        }
+
+        public async Task<Respuesta> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId, string pUsuarioModifico)
+        {
+            //Julian Martinez
+            int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                Cofinanciacion cofinanciacion = _context.Cofinanciacion.Find(pCofinancicacionId);
+                cofinanciacion.Eliminado = true;
+                cofinanciacion.UsuarioModificacion = pUsuarioModifico;
+                cofinanciacion.FechaModificacion = DateTime.Now;
+                //Si falla descomentar el de abajo
+                // _context.Update(cofinanciacion);
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesCofinanciacion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.OperacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesProyecto.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccionEliminarCofinanciacion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
+
+        }
 
         public async Task<Cofinanciacion> GetCofinanciacionByIdCofinanciacion(int idCofinanciacion)
         {//con include
@@ -43,7 +128,7 @@ namespace asivamosffie.services
 
             //includefilter
             Cofinanciacion cofinanciacion = new Cofinanciacion();
-             cofinanciacion =  _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
+            cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
 
             if (cofinanciacion != null)
             {
@@ -75,136 +160,157 @@ namespace asivamosffie.services
             return cofinanciacion;
         }
 
-        public async Task<object> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion)
+        public async Task<Respuesta> CreateorUpdateCofinancing(Cofinanciacion cofinanciacion)
         {
-            Respuesta respuesta = new Respuesta();
-            bool IsSuccessful = false;
-            int idCofinancicacionAportante = 0;
+            //Se modifica los campos obligatorios de base de datos y se devuelve el CofinanicacionId en el data respuesta para cuando se
 
-            if (cofinanciacion.CofinanciacionAportante.Count > 0)
+            int IdAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
             {
-                try
+                string CreadoEditado;
+                if (cofinanciacion.CofinanciacionId == 0)
                 {
-                    if (string.IsNullOrEmpty(cofinanciacion.CofinanciacionId.ToString()) || cofinanciacion.CofinanciacionId == 0)
+                    CreadoEditado = "CREAR COFINANCIACIÓN ";
+                    cofinanciacion.Eliminado = false;
+                    cofinanciacion.FechaCreacion = DateTime.Now;
+                    cofinanciacion.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
+
+                    //Validar Registro Completo
+                    if (string.IsNullOrEmpty(cofinanciacion.VigenciaCofinanciacionId.ToString()))
                     {
-
-                        cofinanciacion.Eliminado = false;
-                        cofinanciacion.FechaCreacion = DateTime.Now;
-                        _context.Cofinanciacion.Add(cofinanciacion);
-                        respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.CreadoCorrrectamente };
-
+                        cofinanciacion.RegistroCompleto = false;
                     }
                     else
                     {
-                        Cofinanciacion cofinanciacionEdit = _context.Cofinanciacion.Find(cofinanciacion.CofinanciacionId);
-                        cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
-                        cofinanciacionEdit.FechaModificacion = DateTime.Now;
-                        respuesta = new Respuesta() { IsValidation = true, Code = ConstantMessagesCofinanciacion.EditadoCorrrectamente };
+                        cofinanciacion.RegistroCompleto = true;
                     }
 
+
+                    //Foreach para poner campos de auditoria en las tablas relacionadas !
 
                     foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                     {
-                        cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
                         cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
-                        idCofinancicacionAportante = await CreateCofinancingContributor(cofinanciacionAportante);
+                        cofinanciacionAportante.FechaCreacion = DateTime.Now;
+                        cofinanciacionAportante.Eliminado = false;
 
-                        //Se crear los CofinanciacionDocumento relacionados a este aportante
-                        if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
+                        foreach (var documentoAportante in cofinanciacionAportante.CofinanciacionDocumento)
                         {
-                            foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
-                            {
-                                cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
-                                cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
-                                await CreateCofinancingDocuments(cofinancicacionDocumento);
-                            }
+                            documentoAportante.Eliminado = false;
+                            documentoAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                            documentoAportante.FechaCreacion = DateTime.Now;
                         }
                     }
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    respuesta = new Respuesta() { IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
-                    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.Error, cofinanciacion.UsuarioCreacion, ex.ToString() + ex.InnerException);
-                    return respuesta;
-                }
-            }
-            else
-            {
-                respuesta = new Respuesta() { IsValidation = false, Code = ConstantMessagesCofinanciacion.CamposIncompletos };
-
-            }
-            respuesta.Data = cofinanciacion.CofinanciacionId;
-            respuesta.IsSuccessful = IsSuccessful;
-            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, respuesta.Code, (int)enumeratorAccion.CrearActualizarCofinanciacion, cofinanciacion.UsuarioCreacion, " ");
-            return respuesta;
-        }
-
-        public async Task<int> CreateCofinancingContributor(CofinanciacionAportante pcofinanciacionAportante)
-        {
-            try
-            {
-
-                if (string.IsNullOrEmpty(pcofinanciacionAportante.CofinanciacionAportanteId.ToString()) || pcofinanciacionAportante.CofinanciacionAportanteId == 0)
-                {
-                    pcofinanciacionAportante.FechaCreacion = DateTime.Now;
-                    pcofinanciacionAportante.Eliminado = false;
-                    _context.CofinanciacionAportante.Add(pcofinanciacionAportante);
+                    _context.Cofinanciacion.Add(cofinanciacion);
                 }
                 else
                 {
-
-                    CofinanciacionAportante cofinanciacionAportanteEdit = _context.CofinanciacionAportante.Find(pcofinanciacionAportante.CofinanciacionAportanteId);
-                    cofinanciacionAportanteEdit.UsuarioModificacion = pcofinanciacionAportante.UsuarioCreacion;
-                    cofinanciacionAportanteEdit.FechaModificacion = DateTime.Now;
-                    cofinanciacionAportanteEdit.MunicipioId = pcofinanciacionAportante.MunicipioId;
-                    cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
-                    cofinanciacionAportanteEdit.TipoAportanteId = pcofinanciacionAportante.TipoAportanteId;
-                    cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
+                    CreadoEditado = "EDITAR COFINANCIACIÓN";
+                    Cofinanciacion cofinanciacionEdit = _context.Cofinanciacion.Find(cofinanciacion.CofinanciacionId);
+                    cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
+                    cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
+                    cofinanciacionEdit.FechaModificacion = DateTime.Now;
+                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion;
                 }
 
-                //await _context.SaveChangesAsync();
-                return pcofinanciacionAportante.CofinanciacionAportanteId;
+                foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
+                {
+
+                    if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
+                    {
+                        cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
+                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                        int idCofinancicacionAportante = EditCofinancingContributor(cofinanciacionAportante);
+
+
+                        if (idCofinancicacionAportante > 0)
+                        {
+                            foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                            {
+
+                                if (cofinancicacionDocumento.CofinanciacionDocumentoId > 0)
+                                {
+                                    cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                                    cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
+                                    CreateCofinancingDocuments(cofinancicacionDocumento);
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                return
+                       new Respuesta
+                       {
+                           IsSuccessful = true,
+                           IsException = false,
+                           IsValidation = false,
+                           Data = cofinanciacion,
+                           Code = ConstantMessagesProyecto.OperacionExitosa,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.OperacionExitosa, IdAccion, cofinanciacion.UsuarioCreacion, CreadoEditado)
+                       };
+
             }
             catch (Exception ex)
             {
-                CofinanciacionAportante pcofinanciacionAportanteNull = new CofinanciacionAportante();
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = ConstantMessagesProyecto.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccion, cofinanciacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                     };
+            }
+
+        }
+
+        public int EditCofinancingContributor(CofinanciacionAportante pcofinanciacionAportante)
+        {
+            try
+            {
+                CofinanciacionAportante cofinanciacionAportanteEdit = _context.CofinanciacionAportante.Find(pcofinanciacionAportante.CofinanciacionAportanteId);
+                cofinanciacionAportanteEdit.UsuarioModificacion = pcofinanciacionAportante.UsuarioCreacion;
+                cofinanciacionAportanteEdit.FechaModificacion = DateTime.Now;
+                cofinanciacionAportanteEdit.MunicipioId = pcofinanciacionAportante.MunicipioId;
+                cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
+                cofinanciacionAportanteEdit.TipoAportanteId = pcofinanciacionAportante.TipoAportanteId;
+                cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
+
+                return pcofinanciacionAportante.CofinanciacionAportanteId;
+            }
+            catch (Exception)
+            {
                 return 0;
             }
 
         }
 
-        public async Task<int> CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento)
+        public int CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento)
         {
             try
             {
-                if (string.IsNullOrEmpty(pCofinanciacionDocumento.CofinanciacionDocumentoId.ToString()) || pCofinanciacionDocumento.CofinanciacionDocumentoId == 0)
-                {
-                    pCofinanciacionDocumento.FechaCreacion = DateTime.Now;
-                    pCofinanciacionDocumento.Eliminado = false;
-                    _context.CofinanciacionDocumento.Add(pCofinanciacionDocumento);
-                }
-                else
-                {
-                    CofinanciacionDocumento cofinanciacionDocumentoEdit = _context.CofinanciacionDocumento.Find(pCofinanciacionDocumento.CofinanciacionDocumentoId);
+                CofinanciacionDocumento cofinanciacionDocumentoEdit = _context.CofinanciacionDocumento.Find(pCofinanciacionDocumento.CofinanciacionDocumentoId);
 
-                    cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion;
-                    cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
-                    cofinanciacionDocumentoEdit.FechaActa = pCofinanciacionDocumento.FechaActa;
-                    cofinanciacionDocumentoEdit.FechaAcuerdo = pCofinanciacionDocumento.FechaAcuerdo;
-                    cofinanciacionDocumentoEdit.NumeroActa = pCofinanciacionDocumento.NumeroActa;
-                    cofinanciacionDocumentoEdit.TipoDocumentoId = pCofinanciacionDocumento.TipoDocumentoId;
-                    cofinanciacionDocumentoEdit.ValorDocumento = pCofinanciacionDocumento.ValorDocumento;
-                    cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante;
-                }
+                cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion;
+                cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
+                cofinanciacionDocumentoEdit.FechaActa = pCofinanciacionDocumento.FechaActa;
+                cofinanciacionDocumentoEdit.FechaAcuerdo = pCofinanciacionDocumento.FechaAcuerdo;
+                cofinanciacionDocumentoEdit.NumeroActa = pCofinanciacionDocumento.NumeroActa;
+                cofinanciacionDocumentoEdit.TipoDocumentoId = pCofinanciacionDocumento.TipoDocumentoId;
+                cofinanciacionDocumentoEdit.ValorDocumento = pCofinanciacionDocumento.ValorDocumento;
+                cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante;
 
-                //await _context.SaveChangesAsync();
+
                 return pCofinanciacionDocumento.CofinanciacionDocumentoId;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                CofinanciacionDocumento cofinanciacionDocumentoNull = new CofinanciacionDocumento();
                 return 0;
             }
 
@@ -213,28 +319,48 @@ namespace asivamosffie.services
         public async Task<List<Cofinanciacion>> GetListCofinancing()
         {
             List<Cofinanciacion> Listcofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado).ToListAsync();
-             
+
             foreach (var item in Listcofinanciacion)
             {
-                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r=> r.CofinanciacionDocumento.Where(r=> !(bool)r.Eliminado)).ToListAsync();
-             } 
-            return Listcofinanciacion;
+                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+            }
+            return Listcofinanciacion.OrderByDescending(r => r.CofinanciacionId).ToList();
         }
 
-        //GetDocument?cofinancionAportanteId
-        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetDocument(int id)
+        public async Task<List<CofinanciacionDocumento>> GetDocument(int ContributorId)
+        {
+            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).ToListAsync();
+        }
+
+        public async Task<List<CofinanciacionAportante>> GetListAportante()
         {
 
-            try
-            {
-                //return await _context.DocumentoApropiacion.Include(x => x.Aportante).Where(x => x.AportanteId == ContributorId).ToListAsync();
-                return await _context.CofinanciacionDocumento.Where(x => x.CofinanciacionAportanteId == id).Include(x=>x.TipoDocumento).ToListAsync();
-            }
-            catch (Exception)
-            {
+            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).ToListAsync();
+        }
 
-                throw;
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            List<CofinanciacionAportante> ListCofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+
+            List<CofinanicacionAportanteGrilla> ListCofinanicacionAportanteGrilla = new List<CofinanicacionAportanteGrilla>();
+
+            foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
+            {
+                CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
+                {
+                    CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
+                    Nombre = cofinanciacionAportante.NombreAportanteId != null ? await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.NombreAportanteId) : "",
+                    TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId)
+                };
+                ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
             }
+
+            return ListCofinanicacionAportanteGrilla;
+        }
+
+        public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
+        {
+            return await _context.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == pAportanteID).ToListAsync();
         }
 
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)

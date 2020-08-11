@@ -3,7 +3,7 @@
     <img src="assets/img/logo/asi-vamos-ffie.svg" alt="asi vamos ffie" class="header--logo" *ngIf="actualUser">
     <img src="assets/img/logo/minEdu.png" alt="Min educación" class="header--logo">
     <aside class="header--aside" *ngIf="actualUser">
-        <p class="header--aside--usuario">{{actualUser.nombres}} {{actualUser.apellidos}}</p>
-        <p class="header--aside--rol">Administrador</p>
+        <p class="header--aside--usuario" style="width: 13em;">{{actualUser.nombres}} {{actualUser.apellidos}}</p>
+        <p class="header--aside--rol">{{roles}}</p>
     </aside>
 </header>

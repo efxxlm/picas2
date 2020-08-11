@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public Contratacion()
         {
             ContratacionProyecto = new HashSet<ContratacionProyecto>();
+            Contrato = new HashSet<Contrato>();
         }
 
         public int ContratacionId { get; set; }
@@ -24,8 +25,12 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public DateTime? FechaEnvioDocumentacion { get; set; }
+        public string Observaciones { get; set; }
+        public string RutaMinuta { get; set; }
 
         public virtual Contratista Contratista { get; set; }
         public virtual ICollection<ContratacionProyecto> ContratacionProyecto { get; set; }
+        public virtual ICollection<Contrato> Contrato { get; set; }
     }
 }

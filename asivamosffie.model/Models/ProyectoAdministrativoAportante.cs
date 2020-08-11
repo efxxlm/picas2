@@ -8,7 +8,7 @@ namespace asivamosffie.model.Models
         public int ProyectoAdministrativoAportanteId { get; set; }
         public int ProyectoAdminstrativoId { get; set; }
         public int AportanteId { get; set; }
-        public bool Eliminado { get; set; }
+        public bool? Eliminado { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioEdicion { get; set; }
