@@ -26,9 +26,17 @@ namespace asivamosffie.services
             return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
         }
 
+
         public async Task<List<Perfil>> GetProfile()
         {
             return await _context.Perfil.ToListAsync();
+        }
+
+        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil )
+        {
+            return await _context.UsuarioPerfil.Where( u => u.PerfilId == pIdPerfil)
+                                                .Include( u => u.Usuario )
+                                                .Select( s => s.Usuario ).ToListAsync();
         }
 
         public async Task<Template> GetTemplateById(int pId)

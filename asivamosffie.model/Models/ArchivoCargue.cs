@@ -25,5 +25,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
 
         public virtual ICollection<TemporalProyecto> TemporalProyecto { get; set; }
+        public virtual ICollection<TempOrdenLegibilidad> TempOrdenLegibilidad { get; set; }
     }
 }

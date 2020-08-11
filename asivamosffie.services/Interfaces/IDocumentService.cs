@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch, int OrigenId);
 
-        Task<List<ArchivoCargue>> GetListloadedDocuments();
+        Task<List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1");
 
         Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser);
 
