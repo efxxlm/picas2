@@ -167,26 +167,26 @@ namespace asivamosffie.services
 
             try
             {
-                var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).Select(x => new
+                var ListComiteTecnico = _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).Select(x => new
                 {
                     Id = x.ComiteTecnicoId,
-                    FechaSolicitud = x.FechaCreacion.ToString(),
+                    FechaSolicitud = x.FechaCreacion,
                     TipoSolicitud = x.TipoSolicitudCodigo,
                     x.NumeroSolicitud
-                }).OrderByDescending(r => r.Id).ToListAsync();
+                }).OrderByDescending(r => r.Id).ToList();
 
 
                 foreach (var comiteTecnico in ListComiteTecnico)
                 {
                     ListValidacionSolicitudesContractualesGrilla.Add(new
                     {
-                        Id = comiteTecnico.Id,
-                        FechaSolicitud = comiteTecnico.FechaSolicitud,
-                        NumeroSolicitud = comiteTecnico.NumeroSolicitud,
+                        comiteTecnico.Id,
+                        FechaSolicitud = comiteTecnico.FechaSolicitud.ToString("yyyy-MM-dd"),
+                        comiteTecnico.NumeroSolicitud,
                         TipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(comiteTecnico.TipoSolicitud, (int)EnumeratorTipoDominio.Tipo_Solicitud)
                     });
                 };
-                  
+
             }
             catch (Exception ex)
             {
@@ -223,7 +223,7 @@ namespace asivamosffie.services
                      Code = ConstantSesionComiteTecnico.OperacionExitosa,
                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SESIÓN COMITE TEMA")
                  };
-            } 
+            }
             catch (Exception ex)
             {
                 return
@@ -239,15 +239,15 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> CambiarEstadoComite(Sesion pSesion) 
+        public async Task<Respuesta> CambiarEstadoComite(Sesion pSesion)
         {
-            int idAccionCambiarEstadoSesion= await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Comite_Sesion, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCambiarEstadoSesion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Comite_Sesion, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
                 Sesion sesionOld = _context.Sesion.Find(pSesion.SesionId);
 
-                string NombreEstado = await _commonService.GetNombreDominioByCodigoAndTipoDominio(pSesion.EstadoComiteCodigo , (int)EnumeratorTipoDominio.Estado_Comite);
+                string NombreEstado = await _commonService.GetNombreDominioByCodigoAndTipoDominio(pSesion.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite);
                 sesionOld.UsuarioModificacion = pSesion.UsuarioCreacion;
                 sesionOld.FechaModificacion = DateTime.Now;
                 sesionOld.EstadoComiteCodigo = pSesion.EstadoComiteCodigo;
@@ -262,7 +262,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionCambiarEstadoSesion, pSesion.UsuarioCreacion, "ESTADO COMITE CAMBIADO A "+NombreEstado.ToUpper())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionCambiarEstadoSesion, pSesion.UsuarioCreacion, "ESTADO COMITE CAMBIADO A " + NombreEstado.ToUpper())
                     };
             }
             catch (Exception)
@@ -270,7 +270,7 @@ namespace asivamosffie.services
 
                 throw;
             }
-      
+
         }
 
 
