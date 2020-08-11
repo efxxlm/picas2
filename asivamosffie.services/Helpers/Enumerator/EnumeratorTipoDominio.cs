@@ -63,7 +63,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Estado_Proceso_Seleccion = 35,
 
-		Opcion_Por_Contratar = 37
+		Opcion_Por_Contratar = 37,
+
+		Estado_Comite = 38
 
 
 	}
