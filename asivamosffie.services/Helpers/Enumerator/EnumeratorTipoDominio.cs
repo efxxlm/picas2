@@ -48,6 +48,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Estado_Registro = 23,
 		Tipo_Proceso_Seleccion = 27,
 		Etapa_Proceso_Seleccion = 34,
+		Tipo_de_Solicitud = 29,
 		Tipo_Documento = 30,
 		Tipo_Proponente = 28,
 		Estado_Proceso_Seleccion = 35,
