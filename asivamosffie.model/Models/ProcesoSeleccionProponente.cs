@@ -19,6 +19,5 @@ namespace asivamosffie.model.Models
         public string CedulaRepresentanteLegal { get; set; }
 
         public virtual ProcesoSeleccion ProcesoSeleccion { get; set; }
-       
     }
 }
