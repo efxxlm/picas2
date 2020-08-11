@@ -11,8 +11,14 @@ namespace asivamosffie.services.Helpers.Enumerator
         Fuentes = 14,
         Aportantes = 15,
 
-        RegistrarComiteTecnico = 24
 
+        Procesos_Seleccion = 18,
+        
+        Procesos_Seleccion_Cronograma = 20,
+        Procesos_Seleccion_Grupo = 21,
+        CargueMasivoOrdenes = 22,
+        CronogramaSeguimiento = 23
+        RegistrarComiteTecnico = 24
     }
 
     public enum enumeratorAccion
@@ -24,7 +30,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Error = 56,
         ValidarExcel = 63, 
         CargueProyectosMasivos = 69,
-        DescargarExcelProyectos = 75
+        DescargarExcelProyectos = 75,
+        CargueOrdenesMasivos = 76,
+        DescargarExcelOrdenes = 77
+
     }
 
 }

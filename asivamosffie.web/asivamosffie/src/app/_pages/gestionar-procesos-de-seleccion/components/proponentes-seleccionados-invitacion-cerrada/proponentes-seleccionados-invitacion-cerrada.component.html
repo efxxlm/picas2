@@ -1,0 +1,92 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el proceso?</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #cuantosProponentes type="number" maxlength="2" formControlName="cuantosProponentes"
+                  required>
+              </mat-form-field>
+              <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" >
+        <div class="pr-1">
+          <label for="nombresProponentes" class="label-left">Nombres de proponentes</label>
+        </div>
+        <div class="col">
+          <mat-form-field class="select-width">
+            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente()" >
+              <mat-option *ngFor="let nombreProponente of nombresProponentesList" 
+                          [value]="nombreProponente" >
+                {{ nombreProponente.nombreProponente }}
+              </mat-option>
+              <mat-option value="Nuevo"> Nuevo </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' ">
+      <div class="pt-1em" *ngFor=" let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index " >
+        <mat-card-title class="header-card--text">
+          Proponente {{ i + 1 }}
+        </mat-card-title>
+        <p>
+          <strong>Nombre del proponente:</strong>
+          {{ proponente.nombreProponente }}
+        </p>
+        <p>
+          <strong>Número de identificación del proponente:</strong>
+          {{ proponente.numeroIdentificacion }}
+        </p>
+        <p>
+          <strong>Departamento del domicilio del proponente:</strong>
+          Atlántico
+        </p>
+        <p>
+          <strong>Municipio del domicilio del proponente:</strong>
+          Malambo
+        </p>
+        <p>
+          <strong>Dirección del proponente:</strong>
+          {{ proponente.direccionProponente }}
+        </p>
+        <p>
+          <strong>Teléfono del proponente</strong>
+          {{ proponente.telefonoProponente }}
+        </p>
+        <p>
+          <strong>Correo electrónico del proponente:</strong>
+          {{ proponente.emailProponente }}
+        </p>
+      </div>
+    </div>
+      <div *ngIf=" this.addressForm.get('nombresProponentes').value == 'Nuevo' ">
+      <app-form-datos-proponentes-seleccionados 
+                                                #proponente 
+                                                [procesoSeleccion]="procesoSeleccion" 
+                                                (guardar)="onSubmitNuevoProponente()">
+      </app-form-datos-proponentes-seleccionados>
+      <button style="display: none;" 
+              type="button" 
+              (click)="proponente.cargarRegistro()" 
+              id="botonProponente"
+              >
+      </button>
+    </div>
+
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' ">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+  </div>
+</form>

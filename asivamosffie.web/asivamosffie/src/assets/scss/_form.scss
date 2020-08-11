@@ -81,6 +81,9 @@ div.mat-select-arrow {
     color: #174193;;
     color: var(--mainColor);
     font-weight: 500;
+    height: 2.4em;
+    width: 2.4em;
+    min-width: 2.4em;
     height: 2em;
     width: 2em;
     min-width: 2em;
@@ -151,3 +154,6 @@ div.mat-select-arrow {
     border-color: var(--mainColor);
 }
 
+.calendar-class .mat-form-field-appearance-legacy .mat-form-field-underline {
+    background-color: transparent !important;
+}

@@ -44,10 +44,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Origen_Documento_Cargue = 20,
 
-		//Es igual a estado Proyecto
+		//Es igual a estado Proyecto 
 		Estado_Registro = 23,
 
-		Estado_Juridico_Predios = 25,
+	 	Estado_Juridico_Predios = 25,
 
 		Tipo_Proceso_Seleccion = 27,
 
@@ -55,8 +55,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Tipo_Solicitud = 29,
 
-		Tipo_Documento = 30,
-
+		Tipo_Documento = 30, 
 		// Para disponibilidad presupuestal
 
 		Etapa_Proceso_Seleccion = 34,
@@ -67,6 +66,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Estado_Comite = 38
 
+		Estado_Cronograma_Seguimiento = 40
 
 	}
 }

@@ -28,11 +28,16 @@
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
 
+        public const string Crear_Proceso_Seleccion = "18";
+         public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
+        public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
+        public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
          
         public const string Crear_Editar_SesionComiteTema = "38";
         public const string Eliminar_Sesion_Comite_Tema = "39";
         public const string Cambiar_Estado_Comite_Sesion = "40";
 
+        public const string Crear_Editar_Cronograma_Seguimiento = "37";
     }
 }

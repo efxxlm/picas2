@@ -64,6 +64,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio);
 
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
-        //Task<List<int>> GetListVigenciaAportes(string pYearVigente , bool yearSiguienteEsVigente);
+        Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil );
     }
 }
