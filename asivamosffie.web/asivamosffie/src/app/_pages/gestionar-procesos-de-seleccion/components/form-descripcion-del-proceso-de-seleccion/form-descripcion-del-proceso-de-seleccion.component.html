@@ -178,54 +178,56 @@
       <div formGroupName="cronogramas">
           <div>
             <h2 class="card-subTitle">Cronograma</h2>
-            <table class="mat-table cdk-table mat-sort mat-table-style">
-              <thead>
-                <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Actividad
-                  </th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Descripción
-                  </th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Fecha máxima
-                  </th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Gestión
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let cronograma of cronogramas.controls; let i = index" [formGroupName]="i" >
+            <div class="table-responsive">
+              <table class="mat-table cdk-table mat-sort mat-table-style">
+                <thead>
+                  <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Actividad
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Descripción
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Fecha máxima
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Gestión
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cronograma of cronogramas.controls; let i = index" [formGroupName]="i" >
+                    
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <b class="text-1-2em">
+                        {{ i +1 }}
+                      </b>
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <div class="d-flex justify-content-center">
+                      </div>
+                      <input type="hidden" formControlName="procesoSeleccionCronogramaId">
+                      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                        (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" >
+                      </button>
+                      <mat-form-field class="example-full-width">
+                        <input matInput [matDatepicker]="picker" formControlName="fechaMaxima">
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <button mat-raised-button color="accent">Eliminar</button>
+                    </td>
                   
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    <b class="text-1-2em">
-                      {{ i +1 }}
-                    </b>
-                  </td>
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    <div class="d-flex justify-content-center">
-                    </div>
-                    <input type="hidden" formControlName="procesoSeleccionCronogramaId">
-                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                      (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
-                  </td>
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
-                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" >
-                    </button>
-                    <mat-form-field class="example-full-width">
-                      <input matInput [matDatepicker]="picker" formControlName="fechaMaxima">
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                  </td>
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    <button mat-raised-button color="accent">Eliminar</button>
-                  </td>
-                
-                </tr>
-              </tbody>
-            </table>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="text-right">
               <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarActividad()">
                 <img src="assets/img/icon/mas.svg" alt="Agregar otra actividad">
