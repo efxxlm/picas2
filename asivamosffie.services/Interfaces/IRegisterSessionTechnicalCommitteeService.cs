@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
-        Task<List<ValidacionSolicitudesContractualesGrilla>> GetListSolicitudesContractuales();
+        Task<List<dynamic>> GetListSolicitudesContractuales();
 
         Task<Respuesta> SaveEditSesionComiteTema(List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite);
 

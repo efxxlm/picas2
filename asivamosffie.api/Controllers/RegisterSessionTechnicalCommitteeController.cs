@@ -24,7 +24,7 @@ namespace asivamosffie.api.Controllers
     
         [HttpGet]
         [Route("GetListSolicitudesContractuales")] 
-        public async Task<List<ValidacionSolicitudesContractualesGrilla>> GetListSolicitudesContractuales() {
+        public async Task<List<dynamic>> GetListSolicitudesContractuales() {
             return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales(); 
         }
 

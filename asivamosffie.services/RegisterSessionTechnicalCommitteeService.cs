@@ -161,9 +161,9 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<List<ValidacionSolicitudesContractualesGrilla>> GetListSolicitudesContractuales()
+        public async Task<List<dynamic>> GetListSolicitudesContractuales()
         {
-            List<ValidacionSolicitudesContractualesGrilla> ListValidacionSolicitudesContractualesGrilla = new List<ValidacionSolicitudesContractualesGrilla>();
+            List<dynamic> ListValidacionSolicitudesContractualesGrilla = new List<dynamic>();
 
             try
             {
@@ -173,20 +173,22 @@ namespace asivamosffie.services
                     FechaSolicitud = x.FechaCreacion.ToString(),
                     TipoSolicitud = x.TipoSolicitudCodigo,
                     x.NumeroSolicitud
-                }).Distinct().OrderByDescending(r => r.Id).ToListAsync();
+                }).OrderByDescending(r => r.Id).ToListAsync();
+
 
                 foreach (var comiteTecnico in ListComiteTecnico)
                 {
-                    new ValidacionSolicitudesContractualesGrilla
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
                     {
                         Id = comiteTecnico.Id,
                         FechaSolicitud = comiteTecnico.FechaSolicitud,
                         NumeroSolicitud = comiteTecnico.NumeroSolicitud,
                         TipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(comiteTecnico.TipoSolicitud, (int)EnumeratorTipoDominio.Tipo_Solicitud)
-                    };
+                    });
                 };
+                  
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }
@@ -279,7 +281,7 @@ namespace asivamosffie.services
             try
             {
 
-                Sesion sesion = _context.Sesion.Where(r=> (bool)r.Eliminado).IncludeFilter(r=> r.SesionInvitado).FirstOrDefault()
+                Sesion sesion = _context.Sesion.Where(r => (bool)r.Eliminado).IncludeFilter(r => r.SesionInvitado).FirstOrDefault();
                 Sesion sesionOld = _context.Sesion.Find(pSesion.SesionId);
 
                 string NombreEstado = await _commonService.GetNombreDominioByCodigoAndTipoDominio(pSesion.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite);
