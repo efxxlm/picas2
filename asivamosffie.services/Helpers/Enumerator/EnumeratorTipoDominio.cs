@@ -64,7 +64,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Opcion_Por_Contratar = 37,
 
-		Estado_Comite = 38
+		Estado_Comite = 38,
 
 		Estado_Cronograma_Seguimiento = 40
 
