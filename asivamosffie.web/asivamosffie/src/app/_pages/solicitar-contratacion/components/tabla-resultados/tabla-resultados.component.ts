@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogTableProyectosSeleccionadosComponent } from '../dialog-table-proyectos-seleccionados/dialog-table-proyectos-seleccionados.component';
+import { AsociadaComponent } from '../asociada/asociada.component';
 
 export interface TableElement {
   id: number;
@@ -84,5 +85,9 @@ export class TablaResultadosComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogTableProyectosSeleccionadosComponent, {
       data: this.elementosSelecciondos
     });
+  }
+
+  openPopup() {
+    this.dialog.open(AsociadaComponent);
   }
 }

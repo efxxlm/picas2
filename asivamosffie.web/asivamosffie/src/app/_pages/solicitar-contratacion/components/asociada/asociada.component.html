@@ -1,0 +1,23 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<div class="row">
+    <div class="pr-1">
+        <label class="label-left">Aportante</label>
+    </div>
+    <div class="col">
+        <mat-form-field class="select-width">
+            <mat-select required [formControl]="solicitudAsociada">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let asociada of solicitudAsociadaArray" [value]="asociada.value">
+                    {{ asociada.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+<div class="text-center">
+    <button mat-raised-button color="accent" [disabled]="solicitudAsociada.invalid">Guardar solicitud</button>
+</div>
