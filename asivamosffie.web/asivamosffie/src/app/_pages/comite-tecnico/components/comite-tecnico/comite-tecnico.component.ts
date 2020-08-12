@@ -17,12 +17,12 @@ export class ComiteTecnicoComponent implements OnInit {
   monitoreoCompromisos = false;
 
   fechaComite: FormControl;
-  maxDate: Date;
+  minDate: Date;
 
   constructor(
     private router: Router
   ) {
-    this.maxDate = new Date();
+    this.minDate = new Date();
     this.fechaComite = new FormControl('', [Validators.required]);
     this.fechaComite.valueChanges
     .subscribe(value => {

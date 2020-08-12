@@ -55,7 +55,7 @@
             </div>
             <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                    <input [formControl]="fechaComite" matInput [matDatepicker]="picker" required [max]="maxDate"
+                    <input [formControl]="fechaComite" matInput [matDatepicker]="picker" required [min]="minDate"
                         readonly (click)="picker.open()">
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
