@@ -84,6 +84,13 @@ export class ProjectService {
   public listaFuentes(pAportanteId:number) {
     return this.http.get<any>(`${environment.apiUrl}/Project/GetFontsByAportantID?pAportanteId=${pAportanteId}`);
   }
+
+  public listaProyectoConFiltros(pTipoIntervencion: string, pLlaveMen: string, pMunicipio: string, pIdInstitucionEducativa: number, pIdSede: number){
+    return this.http.get<any>(`${environment.apiUrl}/ProjectContracting/getListProyectsByFilters?pTipoIntervencion=${
+      pTipoIntervencion }&pLlaveMen=${ pLlaveMen }&pMunicipio=${ pMunicipio }&pIdInstitucionEducativa=${ pIdInstitucionEducativa }&pIdSede=${ pIdSede }`);
+  }
+  
+
 }
 export interface RespuestaProyecto{
   cantidadDeRegistros: number,
@@ -155,14 +162,14 @@ export interface Proyecto{
 }
 
 export interface InstitucionEducativa{  
- InstitucionEducativaSedeId:number ;
-  PadreId?:number ,
-  Nombre:string ,
-  CodigoDane?:number ,
-  LocalizacionIdMunicipio?:number ,
-  FechaCreacion:Date ,
-  UsuarioCreacion:string ,
-  Activo:boolean ,
+  institucionEducativaSedeId:number ;
+  padreId?:number ,
+  nombre:string ,
+  codigoDane?:number ,
+  localizacionIdMunicipio?:number ,
+  fechaCreacion:Date ,
+  usuarioCreacion:string ,
+  activo:boolean ,
 }
 
 export interface Localizacion{  
