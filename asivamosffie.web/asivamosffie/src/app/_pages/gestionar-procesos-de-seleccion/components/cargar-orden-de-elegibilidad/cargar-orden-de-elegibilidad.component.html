@@ -1,0 +1,18 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<h1 class="title-menu--h1">
+    Cargar orden de elegibilidad
+</h1>
+
+<div class="input-file">
+    <span class="input-file--text">{{archivo}}</span>
+    <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">Explorar</button>
+    <input required hidden (change)="fileName()" #fileInput type="file" id="file" [formControl]="fileElegibilidad"
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+</div>
+<p class="fontColor">
+    Explore en su computador o dispositivo y seleccione el documento Excelque desea cargar
+</p>
+<button mat-raised-button color="accent" [disabled]="fileElegibilidad.invalid" (click)="onSubmit()">{{boton}}</button>

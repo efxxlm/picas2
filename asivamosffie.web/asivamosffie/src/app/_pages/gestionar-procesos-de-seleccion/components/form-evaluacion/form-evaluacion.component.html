@@ -1,0 +1,33 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <div class="d-flex align-items-center">
+    <div class="text-area-quill">
+      <label for="descricion" class="text-area-quill--label">Descripción</label>
+      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)" formControlName="descricion"></quill-editor>
+        <input type="hidden" formControlName="procesoSeleccionId">
+    </div>
+    <span class="contador" *ngIf="addressForm.get('descricion').value">
+      {{3000 - addressForm.get('descricion').value.length}}
+    </span>
+    <span class="contador" *ngIf="addressForm.get('descricion').value">
+      3000
+    </span>
+  </div>
+
+  <div class="row">
+    <div class="pr-1">
+      <label for="url" class="label-left">Url con soporte</label>
+    </div>
+    <div class="col d-flex">
+      <mat-form-field class="full-width">
+        <input matInput type="url" formControlName="url">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+  </div>
+</form>

@@ -31,6 +31,11 @@ export class ProjectService {
     return retorno;
   }
 
+  public getListProjectsFileProjectByOrigenId( pOrigenId: string ) {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocuments?pOrigenId=${ pOrigenId }`);
+    return retorno;
+  }
+
   public getFileByName(name: string) {   
     const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesByName?pNameFiles=${name}`, { responseType: "blob" });
     return retorno;

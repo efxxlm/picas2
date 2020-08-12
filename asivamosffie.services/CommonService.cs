@@ -17,7 +17,22 @@ namespace asivamosffie.services
 
         public CommonService(devAsiVamosFFIEContext context)
         {
-            _context = context;            
+            _context = context;
+        }
+
+        public async Task<string> EnumeradorComite()
+        {
+            string cantidadDigitos = "00000";
+            string cantidadDeResgistros =  _context.Sesion.ToList().Count().ToString();
+
+            if ((cantidadDigitos.Length - cantidadDeResgistros.Length < 1))
+            {
+                return "CT_0" + (Int32.Parse(cantidadDeResgistros) + 1);
+            }
+            else
+            {
+                return "CT_" + (cantidadDigitos.TakeLast(cantidadDigitos.Length - cantidadDeResgistros.Length)) + (Int32.Parse(cantidadDeResgistros) + 1);
+            }
         }
 
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
@@ -26,14 +41,22 @@ namespace asivamosffie.services
             return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
         }
 
+
         public async Task<List<Perfil>> GetProfile()
         {
             return await _context.Perfil.ToListAsync();
         }
 
+        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil )
+        {
+            return await _context.UsuarioPerfil.Where( u => u.PerfilId == pIdPerfil)
+                                                .Include( u => u.Usuario )
+                                                .Select( s => s.Usuario ).ToListAsync();
+        }
+
         public async Task<Template> GetTemplateById(int pId)
         {
-            return await _context.Template.Where(r=> r.TemplateId==pId && (bool)r.Activo).FirstOrDefaultAsync();
+            return await _context.Template.Where(r => r.TemplateId == pId && (bool)r.Activo).FirstOrDefaultAsync();
         }
 
         public async Task<Template> GetTemplateByTipo(string ptipo)
@@ -42,7 +65,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio)
-        { 
+        {
             //JMARTINEZ
             List<Dominio> listDominio = await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync();
             //Vuelve todo mayuscula
@@ -54,25 +77,25 @@ namespace asivamosffie.services
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
-            _context.Auditoria.Add(new Auditoria{AccionId=pAccionId,MensajesValidacionesId=retorno.MensajesValidacionesId,Usuario=pUsuario, Observacion= pObservaciones.ToUpper(),Fecha=DateTime.Now });
+            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario, Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
             _context.SaveChanges();
             return retorno.Mensaje;
-        } 
+        }
 
         public async Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
-            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.DominioId).FirstOrDefaultAsync();
+            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
         }
 
         public async Task<List<Localicacion>> GetListDepartamento()
-        { 
-             return await _context.Localizacion.Where(r => r.Nivel == 1)
-             .Select(x => new Localicacion
-             {
-                 LocalizacionId = x.LocalizacionId,
-                 Descripcion = x.Descripcion
-             }).ToListAsync();
-         }
+        {
+            return await _context.Localizacion.Where(r => r.Nivel == 1)
+            .Select(x => new Localicacion
+            {
+                LocalizacionId = x.LocalizacionId,
+                Descripcion = x.Descripcion
+            }).ToListAsync();
+        }
 
         public async Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento)
         {
@@ -84,22 +107,23 @@ namespace asivamosffie.services
                     Descripcion = x.Descripcion
                 }).ToListAsync();
             }
-            else {
+            else
+            {
                 return await _context.Localizacion.Where(r => r.Nivel == 2).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
                     Descripcion = x.Descripcion
                 }).ToListAsync();
             }
-   
+
         }
 
         public async Task<List<int>> GetListVigenciaAportes(string pYearVigente, bool yearSiguienteEsVigente)
         {
             try
-            { 
+            {
                 List<int> YearVigencia = new List<int>();
-      
+
                 int intYearDesde = Int32.Parse(pYearVigente);
                 int yearHasta = (yearSiguienteEsVigente) ? DateTime.Now.AddYears(1).Year : DateTime.Now.Year;
 
@@ -111,9 +135,9 @@ namespace asivamosffie.services
                 return YearVigencia;
             }
             catch (Exception)
-            { 
+            {
                 throw;
-            } 
+            }
         }
 
         public async Task<int> GetDominioIdByNombreDominioAndTipoDominio(string pNombreDominio, int pTipoDominioId)
@@ -140,13 +164,13 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Nombre.Trim().ToUpper().Equals(pCodigo.Trim().ToUpper()) && r.TipoDominioId == pTipoDominioId).Select(r => r.Codigo).FirstOrDefaultAsync();
         }
-         
+
         public async Task<int> getSedeInstitucionEducativaIdByNameAndInstitucionPadre(string pNombre, int pIdPadre)
         {
 
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == pIdPadre && r.Nombre.Equals(pNombre)).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
-         
+
         public async Task<int> getInstitucionEducativaIdByCodigoDane(int pCodigoDane)
         {
 
@@ -154,7 +178,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Localizacion> GetLocalizacionByLocalizacionId(string pLocalizacionId)
-        { 
+        {
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
         }
 
@@ -193,7 +217,7 @@ namespace asivamosffie.services
                 Descripcion = x.Descripcion
             }).ToListAsync();
         }
-         
+
         public async Task<Dominio> GetDominioByNombreDominioAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();

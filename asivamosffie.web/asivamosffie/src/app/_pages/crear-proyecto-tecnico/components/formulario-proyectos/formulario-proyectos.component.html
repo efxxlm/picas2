@@ -252,12 +252,12 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="2"
+                <input matInput [(ngModel)]="proyecto.cantPrediosPostulados" (keyup)="evaluopredios()" maxlength="3"
                   (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
                   max="99" required type="number">
               </mat-form-field>
               <span
-                class="contador">{{2 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
+                class="contador">{{3 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -447,6 +447,12 @@
                     class="contador">{{20 - (predios.Predio.CedulaCatastral?predios.Predio.CedulaCatastral.toString().length:0)}}</span>
                 </div>
               </div>
+            </div>
+            <div class="col-md-4 text-right">
+              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteAportante(i)">
+                <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
+                Eliminar aportante
+              </button>
             </div>
           </div>
         </div>
