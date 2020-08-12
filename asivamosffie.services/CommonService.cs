@@ -31,7 +31,13 @@ namespace asivamosffie.services
             string idPadre =  _context.Localizacion.Where(r => r.LocalizacionId.Equals(pIdMunicipio)).Select(r => r.IdPadre).FirstOrDefault();
             return  _context.Localizacion.Where(r => r.LocalizacionId.Equals(idPadre)).FirstOrDefault().Descripcion;
         }
-
+        public string GetNombreRegionByIdMunicipio(string pIdMunicipio)
+        {
+            //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
+            string idDepartamento = _context.Localizacion.Where(r => r.LocalizacionId.Equals(pIdMunicipio)).Select(r => r.IdPadre).FirstOrDefault();
+            string idRegion =  _context.Localizacion.Where(r => r.LocalizacionId.Equals(idDepartamento)).FirstOrDefault().IdPadre;
+             return _context.Localizacion.Where(r => r.LocalizacionId.Equals(idRegion)).FirstOrDefault().Descripcion;
+         }
 
         public async Task<List<Perfil>> GetProfile()
         {

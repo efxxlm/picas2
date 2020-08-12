@@ -179,14 +179,16 @@ namespace asivamosffie.services
                     {
                         ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                         {
-                            ProyectoId = proyecto.ProyectoId,
+                            TipoIntervencion = await _commonService.GetNombreDominioByCodigoAndTipoDominio(proyecto.TipoIntervencionCodigo, (int)EnumeratorTipoDominio.Tipo_de_Intervencion),
+                            LlaveMen = proyecto.LlaveMen,
+                            Region = _commonService.GetNombreRegionByIdMunicipio(proyecto.LocalizacionIdMunicipio),
                             Departamento = _commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio),
                             Municipio = _commonService.GetNombreLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio),
                             InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
                             Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
-                            LlaveMen = proyecto.LlaveMen,
-                            TipoIntervencion = await _commonService.GetNombreDominioByCodigoAndTipoDominio(proyecto.TipoIntervencionCodigo , (int)EnumeratorTipoDominio.Tipo_de_Intervencion) 
 
+                            ProyectoId = proyecto.ProyectoId,
+                          
                         };
                         ListProyectoGrilla.Add(proyectoGrilla);
                     }
@@ -195,7 +197,7 @@ namespace asivamosffie.services
                     }
                 }
             }
-            return ListProyectoGrilla;
+            return ListProyectoGrilla.OrderByDescending(r=> r.ProyectoId).ToList();
         }
 
         public async Task<Respuesta> CreateContratacionProyecto(int[] idsProyectos, string tipoSolicitudCodigo, string usuarioCreacion)

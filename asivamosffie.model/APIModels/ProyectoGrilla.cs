@@ -15,5 +15,6 @@ namespace asivamosffie.model.APIModels
         public string Fecha { get; set; }
         public string TipoIntervencion { get; set; }
         public string LlaveMen { get; set; }
+        public string Region { get; set; }
     }
 }
