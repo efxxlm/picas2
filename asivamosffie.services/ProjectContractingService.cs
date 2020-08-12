@@ -139,56 +139,79 @@ namespace asivamosffie.services
             string strCodigoEstadoJuridicoAprobado = ConstantCodigoEstadoJuridico.Aprobado;
 
             List<Proyecto> ListProyectos =
-                _context.Proyecto.Where(
-                    r => !(bool)r.Eliminado &&
-                    r.EstadoJuridicoCodigo.Equals(strCodigoEstadoJuridicoAprobado) &&
-                    (bool)r.RegistroCompleto).Distinct().ToList();
+                  _context.Proyecto.Where(
+                      r => !(bool)r.Eliminado &&
+                      r.EstadoJuridicoCodigo
+                      .Equals(strCodigoEstadoJuridicoAprobado) &&
+                      (bool)r.RegistroCompleto &&
+                      r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
+                      r.LlaveMen == (string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen) &&
+                      r.LocalizacionIdMunicipio == (string.IsNullOrEmpty(pMunicipio) ? r.LocalizacionIdMunicipio : pMunicipio) &&
+                      r.InstitucionEducativaId == (pIdInstitucionEducativa > 0 ? pIdInstitucionEducativa : r.InstitucionEducativaId) &&
+                      r.SedeId == (pIdSede > 0 ? pIdSede : r.SedeId)
+                      )
+                              .Distinct()
+                              .Include(r => r.Sede)
+                              .Include(r => r.InstitucionEducativa)
+                              .Include(r => r.LocalizacionIdMunicipioNavigation).ToList();
+                              
 
-            if (!string.IsNullOrEmpty(pTipoIntervencion))
-            {
-                ListProyectos = ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion)).ToList();
-            }
-            if (!string.IsNullOrEmpty(pLlaveMen))
-            {
-                ListProyectos = ListProyectos.Where(r => r.LlaveMen.Contains(pLlaveMen)).ToList();
-            }
-            if (!string.IsNullOrEmpty(pMunicipio))
-            {
-                ListProyectos = ListProyectos.Where(r => r.LocalizacionIdMunicipio.Equals(pMunicipio)).ToList();
-            }
-            if (pIdInstitucionEducativa > 0)
-            {
-                ListProyectos = ListProyectos.Where(r => r.InstitucionEducativaId.Equals(pIdInstitucionEducativa)).ToList();
-            }
-            if (pIdSede > 0)
-            {
-                ListProyectos = ListProyectos.Where(r => r.SedeId.Equals(pIdSede)).ToList();
-            }
+
+            //if (!string.IsNullOrEmpty(pTipoIntervencion))
+            //{
+            //    ListProyectos = ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion));
+            //}
+            //if (!string.IsNullOrEmpty(pLlaveMen))
+            //{
+            //    ListProyectos = ListProyectos.Where(r => r.LlaveMen.Contains(pLlaveMen));
+            //}
+            //if (!string.IsNullOrEmpty(pMunicipio))
+            //{
+            //    ListProyectos = ListProyectos.Where(r => r.LocalizacionIdMunicipio.Equals(pMunicipio));
+            //}
+            //if (pIdInstitucionEducativa > 0)
+            //{
+            //    ListProyectos = ListProyectos.Where(r => r.InstitucionEducativaId.Equals(pIdInstitucionEducativa));
+            //}
+            //if (pIdSede > 0)
+            //{
+            //    ListProyectos = ListProyectos.Where(r => r.SedeId.Equals(pIdSede));
+            //}
             //
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
+
+
+            //Lista para Dominio intervencio
+            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
+
+            List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == 1).ToList();
+            List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == 3).ToList();
+            //departamneto 
+            //    Region 
+
             foreach (var proyecto in ListProyectos)
             {
-                //Validacion
-                if (!string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio) 
-                    && !string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo)
-                    && !string.IsNullOrEmpty(proyecto.SedeId.ToString())
-                    && !string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
-                 )
+                if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo)) 
                 {
+                    Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
+
                     try
                     {
                         ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                         {
-                            TipoIntervencion = await _commonService.GetNombreDominioByCodigoAndTipoDominio(proyecto.TipoIntervencionCodigo, (int)EnumeratorTipoDominio.Tipo_de_Intervencion),
+                            TipoIntervencion = ListTipoIntervencion.Find(r => r.Codigo == proyecto.TipoIntervencionCodigo).Nombre,
                             LlaveMen = proyecto.LlaveMen,
-                            Region = _commonService.GetNombreRegionByIdMunicipio(proyecto.LocalizacionIdMunicipio),
-                            Departamento = _commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio),
-                            Municipio = _commonService.GetNombreLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio),
-                            InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
-                            Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
-
+                            Departamento = departamento.Descripcion,
+                            Region = ListRegiones.Find(r => r.LocalizacionId == departamento.IdPadre).Descripcion,
+                            //  Departamento = _commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio),
+                            // Municipio = _commonService.GetNombreLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio),
+                            Municipio = proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
+                            //InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
+                            //Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
+                            InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
+                            Sede = proyecto.Sede.Nombre,
                             ProyectoId = proyecto.ProyectoId,
-                          
+
                         };
                         ListProyectoGrilla.Add(proyectoGrilla);
                     }
@@ -197,8 +220,10 @@ namespace asivamosffie.services
                     }
                 }
             }
+
             return ListProyectoGrilla.OrderByDescending(r=> r.ProyectoId).ToList();
         }
+
 
         public async Task<Respuesta> CreateContratacionProyecto(int[] idsProyectos, string tipoSolicitudCodigo, string usuarioCreacion)
         {
