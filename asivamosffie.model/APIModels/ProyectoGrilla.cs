@@ -13,5 +13,7 @@ namespace asivamosffie.model.APIModels
         public string EstadoRegistro { get; set; }
         public string EstadoJuridicoPredios { get; set; }
         public string Fecha { get; set; }
+        public string TipoIntervencion { get; set; }
+        public string LlaveMen { get; set; }
     }
 }

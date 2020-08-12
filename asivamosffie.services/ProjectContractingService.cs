@@ -133,74 +133,69 @@ namespace asivamosffie.services
             int pIdInstitucionEducativa,
             int pIdSede)
         {
+            //Listar Los proyecto segun caso de uso solo trae los ue estado
+            //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
 
+            string strCodigoEstadoJuridicoAprobado = ConstantCodigoEstadoJuridico.Aprobado;
+
+            List<Proyecto> ListProyectos =
+                _context.Proyecto.Where(
+                    r => !(bool)r.Eliminado &&
+                    r.EstadoJuridicoCodigo.Equals(strCodigoEstadoJuridicoAprobado) &&
+                    (bool)r.RegistroCompleto).Distinct().ToList();
+
+            if (!string.IsNullOrEmpty(pTipoIntervencion))
+            {
+                ListProyectos = ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion)).ToList();
+            }
+            if (!string.IsNullOrEmpty(pLlaveMen))
+            {
+                ListProyectos = ListProyectos.Where(r => r.LlaveMen.Contains(pLlaveMen)).ToList();
+            }
+            if (!string.IsNullOrEmpty(pMunicipio))
+            {
+                ListProyectos = ListProyectos.Where(r => r.LocalizacionIdMunicipio.Equals(pMunicipio)).ToList();
+            }
+            if (pIdInstitucionEducativa > 0)
+            {
+                ListProyectos = ListProyectos.Where(r => r.InstitucionEducativaId.Equals(pIdInstitucionEducativa)).ToList();
+            }
+            if (pIdSede > 0)
+            {
+                ListProyectos = ListProyectos.Where(r => r.SedeId.Equals(pIdSede)).ToList();
+            }
+            //
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
-            try
+            foreach (var proyecto in ListProyectos)
             {
-                //Listar Los proyecto segun caso de uso solo trae los ue estado
-                //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
-
-                string strCodigoEstadoJuridicoAprobado = ConstantCodigoEstadoJuridico.Aprobado;
-                string strCodigoEstadoProyectoCompleto = ConstantCodigoEstadoProyecto.Completo;
-
-                IQueryable<Proyecto> ListProyectos =
-                    _context.Proyecto.Where(
-                        r => !(bool)r.Eliminado &&
-                        r.EstadoJuridicoCodigo.Equals(strCodigoEstadoJuridicoAprobado) &&
-                        r.EstadoProyectoCodigo.Equals(strCodigoEstadoJuridicoAprobado) &&
-                        r.EstadoProyectoCodigo.Equals(strCodigoEstadoProyectoCompleto));
-
-                if (!string.IsNullOrEmpty(pTipoIntervencion))
+                //Validacion
+                if (!string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio) 
+                    && !string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo)
+                    && !string.IsNullOrEmpty(proyecto.SedeId.ToString())
+                    && !string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
+                 )
                 {
-                    ListProyectos = ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion));
-                }
-                if (!string.IsNullOrEmpty(pLlaveMen))
-                {
-                    ListProyectos = ListProyectos.Where(r => r.LlaveMen.Contains(pLlaveMen));
-                }
-                if (!string.IsNullOrEmpty(pMunicipio))
-                {
-                    ListProyectos = ListProyectos.Where(r => r.LocalizacionIdMunicipio.Equals(pMunicipio));
-                }
-                if (pIdInstitucionEducativa != null || pIdInstitucionEducativa > 0)
-                {
-                    ListProyectos = ListProyectos.Where(r => r.InstitucionEducativaId.Equals(pIdInstitucionEducativa));
-                }
-                if (pIdSede != null || pIdSede > 0)
-                {
-                    ListProyectos = ListProyectos.Where(r => r.SedeId.Equals(pIdSede));
-                }
-
-
-                foreach (var proyecto in ListProyectos)
-                {
-                    Localizacion municipio = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
-                    Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
-                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
-
-                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    try
                     {
-                        ProyectoId = proyecto.ProyectoId,
-                        Departamento = departamento.Descripcion,
-                        Municipio = municipio.Descripcion,
-                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
-                        Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
-                        EstadoRegistro = estadoRegistro.Nombre,
-                        EstadoJuridicoPredios = EstadoJuridicoPredios.Nombre
-                    };
-                    ListProyectoGrilla.Add(proyectoGrilla);
+                        ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                        {
+                            ProyectoId = proyecto.ProyectoId,
+                            Departamento = _commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio),
+                            Municipio = _commonService.GetNombreLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio),
+                            InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
+                            Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
+                            LlaveMen = proyecto.LlaveMen,
+                            TipoIntervencion = await _commonService.GetNombreDominioByCodigoAndTipoDominio(proyecto.TipoIntervencionCodigo , (int)EnumeratorTipoDominio.Tipo_de_Intervencion) 
+
+                        };
+                        ListProyectoGrilla.Add(proyectoGrilla);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
-
-                return ListProyectoGrilla;
-
-
             }
-            catch (Exception ex)
-            {
-                return ListProyectoGrilla;
-
-            }
+            return ListProyectoGrilla;
         }
 
         public async Task<Respuesta> CreateContratacionProyecto(int[] idsProyectos, string tipoSolicitudCodigo, string usuarioCreacion)
@@ -343,7 +338,7 @@ namespace asivamosffie.services
             }
             return false;
         }
-         
+
         public async Task<Respuesta> CreateEditContratacionProyecto(ContratacionProyecto contratacionProyecto)
         {
             Respuesta respuesta = new Respuesta();
@@ -370,7 +365,7 @@ namespace asivamosffie.services
                 {
                     strAccion = "EDITAR CONTRATACION PROYECTO";
 
-                    ContratacionProyecto contratacionProyectoAntiguo = _context.ContratacionProyecto.Find(contratacionProyecto.ContratacionProyectoId); 
+                    ContratacionProyecto contratacionProyectoAntiguo = _context.ContratacionProyecto.Find(contratacionProyecto.ContratacionProyectoId);
                     //Auditoria 
                     contratacionProyectoAntiguo.FechaModificacion = DateTime.Now;
                     contratacionProyectoAntiguo.UsuarioModificacion = contratacionProyecto.UsuarioCreacion;
@@ -385,7 +380,7 @@ namespace asivamosffie.services
                     contratacionProyectoAntiguo.LicenciaVigente = contratacionProyecto.LicenciaVigente;
                     contratacionProyectoAntiguo.NumeroLicencia = contratacionProyecto.NumeroLicencia;
                     contratacionProyectoAntiguo.FechaVigencia = contratacionProyecto.FechaVigencia;
-                     
+
                     _context.SaveChanges();
                 }
                 return new Respuesta
@@ -421,7 +416,7 @@ namespace asivamosffie.services
             try
             {
 
-                if (pContratacionProyectoAportante.ContratacionProyectoAportanteId != null || pContratacionProyectoAportante.ContratacionProyectoAportanteId  == 0)
+                if (pContratacionProyectoAportante.ContratacionProyectoAportanteId != null || pContratacionProyectoAportante.ContratacionProyectoAportanteId == 0)
                 {
                     strAccion = "CREAR CONTRATACION PROYECTO APORTANTE";
 
@@ -473,7 +468,7 @@ namespace asivamosffie.services
 
         }
 
-        
+
 
     }
 }

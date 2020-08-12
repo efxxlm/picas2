@@ -25,6 +25,12 @@ namespace asivamosffie.services
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
             return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
         }
+        public string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio)
+        {
+            //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
+            string idPadre =  _context.Localizacion.Where(r => r.LocalizacionId.Equals(pIdMunicipio)).Select(r => r.IdPadre).FirstOrDefault();
+            return  _context.Localizacion.Where(r => r.LocalizacionId.Equals(idPadre)).FirstOrDefault().Descripcion;
+        }
 
 
         public async Task<List<Perfil>> GetProfile()
@@ -164,6 +170,11 @@ namespace asivamosffie.services
         public async Task<Localizacion> GetLocalizacionByLocalizacionId(string pLocalizacionId)
         { 
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
+        }
+
+        public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
+        {
+            return  _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r=> r.Descripcion).FirstOrDefault();
         }
 
         public async Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio)
