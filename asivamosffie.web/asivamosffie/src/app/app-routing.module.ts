@@ -85,6 +85,10 @@ const routes: Routes = [
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
+      {
+        path: 'comiteTecnico',
+        loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
+      }
     ]
 
   },
