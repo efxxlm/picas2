@@ -11,6 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<string> EnumeradorComite();
 
+        Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
 
         Task<List<MenuPerfil>> GetMenuByRol(int pUserId);
         Task<List<Perfil>> GetProfile();
