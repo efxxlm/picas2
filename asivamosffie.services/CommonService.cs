@@ -20,10 +20,31 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
+        { 
+
+            List<dynamic> ListaUsuario = new List<dynamic>();
+
+            var ListUsuarios = await _context.UsuarioPerfil.Where(r => r.PerfilId == idPerfil && (bool)r.Activo).Select(r => r.Usuario).Where(r=> !(bool)r.Eliminado).Distinct().OrderBy(r=> r.Nombres).ToListAsync();
+
+            foreach (var item in ListUsuarios)
+            {
+                ListaUsuario.Add(
+                                    new
+                                    {
+                                        item.UsuarioId,
+                                        item.Nombres,
+                                        item.Apellidos
+                                    }
+                                );
+            }
+            return ListaUsuario;
+        }
+
         public async Task<string> EnumeradorComite()
         {
             string cantidadDigitos = "00000";
-            string cantidadDeResgistros =  _context.Sesion.ToList().Count().ToString();
+            string cantidadDeResgistros = _context.Sesion.ToList().Count().ToString();
 
             if ((cantidadDigitos.Length - cantidadDeResgistros.Length < 1))
             {
@@ -47,11 +68,11 @@ namespace asivamosffie.services
             return await _context.Perfil.ToListAsync();
         }
 
-        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil )
+        public async Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil)
         {
-            return await _context.UsuarioPerfil.Where( u => u.PerfilId == pIdPerfil)
-                                                .Include( u => u.Usuario )
-                                                .Select( s => s.Usuario ).ToListAsync();
+            return await _context.UsuarioPerfil.Where(u => u.PerfilId == pIdPerfil)
+                                                .Include(u => u.Usuario)
+                                                .Select(s => s.Usuario).ToListAsync();
         }
 
         public async Task<Template> GetTemplateById(int pId)

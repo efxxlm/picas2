@@ -38,6 +38,41 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+        public bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema) {
+
+            if (
+                !string.IsNullOrEmpty(pSesionComiteTema.ResponsableCodigo) ||
+                !string.IsNullOrEmpty(pSesionComiteTema.TiempoIntervencion.ToString()) ||
+                !string.IsNullOrEmpty(pSesionComiteTema.RutaSoporte) ||
+                !string.IsNullOrEmpty(pSesionComiteTema.Observaciones) ||
+                !string.IsNullOrEmpty(pSesionComiteTema.EsAprobado.ToString()) ||
+                !string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision) ||
+                !string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision)  
+                ) { return false; }
+
+            return true;
+        }
+
+        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion) {
+
+            var ListSesionComiteTema = _context.SesionComiteTema.Where(r => r.SesionId == pIdSesion && !(bool)r.Eliminado).ToList(); 
+
+            List<dynamic> ListSesionComiteTemaDyn = new List<dynamic>();
+
+            foreach (var sesionComiteTema in ListSesionComiteTema)
+            {
+                ListSesionComiteTemaDyn.Add(
+                                            new 
+                                            {
+                                                
+
+                                            }
+                                            );
+            }
+
+
+            return ListSesionComiteTemaDyn;
+        }
 
         public async Task<List<ComiteGrilla>> GetComiteGrilla()
         {
@@ -272,8 +307,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         public async Task<Respuesta> GuardarInvitado(Sesion pSesion)
         {
             int idAccionCambiarEstadoSesion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Comite_Sesion, (int)EnumeratorTipoDominio.Acciones);
@@ -309,6 +343,7 @@ namespace asivamosffie.services
             }
 
         }
+
         public bool EjemploTransaction()
         {
             using (DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction())

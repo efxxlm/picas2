@@ -22,6 +22,13 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
+         
+        [HttpGet]
+        [Route("GetUsuarioByPerfil")]
+        public Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
+        {  
+            return  common.GetUsuarioByPerfil(idPerfil);
+         }
 
         [HttpGet]
         [Route("GetMenuByRol")]
