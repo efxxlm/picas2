@@ -5,7 +5,8 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el proceso?</label>
+              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el
+                proceso?</label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
@@ -16,31 +17,34 @@
           </div>
         </div>
       </div>
-      <div class="margin-tabla" *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
-        <table class="mat-table cdk-table mat-sort mat-table-style">
-          <thead>
-            <tr class="mat-header-row cdk-header-row ng-star-inserted">
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Nombres de los proponentes
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Invitar
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionCotizacion">
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ proponente.nombreOrganizacion }}
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <section class="example-section">
-                  <mat-checkbox></mat-checkbox>
-                </section>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="margin-tabla"
+        *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
+        <div class="table-responsive">
+          <table class="mat-table cdk-table mat-sort mat-table-style">
+            <thead>
+              <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Nombres de los proponentes
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Invitar
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionCotizacion">
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ proponente.nombreOrganizacion }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  <section class="example-section">
+                    <mat-checkbox></mat-checkbox>
+                  </section>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div class="row mt-2em">
           <div class="pr-1">
@@ -56,7 +60,8 @@
     </mat-card-content>
   </mat-card>
 
-  <div class="text-center" *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
+  <div class="text-center"
+    *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
     <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>

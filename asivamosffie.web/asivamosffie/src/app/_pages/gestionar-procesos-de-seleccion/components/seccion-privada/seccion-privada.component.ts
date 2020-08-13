@@ -97,13 +97,21 @@ export class SeccionPrivadaComponent implements OnInit {
   onSubmit(){
     console.log(this.procesoSeleccion);
     this.procesoSeleccionService.guardarEditarProcesoSeleccion(this.procesoSeleccion).subscribe( respuesta => {
-      // if ( respuesta.code == "200" )
-      // {
-      //   this.router.navigate([`/seleccion/seccionPrivada/${ this.procesoSeleccion.tipoProcesoCodigo }/${ this.procesoSeleccion.procesoSeleccionId }`])
-      // }
       this.openDialog( "Proceso seleccion", respuesta.message )
-      console.log('respuesta',  respuesta );
-    })
+
+       if ( respuesta.code == "200" )
+       {
+         this.router.navigate([`/seleccion/seccionPrivada/${ respuesta.data.procesoSeleccionId }`])
+            
+       }
+      
+      //console.log('respuesta',  respuesta );
+    },
+    error => {
+      this.openDialog( "Proceso seleccion", error )
+      console.log('respuesta',  error );
+    },
+     () => {})
   }
 
   

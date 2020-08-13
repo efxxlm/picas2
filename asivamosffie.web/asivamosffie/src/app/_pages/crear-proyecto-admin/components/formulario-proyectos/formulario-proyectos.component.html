@@ -8,7 +8,7 @@
     Administrativo
   </h1>
   <p class="mt1">Proyecto administrativo:{{proyectoAdmin.identificador}}</p>
-  <div *ngFor="let aportantes of proyectoAdmin.Aportante;index as a">
+  <div *ngFor="let aportantes of proyectoAdmin.Aportante;index as a" class="mt-3em">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
@@ -38,7 +38,7 @@
       </mat-card-content>
       <div *ngIf="aportantes.aportanteId!=0">
         <h2 _ngcontent-oba-c177="" class="card-subTitle">Fuentes</h2>
-        <div *ngFor="let fuente of aportantes.fuenteFinanciacion;index as i">
+        <div *ngFor="let fuente of aportantes.fuenteFinanciacion;index as i" class="mt-3em">
           <mat-card-header class="header-card">
             <mat-card-title class="header-card--text">
               Fuentes {{i+1}}
