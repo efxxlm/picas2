@@ -193,43 +193,24 @@ namespace asivamosffie.services
                       r.SedeId == (pIdSede > 0 ? pIdSede : r.SedeId)
                       )
                               .Distinct()
+                              .Include(r => r.ContratacionProyecto)
                               .Include(r => r.Sede)
                               .Include(r => r.InstitucionEducativa)
                               .Include(r => r.LocalizacionIdMunicipioNavigation).ToList();
 
 
-
-            //if (!string.IsNullOrEmpty(pTipoIntervencion))
-            //{
-            //    ListProyectos = ListProyectos.Where(r => r.TipoIntervencionCodigo.Equals(pTipoIntervencion));
-            //}
-            //if (!string.IsNullOrEmpty(pLlaveMen))
-            //{
-            //    ListProyectos = ListProyectos.Where(r => r.LlaveMen.Contains(pLlaveMen));
-            //}
-            //if (!string.IsNullOrEmpty(pMunicipio))
-            //{
-            //    ListProyectos = ListProyectos.Where(r => r.LocalizacionIdMunicipio.Equals(pMunicipio));
-            //}
-            //if (pIdInstitucionEducativa > 0)
-            //{
-            //    ListProyectos = ListProyectos.Where(r => r.InstitucionEducativaId.Equals(pIdInstitucionEducativa));
-            //}
-            //if (pIdSede > 0)
-            //{
-            //    ListProyectos = ListProyectos.Where(r => r.SedeId.Equals(pIdSede));
-            //}
-            //
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
-
+            List<Dominio> ListTipoSolicitud = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Solicitud_Obra_Interventorias);
 
             //Lista para Dominio intervencio
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
 
             List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == 1).ToList();
+
             List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == 3).ToList();
             //departamneto 
-            //    Region 
+            //    Region  
+            List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).ToList();
 
             foreach (var proyecto in ListProyectos)
             {
@@ -237,6 +218,7 @@ namespace asivamosffie.services
                 {
                     Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
 
+                  
                     try
                     {
                         ProyectoGrilla proyectoGrilla = new ProyectoGrilla
@@ -252,9 +234,26 @@ namespace asivamosffie.services
                             //Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                             InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                             Sede = proyecto.Sede.Nombre,
-                            ProyectoId = proyecto.ProyectoId,
-
+                            ProyectoId = proyecto.ProyectoId, 
                         };
+   
+      //r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
+
+                        foreach (var item in proyecto.ContratacionProyecto)
+                        {
+                            item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
+                            if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
+                            {
+                                if (item.Contratacion.TipoSolicitudCodigo == "1")
+                                {
+                                    proyectoGrilla.TieneObra = true; 
+                                }
+                                if(item.Contratacion.TipoSolicitudCodigo == "2") 
+                                {
+                                    proyectoGrilla.TieneInterventoria = true;
+                                } 
+                            }
+                        } 
                         ListProyectoGrilla.Add(proyectoGrilla);
                     }
                     catch (Exception ex)

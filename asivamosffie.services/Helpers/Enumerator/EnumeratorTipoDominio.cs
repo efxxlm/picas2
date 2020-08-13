@@ -44,15 +44,18 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Origen_Documento_Cargue = 20,
 
-
 		Estado_Registro = 23,
+
+		Estado_Juridico_Predios = 25,
+	
 		Tipo_Proceso_Seleccion = 27,
-		Etapa_Proceso_Seleccion = 34,
+		Tipo_Proponente = 28,
 		Tipo_de_Solicitud = 29,
 		Tipo_Documento = 30,
-		Tipo_Proponente = 28,
+		
+		Etapa_Proceso_Seleccion = 34,
 		Estado_Proceso_Seleccion = 35,
-		Estado_Juridico_Predios = 25,
+		Tipo_de_Solicitud_Obra_Interventorias = 37,
 		Estado_Cronograma_Seguimiento = 40
 
 
