@@ -12,9 +12,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
+import { TablaSolicitudesContractualesComponent } from './tabla-solicitudes-contractuales/tabla-solicitudes-contractuales.component';
 
 @NgModule({
-  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent],
+  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent],
   imports: [
     CommonModule,
     ComiteTecnicoRoutingModule,

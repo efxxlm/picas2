@@ -1,125 +1,130 @@
-<div class="container text-center">
+<div class="container">
+  <div class="text-right">
+    <a routerLink="/comiteTecnico" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1 text-center">
+    Crear orden del día de comité técnico
+  </h1>
+
+  <mat-card class="shipping-card">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text">
+        Validación de solicitudes contractuales
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="text-center">
+      <app-tabla-solicitudes-contractuales></app-tabla-solicitudes-contractuales>
+    </mat-card-content>
+  </mat-card>
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Nuevo tema
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div formGroupName="tema">
+          <div *ngFor="let registroPresupuestal of tema.controls; let i = index">
+            <div [formGroupName]="i">
+              <mat-card-title class="header-card--text alineacion-titulos2">
+                Tema {{ i + 1 }}
+              </mat-card-title>
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Tema</label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #temaInput type="text" formControlName="tema" maxlength="100" required>
+                  </mat-form-field>
+                  <span class="contador">{{50 - temaInput.value.length}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Responsable</label>
+                    </div>
+                    <div class="col">
+                      <mat-form-field class="select-width">
+                        <mat-select formControlName="responsable" required>
+                          <mat-option *ngFor="let responsable of responsablesArray" [value]="responsable.value">
+                            {{ responsable.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left"
+                      [ngClass]="{'color-secondaryColor' : tiempoIntervencion.value === '' }"
+                      >Tiempo de intervención <b class="minutos">Minutos</b></label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #tiempoIntervencion type="number" formControlName="tiempoIntervencion"
+                          maxlength="3" min="1" max="999" required (keypress)="validateNumberKeypress($event)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                      </mat-form-field>
+                      <span class="contador">{{3 - tiempoIntervencion.value.length}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Url con soporte</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="full-width">
+                    <input matInput type="text" formControlName="tema" maxlength="100" required>
+                  </mat-form-field>
+                  <span class="text-center d-block">Indique la ruta del soporte de esta información</span>
+                </div>
+              </div>
+              <div class="text-right" *ngIf="tema.controls.length > 1">
+                <button mat-button color="warn" type="button" class="btn-eliminar"
+                  (click)="borrarArray(tema, i)">
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                  Eliminar tema
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
     <div class="text-right">
-        <a routerLink="/comiteTecnico" mat-button color="primary" class="btn-regresar">
-            <img src="assets/img/icon/regresar.svg" alt="Regresar">
-        </a>
+      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaTema()">
+        <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos">
+        Agregar un nuevo tema
+      </button>
     </div>
-    <h1 class="title-menu--h1">
-        Crear orden del día de comité técnico
-    </h1>
 
-        <mat-card class="shipping-card">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text">
-                    Validación de solicitudes contractuales
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-
-            </mat-card-content>
-        </mat-card>
-
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-        <mat-card class="shipping-card">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text">
-                    Nuevo tema
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <input matInput placeholder="Company" formControlName="company">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <input matInput placeholder="First name" formControlName="firstName">
-                            <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
-                                First name is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <input matInput placeholder="Last name" formControlName="lastName">
-                            <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
-                                Last name is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <textarea matInput placeholder="Address" formControlName="address"></textarea>
-                            <mat-error *ngIf="addressForm.controls['address'].hasError('required')">
-                                Address is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row" *ngIf="!hasUnitNumber">
-                    <div class="col">
-                        <button mat-button type="button" (click)="hasUnitNumber = !hasUnitNumber">
-                            + Add C/O, Apt, Suite, Unit
-                        </button>
-                    </div>
-                </div>
-                <div class="row" *ngIf="hasUnitNumber">
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <textarea matInput placeholder="Address 2" formControlName="address2"></textarea>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <input matInput placeholder="City" formControlName="city">
-                            <mat-error *ngIf="addressForm.controls['city'].hasError('required')">
-                                City is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <mat-select placeholder="State" formControlName="state">
-                                <mat-option *ngFor="let state of states" [value]="state.abbreviation">
-                                    {{ state.name }}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="addressForm.controls['state'].hasError('required')">
-                                State is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="full-width">
-                            <input matInput #postalCode maxlength="5" placeholder="Postal Code" type="number"
-                                formControlName="postalCode">
-                            <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-radio-group formControlName="shipping">
-                            <mat-radio-button value="free">Free Shipping</mat-radio-button>
-                            <mat-radio-button value="priority">Priority Shipping</mat-radio-button>
-                            <mat-radio-button value="nextday">Next Day Shipping</mat-radio-button>
-                        </mat-radio-group>
-                    </div>
-                </div>
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-raised-button color="primary" type="submit">Submit</button>
-            </mat-card-actions>
-        </mat-card>
-    </form>
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Proposiciones y varios
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        
+      </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      </button>
+    </div>
+  </form>
 </div>

@@ -2,6 +2,11 @@ body {
     color: var(--fontColor);
 }
 
+b,
+strong {
+    font-weight: 500;
+}
+
 .color-secondaryColor {
     color: #d21e18;
     color: var(--secondaryColor);
