@@ -396,8 +396,7 @@ namespace asivamosffie.services
                 return Respuesta;
             }
         }
-
-
+         
         public async Task<Respuesta> CreateEditComponenteAportante(ComponenteAportante pComponenteAportante, bool esTransaccion)
         {
             Respuesta Respuesta = new Respuesta();

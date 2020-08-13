@@ -289,6 +289,11 @@ namespace asivamosffie.services
         {
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
+
+        Task<string> ICommonService.GetNumeroSolicitudContratacion()
+        {
+            throw new NotImplementedException();
+        }
     }
     
 }
