@@ -12,22 +12,22 @@
 
         <ng-container matColumnDef="fecha">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fecha}}</b> </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaSolicitud | date: ' dd/MM/yyyy '}}</b> </td>
         </ng-container>
 
         <ng-container matColumnDef="numero">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.numeroSolicitud}} </td>
         </ng-container>
 
         <ng-container matColumnDef="opcionPorContratar">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción por contratar  </th>
-            <td mat-cell *matCellDef="let element"> {{element.opcionPorContratar}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.tipoSolicitudCodigo}} </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoSolicitud">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de solicitud  </th>
-            <td mat-cell *matCellDef="let element"> {{element.estadoSolicitud}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.estadoSolicitudCodigo}} </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoDelIngreso">
@@ -38,7 +38,7 @@
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a mat-raised-button color="accent" class="btn-table" [routerLink]="['/solicitarContratacion/solicitud', element.id]">Detallar la <br> solicitud</a>
+                <a mat-raised-button color="accent" class="btn-table" [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]">Detallar la <br> solicitud</a>
                 <button mat-raised-button color="accent" class="btn-table" (click)="eliminarSolicitud(element.id)">Eliminar</button>
             </td>
         </ng-container>

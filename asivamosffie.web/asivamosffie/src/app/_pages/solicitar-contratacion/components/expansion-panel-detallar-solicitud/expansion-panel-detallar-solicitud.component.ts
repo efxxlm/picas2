@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-contracting';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
 @Component({
   selector: 'app-expansion-panel-detallar-solicitud',
@@ -8,15 +10,24 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
 
+  contratacion: Contratacion = {};
+
   constructor(
-    private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private projectContractingService: ProjectContractingService
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      console.log(params);
-      const id = params.id;
-      console.log(id);
+      this.contratacion.contratacionId = params.id;
+
+      this.projectContractingService.getListContratacionProyectoByContratacionId( this.contratacion.contratacionId )
+        .subscribe( response => {
+            this.contratacion.contratacionProyecto = [];
+            this.contratacion.contratacionProyecto = response;
+            console.log( response );
+      })
+
     });
   }
 

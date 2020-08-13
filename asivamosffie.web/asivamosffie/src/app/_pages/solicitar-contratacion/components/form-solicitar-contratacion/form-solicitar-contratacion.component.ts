@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
-import { ProjectService, InstitucionEducativa } from 'src/app/core/_services/project/project.service';
+import { ProjectService, InstitucionEducativa, ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -36,6 +36,8 @@ export class FormSolicitarContratacionComponent implements OnInit {
   selectinstitucionEducativa: InstitucionEducativa[] = [];
 
   selectSede: InstitucionEducativa[] = [];
+
+  listaResultado: ProyectoGrilla[] = [];
 
   constructor(
                 private fb: FormBuilder,
@@ -104,22 +106,32 @@ export class FormSolicitarContratacionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    
     let pTipoIntervencion: Dominio = this.addressForm.get('tipoInterventor').value;
     let pLlaveMen: string = this.addressForm.get('llaveMEN').value;
     let pMunicipio: Localizacion = this.addressForm.get('municipio').value;
     let pIdInstitucionEducativa: InstitucionEducativa = this.addressForm.get('institucionEducativa').value;
     let pIdSede: InstitucionEducativa = this.addressForm.get('sede').value;
 
+    console.log( pLlaveMen );
+
     this.projectService.listaProyectoConFiltros( 
-                                                  pTipoIntervencion ? pTipoIntervencion.codigo : null, 
-                                                  pLlaveMen, 
-                                                  pMunicipio ? pMunicipio.localizacionId : null, 
-                                                  pIdInstitucionEducativa ? pIdInstitucionEducativa.institucionEducativaSedeId : null, 
-                                                  pIdSede ? pIdSede.institucionEducativaSedeId : null 
+                                                  pTipoIntervencion ? pTipoIntervencion.codigo : "", 
+                                                  pLlaveMen ? pLlaveMen : "", 
+                                                  pMunicipio ? pMunicipio.localizacionId : "", 
+                                                  pIdInstitucionEducativa ? pIdInstitucionEducativa.institucionEducativaSedeId : 0, 
+                                                  pIdSede ? pIdSede.institucionEducativaSedeId : 0 
 
                                                ).subscribe( proyectos => {
-                                                  console.log( proyectos );
+                                                  this.listaResultado = proyectos;
+
+                                                  setTimeout(() => { 
+                                                                      let btnListaResultado = document.getElementById('btnListaResultado');
+                                                                      btnListaResultado.click(); 
+                                                                    },1000)
+
+                                                  
+
                                                })
   }
 }

@@ -2,26 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
-export interface SolicitudesElement {
-  id: number;
-  fecha: string;
-  numero: string;
-  opcionPorContratar: string;
-  estadoSolicitud: string;
-  estadoDelIngreso: string;
-}
-
-const ELEMENT_DATA: SolicitudesElement[] = [
-  {
-    id: 0,
-    fecha: '9/06/2020',
-    numero: 'P.I-0001',
-    opcionPorContratar: 'Obra',
-    estadoSolicitud: '',
-    estadoDelIngreso: 'Incompleto'
-  }
-];
 
 @Component({
   selector: 'app-table-solicitud-contratacion',
@@ -38,7 +20,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
     'estadoDelIngreso',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -48,14 +30,24 @@ export class TableSolicitudContratacionComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+              private projectContractingService: ProjectContractingService
+  ) { }
 
   ngOnInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.projectContractingService.getListContratacion().subscribe( response => {
+
+      this.dataSource = new MatTableDataSource( response );
+
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    })
+    
+    
   }
 
   detallarSolicitud(id: number) {

@@ -225,17 +225,14 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> CreateContratacionProyecto(int[] idsProyectos, string tipoSolicitudCodigo, string usuarioCreacion)
+        public async Task<Respuesta> CreateContratacionProyecto(Contratacion pContratacion, string usuarioCreacion)
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                foreach (var idProyecto in idsProyectos)
-                {
-                    //Crear contratacion 
-                    Contratacion contratacion = new Contratacion
+                Contratacion contratacion = new Contratacion
                     {
                         //Auditoria
                         FechaCreacion = DateTime.Now,
@@ -245,18 +242,19 @@ namespace asivamosffie.services
                         //Registros
 
                         //TODO: Poner contratistaID y los demas campos
-                        TipoSolicitudCodigo = tipoSolicitudCodigo,
+                        TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
                         FechaSolicitud = DateTime.Now,
-                        NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
+                        //NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
                         //Contratista = ContratistaId 
                         //EsObligacionEspecial = (bool),
                         //ConsideracionDescripcion = "" 
                     };
                     contratacion.RegistroCompleto = ValidarEstado(contratacion);
                     //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
-                    _context.Contratacion.Add(contratacion);
-                    _context.SaveChanges();
+                    
 
+                foreach (ContratacionProyecto c in pContratacion.ContratacionProyecto)
+                {
                     //Crear contratacionProyecto
                     ContratacionProyecto contratacionProyecto = new ContratacionProyecto
                     {
@@ -266,12 +264,17 @@ namespace asivamosffie.services
                         Eliminado = false,
                         //Registros
                         ContratacionId = contratacion.ContratacionId,
-                        ProyectoId = idProyecto,
+                        ProyectoId = c.ProyectoId,
 
                     };
-                    _context.ContratacionProyecto.Add(contratacionProyecto);
-                    _context.SaveChanges();
+                    contratacion.ContratacionProyecto.Add( contratacionProyecto );
+                    //_context.ContratacionProyecto.Add(contratacionProyecto);
+                    
                 }
+
+                _context.Contratacion.Add(contratacion);
+                _context.SaveChanges();
+
                 return respuesta =
                  new Respuesta
                  {
@@ -279,6 +282,7 @@ namespace asivamosffie.services
                      IsException = false,
                      IsValidation = true,
                      Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
+                     Data =  contratacion,
                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, "")
                  };
             }

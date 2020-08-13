@@ -178,4 +178,10 @@
     </form>
   </div>
 </div>
-<app-tabla-resultados></app-tabla-resultados>
+<button style="display: none;" (click)="tablaResultados.ngOnInit()" id="btnListaResultado" ></button>
+<app-tabla-resultados
+    [listaResultados]="listaResultado" 
+    #tablaResultados 
+>
+
+</app-tabla-resultados>
