@@ -63,15 +63,22 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   ngOnInit(): void {
   }
 
-   addUso(i: number) {
+  addUso(i: number) {
     const control = this.addressForm.get('componentes') as FormArray;
-    let listaUsos = control.controls[i].get('usos') as FormArray;
+    const listaUsos = control.controls[i].get('usos') as FormArray;
 
-     listaUsos.push(this.fb.control(null, Validators.compose([
-       Validators.required, Validators.minLength(4), Validators.maxLength(20)])
-     ));
-   }
+    listaUsos.push(this.createUso());
+  }
 
+  createUso(): FormGroup {
+    return this.fb.group({
+      usoDescripcion: [null, Validators.compose([
+        Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
+      valorUso: [null, Validators.compose([
+        Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+      ]
+    });
+  }
 
   addComponent() {
     this.componentes.push(this.createComponent());
