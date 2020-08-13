@@ -24,10 +24,26 @@ import { ConsideracionesEspecialesComponent } from './components/consideraciones
 import { TableFuentesYUsosComponent } from './components/table-fuentes-y-usos/table-fuentes-y-usos.component';
 import { DefinirFuentesYUsosComponent } from './components/definir-fuentes-y-usos/definir-fuentes-y-usos.component';
 import { AsociadaComponent } from './components/asociada/asociada.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 
 @NgModule({
-  declarations: [SolicitarContratacionComponent, FormSolicitarContratacionComponent, TablaResultadosComponent, DialogTableProyectosSeleccionadosComponent, TableSolicitudContratacionComponent, ExpansionPanelDetallarSolicitudComponent, TableProyectosDeLaSolicitudComponent, TablaResultadosContratistasComponent, TableCaracteristicasEspecialesComponent, DefinirCaracteristicasComponent, ConsideracionesEspecialesComponent, TableFuentesYUsosComponent, DefinirFuentesYUsosComponent, AsociadaComponent],
+  declarations: [
+    SolicitarContratacionComponent,
+    FormSolicitarContratacionComponent,
+    TablaResultadosComponent,
+    DialogTableProyectosSeleccionadosComponent,
+    TableSolicitudContratacionComponent,
+    ExpansionPanelDetallarSolicitudComponent,
+    TableProyectosDeLaSolicitudComponent,
+    TablaResultadosContratistasComponent,
+    TableCaracteristicasEspecialesComponent,
+    DefinirCaracteristicasComponent,
+    ConsideracionesEspecialesComponent,
+    TableFuentesYUsosComponent,
+    DefinirFuentesYUsosComponent,
+    AsociadaComponent
+  ],
   imports: [
     CommonModule,
     SolicitarContratacionRoutingModule,
@@ -38,6 +54,7 @@ import { AsociadaComponent } from './components/asociada/asociada.component';
     MatRadioModule,
     MatCardModule,
     ReactiveFormsModule,
+    CurrencyMaskModule
   ]
 })
 export class SolicitarContratacionModule { }

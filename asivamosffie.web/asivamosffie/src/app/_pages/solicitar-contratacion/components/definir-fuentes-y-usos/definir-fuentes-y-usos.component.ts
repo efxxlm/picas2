@@ -15,14 +15,17 @@ export class DefinirFuentesYUsosComponent implements OnInit {
     ],
     componentes: this.fb.array([
       this.fb.group({
+        fase: [null, Validators.required],
         componente: [null, Validators.required],
         usos: this.fb.array([
-          [null, Validators.compose([
-            Validators.required, Validators.minLength(4), Validators.maxLength(20)])]
-        ]),
-        valorDeLaFuente: [null, Validators.compose([
-          Validators.required, Validators.minLength(4), Validators.maxLength(20)])
-        ]
+          this.fb.group({
+            usoDescripcion: [null, Validators.compose([
+              Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
+            valorUso: [null, Validators.compose([
+              Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+            ]
+          })
+        ])
       })
     ])
   });
@@ -44,8 +47,15 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   get componentes() {
     return this.addressForm.get('componentes') as FormArray;
   }
-  get usos() {
-    return this.addressForm.get('usos') as FormArray;
+
+  cuentasBancaria(i: number) {
+    const control = this.addressForm.get('fuenteRecursosArray') as FormArray;
+    return control.controls[i].get('cuentasBancaria') as FormArray;
+  }
+
+  usos(i: number) {
+    const control = this.addressForm.get('componentes') as FormArray;
+    return control.controls[i].get('usos') as FormArray;
   }
 
   constructor(private fb: FormBuilder) { }
@@ -53,11 +63,14 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  addUso() {
-    this.usos.push( this.fb.control(null, Validators.compose([
-      Validators.required, Validators.minLength(4), Validators.maxLength(20)])
-    ));
-  }
+   addUso(i: number) {
+    const control = this.addressForm.get('componentes') as FormArray;
+    let listaUsos = control.controls[i].get('usos') as FormArray;
+
+     listaUsos.push(this.fb.control(null, Validators.compose([
+       Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+     ));
+   }
 
 
   addComponent() {
@@ -66,14 +79,17 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
   createComponent(): FormGroup {
     return this.fb.group({
+      fase: [null, Validators.required],
       componente: [null, Validators.required],
-        usos: this.fb.array([
-          [null, Validators.compose([
-            Validators.required, Validators.minLength(4), Validators.maxLength(20)])]
-        ]),
-        valorDeLaFuente: [null, Validators.compose([
-          Validators.required, Validators.minLength(4), Validators.maxLength(20)])
-        ]
+      usos: this.fb.array([
+        this.fb.group({
+          usoDescripcion: [null, Validators.compose([
+            Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
+          valorUso: [null, Validators.compose([
+            Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+          ]
+        })
+      ])
     });
   }
 
