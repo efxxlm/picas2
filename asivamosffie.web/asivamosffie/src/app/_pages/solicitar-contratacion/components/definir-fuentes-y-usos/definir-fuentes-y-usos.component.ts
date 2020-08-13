@@ -15,14 +15,17 @@ export class DefinirFuentesYUsosComponent implements OnInit {
     ],
     componentes: this.fb.array([
       this.fb.group({
+        fase: [null, Validators.required],
         componente: [null, Validators.required],
         usos: this.fb.array([
-          [null, Validators.compose([
-            Validators.required, Validators.minLength(4), Validators.maxLength(20)])]
-        ]),
-        valorDeLaFuente: [null, Validators.compose([
-          Validators.required, Validators.minLength(4), Validators.maxLength(20)])
-        ]
+          this.fb.group({
+            uso: [null, Validators.compose([
+              Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
+            valorUso: [null, Validators.compose([
+              Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+            ]
+          })
+        ])
       })
     ])
   });
@@ -54,7 +57,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   }
 
   addUso() {
-    this.usos.push( this.fb.control(null, Validators.compose([
+    this.usos.push(this.fb.control(null, Validators.compose([
       Validators.required, Validators.minLength(4), Validators.maxLength(20)])
     ));
   }
@@ -66,14 +69,17 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
   createComponent(): FormGroup {
     return this.fb.group({
+      fase: [null, Validators.required],
       componente: [null, Validators.required],
-        usos: this.fb.array([
-          [null, Validators.compose([
-            Validators.required, Validators.minLength(4), Validators.maxLength(20)])]
-        ]),
-        valorDeLaFuente: [null, Validators.compose([
-          Validators.required, Validators.minLength(4), Validators.maxLength(20)])
-        ]
+      usos: this.fb.array([
+        this.fb.group({
+          uso: [null, Validators.compose([
+            Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
+          valorUso: [null, Validators.compose([
+            Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+          ]
+        })
+      ])
     });
   }
 

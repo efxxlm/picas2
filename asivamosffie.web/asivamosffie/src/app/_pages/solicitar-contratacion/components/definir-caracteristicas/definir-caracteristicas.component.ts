@@ -9,8 +9,9 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class DefinirCaracteristicasComponent implements OnInit {
   addressForm = this.fb.group({
-    reasignacion: 'free',
-    avanceObra: 'free',
+    completada: null,
+    reasignacion: null,
+    avanceObra: null,
     porcentajeAvanceObra: [null, Validators.compose([
       Validators.required, Validators.minLength(1), Validators.maxLength(3), Validators.min(1), Validators.max(100)])
     ],
