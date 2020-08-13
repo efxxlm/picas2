@@ -21,20 +21,7 @@ namespace asivamosffie.services.Helpers
             _context = context;
         }
 
-        //TODO: Modificar como obtener el numero de contratacion
-        public  string GetNumeroSolicitudContratacion()
-        { 
-            int? idContratacion = _context.Contratacion.LastOrDefault().ContratistaId;
-
-            if (idContratacion == null)
-            {
-                return "1";
-            }
-            else
-            {
-                return (idContratacion + 1).ToString();
-            } 
-        }
+  
 
         public static string encryptSha1(string password)
         {

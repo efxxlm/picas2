@@ -255,13 +255,23 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
             }
+ 
 
-        public Task<string> GetNumeroSolicitudContratacion()
+        public string GetNumeroSolicitudContratacion()
         {
-            throw new NotImplementedException();
+            int? numeroContratacion = _context.Contratacion.ToList().Count;
+
+            if (numeroContratacion == null)
+            {
+                return "1";
+            }
+            else
+            {
+                return (numeroContratacion + 1).ToString();
+            }
         }
 
-            public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
+        public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
             var depactual = _context.Localizacion.Find(munactual.IdPadre);

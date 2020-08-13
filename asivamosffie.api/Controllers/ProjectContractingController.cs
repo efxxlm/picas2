@@ -117,7 +117,7 @@ namespace asivamosffie.api.Controllers
                 string pUsuarioModifico = " ";
                 //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
                 pContratacionProyecto.UsuarioCreacion = pUsuarioModifico;
-                respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto);
+                respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto , false);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -138,7 +138,7 @@ namespace asivamosffie.api.Controllers
                 string pUsuarioModifico = " ";
                 //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
                 pContratacionProyectoAportante.UsuarioCreacion = pUsuarioModifico;
-                respuesta = await _projectContractingService.CreateEditContratacionProyectoAportante(pContratacionProyectoAportante);
+                respuesta = await _projectContractingService.CreateEditContratacionProyectoAportante(pContratacionProyectoAportante , false);
                 return Ok(respuesta);
             }
             catch (Exception ex)
