@@ -27,6 +27,13 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
+        [Route("GetContratacionByContratacionId")]
+        [HttpGet]
+        public async Task<Contratacion> GetContratacionByContratacionId (int pContratacionId)
+        {
+            return await _projectContractingService.GetContratacionByContratacionId(pContratacionId);
+        }
+
 
         [Route("GetListProyectsByFilters")]
         [HttpGet]

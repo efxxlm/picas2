@@ -34,6 +34,49 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         private readonly devAsiVamosFFIEContext _context;
 
+
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        {
+            Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
+                .Include(r => r.Contratista)
+                .Include(r => r.ContratacionProyecto)
+                .ThenInclude(r => r.Proyecto)
+                .Include(r => r.ContratacionProyecto)
+                .ThenInclude(r => r.ContratacionProyectoAportante)
+                .ThenInclude(r => r.ComponenteAportante)
+                .ThenInclude(r => r.ComponenteUso).FirstOrDefaultAsync();
+
+
+            contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
+     
+            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
+            List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == 1).ToList();
+            List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == 3).ToList();
+
+
+            foreach (var item in contratacion.ContratacionProyecto)
+            {
+
+              
+                if (!(bool)item.Proyecto.Eliminado)
+                {
+                    Proyecto proyectoTem = await _context.Proyecto.Where(r => r.ProyectoId == item.Proyecto.ProyectoId)
+                           .Include(r => r.Sede)
+                           .Include(r => r.InstitucionEducativa)
+                           .Include(r => r.LocalizacionIdMunicipioNavigation).FirstOrDefaultAsync();
+
+                    Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyectoTem.LocalizacionIdMunicipioNavigation.IdPadre);
+
+                    item.Proyecto.LocalizacionIdMunicipio = item.Proyecto.LocalizacionIdMunicipioNavigation.Descripcion + " / " + departamento.Descripcion;
+                    item.Proyecto.UsuarioModificacion = ListRegiones.Find(r => r.LocalizacionId == departamento.IdPadre).Descripcion;
+                    item.Proyecto.TipoIntervencionCodigo = ListTipoIntervencion.Find(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).Nombre;
+                }
+                
+            }
+
+            return contratacion;
+        }
+
         public ProjectContractingService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
             _documentService = documentService;
@@ -154,7 +197,7 @@ namespace asivamosffie.services
                               .Include(r => r.Sede)
                               .Include(r => r.InstitucionEducativa)
                               .Include(r => r.LocalizacionIdMunicipioNavigation).ToList();
-                              
+
 
 
             //if (!string.IsNullOrEmpty(pTipoIntervencion))
@@ -191,7 +234,7 @@ namespace asivamosffie.services
 
             foreach (var proyecto in ListProyectos)
             {
-                if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo)) 
+                if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
                 {
                     Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
 
@@ -221,7 +264,7 @@ namespace asivamosffie.services
                 }
             }
 
-            return ListProyectoGrilla.OrderByDescending(r=> r.ProyectoId).ToList();
+            return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
 
 
@@ -233,25 +276,25 @@ namespace asivamosffie.services
             try
             {
                 Contratacion contratacion = new Contratacion
-                    {
-                        //Auditoria
-                        FechaCreacion = DateTime.Now,
-                        UsuarioCreacion = usuarioCreacion,
-                        Eliminado = false,
+                {
+                    //Auditoria
+                    FechaCreacion = DateTime.Now,
+                    UsuarioCreacion = usuarioCreacion,
+                    Eliminado = false,
 
-                        //Registros
+                    //Registros
 
-                        //TODO: Poner contratistaID y los demas campos
-                        TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
-                        FechaSolicitud = DateTime.Now,
-                        //NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
-                        //Contratista = ContratistaId 
-                        //EsObligacionEspecial = (bool),
-                        //ConsideracionDescripcion = "" 
-                    };
-                    contratacion.RegistroCompleto = ValidarEstado(contratacion);
-                    //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
-                    
+                    //TODO: Poner contratistaID y los demas campos
+                    TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
+                    FechaSolicitud = DateTime.Now,
+                    //NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
+                    //Contratista = ContratistaId 
+                    //EsObligacionEspecial = (bool),
+                    //ConsideracionDescripcion = "" 
+                };
+                contratacion.RegistroCompleto = ValidarEstado(contratacion);
+                //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
+
 
                 foreach (ContratacionProyecto c in pContratacion.ContratacionProyecto)
                 {
@@ -267,9 +310,9 @@ namespace asivamosffie.services
                         ProyectoId = c.ProyectoId,
 
                     };
-                    contratacion.ContratacionProyecto.Add( contratacionProyecto );
+                    contratacion.ContratacionProyecto.Add(contratacionProyecto);
                     //_context.ContratacionProyecto.Add(contratacionProyecto);
-                    
+
                 }
 
                 _context.Contratacion.Add(contratacion);
@@ -282,7 +325,7 @@ namespace asivamosffie.services
                      IsException = false,
                      IsValidation = true,
                      Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
-                     Data =  contratacion,
+                     Data = contratacion,
                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, "")
                  };
             }
@@ -355,7 +398,7 @@ namespace asivamosffie.services
 
         }
 
-        public bool ValidarEstado(Contratacion contratacion)
+        public static bool ValidarEstado(Contratacion contratacion)
         {
 
             if (!string.IsNullOrEmpty(contratacion.TipoSolicitudCodigo)
@@ -436,7 +479,6 @@ namespace asivamosffie.services
             }
 
         }
-
 
         public async Task<Respuesta> CreateEditContratacionProyectoAportante(ContratacionProyectoAportante pContratacionProyectoAportante)
         {
