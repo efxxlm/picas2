@@ -3,30 +3,34 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-export interface Solicitudes {
+export interface OrdenDelDia {
+  id: number;
   fecha: string;
   numero: string;
-  tipo: string;
+  estado: string;
 }
 
-const ELEMENT_DATA: Solicitudes[] = [
-  {fecha: '23/06/2020', numero: 'SA0006', tipo: 'Apertura de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'SC0005', tipo: 'Evaluación de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'PI0004', tipo: 'Contratación'},
+const ELEMENT_DATA: OrdenDelDia[] = [
+  {id: 0, fecha: '24/06/2020', numero: 'CT_00001', estado: 'estado'}
 ];
 
 @Component({
-  selector: 'app-tabla-solicitudes-contractuales',
-  templateUrl: './tabla-solicitudes-contractuales.component.html',
-  styleUrls: ['./tabla-solicitudes-contractuales.component.scss']
+  selector: 'app-tabla-orden-del-dia',
+  templateUrl: './tabla-orden-del-dia.component.html',
+  styleUrls: ['./tabla-orden-del-dia.component.scss']
 })
-export class TablaSolicitudesContractualesComponent implements OnInit {
+export class TablaOrdenDelDiaComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo'];
+  displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   constructor() { }
 
@@ -48,4 +52,7 @@ export class TablaSolicitudesContractualesComponent implements OnInit {
     };
   }
 
+  accion(e: number) {
+    console.log(e);
+  }
 }

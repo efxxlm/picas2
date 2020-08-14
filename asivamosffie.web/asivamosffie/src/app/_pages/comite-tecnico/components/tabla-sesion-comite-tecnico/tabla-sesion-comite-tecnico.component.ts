@@ -3,30 +3,37 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-export interface Solicitudes {
+export interface ComiteTecnico {
+  id: number;
   fecha: string;
   numero: string;
-  tipo: string;
+  estado: string;
 }
 
-const ELEMENT_DATA: Solicitudes[] = [
-  {fecha: '23/06/2020', numero: 'SA0006', tipo: 'Apertura de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'SC0005', tipo: 'Evaluación de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'PI0004', tipo: 'Contratación'},
+const ELEMENT_DATA: ComiteTecnico[] = [
+  {id: 0, fecha: '24/06/2020', numero: 'CT_00001', estado: 'Sín convocatoría'},
+  {id: 0, fecha: '25/06/2020', numero: 'CT_00002', estado: 'Sín convocatoría'},
+  {id: 0, fecha: '26/06/2020', numero: 'CT_00003', estado: 'Sín convocatoría'},
+  {id: 0, fecha: '27/06/2020', numero: 'CT_00004', estado: 'Sín convocatoría'},
 ];
 
 @Component({
-  selector: 'app-tabla-solicitudes-contractuales',
-  templateUrl: './tabla-solicitudes-contractuales.component.html',
-  styleUrls: ['./tabla-solicitudes-contractuales.component.scss']
+  selector: 'app-tabla-sesion-comite-tecnico',
+  templateUrl: './tabla-sesion-comite-tecnico.component.html',
+  styleUrls: ['./tabla-sesion-comite-tecnico.component.scss']
 })
-export class TablaSolicitudesContractualesComponent implements OnInit {
+export class TablaSesionComiteTecnicoComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo'];
+  displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   constructor() { }
 

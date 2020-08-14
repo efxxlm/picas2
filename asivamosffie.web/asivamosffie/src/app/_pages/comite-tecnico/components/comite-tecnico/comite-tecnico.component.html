@@ -65,9 +65,14 @@
             </div>
         </div>
         <a [routerLink]="fechaComite.valid?'/comiteTecnico/crearOrdenDelDia': null" mat-raised-button color="accent"
-            [disabled]="fechaComite.invalid">
+            [disabled]="fechaComite.invalid" class="crear-orden">
             Crear orden del día del comité técnico
         </a>
+
+        <app-tabla-orden-del-dia></app-tabla-orden-del-dia>
     </div>
+
+    <div ></div>
+    <app-tabla-sesion-comite-tecnico *ngIf="sesionComiteTecnico"></app-tabla-sesion-comite-tecnico>
 
 </div>

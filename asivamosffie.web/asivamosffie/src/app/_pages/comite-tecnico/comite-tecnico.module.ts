@@ -13,9 +13,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { TablaSolicitudesContractualesComponent } from './tabla-solicitudes-contractuales/tabla-solicitudes-contractuales.component';
+import { TablaOrdenDelDiaComponent } from './components/tabla-orden-del-dia/tabla-orden-del-dia.component';
+import { TablaSesionComiteTecnicoComponent } from './components/tabla-sesion-comite-tecnico/tabla-sesion-comite-tecnico.component';
+import { TablaGestionActasComponent } from './components/tabla-gestion-actas/tabla-gestion-actas.component';
 
 @NgModule({
-  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent],
+  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent, TablaOrdenDelDiaComponent, TablaSesionComiteTecnicoComponent, TablaGestionActasComponent],
   imports: [
     CommonModule,
     ComiteTecnicoRoutingModule,

@@ -4,9 +4,11 @@
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
     </a>
   </div>
-  <h1 class="title-menu--h1 text-center">
-    Crear orden del día de comité técnico
-  </h1>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Crear orden del día de comité técnico
+    </h1>
+  </div>
 
   <mat-card class="shipping-card">
     <mat-card-header class="header-card">
@@ -66,9 +68,7 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left"
-                      [ngClass]="{'color-secondaryColor' : tiempoIntervencion.value === '' }"
-                      >Tiempo de intervención <b class="minutos">Minutos</b></label>
+                      <label class="label-left">Tiempo de intervención <b class="minutos">Minutos</b></label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
