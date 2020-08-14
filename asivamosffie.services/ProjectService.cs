@@ -497,7 +497,7 @@ namespace asivamosffie.services
                     Proyecto proyectoAntiguo = _context.Proyecto.Where(r => r.ProyectoId == pProyecto.ProyectoId).FirstOrDefault();
 
                     //Proyecto Auditoria
-                 
+
                     proyectoAntiguo.FechaModificacion = DateTime.Now;
                     proyectoAntiguo.UsuarioModificacion = pProyecto.UsuarioCreacion;
                     //Proyecto Registros 
@@ -610,8 +610,8 @@ namespace asivamosffie.services
                             };
                             _context.ProyectoAportante.Add(proyectoAportante1);
                             _context.SaveChanges();
-                        } 
-                     
+                        }
+
                         else
                         {
                             ProyectoAportante proyectoAportanteAntiguo = _context.ProyectoAportante.Find(proyectoAportante.ProyectoAportanteId);
@@ -656,7 +656,7 @@ namespace asivamosffie.services
                                 CoordinacionResponsableCodigo = infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo
                             };
                             _context.InfraestructuraIntervenirProyecto.Add(infraestructuraIntervenirProyecto1);
-                            _context.SaveChanges(); 
+                            _context.SaveChanges();
                         }
                         else
                         {
@@ -758,7 +758,7 @@ namespace asivamosffie.services
                             !string.IsNullOrEmpty(worksheet.Cells[i, 31].Text) |
                             !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
                             )
-                        {                            
+                        {
 
                             TemporalProyecto temporalProyecto = new TemporalProyecto
                             {
@@ -813,8 +813,9 @@ namespace asivamosffie.services
                             }
                             else
                             {
-                                archivoCarge.CantidadRegistrosInvalidos++;
-                                break;
+                                worksheet.Cells[i, 1].Value = "Registro invalido";
+                                CantidadRegistrosInvalidos++;
+                                continue;
                             }
 
                             //#9
@@ -827,11 +828,14 @@ namespace asivamosffie.services
                             //Volver a dejar como estaba buscando con nombre
                             int SedeId = await _commonService.getSedeInstitucionEducativaIdByNameAndInstitucionPadre(worksheet.Cells[i, 10].Text, idInstitucionEducativaSede);
                             if (SedeId > 0)
-                            { temporalProyecto.SedeId = SedeId; }
+                            {
+                                temporalProyecto.SedeId = SedeId;
+                            }
                             else
                             {
-                                archivoCarge.CantidadRegistrosInvalidos++;
-                                break;
+                                worksheet.Cells[i, 1].Value = "Registro invalido";
+                                CantidadRegistrosInvalidos++;
+                                continue;
                             }
 
                             //#11
@@ -976,12 +980,13 @@ namespace asivamosffie.services
 
                             if (temporalProyecto.TemporalProyectoId > 0)
                             {
+                                worksheet.Cells[i, 1].Value = "Registro valido";
                                 CantidadResgistrosValidos++;
                             }
                             else
                             {
                                 CantidadRegistrosInvalidos++;
-                                worksheet.Cells[i, 1].Value = "Estructura invalida";
+                                worksheet.Cells[i, 1].Value = "Registro invalido";
                             }
                         }
                         else
@@ -1001,7 +1006,8 @@ namespace asivamosffie.services
                             else
                             {
                                 CantidadRegistrosInvalidos++;
-                                worksheet.Cells[i, 1].Value = "Campos vacios";
+                                worksheet.Cells[i, 1].Value = "Registro invalido";
+                            //    worksheet.Cells[i, 1].Value = "Campos vacios";
                             }
                         }
 
@@ -1030,7 +1036,7 @@ namespace asivamosffie.services
                     //write the file to the disk
                     File.WriteAllBytes(filePath, bin);
                 }
-                
+
 
 
                 //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
@@ -1352,7 +1358,7 @@ namespace asivamosffie.services
 
         public async Task<Proyecto> GetProyectoByProyectoId(int idProyecto)
         {
-            Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).Include(y=>y.InstitucionEducativa).FirstOrDefaultAsync();
+            Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).Include(y => y.InstitucionEducativa).FirstOrDefaultAsync();
             proyecto.ProyectoAportante = _context.ProyectoAportante.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false).Include(y => y.Aportante).Include(z => z.CofinanciacionDocumento).ToList();
             proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();
             List<InfraestructuraIntervenirProyecto> infraestructuras = _context.InfraestructuraIntervenirProyecto.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false).ToList();
