@@ -7,22 +7,22 @@ export interface OrdenDelDia {
   id: number;
   fecha: string;
   numero: string;
-  estadoAprobacion: string;
-  estadoRegistro: string;
+  numeroCompromisos: number;
+  nivelCumplimiento: string;
 }
 
 const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '24/06/2020', numero: 'CT_00001', estadoAprobacion: 'Sin acta', estadoRegistro: 'Incompleto' }
+  { id: 0, fecha: '24/06/2020', numero: 'CT_00001', numeroCompromisos: 2, nivelCumplimiento: '0' }
 ];
 
 @Component({
-  selector: 'app-tabla-gestion-actas',
-  templateUrl: './tabla-gestion-actas.component.html',
-  styleUrls: ['./tabla-gestion-actas.component.scss']
+  selector: 'app-tabla-monitoreo-compromisos',
+  templateUrl: './tabla-monitoreo-compromisos.component.html',
+  styleUrls: ['./tabla-monitoreo-compromisos.component.scss']
 })
-export class TablaGestionActasComponent implements OnInit {
+export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'estadoAprobacion', 'estadoRegistro', 'id'];
+  displayedColumns: string[] = ['fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

@@ -12,13 +12,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
-import { TablaSolicitudesContractualesComponent } from './tabla-solicitudes-contractuales/tabla-solicitudes-contractuales.component';
+import { TablaSolicitudesContractualesComponent } from './components/tabla-solicitudes-contractuales/tabla-solicitudes-contractuales.component';
 import { TablaOrdenDelDiaComponent } from './components/tabla-orden-del-dia/tabla-orden-del-dia.component';
 import { TablaSesionComiteTecnicoComponent } from './components/tabla-sesion-comite-tecnico/tabla-sesion-comite-tecnico.component';
 import { TablaGestionActasComponent } from './components/tabla-gestion-actas/tabla-gestion-actas.component';
+import { TablaMonitoreoCompromisosComponent } from './components/tabla-monitoreo-compromisos/tabla-monitoreo-compromisos.component';
 
 @NgModule({
-  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent, TablaOrdenDelDiaComponent, TablaSesionComiteTecnicoComponent, TablaGestionActasComponent],
+  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent, TablaOrdenDelDiaComponent, TablaSesionComiteTecnicoComponent, TablaGestionActasComponent, TablaMonitoreoCompromisosComponent],
   imports: [
     CommonModule,
     ComiteTecnicoRoutingModule,

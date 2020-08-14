@@ -72,7 +72,10 @@
         <app-tabla-orden-del-dia></app-tabla-orden-del-dia>
     </div>
 
-    <div ></div>
     <app-tabla-sesion-comite-tecnico *ngIf="sesionComiteTecnico"></app-tabla-sesion-comite-tecnico>
+
+    <app-tabla-gestion-actas *ngIf="gestionActas"></app-tabla-gestion-actas>
+
+    <app-tabla-monitoreo-compromisos *ngIf="monitoreoCompromisos"></app-tabla-monitoreo-compromisos>
 
 </div>
