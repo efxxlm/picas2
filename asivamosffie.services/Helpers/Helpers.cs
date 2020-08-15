@@ -9,6 +9,14 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
+using ClosedXML.Excel;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace asivamosffie.services.Helpers
 {
@@ -19,6 +27,69 @@ namespace asivamosffie.services.Helpers
         public Helpers(devAsiVamosFFIEContext context)
         {
             _context = context;
+        }
+         
+        public static bool SaveListToExcel<T>(List<T> lista,string pFilePatch, string pNombreHoja , bool TieneEncabezado)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                var workbook = new XLWorkbook();
+                var ws = workbook.Worksheets.Add(pNombreHoja);
+
+                int i = 1;
+                bool columnas = TieneEncabezado;
+                foreach (var item in lista)
+                {
+                    List<Type> primitivos = (new Type[] { typeof(int), typeof(float), typeof(decimal), typeof(string), typeof(byte[]), typeof(bool), typeof(DateTime?), typeof(int?), typeof(float?), typeof(decimal?), typeof(DateTime) }).ToList();
+                    int j = 1;
+                    foreach (PropertyInfo propInfo in item.GetType().GetProperties())
+                    {
+                        try
+                        {
+                            ////Copia solo los no indexados y los que sean primitivos
+                            if (propInfo.GetIndexParameters().Length == 0 && primitivos.Any(tip => tip.Name.Equals(propInfo.PropertyType.Name)))
+                            {
+                                if (columnas)
+                                {
+                                    ws.Cell(1, j).Value = propInfo.Name;
+                                }
+                                object valorOriginal = propInfo.GetValue(item, null);
+                                // set the value of the new object
+                                if (valorOriginal != null)
+                                {
+                                    if (typeof(string).Name.Equals(propInfo.PropertyType.Name))
+                                    {
+                                        ws.Cell(i + 1, j).SetValue(valorOriginal);
+                                    }
+                                    else
+                                    {
+                                        ws.Cell(i + 1, j).Value = valorOriginal;
+                                    }
+
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        { 
+                        }
+                        j++;
+                    }
+                    columnas = false;
+                    i++;
+                } 
+                workbook.SaveAs(stream); 
+                byte[] bin = stream.ToArray();  
+                string filePath = pFilePatch;  
+                File.WriteAllBytes(filePath, bin); 
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+          
+
         }
 
         public static string encryptSha1(string password)
@@ -32,7 +103,7 @@ namespace asivamosffie.services.Helpers
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
             result = sha.ComputeHash(data);
-             
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
             {
@@ -45,14 +116,14 @@ namespace asivamosffie.services.Helpers
                     sb.Append("0");
                 }
                 sb.Append(result[i].ToString("x"));
-            }  
+            }
             return sb.ToString().ToUpper();
         }
 
         public static string CleanStringInput(string text)//ÁÉÍÓÚ //
         {
 
-            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
             char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
 
             if (text != null)
@@ -99,10 +170,10 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort)
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort)
         {
             try
-            { 
+            {
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient(pStrSmtpServerV);
 
@@ -110,7 +181,7 @@ namespace asivamosffie.services.Helpers
                 mail.To.Add(pDestinatario);
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
-        
+
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;
                 SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);
@@ -124,7 +195,7 @@ namespace asivamosffie.services.Helpers
 
             return true;
         }
-         
+
         public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
         {
             const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
@@ -180,6 +251,6 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
- 
+
     }
 }
