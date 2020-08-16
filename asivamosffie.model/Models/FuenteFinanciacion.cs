@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace asivamosffie.model.Models
 {
@@ -28,22 +26,6 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
 
-        [NotMapped]
-        public decimal ValorAporteEnCuenta
-        {
-            get
-            {
-                try
-                {
-                    
-                    return this.ControlRecurso.Sum(e => (decimal)e.ValorConsignacion);
-                }
-                catch
-                {
-                    throw new Exception("Error calculado en valor aporte en cuenta");
-                }
-            }
-        }
         public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }

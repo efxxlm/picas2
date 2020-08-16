@@ -126,8 +126,6 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     listaCotizaciones.clear();
     this.addressForm.get('cuantasCotizaciones').setValue( this.procesoSeleccion.cantidadCotizaciones )
 
-    console.log(this.procesoSeleccion);
-
     this.procesoSeleccion.procesoSeleccionCotizacion.forEach( cotizacion => {
       let control = this.createCotizacion();
 
