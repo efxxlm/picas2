@@ -485,17 +485,17 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 2)");
 
-                entity.HasOne(d => d.Aportante)
-                    .WithMany(p => p.ContratacionProyectoAportante)
-                    .HasForeignKey(d => d.AportanteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ContratacionProyectoAportante_Aportante");
-
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.ContratacionProyectoAportante)
                     .HasForeignKey(d => d.ContratacionProyectoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContratacionProyectoAportante_ContratacionProyecto");
+
+                entity.HasOne(d => d.ProyectoAportante)
+                    .WithMany(p => p.ContratacionProyectoAportante)
+                    .HasForeignKey(d => d.ProyectoAportanteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContratacionProyectoAportante_Aportante");
             });
 
             modelBuilder.Entity<Contratista>(entity =>
