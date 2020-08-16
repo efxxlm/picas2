@@ -1,34 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ContratistaGrilla, Contratacion } from 'src/app/_interfaces/project-contracting';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
-
-export interface TableElement {
-  id: number;
-  nombre: string;
-  nombreRepresentanteLegak: string;
-  numeroInvitacion: string;
-  numeroIdentificacion: string;
-}
-
-const ELEMENT_DATA: TableElement[] = [
-  {
-    id: 0,
-    nombre: 'Constructora del Atlántico',
-    nombreRepresentanteLegak: 'Camilo Albeiro Aponte Diaz ',
-    numeroInvitacion: '000234',
-    numeroIdentificacion: '10995556644'
-  },
-  {
-    id: 1,
-    nombre: 'Constructora del Atlántico S.A',
-    nombreRepresentanteLegak: 'Juan Felipe Otero',
-    numeroInvitacion: '000333',
-    numeroIdentificacion: '23875556644'
-  }
-];
 
 @Component({
   selector: 'app-tabla-resultados-contratistas',
@@ -37,7 +14,14 @@ const ELEMENT_DATA: TableElement[] = [
 })
 export class TablaResultadosContratistasComponent implements OnInit {
 
+  @Input() contratacion: Contratacion;
+  @Output() guardar: EventEmitter<any> = new EventEmitter(); 
+
+  contratista: ContratistaGrilla;
+
   unionTemporal: FormControl;
+  nombreContratista: FormControl;
+  numeroDocumento: FormControl;
 
   displayedColumns: string[] = [
     'nombre',
@@ -46,19 +30,25 @@ export class TablaResultadosContratistasComponent implements OnInit {
     'numeroIdentificacion',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   elementosSelecciondos: any[] = [];
 
-  constructor() {
+  constructor(
+                private projectContractingService: ProjectContractingService,
+
+             ) 
+  {
     this.declararUnionTemporal();
   }
 
   private declararUnionTemporal() {
-    this.unionTemporal = new FormControl(['free', Validators.required]);
+    this.unionTemporal = new FormControl(false, Validators.required);
+    this.nombreContratista = new FormControl('', Validators.required);
+    this.numeroDocumento = new FormControl('', Validators.required);
   }
 
   ngOnInit(): void {
@@ -69,8 +59,35 @@ export class TablaResultadosContratistasComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  addElement(event: any, elemento: any) {
-    console.log(event);
-    this.elementosSelecciondos.push(elemento);
+  selectElement(elemento: ContratistaGrilla) {
+    this.contratista = {
+      idContratista: elemento.idContratista,
+
+    }
+
+
   }
+
+  buscar(){
+    let nombre = this.nombreContratista.value;
+    let numero = this.numeroDocumento.value;
+    let esConsorcio = this.unionTemporal.value;
+
+    this.projectContractingService.getListContractingByFilters( numero, nombre, esConsorcio )
+      .subscribe( response => {
+        this.dataSource = new MatTableDataSource(response);
+      })
+
+  }
+
+  cargarRegistros(){
+
+  }
+
+  onSave(){
+    this.contratacion.contratistaId = this.contratista.idContratista;
+    this.guardar.emit(null);
+  }
+  
+
 }

@@ -4,18 +4,18 @@
             <label class="label-left" for="reasignacion">¿Este contrato tendrá alguna obligación especial?</label>
         </div>
         <mat-radio-group class="radioInput" formControlName="reasignacion">
-            <mat-radio-button value="si">Sí</mat-radio-button>
-            <mat-radio-button value="no">No</mat-radio-button>
+            <mat-radio-button value="true">Sí</mat-radio-button>
+            <mat-radio-button value="false">No</mat-radio-button>
         </mat-radio-group>
     </div>
-    <div class="animatedDown" *ngIf="addressForm.controls.reasignacion.value === 'si'">
+    <div class="animatedDown" *ngIf="addressForm.controls.reasignacion.value === 'true'">
         <mat-form-field class="full-width">
             <textarea matInput formControlName="descripcion"></textarea>
         </mat-form-field>
     </div>
-    <div class="text-center animatedDown" *ngIf="addressForm.controls.reasignacion.value !== 'free'">
+    <div class="text-center animatedDown" *ngIf="addressForm.controls.reasignacion.value !== ''">
         <button mat-button color="warn" class="btn-guardar" type="submit"
-            [disabled]="addressForm.controls.reasignacion.value === 'si' && addressForm.controls.descripcion.value === '' || !addressForm.controls.descripcion.dirty">
+            [disabled]="addressForm.controls.reasignacion.value === 'true' && addressForm.controls.descripcion.value === '' || !addressForm.controls.descripcion.dirty">
             <img src="assets/img/icon/guardar.svg" alt="guardar">
         </button>
     </div>

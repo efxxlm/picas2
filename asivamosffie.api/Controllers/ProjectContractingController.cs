@@ -61,20 +61,21 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateContratacionProyecto")]
         [HttpPost]
-        public async Task<IActionResult> CreateContratacionProyecto(Contratacion pContratacion)
+        public async Task<Respuesta> CreateContratacionProyecto(ContratacionProyecto pContratacionProyecto)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //string pUsuarioModifico = " ";
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
-                respuesta = await _projectContractingService.CreateContratacionProyecto(pContratacion, pUsuarioModifico);
-                return Ok(respuesta);
+                pContratacionProyecto.UsuarioCreacion = pUsuarioModifico;
+                respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto, false);
+                return respuesta;
             }
             catch (Exception ex)
             {
                 respuesta.Data = ex.ToString();
-                return Ok(respuesta);
+                return respuesta;
             }
         }
 
@@ -146,6 +147,13 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.ToString();
                 return Ok(respuesta);
             }
+        }
+
+        [Route("GetContratacionProyectoById")]
+        [HttpGet]
+        public async Task<ContratacionProyecto> GetContratacionProyectoById(int idContratacionProyecto){
+            var respuesta = await _projectContractingService.GetContratacionProyectoById(idContratacionProyecto);
+            return respuesta;            
         }
     }
 }

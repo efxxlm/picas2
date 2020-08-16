@@ -37,6 +37,8 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
+
+            try{
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.Contratista)
                 .Include(r => r.ContratacionProyecto)
@@ -74,6 +76,10 @@ namespace asivamosffie.services
             }
 
             return contratacion;
+            }catch(Exception ex)
+            {
+                return null;
+            }
         }
 
         public ProjectContractingService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
@@ -106,6 +112,27 @@ namespace asivamosffie.services
             return ListContratacionProyecto;
 
 
+        }
+
+        public async Task<ContratacionProyecto> GetContratacionProyectoById(int idContratacionProyecto)
+        {
+            ContratacionProyecto contratacionProyecto = new ContratacionProyecto();
+
+            contratacionProyecto = await _context.ContratacionProyecto.
+                Where(r => !(bool)r.Eliminado && r.ContratacionProyectoId == idContratacionProyecto).
+                IncludeFilter(r => r.Proyecto).Where(r => !(bool)r.Eliminado).
+                IncludeFilter(r => r.Contratacion.Contratista).Where(r => !(bool)r.Eliminado).
+                IncludeFilter(r => r.ContratacionProyectoAportante.Where(r => !(bool)r.Eliminado)).FirstOrDefaultAsync();
+
+            // foreach (var item in ListContratacionProyecto)
+            // {
+            //     foreach (var ContratacionProyectoAportante in item.ContratacionProyectoAportante)
+            //     {
+            //         ContratacionProyectoAportante.Aportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == ContratacionProyectoAportante.AportanteId).FirstOrDefaultAsync();
+            //     }
+            // }
+
+            return contratacionProyecto;
         }
 
         public async Task<List<Contratacion>> GetListContratacion()
@@ -292,6 +319,8 @@ namespace asivamosffie.services
                 {
                     Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
                     contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
+                    contratacionVieja.EsObligacionEspecial = Pcontratacion.EsObligacionEspecial;
+                    contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
                     contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
                     contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
                     _context.Update(contratacionVieja);
@@ -336,8 +365,8 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantMessagesProyecto.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, Pcontratacion.UsuarioCreacion, "")
+                    Code = ConstantMessagesProyecto.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, Pcontratacion.UsuarioCreacion, "")
                 };
             }
             catch (Exception ex)
@@ -516,7 +545,7 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantMessagesProyecto.Error,
+                    Code = ConstantMessagesProyecto.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, strAccion)
                 };
             }
