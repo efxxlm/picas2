@@ -74,6 +74,8 @@
                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                         formControlName="valorAportanteProyecto">
                         <input type="hidden" formControlName="contratacionProyectoAportanteId" >
+                        <input type="hidden" formControlName="proyectoAportanteId" >
+                        
                     </mat-form-field>
                     <span class="contador">{{20 - valorAportante.value.length}}</span>
                   </div>
@@ -96,7 +98,7 @@
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
-                              <mat-select required formControlName="componente">
+                              <mat-select required formControlName="fase">
                                 <mat-option></mat-option>
                                 <mat-option *ngFor="let fase of fasesSelect" [value]="fase">
                                   {{ fase.nombre }}
@@ -122,6 +124,7 @@
                                 </mat-option>
                               </mat-select>
                               <input type="hidden" formControlName="componenteAportanteId">
+                              <input type="hidden" formControlName="contratacionProyectoAportanteId">
                             </mat-form-field>
                           </div>
                         </div>
@@ -129,12 +132,12 @@
                     </div>
                     <div formGroupName="usos">
                       <div class="animatedDown" *ngFor="let uso of usos(j, i).controls; let k = index">
-                        <div [formGroupName]="j">
+                        <div [formGroupName]="k">
                           <div class="row">
                             <div class="col-md-8">
                               <div class="row">
                                 <div class="pr-1">
-                                  <label class="label-left">Uso {{ j + 1 }}</label>
+                                  <label class="label-left">Uso {{ k + 1 }}</label>
                                 </div>
                                 <div class="col">
                                   <mat-form-field class="select-width" >
@@ -174,6 +177,7 @@
                                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                       formControlName="valorUso">
                                       <input type="hidden" formControlName="componenteUsoId">
+                                      <input type="hidden" formControlName="componenteAportanteId">
                                   </mat-form-field>
                                   <span class="contador">{{20 - valorUso.value.length}}</span>
                                 </div>
@@ -190,7 +194,7 @@
                         Eliminar componente
                       </button>
                       <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length === i + 1"
-                        (click)="addComponent()">
+                        (click)="addComponent( i )">
                         <img src="assets/img/icon/mas.svg" alt="Agregar otro componente">
                         Agregar otro componente
                       </button>

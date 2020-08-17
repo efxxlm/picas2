@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { ContratacionProyecto, ComponenteUso, ComponenteAportante, ContratacionProyectoAportante } from 'src/app/_interfaces/project-contracting';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-definir-fuentes-y-usos',
@@ -51,7 +53,8 @@ export class DefinirFuentesYUsosComponent implements OnInit {
               private route: ActivatedRoute,
               private projectContractingService: ProjectContractingService,
               private commonService: CommonService,
-
+              public dialog: MatDialog,    
+              private router: Router,
 
              ) 
   { 
@@ -61,6 +64,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   createAportante(){
     return this.fb.group({
       contratacionProyectoAportanteId: [],
+      proyectoAportanteId:[],
       valorAportanteProyecto: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
       ],
@@ -96,17 +100,30 @@ export class DefinirFuentesYUsosComponent implements OnInit {
             let grupoAportante = this.createAportante();
             let listaComponentes = grupoAportante.get('componentes') as FormArray;
 
+            grupoAportante.get('contratacionProyectoAportanteId').setValue( apo.contratacionProyectoAportanteId );
+            grupoAportante.get('proyectoAportanteId').setValue( apo.proyectoAportanteId );
             grupoAportante.get('valorAportanteProyecto').setValue( apo.valorAporte );
 
             if ( apo.componenteAportante.length > 0 ){
                 apo.componenteAportante.forEach( compoApo => {
                     let grupoComponente = this.createComponente();
                     let listaUsos = grupoComponente.get('usos') as FormArray;
+                    let faseSeleccionada = this.fasesSelect.find( f => f.codigo == compoApo.faseCodigo )
+                    let componenteSeleccionado = this.componentesSelect.find( c => c.codigo == compoApo.tipoComponenteCodigo )
 
-                    grupoComponente.get('componente').setValue( compoApo.tipoComponenteCodigo )
+                    grupoComponente.get('componenteAportanteId').setValue( compoApo.componenteAportanteId )
+                    grupoComponente.get('contratacionProyectoAportanteId').setValue( compoApo.contratacionProyectoAportanteId )
+                    grupoComponente.get('fase').setValue( faseSeleccionada )
+                    grupoComponente.get('componente').setValue( componenteSeleccionado );
 
                     compoApo.componenteUso.forEach( uso => {
                         let grupoUso = this.createUso();
+                        let usoSeleccionado = this.usosSelect.find( u => u.codigo == uso.tipoUsoCodigo )
+
+                        grupoUso.get('componenteUsoId').setValue( uso.componenteUsoId )
+                        grupoUso.get('componenteAportanteId').setValue( uso.componenteAportanteId )
+                        grupoUso.get('usoDescripcion').setValue( usoSeleccionado )
+                        grupoUso.get('valorUso').setValue( uso.valorUso )
 
                         listaUsos.push( grupoUso );
                      })
@@ -140,16 +157,15 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   }
 
 
-  addUso(i: number) {
-    const control = this.addressForm.get('componentes') as FormArray;
-    const listaUsos = control.controls[i].get('usos') as FormArray;
-
+  addUso(j: number, i: number) {
+    const listaUsos =  this.componentes( j ).controls[i].get('usos') as FormArray;
     listaUsos.push(this.createUso());
   }
 
   createUso(): FormGroup {
     return this.fb.group({
       componenteUsoId: [],
+      componenteAportanteId: [],
       usoDescripcion: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
       valorUso: [null, Validators.compose([
@@ -159,12 +175,16 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   }
 
   addComponent( i: number ) {
-    this.componentes( i ).push(this.createComponente());
+    let grupoComponente = this.createComponente();
+    let listaUsos = grupoComponente.get('usos') as FormArray;
+    listaUsos.push( this.createUso() );
+    this.componentes( i ).push( grupoComponente );
   }
 
   createComponente(): FormGroup {
     return this.fb.group({
       componenteAportanteId:[],
+      contratacionProyectoAportanteId: [],
       fase: [null, Validators.required],
       componente: [null, Validators.required],
       usos: this.fb.array([])
@@ -173,6 +193,13 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   }
 
   onSubmit() {
@@ -185,6 +212,8 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
         let aportante: ContratacionProyectoAportante = {
           contratacionProyectoAportanteId: controlAportante.get('contratacionProyectoAportanteId').value,
+          contratacionProyectoId: this.contratacionProyecto.contratacionProyectoId,
+          proyectoAportanteId: controlAportante.get('proyectoAportanteId').value,
           valorAporte: controlAportante.get('valorAportanteProyecto').value,
           componenteAportante: [],
 
@@ -197,6 +226,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
             componenteAportanteId: controlComponente.get('componenteAportanteId').value,
             contratacionProyectoAportanteId: aportante.contratacionProyectoAportanteId,
             tipoComponenteCodigo: controlComponente.get('componente').value ? controlComponente.get('componente').value.codigo : null ,
+            faseCodigo: controlComponente.get('fase').value ? controlComponente.get('fase').value.codigo : null ,
             componenteUso: [],
 
           }
@@ -220,9 +250,12 @@ export class DefinirFuentesYUsosComponent implements OnInit {
         this.contratacionProyecto.contratacionProyectoAportante.push( aportante );
     })
 
-    this.projectContractingService.createEditContratacionProyecto( this.contratacionProyecto )
-      .subscribe( response => {
-        console.log( response );
+    this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto( this.contratacionProyecto )
+      .subscribe( respuesta => {
+        this.openDialog( "Solicitud Contratación", respuesta.message )
+
+        if (respuesta.code == "200")
+          this.router.navigate(["/solicitarContratacion/solicitud", this.contratacionProyecto.contratacionId ]);
       })
 
     console.log(this.contratacionProyecto);

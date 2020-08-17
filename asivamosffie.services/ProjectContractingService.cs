@@ -123,6 +123,11 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude( r => r.Aportante )
+                .Include(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante)
+                        .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
                 .FirstOrDefaultAsync();
                 
 
@@ -448,6 +453,7 @@ namespace asivamosffie.services
                     componenteAportanteOld.FechaModificacion = DateTime.Now;
                     //Esto es lo unico que puede cambiar en esta tabla
                     componenteAportanteOld.TipoComponenteCodigo = pComponenteAportante.TipoComponenteCodigo;
+                    componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
                 }
                 if (esTransaccion)
                 {
@@ -542,6 +548,58 @@ namespace asivamosffie.services
                 {
                     return respuesta;
                 }
+                _context.SaveChanges();
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesProyecto.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, strAccion)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesProyecto.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+        public async Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+            string strAccion = " ";
+
+            try
+            {
+                foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)
+                    {
+                        ContratacionProyectoAportante.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
+                        await CreateEditContratacionProyectoAportante(ContratacionProyectoAportante, true);
+
+                        //ComponenteAportante
+                        foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                        {
+                            ComponenteAportante.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
+                            await CreateEditComponenteAportante(ComponenteAportante, true);
+
+
+                            //Componente Uso
+                            foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
+                            {
+                                ComponenteUso.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
+                                await CreateEditComponenteUso(ComponenteUso, true);
+                            }
+                        }
+                    }
                 _context.SaveChanges();
                 return new Respuesta
                 {

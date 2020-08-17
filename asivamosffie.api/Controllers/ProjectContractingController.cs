@@ -128,6 +128,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateEditContratacionProyectoAportanteByContratacionproyecto")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
+                pContratacionProyecto.UsuarioCreacion = pUsuarioModifico;
+                respuesta = await _projectContractingService.CreateEditContratacionProyectoAportanteByContratacionproyecto(pContratacionProyecto , false);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return Ok(respuesta);
+            }
+        }
+
 
         [Route("CreateEditContratacionProyectoAportante")]
         [HttpPost]

@@ -76,13 +76,14 @@ export interface ComponenteAportante{
     componenteAportanteId?: number,
     contratacionProyectoAportanteId?: number,
     tipoComponenteCodigo?: string,
+    faseCodigo?: string,
     fechaCreacion?: Date,
     usuarioCreacion?: string,
     eliminado?: boolean,
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     componenteUso?: ComponenteUso[],
-    
+
 }
 
 export interface ComponenteUso{
