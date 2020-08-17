@@ -27,6 +27,25 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
+      
+
+        [Route("DeleteContratacionByIdContratacion")]
+        [HttpPost]
+        public async Task<Respuesta> DeleteContratacionByIdContratacion(int idContratacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _projectContractingService.DeleteContratacionByIdContratacion(idContratacion, HttpContext.User.FindFirst("User").Value);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return respuesta;
+            }
+        }
+
         [Route("GetContratacionByContratacionId")]
         [HttpGet]
         public async Task<Contratacion> GetContratacionByContratacionId (int pContratacionId)

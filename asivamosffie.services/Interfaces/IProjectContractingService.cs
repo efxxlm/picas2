@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IProjectContractingService
     {
+        Task<Respuesta> DeleteContratacionByIdContratacion(int idContratacion, string pUsusarioElimino);
+
         Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);
 
         Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pMunicipio, int pIdInstitucionEducativa, int pIdSede);

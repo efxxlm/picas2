@@ -35,6 +35,39 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
 
 
+        public async Task<Respuesta> DeleteContratacionByIdContratacion(int idContratacion , string pUsusarioElimino) 
+        {
+            int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Contratacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
+                contratacionOld.Eliminado = true;
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionEliminarContratacionProyecto, pUsusarioElimino, "ELIMINAR CONTRATO")
+                }; 
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratacionProyecto.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.Error, idAccionEliminarContratacionProyecto, pUsusarioElimino, ex.InnerException.ToString().Substring(0,500))
+                }; 
+            }
+
+        }
+
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
 
