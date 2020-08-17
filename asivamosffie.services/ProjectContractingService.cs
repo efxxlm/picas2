@@ -71,7 +71,6 @@ namespace asivamosffie.services
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
 
-            try{
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.Contratista)
                 .Include(r => r.ContratacionProyecto)
@@ -109,10 +108,6 @@ namespace asivamosffie.services
             }
 
             return contratacion;
-            }catch(Exception ex)
-            {
-                return null;
-            }
         }
 
         public ProjectContractingService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
@@ -139,7 +134,7 @@ namespace asivamosffie.services
             {
                 foreach (var ContratacionProyectoAportante in item.ContratacionProyectoAportante)
                 {
-                    ContratacionProyectoAportante.Aportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == ContratacionProyectoAportante.AportanteId).FirstOrDefaultAsync();
+                    ContratacionProyectoAportante.ProyectoAportante = await _context.ProyectoAportante.Where(r => !(bool)r.Eliminado && r.ProyectoAportanteId == ContratacionProyectoAportante.ProyectoAportanteId ).FirstOrDefaultAsync();
                 }
             }
             return ListContratacionProyecto;
@@ -151,11 +146,23 @@ namespace asivamosffie.services
         {
             ContratacionProyecto contratacionProyecto = new ContratacionProyecto();
 
-            contratacionProyecto = await _context.ContratacionProyecto.
-                Where(r => !(bool)r.Eliminado && r.ContratacionProyectoId == idContratacionProyecto).
-                IncludeFilter(r => r.Proyecto).Where(r => !(bool)r.Eliminado).
-                IncludeFilter(r => r.Contratacion.Contratista).Where(r => !(bool)r.Eliminado).
-                IncludeFilter(r => r.ContratacionProyectoAportante.Where(r => !(bool)r.Eliminado)).FirstOrDefaultAsync();
+            contratacionProyecto = await _context.ContratacionProyecto
+                .Where(r => !(bool)r.Eliminado && r.ContratacionProyectoId == idContratacionProyecto)
+                .Include(r => r.Proyecto).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.Contratacion).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.ContratacionProyectoAportante).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.Proyecto)
+                    .ThenInclude(r => r.ProyectoAportante).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.Proyecto)
+                     .ThenInclude(r => r.ProyectoAportante)
+                         .ThenInclude( r => r.Aportante )
+                .Include(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante)
+                        .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
+                .FirstOrDefaultAsync();
+                
 
             // foreach (var item in ListContratacionProyecto)
             // {
@@ -354,6 +361,8 @@ namespace asivamosffie.services
                     contratacionVieja.EsObligacionEspecial = Pcontratacion.EsObligacionEspecial;
                     contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
                     contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
+                    contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;    
+
                     contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
                     _context.Update(contratacionVieja);
                 }
@@ -477,6 +486,7 @@ namespace asivamosffie.services
                     componenteAportanteOld.FechaModificacion = DateTime.Now;
                     //Esto es lo unico que puede cambiar en esta tabla
                     componenteAportanteOld.TipoComponenteCodigo = pComponenteAportante.TipoComponenteCodigo;
+                    componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
                 }
                 if (esTransaccion)
                 {
@@ -595,6 +605,58 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+            string strAccion = " ";
+
+            try
+            {
+                foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)
+                    {
+                        ContratacionProyectoAportante.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
+                        await CreateEditContratacionProyectoAportante(ContratacionProyectoAportante, true);
+
+                        //ComponenteAportante
+                        foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                        {
+                            ComponenteAportante.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
+                            await CreateEditComponenteAportante(ComponenteAportante, true);
+
+
+                            //Componente Uso
+                            foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
+                            {
+                                ComponenteUso.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
+                                await CreateEditComponenteUso(ComponenteUso, true);
+                            }
+                        }
+                    }
+                _context.SaveChanges();
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesProyecto.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, strAccion)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesProyecto.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
         public async Task<Respuesta> CreateEditContratacionProyectoAportante(ContratacionProyectoAportante pContratacionProyectoAportante, bool esTransaccion)
         {
             Respuesta respuesta = new Respuesta();
@@ -628,7 +690,7 @@ namespace asivamosffie.services
 
                     //registros
                     contratacionProyectoAportanteAntiguo.ContratacionProyectoId = pContratacionProyectoAportante.ContratacionProyectoId;
-                    contratacionProyectoAportanteAntiguo.AportanteId = pContratacionProyectoAportante.AportanteId;
+                    contratacionProyectoAportanteAntiguo.ProyectoAportanteId = pContratacionProyectoAportante.ProyectoAportanteId;
                     contratacionProyectoAportanteAntiguo.ValorAporte = pContratacionProyectoAportante.ValorAporte;
 
                 }
@@ -697,7 +759,7 @@ namespace asivamosffie.services
                     //TODO: Poner contratistaID y los demas campos
                     TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
                     FechaSolicitud = DateTime.Now,
-                    NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
+                    //NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
                     //Contratista = ContratistaId 
                     //EsObligacionEspecial = (bool),
                     //ConsideracionDescripcion = "" 
@@ -720,6 +782,20 @@ namespace asivamosffie.services
                         ProyectoId = c.ProyectoId,
 
                     };
+
+                    List<ProyectoAportante> listaAportantes = _context.ProyectoAportante.Where( a => !(bool)a.Eliminado && a.ProyectoId == c.ProyectoId ).ToList();
+
+                    listaAportantes.ForEach( apo => {
+                        ContratacionProyectoAportante contratacionProyectoAportante = new ContratacionProyectoAportante();
+
+                        contratacionProyectoAportante.ProyectoAportanteId = apo.ProyectoAportanteId;
+                        contratacionProyectoAportante.FechaCreacion = DateTime.Now;
+                        contratacionProyectoAportante.UsuarioCreacion = usuarioCreacion;
+
+                        contratacionProyecto.ContratacionProyectoAportante.Add( contratacionProyectoAportante );
+
+                    });
+
                     contratacion.ContratacionProyecto.Add(contratacionProyecto);
                     //_context.ContratacionProyecto.Add(contratacionProyecto);
 
@@ -736,7 +812,7 @@ namespace asivamosffie.services
                      IsValidation = true,
                      Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
                      Data = contratacion,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, "")
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, usuarioCreacion, "")
                  };
             }
             catch (Exception ex)

@@ -89,6 +89,7 @@ button.mat-raised-button {
     }
 }
 
+.btn-descargar-plantilla,
 .btn-eliminar {
     font-style: italic;
     img {
@@ -118,7 +119,7 @@ button.btn-calendario {
     justify-content: center;
 }
 
-.mat-dialog-actions button {    
+.mat-dialog-actions button {
     background-color: #174193;;
     background-color: var(--mainColor);
     color: white;

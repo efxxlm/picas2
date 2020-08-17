@@ -37,11 +37,13 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
               let btnTablaContratistas = document.getElementById('btnTablaContratistas');
               let btnTablacaracteristicas = document.getElementById('btnTablacaracteristicas');
               let btnconsideraciones = document.getElementById('btnconsideraciones');
+              let btnFuentesUsos = document.getElementById('btnFuentesUsos');
 
               btnTablaProyectos.click();
               btnTablaContratistas.click();
               btnTablacaracteristicas.click();
               btnconsideraciones.click();
+              btnFuentesUsos.click();
 
             }, 1000);
 

@@ -39,7 +39,7 @@ mat-form-field {
 
 .mat-form-field-appearance-outline .mat-form-field-prefix,
 .mat-form-field-appearance-outline .mat-form-field-suffix {
-    top: 0 !important; //no pude sobreescribir usando especificidad
+    bottom: 0 !important; //no pude sobreescribir usando especificidad
 }
 
 .label-left {
@@ -60,7 +60,7 @@ mat-form-field {
 
 .mat-select-arrow-wrapper {
     position: relative;
-    right: -2.65em;
+    right: -1.7em;
     top: .3em
 }
 

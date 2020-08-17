@@ -134,8 +134,8 @@ export interface Proyecto{
   tipoIntervencionCodigo:number,
   llaveMen:string,
   localizacionIdMunicipio:string,
-  institucionEducativaId:any,
-  sedeId:any,
+  institucionEducativaId:number,
+  sedeId:number,
   enConvocatoria:boolean,
   convocatoriaId?:number,
   cantPrediosPostulados:number,
@@ -155,6 +155,7 @@ export interface Proyecto{
   regid?:string;
   depid?:string;
 
+  institucionEducativa?:InstitucionEducativa
   institucionEducativaSede:InstitucionEducativa,
   localizacionIdMunicipioNavigation: Localizacion,
   predioPrincipal: Predio,
@@ -166,10 +167,10 @@ export interface Proyecto{
 }
 
 export interface InstitucionEducativa{  
-  institucionEducativaSedeId:number ;
+ institucionEducativaSedeId:number ;
   padreId?:number ,
   nombre:string ,
-  codigoDane?:number ,
+  codigoDane?:string ,
   localizacionIdMunicipio?:number ,
   fechaCreacion:Date ,
   usuarioCreacion:string ,

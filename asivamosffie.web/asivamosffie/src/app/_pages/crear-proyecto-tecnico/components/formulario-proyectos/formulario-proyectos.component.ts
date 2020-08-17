@@ -50,7 +50,7 @@ export class FormularioProyectosComponent implements OnInit {
     tipoIntervencionCodigo: null,
     llaveMen: '',
     localizacionIdMunicipio: '',
-    institucionEducativaId: 0,
+    institucionEducativaId:0,
     sedeId: 0,
     enConvocatoria: false,
     convocatoriaId: null,
@@ -86,8 +86,8 @@ export class FormularioProyectosComponent implements OnInit {
     // ajusto latitud y longitud de predios
     this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' + this.proyecto.predioPrincipal.ubicacionLatitud2;
     this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' + this.proyecto.predioPrincipal.ubicacionLongitud2;
-    this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId.institucionEducativaSedeId;
-    this.proyecto.sedeId = this.proyecto.sedeId.institucionEducativaSedeId
+    //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
+    //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(respuesta => {
       this.openDialog('', respuesta.message);
       this.router.navigate(['/crearProyecto']);
@@ -150,8 +150,8 @@ export class FormularioProyectosComponent implements OnInit {
           }
 
           this.proyecto.cantidadAportantes = respuesta.proyectoAportante.length;
-          this.getInstitucion();
-          this.getSede();
+          this.getInstitucion(respuesta.institucionEducativaId,respuesta.sedeId);
+          
           this.commonServices.forkDepartamentoMunicipio(respuesta.localizacionIdMunicipio).subscribe(
             listadoregiones => {
               this.listadoMunicipio = listadoregiones[0];
@@ -390,10 +390,13 @@ export class FormularioProyectosComponent implements OnInit {
       });
   }
 
-  getInstitucion() {
+  getInstitucion(institudcionid?:number,sedeid?:number) {
 
+    console.log(this.proyecto);
     this.commonServices.listaIntitucionEducativaByMunicipioId(this.proyecto.localizacionIdMunicipio).subscribe(respuesta => {
       this.listadoInstitucion = respuesta;
+      this.proyecto.institucionEducativaId=institudcionid;//lo uso como patch pero no esta funcionando
+      this.getSede(sedeid); 
     },
       err => {
         let mensaje: string;
@@ -412,15 +415,19 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   getCodigoDane() {
-    this.codigoDaneSede = this.proyecto.sedeId.codigoDane;
+    this.codigoDaneSede = this.proyecto.sede.codigoDane;
   }
 
-  getSede() {
+  getSede(sedeid?:number) {
     // console.log(this.proyecto.institucionEducativaId);
-    this.CodigoDaneIE = this.proyecto.institucionEducativaId.codigoDane;
-    this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId.institucionEducativaSedeId)
+    this.CodigoDaneIE = this.proyecto.institucionEducativa.codigoDane;
+    console.log("loading sede");
+    this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId)
       .subscribe(respuesta => {
-        this.listadoSede = respuesta;
+        console.log("fin sede");
+        this.listadoSede = respuesta;    
+        console.log("set sede"+sedeid);    
+        this.proyecto.sedeId=sedeid;
       },
         err => {
           let mensaje: string;
@@ -435,6 +442,7 @@ export class FormularioProyectosComponent implements OnInit {
         },
         () => {
           // console.log('terminó');
+          this.proyecto.sedeId=sedeid;
         });
   }
 

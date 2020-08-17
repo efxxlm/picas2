@@ -46,4 +46,9 @@ export class ProjectContractingService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/createEditContratacion`, contratacion );
   }
 
+  createEditContratacionProyectoAportanteByContratacionproyecto( contratacionProyecto: ContratacionProyecto  ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/createEditContratacionProyectoAportanteByContratacionproyecto`, contratacionProyecto );
+
+  }
+
 }
