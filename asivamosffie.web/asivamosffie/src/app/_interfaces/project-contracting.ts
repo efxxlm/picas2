@@ -31,7 +31,7 @@ export interface ContratacionProyecto{
     numeroLicencia?: string,
     fechaVigencia?: Date,
     contempladaServicioMonitoreo?: boolean,
-    
+    contratacionProyectoAportante?: ContratacionProyectoAportante[],     
 
 }
 
@@ -56,4 +56,43 @@ export interface ProyectoGrilla{
     tipoIntervencion?: string,
     llaveMen?: string,
     region?: string,
+}
+
+export interface ContratacionProyectoAportante{
+    contratacionProyectoAportanteId?: number,
+    contratacionProyectoId?: number,
+    proyectoAportanteId?: number,
+    valorAporte?: number,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    usuarioModificacion?: string,
+    fechaModificacion?: Date,
+    eliminado?: number,
+    componenteAportante?: ComponenteAportante[],
+
+}
+
+export interface ComponenteAportante{
+    componenteAportanteId?: number,
+    contratacionProyectoAportanteId?: number,
+    tipoComponenteCodigo?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    componenteUso?: ComponenteUso[],
+    
+}
+
+export interface ComponenteUso{
+    componenteUsoId?: number,
+    componenteAportanteId?: number,
+    tipoUsoCodigo?: string,
+    valorUso?: number,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
 }

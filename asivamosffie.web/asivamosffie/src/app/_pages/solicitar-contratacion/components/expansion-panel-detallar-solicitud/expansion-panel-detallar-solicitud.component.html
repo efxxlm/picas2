@@ -98,7 +98,18 @@
                     Fuentes y usos
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-table-fuentes-y-usos></app-table-fuentes-y-usos>
+            <button 
+                type="button" 
+                (click)="fuentesUsos.cargarRegistros()" 
+                id="btnFuentesUsos" 
+                style="display: none;"
+                >
+            </button>
+            <app-table-fuentes-y-usos
+                #fuentesUsos 
+                [contratacion]="contratacion"
+                >
+        </app-table-fuentes-y-usos>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

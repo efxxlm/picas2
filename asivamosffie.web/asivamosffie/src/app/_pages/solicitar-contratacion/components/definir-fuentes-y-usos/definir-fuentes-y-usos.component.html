@@ -1,6 +1,6 @@
 <div class="container">
   <div class="text-right">
-    <a routerLink="/solicitarContratacion/solicitud/0" mat-button color="primary" class="btn-regresar">
+    <a [routerLink]="['/solicitarContratacion/solicitud/', idSolicitud]" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
     </a>
   </div>
@@ -33,15 +33,17 @@
     <span class="info-text completo">Completo</span>
   </p>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+
+  <mat-accordion formGroupName="aportantes" *ngFor="let aportante of aportantes.controls; let j = index" >
+    <mat-expansion-panel class="expansion-style" [formGroupName]="j">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title completo">
-          Aportante 1
+          Aportante {{ j + 1 }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+      
         <mat-card class="shipping-card">
           <mat-card-content>
             <div class="row">
@@ -71,6 +73,7 @@
                         onKeyPress="if(this.value.length>=this.maxLength) return false;"
                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                         formControlName="valorAportanteProyecto">
+                        <input type="hidden" formControlName="contratacionProyectoAportanteId" >
                     </mat-form-field>
                     <span class="contador">{{20 - valorAportante.value.length}}</span>
                   </div>
@@ -80,7 +83,7 @@
             <div class="animatedDown">
               <h2 class="card-subTitle">Usos</h2>
               <div formGroupName="componentes">
-                <div class="animatedDown" *ngFor="let conponente of componentes.controls; let i = index">
+                <div class="animatedDown" *ngFor="let conponente of componentes(j).controls; let i = index">
                   <div [formGroupName]="i">
                     <mat-card-title class="header-card--text sub-text">
                       Componente {{i + 1}}
@@ -95,8 +98,8 @@
                             <mat-form-field class="select-width">
                               <mat-select required formControlName="componente">
                                 <mat-option></mat-option>
-                                <mat-option *ngFor="let componente of componentesSelect" [value]="componente.value">
-                                  {{ componente.name }}
+                                <mat-option *ngFor="let fase of fasesSelect" [value]="fase">
+                                  {{ fase.nombre }}
                                 </mat-option>
                               </mat-select>
                             </mat-form-field>
@@ -114,17 +117,18 @@
                             <mat-form-field class="select-width">
                               <mat-select required formControlName="componente">
                                 <mat-option></mat-option>
-                                <mat-option *ngFor="let componente of componentesSelect" [value]="componente.value">
-                                  {{ componente.name }}
+                                <mat-option *ngFor="let componente of componentesSelect" [value]="componente">
+                                  {{ componente.nombre }}
                                 </mat-option>
                               </mat-select>
+                              <input type="hidden" formControlName="componenteAportanteId">
                             </mat-form-field>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div formGroupName="usos">
-                      <div class="animatedDown" *ngFor="let uso of usos(i).controls; let j = index">
+                      <div class="animatedDown" *ngFor="let uso of usos(j, i).controls; let k = index">
                         <div [formGroupName]="j">
                           <div class="row">
                             <div class="col-md-8">
@@ -136,8 +140,8 @@
                                   <mat-form-field class="select-width" >
                                     <mat-select required formControlName="usoDescripcion">
                                       <mat-option></mat-option>
-                                      <mat-option *ngFor="let u of usosSelect" [value]="u.value">
-                                        {{ u.name }}
+                                      <mat-option *ngFor="let u of usosSelect" [value]="u">
+                                        {{ u.nombre }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
@@ -146,12 +150,12 @@
                             </div>
                             <div class="col-md-4 text-right p-0">
                               <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                *ngIf="usos(i).length > 1" (click)="borrarArray(usos(i), j)">
+                                *ngIf="usos(j, i).length > 1" (click)="borrarArray(usos(j, i), k)">
                                 <img src="assets/img/icon/menos.svg" alt="Eliminar uso">
                                 Eliminar uso
                               </button>
                               <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                *ngIf="j + 1 === usos(i).length" (click)="addUso(i)">
+                                *ngIf="k + 1 === usos(j, i).length" (click)="addUso(j, i)">
                                 <img src="assets/img/icon/mas.svg" alt="Agregar otro uso">
                                 Agregar otro uso
                               </button>
@@ -169,6 +173,7 @@
                                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                       formControlName="valorUso">
+                                      <input type="hidden" formControlName="componenteUsoId">
                                   </mat-form-field>
                                   <span class="contador">{{20 - valorUso.value.length}}</span>
                                 </div>
@@ -201,10 +206,9 @@
             <img src="assets/img/icon/guardar.svg" alt="guardar">
           </button>
         </div>
-      </form>
-
     </mat-expansion-panel>
   </mat-accordion>
+</form>
 </div>
 
 <!-- <pre class="container">

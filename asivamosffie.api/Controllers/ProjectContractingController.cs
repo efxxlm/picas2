@@ -61,15 +61,15 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateContratacionProyecto")]
         [HttpPost]
-        public async Task<Respuesta> CreateContratacionProyecto(ContratacionProyecto pContratacionProyecto)
+        public async Task<Respuesta> CreateContratacionProyecto(Contratacion pContratacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //string pUsuarioModifico = " ";
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
-                pContratacionProyecto.UsuarioCreacion = pUsuarioModifico;
-                respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto, false);
+                pContratacion.UsuarioCreacion = pUsuarioModifico;
+                respuesta = await _projectContractingService.CreateContratacionProyecto(pContratacion, pUsuarioModifico);
                 return respuesta;
             }
             catch (Exception ex)
