@@ -802,7 +802,7 @@ namespace asivamosffie.services
                     //TODO: Poner contratistaID y los demas campos
                     TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
                     FechaSolicitud = DateTime.Now,
-                    //NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
+                    NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
                     //Contratista = ContratistaId 
                     //EsObligacionEspecial = (bool),
                     //ConsideracionDescripcion = "" 

@@ -258,17 +258,8 @@ namespace asivamosffie.services
  
 
         public string GetNumeroSolicitudContratacion()
-        {
-            int? numeroContratacion = _context.Contratacion.ToList().Count;
-
-            if (numeroContratacion == null)
-            {
-                return "1";
-            }
-            else
-            {
-                return (numeroContratacion + 1).ToString();
-            }
+        {  
+            return "P.I-" + _context.Contratacion.ToList().Count + 1; 
         }
 
         public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
