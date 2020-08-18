@@ -31,6 +31,11 @@ export class ProjectService {
     return retorno;
   }
 
+  public getListProjectsFileProjectByOrigenId( pOrigenId: string ) {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocuments?pOrigenId=${ pOrigenId }`);
+    return retorno;
+  }
+
   public getFileByName(name: string) {   
     const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesByName?pNameFiles=${name}`, { responseType: "blob" });
     return retorno;
@@ -118,8 +123,8 @@ export interface Proyecto{
   tipoIntervencionCodigo:number,
   llaveMen:string,
   localizacionIdMunicipio:string,
-  institucionEducativaId:any,
-  sedeId:any,
+  institucionEducativaId:number,
+  sedeId:number,
   enConvocatoria:boolean,
   convocatoriaId?:number,
   cantPrediosPostulados:number,
@@ -139,6 +144,7 @@ export interface Proyecto{
   regid?:string;
   depid?:string;
 
+  institucionEducativa?:InstitucionEducativa
   institucionEducativaSede:InstitucionEducativa,
   localizacionIdMunicipioNavigation: Localizacion,
   predioPrincipal: Predio,
@@ -150,14 +156,14 @@ export interface Proyecto{
 }
 
 export interface InstitucionEducativa{  
- InstitucionEducativaSedeId:number ;
-  PadreId?:number ,
-  Nombre:string ,
-  CodigoDane?:number ,
-  LocalizacionIdMunicipio?:number ,
-  FechaCreacion:Date ,
-  UsuarioCreacion:string ,
-  Activo:boolean ,
+ institucionEducativaSedeId:number ;
+  padreId?:number ,
+  nombre:string ,
+  codigoDane?:string ,
+  localizacionIdMunicipio?:number ,
+  fechaCreacion:Date ,
+  usuarioCreacion:string ,
+  activo:boolean ,
 }
 
 export interface Localizacion{  

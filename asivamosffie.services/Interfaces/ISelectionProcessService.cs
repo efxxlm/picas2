@@ -1,5 +1,6 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<ProcesoSeleccion>>> GetSelectionProcess();
         Task<ProcesoSeleccion> GetSelectionProcessById(int id);
         Task<Respuesta> CreateEditarProcesoSeleccion(ProcesoSeleccion procesoSeleccion);
-        Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma);
+        Task<Respuesta> CreateEditarProcesoSeleccionCronograma(ProcesoSeleccionCronograma procesoSeleccionCronograma, bool esTransaccion);
         Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule();
         Task<ActionResult<List<GrillaControlCronograma>>> GetControlGridSchedule();
         Task<ProcesoSeleccionCronograma> GetSelectionProcessScheduleById(int id);
@@ -36,7 +37,11 @@ namespace asivamosffie.services.Interfaces
         Task<ProcesoSeleccionIntegrante> GetProcesoSeleccionIntegranteById(int id);
         Task<ActionResult<List<GrillaProcesoSeleccionIntegrante>>> GetGridProcesoSeleccionIntegrante(int? procesoSeleccionId);
         Task<Respuesta> CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante);
-        
-        Task<bool> Delete(int id);
+        Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento);
+         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
+         Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico);
+         Task<Respuesta> DeleteProcesoSeleccion( int pId, string pUsuarioModificacion );
+         Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado );
+         Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes();
     }
 }

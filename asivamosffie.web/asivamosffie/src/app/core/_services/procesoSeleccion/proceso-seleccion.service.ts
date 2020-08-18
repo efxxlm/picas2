@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { environment } from 'src/environments/environment';
+import { pid } from 'process';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,41 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.get<ProcesoSeleccion>(`${environment.apiUrl}/SelectionProcess/${id}`);
   }
 
+  listaActividadesByIdProcesoSeleccion( id: number ){
+    return this.http.get<ProcesoSeleccionCronograma[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);
+  }
+
+  createEditarProcesoSeleccionCronograma( cronograma: ProcesoSeleccionCronograma ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarProcesoSeleccionCronograma`, cronograma );
+  }
+
+  deleteProcesoSeleccion( pId: number ){
+    return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccion?pId=${ pId }`);
+  }
+
+  changeStateProcesoSeleccion( procesoSeleccion: ProcesoSeleccion ){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/SelectionProcess/ChangeStateProcesoSeleccion`, procesoSeleccion);
+  }
+
+  createEditarCronogramaSeguimiento( cronograma: CronogramaSeguimiento ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarCronogramaSeguimiento`, cronograma );
+  }
+
+  getProcesoSeleccionProponentes(){
+    return this.http.get<ProcesoSeleccionProponente[]>(`${environment.apiUrl}/SelectionProcess/getProcesoSeleccionProponentes`);
+  }
+
+  setValidateMassiveLoadElegibilidad( archivoParaSubir: File ){
+    const formData = new FormData(); 
+    formData.append('file', archivoParaSubir, archivoParaSubir.name);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/setValidateMassiveLoadElegibilidad`, formData);
+  }
+
+  uploadMassiveLoadElegibilidad( pId: string ){
+    let objeto = { pIdDocument: pId }
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad?pIdDocument=${ pId }`, null);
+  }
+  
 }
 
 export interface ProcesoSeleccion{
@@ -129,6 +165,16 @@ export interface ProcesoSeleccionIntegrante {
 
 }
 
+export interface CronogramaSeguimiento{
+  cronogramaSeguimientoId?: number,
+  procesoSeleccionCronogramaId?: number,
+  estadoActividadInicialCodigo?: string,
+  estadoActividadFinalCodigo?: string,
+  observacion?: string,
+  procesoSeleccionCronograma?: ProcesoSeleccionCronograma
+
+}
+
 interface TipoProcesoSeleccion{
   Privada: string;
   Cerrada: string;
@@ -140,3 +186,20 @@ export const TiposProcesoSeleccion: TipoProcesoSeleccion = {
   Cerrada:  "2",
   Abierta:  "3"
 }
+
+interface EstadoProcesoSeleccion{
+  Creado: string;
+  AperturaEntramite: string;
+  DevueltaAperturaPorComiteTecnico: string;
+  EnProcesoDeSeleccion: string;
+  RechazadaSeleccionPorComiteTecnico: string;      
+}
+
+export const EstadosProcesoSeleccion: EstadoProcesoSeleccion = {
+  Creado: "1",
+  AperturaEntramite: "2",
+  DevueltaAperturaPorComiteTecnico: "3",
+  EnProcesoDeSeleccion: "4",
+  RechazadaSeleccionPorComiteTecnico: "5",
+}
+

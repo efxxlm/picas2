@@ -62,6 +62,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 		
 		Estado_Proceso_Seleccion = 35,
 		Opcion_Por_Contratar = 37
+		Estado_Juridico_Predios = 25,
+		Estado_Cronograma_Seguimiento = 40
 
 
 

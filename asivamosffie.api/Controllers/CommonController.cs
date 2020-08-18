@@ -133,5 +133,12 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetInstitucionEducativaById(idInstitucionEducativaId);
             return result;
         }
+
+        [HttpGet]
+        [Route("GetUsuariosByPerfil")]
+        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil ){
+            var result = await common.GetUsuariosByPerfil(pIdPerfil);
+            return result;
+        }
     }
 }

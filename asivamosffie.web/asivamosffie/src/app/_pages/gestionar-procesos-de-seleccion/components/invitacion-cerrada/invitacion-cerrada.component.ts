@@ -103,6 +103,7 @@ export class InvitacionCerradaComponent implements OnInit {
       //   this.router.navigate([`/seleccion/seccionPrivada/${ this.procesoSeleccion.tipoProcesoCodigo }/${ this.procesoSeleccion.procesoSeleccionId }`])
       // }
       this.openDialog( "Proceso seleccion", respuesta.message )
+      this.router.navigate(["/seleccion/invitacionCerrada", respuesta.data.procesoSeleccionId])
       console.log('respuesta',  respuesta );
     })
   }

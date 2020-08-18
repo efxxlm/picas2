@@ -6,6 +6,7 @@ import { RegistrarNuevoComponent } from './components/registrar-nuevo/registrar-
 import { SeccionPrivadaComponent } from './components/seccion-privada/seccion-privada.component';
 import { InvitacionCerradaComponent } from './components/invitacion-cerrada/invitacion-cerrada.component';
 import { InvitacionAbiertaComponent } from './components/invitacion-abierta/invitacion-abierta.component';
+import { MonitorearCronogramaComponent } from './components/monitorear-cronograma/monitorear-cronograma.component';
 
 const routes: Routes = [
   {
@@ -28,7 +29,10 @@ const routes: Routes = [
     path: 'invitacionAbierta/:id',
     component: InvitacionAbiertaComponent
   },
-  
+  {
+    path: 'monitorearCronograma/:id',
+    component: MonitorearCronogramaComponent
+  }
 ];
 
 @NgModule({

@@ -1,20 +1,20 @@
 <h1 class="title-menu--h1">
-    Gestionar proceso {{ data.numero }}
+    <!-- Gestionar proceso {{ data.numero }} -->
 </h1>
 
 <div class="d-flex justify-content-center mt-2em">
-    <span class="mr-2em">{{ data.fechaCreacion | date:'dd/MM/yyyy' }}</span>
+    <!-- <span class="mr-2em">{{ data.fechaCreacion | date:'dd/MM/yyyy' }}</span> -->
     <span class="mr-2em">{{ data.tipoProcesoNombre }}</span>
     <span class="mr-2em">{{ data.etapaProcesoSeleccionNombre }}</span>
     <span class="mr-2em info-text completo">{{ data.esCompleto }}</span>
-    <span>{{ data.estadoDelProceso }}</span>
+    <!-- <span>{{ data.estadoDelProceso }}</span> -->
 </div>
 
 <div class="dialog-btn">
     <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onEditar()">Ver detalle / Editar</button>
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Eliminar</button>
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Monitorear cronograma</button>
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onNoClick()">Presentar evaluación a comité</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onEliminar( data.procesoSeleccionId )">Eliminar</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onMonitorearCronograma()">Monitorear cronograma</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onCerrarProceso( data.procesoSeleccionId )">Cerrar proceso</button>
 </div>
 
 <p>

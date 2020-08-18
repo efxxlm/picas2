@@ -18,11 +18,20 @@ import { InvitacionCerradaComponent } from './components/invitacion-cerrada/invi
 import { InvitacionAbiertaComponent } from './components/invitacion-abierta/invitacion-abierta.component';
 import { FormSeleccionProponenteAInvitarComponent } from './components/form-seleccion-proponente-a-invitar/form-seleccion-proponente-a-invitar.component';
 import { FormEvaluacionComponent } from './components/form-evaluacion/form-evaluacion.component';
-import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './components/form-datos-proponentes-seleccionados-invitacion-cerrada/form-datos-proponentes-seleccionados-invitacion-cerrada.component';
+import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './components/proponentes-seleccionados-invitacion-cerrada/proponentes-seleccionados-invitacion-cerrada.component';
 import { FormOrdenDeElegibilidadComponent } from './components/form-orden-de-elegibilidad/form-orden-de-elegibilidad.component';
 import { CargarOrdenDeElegibilidadComponent } from './components/cargar-orden-de-elegibilidad/cargar-orden-de-elegibilidad.component';
 import { TablaOrdenDeElegibilidadComponent } from './components/tabla-orden-de-elegibilidad/tabla-orden-de-elegibilidad.component';
 import { VerDetalleTablaProcesosComponent } from './components/ver-detalle-tabla-procesos/ver-detalle-tabla-procesos.component';
+import { MonitorearCronogramaComponent } from './components/monitorear-cronograma/monitorear-cronograma.component';
+import { TablaCronogramaComponent } from './components/tabla-cronograma/tabla-cronograma.component';
+import { TablaDetalleCronogramaComponent } from './components/tabla-detalle-cronograma/tabla-detalle-cronograma.component';
+import { RegistrarSeguimientoCronogramaComponent } from './components/registrar-seguimiento-cronograma/registrar-seguimiento-cronograma.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -42,14 +51,23 @@ import { VerDetalleTablaProcesosComponent } from './components/ver-detalle-tabla
     FormOrdenDeElegibilidadComponent,
     CargarOrdenDeElegibilidadComponent,
     TablaOrdenDeElegibilidadComponent,
-    VerDetalleTablaProcesosComponent
+    VerDetalleTablaProcesosComponent,
+    MonitorearCronogramaComponent,
+    TablaCronogramaComponent,
+    TablaDetalleCronogramaComponent,
+    RegistrarSeguimientoCronogramaComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     GestionarProcesosDeSeleccionRoutingModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule
   ]
 })
 export class GestionarProcesosDeSeleccionModule { }

@@ -8,36 +8,24 @@
             <img src="assets/img/icon/lupa.svg" alt="Buscar">
         </button>
     </div>
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-        <ng-container matColumnDef="fechaCargue">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de cargue </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fechaCargue}}</b> </td>
-        </ng-container>
+            <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{columna.titulo}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[columna.name]}} </td>
+            </ng-container>
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Gestión </th>
+                <td mat-cell *matCellDef="let gestion">
+                    <button mat-button color="warn" mat-raised-button color="accent"
+                        class="btn-table btn-descargar-plantilla" type="button" (click)="ver(gestion)">Ver
+                        detalle</button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-        <ng-container matColumnDef="numeroRegistros">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número total de registros </th>
-            <td mat-cell *matCellDef="let element"> {{element.numeroRegistros}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="numeroRegistrosValidos">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de registros validos </th>
-            <td mat-cell *matCellDef="let element"> {{element.numeroRegistrosValidos}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="numeroRegistrosInalidos">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de registros inválidos </th>
-            <td mat-cell *matCellDef="let element"> {{element.numeroRegistrosInalidos}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-            <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.id)">Ver detalle</button>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+        </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

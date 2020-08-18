@@ -69,10 +69,16 @@
                     Datos de proponentes seleccionados
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>
+            <button style="display: none;" type="button" (click)="proponenteCerrada.cargarRegistro()" id="botonProponente"></button>
+            <app-form-datos-proponentes-seleccionados-invitacion-cerrada
+               #proponenteCerrada [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+            </app-form-datos-proponentes-seleccionados-invitacion-cerrada>
+
+            <!-- <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>
             <app-form-datos-proponentes-seleccionados
                #proponente [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
-            </app-form-datos-proponentes-seleccionados>
+            </app-form-datos-proponentes-seleccionados> -->
         </mat-expansion-panel>
+
     </mat-accordion>
 </div>

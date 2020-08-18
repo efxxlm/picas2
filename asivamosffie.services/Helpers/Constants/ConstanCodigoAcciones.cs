@@ -36,5 +36,6 @@
         public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
         public const string Eliminar_Disponibilidad_Presupuestal = "33";
         public const string Crear_Editar_DP_Proyecto = "34"; // Crear_Editar Disponibilidad Presupuestal Proyecto
+        public const string Crear_Editar_Cronograma_Seguimiento = "37";
     }
 }
