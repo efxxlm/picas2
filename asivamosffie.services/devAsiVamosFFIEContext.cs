@@ -1396,6 +1396,10 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ProcesoSeleccionCotizacion>(entity =>
