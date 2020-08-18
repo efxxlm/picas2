@@ -5,6 +5,8 @@ import { ComiteTecnicoRoutingModule } from './comite-tecnico-routing.module';
 import { ComiteTecnicoComponent } from './components/comite-tecnico/comite-tecnico.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
+import { QuillModule } from 'ngx-quill';
+
 import { MaterialModule } from './../../material/material.module';
 import { CrearOrdenDelDiaComponent } from './components/crear-orden-del-dia/crear-orden-del-dia.component';
 import { MatInputModule } from '@angular/material/input';
@@ -24,9 +26,26 @@ import { FormProposicionesVariosComponent } from './components/form-proposicione
 import { FormRegistrarParticipantesComponent } from './components/form-registrar-participantes/form-registrar-participantes.component';
 import { TablaRegistrarValidacionSolicitudesContractialesComponent } from './components/tabla-registrar-validacion-solicitudes-contractiales/tabla-registrar-validacion-solicitudes-contractiales.component';
 import { TablaRegistrarOtrosTemasComponent } from './components/tabla-registrar-otros-temas/tabla-registrar-otros-temas.component';
+import { VotacionSolicitudComponent } from './components/votacion-solicitud/votacion-solicitud.component';
 
 @NgModule({
-  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent, TablaOrdenDelDiaComponent, TablaSesionComiteTecnicoComponent, TablaGestionActasComponent, TablaMonitoreoCompromisosComponent, RegistrarSesionComiteTecnicoComponent, TablaValidacionSolicitudesContractualesComponent, TablaOtrosTemasComponent, FormProposicionesVariosComponent, FormRegistrarParticipantesComponent, TablaRegistrarValidacionSolicitudesContractialesComponent, TablaRegistrarOtrosTemasComponent],
+  declarations: [
+    ComiteTecnicoComponent,
+    CrearOrdenDelDiaComponent,
+    TablaSolicitudesContractualesComponent,
+    TablaOrdenDelDiaComponent,
+    TablaSesionComiteTecnicoComponent,
+    TablaGestionActasComponent,
+    TablaMonitoreoCompromisosComponent,
+    RegistrarSesionComiteTecnicoComponent,
+    TablaValidacionSolicitudesContractualesComponent,
+    TablaOtrosTemasComponent,
+    FormProposicionesVariosComponent,
+    FormRegistrarParticipantesComponent,
+    TablaRegistrarValidacionSolicitudesContractialesComponent,
+    TablaRegistrarOtrosTemasComponent,
+    VotacionSolicitudComponent
+  ],
   imports: [
     CommonModule,
     ComiteTecnicoRoutingModule,
@@ -37,7 +56,8 @@ import { TablaRegistrarOtrosTemasComponent } from './components/tabla-registrar-
     MatButtonModule,
     MatSelectModule,
     MatRadioModule,
-    MatCardModule
+    MatCardModule,
+    QuillModule.forRoot()
   ]
 })
 export class ComiteTecnicoModule { }

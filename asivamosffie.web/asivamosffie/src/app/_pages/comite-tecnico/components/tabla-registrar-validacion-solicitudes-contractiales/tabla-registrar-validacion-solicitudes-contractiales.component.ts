@@ -3,18 +3,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 
 export interface OrdenDelDia {
   id: number;
-  responsable: string;
-  tiempo: string;
-  tema: string;
-  // votacion: boolean;
+  fecha: string;
+  numero: string;
+  tipo: string;
+  votacion: boolean;
 }
 
 const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, responsable: 'Dirección administrativa', tiempo: '45 minutos', tema: 'Revisión de terminos técnicos' }
-  // { id: 0, responsable: 'Dirección administrativa', tiempo: '45 minutos', tema: 'Revisión de terminos técnicos', votacion: false }
+  { id: 0, fecha: '23/06/2020', numero: 'SA0006', tipo: 'Apertura de proceso de selección', votacion: false }
 ];
 
 @Component({
@@ -24,8 +24,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
 
-  displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
-  // displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
+  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -39,6 +38,12 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   constructor(
     public dialog: MatDialog
   ) { }
+
+  openDialogValidacionSolicitudes() {
+    this.dialog.open(VotacionSolicitudComponent, {
+      width: '28em'
+    });
+  }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;

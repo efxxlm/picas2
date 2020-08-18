@@ -6,14 +6,14 @@ import { MatDialog } from '@angular/material/dialog';
 
 export interface OrdenDelDia {
   id: number;
-  fecha: string;
-  numero: string;
-  tipo: string;
+  responsable: string;
+  tiempo: string;
+  tema: string;
   votacion: boolean;
 }
 
 const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '23/06/2020', numero: 'SA0006', tipo: 'Apertura de proceso de selección', votacion: false }
+  { id: 0, responsable: '23/06/2020', tiempo: 'SA0006', tema: 'Apertura de proceso de selección', votacion: false }
 ];
 
 @Component({
@@ -23,7 +23,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
+  displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
