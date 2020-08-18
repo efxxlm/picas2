@@ -221,7 +221,7 @@ namespace asivamosffie.services
         public async Task<List<Contratacion>> GetListContratacion()
         {
 
-            List<Contratacion> ListContratacion = await _context.Contratacion.ToListAsync();
+            List<Contratacion> ListContratacion = await _context.Contratacion.Where( r => !(bool)r.Eliminado ).ToListAsync();
 
             foreach (var Contratacion in ListContratacion)
             {
@@ -231,7 +231,7 @@ namespace asivamosffie.services
                 }
                 if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                 {
-                    Contratacion.EstadoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                    Contratacion.EstadoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud);
                 }
             }
             return ListContratacion;

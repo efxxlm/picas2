@@ -53,7 +53,12 @@ export class ProjectContractingService {
 
   eliminarContratacion( id: number )
   {
-    return this.http.delete<Respuesta>(`${environment.apiUrl}/ProjectContracting/DeleteContratacionByIdContratacion?idContratacion=${ Number }`);
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/ProjectContracting/DeleteContratacionByIdContratacion?idContratacion=${ id }`);
+  }
+
+  changeStateContratacionByIdContratacion( id: number, estado: string )
+  {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/changeStateContratacionByIdContratacion?idContratacion=${ id }&PCodigoEstado=${ estado }`, null);
   }
 
 }

@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 
 @Component({
@@ -13,6 +14,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./table-solicitud-contratacion.component.scss']
 })
 export class TableSolicitudContratacionComponent implements OnInit {
+
+  estadosSolicitud = EstadosSolicitud;
 
   displayedColumns: string[] = [
     'fecha',
@@ -96,7 +99,12 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   enviarSolicitud( id: number){
-    alert('falta implementar esto');
+    this.projectContractingService.changeStateContratacionByIdContratacion( id, this.estadosSolicitud.EnTramite )
+      .subscribe( respuesta => {
+        this.openDialog('Solicitud Contratacion', respuesta.message )
+        this.ngOnInit();          
+
+      });
   }
 
 }

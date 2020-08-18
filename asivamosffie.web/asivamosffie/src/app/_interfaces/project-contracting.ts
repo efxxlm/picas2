@@ -97,3 +97,31 @@ export interface ComponenteUso{
     fechaModificacion?: Date,
     usuarioModificacion?: string,
 }
+
+interface EstadoSolicitud{
+    AprobadaPorComiteTecnico: string,
+    AprobadaPorComiteFiduciario: string,
+    RechazadaPorComiteTecnico: string,
+    RechazadaPorComiteFiduciario: string,
+    DevueltaPorComiteTecnico: string,
+    DevueltaPorComiteFiduciario: string,
+    EnTramite: string,
+  }
+  
+  export const EstadosSolicitud: EstadoSolicitud = {
+    AprobadaPorComiteTecnico: '1',
+    AprobadaPorComiteFiduciario: '2',
+    RechazadaPorComiteTecnico: '3',
+    RechazadaPorComiteFiduciario: '4',
+    DevueltaPorComiteTecnico: '5',
+    DevueltaPorComiteFiduciario: '6',
+    EnTramite: '7',
+  }
+  
+
+
+
+
+
+
+
