@@ -136,6 +136,18 @@ export class CommonService {
     return this.http.get<Usuario[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
   }
 
+  listaFases(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=16`);
+  }
+
+  listaComponentes(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=12`);
+  }
+
+  listaUsos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=13`);
+  }
+
 
   public forkProject():Observable<any[]>
   {

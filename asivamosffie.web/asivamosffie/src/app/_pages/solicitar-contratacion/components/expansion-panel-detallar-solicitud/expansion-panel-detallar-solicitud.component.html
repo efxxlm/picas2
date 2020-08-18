@@ -1,0 +1,115 @@
+<div class="container">
+    <div class="text-right">
+        <a routerLink="/solicitarContratacion" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Detallar la solicitud {{ contratacion.numeroSolicitud }}
+        </h1>
+        <p class="text-primary" *ngIf="contratacion.contratacionProyecto" >Proyectos incluidos: <b>{{ contratacion.contratacionProyecto.length }}</b></p>
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title completo">
+                    Proyectos de la solicitud
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button 
+                type="button" 
+                (click)="tablaProyectos.cargarRegistros()" 
+                id="btnTablaProyectos" 
+                style="display: none;"
+                ></button>
+            <app-table-proyectos-de-la-solicitud
+            #tablaProyectos
+            [contratacion]="contratacion" >
+        </app-table-proyectos-de-la-solicitud>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Datos del contratista
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button 
+                type="button" 
+                (click)="tablaContratistas.cargarRegistros()" 
+                id="btnTablaContratistas" 
+                style="display: none;"
+                >
+            </button>
+            <app-tabla-resultados-contratistas
+                #tablaContratistas 
+                [contratacion]="contratacion"
+                (guardar)="onSubmit()"
+                >
+            </app-tabla-resultados-contratistas>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Características técnicas y jurídicas especiales
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button 
+                type="button" 
+                (click)="tablacaracteristicas.cargarRegistros()" 
+                id="btnTablacaracteristicas" 
+                style="display: none;"
+                >
+            </button>
+            <app-table-caracteristicas-especiales
+                #tablacaracteristicas 
+                [contratacion]="contratacion">
+            </app-table-caracteristicas-especiales>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Consideraciones especiales
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button 
+                type="button" 
+                (click)="consideraciones.cargarRegistros()" 
+                id="btnconsideraciones" 
+                style="display: none;"
+                >
+            </button>
+            <app-consideraciones-especiales
+                #consideraciones 
+                [contratacion]="contratacion"
+                (guardar)="onSubmit()"
+            >
+            </app-consideraciones-especiales>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Fuentes y usos
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button 
+                type="button" 
+                (click)="fuentesUsos.cargarRegistros()" 
+                id="btnFuentesUsos" 
+                style="display: none;"
+                >
+            </button>
+            <app-table-fuentes-y-usos
+                #fuentesUsos 
+                [contratacion]="contratacion"
+                >
+        </app-table-fuentes-y-usos>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
