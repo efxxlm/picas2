@@ -91,7 +91,7 @@ namespace asivamosffie.services
 
 
 
-        //plantlla - rubro por financiar es infraestructura y el tipo de solicitud es contratación
+        //plantilla - rubro por financiar es infraestructura y el tipo de solicitud es contratación
         public async Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal obj)
         {
             try
