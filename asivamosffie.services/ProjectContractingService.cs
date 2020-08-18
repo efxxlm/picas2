@@ -42,6 +42,7 @@ namespace asivamosffie.services
             {
                 Contratacion contratacionOld = _context.Contratacion.Find(idContratacion); 
                 contratacionOld.EstadoSolicitudCodigo = PCodigoEstado;
+                contratacionOld.FechaSolicitud = DateTime.Now;
                 contratacionOld.UsuarioModificacion = pUsusarioModifico;
                 contratacionOld.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
