@@ -394,7 +394,7 @@ namespace asivamosffie.services
                     Pcontratacion.FechaSolicitud = DateTime.Now;
                     //Metodo que valida si todos los registros estan completos retorna true si completos
                     Pcontratacion.RegistroCompleto = ValidarEstado(Pcontratacion);
-                    Pcontratacion.NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion();
+                    Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
                     _context.Contratacion.Add(Pcontratacion);
                 }
                 else
@@ -802,7 +802,7 @@ namespace asivamosffie.services
                     //TODO: Poner contratistaID y los demas campos
                     TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
                     FechaSolicitud = DateTime.Now,
-                    NumeroSolicitud = await _commonService.GetNumeroSolicitudContratacion()
+                    NumeroSolicitud = await _commonService.EnumeradorContratacion()
                     //Contratista = ContratistaId 
                     //EsObligacionEspecial = (bool),
                     //ConsideracionDescripcion = "" 

@@ -11,8 +11,14 @@ namespace asivamosffie.services.Interfaces
     {
         Task<string> EnumeradorComite();
 
+        Task<string> EnumeradorContratacion();
+
+
         Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
-        Task<string> GetNumeroSolicitudContratacion();
+ 
+
+
+
         string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId);
         string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio);
         string GetNombreRegionByIdMunicipio(string pIdDepartamento);

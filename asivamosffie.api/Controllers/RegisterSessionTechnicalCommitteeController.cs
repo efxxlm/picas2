@@ -22,16 +22,14 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion);
+     
 
-
-
-        [HttpGet]
-        [Route("GetListSesionComiteTemaByIdSesion")]
-        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion()
-        {
-            return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByIdSesion();
-        }
+        //[HttpGet]
+        //[Route("GetListSesionComiteTemaByIdSesion")]
+        //public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion()
+        //{
+        //    return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByIdSesion();
+        //}
 
         [HttpGet]
         [Route("GetListSolicitudesContractuales")] 
