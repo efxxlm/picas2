@@ -204,6 +204,8 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
   onSubmit() {
 
+    let valoresCorrectos = true;
+
     this.contratacionProyecto.contratacionProyectoAportante = [];
 
       this.aportantes.controls.forEach( controlAportante => {
@@ -218,6 +220,11 @@ export class DefinirFuentesYUsosComponent implements OnInit {
           componenteAportante: [],
 
         }
+
+        let valorTotal: number = 0; 
+        let valorSumado: number = 0; 
+
+        valorTotal = aportante.valorAporte;
 
         listaComponentes.controls.forEach( controlComponente => {
           let listaUsos = controlComponente.get('usos') as FormArray;
@@ -240,6 +247,8 @@ export class DefinirFuentesYUsosComponent implements OnInit {
               valorUso: controlUsos.get('valorUso').value,
             }
 
+            valorSumado = valorSumado + componenteUso.valorUso;
+
             componenteAportante.componenteUso.push( componenteUso );
           })
 
@@ -247,16 +256,27 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
         })
 
+          if (valorSumado != valorTotal){
+              
+              valoresCorrectos = false;
+            }
+
         this.contratacionProyecto.contratacionProyectoAportante.push( aportante );
     })
 
-    this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto( this.contratacionProyecto )
-      .subscribe( respuesta => {
-        this.openDialog( "Solicitud Contratación", respuesta.message )
+    if (valoresCorrectos){
+      
+      this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto( this.contratacionProyecto )
+        .subscribe( respuesta => {
+          this.openDialog( "Solicitud Contratación", respuesta.message )
 
-        if (respuesta.code == "200")
-          this.router.navigate(["/solicitarContratacion/solicitud", this.contratacionProyecto.contratacionId ]);
-      })
+          if (respuesta.code == "200")
+            this.router.navigate(["/solicitarContratacion/solicitud", this.contratacionProyecto.contratacionId ]);
+        })
+
+      }else{
+        this.openDialog('','El valor total es diferente a la suma del valor de los componentes');
+      }
 
     console.log(this.contratacionProyecto);
   }

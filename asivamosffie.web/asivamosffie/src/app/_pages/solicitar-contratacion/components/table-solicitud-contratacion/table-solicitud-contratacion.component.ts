@@ -3,6 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 @Component({
@@ -31,8 +33,11 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   constructor(
-              private projectContractingService: ProjectContractingService
-  ) { }
+              private projectContractingService: ProjectContractingService,
+              public dialog: MatDialog
+  ) 
+  
+  { }
 
   ngOnInit(): void {
 
@@ -53,8 +58,45 @@ export class TableSolicitudContratacionComponent implements OnInit {
   detallarSolicitud(id: number) {
     console.log(id);
   }
+
+  onDelete( id: number ){
+    this.openDialogSiNo('','“¿Está seguro de eliminar este registro?', id)  
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe( result => {
+
+      if(result)
+      {
+        this.eliminarSolicitud( e );
+      }           
+    });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  }
+
   eliminarSolicitud(id: number) {
     console.log(id);
+    this.projectContractingService.eliminarContratacion( id )
+      .subscribe( respuesta => {
+          
+        this.openDialog('Solicitud Contratacion', 'La información se ha eliminado correctamente')
+        this.ngOnInit();          
+
+      });
+  }
+
+  enviarSolicitud( id: number){
+    alert('falta implementar esto');
   }
 
 }

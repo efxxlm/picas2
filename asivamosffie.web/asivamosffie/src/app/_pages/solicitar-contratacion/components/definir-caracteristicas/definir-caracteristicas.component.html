@@ -11,10 +11,10 @@
     </h1>
   </div>
 
-  <p class="text-detalle">
-    <span>Ampliación</span>
-    <span><b>I.E Alfredo Bonilla Montaño - Única sede</b></span>
-    <span>Jamundí - Valle del Cauca</span>
+  <p class="text-detalle" *ngIf="contratacionProyecto">
+    <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span>
+    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
   </p>
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">

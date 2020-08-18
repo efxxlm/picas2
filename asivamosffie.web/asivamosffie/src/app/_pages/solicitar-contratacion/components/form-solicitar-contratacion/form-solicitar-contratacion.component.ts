@@ -63,7 +63,7 @@ export class FormSolicitarContratacionComponent implements OnInit {
   }
 
   private declararEsMultiple() {
-    this.esMultiple = new FormControl(['free', Validators.required]);
+    this.esMultiple = new FormControl('free', Validators.required);
   }
 
   validateNumberKeypress(event: KeyboardEvent) {
@@ -112,8 +112,6 @@ export class FormSolicitarContratacionComponent implements OnInit {
     let pMunicipio: Localizacion = this.addressForm.get('municipio').value;
     let pIdInstitucionEducativa: InstitucionEducativa = this.addressForm.get('institucionEducativa').value;
     let pIdSede: InstitucionEducativa = this.addressForm.get('sede').value;
-
-    console.log( pLlaveMen );
 
     this.projectService.listaProyectoConFiltros( 
                                                   pTipoIntervencion ? pTipoIntervencion.codigo : "", 

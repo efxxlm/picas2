@@ -30,7 +30,7 @@ namespace asivamosffie.api.Controllers
       
 
         [Route("DeleteContratacionByIdContratacion")]
-        [HttpPost]
+        [HttpDelete]
         public async Task<Respuesta> DeleteContratacionByIdContratacion(int idContratacion)
         {
             Respuesta respuesta = new Respuesta();

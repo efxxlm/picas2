@@ -161,6 +161,12 @@ namespace asivamosffie.services
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante)
                         .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.Proyecto)
+                    .ThenInclude( r => r.InstitucionEducativa )        
+                 .Include(r => r.Proyecto)
+                     .ThenInclude( r => r.Sede )        
+                 .Include(r => r.Proyecto)
+                     .ThenInclude( r => r.LocalizacionIdMunicipioNavigation )        
                 .FirstOrDefaultAsync();
                 
 

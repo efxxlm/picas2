@@ -10,21 +10,21 @@
     </h1>
   </div>
 
-  <p class="text-detalle">
-    <span>Ampliación</span>
-    <span><b>I.E Alfredo Bonilla Montaño - Única sede</b></span>
-    <span>Jamundí - Valle del Cauca</span>
+  <p class="text-detalle" *ngIf="contratacionProyecto">
+    <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span>
+    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
   </p>
 
-  <div class="container-valor">
-    <p>Valor total del proyecto <b>$660.000.000</b></p>
-    <p>Valor obra Valor interventoría <b>$600.000.000</b></p>
-    <p>Valor interventoría <b>$60.000.000</b></p>
+  <div class="container-valor" *ngIf="contratacionProyecto">
+    <p>Valor total del proyecto <b>${{ contratacionProyecto.proyecto.valorTotal }}</b></p>
+    <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra }}</b></p>
+    <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria }}</b></p>
   </div>
 
   <div class="text-center mb-2em">
-    <h1 class="title-menu--h1">
-      Obra
+    <h1 class="title-menu--h1" *ngIf="contratacionProyecto">
+      {{ contratacionProyecto.tipoSolicitudCodigo == 2 ? 'Intervención' : 'Obra'  }}
     </h1>
   </div>
   <p class="text-center info-container">

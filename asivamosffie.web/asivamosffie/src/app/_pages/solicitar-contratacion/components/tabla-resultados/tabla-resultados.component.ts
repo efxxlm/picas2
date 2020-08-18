@@ -19,6 +19,7 @@ import { ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 export class TablaResultadosComponent implements OnInit {
 
   @Input() listaResultados: ProyectoGrilla[];
+  @Input() esMultiproyecto;
 
   displayedColumns: string[] = [
     'tipoInterventor',
@@ -35,12 +36,12 @@ export class TablaResultadosComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   elementosSelecciondos: any[] = [];
+   
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    console.log('entró');
-    console.log('lista', this.elementosSelecciondos);
+    console.log('lista', this.esMultiproyecto );
 
     this.dataSource = new MatTableDataSource(this.listaResultados);
 
@@ -65,7 +66,7 @@ export class TablaResultadosComponent implements OnInit {
 
   openPopup() {
     this.dialog.open(AsociadaComponent, {
-      data: this.elementosSelecciondos
+      data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto}
     });
   }
 }

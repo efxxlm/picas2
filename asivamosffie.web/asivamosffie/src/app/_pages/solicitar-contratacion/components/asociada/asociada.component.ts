@@ -34,7 +34,7 @@ export class AsociadaComponent implements OnInit {
 
 
   constructor(
-                @Inject(MAT_DIALOG_DATA) public data: TableElement[],
+                @Inject(MAT_DIALOG_DATA) public data: any,
                 private projectContactingService: ProjectContractingService,
                 public dialog: MatDialog,    
                 public router: Router      
@@ -58,14 +58,32 @@ export class AsociadaComponent implements OnInit {
     });   
   }
 
+  validaciones(): string{
+    if (this.data.esMultiproyecto == 'true' && this.data.data.length < 2)
+      return 'Debe seleccionar por lo menos dos (2) proyectos';
+
+      if (this.data.esMultiproyecto == 'false' && this.data.data.length > 1)
+      return 'Puede seleccionar unicamente un (1) proyecto';
+    
+      return '';
+  }
+
   onSave(){
 
     let contratacion: Contratacion = {
       tipoSolicitudCodigo: this.solicitudAsociada.value,
       contratacionProyecto: []
-    } 
+    }
+    
+    let mensajeValidaciones = this.validaciones();
 
-    this.data.forEach( e => {
+    if ( mensajeValidaciones.length > 0 )
+    {
+      this.openDialog('', mensajeValidaciones)
+      return false;
+    }
+
+    this.data.data.forEach( e => {
       
       let contratacionProyecto: ContratacionProyecto = {
         proyectoId: e.proyectoId,

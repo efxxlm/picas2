@@ -51,4 +51,9 @@ export class ProjectContractingService {
 
   }
 
+  eliminarContratacion( id: number )
+  {
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/ProjectContracting/DeleteContratacionByIdContratacion?idContratacion=${ Number }`);
+  }
+
 }

@@ -6,9 +6,9 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Detallar la solicitud P.I-0001
+            Detallar la solicitud {{ contratacion.numeroSolicitud }}
         </h1>
-        <p class="text-primary">Proyectos incluidos: <b>2</b></p>
+        <p class="text-primary" *ngIf="contratacion.contratacionProyecto" >Proyectos incluidos: <b>{{ contratacion.contratacionProyecto.length }}</b></p>
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
             <span class="info-text en-proceso">En proceso</span>
