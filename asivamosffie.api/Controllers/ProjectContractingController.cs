@@ -27,7 +27,23 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
-      
+ 
+        [Route("ChangeStateContratacionByIdContratacion")]
+        [HttpPost]
+        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _projectContractingService.ChangeStateContratacionByIdContratacion(idContratacion,PCodigoEstado,HttpContext.User.FindFirst("User").Value);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return respuesta;
+            }
+        }
 
         [Route("DeleteContratacionByIdContratacion")]
         [HttpDelete]
@@ -105,8 +121,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectContractingService.GetListContratacionProyectoByContratacionId(idContratacion);
             return respuesta;
         }
-
-
+         
         [Route("CreateEditContratacion")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratacion(Contratacion pContratacion)
@@ -165,8 +180,7 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
-
-
+         
         [Route("CreateEditContratacionProyectoAportante")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratacionProyectoAportante(ContratacionProyectoAportante pContratacionProyectoAportante)

@@ -34,6 +34,41 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         private readonly devAsiVamosFFIEContext _context;
 
+        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion,string PCodigoEstado, string pUsusarioModifico)
+        {
+            int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contratacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                Contratacion contratacionOld = _context.Contratacion.Find(idContratacion); 
+                contratacionOld.EstadoSolicitudCodigo = PCodigoEstado;
+                contratacionOld.UsuarioModificacion = pUsusarioModifico;
+                contratacionOld.FechaModificacion = DateTime.Now;
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionEliminarContratacionProyecto, pUsusarioModifico, "CAMBIAR ESTADO CONTRATACIÓN")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratacionProyecto.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.Error, idAccionEliminarContratacionProyecto, pUsusarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
 
         public async Task<Respuesta> DeleteContratacionByIdContratacion(int idContratacion , string pUsusarioElimino) 
         {
@@ -43,6 +78,8 @@ namespace asivamosffie.services
             {
                 Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
                 contratacionOld.Eliminado = true;
+                contratacionOld.UsuarioModificacion = pUsusarioElimino;
+                contratacionOld.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
 
                 return new Respuesta

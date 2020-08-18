@@ -35,6 +35,6 @@
         public const string Crear_Editar_Cofinanciacion = "31";
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
         public const string Eliminar_Contratacion = "41";
-
+        public const string Cambiar_Estado_Contratacion = "42";
     }
 }
