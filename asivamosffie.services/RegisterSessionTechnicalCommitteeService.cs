@@ -76,8 +76,7 @@ namespace asivamosffie.services
             }
             return ListSesionComiteTemaDyn;
         }
-
-
+         
         public async Task<Respuesta> SaveInvitadosSesion(Sesion psesion)
         {
 
@@ -316,7 +315,8 @@ namespace asivamosffie.services
                         Id = ProcesoSeleccion.ProcesoSeleccionId,
                         FechaSolicitud = ProcesoSeleccion.FechaCreacion.ToString("yyyy-MM-dd"),
                         NumeroSolicitud = ProcesoSeleccion.NumeroProceso,
-                        TipoSolicitud =  ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre
+                        TipoSolicitud =  ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
                     });
                 };
 
@@ -327,7 +327,8 @@ namespace asivamosffie.services
                         Id = Contratacion.ContratacionId,
                         FechaSolicitud = Contratacion.FechaSolicitud != null ? Convert.ToDateTime(Contratacion.FechaSolicitud).ToString("yyyy-MM-dd") : Contratacion.FechaSolicitud.ToString(),
                         Contratacion.NumeroSolicitud,
-                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Contratacion).FirstOrDefault().Nombre
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Contratacion).FirstOrDefault().Nombre,
+                      tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Contratacion
                     });
                 };
 
