@@ -55,22 +55,23 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion) {
 
-            var ListSesionComiteTema = _context.SesionComiteTema.Where(r => r.SesionId == pIdSesion && !(bool)r.Eliminado).ToList(); 
+            var ListSesionComiteTema =await _context.SesionComiteTema.Where(r => r.SesionId == pIdSesion && !(bool)r.Eliminado).ToListAsync(); 
 
             List<dynamic> ListSesionComiteTemaDyn = new List<dynamic>();
 
             foreach (var sesionComiteTema in ListSesionComiteTema)
             {
                 ListSesionComiteTemaDyn.Add(
-                                            new 
-                                            {
-                                                
-
-                                            }
+                                            new
+                                                {
+                                                    Id = sesionComiteTema.SesionTemaId,
+                                                    Responsable = sesionComiteTema.ResponsableCodigo,
+                                                    Tiempo = sesionComiteTema.TiempoIntervencion,
+                                                    TemaSolicitud = sesionComiteTema.Tema
+                                                }
                                             );
-            }
-
-
+                ;
+            }  
             return ListSesionComiteTemaDyn;
         }
 
