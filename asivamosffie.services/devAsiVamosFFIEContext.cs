@@ -299,6 +299,10 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
+                entity.Property(e => e.FaseCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
