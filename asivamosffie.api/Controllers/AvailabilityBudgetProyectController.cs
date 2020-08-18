@@ -27,7 +27,7 @@ namespace asivamosffie.api.Controllers
 
 
         [Route("GetAvailabilityBudgetProyect")]
-        public async Task<IActionResult> GetAvailabilityBudgetProyect(int? estadoSolicitudCodigo)
+        public async Task<IActionResult> GetAvailabilityBudgetProyect()
         {
             try
             {
