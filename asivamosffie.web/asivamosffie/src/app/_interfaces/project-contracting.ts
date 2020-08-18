@@ -31,7 +31,8 @@ export interface ContratacionProyecto{
     numeroLicencia?: string,
     fechaVigencia?: Date,
     contempladaServicioMonitoreo?: boolean,
-    contratacionProyectoAportante?: ContratacionProyectoAportante[],     
+    contratacionProyectoAportante?: ContratacionProyectoAportante[],    
+    proyecto?: any, 
 
 }
 

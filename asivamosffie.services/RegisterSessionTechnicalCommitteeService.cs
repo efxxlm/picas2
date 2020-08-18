@@ -75,7 +75,7 @@ namespace asivamosffie.services
         }
 
 
-        public Task<Respuesta> SaveInvitadosSesion(Sesion psesion) {
+        public async Task<Respuesta> SaveInvitadosSesion(Sesion psesion) {
 
             try
             {
@@ -89,74 +89,74 @@ namespace asivamosffie.services
                     //Crear Sesión para asignarla a los temas
                     Sesion newSesion = new Sesion();
 
-                    foreach (var SesionComiteTema in pListSesionComiteTema)
-                    {
-                        if (SesionComiteTema.SesionTemaId == 0)
-                        {
-                            //Crear Sesion papa de comite tema 
-                            //Valido que solo cree una ya que puede entrar a editar 
-                            if (newSesion.SesionId == 0)
-                            {
-                                newSesion.FechaCreacion = DateTime.Now;
-                                newSesion.UsuarioCreacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
-                                newSesion.Eliminado = false;
+                    // foreach (var SesionComiteTema in pListSesionComiteTema)
+                    // {
+                    //     if (SesionComiteTema.SesionTemaId == 0)
+                    //     {
+                    //         //Crear Sesion papa de comite tema 
+                    //         //Valido que solo cree una ya que puede entrar a editar 
+                    //         if (newSesion.SesionId == 0)
+                    //         {
+                    //             newSesion.FechaCreacion = DateTime.Now;
+                    //             newSesion.UsuarioCreacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
+                    //             newSesion.Eliminado = false;
 
-                                newSesion.FechaOrdenDia = pFechaProximoComite;
-                                newSesion.NumeroComite = await _commonService.EnumeradorComite();
-                                newSesion.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
+                    //             newSesion.FechaOrdenDia = pFechaProximoComite;
+                    //             newSesion.NumeroComite = await _commonService.EnumeradorComite();
+                    //             newSesion.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
 
-                                newSesion.EsCompleto = false;
-                                _context.Sesion.Add(newSesion);
-                                _context.SaveChanges();
-                            }
+                    //             newSesion.EsCompleto = false;
+                    //             _context.Sesion.Add(newSesion);
+                    //             _context.SaveChanges();
+                    //         }
 
-                            EditarOcrear = "CREAR SESIÓN COMITE TECNICO TEMA";
-                            SesionComiteTema.Eliminado = false;
-                            SesionComiteTema.FechaCreacion = DateTime.Now;
-                            SesionComiteTema.UsuarioCreacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
-                            SesionComiteTema.SesionId = newSesion.SesionId;
-                            _context.SesionComiteTema.Add(SesionComiteTema);
-                        }
-                        else
-                        {
-                            EditarOcrear = "EDITAR SESIÓN COMITE TECNICO TEMA";
-                            SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(SesionComiteTema.SesionTemaId);
-                            sesionComiteTemaOld.FechaModificacion = DateTime.Now;
-                            sesionComiteTemaOld.UsuarioModificacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
+                    //         EditarOcrear = "CREAR SESIÓN COMITE TECNICO TEMA";
+                    //         SesionComiteTema.Eliminado = false;
+                    //         SesionComiteTema.FechaCreacion = DateTime.Now;
+                    //         SesionComiteTema.UsuarioCreacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
+                    //         SesionComiteTema.SesionId = newSesion.SesionId;
+                    //         _context.SesionComiteTema.Add(SesionComiteTema);
+                    //     }
+                    //     else
+                    //     {
+                    //         EditarOcrear = "EDITAR SESIÓN COMITE TECNICO TEMA";
+                    //         SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(SesionComiteTema.SesionTemaId);
+                    //         sesionComiteTemaOld.FechaModificacion = DateTime.Now;
+                    //         sesionComiteTemaOld.UsuarioModificacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
 
-                            sesionComiteTemaOld.Tema = SesionComiteTema.Tema;
-                            sesionComiteTemaOld.ResponsableCodigo = SesionComiteTema.ResponsableCodigo;
-                            sesionComiteTemaOld.TiempoIntervencion = SesionComiteTema.TiempoIntervencion;
-                            sesionComiteTemaOld.RutaSoporte = SesionComiteTema.RutaSoporte;
-                            sesionComiteTemaOld.Observaciones = SesionComiteTema.Observaciones;
-                            sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
-                        }
-                    }
-                    _context.SaveChanges();
-                    transaction.Commit();
-                    return
+                    //         sesionComiteTemaOld.Tema = SesionComiteTema.Tema;
+                    //         sesionComiteTemaOld.ResponsableCodigo = SesionComiteTema.ResponsableCodigo;
+                    //         sesionComiteTemaOld.TiempoIntervencion = SesionComiteTema.TiempoIntervencion;
+                    //         sesionComiteTemaOld.RutaSoporte = SesionComiteTema.RutaSoporte;
+                    //         sesionComiteTemaOld.Observaciones = SesionComiteTema.Observaciones;
+                    //         sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
+                    //     }
+                    // }
+                    // _context.SaveChanges();
+                    // transaction.Commit();
+                    return 
                          new Respuesta
-                         {
-                             IsSuccessful = true,
-                             IsException = false,
-                             IsValidation = false,
-                             Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionCrearEditarSesionComiteTema, pListSesionComiteTema.FirstOrDefault().UsuarioCreacion, EditarOcrear)
-                         };
+                         {};
+                        //      IsSuccessful = true,
+                        //      IsException = false,
+                        //      IsValidation = false,
+                        //      Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                        //      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionCrearEditarSesionComiteTema, pListSesionComiteTema.FirstOrDefault().UsuarioCreacion, EditarOcrear)
+                        //  };
 
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
-                    return
-                           new Respuesta
-                           {
-                               IsSuccessful = false,
-                               IsException = true,
-                               IsValidation = false,
-                               Code = ConstantSesionComiteTecnico.Error,
-                               Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionCrearEditarSesionComiteTema, pListSesionComiteTema.FirstOrDefault().UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
-                           };
+                    // transaction.Rollback();
+                     return
+                            new Respuesta
+                            {};
+                    //            IsSuccessful = false,
+                    //            IsException = true,
+                    //            IsValidation = false,
+                    //            Code = ConstantSesionComiteTecnico.Error,
+                    //            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionCrearEditarSesionComiteTema, pListSesionComiteTema.FirstOrDefault().UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    //        };
                 }
             }
             catch (Exception)
@@ -312,7 +312,7 @@ namespace asivamosffie.services
                         comiteTecnico.Id,
                         FechaSolicitud = comiteTecnico.FechaSolicitud.ToString("yyyy-MM-dd"),
                         comiteTecnico.NumeroSolicitud,
-                        TipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(comiteTecnico.TipoSolicitud, (int)EnumeratorTipoDominio.Tipo_Solicitud)
+                        TipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(comiteTecnico.TipoSolicitud, (int)EnumeratorTipoDominio.Tipo_de_Solicitud)
                     });
                 };
 
