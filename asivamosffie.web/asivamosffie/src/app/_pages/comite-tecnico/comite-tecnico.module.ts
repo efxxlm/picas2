@@ -17,9 +17,16 @@ import { TablaOrdenDelDiaComponent } from './components/tabla-orden-del-dia/tabl
 import { TablaSesionComiteTecnicoComponent } from './components/tabla-sesion-comite-tecnico/tabla-sesion-comite-tecnico.component';
 import { TablaGestionActasComponent } from './components/tabla-gestion-actas/tabla-gestion-actas.component';
 import { TablaMonitoreoCompromisosComponent } from './components/tabla-monitoreo-compromisos/tabla-monitoreo-compromisos.component';
+import { RegistrarSesionComiteTecnicoComponent } from './components/registrar-sesion-comite-tecnico/registrar-sesion-comite-tecnico.component';
+import { TablaValidacionSolicitudesContractualesComponent } from './components/tabla-validacion-solicitudes-contractuales/tabla-validacion-solicitudes-contractuales.component';
+import { TablaOtrosTemasComponent } from './components/tabla-otros-temas/tabla-otros-temas.component';
+import { FormProposicionesVariosComponent } from './components/form-proposiciones-varios/form-proposiciones-varios.component';
+import { FormRegistrarParticipantesComponent } from './components/form-registrar-participantes/form-registrar-participantes.component';
+import { TablaRegistrarValidacionSolicitudesContractialesComponent } from './components/tabla-registrar-validacion-solicitudes-contractiales/tabla-registrar-validacion-solicitudes-contractiales.component';
+import { TablaRegistrarOtrosTemasComponent } from './components/tabla-registrar-otros-temas/tabla-registrar-otros-temas.component';
 
 @NgModule({
-  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent, TablaOrdenDelDiaComponent, TablaSesionComiteTecnicoComponent, TablaGestionActasComponent, TablaMonitoreoCompromisosComponent],
+  declarations: [ComiteTecnicoComponent, CrearOrdenDelDiaComponent, TablaSolicitudesContractualesComponent, TablaOrdenDelDiaComponent, TablaSesionComiteTecnicoComponent, TablaGestionActasComponent, TablaMonitoreoCompromisosComponent, RegistrarSesionComiteTecnicoComponent, TablaValidacionSolicitudesContractualesComponent, TablaOtrosTemasComponent, FormProposicionesVariosComponent, FormRegistrarParticipantesComponent, TablaRegistrarValidacionSolicitudesContractialesComponent, TablaRegistrarOtrosTemasComponent],
   imports: [
     CommonModule,
     ComiteTecnicoRoutingModule,
