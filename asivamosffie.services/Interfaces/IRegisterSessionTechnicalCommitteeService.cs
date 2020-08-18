@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
+        Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion);
+
         Task<List<dynamic>> GetListSolicitudesContractuales();
 
         Task<Respuesta> SaveEditSesionComiteTema(List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite);
@@ -20,5 +22,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarSesionComiteTema(int pSesionComiteTemaId, string pUsuarioModificacion);
 
         Task<Respuesta> CambiarEstadoComite(Sesion pSesion);
+
+       
     }
 }

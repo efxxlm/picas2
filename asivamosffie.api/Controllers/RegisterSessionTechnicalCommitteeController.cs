@@ -21,7 +21,18 @@ namespace asivamosffie.api.Controllers
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService; 
         }
 
-    
+
+        Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion);
+
+
+
+        [HttpGet]
+        [Route("GetListSesionComiteTemaByIdSesion")]
+        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion()
+        {
+            return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByIdSesion();
+        }
+
         [HttpGet]
         [Route("GetListSolicitudesContractuales")] 
         public async Task<List<dynamic>> GetListSolicitudesContractuales() {
@@ -62,8 +73,8 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPut]
-        [Route("GetSesionBySesionId")]
-        public async Task<IActionResult> EliminarSesionComiteTema(int pSesionComiteTemaId)
+        [Route("DeleteSesionComiteTema")]
+        public async Task<IActionResult> DeleteSesionComiteTema(int pSesionComiteTemaId)
         {
             Respuesta respuesta = new Respuesta();
             try
