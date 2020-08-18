@@ -9,6 +9,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueMasivoProyecto = 9,
         Proyecto = 10,
         Fuentes = 14,
+        Contratacion_Proyecto = 17,
         Aportantes = 15,
 
 

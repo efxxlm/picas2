@@ -18,6 +18,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string FaseCodigo { get; set; }
 
         public virtual ContratacionProyectoAportante ContratacionProyectoAportante { get; set; }
         public virtual ICollection<ComponenteUso> ComponenteUso { get; set; }
