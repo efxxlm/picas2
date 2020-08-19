@@ -38,6 +38,31 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+
+        //public async Task<byte[]> GetPlantillaByTablaIdRegistroId(int pTablaId , int pRegistroId) {
+
+
+        //    switch (pTablaId)
+        //    {
+        //        //Ficha de contratación
+        //        case 1:
+        //            return ReplacePlantillaFichaContratacion(pRegistroId); 
+        //         break;
+                     
+        //        default:
+        //            break;
+        //    }
+
+        //}
+
+        //public async Task<byte[]> ReplacePlantillaFichaContratacion(int pRegistroId)
+        //{
+        //    Contratacion contratacion = await _context.Contratacion.FindAsync(pRegistroId);
+        //    Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == ConstanCodigoPlantillas.Ficha_De_Contratacion).FirstOrDefault();
+        
+        //}
+
+
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
         {
             if (
@@ -176,14 +201,22 @@ namespace asivamosffie.services
                 try
                 {
                     string EditarOcrear = "";
-
+           
                     //Crear Sesión para asignarla a los temas
                     Sesion newSesion = new Sesion();
 
+                    //Por defecto, el sistema incluirá automáticamente en cada orden del día un último tema
+                    //sin responsable ni tiempo, este se denominará “Proposiciones y varios”.
+                    pListSesionComiteTema.Add(new SesionComiteTema
+                    {// se pone nombre del tema solo para diferenciar
+                        Tema = "Proposiciones Varios  esto se debe eliminar"
+                    });
+
                     foreach (var SesionComiteTema in pListSesionComiteTema)
-                    {
+                    { 
+
                         if (SesionComiteTema.SesionTemaId == 0)
-                        {
+                        { 
                             //Crear Sesion papa de comite tema 
                             //Valido que solo cree una ya que puede entrar a editar 
                             if (newSesion.SesionId == 0)
@@ -194,13 +227,10 @@ namespace asivamosffie.services
 
                                 newSesion.FechaOrdenDia = pFechaProximoComite;
                                 newSesion.NumeroComite = await _commonService.EnumeradorComite();
-                                newSesion.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
-
+                                newSesion.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria; 
                                 newSesion.EsCompleto = false;
-                                _context.Sesion.Add(newSesion);
-                                _context.SaveChanges();
-                            }
-
+                                _context.Sesion.Add(newSesion); 
+                            }  
                             EditarOcrear = "CREAR SESIÓN COMITE TECNICO TEMA";
                             SesionComiteTema.Eliminado = false;
                             SesionComiteTema.FechaCreacion = DateTime.Now;
