@@ -85,13 +85,15 @@ namespace asivamosffie.services
 
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
-                    int? countMaxId = _context.ProcesoSeleccion.Max(p => (int?)p.ProcesoSeleccionId);
+                    //int? countMaxId = _context.ProcesoSeleccion.Max(p => (int?)p.ProcesoSeleccionId);
+                    int countMax = _context.ProcesoSeleccion.Count(p => p.TipoProcesoCodigo == procesoSeleccion.TipoProcesoCodigo);
+
 
                     //Auditoria
                     strCrearEditar = "CREAR PPROCESO SELECCION";
                     procesoSeleccion.FechaCreacion = DateTime.Now;
                     procesoSeleccion.Eliminado = false;
-                    procesoSeleccion.NumeroProceso = Helpers.Helpers.Consecutive("SP", countMaxId);
+                    procesoSeleccion.NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax);
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
                     
                 }
