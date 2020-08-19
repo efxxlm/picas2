@@ -3,6 +3,8 @@ import { FormBuilder, Validators, FormControl, FormArray, FormGroup } from '@ang
 import { ProcesoSeleccion, ProcesoSeleccionProponente, ProcesoSeleccionIntegrante } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { Dominio, Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-datos-proponentes-seleccionados',
@@ -107,7 +109,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   constructor(
               private fb: FormBuilder,
               private commonService: CommonService,
-
+              public dialog: MatDialog,    
+              
              ) 
   {
     this.declararSelect();
@@ -125,8 +128,15 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
         this.listaDepartamentos = respuesta[1];
         resolve();
       })
-  })
+    })
 
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   }
 
   changeDepartamento(){
@@ -224,7 +234,19 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     //console.log(this.personaNaturalForm.value);
   }
 
+  validacionesUnionTemporal( porcentaje: number): string {
+    let mensaje = '';
+
+    if ( porcentaje != 100 )
+      mensaje = 'Los porcentajes de participación no suman 100%.'
+
+    return mensaje;
+  }
+
   onSubmitUnionTemporal() {
+
+    let porcentaje: number = 0;
+
     this.procesoSeleccion.procesoSeleccionProponente = [];
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
 
@@ -255,9 +277,17 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
         procesoSeleccionIntegranteId: control.get('procesoSeleccionIntegranteId').value,
 
       }
+
+      porcentaje = porcentaje + integrante.porcentajeParticipacion;
+
       this.procesoSeleccion.procesoSeleccionIntegrante.push( integrante );
     })
 
+    let mensajeValidaciones = this.validacionesUnionTemporal( porcentaje );
+    if (mensajeValidaciones.length > 0){
+       this.openDialog('', mensajeValidaciones); 
+       return false;
+    }
 
     this.procesoSeleccion.procesoSeleccionProponente.push( proponente );
     
@@ -334,6 +364,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
                 })
 
+                console.log( this.procesoSeleccion );
                 this.unionTemporalForm.get('cuantasEntidades').setValue( listaIntegrantes.length ); 
               }
             }

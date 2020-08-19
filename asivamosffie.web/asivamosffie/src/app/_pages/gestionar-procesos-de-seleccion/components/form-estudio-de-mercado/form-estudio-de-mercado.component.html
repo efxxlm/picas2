@@ -19,9 +19,10 @@
       </div>
 
       <div formGroupName="cotizaciones">
+        <h2 class="card-subTitle">Cotizaciones</h2>
         <div *ngFor="let cotizacion of cotizaciones.controls; let i = index">
           <div [formGroupName]="i">
-            <h2 class="card-subTitle">Cotizaciones</h2>
+            
             <mat-card-title class="header-card--text sub-text">
               Cotización {{ i + 1 }}
             </mat-card-title>
