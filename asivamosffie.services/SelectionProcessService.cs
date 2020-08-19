@@ -93,6 +93,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PPROCESO SELECCION";
                     procesoSeleccion.FechaCreacion = DateTime.Now;
                     procesoSeleccion.Eliminado = false;
+                    procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
                     procesoSeleccion.NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax);
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
@@ -1213,6 +1214,36 @@ namespace asivamosffie.services
 
         }
 
+        public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
+        {
+            if (
+                 !string.IsNullOrEmpty(procesoSeleccion.Objeto)
+                 || !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
+                 || !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CriteriosSeleccion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
+                 || procesoSeleccion.EsDistribucionGrupos
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantGrupos))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesJuridicasHabilitantes)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesFinancierasHabilitantes)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesAsignacionPuntaje)
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadProponentes))
+                 || !string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
+
+                )
+                 return true;
+            else
+                return false;
+        }
 
 
         public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico)
