@@ -6,10 +6,10 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 2000)" formControlName="objeto"></quill-editor>
     </div>
-    <span class="contador" *ngIf="addressForm.get('objeto').value">
-      {{2000 - addressForm.get('objeto').value.length}}
+    <span class="contador miles" *ngIf="addressForm.get('objeto').value">
+      {{2000 - textoLimpio(addressForm.get('objeto').value)}}
     </span>
-    <span class="contador" *ngIf="addressForm.get('objeto').value">
+    <span class="contador miles" *ngIf="!addressForm.get('objeto').value">
       2000
     </span>
   </div>
@@ -20,10 +20,10 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 3000)" formControlName="alcanceParticular"></quill-editor>
     </div>
-    <span class="contador" *ngIf="addressForm.get('alcanceParticular').value">
-      {{3000 - addressForm.get('alcanceParticular').value.length}}
+    <span class="contador miles" *ngIf="addressForm.get('alcanceParticular').value">
+      {{3000 - textoLimpio(addressForm.get('alcanceParticular').value)}}
     </span>
-    <span class="contador" *ngIf="addressForm.get('alcanceParticular').value">
+    <span class="contador miles" *ngIf="!addressForm.get('alcanceParticular').value">
       3000
     </span>
   </div>
@@ -34,10 +34,10 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 3000)" formControlName="justificacion"></quill-editor>
     </div>
-    <span class="contador" *ngIf="addressForm.get('justificacion').value">
-      {{3000 - addressForm.get('justificacion').value.length}}
+    <span class="contador miles" *ngIf="addressForm.get('justificacion').value">
+      {{3000 - textoLimpio(addressForm.get('justificacion').value)}}
     </span>
-    <span class="contador" *ngIf="addressForm.get('justificacion').value === null">
+    <span class="contador miles" *ngIf="addressForm.get('justificacion').value === null">
       3000
     </span>
   </div>
@@ -87,7 +87,7 @@
               <label class="label-left">¿En este proceso de selección se realiza distribución del territorio en grupos?</label>
             </div>
             <div class="col">
-              <mat-radio-group class="radioInput" formControlName="distribucionEnGrupos">
+              <mat-radio-group class="radioInput d-flex" formControlName="distribucionEnGrupos">
                 <mat-radio-button value="true">Sí</mat-radio-button>
                 <mat-radio-button value="false">No</mat-radio-button>
               </mat-radio-group>

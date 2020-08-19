@@ -81,8 +81,6 @@ div.mat-select-arrow {
     color: #174193;;
     color: var(--mainColor);
     font-weight: 500;
-    height: 2.4em;
-    width: 2.4em;
     min-width: 2.4em;
     height: 2em;
     width: 2em;
@@ -93,6 +91,11 @@ div.mat-select-arrow {
     justify-content: center;
     align-items: center;
     margin-left: .8em;
+
+    &.miles {
+        height: 2.4em;
+        min-width: 2.4em;
+    }
 }
 
 .mat-form-field-appearance-legacy .mat-form-field-wrapper {
