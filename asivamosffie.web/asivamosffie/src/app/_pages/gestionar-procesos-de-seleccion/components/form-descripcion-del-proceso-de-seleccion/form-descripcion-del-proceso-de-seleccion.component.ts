@@ -48,7 +48,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
     this.addressForm = this.crearFormulario();
 
-    return new Promise( resolve => {
+    return new Promise(resolve => {
       forkJoin([
 
         this.commonService.listaTipoIntervencion(),
@@ -118,8 +118,13 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     borrarForm.removeAt(i);
   }
 
-  agregarActividad(): FormGroup {
+  agregarActividad() {
+    this.cronogramas.push(this.createActividad());
+  }
+
+  createActividad(): FormGroup {
     return this.fb.group({
+      procesoSeleccionCronogramaId: [],
       descripcion: [null, Validators.required],
       fechaMaxima: [null, Validators.required]
     });
@@ -172,10 +177,10 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
   }
 
-  textoLimpio(texto: string){
+  textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
-    }
+  }
 
   onSubmit() {
     console.log(this.addressForm.value);

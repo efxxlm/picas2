@@ -1,10 +1,10 @@
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
 
   <div class="d-flex align-items-center">
     <div class="text-area-quill">
       <label for="objeto" class="text-area-quill--label">Objeto</label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 2000)" formControlName="objeto"></quill-editor>
+        (onContentChanged)="maxLength($event, 2000)" formControlName="objeto" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('objeto').value">
       {{2000 - textoLimpio(addressForm.get('objeto').value)}}
@@ -18,7 +18,7 @@
     <div class="text-area-quill">
       <label for="alcanceParticular" class="text-area-quill--label">Alcance particular</label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="alcanceParticular"></quill-editor>
+        (onContentChanged)="maxLength($event, 3000)" formControlName="alcanceParticular" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('alcanceParticular').value">
       {{3000 - textoLimpio(addressForm.get('alcanceParticular').value)}}
@@ -32,7 +32,7 @@
     <div class="text-area-quill">
       <label for="justificacion" class="text-area-quill--label">Justificación</label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="justificacion"></quill-editor>
+        (onContentChanged)="maxLength($event, 3000)" formControlName="justificacion" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('justificacion').value">
       {{3000 - textoLimpio(addressForm.get('justificacion').value)}}
@@ -84,13 +84,15 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left">¿En este proceso de selección se realiza distribución del territorio en grupos?</label>
+              <label class="label-left">¿En este proceso de selección se realiza distribución del territorio en
+                grupos?</label>
             </div>
             <div class="col">
-              <mat-radio-group class="radioInput d-flex" formControlName="distribucionEnGrupos">
+              <mat-radio-group class="radioInput" formControlName="distribucionEnGrupos">
                 <mat-radio-button value="true">Sí</mat-radio-button>
                 <mat-radio-button value="false">No</mat-radio-button>
               </mat-radio-group>
+              <span class="required-form-group">*</span>
             </div>
           </div>
         </div>
@@ -103,7 +105,8 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosGrupos type="number" min="1" max="99" formControlName="cuantosGrupos" (keyup)="CambioNumeroAportantes()">
+                <input matInput #cuantosGrupos type="number" min="1" max="99" formControlName="cuantosGrupos"
+                  (keyup)="CambioNumeroAportantes()" required>
               </mat-form-field>
               <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
             </div>
@@ -119,16 +122,19 @@
               Grupo {{ i + 1 }}
             </mat-card-title>
             <div class="row">
-              <div class="pr-1">
-                <label for="nombreGrupo" class="label-left">Nombre del grupo</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #nombreGrupo type="text" maxlength="100" formControlName="nombreGrupo">
-                  <input type="hidden" formControlName="procesoSeleccionGrupoId">
-                  
-                </mat-form-field>
-                <span class="contador">{{100 - nombreGrupo.value.length}}</span>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="nombreGrupo" class="label-left">Nombre del grupo</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput #nombreGrupo type="text" maxlength="100" formControlName="nombreGrupo" required>
+                      <input type="hidden" formControlName="procesoSeleccionGrupoId">
+                    </mat-form-field>
+                    <span class="contador">{{100 - nombreGrupo.value.length}}</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -143,13 +149,14 @@
                         <mat-option *ngFor="let tipoPresupuesto of listatipoPresupuesto" [value]="tipoPresupuesto">
                           {{ tipoPresupuesto.nombre }}
                         </mat-option>
-                      </mat-select> 
+                      </mat-select>
                     </mat-form-field>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '1' ">
+            <div class="row"
+              *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '1' ">
               <div class="pr-1">
                 <label for="valor" class="label-left">Valor</label>
               </div>
@@ -160,24 +167,28 @@
                 <span class="contador">{{20 - valor.value.length}}</span>
               </div>
             </div>
-            <div class="row" *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
+            <div class="row"
+              *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
               <div class="pr-1">
                 <label for="valorMinimoCategoria" class="label-left">Valor mínimo categoría de ejecución</label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMinimoCategoria type="number" maxlength="20" formControlName="valorMinimoCategoria">
+                  <input matInput #valorMinimoCategoria type="number" maxlength="20"
+                    formControlName="valorMinimoCategoria">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMinimoCategoria.value.length}}</span>
               </div>
             </div>
-            <div class="row" *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
+            <div class="row"
+              *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
               <div class="pr-1">
                 <label for="valorMaximoCategoria" class="label-left">Valor máximo categoría de ejecución</label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMaximoCategoria type="number" maxlength="20" formControlName="valorMaximoCategoria">
+                  <input matInput #valorMaximoCategoria type="number" maxlength="20"
+                    formControlName="valorMaximoCategoria">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMaximoCategoria.value.length}}</span>
               </div>
@@ -190,15 +201,14 @@
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #plazoMeses type="number" min="1" max="99" formControlName="plazoMeses">
+                      <input matInput #plazoMeses type="number" min="1" max="99" formControlName="plazoMeses" required>
                     </mat-form-field>
                     <span class="contador">{{2 - plazoMeses.value.length}}</span>
                   </div>
                 </div>
               </div>
               <div class="col-md-4 text-right" *ngIf="addressForm.value.grupos.length > 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar"
-                  (click)="borrarArray(grupos, i)">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(grupos, i)">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar grupo">
                   Eliminar grupo
                 </button>
@@ -209,110 +219,119 @@
       </div>
 
       <div formGroupName="cronogramas">
-          <div>
-            <h2 class="card-subTitle">Cronograma</h2>
-            <div class="table-responsive">
-              <table class="mat-table cdk-table mat-sort mat-table-style">
-                <thead>
-                  <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                      Actividad
-                    </th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                      Descripción
-                    </th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                      Fecha máxima
-                    </th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                      Gestión
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let cronograma of cronogramas.controls; let i = index" [formGroupName]="i" >
-                    
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      <b class="text-1-2em">
-                        {{ i +1 }}
-                      </b>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      <div class="d-flex justify-content-center">
-                      </div>
-                      <input type="hidden" formControlName="procesoSeleccionCronogramaId">
-                      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                        (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
+        <div>
+          <h2 class="card-subTitle">Cronograma</h2>
+          <div class="table-responsive">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Actividad
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Descripción
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Fecha máxima
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Gestión
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cronograma of cronogramas.controls; let i = index" [formGroupName]="i">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b class="text-1-2em d-flex justify-content-center">
+                      {{ i +1 }}
+                    </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <div class="d-flex justify-content-center">
+                      <span class="contador" *ngIf="cronograma.get('descripcion').value">
+                        {{500 - textoLimpio(cronograma.get('descripcion').value)}}
+                      </span>
+                      <span class="contador" *ngIf="cronograma.get('descripcion').value === null">
+                        500
+                      </span>
+                    </div>
+                    <input type="hidden" formControlName="procesoSeleccionCronogramaId">
+                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                      (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted position-relative">
+                    <div class="d-flex justify-content-center btn-calendario-container">
                       <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
-                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" >
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
-                      <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="picker" formControlName="fechaMaxima">
-                        <mat-datepicker #picker></mat-datepicker>
-                      </mat-form-field>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      <button mat-raised-button color="accent">Eliminar</button>
-                    </td>
-                  
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="text-right">
-              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarActividad()">
-                <img src="assets/img/icon/mas.svg" alt="Agregar otra actividad">
-                Agregar otra actividad
-              </button>
-            </div>
+                      <span class="required-form-group">*</span>
+                    </div>
+                    <mat-form-field class="example-full-width">
+                      <input matInput [matDatepicker]="picker" formControlName="fechaMaxima" (click)="picker.open()" readonly>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <button mat-raised-button color="accent" type="button" (click)="borrarArray(cronogramas, i)">Eliminar</button>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
           </div>
+          <div class="text-right">
+            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarActividad()">
+              <img src="assets/img/icon/mas.svg" alt="Agregar otra actividad">
+              Agregar otra actividad
+            </button>
+          </div>
+        </div>
       </div>
 
       <div>
         <div>
           <h2 class="card-subTitle">Responsables</h2>
 
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label for="responsableEquipoTecnico" class="label-left">Responsable del equipo técnico</label>
-                  </div>
-                  <div class="col">
-                    <mat-form-field class="select-width">
-                      <mat-select formControlName="responsableEquipoTecnico" required>
-                        <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
-                          {{ responsable.nombres }} {{ responsable.apellidos }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label for="responsableEquipoTecnico" class="label-left">Responsable del equipo técnico</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="responsableEquipoTecnico" required>
+                      <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
+                        {{ responsable.nombres }} {{ responsable.apellidos }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label for="responsableEquipoestructurado" class="label-left">Responsable del equipo estructurador</label>
-                  </div>
-                  <div class="col">
-                    <mat-form-field class="select-width">
-                      <mat-select formControlName="responsableEquipoestructurado" required>
-                        <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
-                          {{ responsable.nombres }} {{ responsable.apellidos }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label for="responsableEquipoestructurado" class="label-left">Responsable del equipo
+                    estructurador</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="responsableEquipoestructurado" required>
+                      <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
+                        {{ responsable.nombres }} {{ responsable.apellidos }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
               </div>
             </div>
+          </div>
         </div>
-    </div>
-    
+      </div>
+
     </mat-card-content>
   </mat-card>
 

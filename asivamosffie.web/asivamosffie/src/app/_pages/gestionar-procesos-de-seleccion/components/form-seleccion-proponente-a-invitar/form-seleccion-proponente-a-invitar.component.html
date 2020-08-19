@@ -20,7 +20,7 @@
       <div class="margin-tabla"
         *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
         <div class="table-responsive">
-          <table class="mat-table cdk-table mat-sort mat-table-style">
+          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
             <thead>
               <tr class="mat-header-row cdk-header-row ng-star-inserted">
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted">
@@ -50,10 +50,11 @@
           <div class="pr-1">
             <label for="url" class="label-left">Nombre de la organización</label>
           </div>
-          <div class="col d-flex">
+          <div class="col">
             <mat-form-field class="full-width">
               <input matInput type="url" formControlName="url">
             </mat-form-field>
+            <p class="text-center colorMainColor">Indique la ruta del soporte de esta información</p>
           </div>
         </div>
       </div>

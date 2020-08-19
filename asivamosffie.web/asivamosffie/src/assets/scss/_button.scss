@@ -48,6 +48,17 @@ button.mat-raised-button {
     img {
         height: 2.2em;
     }
+
+    &-container {
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        .required-form-group {
+            margin-left: .5em;
+            margin-top: .75em;
+        }
+    }
 }
 
 .btn-descargar {

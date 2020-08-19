@@ -22,10 +22,10 @@
                     Descripción de la invitación
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>
-            <app-form-descripcion-del-proceso-de-seleccion 
-                #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
-                >
+            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()"
+                id="botonDescripcion"></button>
+            <app-form-descripcion-del-proceso-de-seleccion #descripcion [procesoSeleccion]="procesoSeleccion"
+                (guardar)="onSubmit()">
             </app-form-descripcion-del-proceso-de-seleccion>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
@@ -35,9 +35,8 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="estudio.cargarRegistro()" id="botonEstudio"></button>
-            <app-form-estudio-de-mercado
-            #estudio [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
-        </app-form-estudio-de-mercado>
+            <app-form-estudio-de-mercado #estudio [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+            </app-form-estudio-de-mercado>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style">
@@ -46,9 +45,10 @@
                     Selección de proponentes a invitar
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button style="display: none;" type="button" (click)="proponenteInvitar.cargarRegistro()" id="botonProponenteInvitar"></button>
-            <app-form-seleccion-proponente-a-invitar
-            #proponenteInvitar [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" >
+            <button style="display: none;" type="button" (click)="proponenteInvitar.cargarRegistro()"
+                id="botonProponenteInvitar"></button>
+            <app-form-seleccion-proponente-a-invitar #proponenteInvitar [procesoSeleccion]="procesoSeleccion"
+                (guardar)="onSubmit()">
             </app-form-seleccion-proponente-a-invitar>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
@@ -57,10 +57,10 @@
                     Evaluación
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()" id="botonevaluacion"></button>
-            <app-form-evaluacion
-            #evaluacion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" >
-        </app-form-evaluacion>
+            <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()"
+                id="botonevaluacion"></button>
+            <app-form-evaluacion #evaluacion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+            </app-form-evaluacion>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style">
@@ -69,9 +69,10 @@
                     Datos de proponentes seleccionados
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button style="display: none;" type="button" (click)="proponenteCerrada.cargarRegistro()" id="botonProponente"></button>
-            <app-form-datos-proponentes-seleccionados-invitacion-cerrada
-               #proponenteCerrada [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+            <button style="display: none;" type="button" (click)="proponenteCerrada.cargarRegistro()"
+                id="botonProponente"></button>
+            <app-form-datos-proponentes-seleccionados-invitacion-cerrada #proponenteCerrada
+                [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
             </app-form-datos-proponentes-seleccionados-invitacion-cerrada>
 
             <!-- <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>

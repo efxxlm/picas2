@@ -9,7 +9,7 @@
     <span class="contador miles" *ngIf="addressForm.get('descricion').value">
       {{3000 - textoLimpio(addressForm.get('descricion').value)}}
     </span>
-    <span class="contador" *ngIf="!addressForm.get('descricion').value">
+    <span class="contador miles" *ngIf="!addressForm.get('descricion').value">
       3000
     </span>
   </div>

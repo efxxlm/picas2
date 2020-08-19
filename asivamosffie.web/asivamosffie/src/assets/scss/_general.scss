@@ -2,6 +2,10 @@ body {
     color: var(--fontColor);
 }
 
+.colorMainColor {
+    color: var(--mainColor);
+}
+
 .color-secondaryColor {
     color: #d21e18;
     color: var(--secondaryColor);
@@ -118,6 +122,10 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+.position-relative {
+    position: relative;
 }
 
 .loading {
