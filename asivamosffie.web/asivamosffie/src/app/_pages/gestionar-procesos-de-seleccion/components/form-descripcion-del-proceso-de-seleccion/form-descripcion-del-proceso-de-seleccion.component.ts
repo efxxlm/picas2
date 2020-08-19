@@ -7,6 +7,8 @@ import { delay } from 'rxjs/operators';
 import { promise } from 'protractor';
 import { resolve } from 'dns';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 @Component({
@@ -40,8 +42,9 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   };
 
   constructor(
-    private fb: FormBuilder,
-    private commonService: CommonService,
+              private fb: FormBuilder,
+              private commonService: CommonService,
+              public dialog: MatDialog,    
   ) { }
 
   ngOnInit() {
@@ -62,13 +65,20 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.listaTipoAlcance = respuesta[1];
         this.listatipoPresupuesto = respuesta[2];
         this.listaResponsables = respuesta[3];
+
+        this.listaTipoAlcance = this.listaTipoAlcance.filter( t => t.codigo == "1" || t.codigo == "2" || t.codigo == "3" )
+
         resolve();
 
       });
     });
+  }
 
-
-
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   }
 
   get grupos() {
@@ -85,8 +95,36 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     }
   }
 
+  validarGruposDiligenciados(): boolean {
+    let diligenciado: boolean = false;
+
+    this.grupos.controls.forEach( control => {
+      let nombreGrupo: string = control.get('nombreGrupo').value ? control.get('nombreGrupo').value : '';
+      let plazoGrupo:  string = control.get('plazoMeses').value ? control.get('plazoMeses').value : '';
+
+      if (nombreGrupo.length > 0 || plazoGrupo.length > 0){
+        console.log( nombreGrupo.length, plazoGrupo.length )
+        diligenciado = true;
+      }
+
+    })
+    
+    return diligenciado;
+  }
+
   CambioNumeroAportantes() {
+
     const FormGrupos = this.addressForm.value;
+
+    if (FormGrupos.cuantosGrupos < this.grupos.length)
+      if (this.validarGruposDiligenciados()){
+        this.openDialog('','Debe eliminar uno de los registros diligenciados para disminuir el total de los registros   requeridos');
+
+        this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
+        
+        return false;
+      }
+
     if (FormGrupos.cuantosGrupos > this.grupos.length && FormGrupos.cuantosGrupos < 100) {
       while (this.grupos.length < FormGrupos.cuantosGrupos) {
         this.grupos.push(this.createGrupo());
@@ -96,6 +134,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.borrarArray(this.grupos, this.grupos.length - 1);
       }
     }
+    
   }
 
   createGrupo(): FormGroup {
@@ -115,14 +154,25 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   borrarArray(borrarForm: any, i: number) {
+    
     borrarForm.removeAt(i);
+
+    this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
+
   }
 
   agregarActividad(): FormGroup {
+
+    this.cronogramas.push( this.createCronograma() );
+
     return this.fb.group({
       descripcion: [null, Validators.required],
       fechaMaxima: [null, Validators.required]
     });
+  }
+
+  borrarCronograma( i: number ){
+    this.cronogramas.removeAt(i);
   }
 
   crearFormulario() {

@@ -3,7 +3,7 @@
     <mat-card-content>
       <div class="row">
         <div class="pr-1">
-          <label for="cuantasCotizaciones" class="label-left">¿Cuántos grupos?</label>
+          <label for="cuantasCotizaciones" class="label-left">¿Cuantas cotizaciones se recibieron?</label>
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
@@ -14,9 +14,10 @@
       </div>
 
       <div formGroupName="cotizaciones">
+        <h2 class="card-subTitle">Cotizaciones</h2>
         <div *ngFor="let cotizacion of cotizaciones.controls; let i = index">
           <div [formGroupName]="i">
-            <h2 class="card-subTitle">Cotizaciones</h2>
+            
             <mat-card-title class="header-card--text sub-text">
               Cotización {{ i + 1 }}
             </mat-card-title>
