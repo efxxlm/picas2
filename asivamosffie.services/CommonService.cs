@@ -21,11 +21,11 @@ namespace asivamosffie.services
         }
 
         public async Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
-        { 
+        {
 
             List<dynamic> ListaUsuario = new List<dynamic>();
 
-            var ListUsuarios = await _context.UsuarioPerfil.Where(r => r.PerfilId == idPerfil && (bool)r.Activo).Select(r => r.Usuario).Where(r=> !(bool)r.Eliminado).Distinct().OrderBy(r=> r.Nombres).ToListAsync();
+            var ListUsuarios = await _context.UsuarioPerfil.Where(r => r.PerfilId == idPerfil && (bool)r.Activo).Select(r => r.Usuario).Where(r => !(bool)r.Eliminado).Distinct().OrderBy(r => r.Nombres).ToListAsync();
 
             foreach (var item in ListUsuarios)
             {
@@ -45,23 +45,52 @@ namespace asivamosffie.services
         {
             string cantidadDigitos = "00000";
             string cantidadDeResgistros = _context.Sesion.ToList().Count().ToString();
+            string Nomeclatura = "CT_";
 
             if ((cantidadDigitos.Length - cantidadDeResgistros.Length < 1))
             {
-                return "CT_0" + (Int32.Parse(cantidadDeResgistros) + 1);
+                return Nomeclatura + "0" + (Int32.Parse(cantidadDeResgistros) + 1);
             }
             else
             {
-                return "CT_" + (cantidadDigitos.TakeLast(cantidadDigitos.Length - cantidadDeResgistros.Length)) + (Int32.Parse(cantidadDeResgistros) + 1);
+                return Nomeclatura + (cantidadDigitos.TakeLast(cantidadDigitos.Length - cantidadDeResgistros.Length)) + (Int32.Parse(cantidadDeResgistros) + 1);
             }
         }
+        public async Task<string> EnumeradorContratacion()
+        {
+            string cantidadDigitos = "0000";
+            string cantidadDeResgistros = _context.Contratacion.ToList().Count().ToString();
+            string Nomeclatura = "P.I-";
+
+            if ((cantidadDigitos.Length - cantidadDeResgistros.Length < 1))
+            {
+                return Nomeclatura + "0" + (Int32.Parse(cantidadDeResgistros) + 1);
+            }
+            else
+            {
+                return Nomeclatura + (cantidadDigitos.TakeLast(cantidadDigitos.Length - cantidadDeResgistros.Length)) + (Int32.Parse(cantidadDeResgistros) + 1);
+            }
+        }
+
 
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
         {
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
             return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
         }
-
+        public string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio)
+        {
+            //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
+            string idPadre = _context.Localizacion.Where(r => r.LocalizacionId.Equals(pIdMunicipio)).Select(r => r.IdPadre).FirstOrDefault();
+            return _context.Localizacion.Where(r => r.LocalizacionId.Equals(idPadre)).FirstOrDefault().Descripcion;
+        }
+        public string GetNombreRegionByIdMunicipio(string pIdMunicipio)
+        {
+            //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
+            string idDepartamento = _context.Localizacion.Where(r => r.LocalizacionId.Equals(pIdMunicipio)).Select(r => r.IdPadre).FirstOrDefault();
+            string idRegion = _context.Localizacion.Where(r => r.LocalizacionId.Equals(idDepartamento)).FirstOrDefault().IdPadre;
+            return _context.Localizacion.Where(r => r.LocalizacionId.Equals(idRegion)).FirstOrDefault().Descripcion;
+        }
 
         public async Task<List<Perfil>> GetProfile()
         {
@@ -203,6 +232,11 @@ namespace asivamosffie.services
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
         }
 
+        public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
+        {
+            return _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r => r.Descripcion).FirstOrDefault();
+        }
+
         public async Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio)
         {
             //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
@@ -276,6 +310,8 @@ namespace asivamosffie.services
              }).ToListAsync();
         }
 
+
+
         public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -294,5 +330,11 @@ namespace asivamosffie.services
         {
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
+
+
     }
+
 }
+
+
+

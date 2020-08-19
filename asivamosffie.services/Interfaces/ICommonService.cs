@@ -11,7 +11,17 @@ namespace asivamosffie.services.Interfaces
     {
         Task<string> EnumeradorComite();
 
+        Task<string> EnumeradorContratacion();
+
+
         Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
+ 
+
+
+
+        string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId);
+        string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio);
+        string GetNombreRegionByIdMunicipio(string pIdDepartamento);
 
         Task<List<MenuPerfil>> GetMenuByRol(int pUserId);
         Task<List<Perfil>> GetProfile();
@@ -65,6 +75,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio);
 
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
-        Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil );
+        Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
     }
 }

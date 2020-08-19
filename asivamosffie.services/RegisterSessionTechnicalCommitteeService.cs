@@ -38,8 +38,8 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-        public bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema) {
-
+        public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
+        { 
             if (
                 !string.IsNullOrEmpty(pSesionComiteTema.ResponsableCodigo) ||
                 !string.IsNullOrEmpty(pSesionComiteTema.TiempoIntervencion.ToString()) ||
@@ -47,31 +47,92 @@ namespace asivamosffie.services
                 !string.IsNullOrEmpty(pSesionComiteTema.Observaciones) ||
                 !string.IsNullOrEmpty(pSesionComiteTema.EsAprobado.ToString()) ||
                 !string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision) ||
-                !string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision)  
+                !string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision)
                 ) { return false; }
 
             return true;
         }
 
-        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion) {
+        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion)
+        {
 
-            var ListSesionComiteTema = _context.SesionComiteTema.Where(r => r.SesionId == pIdSesion && !(bool)r.Eliminado).ToList(); 
+            var ListSesionComiteTema = await _context.SesionComiteTema.Where(r => r.SesionId == pIdSesion && !(bool)r.Eliminado).ToListAsync();
 
             List<dynamic> ListSesionComiteTemaDyn = new List<dynamic>();
 
             foreach (var sesionComiteTema in ListSesionComiteTema)
             {
                 ListSesionComiteTemaDyn.Add(
-                                            new 
+                                            new
                                             {
-                                                
+                                                Id = sesionComiteTema.SesionTemaId,
+                                                Responsable = sesionComiteTema.ResponsableCodigo,
+                                                Tiempo = sesionComiteTema.TiempoIntervencion,
+                                                TemaSolicitud = sesionComiteTema.Tema
+                                            }); 
+            }
+            return ListSesionComiteTemaDyn;
+        }
 
-                                            }
-                                            );
+        public async Task<Respuesta> RegistrarParticipantesSesion(Sesion psesion)
+        {
+            try
+            {
+                int idAccionRegistrarParticipantesSesion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Participantes_Sesion, (int)EnumeratorTipoDominio.Acciones);
+
+                using DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction();
+                try
+                {
+                    foreach (var SesionInvitado in psesion.SesionInvitado)
+                    {
+                        SesionInvitado.Eliminado = false;
+                        SesionInvitado.FechaCreacion = DateTime.Now;
+                        SesionInvitado.UsuarioCreacion = psesion.UsuarioCreacion;
+                    }
+
+                    foreach (var SesionUsuario in psesion.SesionUsuario)
+                    {
+                        SesionUsuario.Eliminado = false;
+                        SesionUsuario.FechaCreacion = DateTime.Now;
+                        SesionUsuario.UsuarioCreacion = psesion.UsuarioCreacion;
+                    }
+                    _context.Sesion.Add(psesion);
+                    _context.SaveChanges();
+                    transaction.Commit();
+
+
+                    return
+                         new Respuesta
+                         {
+                             IsSuccessful = true,
+                             IsException = false,
+                             IsValidation = false,
+                             Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionRegistrarParticipantesSesion, psesion.UsuarioCreacion, "REGISTRAR PARTICIPANTES DE LA SESIÓN")
+                         };
+
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return
+                           new Respuesta
+                           {
+                               IsSuccessful = false,
+                               IsException = true,
+                               IsValidation = false,
+                               Code = ConstantSesionComiteTecnico.Error,
+                               Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionRegistrarParticipantesSesion, psesion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                           };
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
 
-            return ListSesionComiteTemaDyn;
         }
 
         public async Task<List<ComiteGrilla>> GetComiteGrilla()
@@ -200,25 +261,38 @@ namespace asivamosffie.services
         {
             List<dynamic> ListValidacionSolicitudesContractualesGrilla = new List<dynamic>();
 
+            //Procesos de Seleccion , Contratación
+
+            List<ProcesoSeleccion> ListProcesoSeleccion = _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.ProcesoSeleccionId).ToList();
+            List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.ContratacionId).ToList();
+            //  List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.ComiteTecnicoId).ToListAsync();
+
             try
             {
-                var ListComiteTecnico = _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).Select(x => new
-                {
-                    Id = x.ComiteTecnicoId,
-                    FechaSolicitud = x.FechaCreacion,
-                    TipoSolicitud = x.TipoSolicitudCodigo,
-                    x.NumeroSolicitud
-                }).OrderByDescending(r => r.Id).ToList();
+                List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
 
-                foreach (var comiteTecnico in ListComiteTecnico)
+                foreach (var ProcesoSeleccion in ListProcesoSeleccion)
                 {
                     ListValidacionSolicitudesContractualesGrilla.Add(new
                     {
-                        comiteTecnico.Id,
-                        FechaSolicitud = comiteTecnico.FechaSolicitud.ToString("yyyy-MM-dd"),
-                        comiteTecnico.NumeroSolicitud,
-                        TipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(comiteTecnico.TipoSolicitud, (int)EnumeratorTipoDominio.Tipo_Solicitud)
+                        Id = ProcesoSeleccion.ProcesoSeleccionId,
+                        FechaSolicitud = ProcesoSeleccion.FechaCreacion.ToString("yyyy-MM-dd"),
+                        NumeroSolicitud = ProcesoSeleccion.NumeroProceso,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
+                    });
+                };
+
+                foreach (var Contratacion in ListContratacion)
+                {
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
+                    {
+                        Id = Contratacion.ContratacionId,
+                        FechaSolicitud = Contratacion.FechaSolicitud != null ? Convert.ToDateTime(Contratacion.FechaSolicitud).ToString("yyyy-MM-dd") : Contratacion.FechaSolicitud.ToString(),
+                        Contratacion.NumeroSolicitud,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Contratacion).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Contratacion
                     });
                 };
 
@@ -307,7 +381,7 @@ namespace asivamosffie.services
             }
 
         }
-         
+
         public async Task<Respuesta> GuardarInvitado(Sesion pSesion)
         {
             int idAccionCambiarEstadoSesion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Comite_Sesion, (int)EnumeratorTipoDominio.Acciones);

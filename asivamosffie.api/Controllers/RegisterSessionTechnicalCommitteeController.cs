@@ -21,7 +21,31 @@ namespace asivamosffie.api.Controllers
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService; 
         }
 
-    
+        [HttpPost]
+        [Route("RegistrarParticipantesSesion")]
+        public async Task<IActionResult> RegistrarParticipantesSesion([FromBody]  Sesion psesion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                psesion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.RegistrarParticipantesSesion(psesion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListSesionComiteTemaByIdSesion")]
+        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion([FromBody]  int pIdSesion)
+        {
+            return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByIdSesion(pIdSesion);
+        }
+
         [HttpGet]
         [Route("GetListSolicitudesContractuales")] 
         public async Task<List<dynamic>> GetListSolicitudesContractuales() {
@@ -30,7 +54,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("SaveEditSesionComiteTema")]
-        public async Task<IActionResult> SaveEditSesionComiteTema(List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite)
+        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody]  List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -56,14 +80,14 @@ namespace asivamosffie.api.Controllers
          
         [HttpGet]
         [Route("GetSesionBySesionId")]
-        public async Task<Sesion> GetSesionBySesionId(int pSesionId)
+        public async Task<Sesion> GetSesionBySesionId([FromBody]  int pSesionId)
         {
             return await _registerSessionTechnicalCommitteeService.GetSesionBySesionId(pSesionId);
         }
 
         [HttpPut]
-        [Route("GetSesionBySesionId")]
-        public async Task<IActionResult> EliminarSesionComiteTema(int pSesionComiteTemaId)
+        [Route("DeleteSesionComiteTema")]
+        public async Task<IActionResult> DeleteSesionComiteTema(int pSesionComiteTemaId)
         {
             Respuesta respuesta = new Respuesta();
             try
