@@ -48,6 +48,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<MenuPerfil> MenuPerfil { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
+        public virtual DbSet<Plantilla> Plantilla { get; set; }
         public virtual DbSet<PolizaGarantia> PolizaGarantia { get; set; }
         public virtual DbSet<PolizaObservacion> PolizaObservacion { get; set; }
         public virtual DbSet<Predio> Predio { get; set; }
@@ -1229,6 +1230,17 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
+            });
+
+            modelBuilder.Entity<Plantilla>(entity =>
+            {
+                entity.Property(e => e.Codigo)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<PolizaGarantia>(entity =>

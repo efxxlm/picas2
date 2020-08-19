@@ -39,7 +39,7 @@ namespace asivamosffie.services
             _context = context;
         }
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
-        { 
+        {
             if (
                 !string.IsNullOrEmpty(pSesionComiteTema.ResponsableCodigo) ||
                 !string.IsNullOrEmpty(pSesionComiteTema.TiempoIntervencion.ToString()) ||
@@ -69,7 +69,7 @@ namespace asivamosffie.services
                                                 Responsable = sesionComiteTema.ResponsableCodigo,
                                                 Tiempo = sesionComiteTema.TiempoIntervencion,
                                                 TemaSolicitud = sesionComiteTema.Tema
-                                            }); 
+                                            });
             }
             return ListSesionComiteTemaDyn;
         }
@@ -257,20 +257,39 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<List<dynamic>> GetListSolicitudesContractuales()
+        public async Task<List<dynamic>> GetListSolicitudesContractuales(DateTime FechaComite)
         {
             List<dynamic> ListValidacionSolicitudesContractualesGrilla = new List<dynamic>();
 
-            //Procesos de Seleccion , Contratación
+            int CantidadDiasComite = Int32.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Dias_Comite && (bool)r.Activo).FirstOrDefault().Descripcion);
+            /*Procesos de Seleccion Estado Apertura tramite  , Contratación Estado En tramite 
+            “Apertura de proceso de selección”, 
+            “Evaluación de proceso de selección”,
+            “Contratación”,
+            “Modificación contractual por novedad”, 
+            “Controversia contractual”,
+             “Procesos de defensa judicial”. */
 
-            List<ProcesoSeleccion> ListProcesoSeleccion = _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.ProcesoSeleccionId).ToList();
-            List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.ContratacionId).ToList();
-            //  List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.ComiteTecnicoId).ToListAsync();
 
+            FechaComite = FechaComite.AddDays(-CantidadDiasComite);
+
+            List<ProcesoSeleccion> ListProcesoSeleccion =
+                _context.ProcesoSeleccion
+                .Where(r => !(bool)r.Eliminado
+                 && r.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite
+                 && r.FechaModificacion < FechaComite
+                 )
+                .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
+
+            List<Contratacion> ListContratacion = _context.Contratacion
+                .Where(r => !(bool)r.Eliminado
+                && r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_tramite
+                && r.FechaSolicitud < FechaComite
+                )
+                .OrderByDescending(r => r.ContratacionId).ToList();
             try
             {
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
-
 
                 foreach (var ProcesoSeleccion in ListProcesoSeleccion)
                 {
