@@ -48,8 +48,8 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListSolicitudesContractuales")] 
-        public async Task<List<dynamic>> GetListSolicitudesContractuales() {
-            return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales(); 
+        public async Task<List<dynamic>> GetListSolicitudesContractuales([FromBody] DateTime FechaComite) {
+            return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales(FechaComite); 
         }
 
         [HttpPost]

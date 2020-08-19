@@ -1,6 +1,6 @@
 ﻿namespace asivamosffie.services.Helpers.Constant
 {
-    public class ConstanCodigoEstadoSolicitud
+    public static class ConstanCodigoEstadoSolicitudContratacion
     { 
         public const string Aprobada_comite_tecnico = "1";
         public const string Aprobada_comite_fiduciario = "2";
