@@ -17,7 +17,12 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content class="text-center">
-      <app-tabla-solicitudes-contractuales></app-tabla-solicitudes-contractuales>
+      <button type="button" style="display: none;" (click)="tablaSolicitudes.ngOnInit()" id="btnTablaSolicitudes" ></button>
+      <app-tabla-solicitudes-contractuales
+        #tablaSolicitudes 
+        [solicitudesContractuales]="solicitudesContractuales"
+      >
+    </app-tabla-solicitudes-contractuales>
     </mat-card-content>
   </mat-card>
 

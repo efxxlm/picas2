@@ -64,10 +64,10 @@
                 </button>
             </div>
         </div>
-        <a [routerLink]="fechaComite.valid?'/comiteTecnico/crearOrdenDelDia': null" mat-raised-button color="accent"
+        <button type="button" (click)="onClickCrearOrden()"  mat-raised-button color="accent"
             [disabled]="fechaComite.invalid" class="crear-orden">
             Crear orden del día del comité técnico
-        </a>
+        </button>
 
         <app-tabla-orden-del-dia></app-tabla-orden-del-dia>
     </div>

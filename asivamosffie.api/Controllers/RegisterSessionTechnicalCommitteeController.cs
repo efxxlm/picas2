@@ -56,19 +56,19 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListSolicitudesContractuales")] 
-        public async Task<List<dynamic>> GetListSolicitudesContractuales([FromBody] DateTime FechaComite) {
-            return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales(FechaComite); 
+        public async Task<List<dynamic>> GetListSolicitudesContractuales([FromQuery] string FechaComite) {
+            return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales( DateTime.Parse( FechaComite )); 
         }
 
         [HttpPost]
         [Route("SaveEditSesionComiteTema")]
-        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody]  List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite)
+        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody]  Sesion session )
         {
             Respuesta respuesta = new Respuesta();
             try
             { 
-                pListSesionComiteTema.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.SaveEditSesionComiteTema(pListSesionComiteTema , pFechaProximoComite);
+                session.SesionComiteTema.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.SaveEditSesionComiteTema( session.SesionComiteTema.ToList() ,  session.FechaOrdenDia);
                 return Ok(respuesta);
             }
             catch (Exception ex)
