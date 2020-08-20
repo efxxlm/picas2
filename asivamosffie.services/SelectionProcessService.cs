@@ -1217,14 +1217,14 @@ namespace asivamosffie.services
         public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
         {
             if (
-                 !string.IsNullOrEmpty(procesoSeleccion.Objeto)
+                 string.IsNullOrEmpty(procesoSeleccion.Objeto)
                  || !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
                  || !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
                  || !string.IsNullOrEmpty(procesoSeleccion.CriteriosSeleccion)
                  || !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
                  || !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
                  || !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
-                 || procesoSeleccion.EsDistribucionGrupos
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
                  || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantGrupos))
                  || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
                  || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
@@ -1240,9 +1240,9 @@ namespace asivamosffie.services
                  || !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
 
                 )
-                 return true;
+                 return false;
             else
-                return false;
+                return true;
         }
 
 
