@@ -56,19 +56,9 @@ namespace asivamosffie.services
 
             string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
 
-            Plantilla Plantilla = _context.Plantilla.Where(r =>  r.Codigo == TipoPlantilla).FirstOrDefault();
-            string strEncabezado = _context.Plantilla.Where(r => r.TipoPlantillaId == Plantilla.EncabezadoId).FirstOrDefault().Contenido;
-            Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-
-            Margenes margenes = new Margenes
-            {
-                Derecha = (float)Plantilla.MargenDerecha,
-                Izquierda = (float)Plantilla.MargenIzquierda,
-                Abajo = (float)Plantilla.MargenAbajo,
-                Arriba = (float)Plantilla.MargenArriba
-            };
-
-            return Helpers.PDF.Convertir(Plantilla.Contenido, strEncabezado, "PIE DE PAGINA", margenes);
+            Plantilla Plantilla = _context.Plantilla.Where(r =>  r.Codigo == TipoPlantilla).Include(r=> r.Encabezado).Include(r=> r.PieDePagina).FirstOrDefault();
+            Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion); 
+            return PDF.Convertir(Plantilla);
 
         }
 

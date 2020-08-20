@@ -25,7 +25,7 @@ using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.pipeline.html;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
- 
+
 using iTextSharp.tool.xml.pipeline;
 
 namespace asivamosffie.services.Helpers
@@ -38,10 +38,20 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
-
-
-        public static byte[] Convertir(string contenido, string encabezado, string pie, Margenes margenes)
+         
+        public static byte[] Convertir(Plantilla pPlantilla)
         {
+            string contenido = pPlantilla.Contenido;
+            string encabezado = pPlantilla.Encabezado.Contenido;
+            string pie = pPlantilla.PieDePagina.Contenido;
+            Margenes margenes = new Margenes
+            {
+                Arriba = (float)pPlantilla.MargenArriba,
+                Abajo = (float)pPlantilla.MargenAbajo,
+                Derecha = (float)pPlantilla.MargenDerecha,
+                Izquierda = (float)pPlantilla.MargenIzquierda 
+            };
+
             try
             {
                 contenido = contenido.Replace("\r\n", "");
@@ -80,11 +90,11 @@ namespace asivamosffie.services.Helpers
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, new StringReader(contenido));
 
                 document.Close();
-                return  stream.ToArray();
+                return stream.ToArray();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                 
+
             }
 
             return Array.Empty<byte>();
