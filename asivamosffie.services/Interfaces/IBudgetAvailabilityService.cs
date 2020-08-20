@@ -15,5 +15,9 @@ namespace asivamosffie.services.Interfaces
         Task<FuenteFinanciacion> GetFuenteFinanciacionByIdAportanteId(int pAportanteId);
 
         Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud);
+        Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal();
+        Task<Respuesta> SetCancelDisponibilidadPresupuestal(int pId,string pUsuarioModificacion, string pObservacion);
+        Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
+        Task<Respuesta> returnDDP(int pId, string pUsuarioModificacion, string pObservacion);
     }
 }
