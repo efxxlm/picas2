@@ -13,26 +13,19 @@ using asivamosffie.model.APIModels;
 using iTextSharp.text;
 using System.IO;
 using iTextSharp.text.pdf;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net;
-using System.Linq;
-using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Text;
-using asivamosffie.model.Models;
-using asivamosffie.services.Helpers.Enumerator;
-using System.Text.RegularExpressions;
-using asivamosffie.model.APIModels;
-using iTextSharp.text;
-using System.IO;
-using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
-using iTextSharp.tool.xml.pipeline.html;
+using iTextSharp.tool.xml.pipeline;
+
+using System;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
+using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.html;
+using iTextSharp.tool.xml.pipeline.html;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
+ 
 using iTextSharp.tool.xml.pipeline;
 
 namespace asivamosffie.services.Helpers
@@ -45,48 +38,56 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
-         
+
+
         public static byte[] Convertir(string contenido, string encabezado, string pie, Margenes margenes)
         {
-            contenido = contenido.Replace("\r\n", "");
-            contenido = contenido.Replace("\r\n", "");
-            contenido = contenido.Replace("\r\n", "");
+            try
+            {
+                contenido = contenido.Replace("\r\n", "");
+                contenido = contenido.Replace("\r\n", "");
+                contenido = contenido.Replace("\r\n", "");
 
-            FontFactory.RegisterDirectories();
+                FontFactory.RegisterDirectories();
 
-            double margenIzquierdo = CentimetrosAMedidaPDF(margenes.Izquierda);
-            double margenDerecho = CentimetrosAMedidaPDF(margenes.Derecha);
-            double margenSuperior = CentimetrosAMedidaPDF(margenes.Superior);
-            double margenInferior = CentimetrosAMedidaPDF(margenes.Inferior);
+                double margenIzquierdo = CentimetrosAMedidaPDF(margenes.Izquierda);
+                double margenDerecho = CentimetrosAMedidaPDF(margenes.Derecha);
+                double margenSuperior = CentimetrosAMedidaPDF(margenes.Arriba);
+                double margenInferior = CentimetrosAMedidaPDF(margenes.Abajo);
 
-            Document document = new Document();
-            iTextSharp.text.Rectangle z = PageSize.LETTER;
-            document = new Document(z, (float)margenIzquierdo, (float)margenDerecho, (float)margenSuperior, (float)margenInferior);
+                Document document = new Document();
+                iTextSharp.text.Rectangle z = PageSize.LETTER;
+                document = new Document(z, (float)margenIzquierdo, (float)margenDerecho, (float)margenSuperior, (float)margenInferior);
 
 
-            EventosPdf e = new EventosPdf();
-            e.Iniciar(encabezado, pie, (float)margenes.Superior, (float)margenes.Inferior);
-            MemoryStream stream = new MemoryStream();
+                EventosPdf e = new EventosPdf();
+                e.Iniciar(encabezado, pie, (float)margenes.Arriba, (float)margenes.Abajo);
+                MemoryStream stream = new MemoryStream();
 
-            PdfWriter writer = PdfWriter.GetInstance(document, stream);
-            writer.PageEvent = e;
+                PdfWriter writer = PdfWriter.GetInstance(document, stream);
+                writer.PageEvent = e;
 
-            document.Open();
+                document.Open();
 
-            HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
+                HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
 
-            htmlContext.SetTagFactory(Tags.GetHtmlTagProcessorFactory());
+                htmlContext.SetTagFactory(Tags.GetHtmlTagProcessorFactory());
 
-            ICSSResolver cssResolver = XMLWorkerHelper.GetInstance().GetDefaultCssResolver(true);
+                ICSSResolver cssResolver = XMLWorkerHelper.GetInstance().GetDefaultCssResolver(true);
 
-            IPipeline pipeline = new CssResolverPipeline(cssResolver, new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, writer)));
+                IPipeline pipeline = new CssResolverPipeline(cssResolver, new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, writer)));
 
-            XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, new StringReader(contenido));
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, new StringReader(contenido));
 
-            document.Close();
-            byte[] retorno = stream.ToArray();
+                document.Close();
+                return  stream.ToArray();
+            }
+            catch (Exception)
+            {
+                 
+            }
 
-            return retorno;
+            return Array.Empty<byte>();
         }
 
         public static double CentimetrosAMedidaPDF(double centimetros)

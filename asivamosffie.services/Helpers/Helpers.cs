@@ -26,7 +26,9 @@ namespace asivamosffie.services.Helpers
         {
             return (double)(centimetros * 0.393701 * 72);
         }
- 
+
+
+     
         public static string encryptSha1(string password)
         {
 

@@ -1,16 +1,18 @@
-﻿using asivamosffie.model.APIModels;
-using asivamosffie.model.Models;
-using asivamosffie.services.Exceptions;
-using asivamosffie.services.Helpers.Constant;
-using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.api.Controllers;
 using AuthorizationTest.JwtHelpers;
+using asivamosffie.services.Exceptions;
+using asivamosffie.services.Helpers;
+using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.model.APIModels;
 using System.IO;
 using System.Text;
 using ClosedXML.Excel;
@@ -21,46 +23,74 @@ using System.Globalization;
 using asivamosffie.services.Validators;
 using asivamosffie.services.Filters;
 using System.Data.Common;
-using Z.EntityFramework.Plus;
-using System.Threading.Tasks;
-using System.Data.Entity;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Z.EntityFramework.Plus; 
 
 namespace asivamosffie.services
 {
     public class RegisterSessionTechnicalCommitteeService : IRegisterSessionTechnicalCommitteeService
     {
         private readonly ICommonService _commonService;
+        private readonly IProjectContractingService _IProjectContractingService;
         private readonly devAsiVamosFFIEContext _context;
 
-        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, ICommonService commonService , IProjectContractingService projectContractingService)
         {
+            _IProjectContractingService = projectContractingService;
             _commonService = commonService;
             _context = context;
         }
 
-        //public async Task<byte[]> GetPlantillaByTablaIdRegistroId(int pTablaId , int pRegistroId) {
+        public async Task<byte[]> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId)
+        {
+            return pTablaId switch
+            {
+                (int)ConstanCodigoPlantillas.Ficha_De_Contratacion => await ReplacePlantillaFichaContratacion(pRegistroId),
+                (int)ConstanCodigoPlantillas.Ficha_De_Procesos_De_Seleccion => await ReplacePlantillaFichaContratacion(pRegistroId),
+                _ => Array.Empty<byte>(),
+            };
+        }
+
+        public async Task<byte[]> ReplacePlantillaFichaContratacion(int pContratacionId)
+        {
+            Contratacion contratacion =await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
+
+            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
+
+            Plantilla Plantilla = _context.Plantilla.Where(r =>  r.Codigo == TipoPlantilla).FirstOrDefault();
+            string strEncabezado = _context.Plantilla.Where(r => r.TipoPlantillaId == Plantilla.EncabezadoId).FirstOrDefault().Contenido;
+            Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
+
+            Margenes margenes = new Margenes
+            {
+                Derecha = (float)Plantilla.MargenDerecha,
+                Izquierda = (float)Plantilla.MargenIzquierda,
+                Abajo = (float)Plantilla.MargenAbajo,
+                Arriba = (float)Plantilla.MargenArriba
+            };
+
+            return Helpers.PDF.Convertir(Plantilla.Contenido, strEncabezado, "PIE DE PAGINA", margenes);
+
+        }
+
+        public string ReemplazarDatosPlantillaContratacion(string pPlantilla, Contratacion pContratacion)
+        {
+            List<Dominio> placeholders =  _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
 
 
-        //    switch (pTablaId)
-        //    {
-        //        //Ficha de contratación
-        //        case 1:
-        //            return ReplacePlantillaFichaContratacion(pRegistroId); 
-        //         break;
-                     
-        //        default:
-        //            break;
-        //    }
+            foreach (Dominio placeholderDominio in placeholders)
+            {
+                //ConstanCodigoVariablesPlaceHolders placeholder = (ConstanCodigoVariablesPlaceHolders)placeholderDominio.Codigo.ToString();
 
-        //}
+                switch (placeholderDominio.Codigo)
+                {
+                    case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
 
-        //public async Task<byte[]> ReplacePlantillaFichaContratacion(int pRegistroId)
-        //{
-        //    Contratacion contratacion = await _context.Contratacion.FindAsync(pRegistroId);
-        //    Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == ConstanCodigoPlantillas.Ficha_De_Contratacion).FirstOrDefault();
-        
-        //}
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.NumeroSolicitud);
+                        break; 
+                }
+            } 
+            return pPlantilla; 
+        }
 
 
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
@@ -104,8 +134,7 @@ namespace asivamosffie.services
             try
             {
                 int idAccionRegistrarParticipantesSesion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Participantes_Sesion, (int)EnumeratorTipoDominio.Acciones);
-
-                using DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction();
+ 
                 try
                 {
                     foreach (var SesionInvitado in psesion.SesionInvitado)
@@ -123,7 +152,7 @@ namespace asivamosffie.services
                     }
                     _context.Sesion.Add(psesion);
                     _context.SaveChanges();
-                    transaction.Commit();
+            
 
 
                     return
@@ -138,8 +167,7 @@ namespace asivamosffie.services
 
                 }
                 catch (Exception ex)
-                {
-                    transaction.Rollback();
+                { 
                     return
                            new Respuesta
                            {
@@ -197,11 +225,11 @@ namespace asivamosffie.services
             {
                 int idAccionCrearEditarSesionComiteTema = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_SesionComiteTema, (int)EnumeratorTipoDominio.Acciones);
 
-                using DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction();
+            
                 try
                 {
                     string EditarOcrear = "";
-           
+
                     //Crear Sesión para asignarla a los temas
                     Sesion newSesion = new Sesion();
 
@@ -213,10 +241,10 @@ namespace asivamosffie.services
                     });
 
                     foreach (var SesionComiteTema in pListSesionComiteTema)
-                    { 
+                    {
 
                         if (SesionComiteTema.SesionTemaId == 0)
-                        { 
+                        {
                             //Crear Sesion papa de comite tema 
                             //Valido que solo cree una ya que puede entrar a editar 
                             if (newSesion.SesionId == 0)
@@ -227,10 +255,10 @@ namespace asivamosffie.services
 
                                 newSesion.FechaOrdenDia = pFechaProximoComite;
                                 newSesion.NumeroComite = await _commonService.EnumeradorComite();
-                                newSesion.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria; 
+                                newSesion.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
                                 newSesion.EsCompleto = false;
-                                _context.Sesion.Add(newSesion); 
-                            }  
+                                _context.Sesion.Add(newSesion);
+                            }
                             EditarOcrear = "CREAR SESIÓN COMITE TECNICO TEMA";
                             SesionComiteTema.Eliminado = false;
                             SesionComiteTema.FechaCreacion = DateTime.Now;
@@ -254,7 +282,7 @@ namespace asivamosffie.services
                         }
                     }
                     _context.SaveChanges();
-                    transaction.Commit();
+             
                     return
                          new Respuesta
                          {
@@ -268,7 +296,7 @@ namespace asivamosffie.services
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+               
                     return
                            new Respuesta
                            {
@@ -467,31 +495,31 @@ namespace asivamosffie.services
 
         }
 
-        public bool EjemploTransaction()
-        {
-            using (DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var standard = _context.ArchivoCargue.Add(new ArchivoCargue() { Activo = true });
+        //public bool EjemploTransaction()
+        //{
+        //    using (DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction())
+        //    {
+        //        try
+        //        {
+        //            var standard = _context.ArchivoCargue.Add(new ArchivoCargue() { Activo = true });
 
-                    _context.Usuario.Add(new Usuario()
-                    {
-                        NombreMaquina = "Rama",
-                        Nombres = "Julian"
-                    });
-                    _context.SaveChanges();
-                    // throw exectiopn to test roll back transaction
+        //            _context.Usuario.Add(new Usuario()
+        //            {
+        //                NombreMaquina = "Rama",
+        //                Nombres = "Julian"
+        //            });
+        //            _context.SaveChanges();
+        //            // throw exectiopn to test roll back transaction
 
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    Console.WriteLine("Error occurred.");
-                }
-            }
-            return false;
-        }
+        //            transaction.Commit();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            transaction.Rollback();
+        //            Console.WriteLine("Error occurred.");
+        //        }
+        //    }
+        //    return false;
+        //}
     }
 }
