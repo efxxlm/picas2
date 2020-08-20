@@ -9,183 +9,182 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
-using asivamosffie.model.APIModels;
-using iTextSharp.text;
-using System.IO;
-using iTextSharp.text.pdf;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net;
-using System.Linq;
-using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Text;
-using asivamosffie.model.Models;
-using asivamosffie.services.Helpers.Enumerator;
-using System.Text.RegularExpressions;
-using asivamosffie.model.APIModels;
-using iTextSharp.text;
-using System.IO;
-using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
-using iTextSharp.tool.xml.pipeline.html;
-using iTextSharp.tool.xml.html;
-using iTextSharp.tool.xml.pipeline.css;
-using iTextSharp.tool.xml.pipeline.end;
-using iTextSharp.tool.xml.pipeline;
+using System; 
+using System.IO; 
 
 namespace asivamosffie.services.Helpers
 {
-    public class PDF
+    public class Helpers
     {
         private readonly devAsiVamosFFIEContext _context;
 
-        public PDF(devAsiVamosFFIEContext context)
+        public Helpers(devAsiVamosFFIEContext context)
         {
             _context = context;
         }
-
-
-        public byte[] convertir(string contenido, string encabezado, string pie, Margenes margenes)
-        {
-            contenido = contenido.Replace("\r\n", "");
-            contenido = contenido.Replace("\r\n", "");
-            contenido = contenido.Replace("\r\n", "");
-
-            FontFactory.RegisterDirectories();
-
-            double margenIzquierdo = CentimetrosAMedidaPDF(margenes.Izquierda);
-            double margenDerecho = CentimetrosAMedidaPDF(margenes.Derecha);
-            double margenSuperior = CentimetrosAMedidaPDF(margenes.Superior);
-            double margenInferior = CentimetrosAMedidaPDF(margenes.Inferior);
-
-            Document document = new Document();
-            iTextSharp.text.Rectangle z = PageSize.LETTER;
-            document = new Document(z, (float)margenIzquierdo, (float)margenDerecho, (float)margenSuperior, (float)margenInferior);
-
-
-            EventosPdf e = new EventosPdf();
-            e.Iniciar(encabezado, pie, (float)margenes.Superior, (float)margenes.Inferior);
-            MemoryStream stream = new MemoryStream();
-
-            PdfWriter writer = PdfWriter.GetInstance(document, stream);
-            writer.PageEvent = e;
-
-            document.Open();
-
-            HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
-
-            htmlContext.SetTagFactory(Tags.GetHtmlTagProcessorFactory());
-
-            ICSSResolver cssResolver = XMLWorkerHelper.GetInstance().GetDefaultCssResolver(true);
-
-            IPipeline pipeline = new CssResolverPipeline(cssResolver, new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, writer)));
-
-            XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, new StringReader(contenido));
-
-            document.Close();
-            byte[] retorno = stream.ToArray();
-
-            return retorno;
-        }
-
         public double CentimetrosAMedidaPDF(double centimetros)
         {
             return (double)(centimetros * 0.393701 * 72);
         }
-
-        class EventosPdf : PdfPageEventHelper
+ 
+        public static string encryptSha1(string password)
         {
 
-            public string Encabezado;
-            public string Pie;
-            public float MargenSuperior;
-            public float MargenInferior;
-            protected ElementList header;
-            protected ElementList footer;
 
-            public void Iniciar(string encabezado, string pie, float margenSuperior, float margenInferior)
-            {
-                this.Encabezado = encabezado;
-                this.MargenSuperior = margenSuperior;
-                this.MargenInferior = margenInferior;
-                this.Pie = pie;
-                if (!string.IsNullOrEmpty(encabezado))
-                {
-                    header = XMLWorkerHelper.ParseToElementList(encabezado, null);
-                }
-                if (!string.IsNullOrEmpty(pie))
-                {
-                    footer = XMLWorkerHelper.ParseToElementList(pie, null);
-                }
-            }
+            UTF8Encoding enc = new UTF8Encoding();
+            byte[] data = enc.GetBytes(password);
+            byte[] result;
 
-            public override void OnStartPage(PdfWriter writer, Document document)
+            SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
+
+            result = sha.ComputeHash(data);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < result.Length; i++)
             {
 
-                if (Encabezado != null)
+                // Convertimos los valores en hexadecimal
+                // cuando tiene una cifra hay que rellenarlo con cero
+                // para que siempre ocupen dos dígitos.
+                if (result[i] < 16)
                 {
-
+                    sb.Append("0");
                 }
+                sb.Append(result[i].ToString("x"));
             }
-
-            public override void OnEndPage(PdfWriter writer, Document document)
-            {
-
-                try
-                {
-                    ColumnText ct = new ColumnText(writer.DirectContent);
-                    if (header != null)
-                    {
-
-                        ct.SetSimpleColumn(new Rectangle(36, 0, 559, document.Top + document.TopMargin - 10));
-
-                        foreach (IElement e in header)
-                        {
-                            ct.AddElement(e);
-                        }
-                        ct.Go();
-                    }
-                    if (footer != null)
-                    {
-                        ct.SetSimpleColumn(new Rectangle(36, 0, 559, 80));
-
-                        foreach (IElement e in footer)
-                        {
-                            ct.AddElement(e);
-                        }
-                        ct.Go();
-                    }
-                }
-                catch (Exception de)
-                {
-                    throw de;
-                }
-            }
-
+            return sb.ToString().ToUpper();
         }
 
-        public class ColumnTextElementHandler : IElementHandler
+        public static string CleanStringInput(string text)//ÁÉÍÓÚ //
         {
-            public ColumnTextElementHandler(ColumnText ct)
+
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
+
+            if (text != null)
             {
-                this.ct = ct;
+                for (int i = 0; i < accents.Length; i++)
+                {
+                    text = text.Replace(accents[i], replacement[i]);
+                }
             }
 
-            ColumnText ct = null;
+            return text;
+        }
 
-            public void Add(IWritable w)
+        public static object ConvertToUpercase(object dataObject)
+        {
+            try
             {
-                if (w is WritableElement)
+                object newObject = new System.Dynamic.ExpandoObject();
+                char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+                char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
+
+                foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(dataObject))
                 {
-                    foreach (IElement e in ((WritableElement)w).Elements())
+
+                    string name = descriptor.Name;
+                    object value = descriptor.GetValue(dataObject);
+                    for (int i = 0; i < accents.Length; i++)
                     {
-                        ct.AddElement(e);
+                        ((IDictionary<String, Object>)newObject).Add(name,
+                         value =
+                         (
+                             descriptor.PropertyType.Name == "String" && value.ToString() != null ?
+                             Convert.ToString(value.ToString().Replace(accents[i], replacement[i])).ToUpper() : value
+                         ));
                     }
                 }
+
+
+                return newObject; //Newtonsoft.Json.JsonConvert.SerializeObject();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message.ToString();
             }
         }
 
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient(pStrSmtpServerV);
+
+                mail.From = new MailAddress(pCorreoLocal);
+                mail.To.Add(pDestinatario);
+                mail.Subject = pAsunto;
+                mail.IsBodyHtml = true;
+
+                mail.Body = pMensajeHtml;
+                SmtpServer.Port = pSmtpPort;
+                SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);
+                SmtpServer.EnableSsl = false;
+                SmtpServer.Send(mail);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
+        {
+            const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
+            const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
+            const string UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string NUMERIC_CHARACTERS = "0123456789";
+            const string SPECIAL_CHARACTERS = @"!#$%*\";
+            const string SPACE_CHARACTER = " ";
+            const int PASSWORD_LENGTH_MIN = 8;
+            const int PASSWORD_LENGTH_MAX = 128;
+
+            if (lengthOfPassword < PASSWORD_LENGTH_MIN || lengthOfPassword > PASSWORD_LENGTH_MAX)
+            {
+                return "Password length must be between 8 and 128.";
+            }
+
+            string characterSet = "";
+
+            if (includeLowercase)
+            {
+                characterSet += LOWERCASE_CHARACTERS;
+            }
+
+            if (includeUppercase)
+            {
+                characterSet += UPPERCASE_CHARACTERS;
+            }
+
+            if (includeNumeric)
+            {
+                characterSet += NUMERIC_CHARACTERS;
+            }
+
+            if (includeSpecial)
+            {
+                characterSet += SPECIAL_CHARACTERS;
+            }
+
+            if (includeSpaces)
+            {
+                characterSet += SPACE_CHARACTER;
+            }
+
+            char[] password = new char[lengthOfPassword];
+            int characterSetLength = characterSet.Length;
+
+            System.Random random = new System.Random();
+            for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
+            {
+                password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
+            }
+            Random randomw = new Random();
+            string def = "Az-" + randomw.Next(5).ToString();
+            return string.Join(null, password) + def;
+        }
     }
 }

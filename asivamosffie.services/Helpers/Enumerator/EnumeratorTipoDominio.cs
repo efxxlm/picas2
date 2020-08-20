@@ -70,7 +70,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Cronograma_Seguimiento = 40,
  
-        Dias_Comite = 43
+        Dias_Comite = 43,
+
+        PlaceHolder = 44
 
     }
 }
