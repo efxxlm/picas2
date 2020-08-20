@@ -35,6 +35,14 @@ mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat
     border-bottom-color: var(--mainColor);
 }
 
+td.mat-cell:first-of-type {
+    border-left: solid 1px;
+}
+
+td.mat-cell:last-of-type {
+    border-right: solid 1px;
+}
+
 table {
     width: 100%;
 }
