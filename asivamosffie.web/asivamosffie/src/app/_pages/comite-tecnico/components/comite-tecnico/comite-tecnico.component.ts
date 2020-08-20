@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-comite-tecnico',
@@ -20,9 +20,11 @@ export class ComiteTecnicoComponent implements OnInit {
   minDate: Date;
 
   constructor(
-    private router: Router
-  ) {
-    this.minDate = new Date();
+              private router: Router,
+
+             ) 
+  {
+    //this.minDate = new Date();
     this.fechaComite = new FormControl('', [Validators.required]);
     this.fechaComite.valueChanges
     .subscribe(value => {
@@ -31,6 +33,10 @@ export class ComiteTecnicoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  onClickCrearOrden(){
+    this.router.navigate(['/comiteTecnico/crearOrdenDelDia', "'" + this.fechaComite.value + "'" ]);
   }
 
 }

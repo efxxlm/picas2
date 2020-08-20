@@ -1,19 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-
-export interface SolicitudesContractuales {
-  fecha: string;
-  numero: string;
-  solicitud: string;
-}
-
-const ELEMENT_DATA: SolicitudesContractuales[] = [
-  {fecha: '23/06/2020', numero: 'SA0006', solicitud: 'Apertura de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'SC0005', solicitud: 'Evaluación de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'PI0004', solicitud: 'Contratación'},
-];
+import { ActivatedRoute } from '@angular/router';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { SolicitudesContractuales, Sesion, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-crear-orden-del-dia',
@@ -21,7 +12,12 @@ const ELEMENT_DATA: SolicitudesContractuales[] = [
   styleUrls: ['./crear-orden-del-dia.component.scss']
 })
 
-export class CrearOrdenDelDiaComponent {
+export class CrearOrdenDelDiaComponent implements OnInit {
+
+  solicitudesContractuales: SolicitudesContractuales[] = [];
+  fechaSesionString: string;
+  fechaSesion: Date;
+
   addressForm = this.fb.group({
     tema: this.fb.array([
       this.fb.group({
@@ -48,9 +44,40 @@ export class CrearOrdenDelDiaComponent {
   ];
 
   constructor(
-    private fb: FormBuilder,
-    public dialog: MatDialog
-    ) {}
+              private fb: FormBuilder,
+              public dialog: MatDialog,
+              private activatedRoute: ActivatedRoute,
+              private techicalCommitteeSessionService: TechnicalCommitteSessionService,
+
+             ) 
+    {
+
+    }
+
+
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe( a => {
+      let fecha = Date.parse(a.fecha);
+       this.fechaSesion = new Date(fecha);
+       this.fechaSesionString = `${ this.fechaSesion.getFullYear() }/${ this.fechaSesion.getMonth() + 1 }/${ this.fechaSesion.getDate() }` 
+
+      this.techicalCommitteeSessionService.getListSolicitudesContractuales( this.fechaSesionString )
+      .subscribe( response => {
+
+        this.solicitudesContractuales = response;
+
+        setTimeout(() => {
+          
+          let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
+          btnTablaSolicitudes.click();
+          console.log( this.solicitudesContractuales );
+
+        }, 1000);
+
+      });
+
+    })
+  }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -95,6 +122,29 @@ export class CrearOrdenDelDiaComponent {
   }
 
   onSubmit() {
+
+    let sesion: Sesion = {
+      fechaOrdenDia: this.fechaSesion,
+      sesionComiteTema: []
+    }
+
+    this.tema.controls.forEach( control => {
+      let sesionComiteTema: SesionComiteTema = {
+        tema: control.get('tema').value,
+        ResponsableCodigo: control.get('responsable').value,
+        tiempoIntervencion: control.get('tiempoIntervencion').value,
+        rutaSoporte: control.get('url').value,
+
+      }
+
+      sesion.sesionComiteTema.push( sesionComiteTema );
+    }) 
+
+
+    this.techicalCommitteeSessionService.saveEditSesionComiteTema( sesion ).subscribe( response => {
+      console.log(response);
+    });
+
     if (this.addressForm.invalid) {
       this.openDialog('Falta registrar información', '');
     }

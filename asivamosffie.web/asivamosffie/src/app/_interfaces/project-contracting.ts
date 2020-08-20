@@ -33,6 +33,8 @@ export interface ContratacionProyecto{
     contempladaServicioMonitoreo?: boolean,
     contratacionProyectoAportante?: ContratacionProyectoAportante[],    
     proyecto?: any, 
+    tipoIntervencionCodigo?: string,
+    tipoSolicitudCodigo?: string,
 
 }
 

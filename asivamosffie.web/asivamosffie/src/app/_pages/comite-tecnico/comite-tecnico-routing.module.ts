@@ -12,7 +12,7 @@ const routes: Routes = [
     component: ComiteTecnicoComponent
   },
   {
-    path: 'crearOrdenDelDia',
+    path: 'crearOrdenDelDia/:fecha',
     component: CrearOrdenDelDiaComponent
   },
   {
