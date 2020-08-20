@@ -106,6 +106,16 @@ namespace asivamosffie.services
 
         }
 
+
+        public async Task<Contratacion> GetAllContratacionByContratacionId(int pContratacionId)
+        {
+            return  await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
+              .Include(r => r.Contratista)
+              .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+              .Include(r => r.ContratacionProyecto).FirstOrDefaultAsync();
+        }
+
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
 

@@ -18,8 +18,16 @@ namespace asivamosffie.api.Controllers
 
         public RegisterSessionTechnicalCommitteeController(IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService) {
 
-            _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService; 
+            _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
+         
+        [HttpGet]
+        [Route("GetPlantillaByTablaIdRegistroId")]
+        public async Task<FileResult> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId)
+        { 
+            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
+        }
+
 
         [HttpPost]
         [Route("RegistrarParticipantesSesion")]

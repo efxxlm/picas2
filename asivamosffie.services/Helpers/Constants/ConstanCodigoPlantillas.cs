@@ -1,9 +1,8 @@
 ﻿namespace asivamosffie.services.Helpers.Constant
 {
-    public static class ConstanCodigoPlantillas
+    public enum ConstanCodigoPlantillas 
     {
-        public const string Ficha_De_Contratacion = "1";
-  
-  
+        Ficha_De_Contratacion = 1,
+        Ficha_De_Procesos_De_Seleccion = 2,
     }
 }
