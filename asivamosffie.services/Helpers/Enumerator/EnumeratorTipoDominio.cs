@@ -54,6 +54,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Estado_Juridico_Predios = 25,
 		Estado_Cronograma_Seguimiento = 40
 
+     	Estado_Solicitud_Presupuestal = 33
 
 	}
 }

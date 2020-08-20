@@ -226,7 +226,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => r.DominioId == pDominioID).Select(r => r.Nombre).FirstOrDefaultAsync();
         }
-
+         
         public async Task<List<Localicacion>> GetListMunicipioByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -252,10 +252,11 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-
+         
         public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
         {
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
+ 
     }
 }
