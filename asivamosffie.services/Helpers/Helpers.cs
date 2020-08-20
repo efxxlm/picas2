@@ -11,7 +11,7 @@ using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
 using System; 
 using System.IO; 
-
+   
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
