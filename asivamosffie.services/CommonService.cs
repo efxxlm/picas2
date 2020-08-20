@@ -43,19 +43,13 @@ namespace asivamosffie.services
 
         public async Task<string> EnumeradorComite()
         {
-            string cantidadDigitos = "00000";
-            string cantidadDeResgistros = _context.Sesion.ToList().Count().ToString();
+            int cantidadDeResgistros = _context.Sesion.ToList().Count();
             string Nomeclatura = "CT_";
-
-            if ((cantidadDigitos.Length - cantidadDeResgistros.Length < 1))
-            {
-                return Nomeclatura + "0" + (Int32.Parse(cantidadDeResgistros) + 1);
-            }
-            else
-            {
-                return Nomeclatura + (cantidadDigitos.TakeLast(cantidadDigitos.Length - cantidadDeResgistros.Length)) + (Int32.Parse(cantidadDeResgistros) + 1);
-            }
+            
+            string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
+            return string.Concat(Nomeclatura, consecutivo );
         }
+        
         public async Task<string> EnumeradorContratacion()
         {
             string cantidadDigitos = "0000";
