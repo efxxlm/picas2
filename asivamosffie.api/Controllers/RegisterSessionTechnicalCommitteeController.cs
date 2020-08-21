@@ -62,13 +62,13 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("SaveEditSesionComiteTema")]
-        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody]  Sesion session )
+        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody] Sesion session)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                session.SesionComiteTema.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.SaveEditSesionComiteTema( session.SesionComiteTema.ToList() ,  session.FechaOrdenDia);
+            {
+                session.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.SaveEditSesionComiteTema(session);
                 return Ok(respuesta);
             }
             catch (Exception ex)

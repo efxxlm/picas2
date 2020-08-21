@@ -209,59 +209,37 @@ namespace asivamosffie.services
             return ListComiteGrilla;
         }
 
-        public async Task<Respuesta> SaveEditSesionComiteTema(List<SesionComiteTema> pListSesionComiteTema, DateTime pFechaProximoComite)
+        public async Task<Respuesta> SaveEditSesionComiteTema(Sesion session)
         {
             try
             {
                 int idAccionCrearEditarSesionComiteTema = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_SesionComiteTema, (int)EnumeratorTipoDominio.Acciones);
-
-            
+                 
                 try
                 {
-                    string EditarOcrear = "";
-
-                    //Crear Sesión para asignarla a los temas
-                    Sesion newSesion = new Sesion();
-
+                    string EditarOcrear = ""; 
                     //Por defecto, el sistema incluirá automáticamente en cada orden del día un último tema
                     //sin responsable ni tiempo, este se denominará “Proposiciones y varios”.
-                    pListSesionComiteTema.Add(new SesionComiteTema
+                    session.SesionComiteTema.Add(new SesionComiteTema
                     {// se pone nombre del tema solo para diferenciar
                         Tema = "Proposiciones Varios  esto se debe eliminar"
                     });
 
-                    foreach (var SesionComiteTema in pListSesionComiteTema)
-                    {
-
+                    foreach (var SesionComiteTema in session.SesionComiteTema)
+                    { 
                         if (SesionComiteTema.SesionTemaId == 0)
-                        {
-                            //Crear Sesion papa de comite tema 
-                            //Valido que solo cree una ya que puede entrar a editar 
-                            if (newSesion.SesionId == 0)
-                            {
-                                newSesion.FechaCreacion = DateTime.Now;
-                                newSesion.UsuarioCreacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
-                                newSesion.Eliminado = false;
-
-                                newSesion.FechaOrdenDia = pFechaProximoComite;
-                                newSesion.NumeroComite = await _commonService.EnumeradorComite();
-                                newSesion.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
-                                newSesion.EsCompleto = false;
-                                _context.Sesion.Add(newSesion);
-                            }
+                        { 
                             EditarOcrear = "CREAR SESIÓN COMITE TECNICO TEMA";
                             SesionComiteTema.Eliminado = false;
                             SesionComiteTema.FechaCreacion = DateTime.Now;
-                            SesionComiteTema.UsuarioCreacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
-                            SesionComiteTema.SesionId = newSesion.SesionId;
-                            _context.SesionComiteTema.Add(SesionComiteTema);
+                            SesionComiteTema.UsuarioCreacion = session.UsuarioCreacion;  
                         }
                         else
                         {
                             EditarOcrear = "EDITAR SESIÓN COMITE TECNICO TEMA";
                             SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(SesionComiteTema.SesionTemaId);
                             sesionComiteTemaOld.FechaModificacion = DateTime.Now;
-                            sesionComiteTemaOld.UsuarioModificacion = pListSesionComiteTema.FirstOrDefault().UsuarioCreacion;
+                            sesionComiteTemaOld.UsuarioModificacion = session.UsuarioCreacion;
 
                             sesionComiteTemaOld.Tema = SesionComiteTema.Tema;
                             sesionComiteTemaOld.ResponsableCodigo = SesionComiteTema.ResponsableCodigo;
@@ -271,6 +249,15 @@ namespace asivamosffie.services
                             sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
                         }
                     }
+
+                    //Auditoria
+                    session.FechaCreacion = DateTime.Now; 
+                    session.Eliminado = false;
+                    //Registro
+                    session.NumeroComite = await _commonService.EnumeradorComite();
+                    session.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
+                    session.EsCompleto = false;
+                    _context.Sesion.Add(session);
                     _context.SaveChanges();
              
                     return
@@ -280,7 +267,7 @@ namespace asivamosffie.services
                              IsException = false,
                              IsValidation = false,
                              Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionCrearEditarSesionComiteTema, pListSesionComiteTema.FirstOrDefault().UsuarioCreacion, EditarOcrear)
+                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionCrearEditarSesionComiteTema, session.UsuarioCreacion, EditarOcrear)
                          };
 
                 }
@@ -294,7 +281,7 @@ namespace asivamosffie.services
                                IsException = true,
                                IsValidation = false,
                                Code = ConstantSesionComiteTecnico.Error,
-                               Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionCrearEditarSesionComiteTema, pListSesionComiteTema.FirstOrDefault().UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                               Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionCrearEditarSesionComiteTema, session.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                            };
                 }
             }

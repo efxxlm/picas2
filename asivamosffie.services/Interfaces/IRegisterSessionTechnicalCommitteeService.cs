@@ -17,7 +17,7 @@ namespace asivamosffie.services.Interfaces
   
         Task<List<dynamic>> GetListSolicitudesContractuales(DateTime FechaComite);
 
-        Task<Respuesta> SaveEditSesionComiteTema(List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite);
+        Task<Respuesta> SaveEditSesionComiteTema(Sesion session);
 
         Task<List<ComiteGrilla>> GetComiteGrilla();
 
