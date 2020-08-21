@@ -1,0 +1,36 @@
+<div class="container text-center">
+
+  <div class="text-right">
+      <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+          <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Registrar sesión de comité fiduciario
+  </h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+      <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+          <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+      </button>
+
+      Bienvenida/o, aquí podrá realizar la programación y registro de una sesión de comité fiduciario.
+  </div>
+
+  <a routerLink="/comiteFiduciario/ordenesDelDia" routerLinkActive="active" mat-raised-button color="accent" class="btn-registrar-acuerdo ml-1">
+    Órdenes del día
+  </a>
+  <a routerLink="/comiteFiduciario/sesionesConvocadas" routerLinkActive="active" mat-raised-button color="accent" class="btn-registrar-acuerdo ml-1">
+    Sesiones de comité fiduciario
+  </a>
+  <a routerLink="" routerLinkActive="active" mat-raised-button color="accent" class="btn-registrar-acuerdo ml-1">
+    Gestión de actas
+  </a>
+  <a routerLink="" routerLinkActive="active" mat-raised-button color="accent" class="btn-registrar-acuerdo ml-1">
+    Monitoreo a compromisos
+  </a>
+
+  <router-outlet></router-outlet>
+
+</div>

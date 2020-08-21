@@ -1,0 +1,187 @@
+<!-- Presentacion del componente -->
+<div class="container text-center">
+
+  <div class="text-right">
+      <a routerLink="/comiteFiduciario" mat-button color="primary" class="btn-regresar">
+          <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Crear orden del día de comité fiduciario
+  </h1>
+
+</div>
+
+<!-- Seleccionar temas a tratar en el comite Fiduciario -->
+<div class="flex">
+
+  <h3 class="padding-1">Tipo de tema</h3>
+
+  <mat-form-field appearance="fill" class="width-20">
+    <mat-select [formControl]="tipoDeTemas" multiple required (selectionChange)="values( $event.value )">
+      <mat-select-trigger>
+        <small>
+          {{tipoDeTemas.value ? tipoDeTemas.value[0] : ''}}
+          <span *ngIf="tipoDeTemas.value?.length > 1">
+            , {{ tipoDeTemas.value ? tipoDeTemas.value[1] : '' }}
+          </span>
+        </small>
+      </mat-select-trigger>
+      <mat-option *ngFor="let tema of temas" [value]="tema">{{tema}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>
+
+<!-- Solicitudes contractuales -->
+<div *ngIf="solicitudBoolean">
+
+  <div class="flex ml-3">
+    <img class="img" src="/assets/img/icon/ayuda-azul.svg">
+    <h4 align="center"> Seleccione los temas que desea incluir al comité fiduciario</h4>
+    <span class="seleccionados"> {{ totalSolicitudes() }} </span>
+  </div>
+
+  <mat-accordion>
+
+    <mat-expansion-panel class="expansion-style ml-5" *ngFor="let datasolicitud of dataSolicitudContractual">
+      <mat-expansion-panel-header class="expansion-style--header width-40">
+        <mat-panel-title class="expansion-style--title">
+          Sesión del {{ datasolicitud.fecha }} {{ datasolicitud.nombreSesion }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-tabla-sesiones (sesionesSeleccionadas)="getSesionesSeleccionada( $event )" [displayedColumns]="displayedColumns" [dataSolicitud]="datasolicitud" [columnas]="columnas"></app-tabla-sesiones>
+    </mat-expansion-panel>
+
+</mat-accordion>
+
+</div>
+
+<!-- Temas nuevos -->
+<div *ngIf="temaBoolean" class="div-temas">
+  <mat-card class="shipping-card width-80 mr-bottom">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text"> Nuevo tema </mat-card-title>
+    </mat-card-header>
+    <mat-card-content *ngFor="let tema of sesionComiteFiduciario.temas;index as i">
+
+      <mat-card-title class="header-card--text sub-text"> Tema {{ tema.numeroTema }} </mat-card-title>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left"> Tema </label>
+            </div>
+            <div class="col d-flex w-100-4em">
+              <mat-form-field class="full-width">
+                <input matInput [(ngModel)]="tema.temaTratar" minlength="1" maxlength="100" required type="text">
+              </mat-form-field>
+              <span class="contador">{{ 100 - ( tema.temaTratar?tema.temaTratar.length:0 ) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Responsable</label>
+            </div>
+            <div class="col w-100-15em">
+              <mat-form-field class="select-width">
+                <mat-select required [(ngModel)]="tema.responsable">
+                  <mat-option *ngFor="let listado of listadoResponsables" [value]="listado">
+                    {{ listado }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Tiempo de intervención</label>
+            </div>
+            <div class="col d-flex w-100-20em">
+              <label class="label-left sub-label"> Minutos </label>
+              <mat-form-field class="full-width">
+                <input matInput [(ngModel)]="tema.tiempoIntervencion" minlength="1" maxlength="3" min="1" max="999" required type="number" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+              </mat-form-field>
+              <span class="contador">{{ 3 - ( tema.tiempoIntervencion?tema.tiempoIntervencion.toString().length:0 ) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left"> Url con soporte </label>
+            </div>
+            <div class="col d-flex w-100-11em">
+              <mat-form-field class="full-width">
+                <input matInput [(ngModel)]="tema.urlSoporte" type="text">
+              </mat-form-field>
+            </div>
+          </div>
+          <span class="text-center display-block"><small> Indique la ruta del soporte de esta información </small></span>
+        </div>
+      </div>
+
+      <!-- Boton para eliminar tema a tratar -->
+      <div *ngIf="sesionComiteFiduciario.temas.length > 1" class="btn-right-delete">
+        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarTema( tema )">
+          <img src="assets/img/icon/menos.svg" alt="Agregar otra infraestructura">
+          Eliminar tema
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Boton para agregar tema nuevo a tratar -->
+  <div class="btn-right">
+    <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarTema()">
+      <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura">
+      Agregar un nuevo tema
+    </button>
+  </div>
+
+  <!-- Proposiciones y temas a tratar -->
+  <mat-card class="shipping-card width-80 mt-1">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <img class="img" src="/assets/img/icon/ayuda-azul.svg">
+            <div class="col d-flex w-100-4em">
+              <mat-form-field class="full-width">
+                <input matInput [(ngModel)]="sesionComiteFiduciario.proposiciones" minlength="1" type="text" placeholder="Tenga en cuenta que antes de registrar la sesión de comité fiduciario podra diligenciar este campo">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Guardar informacion -->
+<div class="text-center animatedOpacity">
+  <button *ngIf="sesionComiteFiduciario.solicitudesSeleccionadas.length > 0 || sesionComiteFiduciario.temas.length > 0" 
+          mat-button color="warn" 
+          class="btn-guardar"
+          (click)="enviarSesion()">
+    <img src="assets/img/icon/guardar.svg" alt="Regresar">
+  </button>
+</div>

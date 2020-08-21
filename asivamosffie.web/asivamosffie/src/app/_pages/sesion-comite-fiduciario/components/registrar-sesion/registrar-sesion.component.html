@@ -1,0 +1,78 @@
+<!-- Presentacion del componente -->
+<div class="container text-center">
+
+  <div class="text-right">
+      <a routerLink="/comiteFiduciario/sesionesConvocadas" mat-button color="primary" class="btn-regresar">
+          <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Registrar sesión {{ registroSesion.numeroComite }}
+  </h1>
+
+</div>
+
+<!-- Procesos -->
+<div class="container mt-2em">
+  <div class="text-center">
+
+      <p class="info-container">
+          <span class="info-text sin-diligenciar">Sin diligenciar</span>
+          <span class="info-text en-proceso">En proceso</span>
+          <span class="info-text completo">Completo</span>
+      </p>
+  </div>
+
+  <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="estadoValidacion">
+              Validación de solicitudes contractuales
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-tabla-validaciones-contractuales></app-tabla-validaciones-contractuales>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="estadoOtrosTemas">
+              Otros temas
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-tabla-validaciones-contractuales></app-tabla-validaciones-contractuales>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="estadoProposiciones">
+              Proposiciones y varios
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <app-form-nuevo-tema></app-form-nuevo-tema>
+
+      </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<!-- Guardar informacion -->
+<div class="text-center animatedOpacity">
+  <button mat-button color="warn" 
+          class="btn-guardar"> <!-- *ngIf="sesionComiteFiduciario.solicitudesSeleccionadas.length > 0 || sesionComiteFiduciario.temas.length > 0" (click)="enviarSesion()" -->
+    <img src="assets/img/icon/guardar.svg" alt="Regresar">
+  </button>
+</div>
+
+<div class="container text-center mt-2em">
+  <a mat-raised-button color="accent" class="btn-registrar-acuerdo ml-1">
+    Aplazar sesión
+  </a>
+  <a mat-raised-button color="accent" class="btn-registrar-acuerdo ml-1">
+    Declarar fallida
+  </a>
+  <a mat-raised-button color="accent" class="btn-registrar-acuerdo ml-1">
+    Registrar participantes
+  </a>
+</div>

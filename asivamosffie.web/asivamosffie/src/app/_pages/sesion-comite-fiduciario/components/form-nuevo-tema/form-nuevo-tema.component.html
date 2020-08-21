@@ -1,0 +1,96 @@
+<div class="div-temas">
+  <mat-card class="shipping-card width-80 mr-bottom">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
+    </mat-card-header>
+    <mat-card-content > <!-- *ngFor="let tema of sesionComiteFiduciario.temas;index as i" -->
+
+      <mat-card-title class="header-card--text sub-text"> Tema <!-- {{ tema.numeroTema }} --> </mat-card-title>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left"> Tema </label>
+            </div>
+            <div class="col d-flex w-100-4em">
+              <mat-form-field class="full-width">
+                <input matInput minlength="1" maxlength="100" required type="text"> <!-- [(ngModel)]="tema.temaTratar" -->
+              </mat-form-field>
+              <span class="contador">{{ 100 <!-- - ( tema.temaTratar?tema.temaTratar.length:0 ) --> }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Responsable</label>
+            </div>
+            <div class="col w-100-15em">
+              <mat-form-field class="select-width">
+                <mat-select required> <!-- [(ngModel)]="tema.responsable" -->
+                  <mat-option> <!--  *ngFor="let listado of listadoResponsables" [value]="listado" -->
+                    listado
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Tiempo de intervención</label>
+            </div>
+            <div class="col d-flex w-100-20em">
+              <label class="label-left sub-label"> Minutos </label>
+              <mat-form-field class="full-width">
+                <input matInput minlength="1" maxlength="3" min="1" max="999" required type="number" onKeyPress="if(this.value.length>=this.maxLength) return false;"> <!-- [(ngModel)]="tema.tiempoIntervencion" -->
+              </mat-form-field>
+              <span class="contador">{{ 3 <!-- - ( tema.tiempoIntervencion?tema.tiempoIntervencion.toString().length:0 ) --> }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left"> Url con soporte </label>
+            </div>
+            <div class="col d-flex w-100-11em">
+              <mat-form-field class="full-width">
+                <input matInput type="text"> <!-- [(ngModel)]="tema.urlSoporte" -->
+              </mat-form-field>
+            </div>
+          </div>
+          <span class="text-center display-block"><small> Indique la ruta del soporte de esta información </small></span>
+        </div>
+      </div>
+
+      <!-- Boton para eliminar tema a tratar -->
+      <div class="btn-right-delete"> <!-- *ngIf="sesionComiteFiduciario.temas.length > 1" -->
+        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarTema( )">
+          <img src="assets/img/icon/menos.svg" alt="Agregar otra infraestructura">
+          Eliminar tema
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Boton para agregar tema nuevo a tratar -->
+  <div class="btn-right">
+    <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarTema()">
+      <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura">
+      Agregar un nuevo tema
+    </button>
+  </div>
+
+</div>
