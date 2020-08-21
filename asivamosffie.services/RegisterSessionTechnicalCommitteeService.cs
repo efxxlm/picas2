@@ -110,10 +110,10 @@ namespace asivamosffie.services
                 ListSesionComiteTemaDyn.Add(
                                             new
                                             {
-                                                Id = sesionComiteTema.SesionTemaId,
-                                                Responsable = sesionComiteTema.ResponsableCodigo,
-                                                Tiempo = sesionComiteTema.TiempoIntervencion,
-                                                TemaSolicitud = sesionComiteTema.Tema
+                                                SesionTemaId = sesionComiteTema.SesionTemaId,
+                                                ResponsableCodigo = sesionComiteTema.ResponsableCodigo,
+                                                TiempoIntervencion = sesionComiteTema.TiempoIntervencion,
+                                                Tema = sesionComiteTema.Tema
                                             });
             }
             return ListSesionComiteTemaDyn;
@@ -198,8 +198,11 @@ namespace asivamosffie.services
                     {
                         Id = comite.Id,
                         FechaComite = comite.FechaComite,
-                        EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(comite.EstadoComite, (int)EnumeratorTipoDominio.Estado_Comite) : "---"
+                        EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(comite.EstadoComite, (int)EnumeratorTipoDominio.Estado_Comite) : "---",
+                        NumeroComite = comite.NumeroComite
                     };
+
+                    ListComiteGrilla.Add( comiteGrilla );
 
                 }
             }

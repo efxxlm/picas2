@@ -49,7 +49,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListSesionComiteTemaByIdSesion")]
-        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion([FromBody]  int pIdSesion)
+        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion([FromQuery]  int pIdSesion)
         {
             return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByIdSesion(pIdSesion);
         }

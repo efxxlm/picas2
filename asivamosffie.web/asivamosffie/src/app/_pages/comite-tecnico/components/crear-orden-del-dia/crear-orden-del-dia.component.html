@@ -47,6 +47,7 @@
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
                     <input matInput #temaInput type="text" formControlName="tema" maxlength="100" required>
+                    <input type="hidden" formControlName="sesionTemaId">
                   </mat-form-field>
                   <span class="contador">{{50 - temaInput.value.length}}</span>
                 </div>

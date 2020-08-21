@@ -36,7 +36,7 @@ export class ComiteTecnicoComponent implements OnInit {
   }
 
   onClickCrearOrden(){
-    this.router.navigate(['/comiteTecnico/crearOrdenDelDia', "'" + this.fechaComite.value + "'" ]);
+    this.router.navigate(['/comiteTecnico/crearOrdenDelDia',0, "'" + this.fechaComite.value + "'" ]);
   }
 
 }

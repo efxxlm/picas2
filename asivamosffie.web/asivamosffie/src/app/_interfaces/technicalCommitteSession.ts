@@ -27,7 +27,7 @@ export interface SesionComiteTema{
     sesionTemaId?: number,
     sesionId?: number,
     tema?: string,
-    ResponsableCodigo?: string,
+    responsableCodigo?: string,
     tiempoIntervencion?: number,
     rutaSoporte?: string,
     observaciones?: string,
@@ -57,5 +57,13 @@ export interface SesionComiteTecnico{
     usuarioModificacion?: string,
     fechaModificacion?: Date,
     eliminado?: boolean,
+}
+
+export interface ComiteGrilla{
+    id?: number,
+    fechaComite?: string,
+    numeroComite?: string,
+    estadoComite?: string, 
+    
 }
 
