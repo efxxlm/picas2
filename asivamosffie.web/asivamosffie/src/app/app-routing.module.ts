@@ -40,6 +40,7 @@ const routes: Routes = [
         path: 'cambiarContrasena',
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
       },
+      //verificar ruta duplicada
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
@@ -75,7 +76,8 @@ const routes: Routes = [
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
-        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
+          .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
         path: 'gestionarFuentes',
@@ -91,6 +93,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
       },
+      {
+        path: 'comiteFiduciario',
+        loadChildren: () => import( './_pages/sesion-comite-fiduciario/sesion-comite-fiduciario.module' )
+          .then( module => module.SesionComiteFiduciarioModule )
+      }
     ]
 
   },
