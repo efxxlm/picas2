@@ -5,6 +5,8 @@ import { ComiteTecnicoComponent } from './components/comite-tecnico/comite-tecni
 import { CrearOrdenDelDiaComponent } from './components/crear-orden-del-dia/crear-orden-del-dia.component';
 import { RegistrarSesionComiteTecnicoComponent } from './components/registrar-sesion-comite-tecnico/registrar-sesion-comite-tecnico.component';
 import { FormRegistrarParticipantesComponent } from './components/form-registrar-participantes/form-registrar-participantes.component';
+import { CrearActaComponent } from './components/crear-acta/crear-acta.component';
+import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
 
 const routes: Routes = [
   {
@@ -22,6 +24,14 @@ const routes: Routes = [
   {
     path: 'registrarSesionDeComiteTecnico/:id/registrarParticipantes',
     component: FormRegistrarParticipantesComponent
+  },
+  {
+    path: 'crearActa/:id',
+    component: CrearActaComponent
+  },
+  {
+    path: 'verificarCumplimiento/:id',
+    component: CrearActaComponent
   }
 ];
 

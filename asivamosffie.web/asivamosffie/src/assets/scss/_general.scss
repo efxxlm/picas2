@@ -7,6 +7,14 @@ strong {
     font-weight: 500;
 }
 
+.font-weight-lighter {
+    font-weight: lighter;
+}
+
+.colorMainColor {
+    color: var(--mainColor);
+}
+
 .color-secondaryColor {
     color: #d21e18;
     color: var(--secondaryColor);
@@ -84,6 +92,10 @@ strong {
 
 .pr-1 {
     padding-right: .5em;
+}
+
+.pt-1 {
+    padding-top: .5em;
 }
 
 .d-flex {

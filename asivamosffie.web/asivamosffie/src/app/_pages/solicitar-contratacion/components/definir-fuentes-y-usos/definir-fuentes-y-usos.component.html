@@ -11,7 +11,7 @@
   </div>
 
   <p class="text-detalle" *ngIf="contratacionProyecto">
-    <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span>
+    <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
     <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
     <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
   </p>
@@ -24,7 +24,7 @@
 
   <div class="text-center mb-2em">
     <h1 class="title-menu--h1" *ngIf="contratacionProyecto">
-      {{ contratacionProyecto.tipoSolicitudCodigo == 2 ? 'Intervención' : 'Obra'  }}
+      <!-- {{ contratacionProyecto.tipoSolicitudCodigo == 2 ? 'Intervención' : 'Obra'  }} -->
     </h1>
   </div>
   <p class="text-center info-container">

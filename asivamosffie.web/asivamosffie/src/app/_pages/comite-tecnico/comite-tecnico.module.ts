@@ -28,6 +28,9 @@ import { TablaRegistrarValidacionSolicitudesContractialesComponent } from './com
 import { TablaRegistrarOtrosTemasComponent } from './components/tabla-registrar-otros-temas/tabla-registrar-otros-temas.component';
 import { VotacionSolicitudComponent } from './components/votacion-solicitud/votacion-solicitud.component';
 import { AplazarSesionComponent } from './components/aplazar-sesion/aplazar-sesion.component';
+import { CrearActaComponent } from './components/crear-acta/crear-acta.component';
+import { FormSolicitudComponent } from './components/form-solicitud/form-solicitud.component';
+import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import { AplazarSesionComponent } from './components/aplazar-sesion/aplazar-sesi
     TablaRegistrarValidacionSolicitudesContractialesComponent,
     TablaRegistrarOtrosTemasComponent,
     VotacionSolicitudComponent,
-    AplazarSesionComponent
+    AplazarSesionComponent,
+    CrearActaComponent,
+    FormSolicitudComponent,
+    VerificarCumplimientoComponent
   ],
   imports: [
     CommonModule,
