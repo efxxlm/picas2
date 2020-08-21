@@ -33,7 +33,7 @@
 .expansion-style {
     box-shadow: none !important;
     &--header {
-        width: 25em;
+        width: 28em;
         max-width: 100%;
         min-width: max-content;
         background-color: transparent;
@@ -61,7 +61,19 @@
             top: 50%;
             transform: translateY(-50%);
         }
+    }
 
+    &.sub-expansion {
+        .expansion-style--title {
+            background-color: #d1d1d1;
+            font-weight: 500;
+            color: #0b254f;
+            padding: .1em 1.5em;
+        }
+
+        span.mat-expansion-indicator::after{
+            color: #d1d1d1;
+        }
     }
 }
 

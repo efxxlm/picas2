@@ -15,22 +15,33 @@
         public const string Crear_Proyecto = "11";
         public const string Editar_Proyecto = "12";
         public const string RegistrarAportante = "13";
+
         public const string Crear_Proyecto_Administrativo = "15";
+
         public const string Eliminar_Cofinanciacion = "17 ";
+        public const string Crear_Editar_Contratacion_Proyecto = "18";
+        //public const string Crear_Proceso_Seleccion = "18";
+        public const string Crear_Editar_Contratacion_Proyecto_Aportante = "19";
         public const string Crear_Editar_Fuentes_Financiacion = "20";
         public const string Eliminar_Fuentes_Financiacion = "21";
 
         public const string Crear_Editar_Cuenta_Bancaria = "23";
         public const string Crear_Editar_Vigencia_Aporte = "24";
-
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
-
-        public const string Crear_Proceso_Seleccion = "18";
-         public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
+        public const string Crear_Proceso_Seleccion = "27"; 
+        public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
+
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
+        public const string Crear_Editar_SesionComiteTema = "38";
+        public const string Eliminar_Sesion_Comite_Tema = "39";
+        public const string Cambiar_Estado_Comite_Sesion = "40"; 
+        public const string Eliminar_Contratacion = "41";
+        public const string Cambiar_Estado_Contratacion = "42";
+
+        public const string Registrar_Participantes_Sesion = "44";
     }
 }

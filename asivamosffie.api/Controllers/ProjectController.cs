@@ -9,15 +9,14 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
-
+using asivamosffie.model.APIModels;
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
     {
- 
+        private readonly IDocumentService _documentService;
         private readonly IProjectService _projectService;
         private readonly IOptions<AppSettings> _settings;
 
@@ -26,7 +25,7 @@ namespace asivamosffie.api.Controllers
         {
             _projectService = projectService;
             _settings = settings;
-        
+            _documentService = documentService;
         }
 
         [Route("CreateOrEditAdministrativeProject")]
@@ -45,7 +44,7 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 respuesta.Data = ex.ToString();
-                return Ok(respuesta);
+                return BadRequest(respuesta);
             }
         }
 
@@ -109,6 +108,9 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
+
+
+        
          
 
         [Route("ListAdministrativeProject")]
