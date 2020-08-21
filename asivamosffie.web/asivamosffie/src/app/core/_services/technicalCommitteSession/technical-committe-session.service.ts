@@ -33,4 +33,12 @@ export class TechnicalCommitteSessionService {
     return this.http.get<SesionComiteTema[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getListSesionComiteTemaByIdSesion?pIdSesion=${ id }`);
   }
 
+  cambiarEstadoComite( sesion: Sesion ){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/cambiarEstadoComite`, sesion);
+  }
+
+  getSesionBySesionId( id: number ){
+    return this.http.get<Sesion>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetSesionBySesionId?pSesionId=${ id }`);
+  }
+
 }

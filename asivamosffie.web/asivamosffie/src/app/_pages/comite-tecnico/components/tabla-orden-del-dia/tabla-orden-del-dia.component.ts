@@ -4,6 +4,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { Router } from '@angular/router';
+import { Sesion, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-orden-del-dia',
@@ -11,6 +14,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./tabla-orden-del-dia.component.scss']
 })
 export class TablaOrdenDelDiaComponent implements OnInit {
+
+  estadosComite = EstadosComite;
 
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource();
@@ -26,7 +31,8 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   constructor(
                 private technicalCommitteeSessionService: TechnicalCommitteSessionService,
                 private router: Router,
-
+                public dialog: MatDialog,
+                
              ) 
   {
 
@@ -57,12 +63,32 @@ export class TablaOrdenDelDiaComponent implements OnInit {
     };
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   onEdit(e: number) {
     this.router.navigate(['/comiteTecnico/crearOrdenDelDia',e ,'']);
   }
 
   onConvocar(e: number){
 
+    let sesion: Sesion = {
+      sesionId: e,
+      estadoComiteCodigo: this.estadosComite.convocada
+    }
+
+    this.technicalCommitteeSessionService.cambiarEstadoComite( sesion )
+      .subscribe( respuesta => {
+
+        this.openDialog( ' sesión comité ', respuesta.message )
+
+        this.ngOnInit();
+
+      })
   }
 
   OnDelete(e: number){

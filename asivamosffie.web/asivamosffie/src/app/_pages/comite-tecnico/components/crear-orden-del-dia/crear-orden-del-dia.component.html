@@ -26,8 +26,8 @@
     </mat-card-content>
   </mat-card>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-    <mat-card class="shipping-card">
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" >
+    <mat-card class="shipping-card" >
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
           Nuevo tema
@@ -127,7 +127,12 @@
       </mat-card-content>
     </mat-card>
     <div class="text-center">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
+
+      <button mat-button 
+        color="warn" 
+        class="btn-guardar" 
+        *ngIf="estadosComite.sinConvocatoria == objetoSesion.estadoComiteCodigo"
+        type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar">
       </button>
     </div>

@@ -88,7 +88,7 @@ namespace asivamosffie.api.Controllers
          
         [HttpGet]
         [Route("GetSesionBySesionId")]
-        public async Task<Sesion> GetSesionBySesionId([FromBody]  int pSesionId)
+        public async Task<Sesion> GetSesionBySesionId([FromQuery]  int pSesionId)
         {
             return await _registerSessionTechnicalCommitteeService.GetSesionBySesionId(pSesionId);
         }

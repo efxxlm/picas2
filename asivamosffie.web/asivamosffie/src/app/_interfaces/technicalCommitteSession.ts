@@ -64,6 +64,27 @@ export interface ComiteGrilla{
     fechaComite?: string,
     numeroComite?: string,
     estadoComite?: string, 
+    estadoComiteCodigo?: string,
     
 }
 
+interface EstadoComite{
+    sinConvocatoria?: string,
+    convocada?: string,
+    desarrolladaSinActa?: string,
+    conActaDeSesionEnviada?: string,
+    conActaDeSesionAprobada?: string,
+    aplazada?: string,
+    fallida?: string,
+  }
+  
+  export const EstadosComite: EstadoComite = {
+    sinConvocatoria: "1",
+    convocada: "2",
+    desarrolladaSinActa: "3",
+    conActaDeSesionEnviada: "4",
+    conActaDeSesionAprobada: "5",
+    aplazada: "6",
+    fallida: "7",
+
+  }

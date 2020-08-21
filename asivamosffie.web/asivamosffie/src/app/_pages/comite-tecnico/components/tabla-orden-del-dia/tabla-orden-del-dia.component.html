@@ -28,9 +28,36 @@
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <button mat-raised-button color="accent" class="btn-table" (click)="onEdit(element.id)" >Ver detalle/ <br> Editar</button>
-            <button mat-raised-button color="accent" class="btn-table" (click)="onConvocar(element.id)" >Convocar sesión <br> de comité</button>
-            <button mat-raised-button color="accent" class="btn-table" (click)="OnDelete(element.id)" >Eliminar</button>
+            
+            <button mat-raised-button color="accent" 
+                class="btn-table" 
+                (click)="onEdit(element.id)" 
+                *ngIf="estadosComite.sinConvocatoria == element.estadoComiteCodigo" >
+                Ver detalle/ <br> Editar
+            </button>
+
+            <button mat-raised-button color="accent" 
+                class="btn-table" 
+                (click)="onConvocar(element.id)" 
+                *ngIf="estadosComite.sinConvocatoria == element.estadoComiteCodigo">
+                Convocar sesión <br> de comité
+            </button>
+
+            <button mat-raised-button color="accent" 
+                class="btn-table" 
+                (click)="OnDelete(element.id)" 
+                *ngIf="estadosComite.sinConvocatoria == element.estadoComiteCodigo">
+                Eliminar
+            </button>
+
+            <button mat-raised-button 
+                color="accent" 
+                (click)="onEdit(element.id)" 
+                *ngIf="estadosComite.sinConvocatoria != element.estadoComiteCodigo"
+                class="btn-table">
+                Ver detalle
+            </button>
+
         </td>
     </ng-container>
 

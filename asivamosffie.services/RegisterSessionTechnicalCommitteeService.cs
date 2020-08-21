@@ -198,6 +198,7 @@ namespace asivamosffie.services
                     {
                         Id = comite.Id,
                         FechaComite = comite.FechaComite,
+                        EstadoComiteCodigo = comite.EstadoComite,
                         EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(comite.EstadoComite, (int)EnumeratorTipoDominio.Estado_Comite) : "---",
                         NumeroComite = comite.NumeroComite
                     };
@@ -221,21 +222,34 @@ namespace asivamosffie.services
                 try
                 {
                     string EditarOcrear = ""; 
-                    //Por defecto, el sistema incluirá automáticamente en cada orden del día un último tema
-                    //sin responsable ni tiempo, este se denominará “Proposiciones y varios”.
-                    session.SesionComiteTema.Add(new SesionComiteTema
-                    {// se pone nombre del tema solo para diferenciar
-                        Tema = "Proposiciones Varios  esto se debe eliminar"
-                    });
 
-                    //SESION 
-                    //Auditoria
-                    session.FechaCreacion = DateTime.Now;
-                    session.Eliminado = false;
-                    //Registro
-                    session.NumeroComite = await _commonService.EnumeradorComite();
-                    session.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
-                    session.EsCompleto = false;
+                    if ( session.SesionId == 0 )
+                    {
+                        //Por defecto, el sistema incluirá automáticamente en cada orden del día un último tema
+                        //sin responsable ni tiempo, este se denominará “Proposiciones y varios”.
+                        session.SesionComiteTema.Add(new SesionComiteTema
+                        {// se pone nombre del tema solo para diferenciar
+                            Tema = "Proposiciones Varios  esto se debe eliminar"
+                        });
+
+                        //SESION 
+                        //Auditoria
+                        session.FechaCreacion = DateTime.Now;
+                        session.Eliminado = false;
+                        //Registro
+                        session.NumeroComite = await _commonService.EnumeradorComite();
+                        session.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
+                        session.EsCompleto = false;
+                        _context.Sesion.Add(session);
+                    }else{
+                        Sesion sessionOld = _context.Sesion.Find( session.SesionId );
+
+                        sessionOld.UsuarioModificacion = session.UsuarioCreacion;
+                        sessionOld.FechaModificacion = session.FechaModificacion;
+
+                        sessionOld.RutaActaSesion = session.RutaActaSesion;
+                        sessionOld.RutaActaSesion = session.RutaActaSesion;
+                    }
 
                     foreach (var SesionComiteTema in session.SesionComiteTema)
                     { 
@@ -245,7 +259,7 @@ namespace asivamosffie.services
                             SesionComiteTema.Eliminado = false;
                             SesionComiteTema.FechaCreacion = DateTime.Now;
                             SesionComiteTema.UsuarioCreacion = session.UsuarioCreacion;
-                            _context.Sesion.Add(session);
+                            
                         }
                         else
                         {
