@@ -169,7 +169,8 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pId);
-            //var usuarioTecnico = _context.Usuario.Where(x => x.Email == DisponibilidadCancelar.UsuarioCreacion).FirstOrDefault();
+            /*busco usuario Juridico*/
+            var usuarioJuridico = _context.UsuarioPerfil.Where(x=>x.PerfilId==(int)enumeratorPerfil.Juridica).Include(y=>y.Usuario).FirstOrDefault();
             try
             {
                 DisponibilidadCancelar.FechaModificacion = DateTime.Now;
@@ -183,7 +184,7 @@ namespace asivamosffie.services
 
                 //template = template.Replace("_Link_", urlDestino);                
 
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(DisponibilidadCancelar.UsuarioCreacion, "DDP Generado", template, pSentender, pPassword, pMailServer, pMailPort);
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "DDP Generado", template, pSentender, pPassword, pMailServer, pMailPort);
                 if (blEnvioCorreo)
                 {
                    return new Respuesta
@@ -254,6 +255,17 @@ namespace asivamosffie.services
                                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.Error, pId, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
                              };
             }
+        }
+
+        public Task<byte[]> GetPDFDDP(int id, string pUsurioGenero)
+        {
+            Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
+
+            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
+
+            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+            Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
+            return PDF.Convertir(Plantilla);
         }
 
         //    public async Task<Respuesta> CreateEditDisponibilidadPresupuestal(DisponibilidadPresupuestal pDisponibilidadPresupuestal) {

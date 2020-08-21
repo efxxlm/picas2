@@ -69,14 +69,14 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.3*/
         [Route("SetCancelDDP")]
         [HttpPost]
-        public async Task<IActionResult> SetCancelarDDP(int id,string observacion)
+        public async Task<IActionResult> SetCancelarDDP(int id, string observacion)
         {
-            
+
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion= HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.SetCancelDisponibilidadPresupuestal(id,UsuarioModificacion, observacion);
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.SetCancelDisponibilidadPresupuestal(id, UsuarioModificacion, observacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -91,14 +91,14 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.3*/
         [Route("SetReturnDDP")]
         [HttpPost]
-        public async Task<IActionResult> SetReturnDDP(int id,string observacion)
+        public async Task<IActionResult> SetReturnDDP(int id, string observacion)
         {
 
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.returnDDP(id,UsuarioModificacion,observacion);
+                Task<Respuesta> result = _budgetAvailabilityService.returnDDP(id, UsuarioModificacion, observacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -120,9 +120,27 @@ namespace asivamosffie.api.Controllers
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.CreateDDP(id,UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Task<Respuesta> result = _budgetAvailabilityService.CreateDDP(id, UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+        [Route("GenerateDDP")]
+        [HttpGet]
+        public async Task<IActionResult> GenerateDDP(int id)
+        {
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                var respuesta = await _budgetAvailabilityService.GetPDFDDP(id,UsuarioModificacion);
+                return File(respuesta, "application/octet-stream");
             }
             catch (Exception ex)
             {
