@@ -6,12 +6,12 @@ namespace asivamosffie.model.APIModels
 {
     public class Margenes
     {
-        public float Superior
+        public float Arriba
         {
             get;
             set;
         }
-        public float Inferior
+        public float Abajo
         {
             get;
             set;

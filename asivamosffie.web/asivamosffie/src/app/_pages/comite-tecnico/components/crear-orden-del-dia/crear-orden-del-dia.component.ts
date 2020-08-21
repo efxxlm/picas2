@@ -1,19 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-
-export interface SolicitudesContractuales {
-  fecha: string;
-  numero: string;
-  solicitud: string;
-}
-
-const ELEMENT_DATA: SolicitudesContractuales[] = [
-  {fecha: '23/06/2020', numero: 'SA0006', solicitud: 'Apertura de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'SC0005', solicitud: 'Evaluación de proceso de selección'},
-  {fecha: '22/06/2020', numero: 'PI0004', solicitud: 'Contratación'},
-];
+import { ActivatedRoute, Router } from '@angular/router';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { SolicitudesContractuales, Sesion, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-crear-orden-del-dia',
@@ -21,24 +12,17 @@ const ELEMENT_DATA: SolicitudesContractuales[] = [
   styleUrls: ['./crear-orden-del-dia.component.scss']
 })
 
-export class CrearOrdenDelDiaComponent {
+export class CrearOrdenDelDiaComponent implements OnInit {
+
+  solicitudesContractuales: SolicitudesContractuales[] = [];
+  fechaSesionString: string;
+  fechaSesion: Date;
+  idSesion: number = 0;
+
   addressForm = this.fb.group({
-    tema: this.fb.array([
-      this.fb.group({
-        tema: [null, Validators.compose([
-          Validators.required, Validators.minLength(5), Validators.maxLength(100)])
-        ],
-        responsable: [null, Validators.required],
-        tiempoIntervencion: [null, Validators.compose([
-          Validators.required, Validators.minLength(1), Validators.maxLength(3)])
-        ],
-        url: [null, [
-          Validators.required,
-          Validators.pattern('/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/')
-        ]]
-      })
-    ])
-  });
+      tema: this.fb.array([]),
+    });
+  
 
 
   responsablesArray = [
@@ -48,9 +32,75 @@ export class CrearOrdenDelDiaComponent {
   ];
 
   constructor(
-    private fb: FormBuilder,
-    public dialog: MatDialog
-    ) {}
+              private fb: FormBuilder,
+              public dialog: MatDialog,
+              private activatedRoute: ActivatedRoute,
+              private techicalCommitteeSessionService: TechnicalCommitteSessionService,
+              private router: Router,
+
+             ) 
+    {
+
+    }
+
+
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe( a => {
+      let fecha = Date.parse(a.fecha);
+       this.fechaSesion = new Date(fecha);
+       this.fechaSesionString = `${ this.fechaSesion.getFullYear() }/${ this.fechaSesion.getMonth() + 1 }/${ this.fechaSesion.getDate() }` 
+
+       this.idSesion = a.id;
+
+       if (this.idSesion > 0){
+        this.editMode();
+       }else{
+
+        this.agregaTema();
+
+        this.techicalCommitteeSessionService.getListSolicitudesContractuales( this.fechaSesionString )
+        .subscribe( response => {
+
+          this.solicitudesContractuales = response;
+
+          setTimeout(() => {
+            
+            let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
+            btnTablaSolicitudes.click();
+            console.log( this.solicitudesContractuales );
+
+          }, 1000);
+
+        });
+      }
+
+    })
+  }
+
+  editMode(){
+    this.techicalCommitteeSessionService.getListSesionComiteTemaByIdSesion( this.idSesion )
+      .subscribe( response => {
+        let temas = this.addressForm.get('tema') as FormArray;
+
+        temas.clear();
+
+        response.forEach( te => {
+          let grupoTema = this.crearTema();
+
+          grupoTema.get('tema').setValue( te.tema );
+          grupoTema.get('responsable').setValue( te.responsableCodigo );
+          grupoTema.get('tiempoIntervencion').setValue( te.tiempoIntervencion );
+          grupoTema.get('url').setValue( te.rutaSoporte );
+          grupoTema.get('sesionTemaId').setValue( te.sesionTemaId );
+          
+
+          temas.push( grupoTema );
+
+        })
+
+        console.log( response );
+      })
+  }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -80,6 +130,7 @@ export class CrearOrdenDelDiaComponent {
 
   crearTema() {
     return this.fb.group({
+      sesionTemaId: [],
       tema: [null, Validators.compose([
         Validators.required, Validators.minLength(5), Validators.maxLength(100)])
       ],
@@ -88,15 +139,44 @@ export class CrearOrdenDelDiaComponent {
         Validators.required, Validators.minLength(1), Validators.maxLength(3)])
       ],
       url: [null, [
-        Validators.required,
-        Validators.pattern('/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/')
+        //Validators.required,
+        //Validators.pattern('/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/')
       ]],
     });
   }
 
   onSubmit() {
+
+    console.log(this.addressForm);
     if (this.addressForm.invalid) {
       this.openDialog('Falta registrar información', '');
+
+    }else{
+      let sesion: Sesion = {
+        fechaOrdenDia: this.fechaSesion,
+        sesionComiteTema: []
+      }
+  
+      this.tema.controls.forEach( control => {
+        let sesionComiteTema: SesionComiteTema = {
+          tema: control.get('tema').value,
+          responsableCodigo: control.get('responsable').value,
+          tiempoIntervencion: control.get('tiempoIntervencion').value,
+          rutaSoporte: control.get('url').value,
+          sesionTemaId: control.get('sesionTemaId').value,
+          sesionId: this.idSesion,
+
+        }
+  
+        sesion.sesionComiteTema.push( sesionComiteTema );
+      }) 
+  
+  
+      this.techicalCommitteeSessionService.saveEditSesionComiteTema( sesion ).subscribe( respuesta => {
+          this.openDialog( 'Sesion Comite', respuesta.message )
+          if ( respuesta.code == "200" )
+            this.router.navigate(['/solicitarContratacion']);
+      });
     }
   }
 }

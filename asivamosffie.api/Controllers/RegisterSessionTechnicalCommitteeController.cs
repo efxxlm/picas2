@@ -18,8 +18,16 @@ namespace asivamosffie.api.Controllers
 
         public RegisterSessionTechnicalCommitteeController(IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService) {
 
-            _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService; 
+            _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
+         
+        [HttpGet]
+        [Route("GetPlantillaByTablaIdRegistroId")]
+        public async Task<FileResult> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId)
+        { 
+            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
+        }
+
 
         [HttpPost]
         [Route("RegistrarParticipantesSesion")]
@@ -41,26 +49,26 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListSesionComiteTemaByIdSesion")]
-        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion([FromBody]  int pIdSesion)
+        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion([FromQuery]  int pIdSesion)
         {
             return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByIdSesion(pIdSesion);
         }
 
         [HttpGet]
         [Route("GetListSolicitudesContractuales")] 
-        public async Task<List<dynamic>> GetListSolicitudesContractuales([FromBody] DateTime FechaComite) {
-            return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales(FechaComite); 
+        public async Task<List<dynamic>> GetListSolicitudesContractuales([FromQuery] string FechaComite) {
+            return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales( DateTime.Parse( FechaComite )); 
         }
 
         [HttpPost]
         [Route("SaveEditSesionComiteTema")]
-        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody]  List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite)
+        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody] Sesion session)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                pListSesionComiteTema.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.SaveEditSesionComiteTema(pListSesionComiteTema , pFechaProximoComite);
+            {
+                session.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.SaveEditSesionComiteTema(session);
                 return Ok(respuesta);
             }
             catch (Exception ex)

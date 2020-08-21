@@ -9,13 +9,15 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
+        Task<byte[]> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId);
+
         Task<Respuesta> RegistrarParticipantesSesion(Sesion psesion);
 
         Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion);
   
         Task<List<dynamic>> GetListSolicitudesContractuales(DateTime FechaComite);
 
-        Task<Respuesta> SaveEditSesionComiteTema(List<SesionComiteTema> pListSesionComiteTema ,DateTime pFechaProximoComite);
+        Task<Respuesta> SaveEditSesionComiteTema(Sesion session);
 
         Task<List<ComiteGrilla>> GetComiteGrilla();
 

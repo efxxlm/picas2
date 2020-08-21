@@ -11,7 +11,7 @@ using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
 using System; 
 using System.IO; 
-
+   
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -26,7 +26,9 @@ namespace asivamosffie.services.Helpers
         {
             return (double)(centimetros * 0.393701 * 72);
         }
- 
+
+
+     
         public static string encryptSha1(string password)
         {
 
