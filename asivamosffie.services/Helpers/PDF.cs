@@ -38,18 +38,19 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
-         
+
         public static byte[] Convertir(Plantilla pPlantilla)
         {
-            string contenido = pPlantilla.Contenido;
-            string encabezado = pPlantilla.Encabezado.Contenido;
-            string pie = pPlantilla.PieDePagina.Contenido;
+            string contenido = pPlantilla.Contenido ?? " "; 
+            string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " "; 
+            string pie = pPlantilla.PieDePagina != null ? pPlantilla.PieDePagina.Contenido :" ";
+        
             Margenes margenes = new Margenes
             {
                 Arriba = (float)pPlantilla.MargenArriba,
                 Abajo = (float)pPlantilla.MargenAbajo,
                 Derecha = (float)pPlantilla.MargenDerecha,
-                Izquierda = (float)pPlantilla.MargenIzquierda 
+                Izquierda = (float)pPlantilla.MargenIzquierda
             };
 
             try
