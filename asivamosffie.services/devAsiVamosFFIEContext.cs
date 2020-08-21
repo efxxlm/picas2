@@ -9,7 +9,7 @@ namespace asivamosffie.model.Models
         public devAsiVamosFFIEContext()
         {
         }
-
+          
         public devAsiVamosFFIEContext(DbContextOptions<devAsiVamosFFIEContext> options)
             : base(options)
         {
