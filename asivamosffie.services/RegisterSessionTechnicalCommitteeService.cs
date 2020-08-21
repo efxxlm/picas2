@@ -225,6 +225,15 @@ namespace asivamosffie.services
                         Tema = "Proposiciones Varios  esto se debe eliminar"
                     });
 
+                    //SESION 
+                    //Auditoria
+                    session.FechaCreacion = DateTime.Now;
+                    session.Eliminado = false;
+                    //Registro
+                    session.NumeroComite = await _commonService.EnumeradorComite();
+                    session.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
+                    session.EsCompleto = false;
+
                     foreach (var SesionComiteTema in session.SesionComiteTema)
                     { 
                         if (SesionComiteTema.SesionTemaId == 0)
@@ -232,7 +241,8 @@ namespace asivamosffie.services
                             EditarOcrear = "CREAR SESIÓN COMITE TECNICO TEMA";
                             SesionComiteTema.Eliminado = false;
                             SesionComiteTema.FechaCreacion = DateTime.Now;
-                            SesionComiteTema.UsuarioCreacion = session.UsuarioCreacion;  
+                            SesionComiteTema.UsuarioCreacion = session.UsuarioCreacion;
+                            _context.Sesion.Add(session);
                         }
                         else
                         {
@@ -250,14 +260,7 @@ namespace asivamosffie.services
                         }
                     }
 
-                    //Auditoria
-                    session.FechaCreacion = DateTime.Now; 
-                    session.Eliminado = false;
-                    //Registro
-                    session.NumeroComite = await _commonService.EnumeradorComite();
-                    session.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
-                    session.EsCompleto = false;
-                    _context.Sesion.Add(session);
+                 
                     _context.SaveChanges();
              
                     return
