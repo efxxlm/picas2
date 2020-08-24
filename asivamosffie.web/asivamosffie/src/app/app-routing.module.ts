@@ -90,6 +90,8 @@ const routes: Routes = [
         path: 'validarDisponibilidadPresupuesto',
         loadChildren: () => import('./_pages/validar-disponibilidad-presupuesto/validar-disponibilidad-presupuesto.module')
         .then(m => m.ValidarDisponibilidadPresupuestoModule)
+      },
+      {
         path: 'comiteTecnico',
         loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
       },
