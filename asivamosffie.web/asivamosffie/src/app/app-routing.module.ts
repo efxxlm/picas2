@@ -85,13 +85,18 @@ const routes: Routes = [
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
+      {
+        path: 'validarDisponibilidadPresupuesto',
+        loadChildren: () => import('./_pages/validar-disponibilidad-presupuesto/validar-disponibilidad-presupuesto.module')
+        .then(m => m.ValidarDisponibilidadPresupuestoModule)
+      },
     ]
 
   },
   {
     path: '**',
-    redirectTo: '/inicio',
-    // loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    // redirectTo: '/inicio',
+    loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 @NgModule({

@@ -1,0 +1,25 @@
+.shipping-card {
+    padding-top: 2.5em !important;
+}
+
+.info-sub-title {
+    margin-top: .8em;
+    margin-bottom: 1.2em;
+    color: var(--mainColor);
+
+    span {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+}
+
+.botones {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 3em;
+
+    button {
+        line-height: 1.2;
+        min-height: 33px;
+    }
+}
