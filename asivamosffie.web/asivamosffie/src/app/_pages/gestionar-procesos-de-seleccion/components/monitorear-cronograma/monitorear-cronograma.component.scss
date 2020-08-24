@@ -1,0 +1,33 @@
+.subtittle {
+    color: var(--mainColor);
+    display: block;
+    margin-top: .7em;
+    margin-bottom: .5em;
+}
+
+.btn-ver-objetivo {
+    margin-bottom: 2em;
+
+    img {
+        height: 1em;
+        padding-bottom: .2em;
+    }
+}
+
+.ajsutar-cronograma {
+    &--actions {
+        text-align: center;
+    }
+
+    &--btn {
+        padding: .5em 2em;
+        width: 300px;
+        box-shadow: none;
+        border: solid 1px #fff;
+
+        &.active {
+            background-color: #0A244F;
+            color: #fff;
+        }
+    }
+}

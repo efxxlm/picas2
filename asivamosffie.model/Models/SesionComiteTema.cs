@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
         public int SesionId { get; set; }
         public string Tema { get; set; }
         public string ResponsableCodigo { get; set; }
-        public int TiempoIntervencion { get; set; }
+        public int? TiempoIntervencion { get; set; }
         public string RutaSoporte { get; set; }
         public string Observaciones { get; set; }
         public bool? EsAprobado { get; set; }
@@ -23,6 +23,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public bool? Eliminado { get; set; }
 
         public virtual Sesion Sesion { get; set; }
         public virtual ICollection<TemaCompromiso> TemaCompromiso { get; set; }

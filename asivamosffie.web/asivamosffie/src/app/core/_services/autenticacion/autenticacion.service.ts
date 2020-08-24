@@ -82,7 +82,7 @@ export class AutenticacionService {
 }
 
 export interface Usuario{
-  UsuarioId?: number;
+  usuarioId?: number;
   Email: string;
   Contrasena?: string;
   Activo?: boolean;
@@ -93,6 +93,8 @@ export interface Usuario{
   fechaUltimoIngreso?:Date;
   cambiarContrasena?:boolean;
   rol?:any[];
+  nombres?: string;
+  apellidos?: string;
 }
 
 export interface Respuesta{

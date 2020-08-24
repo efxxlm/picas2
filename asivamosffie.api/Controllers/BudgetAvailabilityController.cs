@@ -19,10 +19,12 @@ namespace asivamosffie.api.Controllers
     {
 
         private readonly IBudgetAvailabilityService _budgetAvailabilityService;
+        private readonly IOptions<AppSettings> _settings;
 
-        public BudgetAvailabilityController(IBudgetAvailabilityService budgetAvailabilityService)
+        public BudgetAvailabilityController(IBudgetAvailabilityService budgetAvailabilityService, IOptions<AppSettings> settings)
         {
-            _budgetAvailabilityService = budgetAvailabilityService; 
+            _budgetAvailabilityService = budgetAvailabilityService;
+            _settings = settings;
         }
 
         [Route("ListAdministrativeProject")]
@@ -31,7 +33,7 @@ namespace asivamosffie.api.Controllers
         {
             // string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestal();
-            return respuesta; 
+            return respuesta;
         }
 
         [Route("GetFuenteFinanciacionByIdAportanteId")]
@@ -46,12 +48,104 @@ namespace asivamosffie.api.Controllers
         [Route("GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud")]
         [HttpGet]
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
-        { 
+        {
             var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(pCodigoEstadoSolicitud);
             return respuesta;
         }
 
+        /*autor: jflorez
+            descripción: objeto para entregar a front los datos ordenados de disponibilidades
+            impacto: CU 3.3.3*/
+        [Route("GetListGenerarDisponibilidadPresupuestal")]
+        [HttpGet]
+        public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal()
+        {
+            var respuesta = await _budgetAvailabilityService.GetListGenerarDisponibilidadPresupuestal();
+            return respuesta;
+        }
 
- 
+        /*autor: jflorez
+            descripción: cancela la solicitud
+            impacto: CU 3.3.3*/
+        [Route("SetCancelDDP")]
+        [HttpPost]
+        public async Task<IActionResult> SetCancelarDDP(int id, string observacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.SetCancelDisponibilidadPresupuestal(id, UsuarioModificacion, observacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: devuelve la solicitud a financiera
+            impacto: CU 3.3.3*/
+        [Route("SetReturnDDP")]
+        [HttpPost]
+        public async Task<IActionResult> SetReturnDDP(int id, string observacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.returnDDP(id, UsuarioModificacion, observacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: genera DDP
+            impacto: CU 3.3.3*/
+        [Route("CreateDDP")]
+        [HttpPost]
+        public async Task<IActionResult> CreateDDP(int id)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.CreateDDP(id, UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+        [Route("GenerateDDP")]
+        [HttpGet]
+        public async Task<IActionResult> GenerateDDP(int id)
+        {
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                var respuesta = await _budgetAvailabilityService.GetPDFDDP(id,UsuarioModificacion);
+                return File(respuesta, "application/octet-stream");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }

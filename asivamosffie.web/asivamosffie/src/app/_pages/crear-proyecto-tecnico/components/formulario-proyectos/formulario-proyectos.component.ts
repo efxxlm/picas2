@@ -50,7 +50,7 @@ export class FormularioProyectosComponent implements OnInit {
     tipoIntervencionCodigo: null,
     llaveMen: '',
     localizacionIdMunicipio: '',
-    institucionEducativaId: 0,
+    institucionEducativaId:0,
     sedeId: 0,
     enConvocatoria: false,
     convocatoriaId: null,
@@ -69,9 +69,9 @@ export class FormularioProyectosComponent implements OnInit {
     institucionEducativaSede: null,
     localizacionIdMunicipioNavigation: null,
     predioPrincipal: {
-      cedulaCatastral: "", direccion: "", documentoAcreditacionCodigo: "",
-      fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: "",
-      usuarioCreacion: "", predioId: 0, tipoPredioCodigo: "", ubicacionLatitud: "", ubicacionLongitud: ""
+      cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
+      fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
+      usuarioCreacion: '', predioId: 0, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
     },
     sede: null,
     infraestructuraIntervenirProyecto: [],
@@ -83,14 +83,14 @@ export class FormularioProyectosComponent implements OnInit {
   codigoDaneSede: string = '';
 
   onSubmit() {
-    //ajusto latitud y longitud de predios
+    // ajusto latitud y longitud de predios
     this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' + this.proyecto.predioPrincipal.ubicacionLatitud2;
     this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' + this.proyecto.predioPrincipal.ubicacionLongitud2;
-    this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId.institucionEducativaSedeId;
-    this.proyecto.sedeId = this.proyecto.sedeId.institucionEducativaSedeId
+    //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
+    //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(respuesta => {
       this.openDialog('', respuesta.message);
-      this.router.navigate(["/crearProyecto"]); 
+      this.router.navigate(['/crearProyecto']);
     },
       err => {
         let mensaje: string;
@@ -135,9 +135,9 @@ export class FormularioProyectosComponent implements OnInit {
         this.listaCordinaciones = listas[6];
         this.listadoConvocatoria = listas[7];
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
-          //console.log(respuesta.numeroActaJunta);
+          // console.log(respuesta.numeroActaJunta);
           this.proyecto = respuesta;
-          //ajusto lartitud y longitud
+          // ajusto lartitud y longitud
           if (respuesta.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
             const lat = respuesta.predioPrincipal.ubicacionLatitud.split('°');
             this.proyecto.predioPrincipal.ubicacionLatitud = lat[0];
@@ -150,8 +150,8 @@ export class FormularioProyectosComponent implements OnInit {
           }
 
           this.proyecto.cantidadAportantes = respuesta.proyectoAportante.length;
-          this.getInstitucion();
-          this.getSede();
+          this.getInstitucion(respuesta.institucionEducativaId,respuesta.sedeId);
+          
           this.commonServices.forkDepartamentoMunicipio(respuesta.localizacionIdMunicipio).subscribe(
             listadoregiones => {
               this.listadoMunicipio = listadoregiones[0];
@@ -187,7 +187,7 @@ export class FormularioProyectosComponent implements OnInit {
 
     }
     else {
-      //this.proyecto 
+      // this.proyecto
       // agrego el predio principal
 
       /*this.proyecto.proyectoPredio.push({
@@ -390,10 +390,13 @@ export class FormularioProyectosComponent implements OnInit {
       });
   }
 
-  getInstitucion() {
+  getInstitucion(institudcionid?:number,sedeid?:number) {
 
+    console.log(this.proyecto);
     this.commonServices.listaIntitucionEducativaByMunicipioId(this.proyecto.localizacionIdMunicipio).subscribe(respuesta => {
       this.listadoInstitucion = respuesta;
+      this.proyecto.institucionEducativaId=institudcionid;//lo uso como patch pero no esta funcionando
+      this.getSede(sedeid); 
     },
       err => {
         let mensaje: string;
@@ -409,33 +412,38 @@ export class FormularioProyectosComponent implements OnInit {
       () => {
         // console.log('terminó');
       });
-  }
-  
-  getCodigoDane(){
-    this.codigoDaneSede = this.proyecto.sedeId.codigoDane;
   }
 
-  getSede() {
-     //console.log(this.proyecto.institucionEducativaId);
-     this.CodigoDaneIE = this.proyecto.institucionEducativaId.codigoDane;
-    this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId.institucionEducativaSedeId).subscribe(respuesta => {
-      this.listadoSede = respuesta;
-      
-    },
-      err => {
-        let mensaje: string;
-        console.log(err);
-        if (err.message) {
-          mensaje = err.message;
-        }
-        else if (err.error.message) {
-          mensaje = err.error.message;
-        }
-        this.openDialog('Error', mensaje);
+  getCodigoDane() {
+    this.codigoDaneSede = this.proyecto.sede.codigoDane;
+  }
+
+  getSede(sedeid?:number) {
+    // console.log(this.proyecto.institucionEducativaId);
+    this.CodigoDaneIE = this.proyecto.institucionEducativa.codigoDane;
+    console.log("loading sede");
+    this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId)
+      .subscribe(respuesta => {
+        console.log("fin sede");
+        this.listadoSede = respuesta;    
+        console.log("set sede"+sedeid);    
+        this.proyecto.sedeId=sedeid;
       },
-      () => {
-        // console.log('terminó');
-      });
+        err => {
+          let mensaje: string;
+          console.log(err);
+          if (err.message) {
+            mensaje = err.message;
+          }
+          else if (err.error.message) {
+            mensaje = err.error.message;
+          }
+          this.openDialog('Error', mensaje);
+        },
+        () => {
+          // console.log('terminó');
+          this.proyecto.sedeId=sedeid;
+        });
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -449,32 +457,32 @@ export class FormularioProyectosComponent implements OnInit {
     this.proyecto.infraestructuraIntervenirProyecto.push({
       infraestrucutraIntervenirProyectoId: 0,
       proyectoId: 0,
-      infraestructuraCodigo: "",
+      infraestructuraCodigo: '',
       cantidad: 0,
       eliminado: false,
       fechaCreacion: null,
-      usuarioCreacion: "",
-      usuarioEliminacion: "",
+      usuarioCreacion: '',
+      usuarioEliminacion: '',
       plazoMesesObra: 0,
       plazoDiasObra: 0,
       plazoMesesInterventoria: 0,
       plazoDiasInterventoria: 0,
-      coordinacionResponsableCodigo: ""
+      coordinacionResponsableCodigo: ''
     });
   }
 
   evaluopredios() {
     if (this.proyecto.cantPrediosPostulados > 1) {
-      if (this.proyecto.cantPrediosPostulados != this.proyecto.proyectoPredio.length) {
+      if (this.proyecto.cantPrediosPostulados !== this.proyecto.proyectoPredio.length) {
         if (this.proyecto.cantPrediosPostulados < this.proyecto.proyectoPredio.length) {
           this.proyecto.proyectoPredio = [];
           for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
             this.proyecto.proyectoPredio.push({
-              ProyectoPredioId: 0,  UsuarioCreacion: "",
+              ProyectoPredioId: 0, UsuarioCreacion: '',
               Predio: {
-                cedulaCatastral: "", direccion: "", documentoAcreditacionCodigo: "",
-                fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: "",
-                usuarioCreacion: "", predioId: 0, tipoPredioCodigo: "", ubicacionLatitud: "", ubicacionLongitud: ""
+                cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
+                fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
+                usuarioCreacion: '', predioId: 0, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
               }
             });
           }
@@ -484,11 +492,11 @@ export class FormularioProyectosComponent implements OnInit {
 
             for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
               this.proyecto.proyectoPredio.push({
-                ProyectoPredioId: 0,  UsuarioCreacion: "",
+                ProyectoPredioId: 0, UsuarioCreacion: '',
                 Predio: {
-                  cedulaCatastral: "", direccion: "", documentoAcreditacionCodigo: "",
-                  fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: "",
-                  usuarioCreacion: "", predioId: 0, tipoPredioCodigo: "", ubicacionLatitud: "", ubicacionLongitud: ""
+                  cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
+                  fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
+                  usuarioCreacion: '', predioId: 0, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
                 }
               });
             }
@@ -499,11 +507,11 @@ export class FormularioProyectosComponent implements OnInit {
 
   }
   evaluoaportantes() {
-    if (this.proyecto.cantidadAportantes != this.proyecto.proyectoAportante.length) {
+    if (this.proyecto.cantidadAportantes !== this.proyecto.proyectoAportante.length) {
       this.proyecto.proyectoAportante = [];
       /*if(this.proyecto.cantidadAportantes<this.proyecto.ProyectoAportante.length)
       {
-        
+
         //preguntar
       }
       else{
@@ -517,17 +525,23 @@ export class FormularioProyectosComponent implements OnInit {
           aportanteId: null,
           eliminado: false,
           fechaCreacion: null,
-          usuarioCreacion: "",
+          usuarioCreacion: '',
           cofinanciacionDocumentoID: null,
-          aportante: { cofinanciacionAportanteId: 0, cofinanciacionDocumento: null, cofinanciacionId: 0, municipioId: 0, tipoAportanteId: 0 }
+          aportante: {
+            cofinanciacionAportanteId: 0,
+            cofinanciacionDocumento: null,
+            cofinanciacionId: 0,
+            municipioId: 0,
+            tipoAportanteId: 0
+          }
         });
         /*let listavacia:any[]=[];
         this.listaAportante.push(listavacia);
         console.log(this.listaAportante);
         this.listaVigencias.push(listavacia);*/
       }
-      //}
-      //}
+      // }
+      // }
     }
   }
   valorTotal(aportantes: any) {
@@ -555,7 +569,7 @@ export class FormularioProyectosComponent implements OnInit {
         this.openDialog('Error', mensaje);
       },
       () => {
-        //console.log('terminó');
+        // console.log('terminó');
       });
   }
 
@@ -576,7 +590,7 @@ export class FormularioProyectosComponent implements OnInit {
         this.openDialog('Error', mensaje);
       },
       () => {
-        //console.log('terminó');
+        // console.log('terminó');
       });
   }
 
@@ -596,7 +610,7 @@ export class FormularioProyectosComponent implements OnInit {
         this.openDialog('Error', mensaje);
       },
       () => {
-        //console.log('terminó');
+        // console.log('terminó');
       });
   }
 
@@ -616,8 +630,16 @@ export class FormularioProyectosComponent implements OnInit {
         this.openDialog('Error', mensaje);
       },
       () => {
-        //console.log('terminó');
+        // console.log('terminó');
       });
+  }
+
+  deleteAportante(i: number) {
+    console.log(i);
+  }
+
+  borrarArray(borrarForm: any, i: number) {
+    borrarForm.removeAt(i);
   }
 
   number(e: { keyCode: any; }) {

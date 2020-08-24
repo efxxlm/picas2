@@ -1,0 +1,82 @@
+<div class="row justify-content-center m1">
+    <div class="pr-1">
+        <label class="label-left" for="unionTemporal">¿El contratista es una unión temporal o consorcio? </label>
+    </div>
+    <mat-radio-group class="radioInput" [formControl]="unionTemporal">
+        <mat-radio-button value="true">Sí</mat-radio-button>
+        <mat-radio-button value="false">No</mat-radio-button>
+    </mat-radio-group>
+</div>
+<mat-card class="shipping-card">
+    <mat-card-content>
+        <div class="row mt-1em" *ngIf="unionTemporal.value == 'false'" >
+            <div class="pr-1">
+                <label class="label-left" for="numeroDocumento">Número de documento del contratista (NIT/RUT/CC)</label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field class="full-width">
+                    <input matInput type="text" [formControl]="numeroDocumento">
+                </mat-form-field>
+            </div>
+            
+        </div>
+        <div class="row mt-1em">
+            <div class="pr-1">
+                <label class="label-left" for="nombreContratista">Nombre del contratista</label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field class="full-width">
+                    <input matInput type="text" [formControl]="nombreContratista">
+                </mat-form-field>
+            </div>
+            <button mat-button color="primary" class="btn-guardar" type="submit" (click)="buscar()">
+                <img src="assets/img/icon/lupa.svg" alt="Regresar" > <strong>Buscar</strong>
+            </button>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<div class="text-center">
+    <p class="info-table cantidad-seleccionados">
+        <img class="info-table--img" src="assets/img/icon/sim.svg" alt="icono información">
+        Seleccione el contratista
+    </p>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombreRepresentanteLegak">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del representante legal </th>
+                <td mat-cell *matCellDef="let element"> {{element.representanteLegal}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numeroInvitacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de la invitación </th>
+                <td mat-cell *matCellDef="let element"> {{element.numeroInvitacion}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numeroIdentificacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de identificación </th>
+                <td mat-cell *matCellDef="let element"> {{element.numeroIdentificacion}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Seleccionar </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-radio-button class="example-margin" (change)="selectElement(element)"></mat-radio-button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <button mat-button color="warn" class="btn-guardar" type="submit" (click)="onSave()" >
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+</div>

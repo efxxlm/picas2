@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { CofinanciacionAportante, CofinanciacionDocumento } from '../Cofinanciacion/cofinanciacion.service';
 import { Observable, forkJoin } from 'rxjs';
+import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-contracting';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,11 @@ export class ProjectService {
 
   public getListProjectsFileProject() {   
     const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocuments`);
+    return retorno;
+  }
+
+  public getListProjectsFileProjectByOrigenId( pOrigenId: string ) {   
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocuments?pOrigenId=${ pOrigenId }`);
     return retorno;
   }
 
@@ -79,6 +85,16 @@ export class ProjectService {
   public listaFuentes(pAportanteId:number) {
     return this.http.get<any>(`${environment.apiUrl}/Project/GetFontsByAportantID?pAportanteId=${pAportanteId}`);
   }
+
+  public listaProyectoConFiltros(pTipoIntervencion: string, pLlaveMen: string, pMunicipio: string, pIdInstitucionEducativa: number, pIdSede: number){
+    return this.http.get<ProyectoGrilla[]>(`${environment.apiUrl}/ProjectContracting/getListProyectsByFilters?pTipoIntervencion=${
+      pTipoIntervencion }&pLlaveMen=${ pLlaveMen }&pMunicipio=${ pMunicipio }&pIdInstitucionEducativa=${ pIdInstitucionEducativa }&pIdSede=${ pIdSede }`);
+  }
+
+  
+
+  
+
 }
 export interface RespuestaProyecto{
   cantidadDeRegistros: number,
@@ -118,8 +134,8 @@ export interface Proyecto{
   tipoIntervencionCodigo:number,
   llaveMen:string,
   localizacionIdMunicipio:string,
-  institucionEducativaId:any,
-  sedeId:any,
+  institucionEducativaId:number,
+  sedeId:number,
   enConvocatoria:boolean,
   convocatoriaId?:number,
   cantPrediosPostulados:number,
@@ -139,6 +155,7 @@ export interface Proyecto{
   regid?:string;
   depid?:string;
 
+  institucionEducativa?:InstitucionEducativa
   institucionEducativaSede:InstitucionEducativa,
   localizacionIdMunicipioNavigation: Localizacion,
   predioPrincipal: Predio,
@@ -150,14 +167,14 @@ export interface Proyecto{
 }
 
 export interface InstitucionEducativa{  
- InstitucionEducativaSedeId:number ;
-  PadreId?:number ,
-  Nombre:string ,
-  CodigoDane?:number ,
-  LocalizacionIdMunicipio?:number ,
-  FechaCreacion:Date ,
-  UsuarioCreacion:string ,
-  Activo:boolean ,
+ institucionEducativaSedeId:number ;
+  padreId?:number ,
+  nombre:string ,
+  codigoDane?:string ,
+  localizacionIdMunicipio?:number ,
+  fechaCreacion:Date ,
+  usuarioCreacion:string ,
+  activo:boolean ,
 }
 
 export interface Localizacion{  
@@ -222,4 +239,18 @@ export interface ProyectoPredio{
   FechaCreacion?:Date ,
   UsuarioCreacion:string ,
   Predio:Predio
+}
+
+export interface ProyectoGrilla{
+  proyectoId?: number,
+  departamento?: string,
+  municipio?: string,
+  institucionEducativa?: string,
+  sede?: string,
+  estadoRegistro?: string,
+  estadoJuridicoPredios?: string,
+  fecha?: string,
+  tipoIntervencion?: string,
+  llaveMen?: string,
+
 }
