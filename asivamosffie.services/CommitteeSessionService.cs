@@ -118,7 +118,11 @@ namespace asivamosffie.services
         }
 
 
-
+        //RegistrarSesion
+        public async Task RegistrarSesion()
+        { 
+        
+        }
 
         //Crear orden del dia de comité fiduciario
         public async Task<Respuesta> CreateOrEditCommitteeSession(SesionComiteTema sesionComiteTema)
