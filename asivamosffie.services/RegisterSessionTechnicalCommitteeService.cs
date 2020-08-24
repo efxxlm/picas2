@@ -81,8 +81,7 @@ namespace asivamosffie.services
             } 
             return pPlantilla; 
         }
-
-
+         
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
         {
             if (
@@ -228,7 +227,8 @@ namespace asivamosffie.services
                         //Por defecto, el sistema incluirá automáticamente en cada orden del día un último tema
                         //sin responsable ni tiempo, este se denominará “Proposiciones y varios”.
                         session.SesionComiteTema.Add(new SesionComiteTema
-                        {// se pone nombre del tema solo para diferenciar
+                        {
+                            // se pone nombre del tema solo para diferenciar
                             Tema = "Proposiciones Varios  esto se debe eliminar"
                         });
 
