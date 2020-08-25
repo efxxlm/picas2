@@ -95,8 +95,8 @@ const routes: Routes = [
       },
       {
         path: 'comiteFiduciario',
-        loadChildren: () => import( './_pages/sesion-comite-fiduciario/sesion-comite-fiduciario.module' )
-          .then( module => module.SesionComiteFiduciarioModule )
+        loadChildren: () => import( './_pages/sesion-comite-fiduciario/comite-fiduciario.module' )
+          .then( module => module.ComiteFiduciarioModule )
       }
     ]
 
