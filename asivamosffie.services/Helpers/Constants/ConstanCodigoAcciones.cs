@@ -33,5 +33,8 @@
         public const string Crear_Editar_Cofinanciacion = "31";
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
         public const string Crear_Editar_Sesion_Comite_Tema = "43";
+        public const string Crear_Editar_Sesion_invitado = "46";
+        public const string Crear_Editar_Sesion_comentario = "47";
+        public const string Crear_Editar_Tema_Compromiso = "48";
     }
 }

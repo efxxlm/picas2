@@ -4,6 +4,7 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,46 @@ namespace asivamosffie.services
         }
 
 
-        #region "Sesion Comite Tema";
+        #region "Gestion de actas";
+        //Grilla sesion comite, => sesiones desarrolladas sin actas.
+        public async Task<ActionResult<List<Sesion>>> GetSesionSinActa()
+        {
+            try
+            {
+                 return await (from n in _context.Sesion
+                                where n.EstadoComiteCodigo == "3" && !n.Eliminado
+                                select new Sesion
+                                {
+                                    SesionId = n.SesionId,
+                                    NumeroComite = n.NumeroComite,
+                                    FechaOrdenDia = n.FechaOrdenDia,
+                                    //TipoDominioId = 38 -> Estado comite
+                                    EstadoComiteCodigo = n.EstadoComiteCodigo == "3" ? "Sin acta" : n.EstadoComiteCodigo == "4" ? "En proceso de aprobación" : n.EstadoComiteCodigo == "5" ? "Aprobada": "Devuelta" ,
+                                    EsCompleto = n.EsCompleto
+                                }).OrderByDescending(s => s.FechaOrdenDia).ToListAsync();
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+
+        #endregion
+
+
+
+        #region "Sesion";
 
 
         //Grilla sesion comite
         public async Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSession(int? sessionId)
         {
-           
+
             List<Sesion> ListSesion = (sessionId != null ? await _context.Sesion.Where(s => s.SesionId == sessionId && !s.Eliminado).Include(s => s.SesionComiteTema).Where(s => s.SesionId == sessionId && !s.Eliminado).ToListAsync() : await _context.Sesion.Where(s => !s.Eliminado).ToListAsync());
 
             List<GridCommitteeSession> ListGridCommitteeSession = new List<GridCommitteeSession>();
@@ -87,7 +121,8 @@ namespace asivamosffie.services
 
 
 
-        //Grilla sesion comite fiduciario en estado convocada.
+        //todas las solicitudes que fueron aprobadas por el comite tecnico.
+        //TipoDominioId = 38, Codigo = 2, Nombre = Convocada
         public async Task<ActionResult<List<GridCommitteeSession>>> GetCommitteeSessionFiduciario()
         {
             try
@@ -118,10 +153,306 @@ namespace asivamosffie.services
         }
 
 
-        //RegistrarSesion
-        public async Task RegistrarSesion()
-        { 
-        
+        // orden del dia [Fecha Solicitud, Numero Solicitud, TipoSolicitud,FechaDecomiteTecnico,NumeroComiteTecnico]
+        public async Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession()
+        {
+            try
+            {
+                return await _context.ComiteTecnico.Where(sc => sc.EstadoSolicitudCodigo == "2" && !(bool)sc.Eliminado).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        //Aplazar sesion
+        public async Task<bool> SessionPostpone(int sesionId, DateTime newDate, string usuarioModifico)
+        {
+
+            try
+            {
+                int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
+                if (string.IsNullOrEmpty(Convert.ToString(sesionId)) || newDate != null)
+                {
+
+                    var sesion = await _context.Sesion.FindAsync(sesionId);
+                    if (sesion == null)
+                    {
+                        throw new Exception("No se encontro la sesion");
+                    }
+
+                    sesion.FechaOrdenDia = newDate;
+                    sesion.EstadoComiteCodigo = "6"; // Aplazada. TipoDominioId = 38, 
+                    sesion.UsuarioModificacion = usuarioModifico;
+                    _context.Sesion.Update(sesion);
+
+                    var resultado = await _context.SaveChangesAsync();
+                    if (resultado > 0) //TODO: Enviar notificación a los miembros del comite indicando la nueva fecha se sesion.
+                        return true;
+                    else
+                        return false;
+                }
+
+                return false;
+            }
+
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
+
+        //Declarar fallida
+        public async Task<bool> SessionDeclaredFailed(int sesionId, string usuarioModifico)
+        {
+
+            try
+            {
+                int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
+                if (string.IsNullOrEmpty(Convert.ToString(sesionId)))
+                {
+
+                    var sesion = await _context.Sesion.FindAsync(sesionId);
+                    if (sesion == null)
+                    {
+                        throw new Exception("No se encontro la sesion");
+                    }
+                    sesion.EstadoComiteCodigo = "7"; // Fallida. TipoDominioId = 38, 
+                    sesion.UsuarioModificacion = usuarioModifico;
+                    _context.Sesion.Update(sesion);
+
+                    var resultado = await _context.SaveChangesAsync();
+                    if (resultado > 0)
+                        return true;
+                    else
+                        return false;
+                }
+
+                return false;
+            }
+
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
+
+        //Registrar invitado
+        public async Task<Respuesta> CreateOrEditGuest(SesionInvitado sesionInvitado)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_invitado, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            SesionInvitado sesionInvitadoAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(sesionInvitado.SesionInvitadoId.ToString()) || sesionInvitado.SesionInvitadoId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR SESION COMITE INVITADO";
+                    sesionInvitado.FechaCreacion = DateTime.Now;
+                    sesionInvitado.Eliminado = false;
+                    _context.SesionInvitado.Add(sesionInvitado);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT SESION COMITE INVITADO";
+                    sesionInvitadoAntiguo = _context.SesionInvitado.Find(sesionInvitado.SesionInvitadoId);
+                    //Auditoria
+                    sesionInvitadoAntiguo.UsuarioModificacion = sesionInvitado.UsuarioModificacion;
+                    sesionInvitadoAntiguo.FechaModificacion = DateTime.Now;
+                    sesionInvitadoAntiguo.Eliminado = false;
+
+
+                    //Registros
+                    sesionInvitadoAntiguo.SesionId = sesionInvitado.SesionId;
+                    sesionInvitadoAntiguo.Nombre = sesionInvitado.Nombre;
+                    sesionInvitadoAntiguo.Cargo = sesionInvitado.Cargo;
+                    sesionInvitadoAntiguo.Entidad = sesionInvitado.Entidad;
+
+                    _context.SesionInvitado.Update(sesionInvitadoAntiguo);
+
+                }
+
+                return respuesta = new Respuesta        
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = sesionInvitado,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, sesionInvitado.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, sesionInvitado.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+
+        //Registrar Sesion Comentario ->  // No guarda desde este caso de uso
+        public async Task<Respuesta> CreateOrEditSesioncomment(SesionComentario sesionComentario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_comentario, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            SesionComentario sesionComentarioAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(sesionComentario.SesionComentarioId.ToString()) || sesionComentario.SesionComentarioId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR SESION COMENTARIO";
+                    sesionComentario.FechaCreacion = DateTime.Now;
+                    _context.SesionComentario.Add(sesionComentario);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT SESION COMENTARIO";
+                    sesionComentarioAntiguo = _context.SesionComentario.Find(sesionComentario.SesionComentarioId);
+                    //Auditoria
+                    sesionComentarioAntiguo.UsuarioModificacion = sesionComentario.UsuarioModificacion;
+                    sesionComentarioAntiguo.FechaModificacion = DateTime.Now;
+
+
+                    //Registros
+                    sesionComentarioAntiguo.SesionId = sesionComentario.SesionId;
+                    sesionComentarioAntiguo.Fecha = sesionComentario.Fecha;
+                    sesionComentarioAntiguo.Miembro = sesionComentario.Miembro;
+                    sesionComentarioAntiguo.Observacion = sesionComentario.Observacion;
+
+                    _context.SesionComentario.Update(sesionComentarioAntiguo);
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = sesionComentario,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, sesionComentario.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, sesionComentario.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+
+        //Registrar temas compromisos
+        public async Task<Respuesta> CreateOrEditSubjects(TemaCompromiso temaCompromiso)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Tema_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            TemaCompromiso temaCompromisoAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(temaCompromiso.TemaCompromisoId.ToString()) || temaCompromiso.TemaCompromisoId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR TEMA COMPROMISO";
+                    temaCompromiso.UsuarioCreacion = temaCompromiso.UsuarioCreacion;
+                    temaCompromiso.FechaCreacion = DateTime.Now;
+                    _context.TemaCompromiso.Add(temaCompromiso);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT TEMA COMPROMISO";
+                    temaCompromisoAntiguo = _context.TemaCompromiso.Find(temaCompromiso.TemaCompromisoId);
+                    //Auditoria
+                    temaCompromisoAntiguo.UsuarioModificacion = temaCompromiso.UsuarioModificacion;
+                    temaCompromisoAntiguo.FechaModificacion = DateTime.Now;
+
+                    //Registros
+                    temaCompromisoAntiguo.SesionTemaId = temaCompromiso.SesionTemaId;
+                    temaCompromisoAntiguo.Tarea = temaCompromiso.Tarea;
+                    temaCompromisoAntiguo.Responsable = temaCompromiso.Responsable;
+                    temaCompromisoAntiguo.FechaCumplimiento = temaCompromiso.FechaCumplimiento;
+
+                    _context.TemaCompromiso.Update(temaCompromisoAntiguo);
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = temaCompromiso,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, temaCompromiso.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, temaCompromiso.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+        //Detalle de registro sesion invitado
+        public async Task<SesionInvitado> GetSesionGuesById(int sesionInvitadoId)
+        {
+            try
+            {
+                return await _context.SesionInvitado.FindAsync(sesionInvitadoId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         //Crear orden del dia de comité fiduciario
@@ -198,14 +529,17 @@ namespace asivamosffie.services
 
 
 
-        //Eliminar tema
+        //Eliminar Sesion
         public async Task<bool> DeleteTema(int temaId)
         {
-            SesionComiteTema tema = await _context.SesionComiteTema.FindAsync(temaId);
+
+
+
+            Sesion tema = await _context.Sesion.FindAsync(temaId);
             bool retorno = true;
             try
             {
-                 tema.Eliminado = true;
+                tema.Eliminado = true;
                 _context.SaveChanges();
             }
             catch (Exception ex)
@@ -214,7 +548,6 @@ namespace asivamosffie.services
             }
             return retorno;
         }
-
         #endregion
     }
 }

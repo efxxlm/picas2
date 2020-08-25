@@ -40,6 +40,38 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetSesionGuesById")]
+        public async Task<IActionResult> GetSesionGuesById(int sesionInvitadoId)
+        {
+            try
+            {
+                var result = await _committeeSessionService.GetSesionGuesById(sesionInvitadoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [Route("GetSesionSinActa")]
+        public async Task<IActionResult> GetSesionSinActa()
+        {
+            try
+            {
+                var result = await _committeeSessionService.GetSesionSinActa();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+
         [Route("GetCommitteeSessionTemaById")]
         [HttpGet]
         public async Task<IActionResult> GetCommitteeSessionTemaById(int sessionTemaId)
@@ -94,6 +126,89 @@ namespace asivamosffie.api.Controllers
 
 
 
+        // Registrar tema compromiso
+        [Route("CreateOrEditSubjects")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditSubjects([FromBody] TemaCompromiso temaCompromiso)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                temaCompromiso.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionService.CreateOrEditSubjects(temaCompromiso);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
+
+
+        [Route("CreateOrEditGuest")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditGuest([FromBody] SesionInvitado sesionInvitado)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                sesionInvitado.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionService.CreateOrEditGuest(sesionInvitado);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        //Aplazar sesion
+        [Route("SessionPostpone")]
+        [HttpGet]
+        public async Task<bool> SessionPostpone(int sesionId, DateTime newDate)
+        {
+            try
+            {
+
+                string usuarioModifico = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                return await _committeeSessionService.SessionPostpone(sesionId, newDate, usuarioModifico);
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
+        //Declarar fallida
+        [Route("SessionDeclaredFailed")]
+        [HttpGet]
+        public async Task<bool> SessionDeclaredFailed(int sesionId)
+        {
+            try
+            {
+
+                string usuarioModifico = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                return await _committeeSessionService.SessionDeclaredFailed(sesionId, usuarioModifico);
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         [Route("DeleteTema")]
         [HttpGet]
         public async Task<bool> DeleteTema(int temaId)
@@ -101,5 +216,6 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _committeeSessionService.DeleteTema(temaId);
             return respuesta;
         }
+
     }
 }
