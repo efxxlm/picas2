@@ -23,10 +23,17 @@
         public const string VALOR_OBRA = "19";
         public const string VALOR_INTERVENTORIA = "20";
         public const string VALOR_TOTAL_PROYECTO = "21";
-        public const string CONTRATISTA_NOMBRE = "22";
-        public const string CONTRATISTA_NUMERO_IDENTIFICACION = " 23";
+        public const string CONTRATISTA_NOMBRE = "22"; 
+        public const string CONTRATISTA_NUMERO_IDENTIFICACION = "23";
         public const string CONTRATISTA_NOMBRE_RE_LEGAL = "24";
         public const string CONTRATISTA_NUMERO_IDENTIFICACION_RE_LEGAL = "25";
         public const string CONTRATISTA_NUMERO_INVITACION = "26";
+        public const string NOMBRE_PROYECTO = "27";
+        public const string MUNICIPIO = "28"; 
+        public const string ALCANCE_ESPACIOS_A_INTERVENIR ="29";
+        public const string ALCANCE_CANTIDAD ="30";
+        public const string REGISTROS_ALCANCE ="31";
+        public const string DETALLES_PROYECTOS = "32"; 
+
     }
 }

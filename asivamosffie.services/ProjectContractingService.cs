@@ -34,6 +34,13 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         private readonly devAsiVamosFFIEContext _context;
 
+        public ProjectContractingService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
+        {
+            _documentService = documentService;
+            _commonService = commonService;
+            _context = context;
+        }
+
         public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion,string PCodigoEstado, string pUsusarioModifico)
         {
             int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contratacion, (int)EnumeratorTipoDominio.Acciones);
@@ -111,8 +118,16 @@ namespace asivamosffie.services
         {
             return  await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
               .Include(r => r.Contratista)
-              .Include(r => r.ContratacionProyecto)
+              .Include(r => r.ContratacionProyecto) 
                    .ThenInclude(r => r.Proyecto)
+                           .ThenInclude(r => r.ProyectoPredio)
+                                .ThenInclude(r => r.Predio)
+               .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+                      .ThenInclude(r => r.PredioPrincipal)
+               .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+                      .ThenInclude(r => r.InfraestructuraIntervenirProyecto)
               .Include(r => r.ContratacionProyecto).FirstOrDefaultAsync();
         }
 
@@ -158,13 +173,7 @@ namespace asivamosffie.services
             return contratacion;
         }
 
-        public ProjectContractingService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
-        {
-            _documentService = documentService;
-            _commonService = commonService;
-            _context = context;
-        }
-
+       
         public async Task<List<ContratacionProyecto>> GetListContratacionProyectoByContratacionId(int idContratacion)
         {
 
@@ -216,15 +225,6 @@ namespace asivamosffie.services
                  .Include(r => r.Proyecto)
                      .ThenInclude( r => r.LocalizacionIdMunicipioNavigation )        
                 .FirstOrDefaultAsync();
-                
-
-            // foreach (var item in ListContratacionProyecto)
-            // {
-            //     foreach (var ContratacionProyectoAportante in item.ContratacionProyectoAportante)
-            //     {
-            //         ContratacionProyectoAportante.Aportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionAportanteId == ContratacionProyectoAportante.AportanteId).FirstOrDefaultAsync();
-            //     }
-            // }
 
             return contratacionProyecto;
         }
@@ -385,9 +385,7 @@ namespace asivamosffie.services
 
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
-
-
-
+         
         //CrearContratacion
         public async Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion)
         {

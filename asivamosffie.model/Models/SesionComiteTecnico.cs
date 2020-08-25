@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
 
         public int SesionComiteTecnicoId { get; set; }
         public int SesionId { get; set; }
-        public int ComiteTecnicoId { get; set; }
+        public int? ComiteTecnicoId { get; set; }
         public bool? RequiereVotacion { get; set; }
         public string Justificacion { get; set; }
         public bool? EsAprobado { get; set; }
