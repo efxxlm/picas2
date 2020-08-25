@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DevolverPorValidacionComponent } from '../devolver-por-validacion/devolver-por-validacion.component';
 
 @Component({
   selector: 'app-validacion-presupuestal',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ValidacionPresupuestalComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
+  }
+
+  openDialogDevolver() {
+    this.dialog.open(DevolverPorValidacionComponent, {
+      width: '70em'
+    });
   }
 
 }

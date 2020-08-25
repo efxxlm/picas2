@@ -13,17 +13,15 @@ export interface PeriodicElement {
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { id: 1, fecha: '26/05/2020', numero: '003', tipo: 'Modificación contractual', estadoRegistro: false },
-  { id: 2, fecha: '26/05/2020', numero: 'PI_003', tipo: 'Contratación', estadoRegistro: false },
-  { id: 3, fecha: '26/05/2020', numero: 'PI_002', tipo: 'Contratación', estadoRegistro: false },
+  { id: 1, fecha: '07/07/2020', numero: '003', tipo: 'Modificación contractual', estadoRegistro: true },
 ];
 
 @Component({
-  selector: 'app-tabla-en-validacion',
-  templateUrl: './tabla-en-validacion.component.html',
-  styleUrls: ['./tabla-en-validacion.component.scss']
+  selector: 'app-tabla-devuelta-por-validacion',
+  templateUrl: './tabla-devuelta-por-validacion.component.html',
+  styleUrls: ['./tabla-devuelta-por-validacion.component.scss']
 })
-export class TablaEnValidacionComponent implements OnInit {
+export class TablaDevueltaPorValidacionComponent implements OnInit {
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -60,9 +58,9 @@ export class TablaEnValidacionComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  validar(id: number) {
+  verDetalle(id: number) {
     console.log(id);
-    this.router.navigate(['validarDisponibilidadPresupuesto/enValidacionPresupuestal', id]);
+    this.router.navigate(['validarDisponibilidadPresupuesto/devueltaProValidacion', id]);
   }
 
 }
