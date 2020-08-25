@@ -105,15 +105,20 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
     this.ngOnInit().then(() =>       
         { 
-          
+          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
         });
   }
 
   onSubmit() {
+    
+    this.addressForm.get('nombresProponentes').setValue( null );
+    this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     this.guardar.emit(null);
   }
 
   onSubmitNuevoProponente(){
+    this.addressForm.get('nombresProponentes').setValue( null );
+
     this.guardar.emit(null);
   }
 

@@ -65,6 +65,10 @@ export class ProcesoSeleccionService implements OnInit {
     let objeto = { pIdDocument: pId }
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad?pIdDocument=${ pId }`, null);
   }
+
+  createContractorsFromProponent( proceso: ProcesoSeleccion ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/createContractorsFromProponent`, proceso);
+  }
   
 }
 
@@ -98,6 +102,7 @@ export interface ProcesoSeleccion{
   evaluacionDescripcion?: string,
   urlSoporteEvaluacion?: string,
   tipoOrdenEligibilidadCodigo?: string,
+  cantidadProponentesInvitados?: number,
 
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma[],

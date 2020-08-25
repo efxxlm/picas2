@@ -132,6 +132,9 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
                     ProcesoSeleccionAntiguo.UrlSoporteEvaluacion = procesoSeleccion.UrlSoporteEvaluacion;
                     ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
+                    ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
+                    ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
+                    
                     //ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     ProcesoSeleccionAntiguo.Eliminado = false;
                     //ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
@@ -836,6 +839,62 @@ namespace asivamosffie.services
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, cronogramaSeguimiento.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+
+//Registrar Seguimiento cronograma
+        public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_contratistas_desde_proponentes, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+            CronogramaSeguimiento cronogramaSeguimientoAntiguo = null;
+            try
+            {
+
+                pProcesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach( p => {
+                    Contratista contratista = new Contratista();
+
+                    contratista.TipoIdentificacionCodigo =  ( p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2" ) ? "3" : "1"; //Nit - cedula
+                    contratista.NumeroIdentificacion =  string.IsNullOrEmpty( p.NumeroIdentificacion ) ? "0" : p.NumeroIdentificacion;
+                    contratista.Nombre = p.NombreProponente;
+                    contratista.RepresentanteLegal = string.IsNullOrEmpty( p.NombreRepresentanteLegal ) ? p.NombreProponente : p.NombreRepresentanteLegal;
+                    contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
+                    contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
+                    contratista.Activo = true;
+                    contratista.FechaCreacion = DateTime.Now;
+                    contratista.UsuarioCreacion = pUsuarioCreo;
+                    
+                    _context.Contratista.Add( contratista );
+
+                });
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = cronogramaSeguimientoAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, pUsuarioCreo, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, pUsuarioCreo, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }

@@ -42,6 +42,20 @@
     </span>
   </div>
 
+  <div class="d-flex align-items-center" *ngIf="procesoSeleccion.tipoProcesoCodigo == '2'">
+    <div class="text-area-quill">
+      <label for="justificacion" class="text-area-quill--label">Criterios para la selección</label>
+      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)" formControlName="criterios" required></quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="addressForm.get('justificacion').value">
+      {{3000 - textoLimpio(addressForm.get('criterios').value)}}
+    </span>
+    <span class="contador miles" *ngIf="addressForm.get('criterios').value === null">
+      3000
+    </span>
+  </div>
+
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">

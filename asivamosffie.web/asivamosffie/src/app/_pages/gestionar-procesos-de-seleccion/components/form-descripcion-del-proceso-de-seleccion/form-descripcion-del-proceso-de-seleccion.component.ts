@@ -183,6 +183,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       objeto: [null, Validators.required],
       alcanceParticular: [null, Validators.required],
       justificacion: [null, Validators.required],
+      criterios: [null, Validators.required],
       tipoIntervencion: [null, Validators.required],
       tipoAlcance: [null, Validators.required],
       distribucionEnGrupos: ['', Validators.required],
@@ -238,6 +239,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     this.procesoSeleccion.objeto = this.addressForm.get('objeto').value,
       this.procesoSeleccion.alcanceParticular = this.addressForm.get('alcanceParticular').value,
       this.procesoSeleccion.justificacion = this.addressForm.get('justificacion').value,
+      this.procesoSeleccion.criteriosSeleccion = this.addressForm.get('criterios').value,
       this.procesoSeleccion.tipoIntervencionCodigo = this.addressForm.get('tipoIntervencion').value ? this.addressForm.get('tipoIntervencion').value.codigo : null,
       this.procesoSeleccion.tipoAlcanceCodigo = this.addressForm.get('tipoAlcance').value ? this.addressForm.get('tipoAlcance').value.codigo : null,
       this.procesoSeleccion.esDistribucionGrupos = this.addressForm.get('distribucionEnGrupos').value ? this.addressForm.get('distribucionEnGrupos').value.codigo : null,
@@ -300,6 +302,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.addressForm.get('objeto').setValue(this.procesoSeleccion.objeto);
       this.addressForm.get('alcanceParticular').setValue(this.procesoSeleccion.alcanceParticular);
       this.addressForm.get('justificacion').setValue(this.procesoSeleccion.justificacion);
+      this.addressForm.get('criterios').setValue(this.procesoSeleccion.criteriosSeleccion);
       this.addressForm.get('tipoIntervencion').setValue(tipoIntervencion);
       this.addressForm.get('tipoAlcance').setValue(tipoAlcance);
       this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos ? this.procesoSeleccion.esDistribucionGrupos.toString() : null);

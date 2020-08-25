@@ -5,7 +5,7 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el
+              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán seleccionados en el 
                 proceso?</label>
             </div>
             <div class="col d-flex">
@@ -32,13 +32,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionCotizacion">
+              <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionProponente">
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ proponente.nombreOrganizacion }}
+                  {{ proponente.nombreProponente }}
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <section class="example-section">
-                    <mat-checkbox></mat-checkbox>
+                    <mat-checkbox type="checkbox" (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId" ></mat-checkbox>
                   </section>
                 </td>
               </tr>
@@ -63,7 +63,7 @@
 
   <div class="text-center"
     *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>

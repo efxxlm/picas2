@@ -32,5 +32,6 @@
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
+        public const string Crear_contratistas_desde_proponentes = "45";
     }
 }
