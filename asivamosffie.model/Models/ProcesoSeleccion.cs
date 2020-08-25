@@ -46,6 +46,8 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public int? CantidadProponentesInvitados { get; set; }
+        public string UrlSoporteProponentesSeleccionados { get; set; }
 
         public virtual ICollection<ProcesoSeleccionCotizacion> ProcesoSeleccionCotizacion { get; set; }
         public virtual ICollection<ProcesoSeleccionCronograma> ProcesoSeleccionCronograma { get; set; }

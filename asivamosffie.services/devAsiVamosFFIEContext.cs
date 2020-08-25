@@ -15,6 +15,7 @@ namespace asivamosffie.model.Models
         {
         }
 
+        public virtual DbSet<AcuerdoCofinanciamiento> AcuerdoCofinanciamiento { get; set; }
         public virtual DbSet<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual DbSet<ArchivoCargue> ArchivoCargue { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
@@ -22,7 +23,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<CofinanciacionAportante> CofinanciacionAportante { get; set; }
         public virtual DbSet<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
         public virtual DbSet<ComiteTecnico> ComiteTecnico { get; set; }
-        public virtual DbSet<ComiteTecnicoProyecto> ComiteTecnicoProyecto { get; set; }
         public virtual DbSet<ComponenteAportante> ComponenteAportante { get; set; }
         public virtual DbSet<ComponenteUso> ComponenteUso { get; set; }
         public virtual DbSet<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
@@ -71,15 +71,17 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ProyectoRequisitoTecnico> ProyectoRequisitoTecnico { get; set; }
         public virtual DbSet<RegistroPresupuestal> RegistroPresupuestal { get; set; }
         public virtual DbSet<RequisitoTecnicoRadicado> RequisitoTecnicoRadicado { get; set; }
-        public virtual DbSet<Sesion> Sesion { get; set; }
         public virtual DbSet<SesionComentario> SesionComentario { get; set; }
-        public virtual DbSet<SesionComiteInvitadoVoto> SesionComiteInvitadoVoto { get; set; }
         public virtual DbSet<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
-        public virtual DbSet<SesionComiteTecnico> SesionComiteTecnico { get; set; }
         public virtual DbSet<SesionComiteTecnicoCompromiso> SesionComiteTecnicoCompromiso { get; set; }
         public virtual DbSet<SesionComiteTema> SesionComiteTema { get; set; }
         public virtual DbSet<SesionInvitado> SesionInvitado { get; set; }
-        public virtual DbSet<SesionUsuario> SesionUsuario { get; set; }
+        public virtual DbSet<SesionParticipante> SesionParticipante { get; set; }
+        public virtual DbSet<SesionParticipanteVoto> SesionParticipanteVoto { get; set; }
+        public virtual DbSet<SesionSolicitudCompromiso> SesionSolicitudCompromiso { get; set; }
+        public virtual DbSet<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
+        public virtual DbSet<SesionSolicitudVoto> SesionSolicitudVoto { get; set; }
+        public virtual DbSet<SesionTemaVoto> SesionTemaVoto { get; set; }
         public virtual DbSet<TemaCompromiso> TemaCompromiso { get; set; }
         public virtual DbSet<TempOrdenLegibilidad> TempOrdenLegibilidad { get; set; }
         public virtual DbSet<Template> Template { get; set; }
@@ -89,17 +91,47 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-        //            }
-        //        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AcuerdoCofinanciamiento>(entity =>
+            {
+                entity.HasKey(e => e.AcuerdoCofinanciacionId);
+
+                entity.Property(e => e.EstadoCodigo)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.VigenciaCodigo)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -231,28 +263,36 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComiteTecnico>(entity =>
             {
-                entity.Property(e => e.EstadoSolicitudCodigo)
-                    .IsRequired()
+                entity.Property(e => e.EstadoComiteCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.FechaAplazamiento).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroSolicitud)
-                    .IsRequired()
+                entity.Property(e => e.FechaOrdenDia).HasColumnType("datetime");
+
+                entity.Property(e => e.Justificacion)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroComite)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoContratacionCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
+                entity.Property(e => e.Observaciones)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoSolicitudCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
+                entity.Property(e => e.RutaActaSesion)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RutaSoporteVotacion)
+                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
@@ -263,51 +303,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Contratista)
-                    .WithMany(p => p.ComiteTecnico)
-                    .HasForeignKey(d => d.ContratistaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComiteTecnico_Contratista");
-            });
-
-            modelBuilder.Entity<ComiteTecnicoProyecto>(entity =>
-            {
-                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.ComiteTecnico)
-                    .WithMany(p => p.ComiteTecnicoProyecto)
-                    .HasForeignKey(d => d.ComiteTecnicoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComiteTecnicoProyecto_ComiteTecnico");
-
-                entity.HasOne(d => d.ContratacionProyecto)
-                    .WithMany(p => p.ComiteTecnicoProyecto)
-                    .HasForeignKey(d => d.ContratacionProyectoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComiteTecnicoProyecto_ContratacionProyectoId");
             });
 
             modelBuilder.Entity<ComponenteAportante>(entity =>
             {
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.FaseCodigo)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -361,7 +361,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.ComponenteUso)
                     .HasForeignKey(d => d.ComponenteAportanteId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComponenteAportanteId_ComponenteAportante");
+                    .HasConstraintName("FK_ComponenteUso_ComponenteAportante");
             });
 
             modelBuilder.Entity<CompromisoSeguimiento>(entity =>
@@ -388,6 +388,11 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SesionComiteTecnicoCompromisoId)
                     .HasConstraintName("FK_CompromisoSeguimiento_SesionComiteTecnicoCompromiso");
 
+                entity.HasOne(d => d.SesionSolicitudCompromiso)
+                    .WithMany(p => p.CompromisoSeguimiento)
+                    .HasForeignKey(d => d.SesionSolicitudCompromisoId)
+                    .HasConstraintName("FK_CompromisoSeguimiento_SesionSolicitudCompromiso");
+
                 entity.HasOne(d => d.TemaCompromiso)
                     .WithMany(p => p.CompromisoSeguimiento)
                     .HasForeignKey(d => d.TemaCompromisoId)
@@ -410,11 +415,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
-
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroSolicitud)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
@@ -426,7 +430,12 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
+                entity.Property(e => e.TipoContratacionCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -441,7 +450,7 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.Contratista)
                     .WithMany(p => p.Contratacion)
                     .HasForeignKey(d => d.ContratistaId)
-                    .HasConstraintName("FK_ContratistaId_Contratista");
+                    .HasConstraintName("FK_Contratacion_Contratista");
             });
 
             modelBuilder.Entity<ContratacionProyecto>(entity =>
@@ -502,12 +511,6 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ContratacionProyectoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContratacionProyectoAportante_ContratacionProyecto");
-
-                entity.HasOne(d => d.ProyectoAportante)
-                    .WithMany(p => p.ContratacionProyectoAportante)
-                    .HasForeignKey(d => d.ProyectoAportanteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ContratacionProyectoAportante_Aportante");
             });
 
             modelBuilder.Entity<Contratista>(entity =>
@@ -690,11 +693,13 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.CuentaBancaria)
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.CuentaBancariaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ControlRecurso_CuentaBancaria");
 
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ControlRecurso_FuenteFinanciacion");
 
                 entity.HasOne(d => d.RegistroPresupuestal)
@@ -705,6 +710,7 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.VigenciaAporte)
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.VigenciaAporteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ControlRecurso_VigenciaAporte");
             });
 
@@ -730,8 +736,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CronogramaSeguimiento>(entity =>
             {
-                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
-
                 entity.Property(e => e.EstadoActividadFinalCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -948,6 +952,12 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Aportante)
+                    .WithMany(p => p.DocumentoApropiacion)
+                    .HasForeignKey(d => d.AportanteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DocumentoApropiacion_Aportante");
             });
 
             modelBuilder.Entity<Dominio>(entity =>
@@ -1567,6 +1577,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
+                entity.Property(e => e.UrlSoporteProponentesSeleccionados)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -1720,6 +1734,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
+                    .IsRequired()
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
@@ -2056,38 +2071,6 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_RequisitoTecnicoRadicado_ProyectoRequisitoTecnico");
             });
 
-            modelBuilder.Entity<Sesion>(entity =>
-            {
-                entity.Property(e => e.EstadoComiteCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaOrdenDia).HasColumnType("datetime");
-
-                entity.Property(e => e.NumeroComite)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RutaActaSesion)
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<SesionComentario>(entity =>
             {
                 entity.Property(e => e.Fecha).HasColumnType("datetime");
@@ -2095,11 +2078,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.Miembro)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
@@ -2115,54 +2093,37 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Sesion)
+                entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComentario)
-                    .HasForeignKey(d => d.SesionId)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComentario_Sesion");
+                    .HasConstraintName("FK_SesionComentario_ComiteTecnico");
+
+                entity.HasOne(d => d.MiembroSesionParticipante)
+                    .WithMany(p => p.SesionComentario)
+                    .HasForeignKey(d => d.MiembroSesionParticipanteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionComentario_SesionParticipante");
             });
 
-            modelBuilder.Entity<SesionComiteInvitadoVoto>(entity =>
+            modelBuilder.Entity<SesionComiteSolicitud>(entity =>
             {
+                entity.Property(e => e.EstadoCodigo)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observaciones)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RutaSoporteVotacion)
                     .HasMaxLength(1000)
                     .IsUnicode(false);
-
-                entity.Property(e => e.ObservacionesDevolucion)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.SesionComiteTecnico)
-                    .WithMany(p => p.SesionComiteInvitadoVoto)
-                    .HasForeignKey(d => d.SesionComiteTecnicoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteInvitadoVoto_SesionComiteTecnico");
-
-                entity.HasOne(d => d.SesionInvitado)
-                    .WithMany(p => p.SesionComiteInvitadoVoto)
-                    .HasForeignKey(d => d.SesionInvitadoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteInvitadoVoto_SesionInvitado");
-            });
-
-            modelBuilder.Entity<SesionComiteSolicitud>(entity =>
-            {
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
@@ -2178,11 +2139,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.SesionComiteTecnico)
+                entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComiteSolicitud)
-                    .HasForeignKey(d => d.SesionComiteTecnicoId)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteSolicitud_SesionComiteTecnico");
+                    .HasConstraintName("FK_SesionComiteSolicitud_ComiteTecnico");
 
                 entity.HasOne(d => d.Solicitud)
                     .WithMany(p => p.SesionComiteSolicitud)
@@ -2213,45 +2174,6 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SolicitudId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SesionComiteSolicitud_ProcesoSeleccion");
-            });
-
-            modelBuilder.Entity<SesionComiteTecnico>(entity =>
-            {
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.Justificacion)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RutaSoporteVotacion)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.ComiteTecnico)
-                    .WithMany(p => p.SesionComiteTecnico)
-                    .HasForeignKey(d => d.ComiteTecnicoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteTecnico_ComiteTecnico");
-
-                entity.HasOne(d => d.Sesion)
-                    .WithMany(p => p.SesionComiteTecnico)
-                    .HasForeignKey(d => d.SesionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteTecnico_Sesion");
             });
 
             modelBuilder.Entity<SesionComiteTecnicoCompromiso>(entity =>
@@ -2285,11 +2207,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.SesionComiteTecnico)
+                entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComiteTecnicoCompromiso)
-                    .HasForeignKey(d => d.SesionComiteTecnicoId)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteTecnicoCompromiso_SesionComiteTecnico");
+                    .HasConstraintName("FK_SesionComiteTecnicoCompromiso_ComiteTecnico");
             });
 
             modelBuilder.Entity<SesionComiteTema>(entity =>
@@ -2317,6 +2239,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Tema)
+                    .IsRequired()
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
@@ -2328,12 +2251,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Sesion)
-                    .WithMany(p => p.SesionComiteTema)
-                    .HasForeignKey(d => d.SesionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteTema_Sesion");
             });
 
             modelBuilder.Entity<SesionInvitado>(entity =>
@@ -2362,21 +2279,46 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Sesion)
-                    .WithMany(p => p.SesionInvitado)
-                    .HasForeignKey(d => d.SesionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionInvitado_Sesion");
             });
 
-            modelBuilder.Entity<SesionUsuario>(entity =>
+            modelBuilder.Entity<SesionParticipante>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ComiteTecnico)
+                    .WithMany(p => p.SesionParticipante)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionParticipante_ComiteTecnico");
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.SesionParticipante)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionParticipante_Usuario");
+            });
+
+            modelBuilder.Entity<SesionParticipanteVoto>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.Observaciones)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ObservacionesDevolucion)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2384,17 +2326,131 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Sesion)
-                    .WithMany(p => p.SesionUsuario)
-                    .HasForeignKey(d => d.SesionId)
+                entity.HasOne(d => d.ComiteTecnico)
+                    .WithMany(p => p.SesionParticipanteVoto)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Fk_SesionId_Sesion");
+                    .HasConstraintName("FK_SesionParticipanteVoto_ComiteTecnico");
 
-                entity.HasOne(d => d.Usuario)
-                    .WithMany(p => p.SesionUsuario)
-                    .HasForeignKey(d => d.UsuarioId)
+                entity.HasOne(d => d.SesionParticipante)
+                    .WithMany(p => p.SesionParticipanteVoto)
+                    .HasForeignKey(d => d.SesionParticipanteId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Fk_UsuarioId_Usuario");
+                    .HasConstraintName("FK_SesionParticipanteVoto_SesionParticipante");
+            });
+
+            modelBuilder.Entity<SesionSolicitudCompromiso>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.Tarea)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ResponsableSesionParticipante)
+                    .WithMany(p => p.SesionSolicitudCompromiso)
+                    .HasForeignKey(d => d.ResponsableSesionParticipanteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudCompromiso_SesionParticipante");
+
+                entity.HasOne(d => d.SesionComiteSolicitud)
+                    .WithMany(p => p.SesionSolicitudCompromiso)
+                    .HasForeignKey(d => d.SesionComiteSolicitudId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudCompromiso_SesionComiteSolicitud");
+            });
+
+            modelBuilder.Entity<SesionSolicitudObservacionProyecto>(entity =>
+            {
+                entity.Property(e => e.SesionSolicitudObservacionProyectoId).ValueGeneratedNever();
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ContratacionProyecto)
+                    .WithMany(p => p.SesionSolicitudObservacionProyecto)
+                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudObservacionProyecto_ContratacionProyecto");
+
+                entity.HasOne(d => d.SesionComiteSolicitud)
+                    .WithMany(p => p.SesionSolicitudObservacionProyecto)
+                    .HasForeignKey(d => d.SesionComiteSolicitudId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudObservacionProyecto_SesionComiteSolicitud");
+
+                entity.HasOne(d => d.SesionParticipante)
+                    .WithMany(p => p.SesionSolicitudObservacionProyecto)
+                    .HasForeignKey(d => d.SesionParticipanteId)
+                    .HasConstraintName("FK_SesionSolicitudObservacionProyecto_SesionParticipante");
+            });
+
+            modelBuilder.Entity<SesionSolicitudVoto>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SesionComiteSolicitud)
+                    .WithMany(p => p.SesionSolicitudVoto)
+                    .HasForeignKey(d => d.SesionComiteSolicitudId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudVoto_SesionComiteSolicitud");
+
+                entity.HasOne(d => d.SesionParticipante)
+                    .WithMany(p => p.SesionSolicitudVoto)
+                    .HasForeignKey(d => d.SesionParticipanteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudVoto_SesionParticipante");
+            });
+
+            modelBuilder.Entity<SesionTemaVoto>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SesionParticipante)
+                    .WithMany(p => p.SesionTemaVoto)
+                    .HasForeignKey(d => d.SesionParticipanteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionTemaVoto_SesionParticipante");
+
+                entity.HasOne(d => d.SesionTema)
+                    .WithMany(p => p.SesionTemaVoto)
+                    .HasForeignKey(d => d.SesionTemaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionTemaVoto_SesionComiteTema");
             });
 
             modelBuilder.Entity<TemaCompromiso>(entity =>
@@ -2402,6 +2458,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Responsable)
                     .IsRequired()
@@ -2417,6 +2475,8 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).HasColumnType("datetime");
 
                 entity.HasOne(d => d.SesionTema)
                     .WithMany(p => p.TemaCompromiso)
