@@ -14,5 +14,7 @@ namespace asivamosffie.model.Models
         public DateTime Fecha { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
+
+        public virtual CofinanciacionAportante Aportante { get; set; }
     }
 }

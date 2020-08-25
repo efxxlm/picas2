@@ -14,10 +14,8 @@ namespace asivamosffie.model.Models
 
         public int ContratacionId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
-        public DateTime? FechaSolicitud { get; set; }
         public string NumeroSolicitud { get; set; }
         public string EstadoSolicitudCodigo { get; set; }
-        public bool? RegistroCompleto { get; set; }
         public int? ContratistaId { get; set; }
         public bool? EsObligacionEspecial { get; set; }
         public string ConsideracionDescripcion { get; set; }
@@ -31,6 +29,8 @@ namespace asivamosffie.model.Models
         public string RutaMinuta { get; set; }
         public DateTime? FechaTramite { get; set; }
         public bool? Estado { get; set; }
+        public bool? EsMultiProyecto { get; set; }
+        public string TipoContratacionCodigo { get; set; }
 
         public virtual Contratista Contratista { get; set; }
         public virtual ICollection<ContratacionProyecto> ContratacionProyecto { get; set; }

@@ -11,7 +11,6 @@ namespace asivamosffie.model.Models
         }
 
         public int SesionComiteTecnicoCompromisoId { get; set; }
-        public int SesionComiteTecnicoId { get; set; }
         public string Tarea { get; set; }
         public string Responsable { get; set; }
         public DateTime FechaCumplimiento { get; set; }
@@ -21,8 +20,9 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public int ComiteTecnicoId { get; set; }
 
-        public virtual SesionComiteTecnico SesionComiteTecnico { get; set; }
+        public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
     }
 }
