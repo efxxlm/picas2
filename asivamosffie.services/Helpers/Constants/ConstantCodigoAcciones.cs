@@ -43,5 +43,7 @@
         public const string Cambiar_Estado_Contratacion = "42";
 
         public const string Registrar_Participantes_Sesion = "44";
+
+        public const string Crear_Editar_Comite_Tecnico_SesionComiteSolicitud_SesionComiteTema = "49";
     }
 }

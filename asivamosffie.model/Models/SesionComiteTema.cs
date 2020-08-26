@@ -24,9 +24,10 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
-        public bool? EsProposicionesVarios { get; set; }
         public int? ComiteTecnicoId { get; set; }
+        public bool? EsProposicionesVarios { get; set; }
 
+        public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual ICollection<SesionTemaVoto> SesionTemaVoto { get; set; }
         public virtual ICollection<TemaCompromiso> TemaCompromiso { get; set; }
     }

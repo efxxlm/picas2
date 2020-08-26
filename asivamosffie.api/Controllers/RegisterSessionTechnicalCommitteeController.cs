@@ -21,23 +21,33 @@ namespace asivamosffie.api.Controllers
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
          
-        [HttpGet]
-        [Route("GetPlantillaByTablaIdRegistroId")]
-        public async Task<FileResult> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId)
-        { 
-            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
-        }
-
-
         [HttpPost]
-        [Route("RegistrarParticipantesSesion")]
-        public async Task<IActionResult> RegistrarParticipantesSesion([FromBody]  Sesion psesion)
+        [Route("CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud")]
+        public async Task<IActionResult> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud([FromBody] ComiteTecnico pComiteTecnico)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                psesion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.RegistrarParticipantesSesion(psesion);
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(pComiteTecnico);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+ 
+        [HttpPut]
+        [Route("CambiarEstadoComiteTecnico")]
+        public async Task<IActionResult> CambiarEstadoComiteTecnico([FromBody] ComiteTecnico pComiteTecnico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CambiarEstadoComiteTecnico(pComiteTecnico);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -48,87 +58,74 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListSesionComiteTemaByIdSesion")]
-        public async Task<List<dynamic>> GetListSesionComiteTemaByIdSesion([FromQuery]  int pIdSesion)
+        [Route("GetListSesionComiteSolicitudByFechaOrdenDelDia")]
+        public async Task<List<dynamic>> GetListSesionComiteSolicitudByFechaOrdenDelDia([FromQuery] string pFechaComite)
         {
-            return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByIdSesion(pIdSesion);
-        }
+            return await _registerSessionTechnicalCommitteeService.GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime.Parse(pFechaComite));
+        } 
 
         [HttpGet]
-        [Route("GetListSolicitudesContractuales")] 
-        public async Task<List<dynamic>> GetListSolicitudesContractuales([FromQuery] string FechaComite) {
-            return await _registerSessionTechnicalCommitteeService.GetListSolicitudesContractuales( DateTime.Parse( FechaComite )); 
-        }
-
-        [HttpPost]
-        [Route("SaveEditSesionComiteTema")]
-        public async Task<IActionResult> SaveEditSesionComiteTema([FromBody] Sesion session)
+        [Route("GetComiteTecnicoByComiteTecnicoId")]
+        public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                session.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.SaveEditSesionComiteTema(session);
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
-            }  
-        }
-
-
-        [HttpGet]
-        [Route("GetComiteGrilla")]
-        public async Task<List<ComiteGrilla>> GetComiteGrilla()
-        {
-            return await _registerSessionTechnicalCommitteeService.GetComiteGrilla();
+            return await _registerSessionTechnicalCommitteeService.GetComiteTecnicoByComiteTecnicoId(pComiteTecnicoId);
         }
          
-        [HttpGet]
-        [Route("GetSesionBySesionId")]
-        public async Task<Sesion> GetSesionBySesionId([FromQuery]  int pSesionId)
-        {
-            return await _registerSessionTechnicalCommitteeService.GetSesionBySesionId(pSesionId);
-        }
-
-        [HttpPut]
-        [Route("DeleteSesionComiteTema")]
-        public async Task<IActionResult> DeleteSesionComiteTema(int pSesionComiteTemaId)
+        [HttpPost]
+        [Route("CreateSesionInvitadoAndParticipante")]
+        public async Task<IActionResult> CreateSesionInvitadoAndParticipante([FromBody] ComiteTecnico pComiteTecnico)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateSesionInvitadoAndParticipante(pComiteTecnico);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteSesionComiteTema")]
+        public async Task<IActionResult> DeleteSesionComiteTema([FromQuery] int pSesionComiteTemaId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
                 respuesta = await _registerSessionTechnicalCommitteeService.EliminarSesionComiteTema(pSesionComiteTemaId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
-            { 
+            {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
-            } 
+            }
         }
 
-
-        [HttpPut]
-        [Route("CambiarEstadoComite")]
-        public async Task<IActionResult> CambiarEstadoComite(Sesion pSesion)
+        [HttpGet]
+        [Route("GetPlantillaByTablaIdRegistroId")]
+        public async Task<FileResult> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId)
         {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                pSesion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.CambiarEstadoComite(pSesion);
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
-            }
+            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
         }
 
+        [HttpGet]
+        [Route("GetListComiteGrilla")]
+        public async Task<List<ComiteGrilla>> GetListComiteGrilla()
+        {
+            return await _registerSessionTechnicalCommitteeService.GetListComiteGrilla();
+        }
          
+        [HttpGet]
+        [Route("GetListSesionComiteTemaByComiteTecnicoId")]
+        public async Task<List<dynamic>> GetListSesionComiteTemaByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        {
+            return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByComiteTecnicoId(pComiteTecnicoId);
+        }
+          
     }
 }

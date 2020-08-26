@@ -9,24 +9,22 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
-        Task<byte[]> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId);
-
-        Task<Respuesta> RegistrarParticipantesSesion(Sesion psesion);
-
-        Task<List<dynamic>> GetListSesionComiteTemaByIdSesion(int pIdSesion);
-  
-        Task<List<dynamic>> GetListSolicitudesContractuales(DateTime FechaComite);
-
-        Task<Respuesta> SaveEditSesionComiteTema(Sesion session);
-
-        Task<List<ComiteGrilla>> GetComiteGrilla();
-
-        Task<Sesion> GetSesionBySesionId(int pSesionId);
-
-        Task<Respuesta> EliminarSesionComiteTema(int pSesionComiteTemaId, string pUsuarioModificacion);
-
-        Task<Respuesta> CambiarEstadoComite(Sesion pSesion);
-
+        Task<Respuesta> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(ComiteTecnico pComiteTecnico);
+      
+        Task<Respuesta> CambiarEstadoComiteTecnico(ComiteTecnico pComiteTecnico);
        
+        Task<List<dynamic>> GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime pFechaOrdenDelDia);
+       
+        Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId);
+        
+        Task<Respuesta> CreateSesionInvitadoAndParticipante(ComiteTecnico pComiteTecnico);
+        
+        Task<Respuesta> EliminarSesionComiteTema(int pSesionComiteTemaId, string pUsuarioModificacion);
+        
+        Task<byte[]> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId);
+       
+        Task<List<ComiteGrilla>> GetListComiteGrilla();
+
+        Task<List<dynamic>> GetListSesionComiteTemaByComiteTecnicoId(int pComiteTecnicoId);
     }
 }
