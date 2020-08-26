@@ -26,7 +26,7 @@
     </mat-card-content>
   </mat-card>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" >
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" [style.pointer-events]="getStyle()" >
     <mat-card class="shipping-card" >
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
@@ -61,8 +61,8 @@
                     <div class="col">
                       <mat-form-field class="select-width">
                         <mat-select formControlName="responsable" required>
-                          <mat-option *ngFor="let responsable of responsablesArray" [value]="responsable.value">
-                            {{ responsable.name }}
+                          <mat-option *ngFor="let responsable of listaMiembros" [value]="responsable">
+                            {{ responsable.nombre }}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>

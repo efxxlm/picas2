@@ -6,7 +6,7 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            {{ objetoSesion.numeroComite }}
+            {{ objetoComiteTecnico.numeroComite }}
         </h1>
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
@@ -40,7 +40,7 @@
 
             <app-tabla-otros-temas
                 #tablaOtros
-                [objetoSesion]="objetoSesion"
+                [objetoComiteTecnico]="objetoComiteTecnico"
                 >
             </app-tabla-otros-temas>
         </mat-expansion-panel>

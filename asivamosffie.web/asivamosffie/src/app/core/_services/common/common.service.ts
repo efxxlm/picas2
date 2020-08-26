@@ -148,6 +148,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=13`);
   }
 
+  listaMiembrosComiteTecnico(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=46`);
+  }
+
 
   public forkProject():Observable<any[]>
   {
