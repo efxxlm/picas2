@@ -19,6 +19,12 @@ import { TablaRechasadaPorValidacionComponent } from './components/tabla-rechasa
 import { RechasadaPorValidacionComponent } from './components/rechasada-por-validacion/rechasada-por-validacion.component';
 import { TablaGestionarValidacionComponent } from './components/tabla-gestionar-validacion/tabla-gestionar-validacion.component';
 import { FormGestionarFuentesComponent } from './components/form-gestionar-fuentes/form-gestionar-fuentes.component';
+import { TablaDevueltaPorCoordinacionComponent } from './components/tabla-devuelta-por-coordinacion/tabla-devuelta-por-coordinacion.component';
+import { DevueltaPorCoordinacionComponent } from './components/devuelta-por-coordinacion/devuelta-por-coordinacion.component';
+import { TablaConDisponibilidadComponent } from './components/tabla-con-disponibilidad/tabla-con-disponibilidad.component';
+import { ConDisponibilidadComponent } from './components/con-disponibilidad/con-disponibilidad.component';
+import { TablaConDisponibilidadCanceladaComponent } from './components/tabla-con-disponibilidad-cancelada/tabla-con-disponibilidad-cancelada.component';
+import { ConDisponibilidadCanceladaComponent } from './components/con-disponibilidad-cancelada/con-disponibilidad-cancelada.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +39,13 @@ import { FormGestionarFuentesComponent } from './components/form-gestionar-fuent
     TablaRechasadaPorValidacionComponent,
     RechasadaPorValidacionComponent,
     TablaGestionarValidacionComponent,
-    FormGestionarFuentesComponent
+    FormGestionarFuentesComponent,
+    TablaDevueltaPorCoordinacionComponent,
+    DevueltaPorCoordinacionComponent,
+    TablaConDisponibilidadComponent,
+    ConDisponibilidadComponent,
+    TablaConDisponibilidadCanceladaComponent,
+    ConDisponibilidadCanceladaComponent
   ],
   imports: [
     CommonModule,
