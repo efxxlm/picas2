@@ -95,6 +95,7 @@ namespace asivamosffie.services
                     procesoSeleccion.Eliminado = false;
                     procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
                     procesoSeleccion.NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax);
+                    procesoSeleccion.EstadoProcesoSeleccionCodigo = "1";
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
                     
@@ -844,7 +845,7 @@ namespace asivamosffie.services
         }
 
 
-//Registrar Seguimiento cronograma
+        //Registrar Seguimiento cronograma
         public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo)
         {
             Respuesta respuesta = new Respuesta();

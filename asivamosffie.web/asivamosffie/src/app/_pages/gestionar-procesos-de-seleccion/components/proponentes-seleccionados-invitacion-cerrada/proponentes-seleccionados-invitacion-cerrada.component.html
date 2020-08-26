@@ -17,7 +17,8 @@
           </div>
         </div>
       </div>
-      <div class="row" >
+      <div class="row" 
+        *ngIf="procesoSeleccion.procesoSeleccionProponente && (procesoSeleccion.procesoSeleccionProponente.length < addressForm.value.cuantosProponentes)" >
         <div class="pr-1">
           <label for="nombresProponentes" class="label-left">Nombres de proponentes</label>
         </div>
@@ -48,11 +49,11 @@
         </p>
         <p>
           <strong>Departamento del domicilio del proponente:</strong>
-          Atlántico
+          {{ proponente.nombreDepartamento }}
         </p>
         <p>
           <strong>Municipio del domicilio del proponente:</strong>
-          Malambo
+          {{ proponente.nombreMunicipio }}
         </p>
         <p>
           <strong>Dirección del proponente:</strong>
@@ -85,7 +86,10 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' ">
+    <button mat-button color="warn" 
+            class="btn-guardar" 
+            type="submit" 
+            >
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>
