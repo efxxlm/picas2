@@ -33,6 +33,7 @@ namespace asivamosffie.services
 
         public async Task<byte[]> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId)
         {
+            //Cuando se implemente las otras plantillas el idTabla es diferente al de ConstanCodigoPlantillas
             return pTablaId switch
             {
                 (int)ConstanCodigoPlantillas.Ficha_De_Contratacion => await ReplacePlantillaFichaContratacion(pRegistroId),
@@ -649,13 +650,13 @@ namespace asivamosffie.services
                 .OrderByDescending(r => r.ContratacionId).ToList();
 
             //Quitar los que ya estan en sesionComiteSolicitud
-
-            List<SesionComiteSolicitud> ListSesionComiteSolicitudContratacion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
-            List<SesionComiteSolicitud> ListSesionComiteSolicitudProsesosSeleccion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+             
+            List<SesionComiteSolicitud> ListSesionComiteSolicitudContratacion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoPlantillas.Ficha_De_Contratacion.ToString()).ToList();
+            List<SesionComiteSolicitud> ListSesionComiteSolicitudProsesosSeleccion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoPlantillas.Ficha_De_Contratacion.ToString()).ToList();
 
             //Se comentan ya que no esta listo el caso de uso
-            //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.Include(r => r.Solicitud1).ToList();
-            //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.Include(r => r.Solicitud2).ToList();
+            List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
+            List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
 
             //foreach (var Contratacion in ListSesionComiteSolicitudContratacion)
             //{
@@ -905,11 +906,20 @@ namespace asivamosffie.services
 
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
-            return await _context.ComiteTecnico
+            ComiteTecnico comiteTecnico =await _context.ComiteTecnico
                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                 .Include(r => r.SesionComiteSolicitud)
                 .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado))
                 .FirstOrDefaultAsync();
+
+            List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
+
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            {
+                SesionComiteSolicitud.TipoSolicitudCodigo = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+            } 
+
+            return comiteTecnico;
         }
 
         public async Task<Respuesta> CreateSesionInvitadoAndParticipante(ComiteTecnico pComiteTecnico)
