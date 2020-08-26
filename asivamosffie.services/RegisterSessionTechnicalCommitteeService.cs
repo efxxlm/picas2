@@ -650,20 +650,18 @@ namespace asivamosffie.services
             //Quitar los que ya estan en sesionComiteSolicitud
              
             List<int> LisIdContratacion      = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r=> r.SolicitudId).ToList();
-            List<int> ListIdProsesosSeleccion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
+            List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
 
             //Se comentan ya que no esta listo el caso de uso
             //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
             //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
 
             //a1.RemoveAll(a => !b1.Exists(b => a.number == b.number));
+ 
+             //TODO Diego dijo que fresco
+             ListContratacion.RemoveAll(item => !LisIdContratacion.Contains(item.ContratacionId)); 
+             ListProcesoSeleccion.RemoveAll(item => !ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
 
-
-            //ListContratacion.RemoveAll( r=>  !LisIdContratacion.Exists( b=> r.ContratacionId == LisIdContratacion));
-
-            //ListContratacion.RemoveAll(item => !ListContratacion.Contains(item));
-
-       
 
 
 
@@ -929,12 +927,12 @@ namespace asivamosffie.services
                 switch (SesionComiteSolicitud.TipoSolicitudCodigo)
                 {
                     case ConstanCodigoTipoSolicitud.Contratacion:
-                        SesionComiteSolicitud.FechaCreacion = (DateTime)ListContratacion
+                        SesionComiteSolicitud.FechaSolicitud = (DateTime)ListContratacion
                       .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId)
                       .FirstOrDefault()
                       .FechaCreacion;
 
-                        SesionComiteSolicitud.UsuarioCreacion = ListContratacion
+                        SesionComiteSolicitud.NumeroSolicitud = ListContratacion
                              .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId)
                              .FirstOrDefault()
                              .NumeroSolicitud;
@@ -942,12 +940,12 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                        SesionComiteSolicitud.FechaCreacion = ListProcesoSeleccion
+                        SesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId)
                           .FirstOrDefault()
                           .FechaCreacion;
 
-                        SesionComiteSolicitud.UsuarioCreacion = ListProcesoSeleccion
+                        SesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId)
                           .FirstOrDefault()
                           .NumeroProceso; 
