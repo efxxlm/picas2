@@ -50,12 +50,15 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Juridico_Predios = 25,
 
         Tipo_Proceso_Seleccion = 27,
-
+ 
         Tipo_Proponente = 28,
-        Tipo_de_Solicitud = 29,
-        Tipo_Documento = 30,
-        Estado_Solicitud = 31,
 
+        Tipo_de_Solicitud = 29,
+
+        Tipo_Documento = 30,
+
+        Estado_Solicitud = 31,
+ 
         // Para disponibilidad presupuestal
 
         Etapa_Proceso_Seleccion = 34,

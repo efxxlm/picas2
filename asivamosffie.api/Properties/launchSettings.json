@@ -18,7 +18,7 @@
     },
     "asivamosffie.api": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false, // Modificado 12/08/2020 (de true a false para que no inicie eventos del navegador) : Faber Orozco
       "launchUrl": "api/common",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
