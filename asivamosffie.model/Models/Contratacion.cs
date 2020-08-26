@@ -9,14 +9,13 @@ namespace asivamosffie.model.Models
         {
             ContratacionProyecto = new HashSet<ContratacionProyecto>();
             Contrato = new HashSet<Contrato>();
+            SesionComiteSolicitud = new HashSet<SesionComiteSolicitud>();
         }
 
         public int ContratacionId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
-        public DateTime? FechaSolicitud { get; set; }
         public string NumeroSolicitud { get; set; }
         public string EstadoSolicitudCodigo { get; set; }
-        public bool? RegistroCompleto { get; set; }
         public int? ContratistaId { get; set; }
         public bool? EsObligacionEspecial { get; set; }
         public string ConsideracionDescripcion { get; set; }
@@ -28,9 +27,14 @@ namespace asivamosffie.model.Models
         public DateTime? FechaEnvioDocumentacion { get; set; }
         public string Observaciones { get; set; }
         public string RutaMinuta { get; set; }
+        public DateTime? FechaTramite { get; set; }
+        public bool? Estado { get; set; }
+        public bool? EsMultiProyecto { get; set; }
+        public string TipoContratacionCodigo { get; set; }
 
         public virtual Contratista Contratista { get; set; }
         public virtual ICollection<ContratacionProyecto> ContratacionProyecto { get; set; }
         public virtual ICollection<Contrato> Contrato { get; set; }
+        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
     }
 }

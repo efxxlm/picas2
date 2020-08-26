@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class Usuario
     {
+        public Usuario()
+        {
+            SesionParticipante = new HashSet<SesionParticipante>();
+        }
+
         public int UsuarioId { get; set; }
         public string Email { get; set; }
         public string Contrasena { get; set; }
@@ -25,5 +30,7 @@ namespace asivamosffie.model.Models
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string NumeroIdentificacion { get; set; }
+
+        public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }
     }
 }

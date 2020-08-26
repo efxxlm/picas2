@@ -7,7 +7,7 @@ namespace asivamosffie.model.APIModels
 {
     public class GridCommitteeSession
     {
-        public int? SesionId { get; set; }
+        public int? ComiteTecnicoId { get; set; }
         public int SesionComiteTemaId { get; set; }
         public DateTime? FechaDeComite { get; set; }
         public string Tema { get; set; }

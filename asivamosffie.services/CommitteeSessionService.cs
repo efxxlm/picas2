@@ -28,15 +28,15 @@ namespace asivamosffie.services
 
         #region "Gestion de actas";
         //Grilla sesion comite, => sesiones desarrolladas sin actas.
-        public async Task<ActionResult<List<Sesion>>> GetSesionSinActa()
+        public async Task<ActionResult<List<ComiteTecnico>>> GetSesionSinActa()
         {
             try
             {
-                 return await (from n in _context.Sesion
-                                where n.EstadoComiteCodigo == "3" && !n.Eliminado
-                                select new Sesion
+                 return await (from n in _context.ComiteTecnico
+                                where n.EstadoComiteCodigo == "3" && (bool)!n.Eliminado
+                                select new ComiteTecnico
                                 {
-                                    SesionId = n.SesionId,
+                                    ComiteTecnicoId = n.ComiteTecnicoId,
                                     NumeroComite = n.NumeroComite,
                                     FechaOrdenDia = n.FechaOrdenDia,
                                     //TipoDominioId = 38 -> Estado comite
@@ -63,10 +63,10 @@ namespace asivamosffie.services
 
 
         //Grilla sesion comite
-        public async Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSession(int? sessionId)
+        public async Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSession(int? comiteTecnicoId)
         {
 
-            List<Sesion> ListSesion = (sessionId != null ? await _context.Sesion.Where(s => s.SesionId == sessionId && !s.Eliminado).Include(s => s.SesionComiteTema).Where(s => s.SesionId == sessionId && !s.Eliminado).ToListAsync() : await _context.Sesion.Where(s => !s.Eliminado).ToListAsync());
+            List<ComiteTecnico> ListSesion = (comiteTecnicoId != null ? await _context.ComiteTecnico.Where(s => s.ComiteTecnicoId == comiteTecnicoId && (bool)!s.Eliminado).ToListAsync() : await _context.ComiteTecnico.Where(s => (bool)!s.Eliminado).ToListAsync());
 
             List<GridCommitteeSession> ListGridCommitteeSession = new List<GridCommitteeSession>();
 
@@ -75,12 +75,10 @@ namespace asivamosffie.services
             {
                 GridCommitteeSession SesionGrid = new GridCommitteeSession
                 {
-                    SesionId = ss.SesionId,
+                    ComiteTecnicoId = ss.ComiteTecnicoId,
                     FechaDeComite = ss.FechaOrdenDia,
                     EstadoComiteCodigo = ss.EstadoComiteCodigo,
                     NumeroComite = ss.NumeroComite,
-
-                    //TODO: Hacer la validacion del estado.
                     EstadoComiteText = ss.EstadoComiteCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ss.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite) : "",
                 };
                 ListGridCommitteeSession.Add(SesionGrid);
@@ -94,7 +92,7 @@ namespace asivamosffie.services
         public async Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSessionTemaById(int sessionTemaId)
         {
 
-            List<SesionComiteTema> ListSesionComiteTema = await _context.SesionComiteTema.Where(s => s.SesionTemaId == sessionTemaId && !s.Eliminado).ToListAsync();
+            List<SesionComiteTema> ListSesionComiteTema = await _context.SesionComiteTema.Where(s => s.ComiteTecnicoId == sessionTemaId && (bool)!s.Eliminado).ToListAsync();
 
             List<GridCommitteeSession> ListGridsesionComiteTema = new List<GridCommitteeSession>();
 
@@ -103,7 +101,7 @@ namespace asivamosffie.services
             {
                 GridCommitteeSession sesionComiteTemaGrid = new GridCommitteeSession
                 {
-                    SesionId = st.SesionId,
+                    ComiteTecnicoId = st.ComiteTecnicoId,
                     SesionComiteTemaId = st.SesionTemaId,
                     Tema = st.Tema,
                     Responzable = st.ResponsableCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(st.ResponsableCodigo, (int)EnumeratorTipoDominio.Estado_Comite) : "",
@@ -127,14 +125,14 @@ namespace asivamosffie.services
         {
             try
             {
-                List<Sesion> ListSesion = await _context.Sesion.Where(s => s.EstadoComiteCodigo == "2").ToListAsync();
+                List<ComiteTecnico> ListSesion = await _context.ComiteTecnico.Where(s => s.EstadoComiteCodigo == "2").ToListAsync();
                 List<GridCommitteeSession> ListGridCommitteeSessionFiduciario = new List<GridCommitteeSession>();
 
                 foreach (var ss in ListSesion)
                 {
                     GridCommitteeSession SesionGrid = new GridCommitteeSession
                     {
-                        SesionId = ss.SesionId,
+                        SesionComiteTemaId = ss.ComiteTecnicoId,
                         FechaDeComite = ss.FechaOrdenDia,
                         NumeroComite = ss.NumeroComite,
                     };
@@ -158,7 +156,7 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _context.ComiteTecnico.Where(sc => sc.EstadoSolicitudCodigo == "2" && !(bool)sc.Eliminado).ToListAsync();
+                return await _context.ComiteTecnico.Where(sc => sc.EstadoComiteCodigo == "2" && !(bool)sc.Eliminado).ToListAsync();
             }
             catch (Exception)
             {
@@ -178,16 +176,16 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(Convert.ToString(sesionId)) || newDate != null)
                 {
 
-                    var sesion = await _context.Sesion.FindAsync(sesionId);
-                    if (sesion == null)
+                    var comiteTecnico = await _context.ComiteTecnico.FindAsync(sesionId);
+                    if (comiteTecnico == null)
                     {
                         throw new Exception("No se encontro la sesion");
                     }
 
-                    sesion.FechaOrdenDia = newDate;
-                    sesion.EstadoComiteCodigo = "6"; // Aplazada. TipoDominioId = 38, 
-                    sesion.UsuarioModificacion = usuarioModifico;
-                    _context.Sesion.Update(sesion);
+                    comiteTecnico.FechaOrdenDia = newDate;
+                    comiteTecnico.EstadoComiteCodigo = "6"; // Aplazada. TipoDominioId = 38, 
+                    comiteTecnico.UsuarioModificacion = usuarioModifico;
+                    _context.ComiteTecnico.Update(comiteTecnico);
 
                     var resultado = await _context.SaveChangesAsync();
                     if (resultado > 0) //TODO: Enviar notificación a los miembros del comite indicando la nueva fecha se sesion.
@@ -217,14 +215,14 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(Convert.ToString(sesionId)))
                 {
 
-                    var sesion = await _context.Sesion.FindAsync(sesionId);
+                    var sesion = await _context.ComiteTecnico.FindAsync(sesionId);
                     if (sesion == null)
                     {
                         throw new Exception("No se encontro la sesion");
                     }
                     sesion.EstadoComiteCodigo = "7"; // Fallida. TipoDominioId = 38, 
                     sesion.UsuarioModificacion = usuarioModifico;
-                    _context.Sesion.Update(sesion);
+                    _context.ComiteTecnico.Update(sesion);
 
                     var resultado = await _context.SaveChangesAsync();
                     if (resultado > 0)
@@ -274,7 +272,7 @@ namespace asivamosffie.services
 
 
                     //Registros
-                    sesionInvitadoAntiguo.SesionId = sesionInvitado.SesionId;
+                    sesionInvitadoAntiguo.SesionInvitadoId = sesionInvitado.SesionInvitadoId;
                     sesionInvitadoAntiguo.Nombre = sesionInvitado.Nombre;
                     sesionInvitadoAntiguo.Cargo = sesionInvitado.Cargo;
                     sesionInvitadoAntiguo.Entidad = sesionInvitado.Entidad;
@@ -339,9 +337,9 @@ namespace asivamosffie.services
 
 
                     //Registros
-                    sesionComentarioAntiguo.SesionId = sesionComentario.SesionId;
+                    sesionComentarioAntiguo.ComiteTecnicoId = sesionComentario.ComiteTecnicoId;
                     sesionComentarioAntiguo.Fecha = sesionComentario.Fecha;
-                    sesionComentarioAntiguo.Miembro = sesionComentario.Miembro;
+                    sesionComentarioAntiguo.MiembroSesionParticipante = sesionComentario.MiembroSesionParticipante;
                     sesionComentarioAntiguo.Observacion = sesionComentario.Observacion;
 
                     _context.SesionComentario.Update(sesionComentarioAntiguo);
@@ -491,7 +489,7 @@ namespace asivamosffie.services
 
                     //Registros
 
-                    sesionComiteTemaAntiguo.SesionId = sesionComiteTema.SesionId;
+                    sesionComiteTemaAntiguo.SesionTemaId = sesionComiteTema.SesionTemaId;
                     sesionComiteTemaAntiguo.Tema = sesionComiteTema.Tema;
                     sesionComiteTemaAntiguo.ResponsableCodigo = sesionComiteTema.ResponsableCodigo;
                     sesionComiteTemaAntiguo.TiempoIntervencion = sesionComiteTema.TiempoIntervencion; // En minutos
@@ -535,7 +533,7 @@ namespace asivamosffie.services
 
 
 
-            Sesion tema = await _context.Sesion.FindAsync(temaId);
+            ComiteTecnico tema = await _context.ComiteTecnico.FindAsync(temaId);
             bool retorno = true;
             try
             {

@@ -16,7 +16,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateOrEditSubjects(TemaCompromiso temaCompromiso);
         Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSession(int? sessionId);
         Task<SesionInvitado> GetSesionGuesById(int sesionInvitadoId);
-        Task<ActionResult<List<Sesion>>> GetSesionSinActa();
+        Task<ActionResult<List<ComiteTecnico>>> GetSesionSinActa();
         Task<ActionResult<List<GridCommitteeSession>>> GetCommitteeSessionFiduciario();
         Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSessionTemaById(int sessionTemaId);
         Task<bool> SessionPostpone(int sesionId, DateTime newDate, string usuarioModifico);
