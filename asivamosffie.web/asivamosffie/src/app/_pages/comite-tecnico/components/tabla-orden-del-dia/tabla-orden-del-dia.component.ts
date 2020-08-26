@@ -40,7 +40,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.technicalCommitteeSessionService.getComiteGrilla()
+    this.technicalCommitteeSessionService.getListComiteGrilla()
       .subscribe( response => {
         
         this.dataSource = new MatTableDataSource( response );
@@ -81,7 +81,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       estadoComiteCodigo: this.estadosComite.convocada
     }
 
-    this.technicalCommitteeSessionService.cambiarEstadoComite( sesion )
+    this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico( sesion )
       .subscribe( respuesta => {
 
         this.openDialog( ' sesión comité ', respuesta.message )

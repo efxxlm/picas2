@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sesion } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-tabla-otros-temas',
@@ -11,7 +11,7 @@ import { Sesion } from 'src/app/_interfaces/technicalCommitteSession';
 })
 export class TablaOtrosTemasComponent implements OnInit {
 
-  @Input() objetoSesion: Sesion 
+  @Input() objetoComiteTecnico: ComiteTecnico 
 
   displayedColumns: string[] = ['responsable', 'tiempo', 'temaDolicitud', 'id'];
   dataSource = new MatTableDataSource();
@@ -45,8 +45,8 @@ export class TablaOtrosTemasComponent implements OnInit {
   }
 
   cargarRegistros(){
-    this.dataSource = new MatTableDataSource( this.objetoSesion.sesionComiteTema );
-    console.log('s', this.objetoSesion)
+    this.dataSource = new MatTableDataSource( this.objetoComiteTecnico.sesionComiteTema );
+    console.log('s', this.objetoComiteTecnico)
   }
 
 }
