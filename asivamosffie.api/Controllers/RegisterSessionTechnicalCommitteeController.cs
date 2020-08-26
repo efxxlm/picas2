@@ -108,7 +108,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetPlantillaByTablaIdRegistroId")]
-        public async Task<FileResult> GetPlantillaByTablaIdRegistroId(int pTablaId, int pRegistroId)
+        public async Task<FileResult> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId)
         {
             return File(await _registerSessionTechnicalCommitteeService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
         }
