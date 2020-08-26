@@ -25,21 +25,20 @@ export class TablaSesionComiteFiduciarioComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-
-             ) 
-  {
+  constructor ( ) {
   
   }
 
   ngOnInit(): void {
 
-    this.technicalCommitteeSessionService.getComiteGrilla()
+    //getData Tabla sesiones de comite convocadas
+    /*
+    getComiteGrilla()
       .subscribe( response => {
         let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo != this.estadosComite.sinConvocatoria )
         this.dataSource = new MatTableDataSource( lista );
       })
+    */
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;

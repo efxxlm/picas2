@@ -12,15 +12,10 @@ import { ActivatedRoute } from '@angular/router';
 export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
   objetoSesion:Sesion = {  }
+  idSesion: number;
 
-  constructor(
-                public dialog: MatDialog,
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-                private activatedRoute: ActivatedRoute,
-
-             ) 
-  { 
-
+  constructor ( public dialog: MatDialog,
+                private activatedRoute: ActivatedRoute ) { 
   }
 
   openDialogAplazarSesion() {
@@ -31,8 +26,10 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.activatedRoute.params.subscribe( parametros => {
-      this.technicalCommitteeSessionService.getSesionBySesionId( parametros.id )
+    //getData de la sesion a registrar
+    this.idSesion = Number( this.activatedRoute.snapshot.params.id );
+    /*
+    getSesionBySesionId( this.idSesion )
         .subscribe( response => {
           this.objetoSesion = response;
 
@@ -44,7 +41,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
           }, 1000);
 
         })
-    })
+    */
     
 
   }

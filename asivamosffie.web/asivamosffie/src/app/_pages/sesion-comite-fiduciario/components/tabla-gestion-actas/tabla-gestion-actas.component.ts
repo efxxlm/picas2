@@ -12,7 +12,7 @@ export interface OrdenDelDia {
 }
 
 const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '24/06/2020', numero: 'CT_00001', estadoAprobacion: 'Sin acta', estadoRegistro: 'Incompleto' }
+  { id: 0, fecha: '24/06/2020', numero: 'CF_00001', estadoAprobacion: 'Sin acta', estadoRegistro: 'Incompleto' }
 ];
 
 @Component({

@@ -3,7 +3,6 @@ import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { SolicitudesContractuales, Sesion, SesionComiteTema, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 import { forkJoin } from 'rxjs';
 import { ColumnasTabla, DataTable, SolicitudContractual } from 'src/app/_interfaces/comiteFiduciario.interfaces';
@@ -45,22 +44,18 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     {name: 'reponsable 3', value: '3'}
   ];
 
-  constructor(
-              private fb: FormBuilder,
-              public dialog: MatDialog,
-              private activatedRoute: ActivatedRoute,
-              private techicalCommitteeSessionService: TechnicalCommitteSessionService,
-              private router: Router,
-              private datepipe: DatePipe
-
-             ) 
-    {
-      this.getFecha();
-    }
+  constructor ( private fb: FormBuilder,
+                public dialog: MatDialog,
+                private activatedRoute: ActivatedRoute,
+                private router: Router,
+                private datepipe: DatePipe ) 
+  {
+    this.getFecha();
+  };
 
 
   ngOnInit(): void {
-    this.idSesion = this.activatedRoute.snapshot.params.id;
+    this.idSesion = Number( this.activatedRoute.snapshot.params.id );
     this.getSolicitudesContractuales()
   }
 
@@ -178,34 +173,6 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
     this.detalle = 'Ver detalle/Editar orden del día';
 
-    forkJoin([ 
-      this.techicalCommitteeSessionService.getListSesionComiteTemaByIdSesion( this.idSesion ),
-      this.techicalCommitteeSessionService.getSesionBySesionId( this.idSesion ),
-
-     ]).subscribe( response => {
-
-      this.objetoSesion = response[1];
-
-        let temas = this.addressForm.get('tema') as FormArray;
-
-        temas.clear();
-
-        response[0].forEach( te => {
-          let grupoTema = this.crearTema();
-
-          grupoTema.get('tema').setValue( te.tema );
-          grupoTema.get('responsable').setValue( te.responsableCodigo );
-          grupoTema.get('tiempoIntervencion').setValue( te.tiempoIntervencion );
-          grupoTema.get('url').setValue( te.rutaSoporte );
-          grupoTema.get('sesionTemaId').setValue( te.sesionTemaId );
-          
-
-          temas.push( grupoTema );
-
-        })
-
-        console.log( response );
-      })
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -254,14 +221,15 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   onSubmit() {
 
     console.log(this.addressForm);
-    if (this.addressForm.invalid) {
+    if (this.addressForm.invalid || this.solicitudesSeleccionadas.length === 0 ) {
       this.openDialog('Falta registrar información', '');
 
     }else{
-      let sesion: Sesion = {
+      let sesion = {
         sesionId: this.idSesion,
         fechaOrdenDia: this.fechaSesion,
-        sesionComiteTema: []
+        sesionComiteTema: [],
+        solicitudesContractuales: this.solicitudesSeleccionadas
       }
   
       this.tema.controls.forEach( control => {
@@ -277,13 +245,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   
         sesion.sesionComiteTema.push( sesionComiteTema );
       }) 
-  
-  
-      this.techicalCommitteeSessionService.saveEditSesionComiteTema( sesion ).subscribe( respuesta => {
-          this.openDialog( 'Sesion Comite', respuesta.message )
-          if ( respuesta.code == "200" )
-            this.router.navigate(['/comiteFiduciario']);
-      });
+
     }
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-crear-acta',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CrearActaComponent implements OnInit {
 
-  constructor() { }
+  idSesion: number;
+
+  constructor ( private activatedRoute: ActivatedRoute ) { }
 
   ngOnInit(): void {
-  }
+    this.idSesion = Number( this.activatedRoute.snapshot.params.id );
+  };
 
-}
+};

@@ -28,23 +28,20 @@ export class TablaOrdenDelDiaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-                private router: Router,
-                public dialog: MatDialog,
-                
-             ) 
+  constructor ( private router: Router,
+                public dialog: MatDialog ) 
   {
 
   }
 
   ngOnInit(): void {
 
-    this.technicalCommitteeSessionService.getComiteGrilla()
+    //Obtener data para la tabla de las ordenes creadas
+    /*getComiteGrilla()
       .subscribe( response => {
         
         this.dataSource = new MatTableDataSource( response );
-      })
+      })*/
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -81,7 +78,10 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       estadoComiteCodigo: this.estadosComite.convocada
     }
 
-    this.technicalCommitteeSessionService.cambiarEstadoComite( sesion )
+    //Servicio para convocar la sesion
+    /*
+    
+    cambiarEstadoComite( sesion )
       .subscribe( respuesta => {
 
         this.openDialog( ' sesión comité ', respuesta.message )
@@ -89,6 +89,8 @@ export class TablaOrdenDelDiaComponent implements OnInit {
         this.ngOnInit();
 
       })
+
+    */
   }
 
   OnDelete(e: number){
