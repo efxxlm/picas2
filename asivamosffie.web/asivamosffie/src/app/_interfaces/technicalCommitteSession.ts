@@ -2,8 +2,9 @@ export interface SolicitudesContractuales{
     id?: number,
     fechaSolicitud?: Date,
     tipoSolicitud?: string,
-    tipoSolicitudNumeroTabla?: number,
+    tipoSolicitudNumeroTabla?: string,
     numeroSolicitud?: string,
+    sesionComiteSolicitudId?: number
 
 }
 
@@ -67,6 +68,9 @@ export interface SesionComiteSolicitud {
     generaCompromiso?: boolean,
     cantCompromisos?: number,
     eliminado?: boolean,
+
+    tipoSolicitud?: string,
+    
 }
 
 export interface ComiteGrilla{

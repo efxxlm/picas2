@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AplazarSesionComponent } from '../aplazar-sesion/aplazar-sesion.component';
-import { Sesion } from 'src/app/_interfaces/technicalCommitteSession';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ActivatedRoute } from '@angular/router';
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 @Component({
   selector: 'app-registrar-sesion-comite-tecnico',
   templateUrl: './registrar-sesion-comite-tecnico.component.html',
@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RegistrarSesionComiteTecnicoComponent implements OnInit {
 
-  objetoSesion:Sesion = {  }
+  objetoComiteTecnico: ComiteTecnico = {  }
 
   constructor(
                 public dialog: MatDialog,
@@ -32,9 +32,9 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
   ngOnInit(): void {
 
     this.activatedRoute.params.subscribe( parametros => {
-      this.technicalCommitteeSessionService.getSesionBySesionId( parametros.id )
+      this.technicalCommitteeSessionService.getComiteTecnicoByComiteTecnicoId( parametros.id )
         .subscribe( response => {
-          this.objetoSesion = response;
+          this.objetoComiteTecnico = response;
 
           setTimeout(() => {
 

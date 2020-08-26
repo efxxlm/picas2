@@ -35,7 +35,7 @@ export class TablaSesionComiteTecnicoComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.technicalCommitteeSessionService.getComiteGrilla()
+    this.technicalCommitteeSessionService.getListComiteGrilla()
       .subscribe( response => {
         let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo != this.estadosComite.sinConvocatoria )
         this.dataSource = new MatTableDataSource( lista );
