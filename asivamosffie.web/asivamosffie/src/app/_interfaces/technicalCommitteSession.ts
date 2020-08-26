@@ -7,25 +7,34 @@ export interface SolicitudesContractuales{
 
 }
 
-export interface Sesion{
-    sesionId?: number,
-    fechaOrdenDia?: Date,
-    numeroComite?: string,
-    estadoComiteCodigo?: string,
-    esCompleto?: boolean,
-    rutaActaSesion?: string,
+export interface ComiteTecnico{
+    comiteTecnicoId?: number,
     fechaCreacion?: Date,
     usuarioCreacion?: string,
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
+    esCompleto?: boolean,
+    requiereVotacion?: boolean,
+    justificacion?: string,
+    esAprobado?: boolean,
+    fechaAplazamiento?: Date,
+    observaciones?: string,
+    rutaSoporteVotacion?: string,
+    tieneCompromisos?: boolean,
+    cantCompromisos?: number,
+    rutaActaSesion?: string,
+    fechaOrdenDia?: Date,
+    numeroComite?: string,
+    estadoComiteCodigo?: string,
+
     sesionComiteTema?: SesionComiteTema[],
+    sesionComiteSolicitud?: SesionComiteSolicitud[]
 
 }
 
 export interface SesionComiteTema{
     sesionTemaId?: number,
-    sesionId?: number,
     tema?: string,
     responsableCodigo?: string,
     tiempoIntervencion?: number,
@@ -38,24 +47,25 @@ export interface SesionComiteTema{
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
+    comiteTecnicoId?: number,
+    esProposicionesVarios?: boolean,
 
 }
 
-export interface SesionComiteTecnico{
-    sesionComiteTecnicoId?: number,
-    sesionId?: number,
+export interface SesionComiteSolicitud {
+    sesionComiteSolicitudId?: number,
+    tipoSolicitudCodigo?: string,
+    solicitudId?: number,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
     comiteTecnicoId?: number,
-    requiereVotacion?: boolean,
-    justificacion?: string,
-    esAprobado?: boolean,
+    estadoCodigo?: string,
     observaciones?: string,
     rutaSoporteVotacion?: string,
-    tieneCompromisos?: boolean,
+    generaCompromiso?: boolean,
     cantCompromisos?: number,
-    usuarioCreacion?: string,
-    fechaCreacion?: Date,
-    usuarioModificacion?: string,
-    fechaModificacion?: Date,
     eliminado?: boolean,
 }
 

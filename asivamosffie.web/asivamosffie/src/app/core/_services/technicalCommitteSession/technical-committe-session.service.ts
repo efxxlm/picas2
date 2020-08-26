@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Respuesta } from '../common/common.service';
 import { environment } from 'src/environments/environment';
-import { SolicitudesContractuales, SesionComiteTema, Sesion, ComiteGrilla } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 import { Session } from 'protractor';
 
 
@@ -18,27 +18,23 @@ export class TechnicalCommitteSessionService {
   { }
 
   getListSolicitudesContractuales( fechaComite ){
-    return this.http.get<SolicitudesContractuales[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetListSolicitudesContractuales?FechaComite=${ fechaComite }`);
+    return this.http.get<SolicitudesContractuales[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetListSesionComiteSolicitudByFechaOrdenDelDia?pFechaComite=${ fechaComite }`);
   }
 
-  saveEditSesionComiteTema( sesion: Sesion ){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/saveEditSesionComiteTema`, sesion );
-  }
+  createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( comite: ComiteTecnico ){
+     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud`, comite );
+   }
 
-  getComiteGrilla(){
-    return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetComiteGrilla`);
-  }
+  getListComiteGrilla(){
+     return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getListComiteGrilla`);
+   }
 
-  getListSesionComiteTemaByIdSesion( id: number){
-    return this.http.get<SesionComiteTema[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getListSesionComiteTemaByIdSesion?pIdSesion=${ id }`);
-  }
+  cambiarEstadoComiteTecnico( comite: ComiteTecnico ){
+     return this.http.put<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/CambiarEstadoComiteTecnico`, comite);
+   }
 
-  cambiarEstadoComite( sesion: Sesion ){
-    return this.http.put<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/cambiarEstadoComite`, sesion);
-  }
-
-  getSesionBySesionId( id: number ){
-    return this.http.get<Sesion>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetSesionBySesionId?pSesionId=${ id }`);
-  }
+  getComiteTecnicoByComiteTecnicoId( id: number ){
+     return this.http.get<ComiteTecnico>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
+   }
 
 }

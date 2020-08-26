@@ -128,7 +128,9 @@ namespace asivamosffie.services
                                Eliminado = false,
                                UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
                                FechaCreacion = DateTime.Now,
-                               EsProposicionesVarios = true
+                               EsProposicionesVarios = true,
+                               Tema = "",
+                               
                            });
 
                     strCreateEdit = "CREAR COMITE TECNICO  + SESIÓN COMITE SOLICITUD + SESIÓN COMITE TEMA";
