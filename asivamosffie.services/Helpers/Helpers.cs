@@ -10,8 +10,8 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
 using System; 
-using System.IO; 
-   
+using System.IO;
+using asivamosffie.model.APIModels;
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -22,13 +22,24 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
+        public static string HtmlConvertirTextoPlano(string origen)
+        {
+            DocumentoHtml documento = new DocumentoHtml();
+            origen = documento.ConvertirATextoPlano(origen);
+            return origen.Replace("<", "").Replace(">", "").Replace("/", "").Replace("\\", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "");
+        }
+        public static string HtmlStringLimpio(string valor)
+        {
+            valor = Regex.Replace(valor, @"\t|\n|\r", "");
+            return HtmlConvertirTextoPlano(valor);
+        }
+
+
         public double CentimetrosAMedidaPDF(double centimetros)
         {
             return (double)(centimetros * 0.393701 * 72);
         }
-
-
-     
+         
         public static string encryptSha1(string password)
         {
 

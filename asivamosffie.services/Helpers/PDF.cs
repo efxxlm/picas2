@@ -15,29 +15,27 @@ using System.IO;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.pipeline;
-
-using System;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using System.IO;
-using iTextSharp.tool.xml;
+using DinkToPdf;
+using DinkToPdf.Contracts; 
 using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.pipeline.html;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
-
-using iTextSharp.tool.xml.pipeline;
-
+ 
 namespace asivamosffie.services.Helpers
 {
     public class PDF
     {
         private readonly devAsiVamosFFIEContext _context;
+        public readonly IConverter _converter;
 
-        public PDF(devAsiVamosFFIEContext context)
+        public PDF(devAsiVamosFFIEContext context, IConverter converter)
         {
             _context = context;
+            _converter = converter; 
         }
+
+
 
         public static byte[] Convertir(Plantilla pPlantilla)
         {

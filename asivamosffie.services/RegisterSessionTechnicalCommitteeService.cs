@@ -4,26 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using lalupa.Authorization.JwtHelpers;
-using asivamosffie.api.Controllers;
-using AuthorizationTest.JwtHelpers;
-using asivamosffie.services.Exceptions;
-using asivamosffie.services.Helpers;
+using Microsoft.EntityFrameworkCore; 
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
-using System.IO;
-using System.Text;
-using ClosedXML.Excel;
-using ExcelDataReader;
-using Microsoft.AspNetCore.Http;
-using OfficeOpenXml;
-using System.Globalization;
-using asivamosffie.services.Validators;
-using asivamosffie.services.Filters;
-using System.Data.Common;
-using Z.EntityFramework.Plus;
+using System.IO; 
+using Z.EntityFramework.Plus; 
+using DinkToPdf;
+using DinkToPdf.Contracts; 
+
 
 namespace asivamosffie.services
 {
@@ -32,12 +21,13 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IProjectContractingService _IProjectContractingService;
         private readonly devAsiVamosFFIEContext _context;
-
-        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, ICommonService commonService, IProjectContractingService projectContractingService)
+        public readonly IConverter _converter;
+        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, IConverter converter, ICommonService commonService, IProjectContractingService projectContractingService)
         {
             _IProjectContractingService = projectContractingService;
             _commonService = commonService;
             _context = context;
+            _converter = converter;
         }
         public async Task<List<dynamic>> GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime pFechaOrdenDelDia)
         {
@@ -438,8 +428,49 @@ namespace asivamosffie.services
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-            return PDF.Convertir(Plantilla);
+            return ConvertirPDF(Plantilla);
 
+        }
+        public byte[] ConvertirPDF(Plantilla pPlantilla)
+        { 
+            string strEncabezado = "";
+            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            { 
+                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            }
+
+            var globalSettings = new GlobalSettings
+            {
+                ImageQuality = 1080,
+                PageOffset = 0 ,
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings {
+                    Top = pPlantilla.MargenArriba,
+                    Left = pPlantilla.MargenIzquierda,
+                    Right = pPlantilla.MargenDerecha,
+                    Bottom = pPlantilla.MargenAbajo
+                },
+                DocumentTitle = DateTime.Now.ToString(),
+            };
+
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = pPlantilla.Contenido,
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet =  Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css")},
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false ,Spacing =18 ,Right ="Poner logo"},
+                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]"},
+            };
+
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings },
+            };
+
+            return _converter.Convert(pdf);
         }
 
         public string ReemplazarDatosPlantillaContratacion(string pPlantilla, Contratacion pContratacion)
@@ -631,7 +662,7 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.CONTRATISTA_NUMERO_IDENTIFICACION_RE_LEGAL:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "?????????????");
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, " ");
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.CONTRATISTA_NUMERO_INVITACION:
