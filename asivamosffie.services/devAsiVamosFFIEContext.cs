@@ -90,6 +90,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+ 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -2070,7 +2071,6 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<SesionComiteSolicitud>(entity =>
             {
                 entity.Property(e => e.EstadoCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -2105,36 +2105,6 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ComiteTecnicoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SesionComiteSolicitud_ComiteTecnico");
-
-                entity.HasOne(d => d.Solicitud)
-                    .WithMany(p => p.SesionComiteSolicitud)
-                    .HasForeignKey(d => d.SolicitudId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteSolicitud_Contratacion");
-
-                entity.HasOne(d => d.SolicitudNavigation)
-                    .WithMany(p => p.SesionComiteSolicitud)
-                    .HasForeignKey(d => d.SolicitudId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteSolicitud_ControversiaContractual");
-
-                entity.HasOne(d => d.Solicitud1)
-                    .WithMany(p => p.SesionComiteSolicitud)
-                    .HasForeignKey(d => d.SolicitudId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteSolicitud_DefensaJudicial");
-
-                entity.HasOne(d => d.Solicitud2)
-                    .WithMany(p => p.SesionComiteSolicitud)
-                    .HasForeignKey(d => d.SolicitudId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteSolicitud_NovedadContractual");
-
-                entity.HasOne(d => d.Solicitud3)
-                    .WithMany(p => p.SesionComiteSolicitud)
-                    .HasForeignKey(d => d.SolicitudId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SesionComiteSolicitud_ProcesoSeleccion");
             });
 
             modelBuilder.Entity<SesionComiteTecnicoCompromiso>(entity =>

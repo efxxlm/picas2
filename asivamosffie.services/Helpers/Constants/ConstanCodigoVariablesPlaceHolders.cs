@@ -72,6 +72,7 @@
         public const string  CONDICIONES_ASIGNACION_PUNTAJE_ABIERTA_PS="64";
         public const string  RESPONSABLES_ABIERTA_PS="65";
         public const string  EVALUACION_DESCRIPCION_ABIERTA_PS = "66";
+        public const string  NOMBRE_PRIVADA_PS = "67";
         #endregion
     }
 }

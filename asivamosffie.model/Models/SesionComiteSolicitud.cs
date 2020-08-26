@@ -28,11 +28,6 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
-        public virtual Contratacion Solicitud { get; set; }
-        public virtual DefensaJudicial Solicitud1 { get; set; }
-        public virtual NovedadContractual Solicitud2 { get; set; }
-        public virtual ProcesoSeleccion Solicitud3 { get; set; }
-        public virtual ControversiaContractual SolicitudNavigation { get; set; }
         public virtual ICollection<SesionSolicitudCompromiso> SesionSolicitudCompromiso { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
         public virtual ICollection<SesionSolicitudVoto> SesionSolicitudVoto { get; set; }

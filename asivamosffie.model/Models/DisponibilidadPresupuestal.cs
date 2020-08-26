@@ -28,6 +28,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? RegistroCompleto { get; set; }
+
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
     }
 }

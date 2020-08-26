@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
         public int SesionTemaId { get; set; }
         public string Tema { get; set; }
         public string ResponsableCodigo { get; set; }
-        public int TiempoIntervencion { get; set; }
+        public int? TiempoIntervencion { get; set; }
         public string RutaSoporte { get; set; }
         public string Observaciones { get; set; }
         public bool? EsAprobado { get; set; }
