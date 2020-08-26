@@ -124,7 +124,7 @@ namespace asivamosffie.services
                     //Agregar Tema Proposiciones y Varios
                     pComiteTecnico.SesionComiteTema.Add(
                            new SesionComiteTema
-                           {
+                           { 
                                Eliminado = false,
                                UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
                                FechaCreacion = DateTime.Now,
@@ -140,6 +140,11 @@ namespace asivamosffie.services
 
                     //Registros
                     pComiteTecnico.EsCompleto = ValidarCamposComiteTecnico(pComiteTecnico);
+
+                    pComiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
+                    pComiteTecnico.NumeroComite =await _commonService.EnumeradorComiteTecnico();
+
+
                     foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
                     {
                         //Auditoria
@@ -433,6 +438,7 @@ namespace asivamosffie.services
             return ConvertirPDF(Plantilla);
 
         }
+
         public async Task<byte[]> ReplacePlantillaProcesosSeleccion(int pProcesoSeleccionId)
         {
             ProcesoSeleccion procesoSeleccion = await _context.ProcesoSeleccion
@@ -447,6 +453,7 @@ namespace asivamosffie.services
             return ConvertirPDF(Plantilla);
 
         }
+
         public string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
