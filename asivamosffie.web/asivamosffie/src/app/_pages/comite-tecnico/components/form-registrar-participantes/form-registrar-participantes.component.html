@@ -17,8 +17,8 @@
       <div class="col">
         <mat-form-field class="select-width">
           <mat-select formControlName="miembrosParticipantes" multiple required>
-            <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro.value">
-              {{ miembro.name }}
+            <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro">
+              {{ miembro.nombres }} {{ miembro.apellidos }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -44,6 +44,7 @@
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
                     <input matInput #nombreInvitado type="text" formControlName="nombre" maxlength="100" required>
+                    <input type="hidden" formControlName="sesionInvitadoId">
                   </mat-form-field>
                   <span class="contador">{{100 - nombreInvitado.value.length}}</span>
                 </div>
