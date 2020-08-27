@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 
-
 @Component({
-  selector: 'app-votacion-solicitud',
-  templateUrl: './votacion-solicitud.component.html',
-  styleUrls: ['./votacion-solicitud.component.scss']
+  selector: 'app-votacion-solicitud-multiple',
+  templateUrl: './votacion-solicitud-multiple.component.html',
+  styleUrls: ['./votacion-solicitud-multiple.component.scss']
 })
-export class VotacionSolicitudComponent {
+export class VotacionSolicitudMultipleComponent implements OnInit {
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
   addressForm = this.fb.array([
@@ -56,14 +55,10 @@ export class VotacionSolicitudComponent {
     });
   }
 
-  // cargarDatos() {
-  //   const aprobacion: any[] = ['', '', ''];
-
-  //   aprobacion.forEach(valor => this.aprobacion.push(this.fb.control(valor)));
-  //   aprobacion.forEach(valor => this.observaciones.push(this.fb.control(valor)));
-  // }
-
   constructor(private fb: FormBuilder) { }
+  ngOnInit(): void {
+    throw new Error("Method not implemented.");
+  }
 
   agregarAprovacion() {
     this.aprobacion.push(this.fb.control(null, Validators.required));
@@ -72,4 +67,5 @@ export class VotacionSolicitudComponent {
   onSubmit() {
     alert('Thanks!');
   }
+
 }
