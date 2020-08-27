@@ -69,6 +69,19 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
         this.objetoComiteTecnico = response[5];
 
+        setTimeout(() => {
+
+          let btnRegistrarSolicitudes = document.getElementById( 'btnRegistrarSolicitudes' );
+          let btnOtrosTemas = document.getElementById( 'btnOtrosTemas' );
+          let btnProposiciones = document.getElementById( 'btnProposiciones' );
+          
+
+          btnRegistrarSolicitudes.click();
+          btnOtrosTemas.click();
+          btnProposiciones.click();
+
+        }, 1000);
+
         let listaSeleccionados = [];
         this.objetoComiteTecnico.sesionParticipante.forEach( p => {
           let participante: any = {}

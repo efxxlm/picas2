@@ -1,22 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 
-export interface OrdenDelDia {
-  id: number;
-  responsable: string;
-  tiempo: string;
-  tema: string;
-  votacion: boolean;
-}
-
-const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, responsable: '23/06/2020', tiempo: 'SA0006', tema: 'Apertura de proceso de selección', votacion: false }
-];
 
 @Component({
   selector: 'app-tabla-registrar-otros-temas',
@@ -25,8 +15,10 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
+  @Input() objetoComiteTecnico: ComiteTecnico;
+
   displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -68,6 +60,14 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
     this.dialog.open(VotacionSolicitudMultipleComponent, {
       width: '70em'
     });
+  }
+
+  cargarRegistro(){
+
+    let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
+
+    this.dataSource = new MatTableDataSource( lista );
+    
   }
 
 }
