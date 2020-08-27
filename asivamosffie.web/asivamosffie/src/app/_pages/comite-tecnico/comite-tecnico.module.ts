@@ -27,6 +27,7 @@ import { CrearActaComponent } from './components/crear-acta/crear-acta.component
 import { FormSolicitudComponent } from './components/form-solicitud/form-solicitud.component';
 import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
 import { VotacionSolicitudMultipleComponent } from './components/votacion-solicitud-multiple/votacion-solicitud-multiple.component';
+import { TablaProposicionesYVariosComponent } from './components/tabla-proposiciones-y-varios/tabla-proposiciones-y-varios.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { VotacionSolicitudMultipleComponent } from './components/votacion-solici
     CrearActaComponent,
     FormSolicitudComponent,
     VerificarCumplimientoComponent,
-    VotacionSolicitudMultipleComponent
+    VotacionSolicitudMultipleComponent,
+    TablaProposicionesYVariosComponent
   ],
   imports: [
     CommonModule,

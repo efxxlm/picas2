@@ -19,11 +19,11 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 ];
 
 @Component({
-  selector: 'app-tabla-registrar-otros-temas',
-  templateUrl: './tabla-registrar-otros-temas.component.html',
-  styleUrls: ['./tabla-registrar-otros-temas.component.scss']
+  selector: 'app-tabla-proposiciones-y-varios',
+  templateUrl: './tabla-proposiciones-y-varios.component.html',
+  styleUrls: ['./tabla-proposiciones-y-varios.component.scss']
 })
-export class TablaRegistrarOtrosTemasComponent implements OnInit {
+export class TablaProposicionesYVariosComponent implements OnInit {
 
   displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
