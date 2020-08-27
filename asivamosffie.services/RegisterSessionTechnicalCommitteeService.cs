@@ -746,6 +746,7 @@ namespace asivamosffie.services
         {
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Convocar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
+            List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
 
             try
             {
@@ -760,17 +761,33 @@ namespace asivamosffie.services
                 comiteTecnico.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                 comiteTecnico.FechaModificacion = DateTime.Now;
 
+
+                //Plantilla
+                string TipoPlantilla = ((int)ConstanCodigoPlantillas.Convocar_Comite_Tecnico).ToString();
+                 Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).FirstOrDefault();
+                foreach (Dominio placeholderDominio in placeholders)
+                {
+                    switch (placeholderDominio.Codigo)
+                    {
+                        case ConstanCodigoVariablesPlaceHolders.FECHA_SESION_CONVOCAR_COMITE:
+                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, comiteTecnico.FechaCreacion.ToString("yyyy-MM-dd"));
+                            break;
+
+                        case ConstanCodigoVariablesPlaceHolders.ORDEN_DEL_DIA_CONVOCAR_COMITE:
+                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre,
+                              !string.IsNullOrEmpty(comiteTecnico.FechaOrdenDia.ToString()) ? ((DateTime)comiteTecnico.FechaOrdenDia).ToString("yyyy-MM-dd"):" "); ;
+                            break;
+                    }
+                } 
                 //Notificar a los participantes
+
                 foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
                 {
-                    if (!string.IsNullOrEmpty(SesionParticipante.Usuario.Email)) {
-                    
-                    
-
+                    if (!string.IsNullOrEmpty(SesionParticipante.Usuario.Email)) 
+                    { 
+                       // _commonService.e
                     }
-                }
-              
-
+                } 
 
                 _context.SaveChanges();
                 return
