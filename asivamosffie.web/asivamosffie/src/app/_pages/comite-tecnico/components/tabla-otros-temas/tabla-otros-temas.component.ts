@@ -45,7 +45,9 @@ export class TablaOtrosTemasComponent implements OnInit {
   }
 
   cargarRegistros(){
-    this.dataSource = new MatTableDataSource( this.objetoComiteTecnico.sesionComiteTema );
+    let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
+
+    this.dataSource = new MatTableDataSource( lista );
     console.log('s', this.objetoComiteTecnico)
   }
 

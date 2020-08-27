@@ -22,7 +22,16 @@
                     Validación de solicitudes contractuales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-validacion-solicitudes-contractuales></app-tabla-validacion-solicitudes-contractuales>
+            <button 
+                (click)="tablaValidaciones.cargarRegistro()"
+                style="display: none;"
+                id="btnTablaValidaciones"
+            ></button>
+            <app-tabla-validacion-solicitudes-contractuales
+                #tablaValidaciones
+                [ObjetoComiteTecnico]="objetoComiteTecnico"
+                >
+            </app-tabla-validacion-solicitudes-contractuales>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -50,7 +59,19 @@
                     Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-proposiciones-varios></app-form-proposiciones-varios>
+
+            <button 
+                type="button" 
+                (click)="proposiciones.cargarRegistros()" 
+                style="display: none;"
+                id=btnProposiciones>
+            </button>
+            
+            <app-form-proposiciones-varios
+                #proposiciones
+                [objetoComiteTecnico]="objetoComiteTecnico"
+            >
+        </app-form-proposiciones-varios>
         </mat-expansion-panel>
     </mat-accordion>
 

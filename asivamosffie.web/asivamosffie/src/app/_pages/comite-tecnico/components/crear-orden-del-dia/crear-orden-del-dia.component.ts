@@ -117,8 +117,6 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
         temas.clear();
 
-        console.log( response[0].sesionComiteTema );
-
         response[0].sesionComiteTema = response[0].sesionComiteTema.filter( t => t.esProposicionesVarios != true )
 
         response[0].sesionComiteTema.forEach( te => {

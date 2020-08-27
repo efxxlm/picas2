@@ -11,7 +11,7 @@ import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 })
 export class RegistrarSesionComiteTecnicoComponent implements OnInit {
 
-  objetoComiteTecnico: ComiteTecnico = {  }
+  objetoComiteTecnico: ComiteTecnico = {};
 
   constructor(
                 public dialog: MatDialog,
@@ -36,10 +36,18 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
         .subscribe( response => {
           this.objetoComiteTecnico = response;
 
+          console.log( response )
+
           setTimeout(() => {
 
             let btnOtros = document.getElementById( 'btnOtros' )
+            let btnTablaValidaciones = document.getElementById( 'btnTablaValidaciones' )
+            let btnProposiciones = document.getElementById( 'btnProposiciones' )
+            
+
             btnOtros.click();
+            btnTablaValidaciones.click();
+            btnProposiciones.click();
 
           }, 1000);
 
