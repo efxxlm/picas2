@@ -91,6 +91,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
       },
+      {
+        path: 'compromisosActasComite',
+        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
+          .then( module => module.CompromisosActasComiteModule )
+      }
     ]
 
   },

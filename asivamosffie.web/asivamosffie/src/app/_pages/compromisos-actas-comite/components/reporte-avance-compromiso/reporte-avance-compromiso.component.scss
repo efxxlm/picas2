@@ -1,0 +1,24 @@
+span {
+  color: #174193;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2em;
+}
+
+.mr-right-1 {
+  margin-right: .5em;
+}
+
+.flex-column {
+  margin-top: 1em;
+  display: flex;
+  flex-flow: column;
+}
+
+.w-30 {
+  width: 30%;
+}
