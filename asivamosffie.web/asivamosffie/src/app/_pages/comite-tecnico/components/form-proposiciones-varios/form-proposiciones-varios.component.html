@@ -19,6 +19,7 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #temaInput type="text" formControlName="tema" maxlength="100" required>
+                  <input type="hidden" formControlName="sesionTemaId" >
                 </mat-form-field>
                 <span class="contador">{{50 - temaInput.value.length}}</span>
               </div>
@@ -32,8 +33,8 @@
                   <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="responsable" required>
-                        <mat-option *ngFor="let responsable of responsablesArray" [value]="responsable.value">
-                          {{ responsable.name }}
+                        <mat-option *ngFor="let responsable of listaMiembros" [value]="responsable">
+                          {{ responsable.nombre }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -64,7 +65,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="full-width">
-                  <input matInput type="text" formControlName="tema" maxlength="100" required>
+                  <input matInput type="text" formControlName="url" maxlength="100" required>
                 </mat-form-field>
               </div>
             </div>

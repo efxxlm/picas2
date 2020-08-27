@@ -810,6 +810,7 @@ namespace asivamosffie.services
                     {
                         CreateEdit = "CREAR SESIÓN COMITE TEMA";
                         SesionComiteTema.FechaCreacion = DateTime.Now;
+                        SesionComiteTema.UsuarioCreacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion;
                         SesionComiteTema.Eliminado = false;
                         _context.SesionComiteTema.Add(SesionComiteTema);
                     }
@@ -828,7 +829,7 @@ namespace asivamosffie.services
                         sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
                         sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.ObservacionesDecision;
                         sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
-                        sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
+                        //sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
                     }
                     _context.SaveChanges();
                 }

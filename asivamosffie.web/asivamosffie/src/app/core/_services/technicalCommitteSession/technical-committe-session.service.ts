@@ -37,4 +37,8 @@ export class TechnicalCommitteSessionService {
      return this.http.get<ComiteTecnico>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
    }
 
+   createEditSesionComiteTema( lista: SesionComiteTema[] ){
+     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionComiteTema`, lista );
+   }
+
 }

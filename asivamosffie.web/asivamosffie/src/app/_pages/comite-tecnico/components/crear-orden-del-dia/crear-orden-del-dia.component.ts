@@ -100,11 +100,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       this.objetoComiteTecnico = response[0];
       this.listaMiembros = response[1];
       console.log( response[0] )
-      this.solicitudesContractuales = response[0].sesionComiteSolicitud.map( sol => {
-        //sol.fechaSolicitud = sol.
-        sol.tipoSolicitud = sol.tipoSolicitudCodigo;
-        return sol;
-      } );
+      this.solicitudesContractuales = response[0].sesionComiteSolicitud;
 
       setTimeout(() => {
             
