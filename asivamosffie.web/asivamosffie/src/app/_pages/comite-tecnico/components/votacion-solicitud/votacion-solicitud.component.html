@@ -47,8 +47,8 @@
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
               <div class="d-flex">
-                <quill-editor class="quill-editor-style card" #observaciones [styles]="editorStyle" [modules]="config" required
-                  (onContentChanged)="maxLength($event, 1000)" required></quill-editor>
+                <quill-editor class="quill-editor-style card" #observaciones [styles]="editorStyle" [modules]="config"
+                  required (onContentChanged)="maxLength($event, 1000)" required></quill-editor>
                 <div class="d-flex align-items-center">
                   <!-- <span class="contador miles" *ngIf="observaciones !== null">
                     {{1000 - textoLimpio(observaciones)}}
@@ -67,4 +67,8 @@
 
   <!-- <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
               (onContentChanged)="maxLength($event, 500)" formControlName="i"></quill-editor> -->
+
+  <button mat-button color="warn" class="btn-guardar" type="submit">
+    <img src="assets/img/icon/guardar.svg" alt="guardar">
+  </button>
 </form>

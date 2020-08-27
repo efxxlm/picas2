@@ -26,6 +26,7 @@ import { AplazarSesionComponent } from './components/aplazar-sesion/aplazar-sesi
 import { CrearActaComponent } from './components/crear-acta/crear-acta.component';
 import { FormSolicitudComponent } from './components/form-solicitud/form-solicitud.component';
 import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
+import { VotacionSolicitudMultipleComponent } from './components/votacion-solicitud-multiple/votacion-solicitud-multiple.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { VerificarCumplimientoComponent } from './components/verificar-cumplimie
     AplazarSesionComponent,
     CrearActaComponent,
     FormSolicitudComponent,
-    VerificarCumplimientoComponent
+    VerificarCumplimientoComponent,
+    VotacionSolicitudMultipleComponent
   ],
   imports: [
     CommonModule,

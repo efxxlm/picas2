@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
+import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
 
 export interface OrdenDelDia {
   id: number;
@@ -41,6 +42,12 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   openDialogValidacionSolicitudes() {
     this.dialog.open(VotacionSolicitudComponent, {
+      width: '70em'
+    });
+  }
+
+  openDialogValidacionSolicitudesMultiple() {
+    this.dialog.open(VotacionSolicitudMultipleComponent, {
       width: '70em'
     });
   }
