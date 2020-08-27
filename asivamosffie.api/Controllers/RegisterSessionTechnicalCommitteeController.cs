@@ -22,6 +22,44 @@ namespace asivamosffie.api.Controllers
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
 
+        [HttpPost]
+        [Route("GetNoRequiereVotacionSesionComiteSolicitud")]
+        public async Task<IActionResult> GetNoRequiereVotacionSesionComiteSolicitud([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteSolicitud.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.GetNoRequiereVotacionSesionComiteSolicitud(pSesionComiteSolicitud);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
+        [HttpPost]
+        [Route("CreateEditSesionSolicitudVoto")]
+        public async Task<IActionResult> CreateEditSesionSolicitudVoto([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteSolicitud.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditSesionSolicitudVoto(pSesionComiteSolicitud);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
 
         [HttpPost]

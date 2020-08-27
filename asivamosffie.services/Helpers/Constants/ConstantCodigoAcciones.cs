@@ -48,7 +48,7 @@
 
         public const string Eliminar_Sesion_Invitado = "51";
         public const string Crear_Editar_Sesion_Solicitud_Voto = "52"; 
-        public const string Crear_Editar_Sesion_Comite_Tema = "53";
-
+        public const string Crear_Editar_Sesion_Comite_Tema = "53"; 
+        public const string No_Requiere_Votacion_Sesion_Comite_Solicitud = "54";
     }
 }
