@@ -634,11 +634,17 @@ namespace asivamosffie.services
                 {
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION PROPONENTE";
+                    procesoSeleccionProponente.FechaCreacion = DateTime.Now;
+                    procesoSeleccionProponente.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion;
+                    procesoSeleccionProponente.Eliminado = false;
                     _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
                 }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO SELECCION PROPONENTE";
+                    ProcesoSeleccionProponenteAntiguo.FechaModificacion = DateTime.Now;
+                    ProcesoSeleccionProponenteAntiguo.Eliminado = false;
+                    ProcesoSeleccionProponenteAntiguo.UsuarioModificacion = procesoSeleccionProponente.UsuarioModificacion;
                     ProcesoSeleccionProponenteAntiguo = _context.ProcesoSeleccionProponente.Find(procesoSeleccionProponente.ProcesoSeleccionProponenteId);
 
                     //Registros
