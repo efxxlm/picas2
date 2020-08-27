@@ -11,6 +11,9 @@
         Registros_Cronograma_Proceso_seleccion = 8,
         Proceso_de_seleccion_Privada = 9,
         Proceso_de_seleccion_Cerrada = 10,
-        Proceso_de_seleccion_Abierta = 11
+        Proceso_de_seleccion_Abierta = 11,
+        Convocar_Comite_Tecnico = 12,
+        Tabla_Orden_Del_Dia = 13
+
     }
 }

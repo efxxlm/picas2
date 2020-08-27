@@ -8,24 +8,24 @@ import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multip
 
 export interface OrdenDelDia {
   id: number;
-  fecha: string;
-  numero: string;
-  tipo: string;
+  responsable: string;
+  tiempo: string;
+  tema: string;
   votacion: boolean;
 }
 
 const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '23/06/2020', numero: 'SA0006', tipo: 'Apertura de proceso de selección', votacion: false }
+  { id: 0, responsable: '23/06/2020', tiempo: 'SA0006', tema: 'Apertura de proceso de selección', votacion: false }
 ];
 
 @Component({
-  selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
-  templateUrl: './tabla-registrar-validacion-solicitudes-contractiales.component.html',
-  styleUrls: ['./tabla-registrar-validacion-solicitudes-contractiales.component.scss']
+  selector: 'app-tabla-proposiciones-y-varios',
+  templateUrl: './tabla-proposiciones-y-varios.component.html',
+  styleUrls: ['./tabla-proposiciones-y-varios.component.scss']
 })
-export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
+export class TablaProposicionesYVariosComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
+  displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -39,18 +39,6 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   constructor(
     public dialog: MatDialog
   ) { }
-
-  openDialogValidacionSolicitudes() {
-    this.dialog.open(VotacionSolicitudComponent, {
-      width: '70em'
-    });
-  }
-
-  openDialogValidacionSolicitudesMultiple() {
-    this.dialog.open(VotacionSolicitudMultipleComponent, {
-      width: '70em'
-    });
-  }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -68,6 +56,18 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+  }
+
+  openDialogValidacionSolicitudes() {
+    this.dialog.open(VotacionSolicitudComponent, {
+      width: '70em'
+    });
+  }
+
+  openDialogValidacionSolicitudesMultiple() {
+    this.dialog.open(VotacionSolicitudMultipleComponent, {
+      width: '70em'
+    });
   }
 
 }
