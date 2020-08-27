@@ -752,10 +752,12 @@ namespace asivamosffie.services
             {
                 ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                    .Include(r => r.SesionComiteTema)
                     .Include(r => r.SesionParticipante)
                     .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
 
                 comiteTecnico.SesionParticipante = comiteTecnico.SesionParticipante.Where(r => !(bool)r.Eliminado).ToList();
+                comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
 
                 comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
                 comiteTecnico.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
@@ -764,7 +766,42 @@ namespace asivamosffie.services
 
                 //Plantilla
                 string TipoPlantilla = ((int)ConstanCodigoPlantillas.Convocar_Comite_Tecnico).ToString();
-                 Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).FirstOrDefault();
+                Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).FirstOrDefault();
+
+
+                string TipoPlantilla2 = ((int)ConstanCodigoPlantillas.Tabla_Orden_Del_Dia).ToString();
+                Plantilla TablaTemasRegistro = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla2).Include(r => r.Encabezado).FirstOrDefault();
+                string strRegistros = "";
+
+                List<Dominio> ListaParametricas = _context.Dominio.ToList();
+
+                foreach (var item in comiteTecnico.SesionComiteTema)
+                {
+                    strRegistros += TablaTemasRegistro.Contenido;
+
+                    foreach (Dominio placeholderDominio in placeholders)
+                    {
+                        switch (placeholderDominio.Codigo)
+                        {
+                            case ConstanCodigoVariablesPlaceHolders.TEMAS_ORDEN_DIA:
+                                plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, item.Tema);
+                                break;
+
+                            case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_TEMA_ORDEN_DIA:
+                                    plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, 
+                                    !string.IsNullOrEmpty(item.ResponsableCodigo) ? ListaParametricas.Where(r => r.Codigo == item.ResponsableCodigo
+                                    && r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico).FirstOrDefault().Nombre : ""
+                                    ); 
+                                break;
+
+                            case ConstanCodigoVariablesPlaceHolders.TIEMPO_TEMA_ORDEN_DIA:
+                                plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, item.TiempoIntervencion.ToString());
+                                break; 
+                        }
+                    }
+
+                }
+
                 foreach (Dominio placeholderDominio in placeholders)
                 {
                     switch (placeholderDominio.Codigo)
@@ -774,20 +811,19 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.ORDEN_DEL_DIA_CONVOCAR_COMITE:
-                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre,
-                              !string.IsNullOrEmpty(comiteTecnico.FechaOrdenDia.ToString()) ? ((DateTime)comiteTecnico.FechaOrdenDia).ToString("yyyy-MM-dd"):" "); ;
+                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, strRegistros); 
                             break;
                     }
-                } 
+                }
                 //Notificar a los participantes
 
                 foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
                 {
-                    if (!string.IsNullOrEmpty(SesionParticipante.Usuario.Email)) 
-                    { 
-                       // _commonService.e
+                    if (!string.IsNullOrEmpty(SesionParticipante.Usuario.Email))
+                    {
+                        Helpers.Helpers.EnviarCorreo("", "Recuperar contraseña", "", "", "", "",0);
                     }
-                } 
+                }
 
                 _context.SaveChanges();
                 return
@@ -1262,8 +1298,8 @@ namespace asivamosffie.services
                           .NumeroProceso;
                         break;
                 }
-                 
-               SesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+
+                SesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
             }
 
             return comiteTecnico;

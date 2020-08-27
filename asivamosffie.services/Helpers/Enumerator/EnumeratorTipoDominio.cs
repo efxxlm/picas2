@@ -75,7 +75,11 @@ namespace asivamosffie.services.Helpers.Enumerator
  
         Dias_Comite = 43,
 
-        PlaceHolder = 44
+        PlaceHolder = 44,
+
+        //RESPONSABLES DE TEMAS
+        Miembros_Comite_Tecnico = 46
+
 
     }
 }
