@@ -11,6 +11,8 @@ import { TablaGestionActasComponent } from './components/tabla-gestion-actas/tab
 import { ReporteAvanceCompromisoComponent } from './components/reporte-avance-compromiso/reporte-avance-compromiso.component';
 import { TablaDetalleCompromisoComponent } from './components/tabla-detalle-compromiso/tabla-detalle-compromiso.component';
 import { RevisionActaComponent } from './components/revision-acta/revision-acta.component';
+import { FormSolicitudComponent } from './components/form-solicitud/form-solicitud.component';
+import { TablaDecisionesActaComponent } from './components/tabla-decisiones-acta/tabla-decisiones-acta.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { RevisionActaComponent } from './components/revision-acta/revision-acta.
     TablaGestionActasComponent,
     ReporteAvanceCompromisoComponent,
     TablaDetalleCompromisoComponent,
-    RevisionActaComponent
+    RevisionActaComponent,
+    FormSolicitudComponent,
+    TablaDecisionesActaComponent
   ],
   imports: [
     CommonModule,
