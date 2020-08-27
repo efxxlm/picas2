@@ -22,14 +22,17 @@ namespace asivamosffie.api.Controllers
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
 
-        [HttpDelete]
-        [Route("DeleteSesionInvitado")]
-        public async Task<IActionResult> DeleteSesionInvitado([FromQuery] int pSesionInvitadoId)
+
+
+        [HttpPost]
+        [Route("CreateEditSesionComiteTema")]
+        public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _registerSessionTechnicalCommitteeService.DeleteSesionInvitado(pSesionInvitadoId, HttpContext.User.FindFirst("User").Value);
+            {
+                ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditSesionComiteTema(ListSesionComiteTemas);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -40,6 +43,23 @@ namespace asivamosffie.api.Controllers
         }
 
 
+
+        [HttpDelete]
+        [Route("DeleteSesionInvitado")]
+        public async Task<IActionResult> DeleteSesionInvitado([FromQuery] int pSesionInvitadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerSessionTechnicalCommitteeService.DeleteSesionInvitado(pSesionInvitadoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         [HttpPost]
         [Route("CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud")]

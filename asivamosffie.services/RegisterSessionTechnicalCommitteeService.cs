@@ -634,11 +634,71 @@ namespace asivamosffie.services
 
         #endregion
 
+        public async Task<Respuesta> CreateEditSesionComiteTema(List<SesionComiteTema> ListSesionComiteTemas)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            try
+            { 
+                foreach (var SesionComiteTema in ListSesionComiteTemas)
+                { 
+                    if (SesionComiteTema.SesionTemaId == 0)
+                    {
+                        CreateEdit = "CREAR SESIÓN COMITE TEMA";
+                        SesionComiteTema.FechaCreacion = DateTime.Now;
+                        SesionComiteTema.Eliminado = false;
+                        _context.SesionComiteTema.Add(SesionComiteTema);
+                    }
+                    else
+                    {
+                        CreateEdit = "EDITAR SESIÓN COMITE TEMA";
+                        SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(SesionComiteTema.SesionTemaId);
+                        sesionComiteTemaOld.UsuarioModificacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion;
+                        sesionComiteTemaOld.FechaModificacion = DateTime.Now;
+
+                        sesionComiteTemaOld.Tema = SesionComiteTema.Tema;
+                        sesionComiteTemaOld.ResponsableCodigo = SesionComiteTema.ResponsableCodigo;
+                        sesionComiteTemaOld.TiempoIntervencion = SesionComiteTema.TiempoIntervencion;
+                        sesionComiteTemaOld.RutaSoporte = SesionComiteTema.RutaSoporte;
+                        sesionComiteTemaOld.Observaciones = SesionComiteTema.Observaciones;
+                        sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
+                        sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.ObservacionesDecision;
+                        sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
+                        sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
+                    }
+                    _context.SaveChanges(); 
+                }
+
+                return
+                new Respuesta
+                {
+                    Data = await GetComiteTecnicoByComiteTecnicoId((int)ListSesionComiteTemas.FirstOrDefault().ComiteTecnicoId),
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion, CreateEdit)
+                }; 
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+
+        }
+
 
         public async Task<Respuesta> DeleteSesionInvitado(int pSesionInvitadoId, string pUsuarioModificacion)
-        { 
+        {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Sesion_Invitado, (int)EnumeratorTipoDominio.Acciones);
-
             try
             {
                 SesionInvitado sesionInvitadoOld = await _context.SesionInvitado.FindAsync(pSesionInvitadoId);
