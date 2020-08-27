@@ -634,6 +634,44 @@ namespace asivamosffie.services
 
         #endregion
 
+
+        public async Task<Respuesta> DeleteSesionInvitado(int pSesionInvitadoId, string pUsuarioModificacion)
+        { 
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Sesion_Invitado, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SesionInvitado sesionInvitadoOld = await _context.SesionInvitado.FindAsync(pSesionInvitadoId);
+                sesionInvitadoOld.UsuarioModificacion = pUsuarioModificacion;
+                sesionInvitadoOld.FechaModificacion = DateTime.Now;
+                sesionInvitadoOld.Eliminado = true;
+                _context.SaveChanges();
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SESIÓN INVITADO")
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                  };
+            }
+
+        }
+
         public async Task<List<dynamic>> GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime pFechaOrdenDelDia)
         {
             List<dynamic> ListValidacionSolicitudesContractualesGrilla = new List<dynamic>();
@@ -921,12 +959,12 @@ namespace asivamosffie.services
         {
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                     .Include(r => r.SesionComiteSolicitud)
+                .Include(r => r.SesionComiteSolicitud)
                    .ThenInclude(r => r.SesionSolicitudVoto)
                 .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado))
                 .IncludeFilter(r => r.SesionParticipante.Where(r => !(bool)r.Eliminado))
                 .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado))
-           
+
                 .FirstOrDefaultAsync();
 
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();

@@ -45,5 +45,7 @@
         public const string Registrar_Participantes_Sesion = "44";
 
         public const string Crear_Editar_Comite_Tecnico_SesionComiteSolicitud_SesionComiteTema = "49";
+
+        public const string Eliminar_Sesion_Invitado = "51";
     }
 }

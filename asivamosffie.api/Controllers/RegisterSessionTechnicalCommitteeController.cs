@@ -16,11 +16,31 @@ namespace asivamosffie.api.Controllers
     {
         public readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
 
-        public RegisterSessionTechnicalCommitteeController(IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService) {
+        public RegisterSessionTechnicalCommitteeController(IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
+        {
 
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
-         
+
+        [HttpDelete]
+        [Route("DeleteSesionInvitado")]
+        public async Task<IActionResult> DeleteSesionInvitado([FromQuery] int pSesionInvitadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerSessionTechnicalCommitteeService.DeleteSesionInvitado(pSesionInvitadoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
         [HttpPost]
         [Route("CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud")]
         public async Task<IActionResult> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud([FromBody] ComiteTecnico pComiteTecnico)
@@ -38,7 +58,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
- 
+
         [HttpPut]
         [Route("CambiarEstadoComiteTecnico")]
         public async Task<IActionResult> CambiarEstadoComiteTecnico([FromBody] ComiteTecnico pComiteTecnico)
@@ -62,7 +82,7 @@ namespace asivamosffie.api.Controllers
         public async Task<List<dynamic>> GetListSesionComiteSolicitudByFechaOrdenDelDia([FromQuery] string pFechaComite)
         {
             return await _registerSessionTechnicalCommitteeService.GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime.Parse(pFechaComite));
-        } 
+        }
 
         [HttpGet]
         [Route("GetComiteTecnicoByComiteTecnicoId")]
@@ -70,7 +90,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerSessionTechnicalCommitteeService.GetComiteTecnicoByComiteTecnicoId(pComiteTecnicoId);
         }
-         
+
         [HttpPost]
         [Route("CreateSesionInvitadoAndParticipante")]
         public async Task<IActionResult> CreateSesionInvitadoAndParticipante([FromBody] ComiteTecnico pComiteTecnico)
@@ -119,13 +139,13 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerSessionTechnicalCommitteeService.GetListComiteGrilla();
         }
-         
+
         [HttpGet]
         [Route("GetListSesionComiteTemaByComiteTecnicoId")]
         public async Task<List<dynamic>> GetListSesionComiteTemaByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {
             return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByComiteTecnicoId(pComiteTecnicoId);
         }
-          
+
     }
 }
