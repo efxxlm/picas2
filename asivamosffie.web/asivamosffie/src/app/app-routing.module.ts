@@ -100,6 +100,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
         .then(m => m.SolicitarContratacionModule)
       },
+      {
+        path: 'generarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
     ]
 
   },
