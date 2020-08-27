@@ -9,11 +9,6 @@ import { QuillModule } from 'ngx-quill';
 
 import { MaterialModule } from './../../material/material.module';
 import { CrearOrdenDelDiaComponent } from './components/crear-orden-del-dia/crear-orden-del-dia.component';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatCardModule } from '@angular/material/card';
 import { TablaSolicitudesContractualesComponent } from './components/tabla-solicitudes-contractuales/tabla-solicitudes-contractuales.component';
 import { TablaOrdenDelDiaComponent } from './components/tabla-orden-del-dia/tabla-orden-del-dia.component';
 import { TablaSesionComiteTecnicoComponent } from './components/tabla-sesion-comite-tecnico/tabla-sesion-comite-tecnico.component';
@@ -60,11 +55,6 @@ import { VerificarCumplimientoComponent } from './components/verificar-cumplimie
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatCardModule,
     QuillModule.forRoot()
   ]
 })

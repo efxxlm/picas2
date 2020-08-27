@@ -41,7 +41,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   openDialogValidacionSolicitudes() {
     this.dialog.open(VotacionSolicitudComponent, {
-      width: '28em'
+      width: '70em'
     });
   }
 

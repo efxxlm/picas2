@@ -10,10 +10,12 @@ import { FormBuilder, Validators, FormArray } from '@angular/forms';
 export class VotacionSolicitudComponent {
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
-  addressForm = this.fb.group({
-    aprobacion: this.fb.array([]),
-    observaciones: this.fb.array([]),
-  });
+  addressForm = this.fb.array([
+      this.fb.group({
+        aprobacion: [null, Validators.required],
+        observaciones: [null, Validators.required]
+      })
+    ]);
 
   get aprobacion() {
     return this.addressForm.get('aprobacion') as FormArray;
@@ -36,18 +38,30 @@ export class VotacionSolicitudComponent {
     ]
   };
 
+  textoLimpio(texto: string) {
+    const textolimpio = texto.replace(/<[^>]*>/g, '');
+    return textolimpio.length;
+  }
+
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
   }
 
-  cargarDatos() {
-    const aprobacion: any[] = ['', '', ''];
-
-    aprobacion.forEach(valor => this.aprobacion.push(this.fb.control(valor)));
-    aprobacion.forEach(valor => this.observaciones.push(this.fb.control(valor)));
+  crearParticipante() {
+    this.fb.group({
+      aprobacion: [null, Validators.required],
+      observaciones: [null, Validators.required]
+    });
   }
+
+  // cargarDatos() {
+  //   const aprobacion: any[] = ['', '', ''];
+
+  //   aprobacion.forEach(valor => this.aprobacion.push(this.fb.control(valor)));
+  //   aprobacion.forEach(valor => this.observaciones.push(this.fb.control(valor)));
+  // }
 
   constructor(private fb: FormBuilder) { }
 

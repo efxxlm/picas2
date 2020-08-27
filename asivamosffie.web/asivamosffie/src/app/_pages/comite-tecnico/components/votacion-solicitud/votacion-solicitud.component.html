@@ -6,8 +6,12 @@
   Votación solicitud PI0004
 </h1>
 
+<p>
+  <span class="mx-1em">23/06/2020</span> <span class="mx-1em">Apertura de proceso de selección</span>
+</p>
+
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-  <div formGroupName="aprobacion">
+  <div>
     <table class="mat-table cdk-table mat-sort mat-table-style">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
@@ -20,12 +24,15 @@
           <th class="mat-header-cell cdk-header-cell ng-star-inserted">
             No aprobó
           </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Observaciones
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let control of aprobacion.controls; let i = index">
+        <tr>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ miembros[i] }}
+            Juan Lizcano Garcia
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
@@ -35,6 +42,22 @@
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
               <mat-checkbox></mat-checkbox>
+            </section>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <section class="example-section">
+              <div class="d-flex">
+                <quill-editor class="quill-editor-style card" #observaciones [styles]="editorStyle" [modules]="config" required
+                  (onContentChanged)="maxLength($event, 1000)" required></quill-editor>
+                <div class="d-flex align-items-center">
+                  <!-- <span class="contador miles" *ngIf="observaciones !== null">
+                    {{1000 - textoLimpio(observaciones)}}
+                  </span> -->
+                  <span class="contador miles">
+                    1000
+                  </span>
+                </div>
+              </div>
             </section>
           </td>
         </tr>
