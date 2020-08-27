@@ -2,8 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-proposiciones-varios',
@@ -30,6 +32,8 @@ export class FormProposicionesVariosComponent implements OnInit {
               private fb: FormBuilder,
               public dialog: MatDialog,
               private commonService: CommonService,
+              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              private router: Router
 
              ) 
   {
@@ -86,8 +90,34 @@ export class FormProposicionesVariosComponent implements OnInit {
   }
 
   onSubmit() {
+
+    console.log(this.addressForm)
+
+    let temas: SesionComiteTema[] = []
+
     if (this.addressForm.valid) {
-      this.openDialog(`La información ha sido guardada exitosamente`, '');
+      this.tema.controls.forEach( control => {
+        let sesionComiteTema: SesionComiteTema = {
+          tema: control.get('tema').value,
+          responsableCodigo: control.get('responsable').value.codigo,
+          tiempoIntervencion: control.get('tiempoIntervencion').value,
+          rutaSoporte: control.get('url').value,
+          sesionTemaId: control.get('sesionTemaId').value,
+          comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+          esProposicionesVarios: true,
+
+        }
+  
+        temas.push( sesionComiteTema );
+      });
+
+      this.technicalCommitteSessionService.createEditSesionComiteTema( temas )
+        .subscribe( respuesta => {
+          this.openDialog('Comité Técnico', respuesta.message)
+          if ( respuesta.code == "200" )
+            this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
+        })
+
     }
   }
 

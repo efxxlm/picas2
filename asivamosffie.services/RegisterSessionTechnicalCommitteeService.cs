@@ -18,6 +18,8 @@ namespace asivamosffie.services
 {
     public class RegisterSessionTechnicalCommitteeService : IRegisterSessionTechnicalCommitteeService
     {
+
+        #region Constructor
         private readonly ICommonService _commonService;
         private readonly IProjectContractingService _IProjectContractingService;
         private readonly devAsiVamosFFIEContext _context;
@@ -29,6 +31,8 @@ namespace asivamosffie.services
             _context = context;
             _converter = converter;
         }
+        #endregion
+
         #region Plantillas 
 
         public async Task<byte[]> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId)
@@ -634,18 +638,196 @@ namespace asivamosffie.services
 
         #endregion
 
+        #region Votación
+        public async Task<Respuesta> CreateEditSesionSolicitudVoto(SesionComiteSolicitud pSesionComiteSolicitud)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Solicitud_Voto, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            try
+            {
+                SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
+                pSesionComiteSolicitud.RequiereVotacion = true;
+                pSesionComiteSolicitud.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                pSesionComiteSolicitud.FechaModificacion = DateTime.Now;
+
+                foreach (var sesionSolicitudVoto in pSesionComiteSolicitud.SesionSolicitudVoto)
+                {
+                    if (sesionSolicitudVoto.SesionSolicitudVotoId == 0)
+                    {
+                        CreateEdit = "CREAR SOLICITUD VOTO";
+                        sesionSolicitudVoto.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        sesionSolicitudVoto.Eliminado = false;
+                        sesionSolicitudVoto.FechaCreacion = DateTime.Now;
+                        _context.SesionSolicitudVoto.Add(sesionSolicitudVoto);
+                    }
+                    else
+                    {
+                        CreateEdit = "EDITAR SOLICITUD VOTO";
+                        SesionSolicitudVoto sesionSolicitudVotoOld = _context.SesionSolicitudVoto.Find(sesionSolicitudVoto.SesionSolicitudVotoId);
+
+                        sesionSolicitudVotoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        sesionSolicitudVotoOld.FechaModificacion = DateTime.Now;
+
+                        sesionSolicitudVotoOld.EsAprobado = sesionSolicitudVoto.EsAprobado;
+                        sesionSolicitudVotoOld.Observacion = sesionSolicitudVoto.Observacion;
+                    }
+                }
+                _context.SaveChanges();
+                return
+                new Respuesta
+                {
+                    Data = await GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteSolicitud.ComiteTecnicoId),
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pSesionComiteSolicitud.UsuarioCreacion, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pSesionComiteSolicitud.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+
+        }
+
+        public async Task<Respuesta> GetNoRequiereVotacionSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.No_Requiere_Votacion_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
+                pSesionComiteSolicitud.RequiereVotacion = false;
+                pSesionComiteSolicitud.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                pSesionComiteSolicitud.FechaModificacion = DateTime.Now;
+
+                _context.SaveChanges();
+                return
+
+                new Respuesta
+                {
+                    Data = await GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteSolicitud.ComiteTecnicoId),
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pSesionComiteSolicitud.UsuarioCreacion, "NO REQUIERE VOTACIÓN")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pSesionComiteSolicitud.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+
+        }
+
+
+        #endregion
+
+
+        public async Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico)
+        {
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Convocar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
+            List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+
+            try
+            {
+                ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                    .Include(r => r.SesionParticipante)
+                    .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
+
+                comiteTecnico.SesionParticipante = comiteTecnico.SesionParticipante.Where(r => !(bool)r.Eliminado).ToList();
+
+                comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
+                comiteTecnico.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                comiteTecnico.FechaModificacion = DateTime.Now;
+
+
+                //Plantilla
+                string TipoPlantilla = ((int)ConstanCodigoPlantillas.Convocar_Comite_Tecnico).ToString();
+                 Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).FirstOrDefault();
+                foreach (Dominio placeholderDominio in placeholders)
+                {
+                    switch (placeholderDominio.Codigo)
+                    {
+                        case ConstanCodigoVariablesPlaceHolders.FECHA_SESION_CONVOCAR_COMITE:
+                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, comiteTecnico.FechaCreacion.ToString("yyyy-MM-dd"));
+                            break;
+
+                        case ConstanCodigoVariablesPlaceHolders.ORDEN_DEL_DIA_CONVOCAR_COMITE:
+                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre,
+                              !string.IsNullOrEmpty(comiteTecnico.FechaOrdenDia.ToString()) ? ((DateTime)comiteTecnico.FechaOrdenDia).ToString("yyyy-MM-dd"):" "); ;
+                            break;
+                    }
+                } 
+                //Notificar a los participantes
+
+                foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
+                {
+                    if (!string.IsNullOrEmpty(SesionParticipante.Usuario.Email)) 
+                    { 
+                       // _commonService.e
+                    }
+                } 
+
+                _context.SaveChanges();
+                return
+                   new Respuesta
+                   {
+                       Data = await GetComiteTecnicoByComiteTecnicoId(pComiteTecnico.ComiteTecnicoId),
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pComiteTecnico.UsuarioCreacion, "CONVOCAR COMITE TECNICO")
+                   };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
         public async Task<Respuesta> CreateEditSesionComiteTema(List<SesionComiteTema> ListSesionComiteTemas)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
             string CreateEdit = "";
             try
-            { 
+            {
                 foreach (var SesionComiteTema in ListSesionComiteTemas)
-                { 
+                {
                     if (SesionComiteTema.SesionTemaId == 0)
                     {
                         CreateEdit = "CREAR SESIÓN COMITE TEMA";
                         SesionComiteTema.FechaCreacion = DateTime.Now;
+                        SesionComiteTema.UsuarioCreacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion;
                         SesionComiteTema.Eliminado = false;
                         _context.SesionComiteTema.Add(SesionComiteTema);
                     }
@@ -664,9 +846,9 @@ namespace asivamosffie.services
                         sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
                         sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.ObservacionesDecision;
                         sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
-                        sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
+                        //sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
                     }
-                    _context.SaveChanges(); 
+                    _context.SaveChanges();
                 }
 
                 return
@@ -678,7 +860,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion, CreateEdit)
-                }; 
+                };
             }
             catch (Exception ex)
             {
@@ -694,7 +876,6 @@ namespace asivamosffie.services
             }
 
         }
-
 
         public async Task<Respuesta> DeleteSesionInvitado(int pSesionInvitadoId, string pUsuarioModificacion)
         {
@@ -1081,9 +1262,8 @@ namespace asivamosffie.services
                           .NumeroProceso;
                         break;
                 }
-
-
-                SesionComiteSolicitud.TipoSolicitudCodigo = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+                 
+               SesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
             }
 
             return comiteTecnico;
