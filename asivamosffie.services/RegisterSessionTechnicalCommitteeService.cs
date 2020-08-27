@@ -904,11 +904,26 @@ namespace asivamosffie.services
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
             ComiteTecnico comiteTecnico =await _context.ComiteTecnico
-                .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                .Include(r => r.SesionComiteSolicitud)
+                .Where(r => r.ComiteTecnicoId == pComiteTecnicoId) 
                 .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado)) 
+                .IncludeFilter(r=> r.SesionParticipante.Where(r => !(bool)r.Eliminado))
+                .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado))
+                .Include(r => r.SesionComiteSolicitud)
+                   .ThenInclude(r=> r.SesionSolicitudVoto)
                 .FirstOrDefaultAsync();
 
+            comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            {
+                SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+            }
+
+            List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            {
+                SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
+            }
             List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
 
