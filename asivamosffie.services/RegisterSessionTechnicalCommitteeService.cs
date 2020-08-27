@@ -742,6 +742,62 @@ namespace asivamosffie.services
         #endregion
 
 
+        public async Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico)
+        {
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Convocar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                    .Include(r => r.SesionParticipante)
+                    .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
+
+                comiteTecnico.SesionParticipante = comiteTecnico.SesionParticipante.Where(r => !(bool)r.Eliminado).ToList();
+
+                comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
+                comiteTecnico.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                comiteTecnico.FechaModificacion = DateTime.Now;
+
+                //Notificar a los participantes
+                foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
+                {
+                    if (!string.IsNullOrEmpty(SesionParticipante.Usuario.Email)) {
+                    
+                    
+
+                    }
+                }
+              
+
+
+                _context.SaveChanges();
+                return
+                   new Respuesta
+                   {
+                       Data = await GetComiteTecnicoByComiteTecnicoId(pComiteTecnico.ComiteTecnicoId),
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pComiteTecnico.UsuarioCreacion, "CONVOCAR COMITE TECNICO")
+                   };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
         public async Task<Respuesta> CreateEditSesionComiteTema(List<SesionComiteTema> ListSesionComiteTemas)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
@@ -1188,9 +1244,8 @@ namespace asivamosffie.services
                           .NumeroProceso;
                         break;
                 }
-
-
-                SesionComiteSolicitud.TipoSolicitudCodigo = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+                 
+               SesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
             }
 
             return comiteTecnico;
