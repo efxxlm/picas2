@@ -17,7 +17,11 @@ namespace asivamosffie.model.Models
         public string EmailProponente { get; set; }
         public string NombreRepresentanteLegal { get; set; }
         public string CedulaRepresentanteLegal { get; set; }
-
+        public DateTime FechaCreacion { get; set; }
+        public bool? Eliminado { get; set; }
+        public string UsuarioCreacion { get; set; }
+        public DateTime FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
         public virtual ProcesoSeleccion ProcesoSeleccion { get; set; }
        
     }
