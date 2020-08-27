@@ -44,7 +44,8 @@ namespace asivamosffie.services
         {
             Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
 
-            if (contratacion == null) {
+            if (contratacion == null)
+            {
                 return Array.Empty<byte>();
             }
 
@@ -60,7 +61,7 @@ namespace asivamosffie.services
         {
             ProcesoSeleccion procesoSeleccion = await _context.ProcesoSeleccion
                 .Where(r => r.ProcesoSeleccionId == pProcesoSeleccionId)
-                .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r=> !(bool)r.Eliminado))
+                .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
                 .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
                 //Aqui falta filtrarlos proponentes ya que en model y en codigo no de guarda eliminado
                 .Include(r => r.ProcesoSeleccionProponente)
@@ -95,11 +96,11 @@ namespace asivamosffie.services
             string ProcesoSeleccionPrivada = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProcesoSeleccionPrivada).Select(r => r.Contenido).FirstOrDefault();
             string ProcesosSeleccionPrivada = "";
 
-            string TipoPlantillaProcesoSeleccionCerrada = ((int)ConstanCodigoPlantillas.Proceso_de_seleccion_Privada).ToString();
+            string TipoPlantillaProcesoSeleccionCerrada = ((int)ConstanCodigoPlantillas.Proceso_de_seleccion_Cerrada).ToString();
             string ProcesoSeleccionCerrada = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProcesoSeleccionCerrada).Select(r => r.Contenido).FirstOrDefault();
             string ProcesosSeleccionCerrada = "";
 
-            string TipoPlantillaProcesoSeleccionAbierta = ((int)ConstanCodigoPlantillas.Proceso_de_seleccion_Privada).ToString();
+            string TipoPlantillaProcesoSeleccionAbierta = ((int)ConstanCodigoPlantillas.Proceso_de_seleccion_Abierta).ToString();
             string ProcesoSeleccionAbierta = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProcesoSeleccionAbierta).Select(r => r.Contenido).FirstOrDefault();
             string ProcesosSeleccionAbierta = " ";
 
@@ -232,6 +233,12 @@ namespace asivamosffie.services
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
                                 break;
 
+                            //Faber dijo que eso no estaba en el caso de uso 
+                            //[4:02 PM, 8/26/2020] Faber Ivolucion: se campo no tiene descripción
+                            //[4:03 PM, 8 / 26 / 2020] Faber Ivolucion: no se si lo quitaron o ya en aparece algo en el control de cambios
+                            //    [4:04 PM, 8 / 26 / 2020] JULIÁN MARTÍNEZ C: y el VALOR_CONTIZACION_CERRADA
+                            //        [4:12 PM, 8 / 26 / 2020] Faber Ivolucion: Tampoco aparece en CU
+
                             //case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
                             //    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                             //      Replace(placeholderDominio.Nombre, pProcesoSeleccion.);
@@ -256,25 +263,32 @@ namespace asivamosffie.services
                     {
                         switch (placeholderDominio.Codigo)
                         {
-                            //case ConstanCodigoVariablesPlaceHolders.TIPO_PROPONENTE_PRIVADA_PS:
-                            //    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                            //      Replace(placeholderDominio.Nombre, pProcesoSeleccion.);
-                            //    break;
+                            case ConstanCodigoVariablesPlaceHolders.TIPO_PROPONENTE_PRIVADA_PS:
+                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                  Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo) ? ListaParametricas
+                                  .Where(r => r.Codigo == pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo
+                                  && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Proponente
+                                  ).FirstOrDefault().Nombre : " ");
+                                break;
 
-                            //case ConstanCodigoVariablesPlaceHolders.NOMBRE_PRIVADA_PS:
-                            //    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                            //      Replace(placeholderDominio.Nombre, pProcesoSeleccion.);
-                            //    break;
+                            case ConstanCodigoVariablesPlaceHolders.NOMBRE_PRIVADA_PS:
+                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                  Replace(placeholderDominio.Nombre, pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreProponente);
+                                break;
 
-                            //case ConstanCodigoVariablesPlaceHolders.TIPO_DOCUMENTO_PRIVADA_PS:
-                            //    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                            //      Replace(placeholderDominio.Nombre, pProcesoSeleccion.);
-                            //    break;
+                            case ConstanCodigoVariablesPlaceHolders.TIPO_DOCUMENTO_PRIVADA_PS:
+                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo)
+                                ? ListaParametricas.Where(r => r.Codigo == pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo
+                                && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
+                                ).FirstOrDefault().Nombre : " ");
+                                break;
 
-                            //case ConstanCodigoVariablesPlaceHolders.NOMBRE_REPRESENTANTE_LEGAL_PRIVADA_PS:
-                            //    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                            //      Replace(placeholderDominio.Nombre, pProcesoSeleccion.);
-                            //    break; 
+                            case ConstanCodigoVariablesPlaceHolders.NOMBRE_REPRESENTANTE_LEGAL_PRIVADA_PS:
+                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                               Replace(placeholderDominio.Nombre, pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreRepresentanteLegal);
+
+                                break;
                         }
                     }
                     break;
@@ -316,7 +330,7 @@ namespace asivamosffie.services
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pProcesoSeleccion.Justificacion);
                         break;
 
-                    case ConstanCodigoVariablesPlaceHolders.TIPO_DE_INTERVENCION:
+                    case ConstanCodigoVariablesPlaceHolders.TIPO_INTERVENCION_PS:
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre,
                             !string.IsNullOrEmpty(pProcesoSeleccion.TipoIntervencionCodigo) ?
                             ListaParametricas.Where(r => r.Codigo == pProcesoSeleccion.TipoIntervencionCodigo
@@ -328,13 +342,15 @@ namespace asivamosffie.services
                     case ConstanCodigoVariablesPlaceHolders.TIPO_ALCANCE_PS:
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre,
                              !string.IsNullOrEmpty(pProcesoSeleccion.TipoAlcanceCodigo) ?
-                             ListaParametricas.Where(r => r.Codigo == pProcesoSeleccion.TipoAlcanceCodigo
-                             && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_alcance
-                             ).FirstOrDefault().Nombre
+                             ListaParametricas
+                             .Where(r => r.Codigo == pProcesoSeleccion.TipoAlcanceCodigo
+                             && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_alcance)
+                             .FirstOrDefault().Nombre
                              : ""); break;
 
                     case ConstanCodigoVariablesPlaceHolders.DISTRIBUCION_TERRITORIO_PS:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, (bool)pProcesoSeleccion.EsDistribucionGrupos ? "Si" : "No");
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pProcesoSeleccion.EsDistribucionGrupos != null ?
+                            (bool)pProcesoSeleccion.EsDistribucionGrupos ? "Si" : "No" : " ");
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.CUANTOS_GRUPOS_PS:
@@ -351,16 +367,16 @@ namespace asivamosffie.services
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, RegistrosCronogramas);
                         break;
                     case ConstanCodigoVariablesPlaceHolders.PROCESO_PRIVADA_PS:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ProcesoSeleccionPrivada);
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ProcesosSeleccionPrivada);
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.PROCESO_CERRADA_PS:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ProcesoSeleccionCerrada);
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ProcesosSeleccionCerrada);
                         break;
 
-                    case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_ABIERTA_PS:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ProcesoSeleccionAbierta);
-                        break; 
+                    case ConstanCodigoVariablesPlaceHolders.PROCESO_ABIERTA_PS:
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ProcesosSeleccionAbierta);
+                        break;
                 }
             }
 
@@ -648,8 +664,8 @@ namespace asivamosffie.services
                 .OrderByDescending(r => r.ContratacionId).ToList();
 
             //Quitar los que ya estan en sesionComiteSolicitud
-             
-            List<int> LisIdContratacion      = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r=> r.SolicitudId).ToList();
+
+            List<int> LisIdContratacion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r => r.SolicitudId).ToList();
             List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
 
             //Se comentan ya que no esta listo el caso de uso
@@ -657,10 +673,10 @@ namespace asivamosffie.services
             //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
 
             //a1.RemoveAll(a => !b1.Exists(b => a.number == b.number));
- 
-             //TODO Diego dijo que fresco
-             ListContratacion.RemoveAll(item => !LisIdContratacion.Contains(item.ContratacionId)); 
-             ListProcesoSeleccion.RemoveAll(item => !ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
+
+            //TODO Diego dijo que fresco
+            ListContratacion.RemoveAll(item => !LisIdContratacion.Contains(item.ContratacionId));
+            ListProcesoSeleccion.RemoveAll(item => !ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
 
 
 
@@ -817,7 +833,7 @@ namespace asivamosffie.services
                             //Auditoria 
                             SesionComiteSolicitud.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
                             SesionComiteSolicitud.FechaModificacion = DateTime.Now;
-                            SesionComiteSolicitud.Eliminado = false; 
+                            SesionComiteSolicitud.Eliminado = false;
                             _context.SesionComiteSolicitud.Add(SesionComiteSolicitud);
                         }
                         else
@@ -903,13 +919,13 @@ namespace asivamosffie.services
 
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
-            ComiteTecnico comiteTecnico =await _context.ComiteTecnico
-                .Where(r => r.ComiteTecnicoId == pComiteTecnicoId) 
-                .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado)) 
-                .IncludeFilter(r=> r.SesionParticipante.Where(r => !(bool)r.Eliminado))
+            ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
+                .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado))
+                .IncludeFilter(r => r.SesionParticipante.Where(r => !(bool)r.Eliminado))
                 .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado))
                 .Include(r => r.SesionComiteSolicitud)
-                   .ThenInclude(r=> r.SesionSolicitudVoto)
+                   .ThenInclude(r => r.SesionSolicitudVoto)
                 .FirstOrDefaultAsync();
 
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
@@ -963,13 +979,13 @@ namespace asivamosffie.services
                         SesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId)
                           .FirstOrDefault()
-                          .NumeroProceso; 
+                          .NumeroProceso;
                         break;
                 }
 
 
                 SesionComiteSolicitud.TipoSolicitudCodigo = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
-            } 
+            }
 
             return comiteTecnico;
         }
@@ -1068,7 +1084,7 @@ namespace asivamosffie.services
             }
 
         }
-         
+
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
         {
             if (
