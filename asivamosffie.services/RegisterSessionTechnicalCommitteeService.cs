@@ -646,9 +646,9 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
-                pSesionComiteSolicitud.RequiereVotacion = true;
-                pSesionComiteSolicitud.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                pSesionComiteSolicitud.FechaModificacion = DateTime.Now;
+                sesionComiteSolicitudOld.RequiereVotacion = true;
+                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
 
                 foreach (var sesionSolicitudVoto in pSesionComiteSolicitud.SesionSolicitudVoto)
                 {

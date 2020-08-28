@@ -8,6 +8,7 @@ import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multip
 import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
@@ -33,6 +34,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   constructor(
               public dialog: MatDialog,
               private commonService: CommonService,
+              private technicalCommitteSessionService: TechnicalCommitteSessionService
 
              ) 
   {
@@ -66,9 +68,20 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       elemento.sesionSolicitudVoto.push( solicitudVoto )
     })
 
-    this.dialog.open(VotacionSolicitudComponent, {
-      width: '70em', data: elemento
+    const dialog = this.dialog.open(VotacionSolicitudComponent, {
+      width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
     });
+
+    dialog.afterClosed().subscribe( c => {
+      if ( c.comiteTecnicoId )
+      {
+        this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
+          .subscribe( response => {
+            this.ObjetoComiteTecnico = response;
+          })
+      }
+    })
+
   }
 
   openDialogValidacionSolicitudesMultiple() {
@@ -103,6 +116,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   }
 
   cargarRegistro(){
+    console.log( this.ObjetoComiteTecnico.sesionComiteSolicitud )
     this.dataSource = new MatTableDataSource( this.ObjetoComiteTecnico.sesionComiteSolicitud );    
   }
 

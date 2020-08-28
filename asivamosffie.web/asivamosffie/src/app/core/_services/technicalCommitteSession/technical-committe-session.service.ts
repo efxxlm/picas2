@@ -45,8 +45,12 @@ export class TechnicalCommitteSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createSesionInvitadoAndParticipante`, comite );
    }
 
-   public createEditSesionSolicitudVoto( sesionComiteSolicitud: SesionComiteSolicitud ){
+   createEditSesionSolicitudVoto( sesionComiteSolicitud: SesionComiteSolicitud ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionSolicitudVoto`, sesionComiteSolicitud );
+   }
+
+   convocarComiteTecnico( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/convocarComiteTecnico`, comite );
    }
 
 }

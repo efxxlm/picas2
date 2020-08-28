@@ -5,7 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
-import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
+import { VotacionTemaComponent } from '../votacion-tema/votacion-tema.component';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 
 
 @Component({
@@ -29,8 +31,11 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   constructor(
-    public dialog: MatDialog
-  ) { }
+              public dialog: MatDialog,
+              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+
+             ) 
+  {}
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -50,24 +55,32 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
     };
   }
 
-  openDialogValidacionSolicitudes() {
-    this.dialog.open(VotacionSolicitudComponent, {
-      width: '70em'
+  openDialogValidacionSolicitudes( elemento: SesionComiteTema ) {
+    const dialog = this.dialog.open(VotacionTemaComponent, {
+      width: '70em', data: elemento
     });
+
+    dialog.afterClosed().subscribe( c => {
+      this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
+          .subscribe( response => {
+            this.objetoComiteTecnico = response;
+          })
+    })
+
   }
 
-  openDialogValidacionSolicitudesMultiple() {
-    this.dialog.open(VotacionSolicitudMultipleComponent, {
-      width: '70em'
-    });
-  }
+  // openDialogValidacionSolicitudesMultiple() {
+  //   this.dialog.open(VotacionSolicitudMultipleComponent, {
+  //     width: '70em'
+  //   });
+  // }
 
   cargarRegistro(){
 
     let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
 
     this.dataSource = new MatTableDataSource( lista );
-    
+
   }
 
 }

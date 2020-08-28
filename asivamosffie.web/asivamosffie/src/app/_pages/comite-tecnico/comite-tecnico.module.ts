@@ -33,6 +33,7 @@ import { ObservacionComponent } from './components/observacion/observacion.compo
 import { FormProposicionesYVariosComponent } from './components/form-proposiciones-y-varios/form-proposiciones-y-varios.component';
 import { TablaVerificarCumplimientoComponent } from './components/tabla-verificar-cumplimiento/tabla-verificar-cumplimiento.component';
 import { DialogVerDetalleComponent } from './components/dialog-ver-detalle/dialog-ver-detalle.component';
+import { VotacionTemaComponent } from './components/votacion-tema/votacion-tema.component'
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { DialogVerDetalleComponent } from './components/dialog-ver-detalle/dialo
     ObservacionComponent,
     FormProposicionesYVariosComponent,
     TablaVerificarCumplimientoComponent,
-    DialogVerDetalleComponent
+    DialogVerDetalleComponent,
+    VotacionTemaComponent
   ],
   imports: [
     CommonModule,

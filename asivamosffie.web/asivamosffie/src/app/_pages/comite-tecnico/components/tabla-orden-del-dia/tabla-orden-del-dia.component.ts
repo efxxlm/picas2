@@ -88,7 +88,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       estadoComiteCodigo: this.estadosComite.convocada
     }
 
-    this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
+    this.technicalCommitteeSessionService.convocarComiteTecnico( comite )
       .subscribe( respuesta => {
 
         this.openDialog( ' sesión comité ', respuesta.message )

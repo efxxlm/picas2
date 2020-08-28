@@ -73,7 +73,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     };
   }
 
-  openVerDetalle() {
+  openVerDetalle(e) {
     this.dialog.open(DialogVerDetalleComponent, {
       width: '70em'
     });

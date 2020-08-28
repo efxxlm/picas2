@@ -8,11 +8,11 @@ import { Router } from '@angular/router';
 
 
 @Component({
-  selector: 'app-votacion-solicitud',
-  templateUrl: './votacion-solicitud.component.html',
-  styleUrls: ['./votacion-solicitud.component.scss']
+  selector: 'app-votacion-tema',
+  templateUrl: './votacion-tema.component.html',
+  styleUrls: ['./votacion-tema.component.scss']
 })
-export class VotacionSolicitudComponent implements OnInit{
+export class VotacionTemaComponent implements OnInit{
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
   addressForm = this.fb.array([]);
@@ -66,7 +66,7 @@ export class VotacionSolicitudComponent implements OnInit{
 
   constructor(
               private fb: FormBuilder,
-              public dialogRef: MatDialogRef<VotacionSolicitudComponent>,
+              public dialogRef: MatDialogRef<VotacionTemaComponent>, 
               @Inject(MAT_DIALOG_DATA) public data: { 
                                                       sesionComiteSolicitud: SesionComiteSolicitud, 
                                                       objetoComiteTecnico: ComiteTecnico 
