@@ -1,0 +1,66 @@
+<section class="container">
+  <div class="text-right">
+    <a routerLink="/comiteTecnico" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Observaciones para la devolución o rechazo del proyecto
+    </h1>
+    <b class="sub-text">
+      <span>Ampliación</span>
+      <span>Atlántico/Manatí</span>
+      <span>I.E Antonio Nariño</span>
+      <span>Única sede</span>
+      <span>Devuelto por el comité</span>
+    </b>
+  </div>
+
+  <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
+    <thead>
+      <tr class="mat-header-row cdk-header-row ng-star-inserted">
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+          Miembro participante
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+          Observación
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          Juan Lizcano Carcía
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          <p class="p-table">
+            El proyecto muestra varias inconsistencias en el área de contizaciones y el presupuesto no
+            concuerda con estas
+          </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex align-items-center">
+    <div class="text-area-quill">
+      <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
+      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)" formControlName="observacion"></quill-editor>
+    </div>
+    <span class="contador" *ngIf="observacion.value">
+      {{3000 - textoLimpio(observacion.value)}}
+    </span>
+    <span class="contador" *ngIf="observacion.value">
+      3000
+    </span>
+  </div>
+
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" (click)="enviarObservacion()">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+
+</section>

@@ -28,6 +28,10 @@ import { FormSolicitudComponent } from './components/form-solicitud/form-solicit
 import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
 import { VotacionSolicitudMultipleComponent } from './components/votacion-solicitud-multiple/votacion-solicitud-multiple.component';
 import { TablaProposicionesYVariosComponent } from './components/tabla-proposiciones-y-varios/tabla-proposiciones-y-varios.component';
+import { TablaFormSolicitudMultipleComponent } from './components/tabla-form-solicitud-multiple/tabla-form-solicitud-multiple.component';
+import { FormOtrosTemasComponent } from './components/form-otros-temas/form-otros-temas.component';
+import { ObservacionComponent } from './components/observacion/observacion.component';
+import { FormProposicionesYVariosComponent } from './components/form-proposiciones-y-varios/form-proposiciones-y-varios.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,11 @@ import { TablaProposicionesYVariosComponent } from './components/tabla-proposici
     FormSolicitudComponent,
     VerificarCumplimientoComponent,
     VotacionSolicitudMultipleComponent,
-    TablaProposicionesYVariosComponent
+    TablaProposicionesYVariosComponent,
+    TablaFormSolicitudMultipleComponent,
+    FormOtrosTemasComponent,
+    ObservacionComponent,
+    FormProposicionesYVariosComponent
   ],
   imports: [
     CommonModule,
