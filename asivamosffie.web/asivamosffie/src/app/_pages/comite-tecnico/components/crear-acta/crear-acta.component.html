@@ -8,7 +8,7 @@
         <h1 class="title-menu--h1">
             Crear acta CT_00001
         </h1>
-        <b>24/06/2020</b>
+        <b class="sub-text">24/06/2020</b>
     </div>
     <mat-card class="shipping-card">
         <mat-card-header class="header-card">
@@ -55,6 +55,17 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title completo">
+                            Tema 1
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-otros-temas></app-form-otros-temas>
+                </mat-expansion-panel>
+            </mat-accordion>
+
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -62,6 +73,17 @@
                     Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title completo">
+                            Tema 1
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-proposiciones-y-varios></app-form-proposiciones-y-varios>
+                </mat-expansion-panel>
+            </mat-accordion>
 
         </mat-expansion-panel>
     </mat-accordion>

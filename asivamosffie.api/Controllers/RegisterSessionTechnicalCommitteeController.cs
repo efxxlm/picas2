@@ -7,6 +7,8 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
 
 namespace asivamosffie.api.Controllers
 {
@@ -15,10 +17,11 @@ namespace asivamosffie.api.Controllers
     public class RegisterSessionTechnicalCommitteeController : ControllerBase
     {
         public readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
+        private readonly IOptions<AppSettings> _settings;
 
-        public RegisterSessionTechnicalCommitteeController(IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
+        public RegisterSessionTechnicalCommitteeController(IOptions<AppSettings> settings,IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
-
+            _settings = settings;
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
 
@@ -42,6 +45,25 @@ namespace asivamosffie.api.Controllers
 
 
 
+        [HttpPost]
+        [Route("ConvocarComiteTecnico")]
+        public async Task<IActionResult> ConvocarComiteTecnico([FromBody]ComiteTecnico pComiteTecnico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.ConvocarComiteTecnico(pComiteTecnico, _settings.Value.Dominio, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+ 
         [HttpPost]
         [Route("CreateEditSesionSolicitudVoto")]
         public async Task<IActionResult> CreateEditSesionSolicitudVoto([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
