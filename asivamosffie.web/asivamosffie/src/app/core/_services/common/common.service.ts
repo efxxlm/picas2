@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 import { Usuario } from '../autenticacion/autenticacion.service';
+import { promise } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -152,6 +153,29 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=46`);
   }
 
+  public listaUsuarios(){
+
+    let lista: Usuario[] = [];
+
+    return new Promise<Usuario[]>( resolve => {
+      forkJoin([
+        this.getUsuariosByPerfil(1),
+        this.getUsuariosByPerfil(2),
+        this.getUsuariosByPerfil(3),
+        this.getUsuariosByPerfil(4),
+        this.getUsuariosByPerfil(5),
+
+      ]).subscribe( response => {
+
+        for (let i = 0; i < 5; i++)
+        {
+          lista = lista.concat(response[i])  
+        }
+        
+        resolve(lista);
+      });
+    })
+  }
 
   public forkProject():Observable<any[]>
   {

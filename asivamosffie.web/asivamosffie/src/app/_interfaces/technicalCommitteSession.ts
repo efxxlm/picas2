@@ -1,3 +1,5 @@
+import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
+
 export interface SolicitudesContractuales{
     id?: number,
     fechaSolicitud?: Date,
@@ -70,8 +72,11 @@ export interface SesionComiteSolicitud {
     generaCompromiso?: boolean,
     cantCompromisos?: number,
     eliminado?: boolean,
+    requiereVotacion?: boolean,
 
     tipoSolicitud?: string,
+
+    sesionSolicitudVoto?: SesionSolicitudVoto[],
 
 }
 
@@ -82,6 +87,9 @@ export interface SesionParticipante{
     fechaCreacion?: Date,
     usuarioCreacion?: string,
     eliminado?: boolean,
+
+    usuario?: Usuario,
+    sesionSolicitudVoto?: SesionSolicitudVoto[]
 
 }
 
@@ -96,6 +104,24 @@ export interface SesionInvitado{
     usuarioModificacion?: string,
     eliminado?: boolean,
     comiteTecnicoId?: number,
+
+}
+
+export interface SesionSolicitudVoto{
+    sesionSolicitudVotoId?: number,
+    sesionComiteSolicitudId?: number,
+    sesionParticipanteId?: number,
+    esAprobado?: boolean,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+    usuarioModificacion?: string,
+    fechaModificacion?: Date,
+
+    nombreParticipante?: string,
+
+    sesionComiteSolicitud?: SesionComiteSolicitud
 
 }
 

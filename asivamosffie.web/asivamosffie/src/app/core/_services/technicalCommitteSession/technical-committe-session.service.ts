@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Respuesta } from '../common/common.service';
 import { environment } from 'src/environments/environment';
-import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { Session } from 'protractor';
 
 
@@ -43,6 +43,10 @@ export class TechnicalCommitteSessionService {
 
    createSesionInvitadoAndParticipante( comite: ComiteTecnico ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createSesionInvitadoAndParticipante`, comite );
+   }
+
+   public createEditSesionSolicitudVoto( sesionComiteSolicitud: SesionComiteSolicitud ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionSolicitudVoto`, sesionComiteSolicitud );
    }
 
 }
