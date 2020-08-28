@@ -17,8 +17,8 @@
       <div class="col">
         <mat-form-field class="select-width">
           <mat-select formControlName="miembrosParticipantes" multiple required>
-            <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro.value">
-              {{ miembro.name }}
+            <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro">
+              {{ miembro.nombres }} {{ miembro.apellidos }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -44,6 +44,7 @@
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
                     <input matInput #nombreInvitado type="text" formControlName="nombre" maxlength="100" required>
+                    <input type="hidden" formControlName="sesionInvitadoId">
                   </mat-form-field>
                   <span class="contador">{{100 - nombreInvitado.value.length}}</span>
                 </div>
@@ -110,7 +111,19 @@
           Validación de solicitudes contractuales
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-registrar-validacion-solicitudes-contractiales></app-tabla-registrar-validacion-solicitudes-contractiales>
+
+      <button 
+        (click)="registrarSolicitudes.cargarRegistro()"
+        style="display: none;"
+        id="btnRegistrarSolicitudes"
+      >
+      </button>
+
+      <app-tabla-registrar-validacion-solicitudes-contractiales
+        #registrarSolicitudes
+        [ObjetoComiteTecnico]="objetoComiteTecnico"
+      >
+      </app-tabla-registrar-validacion-solicitudes-contractiales>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
@@ -118,7 +131,19 @@
           Otros temas
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-registrar-otros-temas></app-tabla-registrar-otros-temas>
+
+      <button 
+        (click)="otrosTemas.cargarRegistro()"
+        style="display: none;"
+        id="btnOtrosTemas"
+      >
+      </button>
+
+      <app-tabla-registrar-otros-temas
+        #otrosTemas
+        [objetoComiteTecnico]="objetoComiteTecnico"
+      >
+    </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
@@ -126,7 +151,19 @@
           Proposiciones y varios
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-proposiciones-y-varios></app-tabla-proposiciones-y-varios>
+
+      <button 
+        (click)="proposiciones.cargarRegistro()"
+        style="display: none;"
+        id="btnProposiciones"
+      >
+      </button>
+
+      <app-tabla-proposiciones-y-varios
+        #proposiciones
+        [objetoComiteTecnico]="objetoComiteTecnico"
+      >
+      </app-tabla-proposiciones-y-varios>
     </mat-expansion-panel>
   </mat-accordion>
 </section>

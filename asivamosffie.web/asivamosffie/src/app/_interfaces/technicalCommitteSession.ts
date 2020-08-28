@@ -30,7 +30,9 @@ export interface ComiteTecnico{
     estadoComiteCodigo?: string,
 
     sesionComiteTema?: SesionComiteTema[],
-    sesionComiteSolicitud?: SesionComiteSolicitud[]
+    sesionComiteSolicitud?: SesionComiteSolicitud[],
+    sesionParticipante?: SesionParticipante[],
+    sesionInvitado?: SesionInvitado[],
 
 }
 
@@ -70,7 +72,31 @@ export interface SesionComiteSolicitud {
     eliminado?: boolean,
 
     tipoSolicitud?: string,
-    
+
+}
+
+export interface SesionParticipante{
+    sesionParticipanteId?: number,
+    comiteTecnicoId?: number,
+    usuarioId?: number,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+
+}
+
+export interface SesionInvitado{
+    sesionInvitadoId?: number,
+    nombre?: string,
+    cargo?: string,
+    entidad?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    eliminado?: boolean,
+    comiteTecnicoId?: number,
+
 }
 
 export interface ComiteGrilla{
