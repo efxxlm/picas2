@@ -742,7 +742,7 @@ namespace asivamosffie.services
         #endregion
 
 
-        public async Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico)
+        public async Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Convocar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
@@ -816,12 +816,13 @@ namespace asivamosffie.services
                     }
                 }
                 //Notificar a los participantes
-
+                bool blEnvioCorreo = false;
                 foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
                 {
                     if (!string.IsNullOrEmpty(SesionParticipante.Usuario.Email))
                     {
-                        Helpers.Helpers.EnviarCorreo("", "Recuperar contraseña", "", "", "", "",0);
+
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(SesionParticipante.Usuario.Email, "Convocatoria sesión de comité técnico", plantilla.Contenido, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
 
