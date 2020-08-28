@@ -1,5 +1,10 @@
 .shipping-card {
     padding-top: 2.5em !important;
+
+    .expansion-style & {
+        margin-left: -24px;
+        margin-right: -24px;
+    }
 }
 
 .botones {

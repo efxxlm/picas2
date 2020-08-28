@@ -25,6 +25,7 @@ import { TablaConDisponibilidadComponent } from './components/tabla-con-disponib
 import { ConDisponibilidadComponent } from './components/con-disponibilidad/con-disponibilidad.component';
 import { TablaConDisponibilidadCanceladaComponent } from './components/tabla-con-disponibilidad-cancelada/tabla-con-disponibilidad-cancelada.component';
 import { ConDisponibilidadCanceladaComponent } from './components/con-disponibilidad-cancelada/con-disponibilidad-cancelada.component';
+import { TablaInfoDevueltaPorCoordinacionComponent } from './components/tabla-info-devuelta-por-coordinacion/tabla-info-devuelta-por-coordinacion.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ConDisponibilidadCanceladaComponent } from './components/con-disponibil
     TablaConDisponibilidadComponent,
     ConDisponibilidadComponent,
     TablaConDisponibilidadCanceladaComponent,
-    ConDisponibilidadCanceladaComponent
+    ConDisponibilidadCanceladaComponent,
+    TablaInfoDevueltaPorCoordinacionComponent
   ],
   imports: [
     CommonModule,
