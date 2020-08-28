@@ -30,13 +30,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let temas of listaVotacion.controls; let i = index" [formGroupName]="i">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            Juan Lizcano Garcia
+            {{ addressForm.controls[i].get('nombreParticipante').value }}
+            <input type="hidden" formControlName="sesionSolicitudVotoId">
+            <input type="hidden" formControlName="sesionParticipanteId">
+            <input type="hidden" formControlName="sesionComiteSolicitudId">
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
-              <mat-checkbox></mat-checkbox>
+              <mat-checkbox formControlName="aprobacion"></mat-checkbox>
             </section>
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
@@ -47,8 +50,17 @@
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
               <div class="d-flex">
-                <quill-editor class="quill-editor-style card" #observaciones [styles]="editorStyle" [modules]="config"
-                  required (onContentChanged)="maxLength($event, 1000)" required></quill-editor>
+
+                <quill-editor class="quill-editor-style card" 
+                  #observaciones 
+                  [styles]="editorStyle" 
+                  [modules]="config"
+                  required 
+                  (onContentChanged)="maxLength($event, 1000)" 
+                  required
+                  formControlName="observaciones">
+                </quill-editor>
+
                 <div class="d-flex align-items-center">
                   <!-- <span class="contador miles" *ngIf="observaciones !== null">
                     {{1000 - textoLimpio(observaciones)}}

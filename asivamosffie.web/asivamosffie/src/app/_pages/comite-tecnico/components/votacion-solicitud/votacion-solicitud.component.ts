@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { SesionComiteSolicitud, SesionSolicitudVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 @Component({
@@ -7,15 +11,14 @@ import { FormBuilder, Validators, FormArray } from '@angular/forms';
   templateUrl: './votacion-solicitud.component.html',
   styleUrls: ['./votacion-solicitud.component.scss']
 })
-export class VotacionSolicitudComponent {
+export class VotacionSolicitudComponent implements OnInit{
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
-  addressForm = this.fb.array([
-      this.fb.group({
-        aprobacion: [null, Validators.required],
-        observaciones: [null, Validators.required]
-      })
-    ]);
+  addressForm = this.fb.array([]);
+
+  get listaVotacion() {
+    return this.addressForm as FormArray;
+  }
 
   get aprobacion() {
     return this.addressForm.get('aprobacion') as FormArray;
@@ -50,26 +53,92 @@ export class VotacionSolicitudComponent {
   }
 
   crearParticipante() {
-    this.fb.group({
+    return this.fb.group({
+      nombreParticipante: [],
+      sesionSolicitudVotoId: [],
+      sesionParticipanteId: [],
+      sesionComiteSolicitudId: [],
       aprobacion: [null, Validators.required],
       observaciones: [null, Validators.required]
     });
   }
 
-  // cargarDatos() {
-  //   const aprobacion: any[] = ['', '', ''];
+  constructor(
+              private fb: FormBuilder,
+              public dialogRef: MatDialogRef<VotacionSolicitudComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: SesionComiteSolicitud,
+              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              public dialog: MatDialog,
 
-  //   aprobacion.forEach(valor => this.aprobacion.push(this.fb.control(valor)));
-  //   aprobacion.forEach(valor => this.observaciones.push(this.fb.control(valor)));
-  // }
+             ) 
+  {
 
-  constructor(private fb: FormBuilder) { }
+  }
+
+  ngOnInit(): void {
+
+    
+
+    this.data.sesionSolicitudVoto.forEach( v => {
+      let grupoVotacion = this.crearParticipante();
+      
+      grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
+      grupoVotacion.get('aprobacion').setValue( v.esAprobado );
+      grupoVotacion.get('observaciones').setValue( v.observacion );
+
+      grupoVotacion.get('sesionSolicitudVotoId').setValue( v.sesionSolicitudVotoId );
+      grupoVotacion.get('sesionParticipanteId').setValue( v.sesionParticipanteId );
+      grupoVotacion.get('sesionComiteSolicitudId').setValue( v.sesionComiteSolicitudId );
+
+      this.listaVotacion.push( grupoVotacion )
+    })
+
+    console.log( this.addressForm.value )
+
+  }
 
   agregarAprovacion() {
     this.aprobacion.push(this.fb.control(null, Validators.required));
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   onSubmit() {
-    alert('Thanks!');
+
+    let sesionComiteSolicitud: SesionComiteSolicitud = {
+      sesionComiteSolicitudId: this.data.sesionComiteSolicitudId,
+      comiteTecnicoId: this.data.comiteTecnicoId,
+      sesionSolicitudVoto: []
+    }
+
+    this.listaVotacion.controls.forEach( control => {
+      let sesionSolicitudVoto: SesionSolicitudVoto = {
+        sesionSolicitudVotoId: control.get('sesionSolicitudVotoId').value,
+        sesionComiteSolicitudId: control.get('sesionComiteSolicitudId').value,
+        sesionParticipanteId: control.get('sesionParticipanteId').value,
+        esAprobado: control.get('aprobacion').value,
+        observacion: control.get('observaciones').value,
+
+      }
+
+      sesionComiteSolicitud.sesionSolicitudVoto.push( sesionSolicitudVoto );
+    })
+
+    console.log( sesionComiteSolicitud );
+
+    this.technicalCommitteSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
+    .subscribe( respuesta => {
+      this.openDialog('Comité técnico', respuesta.message)
+      if ( respuesta.code == "200" ){
+        this.dialogRef.close();
+      }
+
+    })
+    
   }
 }

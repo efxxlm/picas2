@@ -5,7 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
-import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
@@ -15,6 +17,7 @@ import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
 
   @Input() ObjetoComiteTecnico: ComiteTecnico;
+  listaMiembros:Usuario[];
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
   dataSource = new MatTableDataSource();
@@ -28,12 +31,43 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   }
 
   constructor(
-    public dialog: MatDialog
-  ) { }
+              public dialog: MatDialog,
+              private commonService: CommonService,
 
-  openDialogValidacionSolicitudes() {
+             ) 
+  {
+
+  }
+
+  openDialogValidacionSolicitudes( elemento: SesionComiteSolicitud ) {
+
+
+    console.log(elemento, this.ObjetoComiteTecnico)
+
+    elemento.sesionSolicitudVoto = [];
+
+    this.ObjetoComiteTecnico.sesionParticipante.forEach( p => {
+      let votacion: SesionSolicitudVoto = p.sesionSolicitudVoto.find( v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId );
+      let usuario: Usuario = this.listaMiembros.find( m => m.usuarioId == p.usuarioId ) 
+
+      let solicitudVoto: SesionSolicitudVoto = {
+        sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+        sesionParticipanteId: p.sesionParticipanteId,
+        sesionSolicitudVotoId: votacion ? votacion.sesionSolicitudVotoId : 0,
+        nombreParticipante: `${ usuario.nombres } ${ usuario.apellidos }`,
+        esAprobado: votacion ? votacion.esAprobado : false,
+        observacion: votacion ? votacion.observacion : null,
+
+        sesionComiteSolicitud: elemento,
+
+
+      }
+
+      elemento.sesionSolicitudVoto.push( solicitudVoto )
+    })
+
     this.dialog.open(VotacionSolicitudComponent, {
-      width: '70em'
+      width: '70em', data: elemento
     });
   }
 
@@ -44,6 +78,13 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   }
 
   ngOnInit(): void {
+
+    this.commonService.listaUsuarios().then(( respuesta )=>{
+      this.listaMiembros = respuesta;
+    })
+    
+    
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
