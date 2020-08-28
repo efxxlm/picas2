@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
             ProcesoSeleccionIntegrante = new HashSet<ProcesoSeleccionIntegrante>();
             ProcesoSeleccionObservacion = new HashSet<ProcesoSeleccionObservacion>();
             ProcesoSeleccionProponente = new HashSet<ProcesoSeleccionProponente>();
+            SesionComiteSolicitud = new HashSet<SesionComiteSolicitud>();
         }
 
         public int ProcesoSeleccionId { get; set; }
@@ -45,6 +46,8 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public int? CantidadProponentesInvitados { get; set; }
+        public string UrlSoporteProponentesSeleccionados { get; set; }
 
         public virtual ICollection<ProcesoSeleccionCotizacion> ProcesoSeleccionCotizacion { get; set; }
         public virtual ICollection<ProcesoSeleccionCronograma> ProcesoSeleccionCronograma { get; set; }
@@ -52,5 +55,6 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ProcesoSeleccionIntegrante> ProcesoSeleccionIntegrante { get; set; }
         public virtual ICollection<ProcesoSeleccionObservacion> ProcesoSeleccionObservacion { get; set; }
         public virtual ICollection<ProcesoSeleccionProponente> ProcesoSeleccionProponente { get; set; }
+        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
     }
 }

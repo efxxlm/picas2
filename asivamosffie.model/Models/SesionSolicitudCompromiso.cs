@@ -3,25 +3,23 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class TemaCompromiso
+    public partial class SesionSolicitudCompromiso
     {
-        public TemaCompromiso()
+        public SesionSolicitudCompromiso()
         {
             CompromisoSeguimiento = new HashSet<CompromisoSeguimiento>();
         }
 
-        public int TemaCompromisoId { get; set; }
-        public int SesionTemaId { get; set; }
+        public int SesionSolicitudCompromisoId { get; set; }
+        public int SesionComiteSolicitudId { get; set; }
         public string Tarea { get; set; }
-        public string Responsable { get; set; }
+        public int ResponsableSesionParticipanteId { get; set; }
         public DateTime FechaCumplimiento { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
-        public DateTime? FechaModificacion { get; set; }
-        public DateTime? UsuarioModificacion { get; set; }
-        public bool? Eliminado { get; set; }
 
-        public virtual SesionComiteTema SesionTema { get; set; }
+        public virtual SesionParticipante ResponsableSesionParticipante { get; set; }
+        public virtual SesionComiteSolicitud SesionComiteSolicitud { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
     }
 }
