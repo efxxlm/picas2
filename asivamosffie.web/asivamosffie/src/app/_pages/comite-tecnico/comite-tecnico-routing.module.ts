@@ -7,7 +7,7 @@ import { RegistrarSesionComiteTecnicoComponent } from './components/registrar-se
 import { FormRegistrarParticipantesComponent } from './components/form-registrar-participantes/form-registrar-participantes.component';
 import { ObservacionComponent } from './components/observacion/observacion.component';
 import { CrearActaComponent } from './components/crear-acta/crear-acta.component';
-import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
+import { TablaVerificarCumplimientoComponent } from './components/tabla-verificar-cumplimiento/tabla-verificar-cumplimiento.component';
 
 const routes: Routes = [
   {
@@ -36,7 +36,7 @@ const routes: Routes = [
   },
   {
     path: 'verificarCumplimiento/:id',
-    component: CrearActaComponent
+    component: TablaVerificarCumplimientoComponent
   }
 ];
 

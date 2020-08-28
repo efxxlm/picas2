@@ -25,13 +25,14 @@ import { VotacionSolicitudComponent } from './components/votacion-solicitud/vota
 import { AplazarSesionComponent } from './components/aplazar-sesion/aplazar-sesion.component';
 import { CrearActaComponent } from './components/crear-acta/crear-acta.component';
 import { FormSolicitudComponent } from './components/form-solicitud/form-solicitud.component';
-import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
 import { VotacionSolicitudMultipleComponent } from './components/votacion-solicitud-multiple/votacion-solicitud-multiple.component';
 import { TablaProposicionesYVariosComponent } from './components/tabla-proposiciones-y-varios/tabla-proposiciones-y-varios.component';
 import { TablaFormSolicitudMultipleComponent } from './components/tabla-form-solicitud-multiple/tabla-form-solicitud-multiple.component';
 import { FormOtrosTemasComponent } from './components/form-otros-temas/form-otros-temas.component';
 import { ObservacionComponent } from './components/observacion/observacion.component';
 import { FormProposicionesYVariosComponent } from './components/form-proposiciones-y-varios/form-proposiciones-y-varios.component';
+import { TablaVerificarCumplimientoComponent } from './components/tabla-verificar-cumplimiento/tabla-verificar-cumplimiento.component';
+import { DialogVerDetalleComponent } from './components/dialog-ver-detalle/dialog-ver-detalle.component';
 
 @NgModule({
   declarations: [
@@ -53,13 +54,14 @@ import { FormProposicionesYVariosComponent } from './components/form-proposicion
     AplazarSesionComponent,
     CrearActaComponent,
     FormSolicitudComponent,
-    VerificarCumplimientoComponent,
     VotacionSolicitudMultipleComponent,
     TablaProposicionesYVariosComponent,
     TablaFormSolicitudMultipleComponent,
     FormOtrosTemasComponent,
     ObservacionComponent,
-    FormProposicionesYVariosComponent
+    FormProposicionesYVariosComponent,
+    TablaVerificarCumplimientoComponent,
+    DialogVerDetalleComponent
   ],
   imports: [
     CommonModule,
