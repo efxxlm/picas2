@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using asivamosffie.model.APIModels;
+
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
@@ -27,6 +28,15 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
             _documentService = documentService;
         }
+
+        [HttpGet]
+        [Route("GetProyectoGrillaByProyecto")]
+        public async Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto)
+        {
+            var result = await _projectService.GetProyectoGrillaByProyecto(pProyecto);
+            return result;
+        }
+         
 
         [Route("CreateOrEditAdministrativeProject")]
         [HttpPost]
@@ -69,8 +79,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-
-
+         
         [Route("UploadMassiveLoadProjects")]
         [HttpPost]
         public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
@@ -89,8 +98,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-
-
+         
         [Route("CreateOrUpdateProyect")]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateProyect([FromBody] Proyecto pProyecto)

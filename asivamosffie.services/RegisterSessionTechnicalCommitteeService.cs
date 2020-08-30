@@ -22,13 +22,15 @@ namespace asivamosffie.services
         #region Constructor
         private readonly ICommonService _commonService;
         private readonly IProjectContractingService _IProjectContractingService;
+        private readonly IProjectService _IprojectService;
         private readonly devAsiVamosFFIEContext _context;
         public readonly IConverter _converter;
-        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, IConverter converter, ICommonService commonService, IProjectContractingService projectContractingService)
+        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, IProjectService projectService, IConverter converter, ICommonService commonService, IProjectContractingService projectContractingService)
         {
             _IProjectContractingService = projectContractingService;
             _commonService = commonService;
             _context = context;
+            _IprojectService = projectService;
             _converter = converter;
         }
         #endregion
@@ -832,15 +834,23 @@ namespace asivamosffie.services
 
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
+            List<ComiteTecnico> comiteTecnicos = _context.ComiteTecnico.ToList();
+         
+            if (pComiteTecnicoId == 0 || comiteTecnicos.Where(r => r.ComiteTecnicoId == pComiteTecnicoId).Count() == 0) {
+
+                return new ComiteTecnico();
+            }
+
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                 .Include(r => r.SesionComiteSolicitud)
-                   .ThenInclude(r => r.SesionSolicitudVoto)
+                   .ThenInclude(r => r.SesionSolicitudVoto) 
                 .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado))
                 .IncludeFilter(r => r.SesionParticipante.Where(r => !(bool)r.Eliminado))
-                .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado))
-
+                .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado) 
+                ) 
                 .FirstOrDefaultAsync();
+
 
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
 
@@ -855,15 +865,22 @@ namespace asivamosffie.services
                 SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
             }
             List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
-
-
+             
             List<ProcesoSeleccion> ListProcesoSeleccion =
                 _context.ProcesoSeleccion
                 .Where(r => !(bool)r.Eliminado).ToList();
 
+ 
             List<Contratacion> ListContratacion = _context.Contratacion
-                .Where(r => !(bool)r.Eliminado).IncludeFilter(r=> r.ContratacionProyecto.Where(r=> !(bool)r.Eliminado)).ToList();
+                .Where(r => !(bool)r.Eliminado) 
+                .Include(r=> r.ContratacionProyecto) 
+                .ThenInclude(r=> r.Proyecto).ToList();
 
+
+            foreach (var contratacion in ListContratacion)
+            {
+                contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
+            }
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
             {
@@ -895,6 +912,7 @@ namespace asivamosffie.services
                           .NumeroProceso;
 
                         SesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
+                         
                         break;
                 }
 

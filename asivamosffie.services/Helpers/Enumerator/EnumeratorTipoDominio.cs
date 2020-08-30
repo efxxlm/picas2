@@ -57,6 +57,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_Documento = 30,
 
+        //Es para proyecto ?
         Estado_Solicitud = 31,
  
         // Para disponibilidad presupuestal
