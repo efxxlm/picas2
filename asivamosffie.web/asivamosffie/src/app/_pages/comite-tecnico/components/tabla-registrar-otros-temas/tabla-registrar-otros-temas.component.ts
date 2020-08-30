@@ -20,6 +20,8 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
   @Input() objetoComiteTecnico: ComiteTecnico;
+  @Input() esProposicionesVarios: boolean;
+
   listaMiembros:Usuario[];
 
   displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
@@ -43,6 +45,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
   ngOnInit(): void {
 
+    console.log( this.esProposicionesVarios )
     this.commonService.listaUsuarios().then(( respuesta )=>{
       this.listaMiembros = respuesta;
     })
@@ -68,8 +71,10 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
     elemento.sesionTemaVoto = [];
 
+    console.log( this.objetoComiteTecnico.sesionParticipante.length )
+
     this.objetoComiteTecnico.sesionParticipante.forEach( p => {
-      let votacion: SesionTemaVoto = elemento.sesionTemaVoto.find( v => v.sesionParticipanteId == p.sesionParticipanteId );
+      let votacion: SesionTemaVoto = p.sesionTemaVoto.find( v => v.sesionTemaId == elemento.sesionTemaId );
       let usuario: Usuario = this.listaMiembros.find( m => m.usuarioId == p.usuarioId ) 
 
       let temaVoto: SesionTemaVoto = {
@@ -87,17 +92,18 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
       elemento.sesionTemaVoto.push( temaVoto )
     })
 
-    console.log( this.objetoComiteTecnico )
 
     const dialog = this.dialog.open(VotacionTemaComponent, {
       width: '70em', data: { sesionComiteTema: elemento }
     });
 
     dialog.afterClosed().subscribe( c => {
+      if (c && c.comiteTecnicoId){
       this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
           .subscribe( response => {
             this.objetoComiteTecnico = response;
           })
+        }
     })
 
   }
@@ -110,7 +116,8 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
   cargarRegistro(){
 
-    let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
+    let lista = this.objetoComiteTecnico.sesionComiteTema.
+                        filter( t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == this.esProposicionesVarios )
 
     this.dataSource = new MatTableDataSource( lista );
 

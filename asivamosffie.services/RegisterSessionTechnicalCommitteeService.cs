@@ -177,7 +177,7 @@ namespace asivamosffie.services
                     else
                     {
                         CrearEditar = "EDITAR SESIÓN TEMA VOTO";
-                        SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaId);
+                        SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaVotoId);
                         SesionTemaVotoOld.FechaModificacion = DateTime.Now;
                         SesionTemaVotoOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
 

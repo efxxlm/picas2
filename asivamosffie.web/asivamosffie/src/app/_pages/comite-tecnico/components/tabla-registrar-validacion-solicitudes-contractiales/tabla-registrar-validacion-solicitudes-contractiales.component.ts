@@ -44,9 +44,6 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   openDialogValidacionSolicitudes( elemento: SesionComiteSolicitud ) {
 
-
-    console.log(elemento, this.ObjetoComiteTecnico)
-
     elemento.sesionSolicitudVoto = [];
 
     this.ObjetoComiteTecnico.sesionParticipante.forEach( p => {
@@ -84,7 +81,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       });
   
       dialog.afterClosed().subscribe( c => {
-        if ( c.comiteTecnicoId )
+        if ( c && c.comiteTecnicoId )
         {
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
             .subscribe( response => {
@@ -100,7 +97,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       });
   
       dialog.afterClosed().subscribe( c => {
-        if ( c.comiteTecnicoId )
+        if ( c && c.comiteTecnicoId )
         {
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
             .subscribe( response => {
@@ -113,11 +110,6 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     
   }
 
-  // openDialogValidacionSolicitudesMultiple() {
-  //   this.dialog.open(VotacionSolicitudMultipleComponent, {
-  //     width: '70em'
-  //   });
-  // }
 
   ngOnInit(): void {
 
