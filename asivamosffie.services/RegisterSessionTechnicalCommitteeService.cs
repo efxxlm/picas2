@@ -75,7 +75,7 @@ namespace asivamosffie.services
                     { 
                         SesionSolicitudObservacionProyecto.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                         SesionSolicitudObservacionProyecto.FechaCreacion = DateTime.Now;
-                        SesionSolicitudObservacionProyecto.Eliminado = false;
+                        SesionSolicitudObservacionProyecto.Eliminado = false; 
                         _context.SesionSolicitudObservacionProyecto.Add(SesionSolicitudObservacionProyecto);
                     }
                     else { 
@@ -862,7 +862,7 @@ namespace asivamosffie.services
                 .Where(r => !(bool)r.Eliminado).ToList();
 
             List<Contratacion> ListContratacion = _context.Contratacion
-                .Where(r => !(bool)r.Eliminado).ToList();
+                .Where(r => !(bool)r.Eliminado).IncludeFilter(r=> r.ContratacionProyecto.Where(r=> !(bool)r.Eliminado)).ToList();
 
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
