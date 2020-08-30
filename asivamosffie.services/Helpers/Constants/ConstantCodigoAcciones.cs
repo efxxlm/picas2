@@ -51,7 +51,10 @@
         public const string Crear_Editar_Sesion_Comite_Tema = "53"; 
         public const string No_Requiere_Votacion_Sesion_Comite_Solicitud = "54";
         public const string Convocar_Comite_Tecnico = "55";
-
+        public const string Crear_Editar_Comite_Tema_Voto ="56";
+        public const string No_Requiere_Votacion_Sesion_Comite_Tema = "57";
+        public const string Aplazar_Sesion_De_Comite = "58";
+        public const string Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS ="59";
 
     }
 }

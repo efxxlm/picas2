@@ -82,5 +82,12 @@
         public const string TIEMPO_TEMA_ORDEN_DIA = "71";
         public const string RESPONSABLE_TEMA_ORDEN_DIA = "72";
         #endregion
+
+        #region Aplazar Comite Tecnico
+
+        public const string COMITE_NUMERO = "73";
+        public const string COMITE_FECHA = "74";
+        public const string COMITE_FECHA_APLAZAMIENTO = "75";
+        #endregion
     }
 }

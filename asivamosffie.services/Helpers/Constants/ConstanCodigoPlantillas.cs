@@ -13,7 +13,8 @@
         Proceso_de_seleccion_Cerrada = 10,
         Proceso_de_seleccion_Abierta = 11,
         Convocar_Comite_Tecnico = 12,
-        Tabla_Orden_Del_Dia = 13
+        Tabla_Orden_Del_Dia = 13,
+        Aplazar_Comite_Tecnico = 14
 
     }
 }
