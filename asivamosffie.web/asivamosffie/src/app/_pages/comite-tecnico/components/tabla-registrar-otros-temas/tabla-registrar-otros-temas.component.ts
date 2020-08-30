@@ -5,9 +5,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
-import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteTema, SesionTemaVoto } from 'src/app/_interfaces/technicalCommitteSession';
 import { VotacionTemaComponent } from '../votacion-tema/votacion-tema.component';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 
 @Component({
@@ -18,6 +20,7 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
   @Input() objetoComiteTecnico: ComiteTecnico;
+  listaMiembros:Usuario[];
 
   displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
   dataSource = new MatTableDataSource();
@@ -33,11 +36,17 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   constructor(
               public dialog: MatDialog,
               private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              private commonService: CommonService,
 
              ) 
   {}
 
   ngOnInit(): void {
+
+    this.commonService.listaUsuarios().then(( respuesta )=>{
+      this.listaMiembros = respuesta;
+    })
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -56,8 +65,32 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   openDialogValidacionSolicitudes( elemento: SesionComiteTema ) {
+
+    elemento.sesionTemaVoto = [];
+
+    this.objetoComiteTecnico.sesionParticipante.forEach( p => {
+      let votacion: SesionTemaVoto = elemento.sesionTemaVoto.find( v => v.sesionParticipanteId == p.sesionParticipanteId );
+      let usuario: Usuario = this.listaMiembros.find( m => m.usuarioId == p.usuarioId ) 
+
+      let temaVoto: SesionTemaVoto = {
+
+        sesionTemaVotoId: votacion ? votacion.sesionTemaVotoId : 0,
+        sesionTemaId: elemento.sesionTemaId,
+        sesionParticipanteId: p.sesionParticipanteId,
+        
+        nombreParticipante: `${ usuario.nombres } ${ usuario.apellidos }`,
+        esAprobado: votacion ? votacion.esAprobado : false,
+        observacion: votacion ? votacion.observacion : null,
+
+      }
+
+      elemento.sesionTemaVoto.push( temaVoto )
+    })
+
+    console.log( this.objetoComiteTecnico )
+
     const dialog = this.dialog.open(VotacionTemaComponent, {
-      width: '70em', data: elemento
+      width: '70em', data: { sesionComiteTema: elemento }
     });
 
     dialog.afterClosed().subscribe( c => {

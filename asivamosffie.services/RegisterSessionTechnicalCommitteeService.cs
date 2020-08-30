@@ -166,7 +166,7 @@ namespace asivamosffie.services
 
                 foreach (var SesionTemaVoto in pSesionComiteTema.SesionTemaVoto)
                 {
-                    if (SesionTemaVoto.SesionTemaId == 0)
+                    if (SesionTemaVoto.SesionTemaVotoId == 0)
                     {
                         CrearEditar = "CREAR SESIÓN TEMA VOTO";
                         SesionTemaVoto.UsuarioCreacion = pSesionComiteTema.UsuarioCreacion;

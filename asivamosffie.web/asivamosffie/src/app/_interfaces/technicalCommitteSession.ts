@@ -56,6 +56,7 @@ export interface SesionComiteTema{
     esProposicionesVarios?: boolean,
     requiereVotacion?: boolean,
 
+    sesionTemaVoto?: SesionTemaVoto[]
 
 }
 
@@ -91,7 +92,8 @@ export interface SesionParticipante{
     eliminado?: boolean,
 
     usuario?: Usuario,
-    sesionSolicitudVoto?: SesionSolicitudVoto[]
+    sesionSolicitudVoto?: SesionSolicitudVoto[],
+    sesionTemaVoto?: SesionTemaVoto[],
 
 }
 
@@ -124,6 +126,22 @@ export interface SesionSolicitudVoto{
     nombreParticipante?: string,
 
     sesionComiteSolicitud?: SesionComiteSolicitud
+
+}
+
+export interface SesionTemaVoto{
+    sesionTemaVotoId?: number,
+    sesionTemaId?: number,
+    sesionParticipanteId?: number,
+    esAprobado?: boolean,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    eliminado?: boolean,
+
+    nombreParticipante?: string,
 
 }
 
