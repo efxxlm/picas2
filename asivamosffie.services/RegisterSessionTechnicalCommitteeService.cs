@@ -67,6 +67,24 @@ namespace asivamosffie.services
                         sesionSolicitudVotoOld.Observacion = sesionSolicitudVoto.Observacion;
                     }
                 }
+
+                //
+                foreach (var SesionSolicitudObservacionProyecto in pSesionComiteSolicitud.SesionSolicitudObservacionProyecto)
+                {
+                    if (SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId == 0)
+                    { 
+                        SesionSolicitudObservacionProyecto.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        SesionSolicitudObservacionProyecto.FechaCreacion = DateTime.Now;
+                        SesionSolicitudObservacionProyecto.Eliminado = false;
+                        _context.SesionSolicitudObservacionProyecto.Add(SesionSolicitudObservacionProyecto);
+                    }
+                    else { 
+                        SesionSolicitudObservacionProyecto SesionSolicitudObservacionProyectoOld = _context.SesionSolicitudObservacionProyecto.Find(SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId);
+                        SesionSolicitudObservacionProyectoOld.Observacion = SesionSolicitudObservacionProyecto.Observacion;
+                        SesionSolicitudObservacionProyectoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        SesionSolicitudObservacionProyectoOld.FechaModificacion = DateTime.Now;
+                    }
+                } 
                 _context.SaveChanges();
                 return
                 new Respuesta
