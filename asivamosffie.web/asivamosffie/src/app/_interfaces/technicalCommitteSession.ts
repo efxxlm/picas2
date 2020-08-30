@@ -54,6 +54,8 @@ export interface SesionComiteTema{
     eliminado?: boolean,
     comiteTecnicoId?: number,
     esProposicionesVarios?: boolean,
+    requiereVotacion?: boolean,
+
 
 }
 
@@ -154,3 +156,18 @@ interface EstadoComite{
     fallida: "7",
 
   }
+
+  interface TipoSolicitud{
+    AperturaDeProcesoDeSeleccion?: string,
+    Contratacion?: string,
+    ModificacionContractual?: string,
+    
+  }
+  
+  export const TiposSolicitud: TipoSolicitud = {
+    AperturaDeProcesoDeSeleccion: "1",
+    Contratacion: "2",
+    ModificacionContractual: "3",
+
+  }
+

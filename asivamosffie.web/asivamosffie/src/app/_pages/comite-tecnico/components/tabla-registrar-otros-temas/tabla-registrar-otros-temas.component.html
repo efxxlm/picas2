@@ -45,6 +45,7 @@
                 color="accent" 
                 class="btn-table" 
                 (click)="openDialogValidacionSolicitudes( element )"
+                [disabled]="element.requiereVotacion && element.requiereVotacion.toString() != 'true' "
             >Votar</button>
         </td>
     </ng-container>

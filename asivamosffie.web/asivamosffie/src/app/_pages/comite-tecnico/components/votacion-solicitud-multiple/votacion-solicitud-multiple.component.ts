@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SesionComiteSolicitud, ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-votacion-solicitud-multiple',
@@ -9,12 +13,11 @@ import { FormBuilder, Validators, FormArray } from '@angular/forms';
 export class VotacionSolicitudMultipleComponent implements OnInit {
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
-  addressForm = this.fb.array([
-      this.fb.group({
-        aprobacion: [null, Validators.required],
-        observaciones: [null, Validators.required]
-      })
-    ]);
+  get listaVotacion() {
+    return this.addressForm as FormArray;
+  }
+
+  addressForm = this.fb.array([]);
 
   get aprobacion() {
     return this.addressForm.get('aprobacion') as FormArray;
@@ -49,15 +52,47 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
   }
 
   crearParticipante() {
-    this.fb.group({
+    return this.fb.group({
+      nombreParticipante: [],
+      sesionSolicitudVotoId: [],
+      sesionParticipanteId: [],
+      sesionComiteSolicitudId: [],
       aprobacion: [null, Validators.required],
       observaciones: [null, Validators.required]
     });
   }
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+              private fb: FormBuilder,
+              public dialogRef: MatDialogRef<VotacionSolicitudMultipleComponent>, 
+              @Inject(MAT_DIALOG_DATA) public data: { 
+                                                      sesionComiteSolicitud: SesionComiteSolicitud, 
+                                                      objetoComiteTecnico: ComiteTecnico 
+                                                    },
+              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              public dialog: MatDialog,
+              private router: Router,
+             )
+  {
+
+  }
+
   ngOnInit(): void {
-    throw new Error("Method not implemented.");
+    
+    this.data.sesionComiteSolicitud.sesionSolicitudVoto.forEach( v => {
+      let grupoVotacion = this.crearParticipante();
+      
+      grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
+      grupoVotacion.get('aprobacion').setValue( v.esAprobado );
+      grupoVotacion.get('observaciones').setValue( v.observacion );
+
+      grupoVotacion.get('sesionSolicitudVotoId').setValue( v.sesionSolicitudVotoId );
+      grupoVotacion.get('sesionParticipanteId').setValue( v.sesionParticipanteId );
+      grupoVotacion.get('sesionComiteSolicitudId').setValue( v.sesionComiteSolicitudId );
+
+      this.listaVotacion.push( grupoVotacion )
+    })
+
   }
 
   agregarAprovacion() {
