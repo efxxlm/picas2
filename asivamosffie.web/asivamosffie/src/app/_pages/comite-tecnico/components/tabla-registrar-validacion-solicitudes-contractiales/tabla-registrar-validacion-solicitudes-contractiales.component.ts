@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
-import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
@@ -19,6 +19,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   @Input() ObjetoComiteTecnico: ComiteTecnico;
   listaMiembros:Usuario[];
+  tiposSolicitud = TiposSolicitud
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
   dataSource = new MatTableDataSource();
@@ -68,27 +69,55 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       elemento.sesionSolicitudVoto.push( solicitudVoto )
     })
 
-    const dialog = this.dialog.open(VotacionSolicitudComponent, {
-      width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
-    });
-
-    dialog.afterClosed().subscribe( c => {
-      if ( c.comiteTecnicoId )
-      {
-        this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
-          .subscribe( response => {
-            this.ObjetoComiteTecnico = response;
-          })
-      }
-    })
-
+    this.abrirPopupVotacion( elemento );
   }
 
-  openDialogValidacionSolicitudesMultiple() {
-    this.dialog.open(VotacionSolicitudMultipleComponent, {
-      width: '70em'
-    });
+  abrirPopupVotacion( elemento: SesionComiteSolicitud ){
+
+    if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion){
+
+      const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
+        width: '70em', 
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        maxHeight: '90em',
+
+      });
+  
+      dialog.afterClosed().subscribe( c => {
+        if ( c.comiteTecnicoId )
+        {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
+            .subscribe( response => {
+              this.ObjetoComiteTecnico = response;
+            })
+        }
+      })
+
+    }else{
+      
+      const dialog = this.dialog.open(VotacionSolicitudComponent, {
+        width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
+      });
+  
+      dialog.afterClosed().subscribe( c => {
+        if ( c.comiteTecnicoId )
+        {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
+            .subscribe( response => {
+              this.ObjetoComiteTecnico = response;
+            })
+        }
+      })
+    }
+
+    
   }
+
+  // openDialogValidacionSolicitudesMultiple() {
+  //   this.dialog.open(VotacionSolicitudMultipleComponent, {
+  //     width: '70em'
+  //   });
+  // }
 
   ngOnInit(): void {
 

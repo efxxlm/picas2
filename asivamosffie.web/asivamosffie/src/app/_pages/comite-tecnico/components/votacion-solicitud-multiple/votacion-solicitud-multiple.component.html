@@ -12,7 +12,7 @@
 
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <div>
-    <table class="mat-table cdk-table mat-sort mat-table-style primer-tabla">
+    <table class="mat-table cdk-table mat-sort mat-table-style">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
           <th class="mat-header-cell cdk-header-cell ng-star-inserted">
@@ -27,13 +27,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let temas of listaVotacion.controls; let i = index" [formGroupName]="i">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            Juan Lizcano Garcia
+            {{ addressForm.controls[i].get('nombreParticipante').value }}
+            <input type="hidden" formControlName="sesionSolicitudVotoId">
+            <input type="hidden" formControlName="sesionParticipanteId">
+            <input type="hidden" formControlName="sesionComiteSolicitudId">
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
-              <mat-checkbox></mat-checkbox>
+              <mat-checkbox formControlName="aprobacion"></mat-checkbox>
             </section>
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
@@ -41,6 +44,7 @@
               <mat-checkbox></mat-checkbox>
             </section>
           </td>
+          
         </tr>
       </tbody>
     </table>
@@ -60,12 +64,6 @@
                 Miembro participante
               </th>
               <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Aprobó
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                No aprobó
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                 Observaciones
               </th>
             </tr>
@@ -74,16 +72,6 @@
             <tr>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 Juan Lizcano Garcia
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <section class="example-section">
-                  <mat-checkbox></mat-checkbox>
-                </section>
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <section class="example-section">
-                  <mat-checkbox></mat-checkbox>
-                </section>
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="example-section">
