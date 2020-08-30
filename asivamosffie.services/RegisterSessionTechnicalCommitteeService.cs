@@ -845,13 +845,14 @@ namespace asivamosffie.services
                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                 .Include(r => r.SesionComiteSolicitud)
                    .ThenInclude(r => r.SesionSolicitudVoto) 
-                .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado))
+                .Include(r => r.SesionComiteTema)
+                   .ThenInclude(r=> r.SesionTemaVoto) 
                 .IncludeFilter(r => r.SesionParticipante.Where(r => !(bool)r.Eliminado))
                 .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado) 
                 ) 
                 .FirstOrDefaultAsync();
 
-
+            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList(); 
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
