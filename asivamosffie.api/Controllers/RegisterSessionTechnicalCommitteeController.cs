@@ -24,9 +24,81 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
+         
+        [HttpPost]
+        [Route("CreateEditActasSesionSolicitudCompromiso")]
+        public async Task<IActionResult> CreateEditActasSesionSolicitudCompromiso([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteSolicitud.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditActasSesionSolicitudCompromiso(pSesionComiteSolicitud);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
         [HttpPost]
-        [Route("GetNoRequiereVotacionSesionComiteSolicitud")]
+        [Route("AplazarSesionComite")]
+        public async Task<IActionResult> AplazarSesionComite([FromBody]ComiteTecnico pComiteTecnico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.AplazarSesionComite(pComiteTecnico, _settings.Value.Dominio, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("NoRequiereVotacionSesionComiteTema")]
+        public async Task<IActionResult> NoRequiereVotacionSesionComiteTema([FromQuery]int idSesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerSessionTechnicalCommitteeService.NoRequiereVotacionSesionComiteTema(idSesionComiteTema , HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditSesionTemaVoto")]
+        public async Task<IActionResult> CreateEditSesionTemaVoto([FromBody] SesionComiteTema pSesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteTema.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditSesionTemaVoto(pSesionComiteTema);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+       
+        [HttpPost]
+        [Route("NoRequiereVotacionSesionComiteSolicitud")]
         public async Task<IActionResult> GetNoRequiereVotacionSesionComiteSolicitud([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
         {
             Respuesta respuesta = new Respuesta();
@@ -42,9 +114,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
+         
         [HttpPost]
         [Route("ConvocarComiteTecnico")]
         public async Task<IActionResult> ConvocarComiteTecnico([FromBody]ComiteTecnico pComiteTecnico)
@@ -62,8 +132,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
- 
+         
         [HttpPost]
         [Route("CreateEditSesionSolicitudVoto")]
         public async Task<IActionResult> CreateEditSesionSolicitudVoto([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
@@ -81,9 +150,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
+         
         [HttpPost]
         [Route("CreateEditSesionComiteTema")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)
@@ -101,9 +168,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
+         
         [HttpDelete]
         [Route("DeleteSesionInvitado")]
         public async Task<IActionResult> DeleteSesionInvitado([FromQuery] int pSesionInvitadoId)
@@ -163,7 +228,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerSessionTechnicalCommitteeService.GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime.Parse(pFechaComite));
         }
-
+     
         [HttpGet]
         [Route("GetComiteTecnicoByComiteTecnicoId")]
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
@@ -172,14 +237,14 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateSesionInvitadoAndParticipante")]
-        public async Task<IActionResult> CreateSesionInvitadoAndParticipante([FromBody] ComiteTecnico pComiteTecnico)
+        [Route("CreateEditSesionInvitadoAndParticipante")]
+        public async Task<IActionResult> CreateEditSesionInvitadoAndParticipante([FromBody] ComiteTecnico pComiteTecnico)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.CreateSesionInvitadoAndParticipante(pComiteTecnico);
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditSesionInvitadoAndParticipante(pComiteTecnico);
                 return Ok(respuesta);
             }
             catch (Exception ex)

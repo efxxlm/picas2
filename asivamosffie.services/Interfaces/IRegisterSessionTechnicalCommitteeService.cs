@@ -10,9 +10,9 @@ namespace asivamosffie.services.Interfaces
     public interface IRegisterSessionTechnicalCommitteeService
     {
         Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
-        
+
         Task<Respuesta> GetNoRequiereVotacionSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud);
-             
+
         Task<Respuesta> CreateEditSesionSolicitudVoto(SesionComiteSolicitud pSesionComiteSolicitud);
 
         Task<Respuesta> CreateEditSesionComiteTema(List<SesionComiteTema> ListSesionComiteTemas);
@@ -27,7 +27,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId);
 
-        Task<Respuesta> CreateSesionInvitadoAndParticipante(ComiteTecnico pComiteTecnico);
+        Task<Respuesta> CreateEditSesionInvitadoAndParticipante(ComiteTecnico pComiteTecnico);
 
         Task<Respuesta> EliminarSesionComiteTema(int pSesionComiteTemaId, string pUsuarioModificacion);
 
@@ -36,5 +36,13 @@ namespace asivamosffie.services.Interfaces
         Task<List<ComiteGrilla>> GetListComiteGrilla();
 
         Task<List<dynamic>> GetListSesionComiteTemaByComiteTecnicoId(int pComiteTecnicoId);
+
+        Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema);
+
+        Task<Respuesta> NoRequiereVotacionSesionComiteTema(int idSesionComiteTema, string pUsuarioCreacion);
+
+        Task<Respuesta> AplazarSesionComite(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
+
+        Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud);
     }
 }
