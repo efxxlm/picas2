@@ -9,7 +9,7 @@
     <ng-container matColumnDef="gestionRealizada">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión realizada </th>
       <td mat-cell *matCellDef="let element" class="padding-1">
-        <button mat-raised-button color="accent" class="tabs--btn">
+        <button mat-raised-button color="accent" class="tabs--btn" (click)="VerDetalle()">
           Ver detalle
         </button>
       </td>
