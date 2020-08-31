@@ -66,29 +66,33 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
       }
 
-      elemento.contratacion.contratacionProyecto.forEach(c => {
+      if (elemento.contratacion && elemento.contratacion.contratacionProyecto) {
 
-        let observacion = elemento.sesionSolicitudObservacionProyecto
-          .find(o => o.sesionParticipanteId == p.sesionParticipanteId && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+        elemento.contratacion.contratacionProyecto.forEach(c => {
 
-        let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
-          sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
-          sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
-          sesionParticipanteId: p.sesionParticipanteId,
-          contratacionProyectoId: c.contratacionProyectoId,
-          observacion: observacion ? observacion.observacion : null,
-          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+          let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
+            .find(o => o.contratacionProyectoId == c.contratacionProyectoId
+              && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
 
+          let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
+            sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
+            sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+            sesionParticipanteId: p.sesionParticipanteId,
+            contratacionProyectoId: c.contratacionProyectoId,
+            observacion: observacion ? observacion.observacion : null,
+            nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
 
-          proyecto: c.proyecto,
-        }
+            proyecto: c.proyecto,
+          }
 
-        elemento.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
-      })
+          elemento.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+        })
+      }
 
 
       elemento.sesionSolicitudVoto.push(solicitudVoto)
     })
+
 
     //console.log(elemento)
 

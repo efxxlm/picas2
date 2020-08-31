@@ -3,11 +3,11 @@
 </button>
 
 <h1 class="title-menu--h1">
-    Votación solicitud PI0004
+    Votación solicitud {{ this.data.comite.numeroComite }}
 </h1>
 
 <p>
-    25/06/2020
+    {{ this.data.comite.fechaOrdenDia | date: 'dd/MM/yyyy' }}
 </p>
 
 <div class="row justify-content-center mt-1em mb-1em">
@@ -24,5 +24,5 @@
             <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
         </button>
     </div>
-    <button mat-raised-button color="accent" [disabled]="fechaAplazamiento.invalid">Aplazar</button>
+    <button mat-raised-button color="accent" [disabled]="fechaAplazamiento.invalid" (click)="onSubmit()" >Aplazar</button>
 </div>

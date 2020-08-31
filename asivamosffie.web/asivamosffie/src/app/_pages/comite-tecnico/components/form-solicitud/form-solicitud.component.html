@@ -8,7 +8,7 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            23/06/2020
+            {{ fechaSolicitud | date: 'dd/MM/yyyy' }} 
           </b>
         </div>
       </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            SA0006
+            {{ sesionComiteSolicitud.numeroSolicitud }}
           </b>
         </div>
       </div>
@@ -28,7 +28,7 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            Apertura de proceso de selección
+            {{ sesionComiteSolicitud.tipoSolicitud }}
           </b>
         </div>
       </div>
@@ -38,25 +38,20 @@
         </div>
         <div class="col">
           <p class="label-left colorMainColor pt-1 font-weight-lighter">
-            En los últimos años se ha visto un crecimiento de la población escolar en el país, que ha hecho que algunas
-            de las instituciones educativas, se hayan visto copadas en sus cupos y no puedan prestar de manera
-            conveniente los servicios educativos, y otras que en razón a las distancias, resultan inaccesibles para los
-            niños en los grados de educación básica primaria. Como alternativa de solución se plantea éste proyecto para
-            ampliar y adecuar la infraestructura educativa, acorde con las necesidades y cumpliendo con los estándares
-            de infraestructura vigentes.
+            {{ justificacion }}
           </p>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>
-      <div class="reparacion-card row">
+      <div class="reparacion-card row" *ngIf="tieneVotacion">
         <div class="col-md-4">
-          Resultado de la votación <b class="colorMainColor">No aprobó</b>
+          Resultado de la votación <b class="colorMainColor">{{ resultadoVotacion }}</b>
         </div>
         <div class="col-md-4 info-text completo">
-          Aprobó <b class="colorMainColor"> 1 </b>
+          Aprobó <b class="colorMainColor"> {{ cantidadAprobado }} </b>
         </div>
         <div class="col-md-4 info-text sin-diligenciar">
-          No aprobó <b class="colorMainColor"> 2 </b>
+          No aprobó <b class="colorMainColor"> {{ cantidadNoAprobado }} </b>
         </div>
       </div>
 

@@ -80,6 +80,8 @@ export interface SesionComiteSolicitud {
     requiereVotacion?: boolean,
 
     tipoSolicitud?: string,
+    numeroSolicitud?: string,
+    fechaSolicitud?: Date, 
 
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
@@ -99,6 +101,7 @@ export interface SesionParticipante{
     usuario?: Usuario,
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionTemaVoto?: SesionTemaVoto[],
+    sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
 
 }
 
