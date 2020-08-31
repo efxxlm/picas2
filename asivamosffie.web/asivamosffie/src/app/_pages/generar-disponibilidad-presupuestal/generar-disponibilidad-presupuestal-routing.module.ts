@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MainComponent } from './components/main/main.component';
+import { MenuGenerarDisponibilidadComponent } from './components/menu-generar-disponibilidad/menu-generar-disponibilidad.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: MainComponent
+    component: MenuGenerarDisponibilidadComponent
+  },
+  {
+    path: 'DDP/:id',
+    component: MenuGenerarDisponibilidadComponent
   }
 ];
 
