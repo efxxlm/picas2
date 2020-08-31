@@ -57,4 +57,8 @@ export class TechnicalCommitteSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionTemaVoto`, tema );
    }
 
+   aplazarSesionComite( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/aplazarSesionComite`, comite );
+   }
+
 }

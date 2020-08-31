@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { ComiteTecnico, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -7,6 +8,19 @@ import { FormBuilder, Validators, FormArray } from '@angular/forms';
   styleUrls: ['./form-solicitud.component.scss']
 })
 export class FormSolicitudComponent {
+
+  @Input() sesionComiteSolicitud: SesionComiteSolicitud; 
+
+  fechaSolicitud: Date;
+  numeroSolicitud: string;
+  justificacion: string;
+
+  tieneVotacion: boolean = true;
+  cantidadAprobado: number = 0;
+  cantidadNoAprobado: number = 0;
+  resultadoVotacion: string = '';
+
+
   addressForm = this.fb.group({
     estadoSolicitud: [null, Validators.required],
     observaciones: [null, Validators.required],
@@ -89,4 +103,11 @@ export class FormSolicitudComponent {
   onSubmit() {
     alert('Thanks!');
   }
+
+  cargarRegistro(){
+
+    this.sesionComiteSolicitud[0].tipoSolicitud
+  }
+
+
 }

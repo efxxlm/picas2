@@ -6,9 +6,9 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Crear acta CT_00001
+            Crear acta {{ objetoComiteTecnico.numeroComite }}
         </h1>
-        <b class="sub-text">24/06/2020</b>
+        <b class="sub-text">{{ objetoComiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</b>
     </div>
     <mat-card class="shipping-card">
         <mat-card-header class="header-card">
@@ -17,7 +17,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content class="colorMainColor">
-            Juan Lizcano Garcia, Fernando José Aldemar Rojas, Gonzalo Díaz Mesa
+            {{ nombresParticipantes }}
         </mat-card-content>
     </mat-card>
     <div class="text-center">
@@ -36,14 +36,29 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion>
+            <mat-accordion *ngFor="let sesionComiteSolicitud of objetoComiteTecnico.sesionComiteSolicitud">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title completo">
-                            Solicitud SA0006
+                            Solicitud {{ sesionComiteSolicitud.numero }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-solicitud></app-form-solicitud>
+
+                    <button 
+                        (click)="otrosTemas.cargarRegistro()"
+                        style="display: none;"
+                        id="btnOtrosTemas"
+                    >
+                    </button>
+                    
+                    <!-- {{ sesionComiteSolicitud | json }} -->
+
+                    <app-form-solicitud
+                    #otrosTemas
+                    [sesionComiteSolicitud]="sesionComiteSolicitud"
+                    >
+
+                    </app-form-solicitud>
                 </mat-expansion-panel>
             </mat-accordion>
 
