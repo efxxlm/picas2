@@ -24,7 +24,47 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
-         
+ 
+        [HttpPost]
+        [Route("CreateEditSesionSolicitudObservacionProyecto")]
+        public async Task<IActionResult> CreateEditSesionSolicitudObservacionProyecto([FromBody] SesionSolicitudObservacionProyecto pSesionSolicitudObservacionProyecto)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionSolicitudObservacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditSesionSolicitudObservacionProyecto(pSesionSolicitudObservacionProyecto);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
+        [HttpPost]
+        [Route("CreateEditTemasCompromiso")]
+        public async Task<IActionResult> CreateEditTemasCompromiso([FromBody] SesionComiteTema pSesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteTema.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditTemasCompromiso(pSesionComiteTema);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
         [HttpPost]
         [Route("CreateEditActasSesionSolicitudCompromiso")]
         public async Task<IActionResult> CreateEditActasSesionSolicitudCompromiso([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)

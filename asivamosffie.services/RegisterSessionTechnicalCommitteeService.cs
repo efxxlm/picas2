@@ -75,20 +75,21 @@ namespace asivamosffie.services
                 foreach (var SesionSolicitudObservacionProyecto in pSesionComiteSolicitud.SesionSolicitudObservacionProyecto)
                 {
                     if (SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId == 0)
-                    { 
+                    {
                         SesionSolicitudObservacionProyecto.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                         SesionSolicitudObservacionProyecto.FechaCreacion = DateTime.Now;
-                        SesionSolicitudObservacionProyecto.Eliminado = false; 
+                        SesionSolicitudObservacionProyecto.Eliminado = false;
                         _context.SesionSolicitudObservacionProyecto.Add(SesionSolicitudObservacionProyecto);
                         //sesionComiteSolicitudOld.SesionSolicitudObservacionProyecto.Add( SesionSolicitudObservacionProyecto );
                     }
-                    else { 
+                    else
+                    {
                         SesionSolicitudObservacionProyecto SesionSolicitudObservacionProyectoOld = _context.SesionSolicitudObservacionProyecto.Find(SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId);
                         SesionSolicitudObservacionProyectoOld.Observacion = SesionSolicitudObservacionProyecto.Observacion;
                         SesionSolicitudObservacionProyectoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                         SesionSolicitudObservacionProyectoOld.FechaModificacion = DateTime.Now;
                     }
-                } 
+                }
                 _context.SaveChanges();
                 return
                 new Respuesta
@@ -837,8 +838,9 @@ namespace asivamosffie.services
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
             List<ComiteTecnico> comiteTecnicos = _context.ComiteTecnico.ToList();
-         
-            if (pComiteTecnicoId == 0 || comiteTecnicos.Where(r => r.ComiteTecnicoId == pComiteTecnicoId).Count() == 0) {
+
+            if (pComiteTecnicoId == 0 || comiteTecnicos.Where(r => r.ComiteTecnicoId == pComiteTecnicoId).Count() == 0)
+            {
 
                 return new ComiteTecnico();
             }
@@ -850,15 +852,15 @@ namespace asivamosffie.services
                 .Include(r => r.SesionComiteSolicitud)
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
                 .Include(r => r.SesionComiteTema)
-                   .ThenInclude(r=> r.SesionTemaVoto)
+                   .ThenInclude(r => r.SesionTemaVoto)
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.TemaCompromiso)
                 .IncludeFilter(r => r.SesionParticipante.Where(r => !(bool)r.Eliminado))
-                .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado) 
-                ) 
+                .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado)
+                )
                 .FirstOrDefaultAsync();
 
-            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList(); 
+            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
@@ -872,16 +874,16 @@ namespace asivamosffie.services
                 SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
             }
             List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
-             
+
             List<ProcesoSeleccion> ListProcesoSeleccion =
                 _context.ProcesoSeleccion
                 .Where(r => !(bool)r.Eliminado).ToList();
 
- 
+
             List<Contratacion> ListContratacion = _context.Contratacion
-                .Where(r => !(bool)r.Eliminado) 
-                .Include(r=> r.ContratacionProyecto) 
-                   .ThenInclude(r=> r.Proyecto)
+                .Where(r => !(bool)r.Eliminado)
+                .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
                 .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
                 .ToList();
@@ -908,9 +910,9 @@ namespace asivamosffie.services
                              .FirstOrDefault()
                              .NumeroSolicitud;
                         SesionComiteSolicitud.Contratacion = ListContratacion
-                                .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId) 
+                                .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId)
                                 .FirstOrDefault();
-                         
+
                         break;
 
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
@@ -925,7 +927,7 @@ namespace asivamosffie.services
                           .NumeroProceso;
 
                         SesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
-                         
+
                         break;
                 }
 
@@ -1176,6 +1178,106 @@ namespace asivamosffie.services
         #endregion
 
         #region Actas
+        public async Task<Respuesta> CreateEditSesionSolicitudObservacionProyecto(SesionSolicitudObservacionProyecto  pSesionSolicitudObservacionProyecto)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Edit_Sesion_Observacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            try
+            { 
+                pSesionSolicitudObservacionProyecto.FechaCreacion =DateTime.Now;
+                pSesionSolicitudObservacionProyecto.Eliminado = false; 
+                _context.SesionSolicitudObservacionProyecto.Add(pSesionSolicitudObservacionProyecto);
+
+                _context.SaveChanges();
+                return
+                   new Respuesta
+                   { 
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pSesionSolicitudObservacionProyecto.UsuarioCreacion, CreateEdit)
+                   };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pSesionSolicitudObservacionProyecto.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
+
+        public async Task<Respuesta> CreateEditTemasCompromiso(SesionComiteTema pSesionComiteTema)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Temas_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            try
+            {
+                SesionComiteTema SesionComiteTemadOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
+
+                SesionComiteTemadOld.FechaModificacion = DateTime.Now;
+                SesionComiteTemadOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
+
+
+                foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
+                {
+                    if (TemaCompromiso.TemaCompromisoId == 0)
+                    {
+                        CreateEdit = "CREAR TEMA COMPROMISO";
+                        TemaCompromiso.UsuarioCreacion = pSesionComiteTema.UsuarioCreacion;
+                        TemaCompromiso.FechaCreacion = DateTime.Now;
+                        TemaCompromiso.Eliminado = true;
+
+                        _context.TemaCompromiso.Add(TemaCompromiso);
+                    }
+                    else
+                    {
+                        CreateEdit = "EDITAR TEMA COMPROMISO";
+                        TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(TemaCompromiso.TemaCompromisoId);
+
+                        temaCompromisoOld.Tarea = TemaCompromiso.Tarea;
+                        temaCompromisoOld.Responsable = TemaCompromiso.Responsable;
+                        temaCompromisoOld.FechaCumplimiento = TemaCompromiso.FechaCumplimiento; 
+
+                        temaCompromisoOld.FechaModificacion = TemaCompromiso.FechaModificacion;
+                        temaCompromisoOld.UsuarioModificacion = TemaCompromiso.UsuarioModificacion;
+                         
+                    }
+                }
+                _context.SaveChanges();
+                return
+                   new Respuesta
+                   {
+                       Data = GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteTema.ComiteTecnicoId),
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pSesionComiteTema.UsuarioCreacion, CreateEdit)
+                   };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pSesionComiteTema.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
+
         public async Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS, (int)EnumeratorTipoDominio.Acciones);
@@ -1185,7 +1287,11 @@ namespace asivamosffie.services
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
 
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
-                pSesionComiteSolicitud.UsuarioModificacion = pSesionComiteSolicitud.UsuarioModificacion;
+                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioModificacion;
+                sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                sesionComiteSolicitudOld.GeneraCompromiso = pSesionComiteSolicitud.GeneraCompromiso;
+                sesionComiteSolicitudOld.CantCompromisos = pSesionComiteSolicitud.CantCompromisos;
+
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {

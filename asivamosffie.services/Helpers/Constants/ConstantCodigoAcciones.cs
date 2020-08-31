@@ -56,5 +56,7 @@
         public const string Aplazar_Sesion_De_Comite = "58";
         public const string Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS ="59";
 
+        public const string Crear_Editar_Temas_Compromiso = "61";  
+        public const string Crear_Edit_Sesion_Observacion_Proyecto = "62";
     }
 }
