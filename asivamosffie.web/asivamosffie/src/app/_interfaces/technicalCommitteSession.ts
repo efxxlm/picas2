@@ -1,4 +1,6 @@
 import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
+import { Contratacion } from './project-contracting';
+import { Proyecto } from '../core/_services/project/project.service';
 
 export interface SolicitudesContractuales{
     id?: number,
@@ -56,6 +58,7 @@ export interface SesionComiteTema{
     esProposicionesVarios?: boolean,
     requiereVotacion?: boolean,
 
+    sesionTemaVoto?: SesionTemaVoto[]
 
 }
 
@@ -79,6 +82,9 @@ export interface SesionComiteSolicitud {
     tipoSolicitud?: string,
 
     sesionSolicitudVoto?: SesionSolicitudVoto[],
+    sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
+    contratacion?: Contratacion,
+
 
 }
 
@@ -91,7 +97,8 @@ export interface SesionParticipante{
     eliminado?: boolean,
 
     usuario?: Usuario,
-    sesionSolicitudVoto?: SesionSolicitudVoto[]
+    sesionSolicitudVoto?: SesionSolicitudVoto[],
+    sesionTemaVoto?: SesionTemaVoto[],
 
 }
 
@@ -127,6 +134,22 @@ export interface SesionSolicitudVoto{
 
 }
 
+export interface SesionTemaVoto{
+    sesionTemaVotoId?: number,
+    sesionTemaId?: number,
+    sesionParticipanteId?: number,
+    esAprobado?: boolean,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    eliminado?: boolean,
+
+    nombreParticipante?: string,
+
+}
+
 export interface ComiteGrilla{
     id?: number,
     fechaComite?: string,
@@ -134,6 +157,24 @@ export interface ComiteGrilla{
     estadoComite?: string, 
     estadoComiteCodigo?: string,
     
+}
+
+export interface SesionSolicitudObservacionProyecto{
+    sesionSolicitudObservacionProyectoId?: number,
+    sesionComiteSolicitudId?: number,
+    contratacionProyectoId?: number,
+    sesionParticipanteId?: number,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    usuarioModificacion?: string,
+    fechaModificacion?: Date,
+    eliminado?: boolean,
+
+    proyecto?: Proyecto,
+
+    nombreParticipante?: string,
+
 }
 
 interface EstadoComite{

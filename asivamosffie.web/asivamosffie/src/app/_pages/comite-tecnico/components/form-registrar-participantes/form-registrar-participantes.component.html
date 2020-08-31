@@ -142,6 +142,8 @@
       <app-tabla-registrar-otros-temas
         #otrosTemas
         [objetoComiteTecnico]="objetoComiteTecnico"
+        [esProposicionesVarios]="false"
+        
       >
     </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
@@ -159,11 +161,12 @@
       >
       </button>
 
-      <app-tabla-proposiciones-y-varios
+      <app-tabla-registrar-otros-temas
         #proposiciones
         [objetoComiteTecnico]="objetoComiteTecnico"
+        [esProposicionesVarios]="true"
       >
-      </app-tabla-proposiciones-y-varios>
+      </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
   </mat-accordion>
 </section>

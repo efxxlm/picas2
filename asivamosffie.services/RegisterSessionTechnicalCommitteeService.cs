@@ -56,6 +56,7 @@ namespace asivamosffie.services
                         sesionSolicitudVoto.Eliminado = false;
                         sesionSolicitudVoto.FechaCreacion = DateTime.Now;
                         _context.SesionSolicitudVoto.Add(sesionSolicitudVoto);
+                        //sesionComiteSolicitudOld.SesionSolicitudVoto.Add(sesionSolicitudVoto);
                     }
                     else
                     {
@@ -79,6 +80,7 @@ namespace asivamosffie.services
                         SesionSolicitudObservacionProyecto.FechaCreacion = DateTime.Now;
                         SesionSolicitudObservacionProyecto.Eliminado = false; 
                         _context.SesionSolicitudObservacionProyecto.Add(SesionSolicitudObservacionProyecto);
+                        //sesionComiteSolicitudOld.SesionSolicitudObservacionProyecto.Add( SesionSolicitudObservacionProyecto );
                     }
                     else { 
                         SesionSolicitudObservacionProyecto SesionSolicitudObservacionProyectoOld = _context.SesionSolicitudObservacionProyecto.Find(SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId);
@@ -166,7 +168,7 @@ namespace asivamosffie.services
 
                 foreach (var SesionTemaVoto in pSesionComiteTema.SesionTemaVoto)
                 {
-                    if (SesionTemaVoto.SesionTemaId == 0)
+                    if (SesionTemaVoto.SesionTemaVotoId == 0)
                     {
                         CrearEditar = "CREAR SESIÓN TEMA VOTO";
                         SesionTemaVoto.UsuarioCreacion = pSesionComiteTema.UsuarioCreacion;
@@ -177,7 +179,7 @@ namespace asivamosffie.services
                     else
                     {
                         CrearEditar = "EDITAR SESIÓN TEMA VOTO";
-                        SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaId);
+                        SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaVotoId);
                         SesionTemaVotoOld.FechaModificacion = DateTime.Now;
                         SesionTemaVotoOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
 

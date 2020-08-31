@@ -33,9 +33,9 @@
         <tr *ngFor="let temas of listaVotacion.controls; let i = index" [formGroupName]="i">
           <td class="mat-cell cdk-cell ng-star-inserted">
             {{ addressForm.controls[i].get('nombreParticipante').value }}
-            <input type="hidden" formControlName="sesionSolicitudVotoId">
+            <input type="hidden" formControlName="sesionTemaVotoId">
+            <input type="hidden" formControlName="sesionTemaId">
             <input type="hidden" formControlName="sesionParticipanteId">
-            <input type="hidden" formControlName="sesionComiteSolicitudId">
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
@@ -44,7 +44,7 @@
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
-              <mat-checkbox></mat-checkbox>
+              <mat-checkbox ></mat-checkbox>
             </section>
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">

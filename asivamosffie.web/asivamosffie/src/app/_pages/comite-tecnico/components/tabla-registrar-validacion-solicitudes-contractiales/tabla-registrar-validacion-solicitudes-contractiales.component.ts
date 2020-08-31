@@ -5,10 +5,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
-import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud, SesionSolicitudObservacionProyecto } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { ProjectService, Proyecto } from 'src/app/core/_services/project/project.service';
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
@@ -18,7 +19,7 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
 
   @Input() ObjetoComiteTecnico: ComiteTecnico;
-  listaMiembros:Usuario[];
+  listaMiembros: Usuario[];
   tiposSolicitud = TiposSolicitud
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
@@ -33,99 +34,114 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   }
 
   constructor(
-              public dialog: MatDialog,
-              private commonService: CommonService,
-              private technicalCommitteSessionService: TechnicalCommitteSessionService
+    public dialog: MatDialog,
+    private commonService: CommonService,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
+    private projectService: ProjectService,
 
-             ) 
-  {
+  ) {
 
   }
 
-  openDialogValidacionSolicitudes( elemento: SesionComiteSolicitud ) {
-
-
-    console.log(elemento, this.ObjetoComiteTecnico)
+  openDialogValidacionSolicitudes(elemento: SesionComiteSolicitud) {
 
     elemento.sesionSolicitudVoto = [];
+    elemento.sesionSolicitudObservacionProyecto = [];
 
-    this.ObjetoComiteTecnico.sesionParticipante.forEach( p => {
-      let votacion: SesionSolicitudVoto = p.sesionSolicitudVoto.find( v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId );
-      let usuario: Usuario = this.listaMiembros.find( m => m.usuarioId == p.usuarioId ) 
+    console.log(this.ObjetoComiteTecnico);
+
+    this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
+      let votacion: SesionSolicitudVoto = p.sesionSolicitudVoto.find(v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId);
+      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
 
       let solicitudVoto: SesionSolicitudVoto = {
         sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
         sesionParticipanteId: p.sesionParticipanteId,
         sesionSolicitudVotoId: votacion ? votacion.sesionSolicitudVotoId : 0,
-        nombreParticipante: `${ usuario.nombres } ${ usuario.apellidos }`,
+        nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
         esAprobado: votacion ? votacion.esAprobado : false,
         observacion: votacion ? votacion.observacion : null,
 
         sesionComiteSolicitud: elemento,
 
-
       }
 
-      elemento.sesionSolicitudVoto.push( solicitudVoto )
+      elemento.contratacion.contratacionProyecto.forEach(c => {
+
+        let observacion = elemento.sesionSolicitudObservacionProyecto
+          .find(o => o.sesionParticipanteId == p.sesionParticipanteId && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+
+        let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
+          sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
+          sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+          sesionParticipanteId: p.sesionParticipanteId,
+          contratacionProyectoId: c.contratacionProyectoId,
+          observacion: observacion ? observacion.observacion : null,
+          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+
+
+          proyecto: c.proyecto,
+        }
+
+        elemento.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+      })
+
+
+      elemento.sesionSolicitudVoto.push(solicitudVoto)
     })
 
-    this.abrirPopupVotacion( elemento );
+    //console.log(elemento)
+
+    this.abrirPopupVotacion(elemento);
   }
 
-  abrirPopupVotacion( elemento: SesionComiteSolicitud ){
+  abrirPopupVotacion(elemento: SesionComiteSolicitud) {
 
-    if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion){
+    if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
 
       const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
-        width: '70em', 
+        width: '70em',
         data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
         maxHeight: '90em',
 
       });
-  
-      dialog.afterClosed().subscribe( c => {
-        if ( c.comiteTecnicoId )
-        {
-          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
-            .subscribe( response => {
+
+      dialog.afterClosed().subscribe(c => {
+        if (c && c.comiteTecnicoId) {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+            .subscribe(response => {
               this.ObjetoComiteTecnico = response;
             })
         }
       })
 
-    }else{
-      
+    } else {
+
       const dialog = this.dialog.open(VotacionSolicitudComponent, {
         width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
       });
-  
-      dialog.afterClosed().subscribe( c => {
-        if ( c.comiteTecnicoId )
-        {
-          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
-            .subscribe( response => {
+
+      dialog.afterClosed().subscribe(c => {
+        if (c && c.comiteTecnicoId) {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+            .subscribe(response => {
               this.ObjetoComiteTecnico = response;
             })
         }
       })
     }
 
-    
+
   }
 
-  // openDialogValidacionSolicitudesMultiple() {
-  //   this.dialog.open(VotacionSolicitudMultipleComponent, {
-  //     width: '70em'
-  //   });
-  // }
 
   ngOnInit(): void {
 
-    this.commonService.listaUsuarios().then(( respuesta )=>{
+    this.commonService.listaUsuarios().then((respuesta) => {
       this.listaMiembros = respuesta;
     })
-    
-    
+
+
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -144,9 +160,9 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     };
   }
 
-  cargarRegistro(){
-    console.log( this.ObjetoComiteTecnico.sesionComiteSolicitud )
-    this.dataSource = new MatTableDataSource( this.ObjetoComiteTecnico.sesionComiteSolicitud );    
+  cargarRegistro() {
+    console.log(this.ObjetoComiteTecnico.sesionComiteSolicitud)
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitud);
   }
 
 }

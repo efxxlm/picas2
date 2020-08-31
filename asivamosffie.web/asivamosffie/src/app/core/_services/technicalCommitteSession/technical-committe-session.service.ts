@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Respuesta } from '../common/common.service';
 import { environment } from 'src/environments/environment';
-import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto } from 'src/app/_interfaces/technicalCommitteSession';
 import { Session } from 'protractor';
 
 
@@ -41,8 +41,8 @@ export class TechnicalCommitteSessionService {
      return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionComiteTema`, lista );
    }
 
-   createSesionInvitadoAndParticipante( comite: ComiteTecnico ){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createSesionInvitadoAndParticipante`, comite );
+   createEditSesionInvitadoAndParticipante( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionInvitadoAndParticipante`, comite );
    }
 
    createEditSesionSolicitudVoto( sesionComiteSolicitud: SesionComiteSolicitud ){
@@ -51,6 +51,10 @@ export class TechnicalCommitteSessionService {
 
    convocarComiteTecnico( comite: ComiteTecnico ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/convocarComiteTecnico`, comite );
+   }
+
+   createEditSesionTemaVoto( tema: SesionTemaVoto ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionTemaVoto`, tema );
    }
 
 }

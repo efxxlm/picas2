@@ -26,10 +26,10 @@
           </th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let temas of listaVotacion.controls; let i = index" [formGroupName]="i">
+      <tbody formGroupName="aprobaciones">
+        <tr *ngFor="let temas of aprobaciones.controls; let i = index"  [formGroupName]="i">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ addressForm.controls[i].get('nombreParticipante').value }}
+            {{ aprobaciones.controls[i].get('nombreParticipante').value }}
             <input type="hidden" formControlName="sesionSolicitudVotoId">
             <input type="hidden" formControlName="sesionParticipanteId">
             <input type="hidden" formControlName="sesionComiteSolicitudId">
@@ -49,11 +49,11 @@
       </tbody>
     </table>
   </div>
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-accordion formGroupName="proyectos" >
+    <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of proyectos.controls; let i = index"  [formGroupName]="i" >
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title completo">
-          Validación de solicitudes contractuales
+          {{ proyecto.value.llaveMen }} - {{ proyecto.value.nombreInstitucion }} - {{ proyecto.value.nombreSede }}
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div>
@@ -68,21 +68,29 @@
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
+          <tbody formGroupName="observaciones">
+            <tr *ngFor="let observacion of observaciones(i).controls; let j = index"  [formGroupName]="j">
               <td class="mat-cell cdk-cell ng-star-inserted">
-                Juan Lizcano Garcia
+                {{ observacion.value.nombreParticipante }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="example-section">
                   <div class="d-flex">
-                    <quill-editor class="quill-editor-style card" #observaciones [styles]="editorStyle"
-                      [modules]="config" required (onContentChanged)="maxLength($event, 1000)" required>
+                    <quill-editor 
+                        class="quill-editor-style card" 
+                        #observaciones 
+                        [styles]="editorStyle"
+                        [modules]="config" 
+                        required 
+                        (onContentChanged)="maxLength($event, 1000)" 
+                        formControlName="observacion"
+                        required>
+                      <input type="hidden" formControlName="sesionSolicitudObservacionProyectoId">
+                      <input type="hidden" formControlName="sesionComiteSolicitudId">
+                      <input type="hidden" formControlName="sesionParticipanteId">
+                      <input type="hidden" formControlName="contratacionProyectoId">
                     </quill-editor>
                     <div class="d-flex align-items-center">
-                      <!-- <span class="contador miles" *ngIf="observaciones !== null">
-                            {{1000 - textoLimpio(observaciones)}}
-                          </span> -->
                       <span class="contador miles">
                         1000
                       </span>
