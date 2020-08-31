@@ -1,4 +1,6 @@
 import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
+import { Contratacion } from './project-contracting';
+import { Proyecto } from '../core/_services/project/project.service';
 
 export interface SolicitudesContractuales{
     id?: number,
@@ -80,6 +82,9 @@ export interface SesionComiteSolicitud {
     tipoSolicitud?: string,
 
     sesionSolicitudVoto?: SesionSolicitudVoto[],
+    sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
+    contratacion?: Contratacion,
+
 
 }
 
@@ -152,6 +157,24 @@ export interface ComiteGrilla{
     estadoComite?: string, 
     estadoComiteCodigo?: string,
     
+}
+
+export interface SesionSolicitudObservacionProyecto{
+    sesionSolicitudObservacionProyectoId?: number,
+    sesionComiteSolicitudId?: number,
+    contratacionProyectoId?: number,
+    sesionParticipanteId?: number,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    usuarioModificacion?: string,
+    fechaModificacion?: Date,
+    eliminado?: boolean,
+
+    proyecto?: Proyecto,
+
+    nombreParticipante?: string,
+
 }
 
 interface EstadoComite{

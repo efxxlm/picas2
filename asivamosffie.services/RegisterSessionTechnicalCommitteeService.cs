@@ -56,6 +56,7 @@ namespace asivamosffie.services
                         sesionSolicitudVoto.Eliminado = false;
                         sesionSolicitudVoto.FechaCreacion = DateTime.Now;
                         _context.SesionSolicitudVoto.Add(sesionSolicitudVoto);
+                        //sesionComiteSolicitudOld.SesionSolicitudVoto.Add(sesionSolicitudVoto);
                     }
                     else
                     {
@@ -79,6 +80,7 @@ namespace asivamosffie.services
                         SesionSolicitudObservacionProyecto.FechaCreacion = DateTime.Now;
                         SesionSolicitudObservacionProyecto.Eliminado = false; 
                         _context.SesionSolicitudObservacionProyecto.Add(SesionSolicitudObservacionProyecto);
+                        //sesionComiteSolicitudOld.SesionSolicitudObservacionProyecto.Add( SesionSolicitudObservacionProyecto );
                     }
                     else { 
                         SesionSolicitudObservacionProyecto SesionSolicitudObservacionProyectoOld = _context.SesionSolicitudObservacionProyecto.Find(SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId);

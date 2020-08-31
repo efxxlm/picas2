@@ -6,6 +6,8 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ActivatedRoute } from '@angular/router';
 import { ComiteTecnico, SesionParticipante, SesionInvitado } from 'src/app/_interfaces/technicalCommitteSession';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-registrar-participantes',
@@ -29,7 +31,9 @@ export class FormRegistrarParticipantesComponent implements OnInit {
               private fb: FormBuilder,
               private commonService: CommonService,
               private activatedRoute: ActivatedRoute,
-              private technicalCommitteSessionService: TechnicalCommitteSessionService
+              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              public dialog: MatDialog,
+              
              ) 
   {
 
@@ -145,6 +149,13 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     });
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   onSubmit() {
 
     if (this.addressForm.valid){
@@ -187,9 +198,11 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
       console.log( comite )
 
-      this.technicalCommitteSessionService.createSesionInvitadoAndParticipante( comite )
+      this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante( comite )
         .subscribe( respuesta => {
-          console.log( respuesta )
+          this.openDialog('', respuesta.message)
+          if ( respuesta.code == "200" )
+            this.ngOnInit();
         })
 
       console.log( this.addressForm.get('miembrosParticipantes').value );

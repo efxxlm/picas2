@@ -2329,8 +2329,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudObservacionProyecto>(entity =>
             {
-                entity.Property(e => e.SesionSolicitudObservacionProyectoId).ValueGeneratedNever();
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
