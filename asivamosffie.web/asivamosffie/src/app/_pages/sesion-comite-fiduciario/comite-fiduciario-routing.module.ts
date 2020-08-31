@@ -31,7 +31,7 @@ const routes: Routes = [
   },
   {
     path: 'verificarCumplimiento/:id',
-    component: CrearActaComponent
+    component: VerificarCumplimientoComponent
   }
 ];
 

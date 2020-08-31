@@ -20,8 +20,8 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource();
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
+  @ViewChild( MatSort, {static: true} ) sort: MatSort;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

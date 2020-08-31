@@ -8,30 +8,19 @@ import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 })
 export class VerificarCumplimientoComponent implements OnInit {
 
-  addressForm = this.fb.group({
-    proceso: this.fb.array([])
-  });
+  data: any[] = [
+    {
+      tarea: 'Realizar seguimiento semanal del cronograma',
+      responsable: 'María josé Coronado',
+      fechaCumplimiento: '17/07/2020 ',
+      fechaReporte: '02/07/2020',
+      estadoReporte: 'Finalizada'
+    }
+  ]
 
-  procesosArray = ['Sin iniciar', 'En proceso', 'Finalizada']
-
-  get proceso() {
-    return this.addressForm.get('proceso') as FormArray;
-  }
-
-  constructor(private fb: FormBuilder) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  cargarDatos() {
-    const aprobacion: any[] = ['', '', ''];
-
-    aprobacion.forEach(valor => this.proceso.push(this.fb.control(valor)));
-  }
-
-  onSubmit() {
-    console.log(this.addressForm.value);
-  }
-
-
-}
+};

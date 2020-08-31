@@ -12,7 +12,7 @@ export interface OrdenDelDia {
 }
 
 const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '24/06/2020', numero: 'CT_00001', numeroCompromisos: 2, nivelCumplimiento: '0' }
+  { id: 0, fecha: '09/07/2020', numero: 'CF_00001', numeroCompromisos: 1, nivelCumplimiento: '0' }
 ];
 
 @Component({
@@ -22,7 +22,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id'];
+  displayedColumns: string[] = [ 'fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'gestion' ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

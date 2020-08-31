@@ -7,3 +7,22 @@
     margin: auto;
     margin-top: 2em;
 }
+
+.flex-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+}
+
+.info {
+    display: inline-block;
+}
+
+.mr-auto {
+    margin: auto;
+}
+
+.w-20 {
+    width: 20%;
+}
