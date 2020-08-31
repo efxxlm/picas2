@@ -20,7 +20,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueMasivoOrdenes = 22,
         CronogramaSeguimiento = 23,
 
-        GenerarDisponibilidadPresupuestal = 28
+        GenerarDisponibilidadPresupuestal = 28,
 
         RegistrarComiteTecnico = 24
     }
