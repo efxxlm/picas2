@@ -875,7 +875,10 @@ namespace asivamosffie.services
             List<Contratacion> ListContratacion = _context.Contratacion
                 .Where(r => !(bool)r.Eliminado) 
                 .Include(r=> r.ContratacionProyecto) 
-                .ThenInclude(r=> r.Proyecto).ToList();
+                   .ThenInclude(r=> r.Proyecto)
+                .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
+                .ToList();
 
 
             foreach (var contratacion in ListContratacion)
@@ -898,7 +901,10 @@ namespace asivamosffie.services
                              .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId)
                              .FirstOrDefault()
                              .NumeroSolicitud;
-                        SesionComiteSolicitud.Contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
+                        SesionComiteSolicitud.Contratacion = ListContratacion
+                                .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId) 
+                                .FirstOrDefault();
+                         
                         break;
 
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
