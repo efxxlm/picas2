@@ -24,7 +24,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
          
-        Task<Proyecto> GetProyectoByProyectoId(int idProyecto);
+        Task<ProyectoGrilla> GetProyectoByProyectoId(int idProyecto);
 
         Task<bool> DeleteProyectoByProyectoId(int pProyectoId);    
         
