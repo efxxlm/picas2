@@ -19,8 +19,8 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<ComiteTecnico>>> GetSesionSinActa();
         Task<ActionResult<List<GridCommitteeSession>>> GetCommitteeSessionFiduciario();
         Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSessionTemaById(int sessionTemaId);
-        Task<bool> SessionPostpone(int sesionId, DateTime newDate, string usuarioModifico);
-        Task<bool> SessionDeclaredFailed(int sesionId, string usuarioModifico);
+        Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate, string usuarioModifico);
+        Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico);
         Task<bool> DeleteTema(int temaId);
 
     }

@@ -14,7 +14,6 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
 
-        public virtual Sesion Sesion { get; set; }
         public virtual Usuario Usuario { get; set; }
     }
 }

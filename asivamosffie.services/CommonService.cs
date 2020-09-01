@@ -72,6 +72,8 @@ namespace asivamosffie.services
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r=> r.DominioId).FirstOrDefaultAsync();
         }
 
+
+
         public async Task<List<Localicacion>> GetListDepartamento()
         { 
              return await _context.Localizacion.Where(r => r.Nivel == 1)
@@ -206,6 +208,8 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
         }
+
+
 
         public async Task<List<InstitucionEducativaSede>> ListIntitucionEducativaByMunicipioId(string pIdMunicipio)
         {

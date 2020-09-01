@@ -46,6 +46,7 @@ namespace asivamosffie.services
 
 
             }
+
             catch (Exception)
             {
 
@@ -167,16 +168,16 @@ namespace asivamosffie.services
 
 
         //Aplazar sesion
-        public async Task<bool> SessionPostpone(int sesionId, DateTime newDate, string usuarioModifico)
+        public async Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate, string usuarioModifico)
         {
 
             try
             {
                 int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
-                if (string.IsNullOrEmpty(Convert.ToString(sesionId)) || newDate != null)
+                if (string.IsNullOrEmpty(Convert.ToString(ComiteTecnicoId)) || newDate != null)
                 {
 
-                    var comiteTecnico = await _context.ComiteTecnico.FindAsync(sesionId);
+                    var comiteTecnico = await _context.ComiteTecnico.FindAsync(ComiteTecnicoId);
                     if (comiteTecnico == null)
                     {
                         throw new Exception("No se encontro la sesion");
@@ -206,16 +207,16 @@ namespace asivamosffie.services
 
 
         //Declarar fallida
-        public async Task<bool> SessionDeclaredFailed(int sesionId, string usuarioModifico)
+        public async Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico)
         {
 
             try
             {
                 int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
-                if (string.IsNullOrEmpty(Convert.ToString(sesionId)))
+                if (string.IsNullOrEmpty(Convert.ToString(ComiteTecnicoId)))
                 {
 
-                    var sesion = await _context.ComiteTecnico.FindAsync(sesionId);
+                    var sesion = await _context.ComiteTecnico.FindAsync(ComiteTecnicoId);
                     if (sesion == null)
                     {
                         throw new Exception("No se encontro la sesion");
@@ -530,9 +531,6 @@ namespace asivamosffie.services
         //Eliminar Sesion
         public async Task<bool> DeleteTema(int temaId)
         {
-
-
-
             ComiteTecnico tema = await _context.ComiteTecnico.FindAsync(temaId);
             bool retorno = true;
             try

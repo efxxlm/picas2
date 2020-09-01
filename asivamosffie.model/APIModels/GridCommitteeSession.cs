@@ -19,7 +19,6 @@ namespace asivamosffie.model.APIModels
         public string  Responzable { get; set; }
         public string EstadoComiteCodigo { get; set; }
         public string EstadoComiteText { get; set; }
-        public  ICollection<Sesion> SesionList { get; set; }
         public  ICollection<SesionComiteTema> SesionComiteTemaList { get; set; }
     }
 }

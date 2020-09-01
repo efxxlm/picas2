@@ -111,7 +111,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                sesionComiteTema.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                sesionComiteTema.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _committeeSessionService.CreateOrEditCommitteeSession(sesionComiteTema);
                 return Ok(respuesta);
                 
@@ -135,7 +135,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                temaCompromiso.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                temaCompromiso.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _committeeSessionService.CreateOrEditSubjects(temaCompromiso);
                 return Ok(respuesta);
 
@@ -159,7 +159,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                sesionInvitado.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                sesionInvitado.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _committeeSessionService.CreateOrEditGuest(sesionInvitado);
                 return Ok(respuesta);
 
@@ -175,13 +175,13 @@ namespace asivamosffie.api.Controllers
         //Aplazar sesion
         [Route("SessionPostpone")]
         [HttpGet]
-        public async Task<bool> SessionPostpone(int sesionId, DateTime newDate)
+        public async Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate)
         {
             try
             {
 
-                string usuarioModifico = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
-                return await _committeeSessionService.SessionPostpone(sesionId, newDate, usuarioModifico);
+                string usuarioModifico = HttpContext.User.FindFirst("User").Value;
+                return await _committeeSessionService.SessionPostpone(ComiteTecnicoId, newDate, usuarioModifico);
 
             }
             catch (Exception)
@@ -194,13 +194,13 @@ namespace asivamosffie.api.Controllers
         //Declarar fallida
         [Route("SessionDeclaredFailed")]
         [HttpGet]
-        public async Task<bool> SessionDeclaredFailed(int sesionId)
+        public async Task<bool> SessionDeclaredFailed(int ComiteTecnicoId)
         {
             try
             {
 
-                string usuarioModifico = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
-                return await _committeeSessionService.SessionDeclaredFailed(sesionId, usuarioModifico);
+                string usuarioModifico = HttpContext.User.FindFirst("User").Value;
+                return await _committeeSessionService.SessionDeclaredFailed(ComiteTecnicoId, usuarioModifico);
 
             }
             catch (Exception)

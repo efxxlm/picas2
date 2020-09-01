@@ -12,7 +12,6 @@ namespace asivamosffie.model.Models
 
         public int ContratacionProyectoAportanteId { get; set; }
         public int ContratacionProyectoId { get; set; }
-        public int AportanteId { get; set; }
         public decimal ValorAporte { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
@@ -20,7 +19,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
 
-        public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual ICollection<ComponenteAportante> ComponenteAportante { get; set; }
     }
