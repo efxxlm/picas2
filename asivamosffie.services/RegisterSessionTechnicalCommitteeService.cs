@@ -1225,6 +1225,11 @@ namespace asivamosffie.services
                 SesionComiteTemadOld.FechaModificacion = DateTime.Now;
                 SesionComiteTemadOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
 
+                SesionComiteTemadOld.Observaciones = pSesionComiteTema.Observaciones;
+                SesionComiteTemadOld.EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo;
+                SesionComiteTemadOld.ObservacionesDecision = pSesionComiteTema.ObservacionesDecision;
+                SesionComiteTemadOld.GeneraCompromiso = pSesionComiteTema.GeneraCompromiso;
+                SesionComiteTemadOld.CantCompromisos = pSesionComiteTema.CantCompromisos;
 
                 foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
                 {
@@ -1255,7 +1260,7 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
-                       Data = GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteTema.ComiteTecnicoId),
+                       Data = SesionComiteTemadOld,
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
@@ -1291,7 +1296,8 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.GeneraCompromiso = pSesionComiteSolicitud.GeneraCompromiso;
                 sesionComiteSolicitudOld.CantCompromisos = pSesionComiteSolicitud.CantCompromisos;
-
+                sesionComiteSolicitudOld.Observaciones = pSesionComiteSolicitud.Observaciones;
+                sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
@@ -1323,9 +1329,9 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
-                       Data = _context.SesionComiteSolicitud
-                          .Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
-                          .IncludeFilter(r => r.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado)).FirstOrDefault(),
+                       Data = sesionComiteSolicitudOld,
+                        //   .Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                        //   .IncludeFilter(r => r.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado)).FirstOrDefault(),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,

@@ -153,6 +153,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=46`);
   }
 
+  listaEstadoSolicitud(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
@@ -171,7 +175,7 @@ export class CommonService {
         {
           lista = lista.concat(response[i])  
         }
-        
+
         resolve(lista);
       });
     })
@@ -218,10 +222,10 @@ export class CommonService {
 }
 
 export interface Dominio{
-  dominioId: number,
-  tipoDominioId: number,
-  nombre: string,
-  activo: boolean,
+  dominioId?: number,
+  tipoDominioId?: number,
+  nombre?: string,
+  activo?: boolean,
   codigo?: string,
 }
 
