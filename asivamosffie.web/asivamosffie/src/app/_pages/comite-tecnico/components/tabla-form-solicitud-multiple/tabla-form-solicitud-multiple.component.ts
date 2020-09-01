@@ -1,10 +1,31 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
-import { ProjectService } from 'src/app/core/_services/project/project.service';
 
+export interface OrdenDelDia {
+  id: number;
+  idMen: string;
+  tipoInterventor: string;
+  departamento: string;
+  municipio: string;
+  institucionEducativa: string;
+  sede: string;
+  estado: string;
+}
+
+const ELEMENT_DATA: OrdenDelDia[] = [
+  {
+    id: 0,
+    idMen: 'LL000004',
+    tipoInterventor: 'Ampliación',
+    departamento: 'Atlántico',
+    municipio: 'Manatí',
+    institucionEducativa: 'I.E. Antonio Nariño',
+    sede: 'Única Sede',
+    estado: 'Devuelto por el comité'
+  }
+];
 
 @Component({
   selector: 'app-tabla-form-solicitud-multiple',
@@ -12,8 +33,6 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
   styleUrls: ['./tabla-form-solicitud-multiple.component.scss']
 })
 export class TablaFormSolicitudMultipleComponent implements OnInit {
-
-  @Input() sesionComiteSolicitud: SesionComiteSolicitud;
 
   displayedColumns: string[] = [
     'idMen',
@@ -24,7 +43,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
     'estado',
     'id'
   ];
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -34,12 +53,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(
-                private projectService: ProjectService
-             ) 
-  {
-
-  }
+  constructor() { }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -57,22 +71,6 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
-  }
-
-  cargarRegistro(){
-
-    this.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {
-      this.projectService.getProjectById( cp.proyectoId )
-        .subscribe( proy => {
-          cp.proyecto = proy; 
-        })
-    })
-
-    console.log( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
-
-    this.dataSource = new MatTableDataSource( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
-
-
   }
 
 }
