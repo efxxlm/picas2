@@ -9,6 +9,7 @@ namespace asivamosffie.model.Models
         {
             ComiteTecnicoProyecto = new HashSet<ComiteTecnicoProyecto>();
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
+            SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
         }
 
         public int ContratacionProyectoId { get; set; }
@@ -18,7 +19,6 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public bool Eliminado { get; set; }
         public bool? EsReasignacion { get; set; }
-        public bool? EsAvanceObra { get; set; }
         public decimal? PorcentajeAvanceObra { get; set; }
         public bool? RequiereLicencia { get; set; }
         public bool? LicenciaVigente { get; set; }
@@ -26,10 +26,13 @@ namespace asivamosffie.model.Models
         public DateTime? FechaVigencia { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public bool? Activo { get; set; }
+        public bool? EsAvanceobra { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<ComiteTecnicoProyecto> ComiteTecnicoProyecto { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
+        public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
     }
 }

@@ -27,10 +27,14 @@
         public const string Eliminar_Editar_Recursos_Control = "26";
 
         public const string Crear_Proceso_Seleccion = "18";
-         public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
+        public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
+        public const string Crear_Editar_Sesion_Comite_Tema = "43";
+        public const string Crear_Editar_Sesion_invitado = "46";
+        public const string Crear_Editar_Sesion_comentario = "47";
+        public const string Crear_Editar_Tema_Compromiso = "48";
     }
 }
