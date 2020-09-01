@@ -1,0 +1,33 @@
+<div align="left">
+  <mat-card class="border" *ngFor="let element of data">
+    <mat-card-title class="text-area-quill--label">{{ element.nombre }}</mat-card-title>
+    <mat-card-content>
+      <p><b>Tipo de intervención</b>: {{ element.tipoIntervencion }}</p>
+      <p><b>Departamento</b>: {{ element.departamento }}</p>
+      <p><b>Municipio</b>: {{ element.municipio }}</p>
+      <p><b>Valor total del proyecto</b>: ${{ element.valorTotalProyecto }}</p>
+      <h2 class="card-subTitle back-color">Aportantes</h2>
+      
+      <div *ngFor="let aportante of element.aportantes; let i = index">
+
+        <div>
+          <h3><b>Aportante {{ i+1 }}</b></h3>
+          <div>
+            <p><b>Tipo de aportante</b>: {{ aportante.tipoAportante }}</p>
+            <p><b>Nombre del aportante</b>: {{ aportante.nombreAportante }}</p>
+            <p><b>Valor del aportante al proyecto</b>: ${{ aportante.valorAportanteProyecto }}</p>
+          </div>
+        </div>
+        <div>
+          <h3><b>Fuente</b></h3>
+          <div>
+            <p><b>Fuente</b>: {{ aportante.fuente }}</p>
+            <p><b>Valor solicitado de la fuente</b>: ${{ aportante.valorSolicitado }}</p>
+          </div>
+        </div>
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
