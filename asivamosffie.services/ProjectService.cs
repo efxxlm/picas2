@@ -39,6 +39,55 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+        public async Task<ProyectoGrilla> GetProyectoGrillaByProyectoId(int idProyecto)
+        {
+            Proyecto pProyecto = _context.Proyecto.Find(idProyecto);
+            if (pProyecto != null)
+            {
+
+                List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+                List<Dominio> ListParametricas = _context.Dominio
+                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Juridico_Predios
+                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion
+                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                    ).ToList();
+                try
+                {
+                    Localizacion municipio = ListLocalizacion.Where(r => r.LocalizacionId == pProyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                    Localizacion departamento = ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
+
+                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(pProyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
+                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    {
+
+                        ProyectoId = pProyecto.ProyectoId,
+                        Departamento = departamento.Descripcion,
+                        Municipio = municipio.Descripcion,
+                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(pProyecto.InstitucionEducativaId).Nombre,
+                        Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
+                        EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
+                        TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                        Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
+                        EstadoRegistro = "COMPLETO"
+                    };
+
+                    if (!(bool)pProyecto.RegistroCompleto)
+                    {
+                        proyectoGrilla.EstadoRegistro = "INCOMPLETO";
+                    }
+                    return proyectoGrilla;
+                }
+                catch (Exception)
+                {
+                    return new ProyectoGrilla();
+                }
+            }
+            else
+            {
+                return new ProyectoGrilla();
+            } 
+        }
 
         public static bool ValidarRegistroEDITAR(Proyecto proyecto)
         {

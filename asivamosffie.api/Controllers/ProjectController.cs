@@ -30,13 +30,22 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetProyectoGrillaByProyectoId")]
+        public async Task<ProyectoGrilla> GetProyectoGrillaByProyectoId(int idProyecto)
+        {
+            var result = await _projectService.GetProyectoGrillaByProyectoId(idProyecto);
+            return result;
+        }
+
+
+        [HttpGet]
         [Route("GetProyectoGrillaByProyecto")]
         public async Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto)
         {
             var result = await _projectService.GetProyectoGrillaByProyecto(pProyecto);
             return result;
         }
-         
+
 
         [Route("CreateOrEditAdministrativeProject")]
         [HttpPost]
@@ -44,7 +53,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 //string pUsuarioModifico = " ";
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
@@ -79,7 +88,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-         
+
         [Route("UploadMassiveLoadProjects")]
         [HttpPost]
         public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
@@ -98,14 +107,14 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-         
+
         [Route("CreateOrUpdateProyect")]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateProyect([FromBody] Proyecto pProyecto)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 pProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
@@ -118,13 +127,13 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        
-         
+
+
 
         [Route("ListAdministrativeProject")]
         [HttpGet]
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProjects()
-        { 
+        {
             string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.ListAdministrativeProyectos(pUsuarioModifico);
             return respuesta;
@@ -140,7 +149,7 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
-        
+
 
         [Route("EnviarProyectoAdministrativoByProyectoId")]
         [HttpGet]
@@ -154,7 +163,7 @@ namespace asivamosffie.api.Controllers
         [Route("ListProject")]
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
-        { 
+        {
             var respuesta = await _projectService.ListProyectos();
             return respuesta;
 
@@ -164,9 +173,9 @@ namespace asivamosffie.api.Controllers
         [Route("GetProyectoByProyectoId")]
         [HttpGet]
         public async Task<Proyecto> GetProyectoByProyectoId(int pProyectoId)
-        { 
+        {
             var respuesta = await _projectService.GetProyectoByProyectoId(pProyectoId);
-            return respuesta; 
+            return respuesta;
         }
 
         [Route("DeleteProyectoByProyectoId")]
