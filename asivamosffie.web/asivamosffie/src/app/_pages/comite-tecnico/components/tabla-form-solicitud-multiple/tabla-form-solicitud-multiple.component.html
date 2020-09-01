@@ -43,7 +43,7 @@
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a [routerLink]="['observacion', element.id]" mat-raised-button color="accent" class="btn-table">
+                <a [routerLink]="['observacion', sesionComiteSolicitud.sesionComiteSolicitudId ]" mat-raised-button color="accent" class="btn-table">
                     Observaciones
                 </a>
             </td>

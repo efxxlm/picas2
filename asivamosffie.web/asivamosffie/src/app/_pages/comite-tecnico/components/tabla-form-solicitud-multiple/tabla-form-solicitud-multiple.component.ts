@@ -65,6 +65,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
       this.projectService.getProjectById( cp.proyectoId )
         .subscribe( proy => {
           cp.proyecto = proy; 
+          console.log( proy );
         })
     })
 
@@ -74,5 +75,5 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
 
 
   }
-
+  
 }
