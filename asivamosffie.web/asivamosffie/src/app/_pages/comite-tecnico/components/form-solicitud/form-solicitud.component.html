@@ -8,7 +8,7 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            {{ sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }} 
+            {{ fechaSolicitud | date: 'dd/MM/yyyy' }} 
           </b>
         </div>
       </div>
@@ -55,19 +55,7 @@
         </div>
       </div>
 
-      <button
-        (click)="solicitudMultiple.cargarRegistro()"
-        style="display: none;"
-        id="btnSolicitudMultiple"
-        type="button"
-      >
-      </button>
-
-      <app-tabla-form-solicitud-multiple
-        #solicitudMultiple
-        [sesionComiteSolicitud]="sesionComiteSolicitud"
-      >
-      </app-tabla-form-solicitud-multiple>
+      <app-tabla-form-solicitud-multiple></app-tabla-form-solicitud-multiple>
 
       <div class="row">
         <div class="col-md-8">
@@ -76,10 +64,10 @@
               <label class="label-left" for="estadoSolicitud">Estado de la solicitud</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width" >
-                <mat-select required formControlName="estadoSolicitud">
-                  <mat-option *ngFor="let estado of estadosArray" [value]="estado">
-                    {{ estado.nombre }}
+              <mat-form-field class="select-width" formControlName="estadoSolicitud">
+                <mat-select required>
+                  <mat-option *ngFor="let estado of estadosArray" [value]="estado.value">
+                    {{ estado.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -123,14 +111,14 @@
             </div>
             <div class="col">
               <mat-radio-group class="radioInput" formControlName="tieneCompromisos">
-                <mat-radio-button [value]="true">Sí</mat-radio-button>
-                <mat-radio-button [value]="false">No</mat-radio-button>
+                <mat-radio-button value="true">Sí</mat-radio-button>
+                <mat-radio-button value="false">No</mat-radio-button>
               </mat-radio-group>
             </div>
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="addressForm.value.tieneCompromisos == true">
+      <div class="row" *ngIf="addressForm.get('tieneCompromisos').value === 'true'">
         <div class="col-md-10">
           <div class="row">
             <div class="pr-1">
@@ -149,8 +137,8 @@
       </div>
 
       <div formGroupName="compromisos">
-        <div *ngFor="let compromiso of compromisos.controls; let i = index" [formGroupName]="i">
-          <div >
+        <div *ngFor="let compromiso of compromisos.controls; let i = index">
+          <div [formGroupName]="i">
 
             <mat-card-title class="header-card--text sub-text">
               Compromiso {{ i + 1 }}
@@ -163,8 +151,6 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
-                  <input type="hidden" formControlName="sesionSolicitudCompromisoId">
-                  <input type="hidden" formControlName="sesionComiteSolicitudId">
                 </mat-form-field>
                 <span class="contador">{{100 - tarea.value.length}}</span>
               </div>
@@ -175,13 +161,10 @@
               <label class="label-left" for="responsable">Responsable</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width" >
-                <mat-select required formControlName="responsable">
-                  <mat-option *ngFor="let estado of listaMiembros" [value]="estado">
-                    {{ estado.nombre }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+              <mat-radio-group class="radioInput" formControlName="responsable">
+                <mat-radio-button value="true">Sí</mat-radio-button>
+                <mat-radio-button value="false">No</mat-radio-button>
+              </mat-radio-group>
             </div>
           </div>
           <div class="row">

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ActivatedRoute } from '@angular/router';
-import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 
@@ -16,8 +16,6 @@ export class CrearActaComponent implements OnInit {
   objetoComiteTecnico: ComiteTecnico = {};
   listaMiembros: Usuario[];
   nombresParticipantes: string = '';
-  listaTemas: SesionComiteTema[] = [];
-  listaProposiciones: SesionComiteTema[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -42,14 +40,9 @@ export class CrearActaComponent implements OnInit {
           .subscribe(response => {
             this.objetoComiteTecnico = response;
 
-            this.listaTemas = response.sesionComiteTema.filter( t => t.esProposicionesVarios != true )
-            this.listaProposiciones = response.sesionComiteTema.filter( t => t.esProposicionesVarios == true )
-
             console.log(response)
 
             setTimeout(() => {
-
-              
 
               this.objetoComiteTecnico.sesionParticipante.forEach(p => {
                 let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
@@ -58,14 +51,14 @@ export class CrearActaComponent implements OnInit {
           
                 });
 
-               let btnSolicitud = document.getElementById( 'btnSolicitud' )
-               let btnOtros = document.getElementById( 'btnOtros' )
-               let btnProposiciones = document.getElementById( 'btnProposiciones' )
+              // let btnOtros = document.getElementById( 'btnOtros' )
+              // let btnTablaValidaciones = document.getElementById( 'btnTablaValidaciones' )
+              // let btnProposiciones = document.getElementById( 'btnProposiciones' )
 
 
-              btnSolicitud.click();
-              btnOtros.click();
-              btnProposiciones.click();
+              // btnOtros.click();
+              // btnTablaValidaciones.click();
+              // btnProposiciones.click();
 
             }, 1000);
 
