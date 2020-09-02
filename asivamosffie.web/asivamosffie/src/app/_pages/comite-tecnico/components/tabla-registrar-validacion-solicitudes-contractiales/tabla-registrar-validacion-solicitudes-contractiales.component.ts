@@ -110,6 +110,10 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
           sc.completo = false
         }else{
           sc.completo = true
+          this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud( solicitud )
+            .subscribe( respuesta => {
+              
+            })
         }
     })
   }

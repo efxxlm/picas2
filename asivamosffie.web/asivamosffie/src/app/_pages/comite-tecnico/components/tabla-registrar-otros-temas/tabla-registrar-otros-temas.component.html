@@ -30,8 +30,8 @@
         <td mat-cell *matCellDef="let element">
             <div class="col">
                 <mat-radio-group class="radioInput" [(ngModel)]="element.requiereVotacion">
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-radio-button [value]="true" (change)="changeRequiere(true, element)">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false" (change)="changeRequiere(false, element)">No</mat-radio-button>
                 </mat-radio-group>
                 <span class="required-form-group">*</span>
             </div>

@@ -37,7 +37,7 @@ export class TablaGestionActasComponent implements OnInit {
 
     this.technicalCommitteeSessionService.getListComiteGrilla()
       .subscribe( response => {
-        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo != this.estadosComite.sinConvocatoria )
+        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.desarrolladaSinActa )
         this.dataSource = new MatTableDataSource( lista );
       })
 

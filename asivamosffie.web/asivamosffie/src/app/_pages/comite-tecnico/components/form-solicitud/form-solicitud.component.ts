@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
-import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudCompromiso, SesionParticipante } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudCompromiso, SesionParticipante, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { EstadosProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
@@ -18,6 +18,8 @@ export class FormSolicitudComponent implements OnInit {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
+
+  tiposSolicitud = TiposSolicitud;
 
   fechaSolicitud: Date;
   numeroSolicitud: string;

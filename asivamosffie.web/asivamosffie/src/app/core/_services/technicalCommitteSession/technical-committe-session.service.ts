@@ -81,5 +81,14 @@ export class TechnicalCommitteSessionService {
    deleteComiteTecnicoByComiteTecnicoId( id: number ){
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
    }
+
+   noRequiereVotacionSesionComiteSolicitud( sesionComiteSolicitud: SesionComiteSolicitud ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteSolicitud`, sesionComiteSolicitud);
+   }
+
+   noRequiereVotacionSesionComiteTema( sesionComiteTema: SesionComiteTema ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteTema?idSesionComiteTema=${ sesionComiteTema.sesionTemaId }`, sesionComiteTema );
+
+   }
   
 }

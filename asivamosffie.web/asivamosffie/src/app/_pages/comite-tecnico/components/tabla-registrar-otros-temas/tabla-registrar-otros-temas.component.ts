@@ -111,11 +111,21 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
   }
 
-  // openDialogValidacionSolicitudesMultiple() {
-  //   this.dialog.open(VotacionSolicitudMultipleComponent, {
-  //     width: '70em'
-  //   });
-  // }
+  changeRequiere( check: boolean, solicitudTema: SesionComiteTema ){
+    
+    this.objetoComiteTecnico.sesionComiteTema.forEach( tem => {
+      if (tem.sesionTemaId == solicitudTema.sesionTemaId)
+        if ( check ){
+          tem.completo = false
+        }else{
+          tem.completo = true
+          this.technicalCommitteSessionService.noRequiereVotacionSesionComiteTema( solicitudTema )
+            .subscribe( respuesta => {
+              
+            })
+        }
+    })
+  }
 
   cargarRegistro(){
 
