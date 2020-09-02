@@ -91,7 +91,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -335,13 +334,12 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Miembro)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -349,6 +347,11 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CompromisoSeguimiento)
                     .HasForeignKey(d => d.SesionComiteTecnicoCompromisoId)
                     .HasConstraintName("FK_CompromisoSeguimiento_SesionComiteTecnicoCompromiso");
+
+                entity.HasOne(d => d.SesionParticipante)
+                    .WithMany(p => p.CompromisoSeguimiento)
+                    .HasForeignKey(d => d.SesionParticipanteId)
+                    .HasConstraintName("FK_CompromisoSeguimiento_SesionParticipante");
 
                 entity.HasOne(d => d.SesionSolicitudCompromiso)
                     .WithMany(p => p.CompromisoSeguimiento)
@@ -2157,6 +2160,8 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.SesionTemaId);
 
+                entity.Property(e => e.EstadoTemaCodigo).HasMaxLength(255);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -2234,8 +2239,14 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("date");
+
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2290,9 +2301,15 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudCompromiso>(entity =>
             {
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Tarea)
                     .IsRequired()
@@ -2301,6 +2318,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2319,9 +2340,9 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudObservacionProyecto>(entity =>
             {
-                entity.Property(e => e.SesionSolicitudObservacionProyectoId).ValueGeneratedNever();
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
                     .HasMaxLength(200)
@@ -2329,6 +2350,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2386,12 +2411,18 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.Observacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 

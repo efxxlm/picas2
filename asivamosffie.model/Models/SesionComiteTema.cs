@@ -27,6 +27,9 @@ namespace asivamosffie.model.Models
         public int? ComiteTecnicoId { get; set; }
         public bool? EsProposicionesVarios { get; set; }
         public bool? RequiereVotacion { get; set; }
+        public string EstadoTemaCodigo { get; set; }
+        public bool? GeneraCompromiso { get; set; }
+        public int? CantCompromisos { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual ICollection<SesionTemaVoto> SesionTemaVoto { get; set; }
