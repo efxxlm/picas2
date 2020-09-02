@@ -62,7 +62,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         sesionParticipanteId: p.sesionParticipanteId,
         sesionSolicitudVotoId: votacion ? votacion.sesionSolicitudVotoId : 0,
         nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
-        esAprobado: votacion ? votacion.esAprobado : false,
+        esAprobado: votacion ? votacion.esAprobado : null,
         observacion: votacion ? votacion.observacion : null,
 
         sesionComiteSolicitud: elemento,
@@ -100,6 +100,18 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     //console.log(elemento)
 
     this.abrirPopupVotacion(elemento);
+  }
+
+  changeRequiere( check: boolean, solicitud: SesionComiteSolicitud ){
+    
+    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach( sc => {
+      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId)
+        if ( check ){
+          sc.completo = false
+        }else{
+          sc.completo = true
+        }
+    })
   }
 
   abrirPopupVotacion(elemento: SesionComiteSolicitud) {

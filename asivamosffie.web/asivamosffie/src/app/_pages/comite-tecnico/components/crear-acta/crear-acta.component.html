@@ -40,22 +40,21 @@
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title completo">
-                            Solicitud {{ sesionComiteSolicitud.numero }}
+                            Solicitud {{ sesionComiteSolicitud.numeroSolicitud }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
                     <button 
-                        (click)="otrosTemas.cargarRegistro()"
+                        (click)="Solicitud.cargarRegistro()"
                         style="display: none;"
-                        id="btnOtrosTemas"
+                        id="btnSolicitud"
                     >
                     </button>
                     
-                    <!-- {{ sesionComiteSolicitud | json }} -->
-
                     <app-form-solicitud
-                    #otrosTemas
-                    [sesionComiteSolicitud]="sesionComiteSolicitud"
+                        #Solicitud 
+                        [sesionComiteSolicitud]="sesionComiteSolicitud"
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante"
                     >
 
                     </app-form-solicitud>
@@ -69,15 +68,27 @@
                     Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-
-            <mat-accordion>
+            <mat-accordion *ngFor="let tema of listaTemas">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title completo">
                             Tema 1
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-otros-temas></app-form-otros-temas>
+
+                    <button 
+                        (click)="otros.cargarRegistro()"
+                        style="display: none;"
+                        id="btnOtros"
+                    >
+                    </button>
+
+                    <app-form-otros-temas
+                        #otros
+                        [sesionComiteTema]="tema"
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante"
+                    >
+                </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>
 
@@ -89,14 +100,27 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion>
+            <mat-accordion *ngFor="let tema of listaProposiciones">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title completo">
                             Tema 1
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-proposiciones-y-varios></app-form-proposiciones-y-varios>
+
+                    <button 
+                        (click)="proposiciones.cargarRegistro()"
+                        style="display: none;"
+                        id="btnProposiciones"
+                    >
+                    </button>
+                    
+                    <app-form-otros-temas
+                        #proposiciones
+                        [sesionComiteTema]="tema"
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante"
+                    >
+                     </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>
 

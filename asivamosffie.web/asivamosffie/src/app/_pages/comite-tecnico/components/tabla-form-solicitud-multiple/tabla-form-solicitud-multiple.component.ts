@@ -57,23 +57,24 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+    this.cargarRegistro();
   }
 
   cargarRegistro(){
 
-    this.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {
-      this.projectService.getProyectoGrillaByProyectoId( cp.proyectoId )
-        .subscribe( proy => {
-          cp.proyecto = proy; 
-          console.log( proy );
-        })
-    })
+    console.log(this.sesionComiteSolicitud)
 
-    console.log( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
-
-    this.dataSource = new MatTableDataSource( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
-
-
+    if (this.sesionComiteSolicitud.contratacion){
+      this.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {
+        // this.projectService.getProyectoGrillaByProyectoId( cp.proyectoId )
+        //   .subscribe( proy => {
+        //     cp.proyecto = proy; 
+        //     console.log( proy ); 
+        //   })
+      })
+      console.log( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
+      this.dataSource = new MatTableDataSource( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
+    }
   }
   
 }

@@ -86,7 +86,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
         sesionParticipanteId: p.sesionParticipanteId,
         
         nombreParticipante: `${ usuario.nombres } ${ usuario.apellidos }`,
-        esAprobado: votacion ? votacion.esAprobado : false,
+        esAprobado: votacion ? votacion.esAprobado : null,
         observacion: votacion ? votacion.observacion : null,
 
       }

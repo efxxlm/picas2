@@ -133,7 +133,7 @@
       <app-tabla-registrar-validacion-solicitudes-contractiales
         #registrarSolicitudes
         [ObjetoComiteTecnico]="objetoComiteTecnico"
-        (validar)="onUpdate()"
+        (validar)="ngOnInit()"
       >
       </app-tabla-registrar-validacion-solicitudes-contractiales>
     </mat-expansion-panel>
@@ -159,7 +159,7 @@
         #otrosTemas
         [objetoComiteTecnico]="objetoComiteTecnico"
         [esProposicionesVarios]="false"
-        (validar)="onUpdate()"
+        (validar)="ngOnInit()"
       >
     </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
@@ -185,14 +185,20 @@
         #proposiciones
         [objetoComiteTecnico]="objetoComiteTecnico"
         [esProposicionesVarios]="true"
-        (validar)="onUpdate()"
+        (validar)="ngOnInit()"
       >
       </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
   </mat-accordion>
 
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="button" [disabled]="!estaTodo">
+    <button mat-button 
+            color="warn" 
+            class="btn-guardar" 
+            type="button" 
+            [disabled]="!estaTodo"
+            (click)="CambiarEstado()"
+            >
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>

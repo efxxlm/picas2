@@ -63,6 +63,8 @@ export interface SesionComiteTema{
     generaCompromiso?: boolean,
     cantCompromisos?: number,
 
+    completo?: boolean,
+
     sesionTemaVoto?: SesionTemaVoto[]
     temaCompromiso?: TemaCompromiso[],
 
@@ -89,6 +91,7 @@ export interface SesionComiteSolicitud {
     tipoSolicitud?: string,
     numeroSolicitud?: string,
     fechaSolicitud?: Date, 
+    completo?: boolean,
 
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],

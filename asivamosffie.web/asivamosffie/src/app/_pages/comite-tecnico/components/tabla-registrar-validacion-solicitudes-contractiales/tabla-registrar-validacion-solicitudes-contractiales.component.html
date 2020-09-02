@@ -30,8 +30,12 @@
         <td mat-cell *matCellDef="let element">
             <div class="col">
                 <mat-radio-group class="radioInput en-proceso" [(ngModel)]="element.requiereVotacion">
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-radio-button [value]="true"
+                                      (change)="changeRequiere(true, element)"
+                                      >Sí</mat-radio-button>
+                    <mat-radio-button [value]="false" 
+                                      (change)="changeRequiere(false, element)"
+                                      >No</mat-radio-button>
                 </mat-radio-group>
                 <span class="required-form-group">*</span>
             </div>
@@ -42,9 +46,12 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
             <button mat-raised-button 
-                color="accent" 
-                class="btn-table" 
+                color="accent"  
+                class="btn-table " 
                 (click)="openDialogValidacionSolicitudes( element )"
+                [class.info-button]="element.requiereVotacion"
+                [class.sin-diligenciar]="!element.completo && element.requiereVotacion"
+                [class.completo]="element.completo && element.requiereVotacion" 
                 [disabled]="!element.requiereVotacion"
             >Votar</button>
         </td>

@@ -42,8 +42,8 @@
               <mat-checkbox formControlName="aprobacion"></mat-checkbox>
             </section> -->
             <mat-radio-group class="radioInput" formControlName="aprobacion">
-              <mat-radio-button value="true">Sí</mat-radio-button>
-              <mat-radio-button value="false">No</mat-radio-button>
+              <mat-radio-button [value]="true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
           </td>
           <!-- <td class="mat-cell cdk-cell ng-star-inserted">

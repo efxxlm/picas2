@@ -45,6 +45,9 @@
                 color="accent" 
                 class="btn-table" 
                 (click)="openDialogValidacionSolicitudes( element )"
+                [class.info-button]="element.requiereVotacion"
+                [class.sin-diligenciar]="!element.completo && element.requiereVotacion"
+                [class.completo]="element.completo && element.requiereVotacion" 
                 [disabled]="!element.requiereVotacion"
             >Votar </button>
         </td>
