@@ -1,0 +1,213 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <h2 class="card-subTitle">Desarrollo</h2>
+      <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Fecha de la solicitud</span>
+        </div>
+        <div class="col">
+          <b class="label-left colorMainColor">
+            23/06/2020
+          </b>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Número de la solicitud</span>
+        </div>
+        <div class="col">
+          <b class="label-left colorMainColor">
+            SA0006
+          </b>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Tipo de solicitud</span>
+        </div>
+        <div class="col">
+          <b class="label-left colorMainColor">
+            Apertura de proceso de selección
+          </b>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Justificación</span>
+        </div>
+        <div class="col">
+          <p class="label-left colorMainColor pt-1 font-weight-lighter">
+            En los últimos años se ha visto un crecimiento de la población escolar en el país, que ha hecho que algunas
+            de las instituciones educativas, se hayan visto copadas en sus cupos y no puedan prestar de manera
+            conveniente los servicios educativos, y otras que en razón a las distancias, resultan inaccesibles para los
+            niños en los grados de educación básica primaria. Como alternativa de solución se plantea éste proyecto para
+            ampliar y adecuar la infraestructura educativa, acorde con las necesidades y cumpliendo con los estándares
+            de infraestructura vigentes.
+          </p>
+        </div>
+      </div>
+      <h2 class="card-subTitle">Decisiones</h2>
+      <!-- <div class="reparacion-card row">
+          <div class="col-md-4">
+            Resultado de la votación <b class="colorMainColor">No aprobó</b>
+          </div>
+          <div class="col-md-4 info-text completo">
+            Aprobó <b class="colorMainColor"> 1 </b>
+          </div>
+          <div class="col-md-4 info-text sin-diligenciar">
+            No aprobó <b class="colorMainColor"> 2 </b>
+          </div>
+        </div> -->
+
+      <app-tabla-form-solicitud-multiple></app-tabla-form-solicitud-multiple>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="estadoSolicitud">Estado de la solicitud</label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width" formControlName="estadoSolicitud">
+                <mat-select required>
+                  <mat-option *ngFor="let estado of estadosArray" [value]="estado.value">
+                    {{ estado.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left" for="observaciones">Descripción</label>
+        </div>
+        <div class="col d-flex">
+          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+            (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required></quill-editor>
+          <div class="d-flex align-items-center">
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
+              {{3000 - textoLimpio(addressForm.get('observaciones').value)}}
+            </span>
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+              3000
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+          <div class="pr-1">
+            <label class="label-left" for="url">URL con soporte de votación</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput type="text" formControlName="url" maxlength="100">
+            </mat-form-field>
+          </div>
+        </div> -->
+      <h2 class="card-subTitle">Decisiones</h2>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radioInput" formControlName="tieneCompromisos">
+                <mat-radio-button value="true">Sí</mat-radio-button>
+                <mat-radio-button value="false">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="addressForm.get('tieneCompromisos').value === 'true'">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="cuantosCompromisos">¿Cuántos compromisos se generaron en este tema del
+                orden del día?</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #cuantosGrupos type="number" min="1" max="99" formControlName="cuantosCompromisos"
+                  (keyup)="CambioCantidadCompromisos()">
+              </mat-form-field>
+              <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div formGroupName="compromisos">
+        <div *ngFor="let compromiso of compromisos.controls; let i = index">
+          <div [formGroupName]="i">
+
+            <mat-card-title class="header-card--text sub-text">
+              Compromiso {{ i + 1 }}
+            </mat-card-title>
+
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="tarea">Tarea</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
+                </mat-form-field>
+                <span class="contador">{{100 - tarea.value.length}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="responsable">Responsable</label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radioInput" formControlName="responsable">
+                <mat-radio-button value="true">Sí</mat-radio-button>
+                <mat-radio-button value="false">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" class="fecha">Fecha de consignación</label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="example-full-width">
+                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()">
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                  <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
+                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col md-4">
+              <div class="text-right" *ngIf="2 > 1">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(compromisos, i)"
+                  *ngIf="compromisos.controls.length > 1">
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                  Eliminar compromiso
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+</form>
