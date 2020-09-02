@@ -90,14 +90,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-//            }
-//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -342,13 +334,12 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Miembro)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -356,6 +347,11 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CompromisoSeguimiento)
                     .HasForeignKey(d => d.SesionComiteTecnicoCompromisoId)
                     .HasConstraintName("FK_CompromisoSeguimiento_SesionComiteTecnicoCompromiso");
+
+                entity.HasOne(d => d.SesionParticipante)
+                    .WithMany(p => p.CompromisoSeguimiento)
+                    .HasForeignKey(d => d.SesionParticipanteId)
+                    .HasConstraintName("FK_CompromisoSeguimiento_SesionParticipante");
 
                 entity.HasOne(d => d.SesionSolicitudCompromiso)
                     .WithMany(p => p.CompromisoSeguimiento)
@@ -2305,6 +2301,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudCompromiso>(entity =>
             {
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
