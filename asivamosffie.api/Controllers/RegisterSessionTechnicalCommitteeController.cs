@@ -19,12 +19,32 @@ namespace asivamosffie.api.Controllers
         public readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
         private readonly IOptions<AppSettings> _settings;
 
-        public RegisterSessionTechnicalCommitteeController(IOptions<AppSettings> settings,IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
+        public RegisterSessionTechnicalCommitteeController(IOptions<AppSettings> settings, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
             _settings = settings;
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
- 
+
+        
+
+        [HttpDelete]
+        [Route("DeleteComiteTecnicoByComiteTecnicoId")]
+        public async Task<IActionResult> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerSessionTechnicalCommitteeService.DeleteComiteTecnicoByComiteTecnicoId(pComiteTecnicoId,HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
         [HttpPost]
         [Route("CreateEditSesionSolicitudObservacionProyecto")]
         public async Task<IActionResult> CreateEditSesionSolicitudObservacionProyecto([FromBody] SesionSolicitudObservacionProyecto pSesionSolicitudObservacionProyecto)

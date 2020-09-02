@@ -338,6 +338,44 @@ namespace asivamosffie.services
         #endregion
 
         #region Comite Tecnico
+
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId,string pUsuarioModifico)
+        { 
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
+             
+            try
+            {
+                ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(pComiteTecnicoId);
+
+                comiteTecnicoOld.UsuarioModificacion = pUsuarioModifico;
+                comiteTecnicoOld.FechaModificacion = DateTime.Now;
+                comiteTecnicoOld.Eliminado = true;
+                _context.SaveChanges();
+
+               return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModifico,"ELIMINAR COMITE TECNICO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString())
+                };
+            }
+ 
+        }
+
+
         public async Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
 
