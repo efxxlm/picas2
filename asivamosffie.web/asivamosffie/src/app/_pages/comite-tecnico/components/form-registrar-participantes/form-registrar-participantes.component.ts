@@ -9,6 +9,7 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MAT_EXPANSION_PANEL_DEFAULT_OPTIONS } from '@angular/material/expansion';
+import { ComiteTecnicoComponent } from '../comite-tecnico/comite-tecnico.component';
 
 @Component({
   selector: 'app-form-registrar-participantes',
@@ -25,13 +26,21 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     invitados: this.fb.array([])
   });
 
-  estadoFormulario = { 
-                        sinDiligenciar: 'info-text sin-diligenciar',
-                        enProceso: 'info-text en-proceso',
-                        completo: 'expansion-style--title completo'   
-                     }
+  estadoFormulario = {
+    sinDiligenciar: 'info-text sin-diligenciar',
+    enProceso: 'info-text en-proceso',
+    completo: 'expansion-style--title completo'
+  }
 
-  estadoAcatualFormulario = this.estadoFormulario.enProceso;  
+  estadoSeccion = {
+    sinDiligenciar: '1',
+    enProceso: '2',
+    completo: '3'
+  }
+
+  estadoSolicitudes = this.estadoFormulario.sinDiligenciar;
+  estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
+  estadoProposiciones = this.estadoFormulario.sinDiligenciar;
 
 
   hasUnitNumber = false;
@@ -39,14 +48,13 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   miembrosArray: SesionParticipante[] = [];
 
   constructor(
-              private fb: FormBuilder,
-              private commonService: CommonService,
-              private activatedRoute: ActivatedRoute,
-              private technicalCommitteSessionService: TechnicalCommitteSessionService,
-              public dialog: MatDialog,
-              
-             ) 
-  {
+    private fb: FormBuilder,
+    private commonService: CommonService,
+    private activatedRoute: ActivatedRoute,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
+    public dialog: MatDialog,
+
+  ) {
 
   }
 
@@ -54,8 +62,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
     this.agregaInvitado();
     let lista: any[] = [];
-    
-    this.activatedRoute.params.subscribe( parametros => {
+
+    this.activatedRoute.params.subscribe(parametros => {
       let id = parametros.id;
 
       forkJoin([
@@ -64,17 +72,16 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         this.commonService.getUsuariosByPerfil(3),
         this.commonService.getUsuariosByPerfil(4),
         this.commonService.getUsuariosByPerfil(5),
-        this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( id ),
+        this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(id),
 
-  
-      ]).subscribe( response => {
-  
-        for (let i = 0; i < 5; i++)
-        {
-          lista = lista.concat(response[i])  
+
+      ]).subscribe(response => {
+
+        for (let i = 0; i < 5; i++) {
+          lista = lista.concat(response[i])
         }
 
-        this.miembrosArray = lista.map( u => {
+        this.miembrosArray = lista.map(u => {
 
           u.sesionParticipanteId = 0;
           u.comiteTecnicoId = 0;
@@ -84,12 +91,14 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
         this.objetoComiteTecnico = response[5];
 
+        this.onUpdate()
+
         setTimeout(() => {
 
-          let btnRegistrarSolicitudes = document.getElementById( 'btnRegistrarSolicitudes' );
-          let btnOtrosTemas = document.getElementById( 'btnOtrosTemas' );
-          let btnProposiciones = document.getElementById( 'btnProposiciones' );
-          
+          let btnRegistrarSolicitudes = document.getElementById('btnRegistrarSolicitudes');
+          let btnOtrosTemas = document.getElementById('btnOtrosTemas');
+          let btnProposiciones = document.getElementById('btnProposiciones');
+
 
           btnRegistrarSolicitudes.click();
           btnOtrosTemas.click();
@@ -98,39 +107,38 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         }, 1000);
 
         let listaSeleccionados = [];
-        this.objetoComiteTecnico.sesionParticipante.forEach( p => {
+        this.objetoComiteTecnico.sesionParticipante.forEach(p => {
           let participante: any = {}
-          participante = this.miembrosArray.find( m => m.usuarioId == p.usuarioId )
+          participante = this.miembrosArray.find(m => m.usuarioId == p.usuarioId)
           participante.sesionParticipanteId = p.sesionParticipanteId
 
-          listaSeleccionados.push( participante );
+          listaSeleccionados.push(participante);
         });
 
-        this.addressForm.get('miembrosParticipantes').setValue( listaSeleccionados )
+        this.addressForm.get('miembrosParticipantes').setValue(listaSeleccionados)
 
 
-        if (this.objetoComiteTecnico.sesionInvitado.length > 0)
-        {
-          
+        if (this.objetoComiteTecnico.sesionInvitado.length > 0) {
+
           this.invitados.clear();
 
-          this.objetoComiteTecnico.sesionInvitado.forEach( i => {
+          this.objetoComiteTecnico.sesionInvitado.forEach(i => {
             let grupoInvitado = this.crearInvitado();
 
-            grupoInvitado.get('nombre').setValue( i.nombre )
-            grupoInvitado.get('cargo').setValue( i.cargo )
-            grupoInvitado.get('entidad').setValue( i.entidad )
-            grupoInvitado.get('sesionInvitadoId').setValue( i.sesionInvitadoId )
-            
-            this.invitados.push( grupoInvitado );
+            grupoInvitado.get('nombre').setValue(i.nombre)
+            grupoInvitado.get('cargo').setValue(i.cargo)
+            grupoInvitado.get('entidad').setValue(i.entidad)
+            grupoInvitado.get('sesionInvitadoId').setValue(i.sesionInvitadoId)
+
+            this.invitados.push(grupoInvitado);
           })
         }
-  
+
       })
 
     })
 
-    
+
   }
 
   get invitados() {
@@ -169,37 +177,73 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     });
   }
 
-  onUpdate(){
-    console.log('validar')
+  onUpdate() {
+    let comite: ComiteTecnico;
+    this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(this.objetoComiteTecnico.comiteTecnicoId)
+      .subscribe(respuesta => {
+        let cantidadSolicitudesCompletas = 0;
+        let cantidadSolicitudes = 0;
+        comite = respuesta;
+
+        console.log(comite)
+
+        comite.sesionComiteSolicitud.forEach(sol => {
+          if (sol.requiereVotacion == true) {
+              comite.sesionParticipante.forEach(par => {
+                if ( par.sesionSolicitudVoto.length == 0 )
+                  cantidadSolicitudes++;
+
+                par.sesionSolicitudVoto.forEach(vot => {
+                  console.log(cantidadSolicitudes)
+                  cantidadSolicitudes++;
+                  if ( vot.esAprobado == false || vot.esAprobado == true ){
+                    cantidadSolicitudesCompletas++;   
+                  }
+              })
+            })
+          }else if (sol.requiereVotacion == false){
+            cantidadSolicitudes++;    
+            cantidadSolicitudesCompletas++;
+          }
+          else{
+            cantidadSolicitudesCompletas--;
+          }
+        })
+
+        if (cantidadSolicitudes > 0){
+          this.estadoSolicitudes = this.estadoFormulario.enProceso;
+          if (cantidadSolicitudes == cantidadSolicitudesCompletas)
+            this.estadoSolicitudes = this.estadoFormulario.completo;
+        }
+      })
   }
 
-  onDelete( i: number ){
+  onDelete(i: number) {
     let grupo = this.invitados.controls[i] as FormGroup;
-    console.log(grupo,this.invitados,i)
-    this.technicalCommitteSessionService.deleteSesionInvitado( grupo.get('sesionInvitadoId').value )
-      .subscribe( respuesta => {
-        this.openDialog( '', 'La información se ha eliminado correctamente.' )
+    console.log(grupo, this.invitados, i)
+    this.technicalCommitteSessionService.deleteSesionInvitado(grupo.get('sesionInvitadoId').value)
+      .subscribe(respuesta => {
+        this.openDialog('', 'La información se ha eliminado correctamente.')
         this.borrarArray(this.invitados, i)
       })
-    
+
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data: { modalTitle, modalText, siNoBoton:true }
-    });   
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
     dialogRef.afterClosed().subscribe(result => {
-      if(result)
-      {
+      if (result) {
         this.onDelete(e)
-      }           
+      }
     });
   }
 
   onSubmit() {
 
-    if (this.addressForm.valid){
+    if (this.addressForm.valid) {
 
       let comite: ComiteTecnico = {
         comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
@@ -210,21 +254,20 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
       let miembros = this.addressForm.get('miembrosParticipantes').value;
 
-      if (miembros)
-      {
-        miembros.forEach( m => {
+      if (miembros) {
+        miembros.forEach(m => {
           let sesionParticipante: SesionParticipante = {
             sesionParticipanteId: m.sesionParticipanteId,
             comiteTecnicoId: comite.comiteTecnicoId,
             usuarioId: m.usuarioId,
-            
+
           }
 
-          comite.sesionParticipante.push( sesionParticipante );
+          comite.sesionParticipante.push(sesionParticipante);
         });
       }
 
-      this.invitados.controls.forEach( control => {
+      this.invitados.controls.forEach(control => {
         let sesionInvitado: SesionInvitado = {
           comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
           sesionInvitadoId: control.get('sesionInvitadoId').value,
@@ -234,19 +277,19 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
         }
 
-        comite.sesionInvitado.push( sesionInvitado );
+        comite.sesionInvitado.push(sesionInvitado);
       })
 
-      console.log( comite )
+      console.log(comite)
 
-      this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante( comite )
-        .subscribe( respuesta => {
+      this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
+        .subscribe(respuesta => {
           this.openDialog('', respuesta.message)
-          if ( respuesta.code == "200" )
+          if (respuesta.code == "200")
             this.ngOnInit();
         })
 
-      console.log( this.addressForm.get('miembrosParticipantes').value );
+      console.log(this.addressForm.get('miembrosParticipantes').value);
     }
   }
 }

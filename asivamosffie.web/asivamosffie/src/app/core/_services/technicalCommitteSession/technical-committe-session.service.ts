@@ -77,5 +77,9 @@ export class TechnicalCommitteSessionService {
    deleteSesionInvitado( id: number ){
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteSesionInvitado?pSesionInvitadoId=${ id }`);
    }
+
+   deleteComiteTecnicoByComiteTecnicoId( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
+   }
   
 }

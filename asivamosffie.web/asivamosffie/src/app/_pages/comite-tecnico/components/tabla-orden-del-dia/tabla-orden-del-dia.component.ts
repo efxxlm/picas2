@@ -112,6 +112,10 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   }
 
   OnDelete(e: number){
-    this.openDialog('', '“La información se ha eliminado correctamente”,')
+    this.technicalCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId( e )
+      .subscribe( respuesta => {
+        this.openDialog('', '“La información se ha eliminado correctamente”,')
+        this.ngOnInit();
+      })
   }
 }

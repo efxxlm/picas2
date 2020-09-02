@@ -116,9 +116,9 @@
         <!-- <mat-panel-title class="expansion-style--title completo" > -->
         <mat-panel-title 
           class="expansion-style--title" 
-          [class.sin-diligenciar]="estadoAcatualFormulario == this.estadoFormulario.sinDiligenciar"
-          [class.en-proceso]="estadoAcatualFormulario == this.estadoFormulario.enProceso"
-          [class.completo]="estadoAcatualFormulario == this.estadoFormulario.completo" >
+          [class.sin-diligenciar]="estadoSolicitudes == this.estadoFormulario.sinDiligenciar"
+          [class.en-proceso]="estadoSolicitudes == this.estadoFormulario.enProceso"
+          [class.completo]="estadoSolicitudes == this.estadoFormulario.completo" >
           Validación de solicitudes contractuales
         </mat-panel-title>
       </mat-expansion-panel-header>
@@ -139,7 +139,11 @@
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title en-proceso">
+        <mat-panel-title 
+          class="expansion-style--title"
+          [class.sin-diligenciar]="estadoOtrosTemas == this.estadoFormulario.sinDiligenciar"
+          [class.en-proceso]="estadoOtrosTemas == this.estadoFormulario.enProceso"
+          [class.completo]="estadoOtrosTemas == this.estadoFormulario.completo" >
           Otros temas
         </mat-panel-title>
       </mat-expansion-panel-header>
@@ -161,7 +165,11 @@
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title sin-diligenciar">
+        <mat-panel-title 
+          class="expansion-style--title"
+          [class.sin-diligenciar]="estadoProposiciones == this.estadoFormulario.sinDiligenciar"
+          [class.en-proceso]="estadoProposiciones == this.estadoFormulario.enProceso"
+          [class.completo]="estadoProposiciones == this.estadoFormulario.completo" >
           Proposiciones y varios
         </mat-panel-title>
       </mat-expansion-panel-header>
