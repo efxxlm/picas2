@@ -1,6 +1,7 @@
 import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
 import { Contratacion } from './project-contracting';
 import { Proyecto } from '../core/_services/project/project.service';
+import { dashCaseToCamelCase } from '@angular/compiler/src/util';
 
 export interface SolicitudesContractuales{
     id?: number,
@@ -8,8 +9,9 @@ export interface SolicitudesContractuales{
     tipoSolicitud?: string,
     tipoSolicitudNumeroTabla?: string,
     numeroSolicitud?: string,
-    sesionComiteSolicitudId?: number
-
+    sesionComiteSolicitudId?: number,
+    tipoSolicitudCodigo?: string,
+    solicitudId?: number,
 }
 
 export interface ComiteTecnico{
@@ -57,8 +59,12 @@ export interface SesionComiteTema{
     comiteTecnicoId?: number,
     esProposicionesVarios?: boolean,
     requiereVotacion?: boolean,
+    estadoTemaCodigo?: string,
+    generaCompromiso?: boolean,
+    cantCompromisos?: number,
 
     sesionTemaVoto?: SesionTemaVoto[]
+    temaCompromiso?: TemaCompromiso[],
 
 }
 
@@ -79,12 +85,14 @@ export interface SesionComiteSolicitud {
     eliminado?: boolean,
     requiereVotacion?: boolean,
 
+
     tipoSolicitud?: string,
     numeroSolicitud?: string,
     fechaSolicitud?: Date, 
 
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
+    sesionSolicitudCompromiso?: SesionSolicitudCompromiso[],
     contratacion?: Contratacion,
 
 
@@ -97,6 +105,8 @@ export interface SesionParticipante{
     fechaCreacion?: Date,
     usuarioCreacion?: string,
     eliminado?: boolean,
+
+    nombre?: string;
 
     usuario?: Usuario,
     sesionSolicitudVoto?: SesionSolicitudVoto[],
@@ -178,6 +188,32 @@ export interface SesionSolicitudObservacionProyecto{
 
     nombreParticipante?: string,
 
+}
+
+export interface SesionSolicitudCompromiso{
+    sesionSolicitudCompromisoId?: number,
+    sesionComiteSolicitudId?: number,
+    tarea?: string,
+    responsableSesionParticipanteId?: number,
+    fechaCumplimiento?: Date,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    eliminado?: boolean,
+}
+
+export interface TemaCompromiso{
+    temaCompromisoId?: number,
+    sesionTemaId?: number,
+    tarea?: string,
+    responsable?: string,
+    fechaCumplimiento?: Date,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: Date,
+    eliminado?: boolean,
 }
 
 interface EstadoComite{

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -19,8 +19,11 @@ import { ProjectService, Proyecto } from 'src/app/core/_services/project/project
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
 
   @Input() ObjetoComiteTecnico: ComiteTecnico;
+  @Output() validar: EventEmitter<any> = new EventEmitter();
+
   listaMiembros: Usuario[];
   tiposSolicitud = TiposSolicitud
+  
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
   dataSource = new MatTableDataSource();
@@ -110,11 +113,14 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
       });
 
+      
+
       dialog.afterClosed().subscribe(c => {
         if (c && c.comiteTecnicoId) {
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
             .subscribe(response => {
               this.ObjetoComiteTecnico = response;
+              this.validar.emit(null);        
             })
         }
       })
@@ -125,11 +131,14 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
       });
 
+      
+
       dialog.afterClosed().subscribe(c => {
         if (c && c.comiteTecnicoId) {
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
             .subscribe(response => {
               this.ObjetoComiteTecnico = response;
+              this.validar.emit(null);        
             })
         }
       })

@@ -756,7 +756,7 @@ namespace asivamosffie.services
 
                             //Auditoria 
                             SesionComiteTema.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
-                            SesionComiteTema.FechaModificacion = DateTime.Now;
+                            SesionComiteTema.FechaCreacion = DateTime.Now;
                             SesionComiteTema.Eliminado = false;
                             //Registros
                             SesionComiteTema.ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId;
@@ -788,7 +788,7 @@ namespace asivamosffie.services
 
                             //Auditoria 
                             SesionComiteSolicitud.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
-                            SesionComiteSolicitud.FechaModificacion = DateTime.Now;
+                            SesionComiteSolicitud.FechaCreacion = DateTime.Now;
                             SesionComiteSolicitud.Eliminado = false;
                             _context.SesionComiteSolicitud.Add(SesionComiteSolicitud);
                         }
@@ -932,44 +932,44 @@ namespace asivamosffie.services
                 contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
             }
 
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
             {
 
-                switch (SesionComiteSolicitud.TipoSolicitudCodigo)
+                switch (sesionComiteSolicitud.TipoSolicitudCodigo)
                 {
                     case ConstanCodigoTipoSolicitud.Contratacion:
-                        SesionComiteSolicitud.FechaSolicitud = (DateTime)ListContratacion
-                      .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId)
+                        sesionComiteSolicitud.FechaSolicitud = (DateTime)ListContratacion
+                      .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
                       .FirstOrDefault()
                       .FechaCreacion;
 
-                        SesionComiteSolicitud.NumeroSolicitud = ListContratacion
-                             .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId)
+                        sesionComiteSolicitud.NumeroSolicitud = ListContratacion
+                             .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
                              .FirstOrDefault()
                              .NumeroSolicitud;
-                        SesionComiteSolicitud.Contratacion = ListContratacion
-                                .Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId)
+                        sesionComiteSolicitud.Contratacion = ListContratacion
+                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
                                 .FirstOrDefault();
 
                         break;
 
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                        SesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
-                          .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId)
+                        sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
+                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
                           .FirstOrDefault()
                           .FechaCreacion;
 
-                        SesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
-                          .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId)
+                        sesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
+                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
                           .FirstOrDefault()
                           .NumeroProceso;
 
-                        SesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
+                        sesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
                         break;
                 }
 
-                SesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+                sesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == sesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
             }
 
             return comiteTecnico;

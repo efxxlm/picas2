@@ -72,7 +72,12 @@
                 </div>
               </div>
               <div class="text-right" *ngIf="invitados.controls.length > 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(invitados, i)">
+                <button mat-button 
+                        color="warn" 
+                        type="button" 
+                        class="btn-eliminar" 
+                        (click)="openDialogSiNo('', '¿Está seguro de eliminar este registro?', i)" 
+                        >
                   <img src="assets/img/icon/menos.svg" alt="Eliminar invitado">
                   Eliminar invitado
                 </button>
@@ -107,7 +112,13 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title completo">
+        <!-- class="expansion-style--title completo" -->
+        <!-- <mat-panel-title class="expansion-style--title completo" > -->
+        <mat-panel-title 
+          class="expansion-style--title" 
+          [class.sin-diligenciar]="estadoAcatualFormulario == this.estadoFormulario.sinDiligenciar"
+          [class.en-proceso]="estadoAcatualFormulario == this.estadoFormulario.enProceso"
+          [class.completo]="estadoAcatualFormulario == this.estadoFormulario.completo" >
           Validación de solicitudes contractuales
         </mat-panel-title>
       </mat-expansion-panel-header>
@@ -122,6 +133,7 @@
       <app-tabla-registrar-validacion-solicitudes-contractiales
         #registrarSolicitudes
         [ObjetoComiteTecnico]="objetoComiteTecnico"
+        (validar)="onUpdate()"
       >
       </app-tabla-registrar-validacion-solicitudes-contractiales>
     </mat-expansion-panel>
@@ -143,7 +155,7 @@
         #otrosTemas
         [objetoComiteTecnico]="objetoComiteTecnico"
         [esProposicionesVarios]="false"
-        
+        (validar)="onUpdate()"
       >
     </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
@@ -165,8 +177,16 @@
         #proposiciones
         [objetoComiteTecnico]="objetoComiteTecnico"
         [esProposicionesVarios]="true"
+        (validar)="onUpdate()"
       >
       </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
   </mat-accordion>
+
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="button" [disabled]="!estaTodo">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+
 </section>

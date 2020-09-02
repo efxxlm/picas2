@@ -91,8 +91,9 @@ export class ProjectService {
       pTipoIntervencion }&pLlaveMen=${ pLlaveMen }&pMunicipio=${ pMunicipio }&pIdInstitucionEducativa=${ pIdInstitucionEducativa }&pIdSede=${ pIdSede }`);
   }
 
-  
-
+  getProyectoGrillaByProyectoId( id: number ){
+    return this.http.get<ProyectoGrilla>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getProyectoGrillaByProyectoId?idProyecto=${ id }`);
+   }
   
 
 }

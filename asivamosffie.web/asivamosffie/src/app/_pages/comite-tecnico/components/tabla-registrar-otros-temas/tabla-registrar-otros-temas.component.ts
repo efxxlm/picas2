@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,6 +21,8 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
   @Input() objetoComiteTecnico: ComiteTecnico;
   @Input() esProposicionesVarios: boolean;
+  @Output() validar: EventEmitter<any> = new EventEmitter();
+
 
   listaMiembros:Usuario[];
 
@@ -102,6 +104,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
       this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
           .subscribe( response => {
             this.objetoComiteTecnico = response;
+            this.validar.emit(null);
           })
         }
     })
