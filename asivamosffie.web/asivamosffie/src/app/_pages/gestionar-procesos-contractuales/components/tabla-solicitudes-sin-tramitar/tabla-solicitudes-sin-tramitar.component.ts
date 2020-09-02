@@ -70,16 +70,16 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         this.routes.navigate( [ '/procesosContractuales/contratacion', id ] )
       break;
       case 'Modificación contractual':
-        console.log( tipoSolicitud );
+        this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ] )
       break;
       case 'Liquidación':
-        console.log( tipoSolicitud );
+        this.routes.navigate( [ '/procesosContractuales/liquidacion', id ] )
       break;
       default:
         console.log( 'No es un tipo de solicitud aceptada' );
 
-    }
+    };
 
-  }
+  };
 
 };

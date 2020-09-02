@@ -1,0 +1,278 @@
+<div class="container text-center mt-2em">
+  <div class="text-right">
+    <a routerLink="/procesosContractuales" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Gestionar solicitud SL_001
+    </h1>
+  </div>
+
+  <div class="text-center flex">
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>15/06/2020</b></p>
+    <p class="color-titulo"><b>Liquidación</b></p>
+  </div>
+
+  <div align="left">
+    <mat-card class="border">
+      <mat-card-content>
+        <p><b>Número DDP</b>: DDP_PI_0045</p>
+        <p>
+          <b>Objeto</b>:  Ejecutar la preconstrucción, construcción y post construcción de la Institución Educativa Manuela Beltran Sede principal en el municipio
+                          de Buga del departamente del Valle del Cauca.
+        </p>
+        <p><b>Número de comité fiduciario</b>: CF_001</p>
+        <p><b>Fecha de comité fiduciario</b>: 13/06/2020</p>
+      </mat-card-content>
+  </mat-card>
+  </div>
+
+  <div class="text-center">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos del contrato
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Tipo de contrato</b>: Obra</p>
+              <p><b>Valor del contrato</b>: $326.000.000</p>
+              <p><b>Plazo</b>: 8 meses / 12 días</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos del contratista
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
+              <p><b>Tipo de identificación</b>: NIT</p>
+              <p><b>Número de identificación</b>: 900.333.000-3</p>
+              <p><b>Nombre del representante legal</b>: Felipe Andrés Ruiz Fandiño</p>
+              <p><b>Número de la invitación</b>: 00300</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Proyectos Asociados
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              LL6789030 I.E Técnica Industrial España- Única sede
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="text-center flex">
+            <p class="mr-right-8em"><b>Valle del Cauca/Jamundi</b></p>
+            <p><b>Reconstrucción</b></p>
+          </div>
+
+          <div align="left">
+            <mat-card class="border">
+              <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
+              <mat-card-content>
+                <p> 
+                  <b>
+                    ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
+                  </b>: Si
+                </p>
+                <p><b>¿El proyecto es una reasignación?</b>: No</p>
+                <p><b>¿El proyecto requiere licencias?</b>: No</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+        </mat-expansion-panel>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Disponibilidad presupuestal
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              DDP_PI_018
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="text-center">
+            <p><b>Valor del DDP</b> $80.000.000</p>
+          </div>
+
+          <app-form-aportantes [data]="dataForm"></app-form-aportantes>
+
+        </mat-expansion-panel>
+
+        <div class="text-center w-15">
+          <button mat-raised-button
+                  color="accent" 
+                  class="btn-table">
+                  Descargar DDP
+          </button>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Modificaciones contractuales
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              Modificación CO_00016 - Contrato A34675850
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="text-center">
+            <p>Tipo de modificación: <b>Adición, Prorroga</b></p>
+          </div>
+
+          <div align="left">
+            <mat-card class="border">
+              <mat-card-title class="text-area-quill--label">Adición</mat-card-title>
+              <mat-card-content>
+                <p><b>Presupuesto adicional solicitado</b>: $246.000.000</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div align="left">
+            <mat-card class="border">
+              <mat-card-title class="text-area-quill--label">Prorroga</mat-card-title>
+              <mat-card-content>
+                <p><b>Plazo adicional solicitado en meses</b>: 12</p>
+                <p><b>Plazo adicional solicitado en días:</b>: 14</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              Modificación CO_00015 - Contrato A34675850
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="text-center">
+            <p>Tipo de modificación: <b>Modificación de condiciones contractuales</b></p>
+          </div>
+
+          <div align="left">
+            <mat-card class="border">
+              <mat-card-content>
+                <p><b>Cláusula a modificar</b>: Se modifica la cláusula segunda contratista</p>
+                <p><b>Ajuste solicitado a la cláusula</b>: Cambio de contratista</p>
+                <p><b>Nombre del nuevo contratista</b>: Constructora Colpatria</p>
+                <p><b>Tipo de identificación</b>: NIT</p>
+                <p><b>Número de identificación</b>: 900.333.000-3</p>
+                <p><b>Nombre del representante legal</b>: Felipe Andrés Ruiz Fandiño</p>
+                <p><b>Número de la invitación</b>: 00300</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+        </mat-expansion-panel>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Balance financiero
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              Recursos comprometidos
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="text-center">
+            <p><b>DDP_0029</b></p>
+          </div>
+          <app-tabla-recursos-compartidos></app-tabla-recursos-compartidos>
+          <app-form-recursos-compartidos></app-form-recursos-compartidos>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              Recursos pagados
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              Ejecución financiera por componentes
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              Traslados de recursos
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Informe final
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Pólizas y garantías
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>
