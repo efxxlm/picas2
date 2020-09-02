@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Respuesta } from '../common/common.service';
 import { environment } from 'src/environments/environment';
-import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto, SesionSolicitudCompromiso } from 'src/app/_interfaces/technicalCommitteSession';
 import { Session } from 'protractor';
+import { ProyectoGrilla } from 'src/app/_interfaces/project-contracting';
 
 
 @Injectable({
@@ -61,4 +62,20 @@ export class TechnicalCommitteSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/aplazarSesionComite`, comite );
    }
 
+   createEditActasSesionSolicitudCompromiso( sesionSolicitud: SesionSolicitudCompromiso ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditActasSesionSolicitudCompromiso`, sesionSolicitud );
+   }
+
+   createEditTemasCompromiso( tema: SesionComiteTema ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditTemasCompromiso`, tema );
+   }
+
+   deleteSesionComiteTema( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteSesionComiteTema?pSesionComiteTemaId=${ id }`);
+   }
+
+   deleteSesionInvitado( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteSesionInvitado?pSesionInvitadoId=${ id }`);
+   }
+  
 }

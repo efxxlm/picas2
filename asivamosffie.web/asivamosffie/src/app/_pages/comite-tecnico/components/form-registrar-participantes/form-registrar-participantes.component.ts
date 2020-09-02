@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
@@ -8,6 +8,7 @@ import { ComiteTecnico, SesionParticipante, SesionInvitado } from 'src/app/_inte
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MAT_EXPANSION_PANEL_DEFAULT_OPTIONS } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-form-registrar-participantes',
@@ -17,11 +18,21 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarParticipantesComponent implements OnInit {
 
   objetoComiteTecnico: ComiteTecnico = {};
+  estaTodo: boolean = false;
 
   addressForm = this.fb.group({
     miembrosParticipantes: [null, Validators.required],
     invitados: this.fb.array([])
   });
+
+  estadoFormulario = { 
+                        sinDiligenciar: 'info-text sin-diligenciar',
+                        enProceso: 'info-text en-proceso',
+                        completo: 'expansion-style--title completo'   
+                     }
+
+  estadoAcatualFormulario = this.estadoFormulario.enProceso;  
+
 
   hasUnitNumber = false;
 
@@ -126,6 +137,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.addressForm.get('invitados') as FormArray;
   }
 
+
+
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
   }
@@ -153,6 +166,34 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+  }
+
+  onUpdate(){
+    console.log('validar')
+  }
+
+  onDelete( i: number ){
+    let grupo = this.invitados.controls[i] as FormGroup;
+    console.log(grupo,this.invitados,i)
+    this.technicalCommitteSessionService.deleteSesionInvitado( grupo.get('sesionInvitadoId').value )
+      .subscribe( respuesta => {
+        this.openDialog( '', 'La información se ha eliminado correctamente.' )
+        this.borrarArray(this.invitados, i)
+      })
+    
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+      {
+        this.onDelete(e)
+      }           
     });
   }
 

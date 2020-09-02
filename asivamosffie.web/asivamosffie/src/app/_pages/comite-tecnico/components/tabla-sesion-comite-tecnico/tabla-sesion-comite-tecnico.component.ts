@@ -37,7 +37,7 @@ export class TablaSesionComiteTecnicoComponent implements OnInit {
 
     this.technicalCommitteeSessionService.getListComiteGrilla()
       .subscribe( response => {
-        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo != this.estadosComite.sinConvocatoria )
+        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.convocada )
         this.dataSource = new MatTableDataSource( lista );
       })
 

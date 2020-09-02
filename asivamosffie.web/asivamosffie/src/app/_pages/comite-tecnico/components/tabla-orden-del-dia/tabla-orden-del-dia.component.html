@@ -45,8 +45,10 @@
 
             <button mat-raised-button color="accent" 
                 class="btn-table" 
-                (click)="OnDelete(element.id)" 
-                *ngIf="estadosComite.sinConvocatoria == element.estadoComiteCodigo">
+                (click)="openDialogSiNo('', '¿Está seguro de eliminar este registro?',element.id)" 
+                *ngIf="estadosComite.sinConvocatoria == element.estadoComiteCodigo || 
+                       estadosComite.convocada       == element.estadoComiteCodigo || 
+                       estadosComite.aplazada        == element.estadoComiteCodigo " >
                 Eliminar
             </button>
 

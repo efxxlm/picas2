@@ -73,6 +73,13 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         ]).subscribe( response => {
 
           this.solicitudesContractuales = response[0];
+
+          this.solicitudesContractuales.forEach( sc => {
+            sc.tipoSolicitudCodigo = sc.tipoSolicitudNumeroTabla
+            
+          })
+           
+          
           this.listaMiembros = response[1];
           
           setTimeout(() => {
@@ -101,6 +108,10 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       this.listaMiembros = response[1];
       console.log( response[0] )
       this.solicitudesContractuales = response[0].sesionComiteSolicitud;
+
+      this.solicitudesContractuales.forEach( sc => {
+        sc.id = sc.solicitudId;
+      })
 
       setTimeout(() => {
             
@@ -132,6 +143,39 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
         console.log( response );
       })
+  }
+
+  eliminarTema( i ){
+    let tema = this.addressForm.get('tema');
+    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+    
+  }
+
+  deleteTema( i ){
+    let grupo = this.addressForm.get('tema') as FormArray;
+    let tema = grupo.controls[i];
+
+    this.techicalCommitteeSessionService.deleteSesionComiteTema( tema.value.sesionTemaId )
+      .subscribe( respuesta => {
+        this.borrarArray(grupo, i)
+        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.ngOnInit();
+      })
+    
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number, grupo: any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        this.deleteTema(e)
+      }           
+    });
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -218,7 +262,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           comiteTecnicoId: this.idComite,
           solicitudId: sol.id,
           sesionComiteSolicitudId: sol.sesionComiteSolicitudId,
-          tipoSolicitudCodigo: sol.tipoSolicitudNumeroTabla,
+          tipoSolicitudCodigo: sol.tipoSolicitudCodigo,
         }
 
         comite.sesionComiteSolicitud.push( sesionComiteSolicitud );

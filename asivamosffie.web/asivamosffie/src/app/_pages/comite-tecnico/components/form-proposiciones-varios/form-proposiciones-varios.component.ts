@@ -118,6 +118,8 @@ export class FormProposicionesVariosComponent implements OnInit {
             this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
         })
 
+    }else{
+      this.openDialog('', 'Falta registrar información.')
     }
   }
 
