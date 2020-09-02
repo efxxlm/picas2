@@ -22,9 +22,6 @@
             Aprobó
           </th>
           <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            No aprobó
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
             Observaciones
           </th>
         </tr>
@@ -38,15 +35,19 @@
             <input type="hidden" formControlName="sesionParticipanteId">
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            <section class="example-section">
-              <mat-checkbox formControlName="aprobacion"></mat-checkbox>
-            </section>
+            <!-- <section class="example-section">
+              <mat-checkbox formControlName=""></mat-checkbox>
+            </section> -->
+            <mat-radio-group class="radioInput" formControlName="aprobacion">
+              <mat-radio-button value="true">Sí</mat-radio-button>
+              <mat-radio-button value="false">No</mat-radio-button>
+            </mat-radio-group>
           </td>
-          <td class="mat-cell cdk-cell ng-star-inserted">
+          <!-- <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
               <mat-checkbox ></mat-checkbox>
             </section>
-          </td>
+          </td> -->
           <td class="mat-cell cdk-cell ng-star-inserted">
             <section class="example-section">
               <div class="d-flex">
