@@ -373,10 +373,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Miembro)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
