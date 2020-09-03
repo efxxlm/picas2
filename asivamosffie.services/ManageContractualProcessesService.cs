@@ -28,9 +28,62 @@ namespace asivamosffie.services
             _context = context;
             _commonService = commonService;
         }
- 
 
-    
+        public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
+        {
+            // Estado de la sesionComiteSolicitud
+            //• Recibidas sin tramitar ante Fiduciaria
+            //• Enviadas a la fiduciaria
+            //• Registradas por la fiduciaria
+
+            List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
+                    .Where(r => (r.TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion)
+                    ).ToListAsync();
+
+
+            List<Dominio> ListasParametricas = _context.Dominio.ToList();
+
+            List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).ToList();
+
+            foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
+            {
+                sesionComiteSolicitud.EstadoCodigo = ListasParametricas
+                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Comite
+                    && r.Codigo == sesionComiteSolicitud.EstadoCodigo
+                    ).FirstOrDefault().Nombre;
+
+                switch (sesionComiteSolicitud.TipoSolicitudCodigo)
+                {
+                    case ConstanCodigoTipoSolicitud.Contratacion:
+                        sesionComiteSolicitud.FechaSolicitud = (DateTime)ListContratacion
+                      .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
+                      .FirstOrDefault()
+                      .FechaCreacion;
+
+                        sesionComiteSolicitud.Contratacion = ListContratacion
+                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
+                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = sesionComiteSolicitud.Contratacion.FechaTramite;
+
+                        sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                            .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                            && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
+                            ).FirstOrDefault().Nombre;
+
+                        sesionComiteSolicitud.NumeroSolicitud = sesionComiteSolicitud.Contratacion.NumeroSolicitud;
+
+                        _ = (bool)sesionComiteSolicitud.Contratacion.RegistroCompleto
+                            ? sesionComiteSolicitud.EstadoDelRegistro == "Completo"
+                            : sesionComiteSolicitud.EstadoDelRegistro == "Incompleto";
+
+
+                        break;
+                }
+            }
+            return ListSesionComiteSolicitud;
+        }
+
 
     }
 }

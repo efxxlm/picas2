@@ -17,6 +17,8 @@ namespace asivamosffie.model.Models
         public ProcesoSeleccion ProcesoSeleccion { get; set; } 
         [NotMapped]
         public Contratacion Contratacion { get; set; }
+        [NotMapped]
+        public string EstadoDelRegistro { get; set; }
     }
     
 }
