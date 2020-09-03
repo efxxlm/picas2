@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
 
@@ -24,6 +26,7 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private bool ReturnValue { get; set; }
 
         public ManagementCommitteeReportService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
@@ -47,13 +50,40 @@ namespace asivamosffie.services
         }
 
 
+        public Task<int> ExecuteSqlRawAsync(string sql, params object[] parameters)
+        {
+            return _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+
 
         //GESTION DE COMPROMISOS
-        public async Task<ActionResult<List<SesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
         {
-            try//GridComiteTecnicoCompromiso
+            try
             {
-                return await _context.SesionComiteTecnicoCompromiso.IncludeFilter(cm => cm.ComiteTecnico).Where(cm => (bool)!cm.Eliminado).ToListAsync();
+                
+                return await (from a in _context.SesionComiteTecnicoCompromiso
+                                join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
+                                where a.Eliminado != true
+                                select new GrillaSesionComiteTecnicoCompromiso
+                                {
+                                    ComiteTecnicoId = s.ComiteTecnicoId,
+                                    FechaOrdenDia = s.FechaOrdenDia,
+                                    NumeroComite = s.NumeroComite,
+                                    Tarea = a.Tarea,
+                                    SesionComiteTecnicoCompromisoId = a.SesionComiteTecnicoCompromisoId,
+                                    FechaCumplimiento = a.FechaCumplimiento,
+                                    EstadoCodigo = a.EstadoCodigo,
+                                    //EstadoCompromisoText =  _commonService.GetNombreDominioByCodigoAndTipoDominio(a.EstadoCodigo, (int)EnumeratorTipoDominio.Estado_Compromiso).Wait(),
+                                    EstadoComiteCodigo = s.EstadoComiteCodigo,
+                                    //EstadoComiteText = (string)_commonService.GetNombreDominioByCodigoAndTipoDominio(s.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite).Wait(),
+
+                                    //EstadoComiteText = ss.EstadoComiteCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ss.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite) : "",
+                                }).ToListAsync();
+
+               
+
 
             }
             catch (Exception)
@@ -171,7 +201,8 @@ namespace asivamosffie.services
                     //Registros
                     SesionComentarioAntiguo.Fecha = SesionComentario.Fecha;
                     SesionComentarioAntiguo.Observacion = SesionComentario.Observacion;
-                    _context.SesionComentario.Update(SesionComentario);
+                    Console.WriteLine(SesionComentarioAntiguo);
+                    _context.SesionComentario.Update(SesionComentarioAntiguo);
 
                 }
 

@@ -28,7 +28,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetManagementCommitteeReport")]
         [HttpGet]
-        public async Task<ActionResult<List<SesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
         {
             try
             {
@@ -63,8 +63,29 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                compromisoSeguimiento.UsuarioCreacion = "jsorozcof"; //HttpContext.User.FindFirst("User").Value;
+                compromisoSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditReportProgress(compromisoSeguimiento, estadoCompromiso);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        [Route("CreateOrEditCommentReport")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditCommentReport([FromBody] SesionComentario SesionComentario)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                SesionComentario.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateOrEditCommentReport(SesionComentario);
                 return Ok(respuesta);
 
             }
