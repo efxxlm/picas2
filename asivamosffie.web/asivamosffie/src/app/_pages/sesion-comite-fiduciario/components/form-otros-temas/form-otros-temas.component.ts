@@ -1,46 +1,38 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
+//import { SesionComiteTema, SesionParticipante, TemaCompromiso } from 'src/app/_interfaces/technicalCommitteSession';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { EstadosProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
-import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-form-solicitud',
-  templateUrl: './form-solicitud.component.html',
-  styleUrls: ['./form-solicitud.component.scss']
+  selector: 'app-form-otros-temas',
+  templateUrl: './form-otros-temas.component.html',
+  styleUrls: ['./form-otros-temas.component.scss']
 })
-export class FormSolicitudComponent implements OnInit {
+export class FormOtrosTemasComponent implements OnInit {
 
-  @Input() sesionComiteSolicitud: any;
+  @Input() sesionComiteTema: any;
   @Input() listaMiembros: any[];
 
-  tiposSolicitud: any;
-
-  fechaSolicitud: Date;
-  numeroSolicitud: string;
-  justificacion: string;
-
-  tieneVotacion: boolean = true;
-  cantidadAprobado: number = 0;
-  cantidadNoAprobado: number = 0;
-  resultadoVotacion: string = '';
-
-
+  listaResponsables: Dominio[] = [];
+  responsable: /*Dominio*/ any= {}
 
   addressForm = this.fb.group({
     estadoSolicitud: [null, Validators.required],
     observaciones: [null, Validators.required],
+    observacionesDecision: [null, Validators.required],
     url: null,
     tieneCompromisos: [null, Validators.required],
     cuantosCompromisos: [null, Validators.required],
     compromisos: this.fb.array([])
   });
 
-  estadosArray: Dominio[] = [];
+  estadosArray = [];
 
   editorStyle = {
     height: '45px'
@@ -60,26 +52,31 @@ export class FormSolicitudComponent implements OnInit {
   }
 
   constructor(
-    private fb: FormBuilder,
-    private commonService: CommonService,
-    private technicalCommitteSessionService: TechnicalCommitteSessionService,
-    public dialog: MatDialog,
-    private router: Router,
+              private fb: FormBuilder,
+              private commonService: CommonService,
+              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              public dialog: MatDialog,
+              private router: Router,
 
-  ) {
+             ) 
+  {
 
   }
-  ngOnInit(): void {
 
-    let estados: string[] = ['1', '3', '5']
+  ngOnInit(): void 
+  {
 
-    /*
-    this.commonService.listaEstadoSolicitud()
+    let estados: string[] = ['1', '3', '5', '8']
+
+    forkJoin([
+      //this.commonService.listaEstadoSolicitud(),
+      //this.commonService.listaMiembrosComiteTecnico()
+    ])   
       .subscribe(response => {
 
-        this.estadosArray = response.filter(s => estados.includes(s.codigo));
+        //this.estadosArray = response[0].filter(s => estados.includes(s.codigo));
+        //this.listaResponsables = response[1];
       })
-    */
 
   }
 
@@ -90,7 +87,7 @@ export class FormSolicitudComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    if (texto) {
+    if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
     }
@@ -106,8 +103,8 @@ export class FormSolicitudComponent implements OnInit {
 
   crearCompromiso() {
     return this.fb.group({
-      sesionSolicitudCompromisoId: [],
-      sesionComiteSolicitudId: [],
+      temaCompromisoId: [],
+      sesionTemaId: [],
       tarea: [null, Validators.compose([
         Validators.required, Validators.minLength(5), Validators.maxLength(100)])
       ],
@@ -137,55 +134,58 @@ export class FormSolicitudComponent implements OnInit {
   }
 
   onSubmit() {
+    let tema: /* SesionComiteTema */any = {
 
-    let Solicitud: any = {
-      sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
-      estadoCodigo: this.addressForm.get('estadoSolicitud').value ? this.addressForm.get('estadoSolicitud').value.codigo : null,
+      sesionTemaId: this.sesionComiteTema.sesionTemaId,
+      comiteTecnicoId: this.sesionComiteTema.comiteTecnicoId,
       observaciones: this.addressForm.get('observaciones').value,
-      rutaSoporteVotacion: this.addressForm.get('url').value,
+      estadoTemaCodigo: this.addressForm.get('estadoSolicitud').value ? this.addressForm.get('estadoSolicitud').value.codigo : null,
+      observacionesDecision: this.addressForm.get('observacionesDecision').value,
       generaCompromiso: this.addressForm.get('tieneCompromisos').value,
       cantCompromisos: this.addressForm.get('cuantosCompromisos').value,
-      sesionSolicitudCompromiso: []
+
+      temaCompromiso: [],
 
     }
 
     this.compromisos.controls.forEach(control => {
-      let sesionSolicitudCompromiso: any = {
-        tarea: control.get('tarea').value,
-        responsableSesionParticipanteId: control.get('responsable').value ? control.get('responsable').value.sesionParticipanteId : null,
+      let temacompromiso: /*TemaCompromiso*/ any = {
+        
+        temaCompromisoId: control.get('temaCompromisoId').value,
+        sesionTemaId: this.sesionComiteTema.sesionTemaId,
+        responsable: control.get('responsable').value ? control.get('responsable').value.sesionParticipanteId : null,
         fechaCumplimiento: control.get('fecha').value,
-        sesionSolicitudCompromisoId: control.get('sesionSolicitudCompromisoId').value,
-        sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
+        tarea: control.get('tarea').value,
 
       }
 
-      Solicitud.sesionSolicitudCompromiso.push(sesionSolicitudCompromiso);
+      tema.temaCompromiso.push(temacompromiso);
     })
 
-    console.log(Solicitud)
+    console.log(tema)
 
     /*
-    this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
+    this.technicalCommitteSessionService.createEditTemasCompromiso(tema)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
         if (respuesta.code == "200")
-          this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
+          this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteTema.comiteTecnicoId])
       })
     */
-
   }
 
   cargarRegistro() {
-
-    let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
-
-    this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado)
-    this.addressForm.get('observaciones').setValue(this.sesionComiteSolicitud.observaciones)
-    this.addressForm.get('url').setValue(this.sesionComiteSolicitud.rutaSoporteVotacion)
-    this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromiso)
-    this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisos)
-
     /*
+        this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
+
+    let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
+
+    this.addressForm.get('observaciones').setValue( this.sesionComiteTema.observaciones ),
+    this.addressForm.get('estadoSolicitud').setValue( estadoSeleccionado ),
+    this.addressForm.get('observacionesDecision').setValue( this.sesionComiteTema.observacionesDecision ),
+    this.addressForm.get('tieneCompromisos').setValue( this.sesionComiteTema.generaCompromiso ),
+    this.addressForm.get('cuantosCompromisos').setValue( this.sesionComiteTema.cantCompromisos ),
+
     this.commonService.listaUsuarios().then((respuesta) => {
 
       this.listaMiembros.forEach(m => {
@@ -194,28 +194,21 @@ export class FormSolicitudComponent implements OnInit {
 
       })
 
-      this.sesionComiteSolicitud.sesionSolicitudCompromiso.forEach(c => {
+      this.sesionComiteTema.temaCompromiso.forEach(c => {
         let grupoCompromiso = this.crearCompromiso();
-        let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId == c.responsableSesionParticipanteId)
+        let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId.toString() == c.responsable)
 
         grupoCompromiso.get('tarea').setValue(c.tarea);
         grupoCompromiso.get('responsable').setValue(responsableSeleccionado);
         grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento);
-        grupoCompromiso.get('sesionSolicitudCompromisoId').setValue(c.sesionSolicitudCompromisoId);
-        grupoCompromiso.get('sesionComiteSolicitudId').setValue(this.sesionComiteSolicitud.sesionComiteSolicitudId);
+        grupoCompromiso.get('temaCompromisoId').setValue(c.temaCompromisoId);
+        grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId);
 
         this.compromisos.push(grupoCompromiso)
       })
 
     });
     */
-
-    let btnSolicitudMultiple = document.getElementById( 'btnSolicitudMultiple' );
-    console.log(this.sesionComiteSolicitud)
-
-    btnSolicitudMultiple.click();
-
   }
-
 
 }

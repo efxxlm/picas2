@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 
 @Component({
   selector: 'app-crear-acta',
@@ -9,6 +10,11 @@ import { ActivatedRoute } from '@angular/router';
 export class CrearActaComponent implements OnInit {
 
   idSesion: number;
+  objetoComiteTecnico: any = {};
+  listaMiembros: Usuario[];
+  nombresParticipantes: string = '';
+  listaTemas: any[] = [];
+  listaProposiciones: any[] = [];
 
   constructor ( private activatedRoute: ActivatedRoute ) { }
 

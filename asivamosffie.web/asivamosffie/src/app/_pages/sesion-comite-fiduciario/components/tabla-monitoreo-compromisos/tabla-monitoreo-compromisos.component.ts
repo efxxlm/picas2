@@ -22,7 +22,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'gestion' ];
+  displayedColumns: string[] = [ 'fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id' ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

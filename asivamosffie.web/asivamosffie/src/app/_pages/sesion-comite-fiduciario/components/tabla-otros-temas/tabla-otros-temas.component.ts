@@ -11,9 +11,9 @@ import { Sesion } from 'src/app/_interfaces/technicalCommitteSession';
 })
 export class TablaOtrosTemasComponent implements OnInit {
 
-  @Input() objetoSesion: Sesion 
+  @Input() objetoSesion: any; 
 
-  displayedColumns: string[] = ['responsable', 'tiempo', 'temaDolicitud', 'id'];
+  displayedColumns: string[] = ['responsable', 'tiempo', 'temaSolicitud', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -27,6 +27,7 @@ export class TablaOtrosTemasComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource( [this.objetoSesion] );
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -45,7 +46,7 @@ export class TablaOtrosTemasComponent implements OnInit {
   }
 
   cargarRegistros(){
-    this.dataSource = new MatTableDataSource( this.objetoSesion.sesionComiteTema );
+    //this.dataSource = new MatTableDataSource( this.objetoSesion.sesionComiteTema );
     console.log('s', this.objetoSesion)
   }
 

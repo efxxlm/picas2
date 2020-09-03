@@ -40,9 +40,12 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     public dialog: MatDialog
   ) { }
 
-  openDialogValidacionSolicitudes() {
+  openDialogValidacionSolicitudes( element: any ) {
+    console.log( element );
     this.dialog.open(VotacionSolicitudComponent, {
-      width: '28em'
+      data: element,
+      width: '28em',
+      maxHeight: '90em'
     });
   }
 

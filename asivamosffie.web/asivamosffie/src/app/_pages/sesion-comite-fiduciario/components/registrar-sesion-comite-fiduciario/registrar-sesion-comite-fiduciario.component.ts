@@ -11,8 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
-  objetoSesion:Sesion = {  }
   idSesion: number;
+  objetoSesion = {
+    numeroComite: 'CF _00001',
+    responsable: 'Dirección administrativa',
+    tiempo: '20 minutos',
+    temaSolicitud: 'Elección de presidente',
+    id: null
+  };
 
   constructor ( public dialog: MatDialog,
                 private activatedRoute: ActivatedRoute ) { 
@@ -28,6 +34,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
     //getData de la sesion a registrar
     this.idSesion = Number( this.activatedRoute.snapshot.params.id );
+    this.objetoSesion.id = this.idSesion;
     /*
     getSesionBySesionId( this.idSesion )
         .subscribe( response => {

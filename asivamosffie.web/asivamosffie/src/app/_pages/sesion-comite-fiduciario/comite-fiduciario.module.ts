@@ -34,6 +34,8 @@ import { RegistrarSesionComiteFiduciarioComponent } from './components/registrar
 import { TablaSesionesComponent } from './components/tabla-sesiones/tabla-sesiones.component';
 import { TablaVerificarCumplimientosComponent } from './components/tabla-verificar-cumplimientos/tabla-verificar-cumplimientos.component';
 import { VerDetallesComponent } from './components/ver-detalles/ver-detalles.component';
+import { FormOtrosTemasComponent } from './components/form-otros-temas/form-otros-temas.component';
+import { TablaFormSolicitudMultipleComponent } from './components/tabla-form-solicitud-multiple/tabla-form-solicitud-multiple.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { VerDetallesComponent } from './components/ver-detalles/ver-detalles.com
     FormSolicitudComponent,
     VerificarCumplimientoComponent,
     TablaVerificarCumplimientosComponent,
-    VerDetallesComponent
+    VerDetallesComponent,
+    FormOtrosTemasComponent,
+    TablaFormSolicitudMultipleComponent
   ],
   imports: [
     CommonModule,

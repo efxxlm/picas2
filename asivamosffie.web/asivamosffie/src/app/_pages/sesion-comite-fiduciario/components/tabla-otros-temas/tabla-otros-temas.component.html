@@ -12,17 +12,17 @@
 
     <ng-container matColumnDef="responsable">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
-        <td mat-cell *matCellDef="let element"> <b>{{ element.responsableCodigo }}</b> </td>
+        <td mat-cell *matCellDef="let element"> <b>{{ element.responsable }}</b> </td>
     </ng-container>
 
     <ng-container matColumnDef="tiempo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tiempo </th>
-        <td mat-cell *matCellDef="let element"> {{element.tiempoIntervencion}} </td>
+        <td mat-cell *matCellDef="let element"> {{ element.tiempo }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="temaDolicitud">
+    <ng-container matColumnDef="temaSolicitud">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tema solicitud </th>
-        <td mat-cell *matCellDef="let element"> {{element.tema}} </td>
+        <td mat-cell *matCellDef="let element"> {{ element.temaSolicitud }} </td>
     </ng-container>
 
     <ng-container matColumnDef="id">

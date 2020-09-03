@@ -12,8 +12,21 @@ import { ComiteGrilla, EstadosComite } from 'src/app/_interfaces/technicalCommit
 })
 export class TablaSesionComiteFiduciarioComponent implements OnInit {
 
-  estadosComite = EstadosComite
-
+  estadosComite: any;
+  data: any[] = [
+    {
+      fecha: '09/07/2020',
+      numero: 'CF_00001',
+      estado: 'Desarrollada sin acta',
+      id: 0
+    },
+    {
+      fecha: '10/07/2020',
+      numero: 'CF_00002',
+      estado: 'Desarrollada sin acta',
+      id: 0
+    }
+  ]
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource();
 
@@ -31,6 +44,7 @@ export class TablaSesionComiteFiduciarioComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.dataSource = new MatTableDataSource( this.data );
     //getData Tabla sesiones de comite convocadas
     /*
     getComiteGrilla()

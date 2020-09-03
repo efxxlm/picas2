@@ -4,71 +4,41 @@
       <h2 class="card-subTitle">Desarrollo</h2>
       <div class="row">
         <div class="pr-1">
-          <span class="label-left">Fecha de la solicitud</span>
+          <span class="label-left">Tema</span>
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            {{ sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }} 
+            {{ sesionComiteTema.tema }}
           </b>
         </div>
       </div>
       <div class="row">
         <div class="pr-1">
-          <span class="label-left">Número de la solicitud</span>
+          <span class="label-left">Responsable</span>
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            {{ sesionComiteSolicitud.numeroSolicitud }}
+            {{ responsable.nombre }}
           </b>
         </div>
       </div>
       <div class="row">
-        <div class="pr-1">
-          <span class="label-left">Tipo de solicitud</span>
-        </div>
-        <div class="col">
-          <b class="label-left colorMainColor">
-            {{ sesionComiteSolicitud.tipoSolicitud }}
-          </b>
-        </div>
-      </div>
-      <div class="row" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo != tiposSolicitud.Contratacion">
-        <div class="pr-1">
-          <span class="label-left">Justificación</span>
-        </div>
-        <div class="col">
-          <p class="label-left colorMainColor pt-1 font-weight-lighter">
-            {{ justificacion }}
-          </p>
+        <div class="col d-flex">
+          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+            (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required></quill-editor>
+          <div class="d-flex align-items-center">
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
+              {{3000 - textoLimpio(addressForm.get('observaciones').value)}}
+            </span>
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+              3000
+            </span>
+          </div>
         </div>
       </div>
+      
       <h2 class="card-subTitle">Decisiones</h2>
-      <div class="reparacion-card row" *ngIf="tieneVotacion">
-        <div class="col-md-4">
-          Resultado de la votación <b class="colorMainColor">{{ resultadoVotacion }}</b>
-        </div>
-        <div class="col-md-4 info-text completo">
-          Aprobó <b class="colorMainColor"> {{ cantidadAprobado }} </b>
-        </div>
-        <div class="col-md-4 info-text sin-diligenciar">
-          No aprobó <b class="colorMainColor"> {{ cantidadNoAprobado }} </b>
-        </div>
-      </div>
-
-      <button
-        (click)="solicitudMultiple.cargarRegistro()"
-        style="display: none;"
-        id="btnSolicitudMultiple"
-        type="button"
-      >
-      </button>
-
-      <app-tabla-form-solicitud-multiple
-        #solicitudMultiple
-        [sesionComiteSolicitud]="sesionComiteSolicitud"
-      >
-      </app-tabla-form-solicitud-multiple>
-
+     
       <div class="row">
         <div class="col-md-8">
           <div class="row">
@@ -89,29 +59,19 @@
       </div>
       <div class="row">
         <div class="pr-1">
-          <label class="label-left" for="observaciones">Descripción</label>
+          <label class="label-left" for="observacionesDecision">Descripción</label>
         </div>
         <div class="col d-flex">
           <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required></quill-editor>
+            (onContentChanged)="maxLength($event, 3000)" formControlName="observacionesDecision" required></quill-editor>
           <div class="d-flex align-items-center">
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{3000 - textoLimpio(addressForm.get('observaciones').value)}}
+            <span class="contador miles" *ngIf="addressForm.get('observacionesDecision').value !== null">
+              {{3000 - textoLimpio(addressForm.get('observacionesDecision').value)}}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+            <span class="contador miles" *ngIf="addressForm.get('observacionesDecision').value === null">
               3000
             </span>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="pr-1">
-          <label class="label-left" for="url">URL con soporte de votación</label>
-        </div>
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput type="text" formControlName="url" maxlength="100">
-          </mat-form-field>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>
@@ -163,8 +123,8 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
-                  <input type="hidden" formControlName="sesionSolicitudCompromisoId">
-                  <input type="hidden" formControlName="sesionComiteSolicitudId">
+                  <input type="hidden" formControlName="temaCompromisoId">
+                  <input type="hidden" formControlName="sesionTemaId">
                 </mat-form-field>
                 <span class="contador">{{100 - tarea.value.length}}</span>
               </div>
