@@ -75,14 +75,12 @@ namespace asivamosffie.services
                                     SesionComiteTecnicoCompromisoId = a.SesionComiteTecnicoCompromisoId,
                                     FechaCumplimiento = a.FechaCumplimiento,
                                     EstadoCodigo = a.EstadoCodigo,
-                                    //EstadoCompromisoText =  _commonService.GetNombreDominioByCodigoAndTipoDominio(a.EstadoCodigo, (int)EnumeratorTipoDominio.Estado_Compromiso).Wait(),
+                                    EstadoCompromisoText =  _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(a.EstadoCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).Select(r => r.Nombre).FirstOrDefault(),
                                     EstadoComiteCodigo = s.EstadoComiteCodigo,
-                                    //EstadoComiteText = (string)_commonService.GetNombreDominioByCodigoAndTipoDominio(s.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite).Wait(),
+                                    EstadoComiteText = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(s.EstadoComiteCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Comite).Select(r => r.Nombre).FirstOrDefault(),
 
-                                    //EstadoComiteText = ss.EstadoComiteCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ss.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite) : "",
                                 }).ToListAsync();
 
-               
 
 
             }
