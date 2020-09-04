@@ -59,7 +59,7 @@ namespace asivamosffie.services
                     Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(pProyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
-
+                        LlaveMen =pProyecto.LlaveMen,
                         ProyectoId = pProyecto.ProyectoId,
                         Departamento = departamento.Descripcion,
                         Municipio = municipio.Descripcion,
