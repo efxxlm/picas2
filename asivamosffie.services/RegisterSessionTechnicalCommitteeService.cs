@@ -339,10 +339,24 @@ namespace asivamosffie.services
 
         #region Comite Tecnico
 
-        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId,string pUsuarioModifico)
-        { 
+        public async Task<ComiteTecnico> GetCompromisos(int ComiteTecnicoId)
+        {
+
+            ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
+                .Include(r => r.SesionComiteTema)
+                   .ThenInclude(r => r.TemaCompromiso)
+               .Include(r => r.SesionComiteSolicitud)
+                   .ThenInclude(r => r.SesionSolicitudCompromiso).FirstOrDefaultAsync();
+            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
+            comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+
+            return comiteTecnico;
+        }
+
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId, string pUsuarioModifico)
+        {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(pComiteTecnicoId);
@@ -352,13 +366,13 @@ namespace asivamosffie.services
                 comiteTecnicoOld.Eliminado = true;
                 _context.SaveChanges();
 
-               return new Respuesta
+                return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModifico,"ELIMINAR COMITE TECNICO")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
                 };
             }
             catch (Exception ex)
@@ -372,7 +386,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString())
                 };
             }
- 
+
         }
 
 
@@ -1216,20 +1230,20 @@ namespace asivamosffie.services
         #endregion
 
         #region Actas
-        public async Task<Respuesta> CreateEditSesionSolicitudObservacionProyecto(SesionSolicitudObservacionProyecto  pSesionSolicitudObservacionProyecto)
+        public async Task<Respuesta> CreateEditSesionSolicitudObservacionProyecto(SesionSolicitudObservacionProyecto pSesionSolicitudObservacionProyecto)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Edit_Sesion_Observacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
             string CreateEdit = "";
             try
-            { 
-                pSesionSolicitudObservacionProyecto.FechaCreacion =DateTime.Now;
-                pSesionSolicitudObservacionProyecto.Eliminado = false; 
+            {
+                pSesionSolicitudObservacionProyecto.FechaCreacion = DateTime.Now;
+                pSesionSolicitudObservacionProyecto.Eliminado = false;
                 _context.SesionSolicitudObservacionProyecto.Add(pSesionSolicitudObservacionProyecto);
 
                 _context.SaveChanges();
                 return
                    new Respuesta
-                   { 
+                   {
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
@@ -1282,11 +1296,11 @@ namespace asivamosffie.services
 
                         temaCompromisoOld.Tarea = TemaCompromiso.Tarea;
                         temaCompromisoOld.Responsable = TemaCompromiso.Responsable;
-                        temaCompromisoOld.FechaCumplimiento = TemaCompromiso.FechaCumplimiento; 
+                        temaCompromisoOld.FechaCumplimiento = TemaCompromiso.FechaCumplimiento;
 
                         temaCompromisoOld.FechaModificacion = TemaCompromiso.FechaModificacion;
                         temaCompromisoOld.UsuarioModificacion = TemaCompromiso.UsuarioModificacion;
-                         
+
                     }
                 }
                 _context.SaveChanges();
