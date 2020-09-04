@@ -348,16 +348,17 @@ namespace asivamosffie.services
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.TemaCompromiso)
-                                      .ThenInclude(r => r.Responsable)
+                                 //     .ThenInclude(r => r.Responsable)
                .Include(r => r.SesionComiteSolicitud)
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
-                      .ThenInclude(r => r.ResponsableSesionParticipante).FirstOrDefaultAsync();
+               //       .ThenInclude(r => r.ResponsableSesionParticipante)
+                      .FirstOrDefaultAsync();
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
 
 
             List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
-
+            List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.ToList();
 
             foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
             {
@@ -366,6 +367,10 @@ namespace asivamosffie.services
                     if (!string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo))
                     {
                         TemaCompromiso.EstadoCodigo = ListEstadoReportado.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                    }
+                    if (TemaCompromiso.Responsable != null)
+                    {
+                        TemaCompromiso.ResponsableNavigation = ListSesionParticipantes.Where(r => r.SesionParticipanteId == TemaCompromiso.Responsable).FirstOrDefault();
                     }
                 }
             }
@@ -377,6 +382,11 @@ namespace asivamosffie.services
                     if (!string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo))
                     {
                         SesionSolicitudCompromiso.EstadoCodigo = ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                    }
+
+                    if (SesionSolicitudCompromiso.ResponsableSesionParticipanteId != null)
+                    {
+                        SesionSolicitudCompromiso.ResponsableSesionParticipante = ListSesionParticipantes.Where(r => r.SesionParticipanteId == SesionSolicitudCompromiso.ResponsableSesionParticipanteId).FirstOrDefault();
                     }
                 }
             }
