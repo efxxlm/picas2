@@ -35,6 +35,16 @@
     }
 }
 
+.info-button {
+
+    &::after {
+        @extend %ayuda-color;
+        margin-left: .2em;
+        position: relative;
+        top: 2px;
+    }
+}
+
 .expansion-style {
     box-shadow: none !important;
     &--header {

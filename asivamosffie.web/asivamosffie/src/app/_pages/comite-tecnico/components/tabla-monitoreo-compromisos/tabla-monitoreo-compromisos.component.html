@@ -33,7 +33,7 @@
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <button mat-raised-button color="accent" class="btn-table">Verificar cumplimiento</button>
+            <a [routerLink]="['verificarCumplimiento', element.id]" mat-raised-button color="accent" class="btn-table">Verificar cumplimiento</a>
         </td>
     </ng-container>
 

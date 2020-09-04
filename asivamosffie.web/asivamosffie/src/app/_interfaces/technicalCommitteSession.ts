@@ -1,31 +1,49 @@
+import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
+import { Contratacion } from './project-contracting';
+import { Proyecto } from '../core/_services/project/project.service';
+import { dashCaseToCamelCase } from '@angular/compiler/src/util';
+
 export interface SolicitudesContractuales{
     id?: number,
     fechaSolicitud?: Date,
     tipoSolicitud?: string,
-    tipoSolicitudNumeroTabla?: number,
+    tipoSolicitudNumeroTabla?: string,
     numeroSolicitud?: string,
-
+    sesionComiteSolicitudId?: number,
+    tipoSolicitudCodigo?: string,
+    solicitudId?: number,
 }
 
-export interface Sesion{
-    sesionId?: number,
-    fechaOrdenDia?: Date,
-    numeroComite?: string,
-    estadoComiteCodigo?: string,
-    esCompleto?: boolean,
-    rutaActaSesion?: string,
+export interface ComiteTecnico{
+    comiteTecnicoId?: number,
     fechaCreacion?: Date,
     usuarioCreacion?: string,
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
+    esCompleto?: boolean,
+    requiereVotacion?: boolean,
+    justificacion?: string,
+    esAprobado?: boolean,
+    fechaAplazamiento?: Date,
+    observaciones?: string,
+    rutaSoporteVotacion?: string,
+    tieneCompromisos?: boolean,
+    cantCompromisos?: number,
+    rutaActaSesion?: string,
+    fechaOrdenDia?: Date,
+    numeroComite?: string,
+    estadoComiteCodigo?: string,
+
     sesionComiteTema?: SesionComiteTema[],
+    sesionComiteSolicitud?: SesionComiteSolicitud[],
+    sesionParticipante?: SesionParticipante[],
+    sesionInvitado?: SesionInvitado[],
 
 }
 
 export interface SesionComiteTema{
     sesionTemaId?: number,
-    sesionId?: number,
     tema?: string,
     responsableCodigo?: string,
     tiempoIntervencion?: number,
@@ -38,25 +56,114 @@ export interface SesionComiteTema{
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
+    comiteTecnicoId?: number,
+    esProposicionesVarios?: boolean,
+    requiereVotacion?: boolean,
+    estadoTemaCodigo?: string,
+    generaCompromiso?: boolean,
+    cantCompromisos?: number,
+
+    completo?: boolean,
+
+    sesionTemaVoto?: SesionTemaVoto[]
+    temaCompromiso?: TemaCompromiso[],
 
 }
 
-export interface SesionComiteTecnico{
-    sesionComiteTecnicoId?: number,
-    sesionId?: number,
+export interface SesionComiteSolicitud {
+    sesionComiteSolicitudId?: number,
+    tipoSolicitudCodigo?: string,
+    solicitudId?: number,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
     comiteTecnicoId?: number,
-    requiereVotacion?: boolean,
-    justificacion?: string,
-    esAprobado?: boolean,
+    estadoCodigo?: string,
     observaciones?: string,
     rutaSoporteVotacion?: string,
-    tieneCompromisos?: boolean,
+    generaCompromiso?: boolean,
     cantCompromisos?: number,
-    usuarioCreacion?: string,
+    eliminado?: boolean,
+    requiereVotacion?: boolean,
+
+
+    tipoSolicitud?: string,
+    numeroSolicitud?: string,
+    fechaSolicitud?: Date, 
+    completo?: boolean,
+
+    sesionSolicitudVoto?: SesionSolicitudVoto[],
+    sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
+    sesionSolicitudCompromiso?: SesionSolicitudCompromiso[],
+    contratacion?: Contratacion,
+
+
+}
+
+export interface SesionParticipante{
+    sesionParticipanteId?: number,
+    comiteTecnicoId?: number,
+    usuarioId?: number,
     fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+
+    nombre?: string;
+
+    usuario?: Usuario,
+    sesionSolicitudVoto?: SesionSolicitudVoto[],
+    sesionTemaVoto?: SesionTemaVoto[],
+    sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
+
+}
+
+export interface SesionInvitado{
+    sesionInvitadoId?: number,
+    nombre?: string,
+    cargo?: string,
+    entidad?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    eliminado?: boolean,
+    comiteTecnicoId?: number,
+
+}
+
+export interface SesionSolicitudVoto{
+    sesionSolicitudVotoId?: number,
+    sesionComiteSolicitudId?: number,
+    sesionParticipanteId?: number,
+    esAprobado?: boolean,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
     usuarioModificacion?: string,
     fechaModificacion?: Date,
+
+    nombreParticipante?: string,
+
+    sesionComiteSolicitud?: SesionComiteSolicitud
+
+}
+
+export interface SesionTemaVoto{
+    sesionTemaVotoId?: number,
+    sesionTemaId?: number,
+    sesionParticipanteId?: number,
+    esAprobado?: boolean,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
     eliminado?: boolean,
+
+    nombreParticipante?: string,
+
 }
 
 export interface ComiteGrilla{
@@ -66,6 +173,50 @@ export interface ComiteGrilla{
     estadoComite?: string, 
     estadoComiteCodigo?: string,
     
+}
+
+export interface SesionSolicitudObservacionProyecto{
+    sesionSolicitudObservacionProyectoId?: number,
+    sesionComiteSolicitudId?: number,
+    contratacionProyectoId?: number,
+    sesionParticipanteId?: number,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    usuarioModificacion?: string,
+    fechaModificacion?: Date,
+    eliminado?: boolean,
+
+    proyecto?: Proyecto,
+
+    nombreParticipante?: string,
+
+}
+
+export interface SesionSolicitudCompromiso{
+    sesionSolicitudCompromisoId?: number,
+    sesionComiteSolicitudId?: number,
+    tarea?: string,
+    responsableSesionParticipanteId?: number,
+    fechaCumplimiento?: Date,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    eliminado?: boolean,
+}
+
+export interface TemaCompromiso{
+    temaCompromisoId?: number,
+    sesionTemaId?: number,
+    tarea?: string,
+    responsable?: string,
+    fechaCumplimiento?: Date,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    fechaModificacion?: Date,
+    usuarioModificacion?: Date,
+    eliminado?: boolean,
 }
 
 interface EstadoComite{
@@ -88,3 +239,18 @@ interface EstadoComite{
     fallida: "7",
 
   }
+
+  interface TipoSolicitud{
+    AperturaDeProcesoDeSeleccion?: string,
+    Contratacion?: string,
+    ModificacionContractual?: string,
+    
+  }
+  
+  export const TiposSolicitud: TipoSolicitud = {
+    AperturaDeProcesoDeSeleccion: "1",
+    Contratacion: "2",
+    ModificacionContractual: "3",
+
+  }
+

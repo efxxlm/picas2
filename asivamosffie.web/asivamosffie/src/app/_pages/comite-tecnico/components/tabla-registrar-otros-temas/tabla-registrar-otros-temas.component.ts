@@ -1,20 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
+import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
+import { ComiteTecnico, SesionComiteTema, SesionTemaVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { VotacionTemaComponent } from '../votacion-tema/votacion-tema.component';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
-export interface OrdenDelDia {
-  id: number;
-  responsable: string;
-  tiempo: string;
-  tema: string;
-  votacion: boolean;
-}
-
-const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, responsable: '23/06/2020', tiempo: 'SA0006', tema: 'Apertura de proceso de selección', votacion: false }
-];
 
 @Component({
   selector: 'app-tabla-registrar-otros-temas',
@@ -23,8 +19,15 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
+  @Input() objetoComiteTecnico: ComiteTecnico;
+  @Input() esProposicionesVarios: boolean;
+  @Output() validar: EventEmitter<any> = new EventEmitter();
+
+
+  listaMiembros:Usuario[];
+
   displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -35,10 +38,20 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   constructor(
-    public dialog: MatDialog
-  ) { }
+              public dialog: MatDialog,
+              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              private commonService: CommonService,
+
+             ) 
+  {}
 
   ngOnInit(): void {
+
+    console.log( this.esProposicionesVarios )
+    this.commonService.listaUsuarios().then(( respuesta )=>{
+      this.listaMiembros = respuesta;
+    })
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -54,6 +67,73 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+  }
+
+  openDialogValidacionSolicitudes( elemento: SesionComiteTema ) {
+
+    elemento.sesionTemaVoto = [];
+
+    console.log( this.objetoComiteTecnico.sesionParticipante.length )
+
+    this.objetoComiteTecnico.sesionParticipante.forEach( p => {
+      let votacion: SesionTemaVoto = p.sesionTemaVoto.find( v => v.sesionTemaId == elemento.sesionTemaId );
+      let usuario: Usuario = this.listaMiembros.find( m => m.usuarioId == p.usuarioId ) 
+
+      let temaVoto: SesionTemaVoto = {
+
+        sesionTemaVotoId: votacion ? votacion.sesionTemaVotoId : 0,
+        sesionTemaId: elemento.sesionTemaId,
+        sesionParticipanteId: p.sesionParticipanteId,
+        
+        nombreParticipante: `${ usuario.nombres } ${ usuario.apellidos }`,
+        esAprobado: votacion ? votacion.esAprobado : null,
+        observacion: votacion ? votacion.observacion : null,
+
+      }
+
+      elemento.sesionTemaVoto.push( temaVoto )
+    })
+
+
+    const dialog = this.dialog.open(VotacionTemaComponent, {
+      width: '70em', data: { sesionComiteTema: elemento }
+    });
+
+    dialog.afterClosed().subscribe( c => {
+      if (c && c.comiteTecnicoId){
+      this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
+          .subscribe( response => {
+            this.objetoComiteTecnico = response;
+            this.validar.emit(null);
+          })
+        }
+    })
+
+  }
+
+  changeRequiere( check: boolean, solicitudTema: SesionComiteTema ){
+    
+    this.objetoComiteTecnico.sesionComiteTema.forEach( tem => {
+      if (tem.sesionTemaId == solicitudTema.sesionTemaId)
+        if ( check ){
+          tem.completo = false
+        }else{
+          tem.completo = true
+          this.technicalCommitteSessionService.noRequiereVotacionSesionComiteTema( solicitudTema )
+            .subscribe( respuesta => {
+              
+            })
+        }
+    })
+  }
+
+  cargarRegistro(){
+
+    let lista = this.objetoComiteTecnico.sesionComiteTema.
+                        filter( t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == this.esProposicionesVarios )
+
+    this.dataSource = new MatTableDataSource( lista );
+
   }
 
 }

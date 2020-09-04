@@ -6,7 +6,7 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar sesión CT_00001
+            Registrar sesión {{ objetoComiteTecnico.numeroComite }}
         </h1>
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
@@ -22,7 +22,16 @@
                     Validación de solicitudes contractuales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-validacion-solicitudes-contractuales></app-tabla-validacion-solicitudes-contractuales>
+            <button 
+                (click)="tablaValidaciones.cargarRegistro()"
+                style="display: none;"
+                id="btnTablaValidaciones"
+            ></button>
+            <app-tabla-validacion-solicitudes-contractuales
+                #tablaValidaciones
+                [ObjetoComiteTecnico]="objetoComiteTecnico"
+                >
+            </app-tabla-validacion-solicitudes-contractuales>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -30,7 +39,19 @@
                     Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-otros-temas></app-tabla-otros-temas>
+            
+            <button 
+                type="button" 
+                (click)="tablaOtros.cargarRegistros()" 
+                style="display: none;"
+                id=btnOtros>
+            </button>
+
+            <app-tabla-otros-temas
+                #tablaOtros
+                [objetoComiteTecnico]="objetoComiteTecnico"
+                >
+            </app-tabla-otros-temas>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -38,13 +59,25 @@
                     Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-proposiciones-varios></app-form-proposiciones-varios>
+
+            <button 
+                type="button" 
+                (click)="proposiciones.cargarRegistros()" 
+                style="display: none;"
+                id=btnProposiciones>
+            </button>
+            
+            <app-form-proposiciones-varios
+                #proposiciones
+                [objetoComiteTecnico]="objetoComiteTecnico"
+            >
+        </app-form-proposiciones-varios>
         </mat-expansion-panel>
     </mat-accordion>
 
     <div class="text-center mt-2em mb-2em">
         <button mat-raised-button color="accent" class="btn-ancho" (click)="openDialogAplazarSesion()">Aplazar sesión</button>
-        <button mat-raised-button color="accent" class="btn-ancho">Declarar fallida </button>
+        <button mat-raised-button color="accent" class="btn-ancho" (click)="fallida()">Declarar fallida </button>
         <a routerLink="registrarParticipantes" mat-raised-button color="accent" class="btn-ancho">Registrar participantes</a>
     </div>
 </section>

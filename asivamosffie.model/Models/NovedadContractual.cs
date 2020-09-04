@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class NovedadContractual
     {
-        public NovedadContractual()
-        {
-            SesionComiteSolicitud = new HashSet<SesionComiteSolicitud>();
-        }
-
         public int NovedadContractualId { get; set; }
         public DateTime FechaSolictud { get; set; }
         public string NumeroSolicitud { get; set; }
@@ -28,7 +23,5 @@ namespace asivamosffie.model.Models
         public int? PlazoAdicionalMeses { get; set; }
         public string ClausulaModificar { get; set; }
         public string AjusteClausula { get; set; }
-
-        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
     }
 }

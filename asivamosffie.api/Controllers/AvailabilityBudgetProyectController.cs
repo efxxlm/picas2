@@ -64,7 +64,8 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                var result = await  _availabilityBudgetProyectService.GetHTMLString(detailValidarDisponibilidadPresupuesal);
+            //    var result = await  _availabilityBudgetProyectService.GetHTMLString(detailValidarDisponibilidadPresupuesal);
+             
                 var globalSettings = new GlobalSettings
                 {
                     ColorMode = ColorMode.Color,

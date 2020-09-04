@@ -8,7 +8,7 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            23/06/2020
+            {{ sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }} 
           </b>
         </div>
       </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            SA0006
+            {{ sesionComiteSolicitud.numeroSolicitud }}
           </b>
         </div>
       </div>
@@ -28,37 +28,47 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            Apertura de proceso de selección
+            {{ sesionComiteSolicitud.tipoSolicitud }}
           </b>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo != tiposSolicitud.Contratacion">
         <div class="pr-1">
           <span class="label-left">Justificación</span>
         </div>
         <div class="col">
           <p class="label-left colorMainColor pt-1 font-weight-lighter">
-            En los últimos años se ha visto un crecimiento de la población escolar en el país, que ha hecho que algunas
-            de las instituciones educativas, se hayan visto copadas en sus cupos y no puedan prestar de manera
-            conveniente los servicios educativos, y otras que en razón a las distancias, resultan inaccesibles para los
-            niños en los grados de educación básica primaria. Como alternativa de solución se plantea éste proyecto para
-            ampliar y adecuar la infraestructura educativa, acorde con las necesidades y cumpliendo con los estándares
-            de infraestructura vigentes.
+            {{ justificacion }}
           </p>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>
-      <div class="reparacion-card row">
+      <div class="reparacion-card row" *ngIf="tieneVotacion">
         <div class="col-md-4">
-          Resultado de la votación <b class="colorMainColor">No aprobó</b>
+          Resultado de la votación <b class="colorMainColor">{{ resultadoVotacion }}</b>
         </div>
         <div class="col-md-4 info-text completo">
-          Aprobó <b class="colorMainColor"> 1 </b>
+          Aprobó <b class="colorMainColor"> {{ cantidadAprobado }} </b>
         </div>
         <div class="col-md-4 info-text sin-diligenciar">
-          No aprobó <b class="colorMainColor"> 2 </b>
+          No aprobó <b class="colorMainColor"> {{ cantidadNoAprobado }} </b>
         </div>
       </div>
+
+      <button
+        (click)="solicitudMultiple.cargarRegistro()"
+        style="display: none;"
+        id="btnSolicitudMultiple"
+        type="button"
+      >
+      </button>
+
+      <app-tabla-form-solicitud-multiple
+        #solicitudMultiple
+        [sesionComiteSolicitud]="sesionComiteSolicitud"
+      >
+      </app-tabla-form-solicitud-multiple>
+
       <div class="row">
         <div class="col-md-8">
           <div class="row">
@@ -66,10 +76,10 @@
               <label class="label-left" for="estadoSolicitud">Estado de la solicitud</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width" formControlName="estadoSolicitud">
-                <mat-select required>
-                  <mat-option *ngFor="let estado of estadosArray" [value]="estado.value">
-                    {{ estado.name }}
+              <mat-form-field class="select-width" >
+                <mat-select required formControlName="estadoSolicitud">
+                  <mat-option *ngFor="let estado of estadosArray" [value]="estado">
+                    {{ estado.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -113,14 +123,14 @@
             </div>
             <div class="col">
               <mat-radio-group class="radioInput" formControlName="tieneCompromisos">
-                <mat-radio-button value="true">Sí</mat-radio-button>
-                <mat-radio-button value="false">No</mat-radio-button>
+                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false">No</mat-radio-button>
               </mat-radio-group>
             </div>
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="addressForm.get('tieneCompromisos').value === 'true'">
+      <div class="row" *ngIf="addressForm.value.tieneCompromisos == true">
         <div class="col-md-10">
           <div class="row">
             <div class="pr-1">
@@ -139,8 +149,8 @@
       </div>
 
       <div formGroupName="compromisos">
-        <div *ngFor="let compromiso of compromisos.controls; let i = index">
-          <div [formGroupName]="i">
+        <div *ngFor="let compromiso of compromisos.controls; let i = index" [formGroupName]="i">
+          <div >
 
             <mat-card-title class="header-card--text sub-text">
               Compromiso {{ i + 1 }}
@@ -153,6 +163,8 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
+                  <input type="hidden" formControlName="sesionSolicitudCompromisoId">
+                  <input type="hidden" formControlName="sesionComiteSolicitudId">
                 </mat-form-field>
                 <span class="contador">{{100 - tarea.value.length}}</span>
               </div>
@@ -163,10 +175,13 @@
               <label class="label-left" for="responsable">Responsable</label>
             </div>
             <div class="col">
-              <mat-radio-group class="radioInput" formControlName="responsable">
-                <mat-radio-button value="true">Sí</mat-radio-button>
-                <mat-radio-button value="false">No</mat-radio-button>
-              </mat-radio-group>
+              <mat-form-field class="select-width" >
+                <mat-select required formControlName="responsable">
+                  <mat-option *ngFor="let estado of listaMiembros" [value]="estado">
+                    {{ estado.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
           <div class="row">

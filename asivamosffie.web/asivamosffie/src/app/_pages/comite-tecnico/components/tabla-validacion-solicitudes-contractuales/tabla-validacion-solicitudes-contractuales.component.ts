@@ -1,18 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-export interface OrdenDelDia {
-  id: number;
-  fecha: string;
-  numero: string;
-  tipo: string;
-}
-
-const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '23/06/2020', numero: 'SA0006', tipo: 'Sin Apertura de proceso de selección' }
-];
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-tabla-validacion-solicitudes-contractuales',
@@ -21,8 +11,10 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaValidacionSolicitudesContractualesComponent implements OnInit {
 
+  @Input() ObjetoComiteTecnico: ComiteTecnico;
+
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -50,6 +42,10 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+  }
+
+  cargarRegistro(){
+    this.dataSource = new MatTableDataSource( this.ObjetoComiteTecnico.sesionComiteSolicitud );
   }
 
 }

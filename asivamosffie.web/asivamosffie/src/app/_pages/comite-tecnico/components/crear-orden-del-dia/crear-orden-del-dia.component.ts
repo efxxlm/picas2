@@ -4,8 +4,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { SolicitudesContractuales, Sesion, SesionComiteTema, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, ComiteTecnico, SesionComiteTema, EstadosComite, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { forkJoin } from 'rxjs';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-crear-orden-del-dia',
@@ -15,12 +16,13 @@ import { forkJoin } from 'rxjs';
 
 export class CrearOrdenDelDiaComponent implements OnInit {
 
+  listaMiembros: Dominio[] = [];
   solicitudesContractuales: SolicitudesContractuales[] = [];
   fechaSesionString: string;
   fechaSesion: Date;
-  idSesion: number = 0;
+  idComite: number = 0;
   estadosComite = EstadosComite;
-  objetoSesion: Sesion = {
+  objetoComiteTecnico: ComiteTecnico = {
     estadoComiteCodigo: this.estadosComite.sinConvocatoria
   };
 
@@ -42,6 +44,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private techicalCommitteeSessionService: TechnicalCommitteSessionService,
               private router: Router,
+              private commonService: CommonService,
 
              ) 
     {
@@ -55,25 +58,34 @@ export class CrearOrdenDelDiaComponent implements OnInit {
        this.fechaSesion = new Date(fecha);
        this.fechaSesionString = `${ this.fechaSesion.getFullYear() }/${ this.fechaSesion.getMonth() + 1 }/${ this.fechaSesion.getDate() }` 
 
-       this.idSesion = a.id;
+       this.idComite = a.id;
 
-       if (this.idSesion > 0){
+       if (this.idComite > 0){
         this.editMode();
        }else{
 
         this.agregaTema();
 
-        this.techicalCommitteeSessionService.getListSolicitudesContractuales( this.fechaSesionString )
-        .subscribe( response => {
+        forkJoin([
+          this.techicalCommitteeSessionService.getListSolicitudesContractuales( this.fechaSesionString ),
+          this.commonService.listaMiembrosComiteTecnico(),
 
-          this.solicitudesContractuales = response;
+        ]).subscribe( response => {
+
+          this.solicitudesContractuales = response[0];
+
+          this.solicitudesContractuales.forEach( sc => {
+            sc.tipoSolicitudCodigo = sc.tipoSolicitudNumeroTabla
+            
+          })
+           
           
-
+          this.listaMiembros = response[1];
+          
           setTimeout(() => {
             
             let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
             btnTablaSolicitudes.click();
-            console.log( this.solicitudesContractuales, this.objetoSesion );
 
           }, 1000);
 
@@ -86,22 +98,40 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   editMode(){
 
     forkJoin([ 
-      this.techicalCommitteeSessionService.getListSesionComiteTemaByIdSesion( this.idSesion ),
-      this.techicalCommitteeSessionService.getSesionBySesionId( this.idSesion ),
+      //this.techicalCommitteeSessionService.getListSesionComiteTemaByIdSesion( this.idSesion ),
+      this.techicalCommitteeSessionService.getComiteTecnicoByComiteTecnicoId( this.idComite ),
+      this.commonService.listaMiembrosComiteTecnico(),
 
      ]).subscribe( response => {
 
-      this.objetoSesion = response[1];
+      this.objetoComiteTecnico = response[0];
+      this.listaMiembros = response[1];
+      console.log( response[0] )
+      this.solicitudesContractuales = response[0].sesionComiteSolicitud;
+
+      this.solicitudesContractuales.forEach( sc => {
+        sc.id = sc.solicitudId;
+      })
+
+      setTimeout(() => {
+            
+        let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
+        btnTablaSolicitudes.click();
+
+      }, 1000);
 
         let temas = this.addressForm.get('tema') as FormArray;
 
         temas.clear();
 
-        response[0].forEach( te => {
+        response[0].sesionComiteTema = response[0].sesionComiteTema.filter( t => t.esProposicionesVarios != true )
+
+        response[0].sesionComiteTema.forEach( te => {
           let grupoTema = this.crearTema();
+          let responsable = this.listaMiembros.find( m => m.codigo == te.responsableCodigo )
 
           grupoTema.get('tema').setValue( te.tema );
-          grupoTema.get('responsable').setValue( te.responsableCodigo );
+          grupoTema.get('responsable').setValue( responsable );
           grupoTema.get('tiempoIntervencion').setValue( te.tiempoIntervencion );
           grupoTema.get('url').setValue( te.rutaSoporte );
           grupoTema.get('sesionTemaId').setValue( te.sesionTemaId );
@@ -113,6 +143,39 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
         console.log( response );
       })
+  }
+
+  eliminarTema( i ){
+    let tema = this.addressForm.get('tema');
+    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+    
+  }
+
+  deleteTema( i ){
+    let grupo = this.addressForm.get('tema') as FormArray;
+    let tema = grupo.controls[i];
+
+    this.techicalCommitteeSessionService.deleteSesionComiteTema( tema.value.sesionTemaId )
+      .subscribe( respuesta => {
+        this.borrarArray(grupo, i)
+        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.ngOnInit();
+      })
+    
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number, grupo: any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        this.deleteTema(e)
+      }           
+    });
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -141,6 +204,13 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     this.tema.push(this.crearTema());
   }
 
+  getStyle(){
+    if (this.estadosComite.sinConvocatoria == this.objetoComiteTecnico.estadoComiteCodigo)
+      return 'auto'
+    else
+      return 'none'
+  }
+
   crearTema() {
     return this.fb.group({
       sesionTemaId: [],
@@ -165,28 +235,42 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       this.openDialog('Falta registrar información', '');
 
     }else{
-      let sesion: Sesion = {
-        sesionId: this.idSesion,
+      let comite: ComiteTecnico = {
+        comiteTecnicoId: this.idComite,
         fechaOrdenDia: this.fechaSesion,
-        sesionComiteTema: []
+        sesionComiteTema: [],
+        sesionComiteSolicitud: [],
+
       }
   
       this.tema.controls.forEach( control => {
         let sesionComiteTema: SesionComiteTema = {
           tema: control.get('tema').value,
-          responsableCodigo: control.get('responsable').value,
+          responsableCodigo: control.get('responsable').value.codigo,
           tiempoIntervencion: control.get('tiempoIntervencion').value,
           rutaSoporte: control.get('url').value,
           sesionTemaId: control.get('sesionTemaId').value,
-          sesionId: this.idSesion,
+          comiteTecnicoId: this.idComite,
 
         }
   
-        sesion.sesionComiteTema.push( sesionComiteTema );
+        comite.sesionComiteTema.push( sesionComiteTema );
       }) 
+
+      this.solicitudesContractuales.forEach( sol => {
+        let sesionComiteSolicitud: SesionComiteSolicitud = {
+          comiteTecnicoId: this.idComite,
+          solicitudId: sol.id,
+          sesionComiteSolicitudId: sol.sesionComiteSolicitudId,
+          tipoSolicitudCodigo: sol.tipoSolicitudCodigo,
+        }
+
+        comite.sesionComiteSolicitud.push( sesionComiteSolicitud );
+      })
   
+      console.log( comite )
   
-      this.techicalCommitteeSessionService.saveEditSesionComiteTema( sesion ).subscribe( respuesta => {
+      this.techicalCommitteeSessionService.createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( comite ).subscribe( respuesta => {
           this.openDialog( 'Sesion Comite', respuesta.message )
           if ( respuesta.code == "200" )
             this.router.navigate(['/comiteTecnico']);
