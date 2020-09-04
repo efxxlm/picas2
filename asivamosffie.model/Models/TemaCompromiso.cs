@@ -18,7 +18,7 @@ namespace asivamosffie.model.Models
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
-        public DateTime? UsuarioModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public string EstadoCodigo { get; set; }
 

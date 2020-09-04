@@ -59,7 +59,7 @@
         public const string Crear_Editar_Temas_Compromiso = "61";  
         public const string Crear_Edit_Sesion_Observacion_Proyecto = "62";
 
-        public const string Eliminar_Comite_Tecnico = "64";
-       
+        public const string Eliminar_Comite_Tecnico = "64"; 
+        public const string Vertificar_Tema_Compromisos = "65";
     }
 }

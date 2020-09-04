@@ -339,7 +339,7 @@ namespace asivamosffie.services
 
         #region Comite Tecnico
 
-        public async Task<ComiteTecnico> GetCompromisos(int ComiteTecnicoId)
+        public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId)
         {
 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
@@ -2002,6 +2002,68 @@ namespace asivamosffie.services
 
             return _converter.Convert(pdf);
         }
+
+        #endregion
+
+        #region  Compromisos
+
+        public async Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Vertificar_Tema_Compromisos, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+                foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
+                {
+
+                    foreach (var temaCompromiso in SesionComiteTema.TemaCompromiso)
+                    {  
+                        TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(temaCompromiso.TemaCompromisoId); 
+                        temaCompromisoOld.FechaModificacion = DateTime.Now;
+                        temaCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        temaCompromisoOld.EstadoCodigo = temaCompromiso.EstadoCodigo;
+                    }
+                }
+
+                foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
+                {
+
+                    foreach (var pSesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                    {
+                        SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
+                        SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
+                        SesionSolicitudCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        SesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
+                    }
+                }
+
+
+                _context.SaveChanges();
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pComiteTecnico.UsuarioCreacion, "VERIFICAR TEMA COMPROMISO")
+                   };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
 
         #endregion
     }
