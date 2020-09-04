@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +11,7 @@ export interface PeriodicElement {
   tipo: string;
   estadoRegistro: boolean;
 }
+
 
 const ELEMENT_DATA: PeriodicElement[] = [
   { id: 1, fecha: '26/05/2020', numero: '003', tipo: 'Modificación contractual', estadoRegistro: false },
@@ -25,6 +26,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TablaEnValidacionComponent implements OnInit {
 
+  @Input()disponibilidadPresupuestal: any;
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
@@ -39,6 +41,7 @@ export class TablaEnValidacionComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    console.log(this.disponibilidadPresupuestal);
     this.inicializarTabla();
   }
   inicializarTabla() {

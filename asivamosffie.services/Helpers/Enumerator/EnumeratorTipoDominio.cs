@@ -60,28 +60,11 @@ namespace asivamosffie.services.Helpers.Enumerator
        
         Tipo_de_Solicitud = 29,       
         Estado_Solicitud = 31,
-		Estado_Juridico_Predios = 25,
 		Tipo_Solicitud = 29,
-		EstadoComite = 38
+		EstadoComite = 38,
 
         // Para disponibilidad presupuestal        
-        Tipo_Proceso_Seleccion = 27,
- 
-        Tipo_Proponente = 28,
-
-        Tipo_de_Solicitud = 29,
-
-        Tipo_Documento = 30,
-
-        //Es para proyecto ?
-        Estado_Solicitud = 31,
- 
-        // Para disponibilidad presupuestal
-
-        Etapa_Proceso_Seleccion = 34,
-
-        Estado_Proceso_Seleccion = 35,
-
+        
         Tipo_de_Solicitud_Obra_Interventorias = 37,
 
         Opcion_Por_Contratar = 37,

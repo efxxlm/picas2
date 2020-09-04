@@ -170,7 +170,7 @@ namespace asivamosffie.services
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pId);
             /*busco usuario Juridico*/
-            var usuarioJuridico = _context.UsuarioPerfil.Where(x=>x.PerfilId==(int)enumeratorPerfil.Juridica).Include(y=>y.Usuario).FirstOrDefault();
+            var usuarioJuridico = _context.UsuarioPerfil.Where(x=>x.PerfilId==(int)EnumeratorPerfil.Juridica).Include(y=>y.Usuario).FirstOrDefault();
             try
             {
                 DisponibilidadCancelar.FechaModificacion = DateTime.Now;
@@ -257,15 +257,16 @@ namespace asivamosffie.services
             }
         }
 
-        public Task<byte[]> GetPDFDDP(int id, string pUsurioGenero)
+        public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero)
         {
-            Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
+            /*Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
 
             string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-            return PDF.Convertir(Plantilla);
+            return PDF.Convertir(Plantilla);*/
+            return null;
         }
 
         //    public async Task<Respuesta> CreateEditDisponibilidadPresupuestal(DisponibilidadPresupuestal pDisponibilidadPresupuestal) {
