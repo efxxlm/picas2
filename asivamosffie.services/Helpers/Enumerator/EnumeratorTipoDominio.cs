@@ -60,6 +60,9 @@ namespace asivamosffie.services.Helpers.Enumerator
        
         Tipo_de_Solicitud = 29,       
         Estado_Solicitud = 31,
+		Estado_Juridico_Predios = 25,
+		Tipo_Solicitud = 29,
+		EstadoComite = 38
 
         // Para disponibilidad presupuestal        
 
