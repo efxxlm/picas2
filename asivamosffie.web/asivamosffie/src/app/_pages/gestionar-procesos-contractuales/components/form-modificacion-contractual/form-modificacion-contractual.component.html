@@ -51,7 +51,32 @@
 
       </mat-expansion-panel>
 
-      <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel class="expansion-style" *ngIf="suspensionBoolean || reinicioBoolean">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Detalle de la novedad contractual
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p *ngIf="suspensionBoolean"><b>Tipo de novedad</b>: Suspensión</p>
+              <p *ngIf="reinicioBoolean"><b>Tipo de novedad</b>: Reinicio</p>
+              <p><b>Motivo de la novedad</b>: Condiciones climaticas</p>
+              <p *ngIf="suspensionBoolean"><b>Fecha de inicio de la suspensión</b>: 27/07/2020</p>
+              <p *ngIf="suspensionBoolean"><b>Fecha final de la suspensión</b>: 30/08/2020</p>
+              <p *ngIf="reinicioBoolean"><b>Tipo de modificación</b>: Reinicio</p>
+              <p *ngIf="reinicioBoolean"><b>Fecha de inicio del reinicio</b>: 31/08/2020</p>
+              <p *ngIf="reinicioBoolean"><b>Fecha final del reinicio</b>: 31/08/2020</p>
+              <p><b>Detalle de la novedad</b>: Se realiza suspensión por lluvias</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style" *ngIf="!suspensionBoolean && !reinicioBoolean">
         <mat-expansion-panel-header class="expansion-style--header w-50">
           <mat-panel-title class="expansion-style--title">
             Detalle de la modificación contractual
@@ -144,43 +169,7 @@
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
         <p>Fecha del trámite <b class="color-titulo">16/06/2020</b></p>
-        <form autocomplete="off" [formGroup]="form" (ngSubmit)="guardar()">
-          <div class="container">
-            <div class="d-flex">
-              <label class="mr-label">Fecha de envío de documentación física para el trámite</label>
-              <mat-form-field class="w-20" appearance="fill">
-                <input matInput [matDatepicker]="picker" formControlName="fechaEnvioTramite">
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-              <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
-                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-              </button>
-            </div>
-
-            <div class="d-flex">
-              <label>Observaciones</label>
-              <quill-editor class="quill-editor-style" 
-                            [styles]="editorStyle"
-                            [modules]="config"
-                            (onContentChanged)="maxLength($event, 2000)" 
-                            formControlName="observaciones"
-                            required></quill-editor>
-              <span class="contador" *ngIf="form.get('observaciones').value">
-                {{2000 - form.get('observaciones').value.length}}
-              </span>
-              <span class="contador" *ngIf="form.get('observaciones').value === null">
-                2000
-              </span>
-            </div>
-
-            <div class="text-center">
-              <button mat-button color="warn" class="btn-guardar" type="submit">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
-              </button>
-            </div>
-          </div>
-
-        </form>
+        <app-form-registro-tramite [dataFormulario]="form"></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

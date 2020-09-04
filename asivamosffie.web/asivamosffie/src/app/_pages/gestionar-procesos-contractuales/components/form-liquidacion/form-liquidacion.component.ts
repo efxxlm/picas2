@@ -77,7 +77,8 @@ export class FormLiquidacionComponent implements OnInit {
     this.form = this.fb.group({
       fechaEnvioTramite: [ null, Validators.required ],
       observaciones: [ null, Validators.required ],
-      minuta: [ null ]
+      minuta: [ null ],
+      minutaFile: [ null ]
     })
   };
 

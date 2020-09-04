@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-modificacion-contractual',
@@ -9,7 +10,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class FormModificacionContractualComponent implements OnInit {
 
   form: FormGroup;
+  archivo: string;
   observaciones: string;
+  reinicioBoolean: boolean;
+  suspensionBoolean: boolean;
   editorStyle = {
     height: '45px'
   };
@@ -75,18 +79,43 @@ export class FormModificacionContractualComponent implements OnInit {
     }
   ];
 
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder,
+                private routes: Router ) {
     this.crearFormulario();
+    this.getMotivo();
   }
 
   ngOnInit(): void {
   }
 
+  getMotivo () {
+
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
+      this.reinicioBoolean = false;
+      this.suspensionBoolean = false;
+      return;
+    };
+
+    this.suspensionBoolean = this.routes.getCurrentNavigation().extras.state.suspension;
+    this.reinicioBoolean = this.routes.getCurrentNavigation().extras.state.reinicio;
+
+    if ( this.reinicioBoolean ) {
+      //reiniciar data formulario
+      this.form.reset({
+        fechaEnvioTramite: [ null ],
+        observaciones: [ null ],
+        minutaFile: [ null ]
+      });
+    }
+
+  };
+
   crearFormulario () {
     this.form = this.fb.group({
       fechaEnvioTramite: [ null, Validators.required ],
       observaciones: [ null, Validators.required ],
-      minuta: [ null ]
+      minuta: [ null ],
+      minutaFile: [ null ]
     })
   };
 
@@ -94,10 +123,6 @@ export class FormModificacionContractualComponent implements OnInit {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
-  }
-
-  guardar () {
-    console.log( this.form );
-  }
+  };
 
 }

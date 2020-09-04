@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
+  @Input() data: any[] = [];
+  @Input() enviadasFiduciaria: boolean;
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
@@ -20,33 +22,6 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     { titulo: 'Número de solicitud', name: 'numeroSolicitud' },
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
-
-  data: any[] = [
-    {
-      fechaSolicitud: '15/06/2020',
-      numeroSolicitud: 'PI_008',
-      tipoSolicitud: 'Contratación',
-      estadoRegistro: false,
-      fechaEnvioTramite: null,
-      id: 0
-    },
-    {
-      fechaSolicitud: '15/06/2020',
-      numeroSolicitud: 'CO_003',
-      tipoSolicitud: 'Modificación contractual',
-      estadoRegistro: false,
-      fechaEnvioTramite: null,
-      id: 1
-    },
-    {
-      fechaSolicitud: '15/06/2020',
-      numeroSolicitud: 'SL_001',
-      tipoSolicitud: 'Liquidación',
-      estadoRegistro: false,
-      fechaEnvioTramite: null,
-      id: 2
-    }
-  ]
 
   constructor ( private routes: Router ) { }
 
@@ -70,7 +45,9 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         this.routes.navigate( [ '/procesosContractuales/contratacion', id ] )
       break;
       case 'Modificación contractual':
-        this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ] )
+        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ], { state: { suspension: true, reinicio: false } } )
+        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ], { state: { suspension: true, reinicio: false } } );
+        this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ], { state: { suspension: false, reinicio: true } } )
       break;
       case 'Liquidación':
         this.routes.navigate( [ '/procesosContractuales/liquidacion', id ] )

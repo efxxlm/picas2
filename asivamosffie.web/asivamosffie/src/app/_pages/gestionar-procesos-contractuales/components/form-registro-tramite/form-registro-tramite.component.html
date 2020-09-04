@@ -1,0 +1,45 @@
+<form autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
+  <div class="container">
+    <div class="d-flex mt-1em">
+      <label class="mr-label">Fecha de envío de documentación física para el trámite</label>
+      <mat-form-field class="w-20" appearance="fill">
+        <input matInput [matDatepicker]="picker" formControlName="fechaEnvioTramite">
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
+        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+      </button>
+    </div>
+
+    <div class="d-flex mt-1em">
+      <label class="mr-label">Observaciones</label>
+      <quill-editor class="quill-editor-style" 
+                    [styles]="editorStyle"
+                    [modules]="config"
+                    (onContentChanged)="maxLength($event, 2000)" 
+                    formControlName="observaciones"></quill-editor>
+      <span class="contador" *ngIf="dataFormulario.get('observaciones').value">
+        {{2000 - dataFormulario.get('observaciones').value.length}}
+      </span>
+      <span class="contador" *ngIf="dataFormulario.get('observaciones').value === null">
+        2000
+      </span>
+    </div>
+
+    <div class="d-flex">
+      <label class="mr-3em">Minuta adjunta</label>
+      <div class="input-file">
+        <span class="input-file-text text-center">{{archivo}}</span>
+        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">Adjuntar</button>
+        <input hidden (change)="fileName( $event )" #fileInput type="file" id="file" formControlName="minuta" accept=".doc,.docx">
+      </div>
+    </div>
+
+    <div class="text-center w-90">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </div>
+
+</form>
