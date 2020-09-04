@@ -10,33 +10,33 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaProyectosAsociadosComponent implements OnInit {
 
-  dataSource = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort: MatSort;
+  @ViewChild( MatSort, { static: true } ) sort          : MatSort;
+  dataSource                 = new MatTableDataSource();
   displayedColumns: string[] = [ 'idMen', 'tipoIntervencion', 'departamentoMunicipio', 'instEducativa', 'sede' ];
-  ELEMENT_DATA: any[] = [
-    {titulo: 'Id MEN', name: 'idMen'},
+  ELEMENT_DATA    : any[]    = [
+    { titulo: 'Id MEN', name: 'idMen' },
     { titulo: 'Tipo de Intervención', name: 'tipoIntervencion' },
     { titulo: 'Departamento/Municipio', name: 'departamentoMunicipio' },
-    {titulo: 'Institución educativa', name: 'instEducativa'},
-    {titulo: 'Sede', name: 'sede'},
+    { titulo: 'Institución educativa', name: 'instEducativa'},
+    { titulo: 'Sede', name: 'sede' },
   ];
   data: any[] = [
     {
-      idMen: 'LL000012',
-      tipoIntervencion: 'Ampliación',
+      idMen                : 'LL000012',
+      tipoIntervencion     : 'Ampliación',
       departamentoMunicipio: 'Valle del Cauca/Buga',
-      instEducativa: 'I.E. Manuela Beltran',
-      sede: 'Sede principal'
+      instEducativa        : 'I.E. Manuela Beltran',
+      sede                 : 'Sede principal'
     }
   ]
 
   constructor() { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource( this.data );
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.dataSource                        = new MatTableDataSource( this.data );
+    this.dataSource.paginator              = this.paginator;
+    this.dataSource.sort                   = this.sort;
     this.paginator._intl.itemsPerPageLabel = 'El. por página';
   }
 

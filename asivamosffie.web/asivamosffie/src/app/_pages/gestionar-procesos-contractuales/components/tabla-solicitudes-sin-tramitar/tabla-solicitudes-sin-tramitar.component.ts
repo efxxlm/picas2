@@ -11,14 +11,14 @@ import { Router } from '@angular/router';
 })
 export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
-  dataSource = new MatTableDataSource();
-  @Input() data: any[] = [];
   @Input() enviadasFiduciaria: boolean;
+  @Input() data              : any[] = [];
+  dataSource                         = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort: MatSort;
+  @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
-  ELEMENT_DATA: any[] = [
-    {titulo: 'Fecha de la solicitud', name: 'fechaSolicitud'},
+  ELEMENT_DATA    : any[]    = [
+    { titulo: 'Fecha de la solicitud', name: 'fechaSolicitud' },
     { titulo: 'Número de solicitud', name: 'numeroSolicitud' },
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
@@ -26,14 +26,14 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   constructor ( private routes: Router ) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource( this.data );
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.dataSource                        = new MatTableDataSource( this.data );
+    this.dataSource.paginator              = this.paginator;
+    this.dataSource.sort                   = this.sort;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   };
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter ( event: Event ) {
+    const filterValue      = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
@@ -45,6 +45,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         this.routes.navigate( [ '/procesosContractuales/contratacion', id ] )
       break;
       case 'Modificación contractual':
+        /*Ejemplo para los 3 tipos de modificaciones contractuales*/
         //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ], { state: { suspension: true, reinicio: false } } )
         //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ], { state: { suspension: true, reinicio: false } } );
         this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ], { state: { suspension: false, reinicio: true } } )
@@ -53,7 +54,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         this.routes.navigate( [ '/procesosContractuales/liquidacion', id ] )
       break;
       default:
-        console.log( 'No es un tipo de solicitud aceptada' );
+        console.log( 'No es un tipo de solicitud valido.' );
 
     };
 

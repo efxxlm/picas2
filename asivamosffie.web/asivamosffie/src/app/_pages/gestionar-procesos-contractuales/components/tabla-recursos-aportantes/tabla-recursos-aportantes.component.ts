@@ -8,11 +8,11 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaRecursosAportantesComponent implements OnInit {
 
-  @Input() data: any[] = [];
-  dataSource = new MatTableDataSource();
+  dataSource                 = new MatTableDataSource();
+  @Input() data   : any[]    = [];
   displayedColumns: string[] = [ 'nombre', 'valorAportante', 'uso', 'valorUso' ];
-  ELEMENT_DATA: any[] = [
-    {titulo: 'Nombre del aportante', name: 'nombre'},
+  ELEMENT_DATA    : any[]    = [
+    { titulo: 'Nombre del aportante', name: 'nombre' },
     { titulo: 'Valor aportante', name: 'valorAportante' }
   ];
 

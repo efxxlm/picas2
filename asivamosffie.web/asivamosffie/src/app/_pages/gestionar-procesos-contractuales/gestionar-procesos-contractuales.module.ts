@@ -7,7 +7,6 @@ import { ProcesosContractualesComponent } from './components/procesos-contractua
 import { MaterialModule } from '../../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TablaSolicitudesSinTramitarComponent } from './components/tabla-solicitudes-sin-tramitar/tabla-solicitudes-sin-tramitar.component';
-import { TablaSolicitudesEnviadasComponent } from './components/tabla-solicitudes-enviadas/tabla-solicitudes-enviadas.component';
 import { FormContratacionComponent } from './components/form-contratacion/form-contratacion.component';
 import { FormAportantesComponent } from './components/form-aportantes/form-aportantes.component';
 import { FormModificacionContractualComponent } from './components/form-modificacion-contractual/form-modificacion-contractual.component';
@@ -24,7 +23,7 @@ import { FormRegistroTramiteComponent } from './components/form-registro-tramite
 
 
 @NgModule({
-  declarations: [ProcesosContractualesComponent, TablaSolicitudesSinTramitarComponent, TablaSolicitudesEnviadasComponent, FormContratacionComponent, FormAportantesComponent, FormModificacionContractualComponent, TablaProyectosAsociadosComponent, FormLiquidacionComponent, TablaRecursosCompartidosComponent, FormRecursosCompartidosComponent, TablaRecursosAportantesComponent, FormRecursosPagadosComponent, TablaRecursosPagadosComponent, TablaOtrosDescuentosComponent, FormEjecucionFinancieraComponent, FormRegistroTramiteComponent],
+  declarations: [ProcesosContractualesComponent, TablaSolicitudesSinTramitarComponent, FormContratacionComponent, FormAportantesComponent, FormModificacionContractualComponent, TablaProyectosAsociadosComponent, FormLiquidacionComponent, TablaRecursosCompartidosComponent, FormRecursosCompartidosComponent, TablaRecursosAportantesComponent, FormRecursosPagadosComponent, TablaRecursosPagadosComponent, TablaOtrosDescuentosComponent, FormEjecucionFinancieraComponent, FormRegistroTramiteComponent],
   imports: [
     CommonModule,
     MaterialModule,

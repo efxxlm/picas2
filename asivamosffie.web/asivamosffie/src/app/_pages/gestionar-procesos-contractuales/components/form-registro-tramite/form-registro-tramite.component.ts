@@ -10,8 +10,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistroTramiteComponent implements OnInit {
 
+  archivo                : string;
   @Input() dataFormulario: FormGroup;
-  archivo: string;
   editorStyle = {
     height: '45px'
   };
@@ -30,10 +30,10 @@ export class FormRegistroTramiteComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  fileName( event: any ) {
+  fileName ( event: any ) {
     
     if ( event.target.files.length > 0) {
-      const file = event.target.files[0];
+      const file   = event.target.files[0];
       this.archivo = event.target.files[0].name;
       this.dataFormulario.patchValue({
         minutaFile: file
@@ -42,18 +42,25 @@ export class FormRegistroTramiteComponent implements OnInit {
 
   };
 
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
-    }
+  textoLimpio (texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    };
   };
 
-  openDialog(modalTitle: string, modalText: string) {
+  maxLength (e: any, n: number) {
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n, e.editor.getLength());
+    };
+  };
+
+  openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data: { modalTitle, modalText }
+      data : { modalTitle, modalText }
     });
-  }
+  };
 
   guardar () {
     console.log( this.dataFormulario );
@@ -61,11 +68,11 @@ export class FormRegistroTramiteComponent implements OnInit {
     if ( this.dataFormulario.invalid ) {
       this.openDialog( 'Falta registrar información.', '' );
       return;
-    }
+    };
 
     let formData = new FormData();
     formData.append( 'file', this.dataFormulario.get('minutaFile').value );
     this.openDialog( 'La información ha sido guardada exitosamente.', '' );
-  }
+  };
 
-}
+};

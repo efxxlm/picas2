@@ -1,8 +1,9 @@
-.input-file {
+.input {
   display: flex;
   justify-content: center;
   margin-bottom: 1em;
   color: var(--mainColor);
+  margin-top: 2em;
 }
 
 .input-file-text {
@@ -21,6 +22,11 @@
 .w-90 {
   width: 90%;
 }
+
+.w-60 {
+  width: 60%;
+};
+
 .w-20 {
   width: 20%;
 }
@@ -31,6 +37,10 @@
 .mr-3em {
   margin-top: 3em;
 };
+
+.mr-bottom-1 {
+  margin-bottom: 1em;
+}
 
 .mr-label {
   margin-right: 0.5em;

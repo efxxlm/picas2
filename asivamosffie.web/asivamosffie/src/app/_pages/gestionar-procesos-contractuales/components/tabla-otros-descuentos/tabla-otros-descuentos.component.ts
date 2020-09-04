@@ -8,9 +8,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaOtrosDescuentosComponent implements OnInit {
 
-  dataAportantes = new MatTableDataSource();
+  dataAportantes                      = new MatTableDataSource();
   @Input() displayedColumns: string[] = [];
-  @Input() ELEMENT_DATA: any[] = [];
+  @Input() ELEMENT_DATA    : any[]    = [];
 
   constructor() { }
 

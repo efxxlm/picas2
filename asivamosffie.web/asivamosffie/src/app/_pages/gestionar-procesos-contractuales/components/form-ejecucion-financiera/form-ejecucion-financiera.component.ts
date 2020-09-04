@@ -8,8 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class FormEjecucionFinancieraComponent implements OnInit {
 
   displayedColumns: string[] = [ 'componente', 'totalComprometido', 'ordenadoGiroImpuestos', 'saldo', 'porcentajeEjecucionFinanciera' ];
-  ELEMENT_DATA: any[] = [
-    {titulo: 'Componente', name: 'componente'},
+  ELEMENT_DATA    : any[]    = [
+    { titulo: 'Componente', name: 'componente' },
     { titulo: 'Total comprometido', name: 'totalComprometido' },
     { titulo: 'Ordenado a girar antes de impuestos', name: 'ordenadoGiroImpuestos' },
     { titulo: 'Saldo', name: 'saldo' },
@@ -17,8 +17,8 @@ export class FormEjecucionFinancieraComponent implements OnInit {
   ];
 
   displayedColumns1: string[] = [ 'componente', 'totalComprometido', 'facturadoAntesImpuestos', 'saldo', 'porcentajeEjecucionPresupuestal' ];
-  ELEMENT_DATA1: any[] = [
-    {titulo: 'Componente', name: 'componente'},
+  ELEMENT_DATA1    : any[]    = [
+    { titulo: 'Componente', name: 'componente' },
     { titulo: 'Total comprometido', name: 'totalComprometido' },
     { titulo: 'Facturado antes de impuestos', name: 'facturadoAntesImpuestos' },
     { titulo: 'Saldo', name: 'saldo' },

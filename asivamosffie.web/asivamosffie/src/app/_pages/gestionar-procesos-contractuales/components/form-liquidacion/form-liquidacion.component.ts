@@ -8,7 +8,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 })
 export class FormLiquidacionComponent implements OnInit {
 
-  form: FormGroup;
+  form         : FormGroup;
   observaciones: string;
   editorStyle = {
     height: '45px'
@@ -23,33 +23,33 @@ export class FormLiquidacionComponent implements OnInit {
   };
   dataForm: any[] = [
     {
-      nombre: 'LL000208 - I.E Andrés Bello',
-      tipoIntervencion: 'Remodelación',
-      departamento: 'Valle del Cauca',
-      municipio: 'Jamundi',
+      nombre            : 'LL000208 - I.E Andrés Bello',
+      tipoIntervencion  : 'Remodelación',
+      departamento      : 'Valle del Cauca',
+      municipio         : 'Jamundi',
       valorTotalProyecto: '80.000.000',
-      aportantes: [
+      aportantes        : [
         {
-          tipoAportante: 'ET',
-          nombreAportante: 'Gobernación Del Valle del Cauca',
+          tipoAportante         : 'ET',
+          nombreAportante       : 'Gobernación Del Valle del Cauca',
           valorAportanteProyecto: '30.000.000',
-          fuente: 'Recursos propios',
-          valorSolicitado: '30.000.000'
+          fuente                : 'Recursos propios',
+          valorSolicitado       : '30.000.000'
         },
         {
-          tipoAportante: 'FFIE',
-          nombreAportante: 'FFIE',
+          tipoAportante         : 'FFIE',
+          nombreAportante       : 'FFIE',
           valorAportanteProyecto: '50.000.000',
-          fuente: 'Contingencias',
-          valorSolicitado: '50.000.000'
+          fuente                : 'Contingencias',
+          valorSolicitado       : '50.000.000'
         }
       ]
     }
   ];
 
   displayedColumns: string[] = [ 'numeroTraslado', 'ordenGiroAsociada', 'fechaRegistroTraslado', 'valorTraslado', 'aportante', 'aportanteValorFacturado' ];
-  ELEMENT_DATA: any[] = [
-    {titulo: 'Número de traslado', name: 'numeroTraslado'},
+  ELEMENT_DATA    : any[]    = [
+    { titulo: 'Número de traslado', name: 'numeroTraslado' },
     { titulo: 'Orden de giro asociada', name: 'ordenGiroAsociada' },
     { titulo: 'Fecha de registro del traslado', name: 'fechaRegistroTraslado' },
     { titulo: 'Valor del traslado', name: 'valorTraslado' },
@@ -58,8 +58,8 @@ export class FormLiquidacionComponent implements OnInit {
   ];
 
   displayedColumns1: string[] = [ 'item', 'calificacionInterventoria', 'tipoAnexo', 'ubicacion', 'validacion' ];
-  ELEMENT_DATA1: any[] = [
-    {titulo: 'Ítem', name: 'item'},
+  ELEMENT_DATA1    : any[]    = [
+    { titulo: 'Ítem', name: 'item' },
     { titulo: 'Calificación Ítem interventoría', name: 'calificacionInterventoria' },
     { titulo: 'Tipo de anexo', name: 'tipoAnexo' },
     { titulo: 'Ubicación (URL/Radicado)', name: 'ubicacion' },
@@ -79,17 +79,17 @@ export class FormLiquidacionComponent implements OnInit {
       observaciones: [ null, Validators.required ],
       minuta: [ null ],
       minutaFile: [ null ]
-    })
+    });
   };
 
-  maxLength(e: any, n: number) {
+  maxLength (e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
+    };
+  };
 
   guardar () {
     console.log( this.form );
-  }
+  };
 
 }
