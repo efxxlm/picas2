@@ -342,13 +342,44 @@ namespace asivamosffie.services
         public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId)
         {
 
+
+            //Dominio estado reportado 48
+
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.TemaCompromiso)
+                                      .ThenInclude(r => r.Responsable)
                .Include(r => r.SesionComiteSolicitud)
-                   .ThenInclude(r => r.SesionSolicitudCompromiso).FirstOrDefaultAsync();
+                   .ThenInclude(r => r.SesionSolicitudCompromiso)
+                      .ThenInclude(r => r.ResponsableSesionParticipante).FirstOrDefaultAsync();
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+
+
+            List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
+
+
+            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
+            {
+                foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso)
+                {
+                    if (!string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo))
+                    {
+                        TemaCompromiso.EstadoCodigo = ListEstadoReportado.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                    }
+                }
+            }
+
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            {
+                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                {
+                    if (!string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo))
+                    {
+                        SesionSolicitudCompromiso.EstadoCodigo = ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                    }
+                }
+            }
 
             return comiteTecnico;
         }
@@ -2018,8 +2049,8 @@ namespace asivamosffie.services
                 {
 
                     foreach (var temaCompromiso in SesionComiteTema.TemaCompromiso)
-                    {  
-                        TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(temaCompromiso.TemaCompromisoId); 
+                    {
+                        TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(temaCompromiso.TemaCompromisoId);
                         temaCompromisoOld.FechaModificacion = DateTime.Now;
                         temaCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                         temaCompromisoOld.EstadoCodigo = temaCompromiso.EstadoCodigo;

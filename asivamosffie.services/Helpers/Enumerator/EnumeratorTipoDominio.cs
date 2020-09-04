@@ -78,6 +78,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         PlaceHolder = 44,
 
+        Estado_Compromisos = 45,
         //RESPONSABLES DE TEMAS
         Miembros_Comite_Tecnico = 46
 
