@@ -1347,8 +1347,7 @@ namespace asivamosffie.services
                 _context.SaveChanges();
                 return
                    new Respuesta
-                   {
-                       Data = GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteTema.ComiteTecnicoId),
+                   { 
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
