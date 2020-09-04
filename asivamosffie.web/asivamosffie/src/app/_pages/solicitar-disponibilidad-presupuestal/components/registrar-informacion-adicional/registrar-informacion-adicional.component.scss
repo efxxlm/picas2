@@ -9,6 +9,7 @@ p,
 
 .departamento {
     font-weight: 500;
+    margin-top: .3em;
 }
 
 .solicitud {
@@ -17,4 +18,8 @@ p,
     margin-right: 2em;
     color: var(--mainColor);
     font-size: 1.1em;
+}
+
+.sub-card {
+    margin: 0 -24px;
 }

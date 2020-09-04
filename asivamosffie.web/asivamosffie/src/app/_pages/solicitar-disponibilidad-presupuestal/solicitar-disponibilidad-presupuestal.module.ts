@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { QuillModule } from 'ngx-quill';
+
 import { SolicitarDisponibilidadPresupuestalRoutingModule } from './solicitar-disponibilidad-presupuestal-routing.module';
 import { TituloComponent } from './components/titulo/titulo.component';
 import { TablaCrearSolicitudTradicionalComponent } from './components/tabla-crear-solicitud-tradicional/tabla-crear-solicitud-tradicional.component';
@@ -14,12 +16,20 @@ import { TablaCrearSolicitudEspecialComponent } from './components/tabla-crear-s
 
 
 @NgModule({
-  declarations: [TituloComponent, TablaCrearSolicitudTradicionalComponent, RegistrarInformacionAdicionalComponent, CrearSolicitudEspecialComponent, NuevaSolicitudEspecialComponent, TablaCrearSolicitudEspecialComponent],
+  declarations: [
+    TituloComponent,
+    TablaCrearSolicitudTradicionalComponent,
+    RegistrarInformacionAdicionalComponent,
+    CrearSolicitudEspecialComponent,
+    NuevaSolicitudEspecialComponent,
+    TablaCrearSolicitudEspecialComponent
+  ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
-    SolicitarDisponibilidadPresupuestalRoutingModule
+    SolicitarDisponibilidadPresupuestalRoutingModule,
+    QuillModule.forRoot()
   ]
 })
 export class SolicitarDisponibilidadPresupuestalModule { }
