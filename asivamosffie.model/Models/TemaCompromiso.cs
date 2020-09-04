@@ -20,6 +20,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public DateTime? UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public string EstadoCodigo { get; set; }
 
         public virtual SesionComiteTema SesionTema { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
