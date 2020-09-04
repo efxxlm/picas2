@@ -358,7 +358,7 @@ namespace asivamosffie.services
 
 
             List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
-            List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.ToList();
+            List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r=> !(bool)r.Eliminado).Include(r=> r.Usuario).ToList();
 
             foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
             {
@@ -1643,8 +1643,7 @@ namespace asivamosffie.services
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
                                 break;
-
-                            //Faber dijo que eso no estaba en el caso de uso 
+ 
                             //[4:02 PM, 8/26/2020] Faber Ivolucion: se campo no tiene descripción
                             //[4:03 PM, 8 / 26 / 2020] Faber Ivolucion: no se si lo quitaron o ya en aparece algo en el control de cambios
                             //    [4:04 PM, 8 / 26 / 2020] JULIÁN MARTÍNEZ C: y el VALOR_CONTIZACION_CERRADA
@@ -1886,7 +1885,9 @@ namespace asivamosffie.services
                             {
                                 RegistrosAlcance += RegistroAlcance;
 
-                                RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_ESPACIOS_A_INTERVENIR]", ListaParametricas.Where(r => r.Codigo == infraestructura.InfraestructuraCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Espacios_Intervenir).FirstOrDefault().Nombre);
+                                RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_ESPACIOS_A_INTERVENIR]", ListaParametricas
+                                    .Where(r => r.Codigo == infraestructura.InfraestructuraCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Espacios_Intervenir)
+                                    .FirstOrDefault().Nombre);
                                 RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_CANTIDAD]", infraestructura.Cantidad.ToString());
                             }
 
