@@ -77,14 +77,23 @@
 </section>
 
 <div class="tabs--actions mt-2">
-  <button mat-raised-button color="accent" class="tabs--btn">
-    Aprobar acta
+  <button mat-raised-button 
+          color="accent" 
+          class="tabs--btn"
+          (click)="aprobarActa()">
+          Aprobar acta
   </button>
-  <button mat-raised-button color="accent" class="tabs--btn" (click)="comentarActa = !comentarActa">
-    Comentar y devolver acta
+  <button mat-raised-button 
+          color="accent" 
+          class="tabs--btn" 
+          (click)="comentarActa = !comentarActa">
+          Comentar y devolver acta
   </button>
-  <button mat-raised-button color="accent" class="tabs--btn">
-    Descargar acta preliminar
+  <button mat-raised-button 
+          color="accent" 
+          class="tabs--btn"
+          (click)="descargarActa()">
+          Descargar acta preliminar
   </button>
 </div>
 
@@ -94,15 +103,15 @@
     <div class="d-flex align-items-center">
       <div class="text-area-quill">
         <label for="justificacion" class="text-area-quill--label">Comentarios al acta</label>
-        <span>Fecha: 26/06/2020</span>
+        <p class="padding-p">Fecha: <b class="text-color">26/06/2020</b></p>
         <quill-editor class="quill-editor-style" format="text" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 1000)" formControlName="comentarioActa" required></quill-editor>
       </div>
-      <span class="contador" *ngIf="form.get('comentarioActa').value">
-        {{1000 - form.get('comentarioActa').value.length}}
+      <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
+        {{500 - textoLimpio(form.get('comentarioActa').value)}}
       </span>
       <span class="contador" *ngIf="form.get('comentarioActa').value === null">
-        1000
+        500
       </span>
     </div>
 
@@ -110,10 +119,10 @@
 
       <button mat-button 
               color="warn" 
-              class="btn-guardar" 
+              class="btn-guardar mr-bottom-2" 
               type="submit">
-              <img src="assets/img/icon/guardar.svg" 
-              alt="Guardar">
+              <img  src="assets/img/icon/guardar.svg" 
+                    alt="Guardar">
       </button>
     </div>
 

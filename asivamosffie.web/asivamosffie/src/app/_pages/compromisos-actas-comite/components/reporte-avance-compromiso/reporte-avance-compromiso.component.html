@@ -71,11 +71,11 @@
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
           <label for="justificacion" class="text-area-quill--label">Gestión realizada</label>
-          <quill-editor class="quill-editor-style" format="text" [styles]="editorStyle" [modules]="config"
+          <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
             (onContentChanged)="maxLength($event, 500)" formControlName="reporteEstado"></quill-editor>
         </div>
-        <span class="contador" *ngIf="reporte.get('reporteEstado').value">
-          {{500 - reporte.get('reporteEstado').value.length}}
+        <span class="contador" *ngIf="reporte.get('reporteEstado').value !== null">
+          {{500 - textoLimpio(reporte.get('reporteEstado').value)}}
         </span>
         <span class="contador" *ngIf="reporte.get('reporteEstado').value === null">
           500
@@ -86,7 +86,7 @@
   
         <button mat-button 
           color="warn" 
-          class="btn-guardar" 
+          class="btn-guardar mr-bottom-2" 
           type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Guardar">
         </button>

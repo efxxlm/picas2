@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class RevisionActaComponent implements OnInit {
 
-  acta;
+  acta: any;
   form:FormGroup;
   comentarActa: boolean = false;
   editorStyle = {
@@ -33,17 +33,17 @@ export class RevisionActaComponent implements OnInit {
     this.getActa();
     this.crearFormulario();
     console.log( this.acta );
-  }
+  };
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void { };
+  //Formulario comentario de actas
   crearFormulario(){
     this.form = this.fb.group({
       comentarioActa: [ null, Validators.required ]
-    })
+    });
   };
 
+  //getData del acta
   getActa () {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
       this.routes.navigateByUrl( '/compromisosActasComite' );
@@ -51,35 +51,50 @@ export class RevisionActaComponent implements OnInit {
     };
     this.acta = this.routes.getCurrentNavigation().extras.state.acta;
   }
-
+  //Limite maximo Quill Editor
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
+    };
+  };
 
+  textoLimpio(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    };
+  };
+  //Modal
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-  }
-
+  };
+  //Submit de la data
   onSubmit () {
-    console.log( this.form );
+
     if ( this.form.invalid ) {
       this.openDialog('Falta registrar información', '');
       return;
     };
 
-    const value = String( this.form.get( 'comentarioActa' ).value );
-
+    const value      = String( this.form.get( 'comentarioActa' ).value );
     const comentario = value.slice( 0, value.length - 1 );
 
     console.log( comentario );
 
     this.openDialog('La información ha sido guardada exitosamente', '');
 
-  }
+  };
+  //Aprobar acta
+  aprobarActa () {
+    //Al aprobar acta redirige al componente principal
+    this.routes.navigate( ['/compromisosActasComite'] );
+  };
+  //Descargar acta en formato pdf
+  descargarActa () {
 
-}
+  };
+
+};

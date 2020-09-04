@@ -11,13 +11,13 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class ReporteAvanceCompromisoComponent implements OnInit {
 
-  compromiso;
-  reporte:FormGroup;
-  estadoBoolean: boolean = false;
-  sinAvanceBoolean: boolean = false;
-  enProcesoBoolean: boolean = false;
+  compromiso       : any;
+  reporte          :FormGroup;
+  estadoBoolean    : boolean = false;
+  sinAvanceBoolean : boolean = false;
+  enProcesoBoolean : boolean = false;
   finalizadoBoolean: boolean = false;
-  estados: any[] = [
+  estados          : any[] = [
     { value: 'sinAvance', viewValue: 'Sin iniciar' },
     { value: 'enProceso', viewValue: 'En proceso' },
     { value: 'finalizado', viewValue: 'Finalizada' }
@@ -42,8 +42,8 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.sinAvanceBoolean = this.compromiso.estadoCompromiso.sinAvance;
-    this.enProcesoBoolean = this.compromiso.estadoCompromiso.enProceso;
+    this.sinAvanceBoolean  = this.compromiso.estadoCompromiso.sinAvance;
+    this.enProcesoBoolean  = this.compromiso.estadoCompromiso.enProceso;
     this.finalizadoBoolean = this.compromiso.estadoCompromiso.finalizado;
   }
 
@@ -52,6 +52,13 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
       e.editor.deleteText(n, e.editor.getLength());
     }
   }
+
+  textoLimpio(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    };
+  };
 
   crearFormulario(){
     this.reporte = this.fb.group({
@@ -94,20 +101,15 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
   };
 
   onSubmit () {
-    console.log( this.reporte );
+    
     if ( this.reporte.invalid ) {
       this.openDialog('Falta registrar información', '');
       return;
     };
 
-    const value = String( this.reporte.get( 'reporteEstado' ).value );
+    this.compromiso.fechaRegistro    = '29/06/2020';
+    this.compromiso.gestionRealizada = this.reporte.get( 'reporteEstado' ).value;
 
-    const detalleReporte = value.slice( 0, value.length - 1 );
-
-    this.compromiso.fechaRegistro = '29/06/2020';
-    this.compromiso.gestionRealizada = detalleReporte;
-
-    console.log( this.compromiso );
     this.openDialog('La información ha sido guardada exitosamente', '');
 
   }
