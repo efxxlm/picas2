@@ -90,6 +90,14 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        //            if (!optionsBuilder.IsConfigured)
+        //            {
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+        //                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+        //            }
+        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -224,6 +232,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComiteTecnico>(entity =>
             {
+                entity.Property(e => e.EstadoActaCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoComiteCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -2441,6 +2453,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TemaCompromiso>(entity =>
             {
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
@@ -2462,7 +2478,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioModificacion).HasColumnType("datetime");
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SesionTema)
                     .WithMany(p => p.TemaCompromiso)
