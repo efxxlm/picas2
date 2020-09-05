@@ -29,6 +29,12 @@ export class CrearActaComponent implements OnInit {
 
   }
 
+  callChildren( elements : NodeListOf<HTMLElement> ){
+    elements.forEach( control => {
+      control.click();
+    })
+  }
+
   ngOnInit(): void {
 
     this.objetoComiteTecnico.fechaOrdenDia
@@ -58,14 +64,13 @@ export class CrearActaComponent implements OnInit {
           
                 });
 
-               let btnSolicitud = document.getElementById( 'btnSolicitud' )
-               let btnOtros = document.getElementById( 'btnOtros' )
-               let btnProposiciones = document.getElementById( 'btnProposiciones' )
+               let btnSolicitud = document.getElementsByName( 'btnSolicitud' )
+               let btnOtros = document.getElementsByName( 'btnOtros' )
+               let btnProposiciones = document.getElementsByName( 'btnProposiciones' )
 
-
-              //btnSolicitud.click();
-              btnOtros.click();
-              btnProposiciones.click();
+               this.callChildren( btnSolicitud );
+               this.callChildren( btnOtros );
+               this.callChildren( btnProposiciones );
 
             }, 1000);
 

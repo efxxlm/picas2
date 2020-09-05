@@ -66,11 +66,11 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
 
     if (this.sesionComiteSolicitud.contratacion){
       this.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {
-        // this.projectService.getProyectoGrillaByProyectoId( cp.proyectoId )
-        //   .subscribe( proy => {
-        //     cp.proyecto = proy; 
-        //     console.log( proy ); 
-        //   })
+        this.projectService.getProyectoGrillaByProyectoId( cp.proyectoId )
+          .subscribe( proy => {
+            cp.proyecto = proy; 
+            console.log( proy ); 
+          })
       })
       console.log( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
       this.dataSource = new MatTableDataSource( this.sesionComiteSolicitud.contratacion.contratacionProyecto );

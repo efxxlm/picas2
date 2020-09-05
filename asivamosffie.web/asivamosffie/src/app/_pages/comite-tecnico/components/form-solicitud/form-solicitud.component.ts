@@ -67,8 +67,16 @@ export class FormSolicitudComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
 
-  ) {
+  ) 
+  {
 
+  }
+
+  getMostrarProyectos(){
+    if ( this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion )
+      return 'block';
+    else
+      return 'none';
   }
   ngOnInit(): void {
 
@@ -205,10 +213,27 @@ export class FormSolicitudComponent implements OnInit {
 
     });
 
-    let btnSolicitudMultiple = document.getElementById( 'btnSolicitudMultiple' );
-    console.log(this.sesionComiteSolicitud)
+    this.sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
+      if (sv.esAprobado)
+        this.cantidadAprobado++;
+      else
+        this.cantidadNoAprobado++;
+    })
 
+    if ( this.cantidadNoAprobado > 0 )
+      this.resultadoVotacion = 'No Aprobó'
+    else
+      this.resultadoVotacion = 'Aprobó'
+
+    let btnSolicitudMultiple = document.getElementById( 'btnSolicitudMultiple' );
+    
     btnSolicitudMultiple.click();
+    
+
+    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion){
+      this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
+    }
+    
 
   }
 

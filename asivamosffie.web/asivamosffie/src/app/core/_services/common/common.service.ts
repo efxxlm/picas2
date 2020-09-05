@@ -157,6 +157,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
   }
 
+  listaEstadoCompromisos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=45`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

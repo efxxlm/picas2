@@ -92,7 +92,7 @@ export class ProjectService {
   }
 
   getProyectoGrillaByProyectoId( id: number ){
-    return this.http.get<ProyectoGrilla>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getProyectoGrillaByProyectoId?idProyecto=${ id }`);
+    return this.http.get<ProyectoGrilla>(`${environment.apiUrl}/Project/getProyectoGrillaByProyectoId?idProyecto=${ id }`);
    }
   
 
