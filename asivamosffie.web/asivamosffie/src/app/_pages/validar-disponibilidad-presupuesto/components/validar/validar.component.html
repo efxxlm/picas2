@@ -27,7 +27,6 @@
       <span class="info-text completo">Completo</span>
     </p>
   </div>
-  {{listaDisponibilidades|json}}
   <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngFor="let disponibilidad of listaDisponibilidades">
       <mat-expansion-panel-header class="expansion-style--header">
@@ -36,11 +35,11 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-tabla-en-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='En validación presupuestal'"></app-tabla-en-validacion>
-      <app-tabla-devuelta-por-coordinacion *ngIf="disponibilidad.nombreEstado=='Devuelta por coordinación financiera'"></app-tabla-devuelta-por-coordinacion>
-      <app-tabla-devuelta-por-validacion *ngIf="disponibilidad.nombreEstado=='Devuelta por validación presupuestal'"></app-tabla-devuelta-por-validacion>
-      <app-tabla-con-validacion *ngIf="disponibilidad.nombreEstado=='Con validación presupuestal' || disponibilidad.nombreEstado=='Con disponibilidad presupuestal'"></app-tabla-con-validacion>
-      <app-tabla-rechasada-por-validacion *ngIf="disponibilidad.nombreEstado=='Rechazada por validación presupuestal'"></app-tabla-rechasada-por-validacion>
-      <app-tabla-con-disponibilidad-cancelada *ngIf="disponibilidad.nombreEstado=='Con disponibilidad cancelada'"></app-tabla-con-disponibilidad-cancelada>
+      <app-tabla-devuelta-por-coordinacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Devuelta por coordinación financiera'"></app-tabla-devuelta-por-coordinacion>
+      <app-tabla-devuelta-por-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Devuelta por validación presupuestal'"></app-tabla-devuelta-por-validacion>
+      <app-tabla-con-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con validación presupuestal' || disponibilidad.nombreEstado=='Con disponibilidad presupuestal'"></app-tabla-con-validacion>
+      <app-tabla-rechasada-por-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Rechazada por validación presupuestal'"></app-tabla-rechasada-por-validacion>
+      <app-tabla-con-disponibilidad-cancelada [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con disponibilidad cancelada'"></app-tabla-con-disponibilidad-cancelada>
     </mat-expansion-panel>
   </mat-accordion>
 

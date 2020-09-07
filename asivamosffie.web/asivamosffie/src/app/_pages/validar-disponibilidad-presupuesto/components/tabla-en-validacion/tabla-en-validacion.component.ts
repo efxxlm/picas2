@@ -42,6 +42,13 @@ export class TablaEnValidacionComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.disponibilidadPresupuestal);
+    let elements:PeriodicElement[]=[];
+    this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
+      elements.push({id:element.disponibilidadPresupuestalId,
+        fecha:element.fechaSolicitud,estadoRegistro:element.estadoRegistro,numero:element.numeroSolicitud,
+        tipo:element.tipoSolicitud})
+    });
+    this.dataSource = new MatTableDataSource(elements);
     this.inicializarTabla();
   }
   inicializarTabla() {
