@@ -90,7 +90,11 @@ const routes: Routes = [
         path: 'seleccion',
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
-      },
+      },{
+        path: 'contratosModificacionesContractuales',
+        loadChildren: () => import( './_pages/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.module' )
+          .then( module => module.ContratosModificacionesContractualesModule )
+      }
     ]
 
   },

@@ -1,0 +1,79 @@
+<div class="container text-center mt-2em">
+  <div class="text-right">
+    <a routerLink="/procesosContractuales" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Gestonar solicitud PI_007
+    </h1>
+  </div>
+  <div class="text-center flex">
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>19/06/2020</b></p>
+    <p class="color-titulo"><b>Contratación</b></p>
+  </div>
+  <div align="left">
+    <mat-card class="border">
+      <mat-card-content>
+        <p><b>Número de comité técnico</b>: CT_0016</p>
+        <p><b>Fecha de comité técnico</b>: 12/06/2020</p>
+        <p><b>Número de comité fiduciario</b>: CF_0019</p>
+        <p><b>Fecha de comité fiduciario</b>: 18/06/2020</p>
+      </mat-card-content>
+  </mat-card>
+  </div>
+  <div class="text-center">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos de contratista
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
+              <p><b>Tipo de identificación</b>: NIT</p>
+              <p><b>Número de identificación</b>: 900.675.987-4</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos del contrato
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Tipo de contrato</b>: Obra</p>
+              <p><b>Valor del contrato</b>: $30.000.000</p>
+              <p><b>Plazo</b>: 12 meses / 20 días</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="mt-2em" align="left">
+    <mat-card class="border">
+      <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
+      <mat-card-content class="mt-2em">
+        <p>Fecha del trámite <b class="color-titulo">16/06/2020</b></p>
+        <app-form-registro-tramite [dataFormulario]="form"></app-form-registro-tramite>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>
