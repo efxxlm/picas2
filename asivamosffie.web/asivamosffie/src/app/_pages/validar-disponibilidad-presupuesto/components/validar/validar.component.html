@@ -30,7 +30,7 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngFor="let disponibilidad of listaDisponibilidades">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title "><!---sin-diligenciar-->
+        <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar': disponibilidad.completo=='Incompleto', 'completo': disponibilidad.completo=='Completo'}"><!----->
           {{disponibilidad.nombreEstado}}
         </mat-panel-title>
       </mat-expansion-panel-header>

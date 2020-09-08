@@ -72,12 +72,14 @@ namespace asivamosffie.services
                     ValorSolicitud = detailDP.ValorSolicitud,
                     // Si es aproboda por comite tecnico se debe mostrar la fecha en la que fue aprobada. traer desde dbo.[Sesion]
                     FechaComiteTecnico = (bool)detailDP.NumeroSolicitud.Contains("PI") ? detailDP.EstadoSolicitudCodigo == "1" ? detailDP.FechaDdp : DateTime.Now : null,// codigo 1, TipoDominioId = 31, TipoDominio, Lista = TipoSolicitud
-                                                                                                                                                                      
+
+                    /*//*y las modificacioens?????//*/
 
                     //Aportantes
-
+                    /*//*?????//*/
                     //Fuentes
-
+                    /*//*?????//*/
+                    //proyectos???????
                 };
 
                 ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);

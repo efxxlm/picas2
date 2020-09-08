@@ -18,6 +18,36 @@ export class ValidarComponent implements OnInit {
     this.disponibilidadServices.GetListGenerarDisponibilidadPresupuestal().subscribe(respuesta => 
       {
         this.listaDisponibilidades=respuesta;
+        
+        this.listaDisponibilidades.forEach(element => {
+          //determino si esta completo o incompleto
+          
+          if(element.nombreEstado=='En validación presupuestal'||element.nombreEstado=='Devuelta por coordinación financiera')
+          {            
+            let cantcompleto=0;
+            element.disponibilidadPresupuestal.forEach(element2 => {
+              if(element2.estadoRegistro)
+              {
+                cantcompleto++;
+              }
+            });
+            if(cantcompleto==element.disponibilidadPresupuestal.length)
+            {
+              element.completo='Completo';
+            }
+            else{
+              if(element.disponibilidadPresupuestal.length>0)
+              {
+                element.completo='Incompleto';
+              }
+              else{
+                element.completo='';
+              }
+              
+            }
+          }
+         
+        });
       }
     );
   }
