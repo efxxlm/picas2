@@ -1386,6 +1386,7 @@ namespace asivamosffie.services
         }
 
         #endregion
+
         #region Plantillas 
 
         public async Task<byte[]> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId)

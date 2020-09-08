@@ -8,7 +8,7 @@ using asivamosffie.model.Models;
 namespace asivamosffie.services.Interfaces
 {
     public interface IManageContractualProcessesService
-    { 
-
+    {
+        Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud();
     }
 }
