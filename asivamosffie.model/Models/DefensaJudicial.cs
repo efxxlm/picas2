@@ -11,5 +11,6 @@ namespace asivamosffie.model.Models
         public string NumeroProceso { get; set; }
         public int CantContratos { get; set; }
         public string EstadoProcesoCodigo { get; set; }
+        public int SolicitudId { get; set; }
     }
 }
