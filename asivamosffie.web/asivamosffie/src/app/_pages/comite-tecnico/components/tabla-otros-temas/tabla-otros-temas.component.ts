@@ -1,18 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-export interface OrdenDelDia {
-  id: number;
-  responsable: string;
-  tiempo: string;
-  temaDolicitud: string;
-}
-
-const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, responsable: 'Juan Lizcano', tiempo: '45 minutos', temaDolicitud: 'Revisión de terminos técnicos' }
-];
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-tabla-otros-temas',
@@ -21,8 +11,10 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaOtrosTemasComponent implements OnInit {
 
+  @Input() objetoComiteTecnico: ComiteTecnico 
+
   displayedColumns: string[] = ['responsable', 'tiempo', 'temaDolicitud', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -50,6 +42,13 @@ export class TablaOtrosTemasComponent implements OnInit {
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+  }
+
+  cargarRegistros(){
+    let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
+
+    this.dataSource = new MatTableDataSource( lista );
+    
   }
 
 }

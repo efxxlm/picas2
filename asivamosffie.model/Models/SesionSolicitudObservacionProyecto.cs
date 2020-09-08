@@ -12,6 +12,12 @@ namespace asivamosffie.model.Models
         public string Observacion { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
+<<<<<<< HEAD
+=======
+        public string UsuarioModificacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public bool? Eliminado { get; set; }
+>>>>>>> 3.3.2_Validar-disponibilidad-de-presupuesto-para-ejecución-de-proyecto
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual SesionComiteSolicitud SesionComiteSolicitud { get; set; }

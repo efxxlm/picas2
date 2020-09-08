@@ -4,9 +4,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { Router } from '@angular/router';
-import { Sesion, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+import { EstadosComite, ComiteGrilla, ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-tabla-orden-del-dia',
@@ -16,6 +18,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaOrdenDelDiaComponent implements OnInit {
 
   estadosComite = EstadosComite;
+  listaMiembrosComite: Dominio[] = [];
 
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource();
@@ -32,6 +35,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
                 private technicalCommitteeSessionService: TechnicalCommitteSessionService,
                 private router: Router,
                 public dialog: MatDialog,
+                private commonService: CommonService,
                 
              ) 
   {
@@ -40,10 +44,13 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.technicalCommitteeSessionService.getComiteGrilla()
-      .subscribe( response => {
-        console.log( response );
-        this.dataSource = new MatTableDataSource( response );
+    forkJoin([
+      this.technicalCommitteeSessionService.getListComiteGrilla(),
+      //this.commonService.listaMiembrosComiteTecnico(),
+
+    ]).subscribe( response => {
+        this.dataSource = new MatTableDataSource( response[0] );
+        this.listaMiembrosComite
       })
 
     this.dataSource.sort = this.sort;
@@ -76,12 +83,12 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
   onConvocar(e: number){
 
-    let sesion: Sesion = {
-      sesionId: e,
+    let comite: ComiteTecnico = {
+      comiteTecnicoId: e,
       estadoComiteCodigo: this.estadosComite.convocada
     }
 
-    this.technicalCommitteeSessionService.cambiarEstadoComite( sesion )
+    this.technicalCommitteeSessionService.convocarComiteTecnico( comite )
       .subscribe( respuesta => {
 
         this.openDialog( ' sesión comité ', respuesta.message )
@@ -91,7 +98,24 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       })
   }
 
-  OnDelete(e: number){
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+      {
+        this.OnDelete(e)
+      }           
+    });
+  }
 
+  OnDelete(e: number){
+    this.technicalCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId( e )
+      .subscribe( respuesta => {
+        this.openDialog('', '“La información se ha eliminado correctamente”,')
+        this.ngOnInit();
+      })
   }
 }

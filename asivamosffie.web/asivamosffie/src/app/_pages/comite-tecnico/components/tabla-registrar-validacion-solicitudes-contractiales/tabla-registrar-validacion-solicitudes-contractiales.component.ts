@@ -1,21 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
-
-export interface OrdenDelDia {
-  id: number;
-  fecha: string;
-  numero: string;
-  tipo: string;
-  votacion: boolean;
-}
-
-const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '23/06/2020', numero: 'SA0006', tipo: 'Apertura de proceso de selección', votacion: false }
-];
+import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud, SesionSolicitudObservacionProyecto } from 'src/app/_interfaces/technicalCommitteSession';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { ProjectService, Proyecto } from 'src/app/core/_services/project/project.service';
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
@@ -24,8 +18,15 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
 
+  @Input() ObjetoComiteTecnico: ComiteTecnico;
+  @Output() validar: EventEmitter<any> = new EventEmitter();
+
+  listaMiembros: Usuario[];
+  tiposSolicitud = TiposSolicitud
+  
+
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -36,16 +37,141 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   }
 
   constructor(
-    public dialog: MatDialog
-  ) { }
+    public dialog: MatDialog,
+    private commonService: CommonService,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
+    private projectService: ProjectService,
 
-  openDialogValidacionSolicitudes() {
-    this.dialog.open(VotacionSolicitudComponent, {
-      width: '28em'
-    });
+  ) {
+
   }
 
+  openDialogValidacionSolicitudes(elemento: SesionComiteSolicitud) {
+
+    elemento.sesionSolicitudVoto = [];
+    elemento.sesionSolicitudObservacionProyecto = [];
+
+    console.log(this.ObjetoComiteTecnico);
+
+    this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
+      let votacion: SesionSolicitudVoto = p.sesionSolicitudVoto.find(v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId);
+      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
+
+      let solicitudVoto: SesionSolicitudVoto = {
+        sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+        sesionParticipanteId: p.sesionParticipanteId,
+        sesionSolicitudVotoId: votacion ? votacion.sesionSolicitudVotoId : 0,
+        nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+        esAprobado: votacion ? votacion.esAprobado : null,
+        observacion: votacion ? votacion.observacion : null,
+
+        sesionComiteSolicitud: elemento,
+
+      }
+
+      if (elemento.contratacion && elemento.contratacion.contratacionProyecto) {
+
+        elemento.contratacion.contratacionProyecto.forEach(c => {
+
+          let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
+            .find(o => o.contratacionProyectoId == c.contratacionProyectoId
+              && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+
+          let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
+            sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
+            sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+            sesionParticipanteId: p.sesionParticipanteId,
+            contratacionProyectoId: c.contratacionProyectoId,
+            observacion: observacion ? observacion.observacion : null,
+            nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+
+            proyecto: c.proyecto,
+          }
+
+          elemento.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+        })
+      }
+
+
+      elemento.sesionSolicitudVoto.push(solicitudVoto)
+    })
+
+
+    //console.log(elemento)
+
+    this.abrirPopupVotacion(elemento);
+  }
+
+  changeRequiere( check: boolean, solicitud: SesionComiteSolicitud ){
+    
+    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach( sc => {
+      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId)
+        if ( check ){
+          sc.completo = false
+        }else{
+          sc.completo = true
+          this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud( solicitud )
+            .subscribe( respuesta => {
+              
+            })
+        }
+    })
+  }
+
+  abrirPopupVotacion(elemento: SesionComiteSolicitud) {
+
+    if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
+
+      const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
+        width: '70em',
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        maxHeight: '90em',
+
+      });
+
+      
+
+      dialog.afterClosed().subscribe(c => {
+        if (c && c.comiteTecnicoId) {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+            .subscribe(response => {
+              this.ObjetoComiteTecnico = response;
+              this.validar.emit(null);        
+            })
+        }
+      })
+
+    } else {
+
+      const dialog = this.dialog.open(VotacionSolicitudComponent, {
+        width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
+      });
+
+      
+
+      dialog.afterClosed().subscribe(c => {
+        if (c && c.comiteTecnicoId) {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+            .subscribe(response => {
+              this.ObjetoComiteTecnico = response;
+              this.validar.emit(null);        
+            })
+        }
+      })
+    }
+
+
+  }
+
+
   ngOnInit(): void {
+
+    this.commonService.listaUsuarios().then((respuesta) => {
+      this.listaMiembros = respuesta;
+    })
+
+
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -61,6 +187,11 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+  }
+
+  cargarRegistro() {
+    console.log(this.ObjetoComiteTecnico.sesionComiteSolicitud)
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitud);
   }
 
 }

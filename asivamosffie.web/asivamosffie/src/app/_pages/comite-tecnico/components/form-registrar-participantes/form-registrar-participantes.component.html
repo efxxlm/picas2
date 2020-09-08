@@ -17,8 +17,8 @@
       <div class="col">
         <mat-form-field class="select-width">
           <mat-select formControlName="miembrosParticipantes" multiple required>
-            <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro.value">
-              {{ miembro.name }}
+            <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro">
+              {{ miembro.nombres }} {{ miembro.apellidos }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -44,6 +44,7 @@
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
                     <input matInput #nombreInvitado type="text" formControlName="nombre" maxlength="100" required>
+                    <input type="hidden" formControlName="sesionInvitadoId">
                   </mat-form-field>
                   <span class="contador">{{100 - nombreInvitado.value.length}}</span>
                 </div>
@@ -71,7 +72,12 @@
                 </div>
               </div>
               <div class="text-right" *ngIf="invitados.controls.length > 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(invitados, i)">
+                <button mat-button 
+                        color="warn" 
+                        type="button" 
+                        class="btn-eliminar" 
+                        (click)="openDialogSiNo('', '¿Está seguro de eliminar este registro?', i)" 
+                        >
                   <img src="assets/img/icon/menos.svg" alt="Eliminar invitado">
                   Eliminar invitado
                 </button>
@@ -106,27 +112,95 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title completo">
+        <!-- class="expansion-style--title completo" -->
+        <!-- <mat-panel-title class="expansion-style--title completo" > -->
+        <mat-panel-title 
+          class="expansion-style--title" 
+          [class.sin-diligenciar]="estadoSolicitudes == this.estadoFormulario.sinDiligenciar"
+          [class.en-proceso]="estadoSolicitudes == this.estadoFormulario.enProceso"
+          [class.completo]="estadoSolicitudes == this.estadoFormulario.completo" >
           Validación de solicitudes contractuales
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-registrar-validacion-solicitudes-contractiales></app-tabla-registrar-validacion-solicitudes-contractiales>
+
+      <button 
+        (click)="registrarSolicitudes.cargarRegistro()"
+        style="display: none;"
+        id="btnRegistrarSolicitudes"
+      >
+      </button>
+
+      <app-tabla-registrar-validacion-solicitudes-contractiales
+        #registrarSolicitudes
+        [ObjetoComiteTecnico]="objetoComiteTecnico"
+        (validar)="ngOnInit()"
+      >
+      </app-tabla-registrar-validacion-solicitudes-contractiales>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title en-proceso">
+        <mat-panel-title 
+          class="expansion-style--title"
+          [class.sin-diligenciar]="estadoOtrosTemas == this.estadoFormulario.sinDiligenciar"
+          [class.en-proceso]="estadoOtrosTemas == this.estadoFormulario.enProceso"
+          [class.completo]="estadoOtrosTemas == this.estadoFormulario.completo" >
           Otros temas
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-registrar-otros-temas></app-tabla-registrar-otros-temas>
+
+      <button 
+        (click)="otrosTemas.cargarRegistro()"
+        style="display: none;"
+        id="btnOtrosTemas"
+      >
+      </button>
+
+      <app-tabla-registrar-otros-temas
+        #otrosTemas
+        [objetoComiteTecnico]="objetoComiteTecnico"
+        [esProposicionesVarios]="false"
+        (validar)="ngOnInit()"
+      >
+    </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title sin-diligenciar">
+        <mat-panel-title 
+          class="expansion-style--title"
+          [class.sin-diligenciar]="estadoProposiciones == this.estadoFormulario.sinDiligenciar"
+          [class.en-proceso]="estadoProposiciones == this.estadoFormulario.enProceso"
+          [class.completo]="estadoProposiciones == this.estadoFormulario.completo" >
           Proposiciones y varios
         </mat-panel-title>
       </mat-expansion-panel-header>
-      
+
+      <button 
+        (click)="proposiciones.cargarRegistro()"
+        style="display: none;"
+        id="btnProposiciones"
+      >
+      </button>
+
+      <app-tabla-registrar-otros-temas
+        #proposiciones
+        [objetoComiteTecnico]="objetoComiteTecnico"
+        [esProposicionesVarios]="true"
+        (validar)="ngOnInit()"
+      >
+      </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
   </mat-accordion>
+
+  <div class="text-center">
+    <button mat-button 
+            color="warn" 
+            class="btn-guardar" 
+            type="button" 
+            [disabled]="!estaTodo"
+            (click)="CambiarEstado()"
+            >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+
 </section>

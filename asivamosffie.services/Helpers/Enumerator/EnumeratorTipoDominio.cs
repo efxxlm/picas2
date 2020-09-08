@@ -60,9 +60,11 @@ namespace asivamosffie.services.Helpers.Enumerator
        
         Tipo_de_Solicitud = 29,       
         Estado_Solicitud = 31,
+		Tipo_Solicitud = 29,
+		EstadoComite = 38,
 
         // Para disponibilidad presupuestal        
-
+        
         Tipo_de_Solicitud_Obra_Interventorias = 37,
 
         Opcion_Por_Contratar = 37,
@@ -71,7 +73,11 @@ namespace asivamosffie.services.Helpers.Enumerator
  
         Dias_Comite = 43,
 
-        PlaceHolder = 44
+        PlaceHolder = 44,
+
+        //RESPONSABLES DE TEMAS
+        Miembros_Comite_Tecnico = 46
+
 
     }
 }

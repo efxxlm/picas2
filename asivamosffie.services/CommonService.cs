@@ -41,9 +41,9 @@ namespace asivamosffie.services
             return ListaUsuario;
         }
 
-        public async Task<string> EnumeradorComite()
+        public async Task<string> EnumeradorComiteTecnico()
         {
-            int cantidadDeResgistros = _context.Sesion.ToList().Count();
+            int cantidadDeResgistros = _context.ComiteTecnico.Count();
             string Nomeclatura = "CT_"; 
             string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
             return string.Concat(Nomeclatura, consecutivo );

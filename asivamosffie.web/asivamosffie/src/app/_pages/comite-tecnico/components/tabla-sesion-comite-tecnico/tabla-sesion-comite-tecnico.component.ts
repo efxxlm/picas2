@@ -2,20 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-export interface ComiteTecnico {
-  id: number;
-  fecha: string;
-  numero: string;
-  estado: string;
-}
-
-const ELEMENT_DATA: ComiteTecnico[] = [
-  {id: 0, fecha: '24/06/2020', numero: 'CT_00001', estado: 'Sín convocatoría'},
-  {id: 0, fecha: '25/06/2020', numero: 'CT_00002', estado: 'Sín convocatoría'},
-  {id: 0, fecha: '26/06/2020', numero: 'CT_00003', estado: 'Sín convocatoría'},
-  {id: 0, fecha: '27/06/2020', numero: 'CT_00004', estado: 'Sín convocatoría'},
-];
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { ComiteGrilla, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-tabla-sesion-comite-tecnico',
@@ -24,8 +12,10 @@ const ELEMENT_DATA: ComiteTecnico[] = [
 })
 export class TablaSesionComiteTecnicoComponent implements OnInit {
 
+  estadosComite = EstadosComite
+
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -35,9 +25,22 @@ export class TablaSesionComiteTecnicoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+
+             ) 
+  {
+  
+  }
 
   ngOnInit(): void {
+
+    this.technicalCommitteeSessionService.getListComiteGrilla()
+      .subscribe( response => {
+        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.convocada )
+        this.dataSource = new MatTableDataSource( lista );
+      })
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

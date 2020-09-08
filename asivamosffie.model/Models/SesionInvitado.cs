@@ -15,5 +15,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public int? ComiteTecnicoId { get; set; }
+
+        public virtual ComiteTecnico ComiteTecnico { get; set; }
     }
 }

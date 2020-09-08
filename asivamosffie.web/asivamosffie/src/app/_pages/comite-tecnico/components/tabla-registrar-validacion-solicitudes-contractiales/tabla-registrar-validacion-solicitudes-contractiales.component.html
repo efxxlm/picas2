@@ -12,26 +12,30 @@
 
     <ng-container matColumnDef="fecha">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-        <td mat-cell *matCellDef="let element"> <b>{{element.fecha}}</b> </td>
+        <td mat-cell *matCellDef="let element"> <b>{{element.fechaSolicitud | date: 'dd/MM/yyyy'}}</b> </td>
     </ng-container>
 
     <ng-container matColumnDef="numero">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de la solicitud </th>
-        <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.numeroSolicitud}} </td>
     </ng-container>
 
     <ng-container matColumnDef="tipo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de solicitud  </th>
-        <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.tipoSolicitud}} </td>
     </ng-container>
 
     <ng-container matColumnDef="votacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿El tema requería votación? </th>
         <td mat-cell *matCellDef="let element">
             <div class="col">
-                <mat-radio-group class="radioInput">
-                    <mat-radio-button value="true">Sí</mat-radio-button>
-                    <mat-radio-button value="false">No</mat-radio-button>
+                <mat-radio-group class="radioInput en-proceso" [(ngModel)]="element.requiereVotacion">
+                    <mat-radio-button [value]="true"
+                                      (change)="changeRequiere(true, element)"
+                                      >Sí</mat-radio-button>
+                    <mat-radio-button [value]="false" 
+                                      (change)="changeRequiere(false, element)"
+                                      >No</mat-radio-button>
                 </mat-radio-group>
                 <span class="required-form-group">*</span>
             </div>
@@ -41,7 +45,15 @@
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <button mat-raised-button color="accent" class="btn-table" (click)="openDialogValidacionSolicitudes()">Votar</button>
+            <button mat-raised-button 
+                color="accent"  
+                class="btn-table " 
+                (click)="openDialogValidacionSolicitudes( element )"
+                [class.info-button]="element.requiereVotacion"
+                [class.sin-diligenciar]="!element.completo && element.requiereVotacion"
+                [class.completo]="element.completo && element.requiereVotacion" 
+                [disabled]="!element.requiereVotacion"
+            >Votar</button>
         </td>
     </ng-container>
 
