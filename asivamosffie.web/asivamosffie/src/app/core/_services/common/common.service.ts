@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 import { Usuario } from '../autenticacion/autenticacion.service';
+import { promise } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -140,6 +141,53 @@ export class CommonService {
     return this.http.get<Usuario[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
   }
 
+  listaFases(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=16`);
+  }
+
+  listaComponentes(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=12`);
+  }
+
+  listaUsos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=13`);
+  }
+
+  listaMiembrosComiteTecnico(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=46`);
+  }
+
+  listaEstadoSolicitud(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
+  }
+
+  listaEstadoCompromisos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=45`);
+  }
+
+  public listaUsuarios(){
+
+    let lista: Usuario[] = [];
+
+    return new Promise<Usuario[]>( resolve => {
+      forkJoin([
+        this.getUsuariosByPerfil(1),
+        this.getUsuariosByPerfil(2),
+        this.getUsuariosByPerfil(3),
+        this.getUsuariosByPerfil(4),
+        this.getUsuariosByPerfil(5),
+
+      ]).subscribe( response => {
+
+        for (let i = 0; i < 5; i++)
+        {
+          lista = lista.concat(response[i])  
+        }
+
+        resolve(lista);
+      });
+    })
+  }
 
   public forkProject():Observable<any[]>
   {
@@ -182,10 +230,10 @@ export class CommonService {
 }
 
 export interface Dominio{
-  dominioId: number,
-  tipoDominioId: number,
-  nombre: string,
-  activo: boolean,
+  dominioId?: number,
+  tipoDominioId?: number,
+  nombre?: string,
+  activo?: boolean,
   codigo?: string,
 }
 

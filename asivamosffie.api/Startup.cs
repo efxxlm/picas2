@@ -17,6 +17,10 @@ using asivamosffie.services.Filters;
 using FluentValidation.AspNetCore;
 using System;
 using System.Text;
+using DinkToPdf.Contracts;
+using DinkToPdf;
+using System.IO;
+using asivamosffie.api.Helpers;
 
 namespace asivamosffie.api
 {
@@ -98,7 +102,13 @@ namespace asivamosffie.api
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-           
+            #region A gregado pora implementacion de descargas de PDF
+            var context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
+            #endregion
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -123,10 +133,14 @@ namespace asivamosffie.api
             services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
-            services.AddTransient<ISelectionProcessService, SelectionProcessService>();
-            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
-            
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
+            services.AddTransient<IProjectContractingService, ProjectContractingService>();
+            services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
+            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>(); 
+            services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
 
+             
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

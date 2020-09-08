@@ -9,6 +9,7 @@ namespace asivamosffie.model.Models
         {
             AportanteFuenteFinanciacion = new HashSet<AportanteFuenteFinanciacion>();
             CofinanciacionDocumento = new HashSet<CofinanciacionDocumento>();
+            DocumentoApropiacion = new HashSet<DocumentoApropiacion>();
             FuenteFinanciacion = new HashSet<FuenteFinanciacion>();
             ProyectoAdministrativoAportante = new HashSet<ProyectoAdministrativoAportante>();
             ProyectoAportante = new HashSet<ProyectoAportante>();
@@ -29,6 +30,7 @@ namespace asivamosffie.model.Models
         public virtual Cofinanciacion Cofinanciacion { get; set; }
         public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual ICollection<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
+        public virtual ICollection<DocumentoApropiacion> DocumentoApropiacion { get; set; }
         public virtual ICollection<FuenteFinanciacion> FuenteFinanciacion { get; set; }
         public virtual ICollection<ProyectoAdministrativoAportante> ProyectoAdministrativoAportante { get; set; }
         public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }

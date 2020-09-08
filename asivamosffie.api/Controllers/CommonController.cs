@@ -22,6 +22,13 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
+         
+        [HttpGet]
+        [Route("GetUsuarioByPerfil")]
+        public Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
+        {  
+            return  common.GetUsuarioByPerfil(idPerfil);
+         }
 
         [HttpGet]
         [Route("GetMenuByRol")]
@@ -70,6 +77,7 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
+
         [HttpGet]
         [Route("ListMunicipiosByIdMunicipio")]
         public async Task<ActionResult<List<Localicacion>>> GetListMunicipioByMunicipio(string idMunicipio)
@@ -95,6 +103,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+
         [Route("ListRegion")]
         public async Task<ActionResult<List<Localicacion>>> ListRegion(string idDepartamento)
         {
@@ -106,6 +115,7 @@ namespace asivamosffie.api.Controllers
         [Route("ListVigenciaAporte")]
         public async Task<ActionResult<List<int>>> GetListVigenciaAportes()
         {
+
             var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente, _settings.Value.YearSiguienteEsVigente);
             return result;
         }
