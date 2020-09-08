@@ -15,6 +15,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public int? ComiteTecnicoFiduciarioId { get; set; }
 
         public virtual SesionComiteSolicitud SesionComiteSolicitud { get; set; }
         public virtual SesionParticipante SesionParticipante { get; set; }
