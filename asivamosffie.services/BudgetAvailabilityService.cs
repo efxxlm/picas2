@@ -77,9 +77,10 @@ namespace asivamosffie.services
                     OpcionPorContratarCodigo = dp.OpcionContratarCodigo,
                     OpcionPorContratarText = dp.OpcionContratarCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(dp.OpcionContratarCodigo, (int)EnumeratorTipoDominio.Opcion_Por_Contratar) : "",
                     ValorSolicitado = dp.ValorSolicitud,
-                    EstadoSolicitudCodigo = string.Empty, // Pendiente hacer la validacion
-                    EstadoRegistro = dp.RegistroCompleto.Equals(true) ? "Completo" : ""
-                    
+                    EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
+                    EstadoSolicitudText = dp.EstadoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(dp.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal) : "",
+
+
                 };
 
                 ListGrillaControlCronograma.Add(DisponibilidadPresupuestalGrilla);

@@ -29,7 +29,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _budgetAvailabilityService.GetBudgetAvailability();
+                return await _budgetAvailabilityService.GetBudgetAvailability();                    
             }
             catch (Exception ex)
             {

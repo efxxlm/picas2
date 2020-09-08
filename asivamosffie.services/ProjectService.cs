@@ -23,6 +23,9 @@ using System.Globalization;
 using asivamosffie.services.Validators;
 using asivamosffie.services.Filters;
 using System.Data.Common;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml;
 
 namespace asivamosffie.services
 {
@@ -351,6 +354,7 @@ namespace asivamosffie.services
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
                                     )
                                 {
+                                  
 
                                     TemporalProyecto temporalProyecto = new TemporalProyecto();
                                     //Auditoria
@@ -358,6 +362,51 @@ namespace asivamosffie.services
                                     temporalProyecto.EstaValidado = false;
                                     temporalProyecto.FechaCreacion = DateTime.Now;
                                     temporalProyecto.UsuarioCreacion = pUsuarioCreo;
+
+                                    string fileName = "C:\\asivamosffie\\ArchivosDeCargue\\Proyecto\\Archivo1.xlsx";
+                                    SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.
+                                    Create(fileName, SpreadsheetDocumentType.Workbook);
+
+                                    // Add a WorkbookPart to the document.  
+                                    WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                                    workbookpart.Workbook = new Workbook();
+
+                                    // Add a WorksheetPart to the WorkbookPart.  
+                                    WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+                                    worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                                    // Add Sheets to the Workbook.  
+                                    Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+
+
+                                    // Append a new worksheet and associate it with the workbook.  
+                                    Sheet sheet = new Sheet()
+                                    {
+                                        Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                                        SheetId = 1,
+                                        Name = "mySheet"
+                                    };
+                                    sheets.Append(sheet);
+                                    Worksheet workshee2t = new Worksheet();
+                                    SheetData sheetData = new SheetData();
+                                    Row row = new Row();
+                                    Cell cell = new Cell()
+                                    {
+                                        CellReference = "A1",
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue("Microsoft")
+                                    };
+                                    row.Append(cell);
+                                    sheetData.Append(row);
+                                    workshee2t.Append(sheetData);
+                                    worksheetPart.Worksheet = workshee2t;
+
+                                    // Close the document.  
+                                    spreadsheetDocument.Close();
+                                    Console.WriteLine("All done. Press any key.");
+                                    Console.ReadKey();
+
+
 
                                     // #1
                                     //Fecha sesion Junta 
@@ -598,6 +647,8 @@ namespace asivamosffie.services
                             }
                         }
 
+
+
                         //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
                         //-2 ya los registros comienzan desde esta fila
                         archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
@@ -605,6 +656,7 @@ namespace asivamosffie.services
                         archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
                         _context.ArchivoCargue.Update(archivoCarge);
 
+                       // leer(pFilePatch);
 
                         ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
                         {
@@ -640,6 +692,9 @@ namespace asivamosffie.services
                     };
             }
         }
+
+
+
 
         public async Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument, string pUsuarioModifico)
         {

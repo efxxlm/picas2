@@ -32,7 +32,7 @@ namespace asivamosffie.services.Helpers
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
             result = sha.ComputeHash(data);
-             
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
             {
@@ -45,14 +45,14 @@ namespace asivamosffie.services.Helpers
                     sb.Append("0");
                 }
                 sb.Append(result[i].ToString("x"));
-            }  
+            }
             return sb.ToString().ToUpper();
         }
 
         public static string CleanStringInput(string text)//ÁÉÍÓÚ //
         {
 
-            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
             char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
 
             if (text != null)
@@ -65,6 +65,8 @@ namespace asivamosffie.services.Helpers
 
             return text;
         }
+
+
 
         public static object ConvertToUpercase(object dataObject)
         {

@@ -60,6 +60,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+        public virtual DbSet<DisponibilidadPresupuestal> DisponibilidadPresupuestal { get; set; }
+        public virtual DbSet<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
 
         //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {
@@ -1673,7 +1675,35 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.FuenteFinanciacionId)
                     .HasConstraintName("FK_VigenciaAporte_FuenteFinanciacion");
             });
+            modelBuilder.Entity<DisponibilidadPresupuestal>(entity =>
+            {
+                entity.Property(e => e.EstadoSolicitudCodigo).IsUnicode(false);
 
+                entity.Property(e => e.NumeroDdp).IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud).IsUnicode(false);
+
+                entity.Property(e => e.Objeto).IsUnicode(false);
+
+                entity.Property(e => e.Observacion).IsUnicode(false);
+
+                entity.Property(e => e.OpcionContratarCodigo).IsUnicode(false);
+
+                entity.Property(e => e.RutaDdp).IsUnicode(false);
+
+                entity.Property(e => e.TipoSolicitudCodigo).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<DisponibilidadPresupuestalProyecto>(entity =>
+            {
+                entity.Property(e => e.UsuarioCreacion).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion).IsUnicode(false);
+            });
             OnModelCreatingPartial(modelBuilder);
         }
 
