@@ -37,50 +37,38 @@ namespace asivamosffie.services
             //• Enviadas a la fiduciaria
             //• Registradas por la fiduciaria
 
-            //Se listan las que tengan con acta de sesion aprobada 
-
+            //Se listan las que tengan con acta de sesion aprobada  
 
             //    List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
             //.Where(r => r.TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion
             //&& r.EstadoDelRegistro == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada
             //)
-            //.ToListAsync();
-
-
+            //.ToListAsync(); 
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
                 && r.EstadoCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada
                 )
-                    .ToListAsync();
-
-
+                    .ToListAsync(); 
             List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
             List<Contratacion> ListContratacion = _context
                 .Contratacion
                 .Where(r => !(bool)r.Eliminado)
-                .Include(r => r.ContratacionProyecto)
-                .ThenInclude(r => r.Proyecto)
-                .ThenInclude(r => r.DisponibilidadPresupuestalProyecto)
-                    .ThenInclude(r => r.Proyecto)
-               
-
+                //.Include(r => r.ContratacionProyecto)
+                //.ThenInclude(r => r.Proyecto)
+                //.ThenInclude(r => r.DisponibilidadPresupuestalProyecto)
+                //    .ThenInclude(r => r.Proyecto) 
                 .ToList(); 
             List<Contratista> ListContratista = _context.Contratista.ToList();
-
-
-
-          
-
+             
             foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
             {
                 switch (sesionComiteSolicitud.TipoSolicitudCodigo)
                 {
-
                     case ConstanCodigoTipoSolicitud.Contratacion:
                         Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
-                        sesionComiteSolicitud.Contratacion = contratacion;
+                      //  sesionComiteSolicitud.Contratacion = contratacion;
 
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
@@ -98,24 +86,29 @@ namespace asivamosffie.services
                         else
                         {
                             sesionComiteSolicitud.EstadoDelRegistro = "Completo";
-                        }
-
-
-                        //(bool)contratacion.RegistroCompleto
-                        //    ? sesionComiteSolicitud.EstadoDelRegistro = "Completo"
-                        //    : sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
-
+                        } 
                         break;
 
                     default:
                         break;
                 }
-
-
             }
-            return ListSesionComiteSolicitud;
+            return ListSesionComiteSolicitud.OrderByDescending(r=> r.SesionComiteSolicitudId).ToList();
         }
 
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId) {
+             
+            //TODO: PENDIENTE Numero comite Fiducuario Fecha Comite Fiducuario
+            return await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
+                    .Include(r => r.DisponibilidadPresupuestal)
+                    .Include(r => r.Contratista)
+                    .Include(r => r.ContratacionProyecto)
+                        .ThenInclude(r => r.Proyecto)
+                               .ThenInclude(r => r.ProyectoAportante) 
+                                  .ThenInclude(r => r.Aportante)
+                                  
+                     .FirstOrDefaultAsync();
 
+        }
     }
 }

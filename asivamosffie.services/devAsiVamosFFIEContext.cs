@@ -38,6 +38,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<CuentaBancaria> CuentaBancaria { get; set; }
         public virtual DbSet<DefensaJudicial> DefensaJudicial { get; set; }
         public virtual DbSet<DisponibilidadPresupuestal> DisponibilidadPresupuestal { get; set; }
+        public virtual DbSet<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
         public virtual DbSet<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
         public virtual DbSet<DocumentoApropiacion> DocumentoApropiacion { get; set; }
         public virtual DbSet<Dominio> Dominio { get; set; }
@@ -866,6 +867,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -874,10 +880,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Objeto)
                     .IsRequired()
                     .HasMaxLength(1000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Observacion)
-                    .HasMaxLength(2000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.OpcionContratarCodigo)
@@ -905,6 +907,32 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
+
+                entity.HasOne(d => d.Contratacion)
+                    .WithMany(p => p.DisponibilidadPresupuestal)
+                    .HasForeignKey(d => d.ContratacionId)
+                    .HasConstraintName("FK_DisponibilidadPresupuestal_Contratacion");
+            });
+
+            modelBuilder.Entity<DisponibilidadPresupuestalObservacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacion)
+                    .IsRequired()
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.DisponibilidadPresupuestal)
+                    .WithMany(p => p.DisponibilidadPresupuestalObservacion)
+                    .HasForeignKey(d => d.DisponibilidadPresupuestalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DisponibilidadPresupuestalObservacion_DisponibilidadPresupuestal");
             });
 
             modelBuilder.Entity<DisponibilidadPresupuestalProyecto>(entity =>
