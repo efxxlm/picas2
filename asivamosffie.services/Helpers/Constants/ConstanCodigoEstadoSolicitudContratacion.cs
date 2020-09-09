@@ -9,5 +9,6 @@
         public const string Devuelta_comite_tecnico = "5";
         public const string Devuelta_comite_fiduciario = "6";
         public const string En_tramite = "7";
+        public const string No_aplica ="8";
     }
 }

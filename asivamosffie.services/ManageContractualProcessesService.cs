@@ -48,10 +48,15 @@ namespace asivamosffie.services
             //&& r.EstadoDelRegistro == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada
             //)
             //.ToListAsync(); 
+            // 2   Aprobada por comité fiduciario
+
+
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
-                && r.EstadoCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada
+                   && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario 
                 ).ToListAsync();
+
+
 
 
             ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
@@ -125,21 +130,11 @@ namespace asivamosffie.services
                       .Include(r => r.Contratista)
                       .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
-                            .ThenInclude(r => r.ProyectoAportante)
-                              .ThenInclude(r => r.Proyecto)
-                                     .ThenInclude(r => r.ProyectoAportante)
-                                        .ThenInclude(r => r.Aportante)
+                            .ThenInclude(r => r.ProyectoAportante) 
                     .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                               .ThenInclude(r => r.InstitucionEducativa)
-                  .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                              .ThenInclude(r => r.ProyectoPredio)
-                                   .ThenInclude(r => r.Predio) 
-                    .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                                .ThenInclude(r => r.PredioPrincipal)
-                           .FirstOrDefaultAsync();
+                 .FirstOrDefaultAsync();
 
             SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
                 .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
@@ -167,8 +162,7 @@ namespace asivamosffie.services
 
             return contratacion;
         }
-
-
+         
         public async Task<Respuesta> RegistrarTramiteContratacion(Contratacion pContratacion, IFormFile pFile, string pDirectorioBase, string pDirectorioMinuta)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contratacion, (int)EnumeratorTipoDominio.Acciones);
