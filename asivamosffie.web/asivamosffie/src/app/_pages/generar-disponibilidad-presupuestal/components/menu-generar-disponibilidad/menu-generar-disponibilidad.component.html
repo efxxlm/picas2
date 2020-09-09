@@ -28,37 +28,16 @@
     </p>
   </div>
   <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" *ngFor="let disponibilidad of listaDisponibilidades">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title sin-diligenciar">
-          Con validación presupuestal
+        <mat-panel-title class="expansion-style--title sin-diligenciar"  [ngClass]="{'sin-diligenciar': disponibilidad.completo=='Incompleto', 'completo': disponibilidad.completo=='Completo'}">
+          {{disponibilidad.nombreEstado}}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-con-validacion-presupuestal></app-tabla-con-validacion-presupuestal>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
-      <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Devuelta por coordinación financiera
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <app-tabla-devuelta-por-coordinacion-financiera></app-tabla-devuelta-por-coordinacion-financiera>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
-      <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Con disponibilidad presupuestal
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <app-tabla-con-disponibilidad-presupuestal></app-tabla-con-disponibilidad-presupuestal>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
-      <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Con disponibilidad cancelada
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <app-tabla-con-disponibilidad-cancelada></app-tabla-con-disponibilidad-cancelada>
-    </mat-expansion-panel>
+      <app-tabla-con-validacion-presupuestal [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con validación presupuestal'"></app-tabla-con-validacion-presupuestal>
+      <app-tabla-devuelta-por-coordinacion-financiera  [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Devuelta por coordinación financiera'"></app-tabla-devuelta-por-coordinacion-financiera>
+      <app-tabla-con-disponibilidad-presupuestal [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con disponibilidad presupuestal'" ></app-tabla-con-disponibilidad-presupuestal>
+      <app-tabla-con-disponibilidad-cancelada  [disponibilidadPresupuestal]="disponibilidad" *ngIf="Con disponibilidad cancelada"></app-tabla-con-disponibilidad-cancelada>
+    </mat-expansion-panel>    
   </mat-accordion>
 </section>
