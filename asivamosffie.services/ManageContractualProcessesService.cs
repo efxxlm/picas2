@@ -92,6 +92,15 @@ namespace asivamosffie.services
                         }
                         break;
 
+                    case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
+
+                        sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                       .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                        && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                       .FirstOrDefault().Nombre; 
+                        break;
+
+
                     default:
                         break;
                 }
