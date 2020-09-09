@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace asivamosffie.api.Models
+namespace asivamosffie.model.Models
 {
     public partial class devAsiVamosFFIEContext : DbContext
     {

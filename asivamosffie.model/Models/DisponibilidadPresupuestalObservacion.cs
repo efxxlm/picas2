@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace asivamosffie.api.Models
+namespace asivamosffie.model.Models
 {
     public partial class DisponibilidadPresupuestalObservacion
     {

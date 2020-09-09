@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,7 +23,7 @@ export class TablaConValidacionPresupuestalComponent implements OnInit {
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-
+  @Input()disponibilidadPresupuestal: any;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
