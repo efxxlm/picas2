@@ -56,8 +56,7 @@ namespace asivamosffie.services
                    && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario 
                 ).ToListAsync();
 
-
-
+             
 
             ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
             || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
@@ -91,15 +90,17 @@ namespace asivamosffie.services
                             && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
                             ).FirstOrDefault().Nombre;
 
-                        sesionComiteSolicitud.EstadoDelRegistro = contratacion.RegistroCompleto.ToString();
-                        //if (!(bool)contratacion.RegistroCompleto || contratacion.RegistroCompleto == null)
-                        //{
-                        //    sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
-                        //}
-                        //else
-                        //{
-                        //    sesionComiteSolicitud.EstadoDelRegistro = "Completo";
-                        //}
+                        if (contratacion.RegistroCompleto == null || (bool)contratacion.RegistroCompleto)
+                        {
+                            sesionComiteSolicitud.EstadoRegistro = false;
+                            sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
+                        }
+                        else
+                        {
+                            sesionComiteSolicitud.EstadoRegistro = true;
+                            sesionComiteSolicitud.EstadoDelRegistro = "Completo"; 
+                        }
+               
                        break;
 
                     case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
