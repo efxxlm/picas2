@@ -46,9 +46,12 @@ namespace asivamosffie.services
             //.ToListAsync(); 
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
-                && r.EstadoCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada
-                )
-                    .ToListAsync(); 
+                && r.EstadoCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada 
+                ).ToListAsync();
+
+       
+            ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+            || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
             List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
             List<Contratacion> ListContratacion = _context
@@ -58,9 +61,9 @@ namespace asivamosffie.services
                 //.ThenInclude(r => r.Proyecto)
                 //.ThenInclude(r => r.DisponibilidadPresupuestalProyecto)
                 //    .ThenInclude(r => r.Proyecto) 
-                .ToList(); 
+                .ToList();
             List<Contratista> ListContratista = _context.Contratista.ToList();
-             
+
             foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
             {
                 switch (sesionComiteSolicitud.TipoSolicitudCodigo)
@@ -68,7 +71,7 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoSolicitud.Contratacion:
                         Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
-                      //  sesionComiteSolicitud.Contratacion = contratacion;
+                        //  sesionComiteSolicitud.Contratacion = contratacion;
 
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
@@ -86,27 +89,28 @@ namespace asivamosffie.services
                         else
                         {
                             sesionComiteSolicitud.EstadoDelRegistro = "Completo";
-                        } 
+                        }
                         break;
 
                     default:
                         break;
                 }
             }
-            return ListSesionComiteSolicitud.OrderByDescending(r=> r.SesionComiteSolicitudId).ToList();
+            return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).ToList();
         }
 
-        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId) {
-             
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        {
+
             //TODO: PENDIENTE Numero comite Fiducuario Fecha Comite Fiducuario
             return await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.DisponibilidadPresupuestal)
                 .Include(r => r.Contratista).Include(r => r.ContratacionProyecto)
                     .ThenInclude(r => r.Proyecto).ThenInclude(r => r.ProyectoAportante)
                         .ThenInclude(r => r.Proyecto)
-                               .ThenInclude(r => r.ProyectoAportante) 
+                               .ThenInclude(r => r.ProyectoAportante)
                                   .ThenInclude(r => r.Aportante)
-                                  
+
                      .FirstOrDefaultAsync();
 
         }
