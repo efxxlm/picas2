@@ -31,7 +31,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratacionByContratacionId")]
         [HttpGet]
-        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        public async Task<Contratacion> GetContratacionByContratacionId([FromQuery] int pContratacionId)
         {
             var result = await _manageContractualProcessesService.GetContratacionByContratacionId(pContratacionId);
             return result;

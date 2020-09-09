@@ -118,10 +118,29 @@ namespace asivamosffie.services
                     .ThenInclude(r => r.Proyecto).ThenInclude(r => r.ProyectoAportante)
                         .ThenInclude(r => r.Proyecto)
                                .ThenInclude(r => r.ProyectoAportante)
-                                  .ThenInclude(r => r.Aportante)
-
-                     .FirstOrDefaultAsync();
-
+                                  .ThenInclude(r => r.Aportante) 
+                     .FirstOrDefaultAsync(); 
         }
+
+
+        //public async Task<Respuesta> RegistrarTramite(Contratacion pContratacion) {
+              
+        //    try
+        //    {
+        //        Contratacion contratacionOld = _context.Contratacion.Find(pContratacion.ContratacionId);
+        //        contratacionOld.
+
+
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        
+        
+        //}
+
     }
 }
