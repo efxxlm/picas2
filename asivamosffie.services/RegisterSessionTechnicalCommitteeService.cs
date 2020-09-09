@@ -2118,7 +2118,7 @@ namespace asivamosffie.services
             try
             {
                 pContratacionObservacion.FechaCreacion = DateTime.Now;
-                _context.ContratacionObservacion.Add(pContratacionObservacion); 
+                _context.ContratacionObservacion.Add(pContratacionObservacion);
                 _context.SaveChanges();
 
                 return new Respuesta
@@ -2139,6 +2139,43 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Code = ConstantSesionComiteTecnico.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pContratacionObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
+         
+        public async Task<Respuesta> CambiarEstadoActa(int pSesionComiteSolicitud, string pCodigoEstado, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Acta, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud);
+                sesionComiteSolicitudOld.UsuarioModificacion = pUsuarioModifica;
+                sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
+                sesionComiteSolicitudOld.EstadoActaCodigo = pCodigoEstado;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO ACTA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
                 };
             }
 

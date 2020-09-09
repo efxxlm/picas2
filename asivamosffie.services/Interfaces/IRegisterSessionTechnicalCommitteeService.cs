@@ -9,7 +9,9 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
-       Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(ContratacionObservacion pContratacionObservacion)
+        Task<Respuesta> CambiarEstadoActa(int pSesionComiteSolicitud, string pCodigoEstado, string pUsuarioModifica);
+
+        Task<Respuesta> CrearObservacionProyecto(ContratacionObservacion pContratacionObservacion);
              
         Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico);
 

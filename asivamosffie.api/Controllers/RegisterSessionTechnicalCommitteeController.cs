@@ -122,6 +122,26 @@ namespace asivamosffie.api.Controllers
         }
 
 
+
+
+        [HttpPut]
+        [Route("CambiarEstadoActa")]
+        public async Task<IActionResult> CambiarEstadoActa([FromQuery] int pSesionComiteSolicitud, string pCodigoEstado)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerSessionTechnicalCommitteeService.CambiarEstadoActa(pSesionComiteSolicitud,  pCodigoEstado , HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+     
         [HttpPost]
         [Route("AplazarSesionComite")]
         public async Task<IActionResult> AplazarSesionComite([FromBody] ComiteTecnico pComiteTecnico)
