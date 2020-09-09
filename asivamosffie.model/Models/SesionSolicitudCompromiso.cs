@@ -17,13 +17,10 @@ namespace asivamosffie.model.Models
         public DateTime FechaCumplimiento { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
-<<<<<<< HEAD
-=======
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public string EstadoCodigo { get; set; }
->>>>>>> 3.3.2_Validar-disponibilidad-de-presupuesto-para-ejecución-de-proyecto
 
         public virtual SesionParticipante ResponsableSesionParticipante { get; set; }
         public virtual SesionComiteSolicitud SesionComiteSolicitud { get; set; }
