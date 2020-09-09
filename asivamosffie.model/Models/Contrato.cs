@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public Contrato()
         {
+            ContratoObservacion = new HashSet<ContratoObservacion>();
             ContratoPoliza = new HashSet<ContratoPoliza>();
         }
 
@@ -28,6 +29,7 @@ namespace asivamosffie.model.Models
         public DateTime? Plazo { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
+        public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }
         public virtual ICollection<ContratoPoliza> ContratoPoliza { get; set; }
     }
 }

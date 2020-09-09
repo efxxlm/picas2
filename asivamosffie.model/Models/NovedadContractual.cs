@@ -5,14 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class NovedadContractual
     {
-<<<<<<< HEAD
-        public NovedadContractual()
-        {
-            SesionComiteSolicitud = new HashSet<SesionComiteSolicitud>();
-        }
-
-=======
->>>>>>> 3.3.2_Validar-disponibilidad-de-presupuesto-para-ejecución-de-proyecto
         public int NovedadContractualId { get; set; }
         public DateTime FechaSolictud { get; set; }
         public string NumeroSolicitud { get; set; }
@@ -31,10 +23,6 @@ namespace asivamosffie.model.Models
         public int? PlazoAdicionalMeses { get; set; }
         public string ClausulaModificar { get; set; }
         public string AjusteClausula { get; set; }
-<<<<<<< HEAD
-
-        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
-=======
->>>>>>> 3.3.2_Validar-disponibilidad-de-presupuesto-para-ejecución-de-proyecto
+        public int SolicitudId { get; set; }
     }
 }

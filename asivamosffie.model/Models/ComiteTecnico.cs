@@ -36,6 +36,8 @@ namespace asivamosffie.model.Models
         public string NumeroComite { get; set; }
         public string EstadoComiteCodigo { get; set; }
         public string EstadoActaCodigo { get; set; }
+        public bool? EsComiteFiduciario { get; set; }
+        public string TipoTemaFiduciarioCodigo { get; set; }
 
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
