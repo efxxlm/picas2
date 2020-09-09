@@ -23,10 +23,19 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListSesionComiteSolicitud")]
         [HttpGet]
-        public async Task<List<SesionComiteSolicitud>> GetCofinancing()
+        public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             var result = await _manageContractualProcessesService.GetListSesionComiteSolicitud();
             return result;
         }
+
+        [Route("GetContratacionByContratacionId")]
+        [HttpGet]
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        {
+            var result = await _manageContractualProcessesService.GetContratacionByContratacionId(pContratacionId);
+            return result;
+        }
+         
     }
 }

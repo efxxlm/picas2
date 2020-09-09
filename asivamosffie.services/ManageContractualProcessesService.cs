@@ -100,9 +100,9 @@ namespace asivamosffie.services
              
             //TODO: PENDIENTE Numero comite Fiducuario Fecha Comite Fiducuario
             return await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
-                    .Include(r => r.DisponibilidadPresupuestal)
-                    .Include(r => r.Contratista)
-                    .Include(r => r.ContratacionProyecto)
+                .Include(r => r.DisponibilidadPresupuestal)
+                .Include(r => r.Contratista).Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.Proyecto).ThenInclude(r => r.ProyectoAportante)
                         .ThenInclude(r => r.Proyecto)
                                .ThenInclude(r => r.ProyectoAportante) 
                                   .ThenInclude(r => r.Aportante)
