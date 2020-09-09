@@ -180,6 +180,7 @@ namespace asivamosffie.services
                 contratacionOld.UsuarioModificacion = pContratacion.UsuarioCreacion;
                 //Registros
                 contratacionOld.RutaMinuta = strFilePatch;
+                contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
                 contratacionOld.RutaMinuta = pContratacion.RutaMinuta;
