@@ -33,6 +33,9 @@
         public string YearVigente { get; set; }
 
         public bool YearSiguienteEsVigente { get; set; }
+
         public string DirectoryBaseOrdeELegibilidad { get; set; }
+         
+        public string DirectoryBaseContratacionMinuta { get; set; }
     }
 }

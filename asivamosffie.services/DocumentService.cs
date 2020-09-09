@@ -71,6 +71,30 @@ namespace asivamosffie.services
 
         }
 
+
+        public async Task<bool> SaveFileContratacion(IFormFile pFile, string pFilePatch ,int idOrigen)
+        {
+            try
+            {
+                if (!Directory.Exists(pFilePatch))
+                {
+                    Directory.CreateDirectory(pFilePatch);
+                }
+                var streamFile = new FileStream(pFilePatch + "/" + idOrigen, FileMode.Create);
+                using (streamFile)
+                {
+                    await pFile.CopyToAsync(streamFile);
+           
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
         public async  Task <List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1")
         {
             return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();

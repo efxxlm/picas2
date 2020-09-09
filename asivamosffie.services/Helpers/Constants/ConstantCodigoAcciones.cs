@@ -60,6 +60,8 @@
         public const string Crear_Edit_Sesion_Observacion_Proyecto = "62";
 
         public const string Eliminar_Comite_Tecnico = "64";
-       
-    }
+
+
+        public const string Registrar_Tramite_Contratacion = "68";
+    } 
 }

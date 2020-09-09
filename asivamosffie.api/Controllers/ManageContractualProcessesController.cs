@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using asivamosffie.model.APIModels;
+using System.IO;
+using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
 {
@@ -14,11 +17,12 @@ namespace asivamosffie.api.Controllers
     public class ManageContractualProcessesController : ControllerBase
     {
         public readonly IManageContractualProcessesService _manageContractualProcessesService;
+        private readonly IOptions<AppSettings> _settings;
 
-
-        public ManageContractualProcessesController(IManageContractualProcessesService IManageContractualProcessesService)
+        public ManageContractualProcessesController(IOptions<AppSettings> settings, IManageContractualProcessesService IManageContractualProcessesService)
         {
             _manageContractualProcessesService = IManageContractualProcessesService;
+            _settings = settings;
         }
 
         [Route("GetListSesionComiteSolicitud")]
@@ -36,6 +40,26 @@ namespace asivamosffie.api.Controllers
             var result = await _manageContractualProcessesService.GetContratacionByContratacionId(pContratacionId);
             return result;
         }
+
+
+        [Route("RegistrarTramiteContratacion")]
+        [HttpPut]
+        public async Task<IActionResult> RegistrarTramiteContratacion([FromBody] Contratacion pContratacion , IFormFile pFile)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
+                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion , pFile , _settings.Value.DirectoryBase , _settings.Value.DirectoryBaseContratacionMinuta);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
          
     }
 }
