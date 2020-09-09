@@ -2,37 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
+import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { GrillaDisponibilidadPresupuestal } from 'src/app/_interfaces/budgetAvailability';
 
-export interface Solicitudes {
-  id: number;
-  fecha: string;
-  tipo: string;
-  numero: string;
-  opcionPorContratar: string;
-  valorSolicitado: number;
-  estado: string;
-}
-
-const ELEMENT_DATA: Solicitudes[] = [
-  {
-    id: 1,
-    fecha: '22/06/2020',
-    tipo: 'Contratación',
-    numero: 'PI_002',
-    opcionPorContratar: 'Obra',
-    valorSolicitado: 400000000,
-    estado: 'Sin registrar'
-  },
-  {
-    id: 2,
-    fecha: '23/06/2020',
-    tipo: 'Modificación contractual ',
-    numero: 'CO_001',
-    opcionPorContratar: 'Obra',
-    valorSolicitado: 60000000,
-    estado: 'Sin registrar'
-  }
-];
 
 @Component({
   selector: 'app-tabla-crear-solicitud-tradicional',
@@ -43,6 +17,8 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
 
   verAyuda = false;
 
+  listaSolicitudes: GrillaDisponibilidadPresupuestal[] = [];
+
   displayedColumns: string[] = [
     'fecha',
     'tipo',
@@ -52,7 +28,7 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
     'estado',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -62,9 +38,22 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+                private budgetAvailabilityService: BudgetAvailabilityService
+             )
+  {
+
+  }
 
   ngOnInit(): void {
+
+    this.budgetAvailabilityService.getGridBudgetAvailability()
+      .subscribe( response => {
+        this.listaSolicitudes = response.value;
+        this.dataSource = new MatTableDataSource( this.listaSolicitudes) ;
+        console.log( response );
+      })
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

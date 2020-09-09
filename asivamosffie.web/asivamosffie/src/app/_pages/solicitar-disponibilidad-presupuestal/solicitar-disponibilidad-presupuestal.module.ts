@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from './../../material/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
 
 import { QuillModule } from 'ngx-quill';
 
@@ -28,6 +28,7 @@ import { TablaCrearSolicitudEspecialComponent } from './components/tabla-crear-s
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    FormsModule,
     SolicitarDisponibilidadPresupuestalRoutingModule,
     QuillModule.forRoot()
   ]

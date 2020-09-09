@@ -29,8 +29,8 @@
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="tipo">
                                         <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
-                                            [value]="tipoSolicitud.value">
-                                            {{ tipoSolicitud.name }}
+                                            [value]="tipoSolicitud">
+                                            {{ tipoSolicitud.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
 
-                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value === 1">
+                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '1'">
                     <h2 class="card-subTitle">Expensas</h2>
                     <div class="row">
                         <div class="col-md-8">
@@ -114,8 +114,8 @@
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="departemento">
                                             <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
-                                                [value]="tipoSolicitud.value">
-                                                {{ tipoSolicitud.name }}
+                                                [value]="tipoSolicitud">
+                                                {{ tipoSolicitud.nombre }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -158,7 +158,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value === 2">
+                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '2'">
                     <h2 class="card-subTitle">Otros costos/Servicios</h2>
                     <div class="row">
                         <div class="col-md-8">

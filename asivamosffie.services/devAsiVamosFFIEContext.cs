@@ -844,10 +844,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Observacion)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.OpcionContratarCodigo)
                     .IsRequired()
                     .HasMaxLength(100)

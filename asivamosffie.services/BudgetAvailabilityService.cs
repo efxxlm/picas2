@@ -69,7 +69,9 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _context.DisponibilidadPresupuestal.Where(r => !r.Eliminado).ToListAsync();
+                return await _context.DisponibilidadPresupuestal.Where(r => !r.Eliminado)
+                                    
+                                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -82,7 +84,9 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _context.DisponibilidadPresupuestal.FindAsync(id);
+                return await _context.DisponibilidadPresupuestal.Where( d => d.DisponibilidadPresupuestalId == id) 
+                                    .Include( r => r.DisponibilidadPresupuestalProyecto )
+                                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -182,7 +186,6 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalAntiguo.FechaDdp = DP.FechaDdp;
                     disponibilidadPresupuestalAntiguo.NumeroDdp = DP.NumeroDdp;
                     disponibilidadPresupuestalAntiguo.RutaDdp = DP.RutaDdp;
-                    disponibilidadPresupuestalAntiguo.Observacion = DP.Observacion;
                     disponibilidadPresupuestalAntiguo.Eliminado = false;
 
                     _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestalAntiguo);

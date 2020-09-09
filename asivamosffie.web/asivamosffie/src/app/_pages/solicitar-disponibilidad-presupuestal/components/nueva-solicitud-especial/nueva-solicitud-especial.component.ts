@@ -50,8 +50,6 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // this.addressForm = this.createForm();
-
     this.commonService.listaTipoDisponibilidadPresupuestal().subscribe(respuesta => {
       this.tipoSolicitudArray = respuesta;
     })

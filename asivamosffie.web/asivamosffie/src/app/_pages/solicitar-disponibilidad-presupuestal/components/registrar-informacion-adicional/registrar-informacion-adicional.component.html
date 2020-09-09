@@ -22,7 +22,7 @@
         </p>
     </div>
 
-    <mat-card class="shipping-card var-main-gris mt-1em">
+    <mat-card class="shipping-card var-main-gris mt-1em" style="display: none;">
         <mat-card-content>
             <p><b>DDP:</b>DDP_PI_007</p>
             <p><b>Valor DDP:</b> $60.000.000</p>
@@ -30,81 +30,85 @@
             <p>Se realiza adición de recursos para obras complementarias</p>
         </mat-card-content>
     </mat-card>
+    
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style" *ngFor=" let proyecto of listaProyectos ">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        {{ proyecto.llaveMen }} - {{ proyecto.institucionEducativa.nombre }} - {{ proyecto.sede.nombre }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
 
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    LL987654 - I.E Juan Bosco - Sede Simón Bolivar
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+                <p class="text-center color-mainColor departamento">Atlántico/ {{ proyecto.localizacionIdMunicipioNavigation.descripcion }}</p>
+                <mat-card class="shipping-card var-main-gris sub-card">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text">
+                            Aportantes
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content  >
+                        <div class="row">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante ">
+                                <p class="mb1-em"><b>Aportante 1</b></p>
 
-            <p class="text-center color-mainColor departamento">Atlántico/Sabanagrande</p>
-            <mat-card class="shipping-card var-main-gris sub-card">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text">
-                        Aportantes
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="row">
-                        <div class="col-md-6 mb-1em">
-                            <p class="mb1-em"><b>Aportante 1</b></p>
+                                <p>
+                                    <b>Tipo de aportante:</b>
+                                    {{ aportante.aportante.tipoAportanteId }}
+                                </p>
+                                <p>
+                                    <b>Aportante:</b>
+                                    {{ aportante.aportante.nombreAportanteId }}
+                                </p>
+                                <p>
+                                    <b>Valor del aportante:</b>
+                                    {{ aportante.valorTotalAportante | currency }}
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
 
-                            <p>
-                                <b>Tipo de aportante:</b>
-                                FFIE
-                            </p>
-                            <p>
-                                <b>Aportante:</b>
-                                FFIE
-                            </p>
-                            <p>
-                                <b>Valor del aportante:</b>
-                                $60.000.000
-                            </p>
+
+                <div class="row justify-content-center mt-2em mb-2em">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label for="plazoMeses" class="label-left">Plazo meses</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #plazoMeses type="number" min="1" max="999" maxlength="3" required
+                                        [(ngModel)]="proyecto.plazoMeses" name="plazoMeses" (keypress)="validateNumberKeypress($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                </mat-form-field>
+                                <span class="contador">{{3 - plazoMeses.value.length}}</span>
+                            </div>
                         </div>
                     </div>
-                </mat-card-content>
-            </mat-card>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label for="plazoDias" class="label-left">Plazo días</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #plazoDias type="number" min="1" max="99" maxlength="2" required
+                                        [(ngModel)]="proyecto.plazoDias" name="plazoDias"  (keypress)="validateNumberKeypress($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                </mat-form-field>
+                                <span class="contador">{{2 - plazoDias.value.length}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        </mat-expansion-panel>
 
-    </mat-accordion>
+            </mat-expansion-panel>
+
+        </mat-accordion>
 
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-        <div class="row justify-content-center mt-2em mb-2em">
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="pr-1">
-                        <label for="plazoMeses" class="label-left">Plazo meses</label>
-                    </div>
-                    <div class="col d-flex">
-                        <mat-form-field class="full-width">
-                            <input matInput #plazoMeses type="number" min="1" max="999" maxlength="3" required
-                                formControlName="plazoMeses" (keypress)="validateNumberKeypress($event)"
-                                onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                        </mat-form-field>
-                        <span class="contador">{{3 - plazoMeses.value.length}}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="pr-1">
-                        <label for="plazoDias" class="label-left">Plazo días</label>
-                    </div>
-                    <div class="col d-flex">
-                        <mat-form-field class="full-width">
-                            <input matInput #plazoDias type="number" min="1" max="99" maxlength="2" required
-                                formControlName="plazoDias" (keypress)="validateNumberKeypress($event)"
-                                onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                        </mat-form-field>
-                        <span class="contador">{{2 - plazoDias.value.length}}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="d-flex align-items-center">
             <div class="text-area-quill">
                 <label for="objeto" class="text-area-quill--label">Objeto</label>

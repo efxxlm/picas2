@@ -34,6 +34,9 @@
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
+        public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
+        public const string Eliminar_Disponibilidad_Presupuestal = "33";
+        public const string Crear_Editar_DP_Proyecto = "34";
 
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
         public const string Crear_Editar_SesionComiteTema = "38";
@@ -61,5 +64,6 @@
 
         public const string Eliminar_Comite_Tecnico = "64"; 
         public const string Vertificar_Tema_Compromisos = "65";
+        
     }
 }

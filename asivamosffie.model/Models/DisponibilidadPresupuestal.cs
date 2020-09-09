@@ -22,13 +22,14 @@ namespace asivamosffie.model.Models
         public DateTime? FechaDdp { get; set; }
         public string NumeroDdp { get; set; }
         public string RutaDdp { get; set; }
-        public string Observacion { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public int? ContratacionId { get; set; }
 
+        public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
     }
 }
