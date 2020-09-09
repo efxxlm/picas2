@@ -91,15 +91,16 @@ namespace asivamosffie.services
                             && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
                             ).FirstOrDefault().Nombre;
 
-                        if (!(bool)contratacion.RegistroCompleto || contratacion.RegistroCompleto == null)
-                        {
-                            sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
-                        }
-                        else
-                        {
-                            sesionComiteSolicitud.EstadoDelRegistro = "Completo";
-                        }
-                        break;
+                        sesionComiteSolicitud.EstadoDelRegistro = contratacion.RegistroCompleto.ToString();
+                        //if (!(bool)contratacion.RegistroCompleto || contratacion.RegistroCompleto == null)
+                        //{
+                        //    sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
+                        //}
+                        //else
+                        //{
+                        //    sesionComiteSolicitud.EstadoDelRegistro = "Completo";
+                        //}
+                       break;
 
                     case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
 
