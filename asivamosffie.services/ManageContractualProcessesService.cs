@@ -79,7 +79,7 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoSolicitud.Contratacion:
                         Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
-                   sesionComiteSolicitud.Contratacion = contratacion;
+                  // sesionComiteSolicitud.Contratacion = contratacion;
 
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
