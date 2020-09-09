@@ -26,6 +26,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ComponenteUso> ComponenteUso { get; set; }
         public virtual DbSet<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
         public virtual DbSet<Contratacion> Contratacion { get; set; }
+        public virtual DbSet<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual DbSet<ContratacionProyecto> ContratacionProyecto { get; set; }
         public virtual DbSet<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
         public virtual DbSet<Contratista> Contratista { get; set; }
@@ -93,14 +94,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-//            }
-//        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -435,6 +429,26 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.Contratacion)
                     .HasForeignKey(d => d.ContratistaId)
                     .HasConstraintName("FK_Contratacion_Contratista");
+            });
+
+            modelBuilder.Entity<ContratacionObservacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ComiteTecnico)
+                    .WithMany(p => p.ContratacionObservacion)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
+                    .HasConstraintName("Fk_ComiteTecnicoId_ComiteTecnico");
+
+                entity.HasOne(d => d.Contratacion)
+                    .WithMany(p => p.ContratacionObservacion)
+                    .HasForeignKey(d => d.ContratacionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ContratacionId_Contratacion");
             });
 
             modelBuilder.Entity<ContratacionProyecto>(entity =>

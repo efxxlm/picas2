@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
+       Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(ContratacionObservacion pContratacionObservacion)
+             
         Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico);
 
         Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId);

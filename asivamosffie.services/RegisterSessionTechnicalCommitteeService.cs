@@ -348,17 +348,17 @@ namespace asivamosffie.services
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.TemaCompromiso)
-                                 //     .ThenInclude(r => r.Responsable)
+               //     .ThenInclude(r => r.Responsable)
                .Include(r => r.SesionComiteSolicitud)
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
-               //       .ThenInclude(r => r.ResponsableSesionParticipante)
+                      //       .ThenInclude(r => r.ResponsableSesionParticipante)
                       .FirstOrDefaultAsync();
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
             comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
 
 
             List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
-            List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r=> !(bool)r.Eliminado).Include(r=> r.Usuario).ToList();
+            List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r => !(bool)r.Eliminado).Include(r => r.Usuario).ToList();
 
             foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
             {
@@ -1347,7 +1347,7 @@ namespace asivamosffie.services
                 _context.SaveChanges();
                 return
                    new Respuesta
-                   { 
+                   {
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
@@ -1644,7 +1644,7 @@ namespace asivamosffie.services
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
                                 break;
- 
+
                             //[4:02 PM, 8/26/2020] Faber Ivolucion: se campo no tiene descripción
                             //[4:03 PM, 8 / 26 / 2020] Faber Ivolucion: no se si lo quitaron o ya en aparece algo en el control de cambios
                             //    [4:04 PM, 8 / 26 / 2020] JULIÁN MARTÍNEZ C: y el VALOR_CONTIZACION_CERRADA
@@ -2108,5 +2108,41 @@ namespace asivamosffie.services
 
 
         #endregion
+
+
+
+        public async Task<Respuesta> CrearObservacionProyecto(ContratacionObservacion pContratacionObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Contratacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                pContratacionObservacion.FechaCreacion = DateTime.Now;
+                _context.ContratacionObservacion.Add(pContratacionObservacion); 
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pContratacionObservacion.UsuarioCreacion, "CREAR OBSERVACION CONTRATACION")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pContratacionObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
     }
 }
