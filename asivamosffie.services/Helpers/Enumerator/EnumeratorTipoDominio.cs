@@ -77,7 +77,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Compromisos = 45,
         //RESPONSABLES DE TEMAS
-        Miembros_Comite_Tecnico = 46
+        Miembros_Comite_Tecnico = 46,
+        Estado_Solicitud_Disponibilidad_Presupuestal = 39
 
 
     }
