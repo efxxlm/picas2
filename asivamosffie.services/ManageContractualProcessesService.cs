@@ -53,10 +53,10 @@ namespace asivamosffie.services
 
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
-                   && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario 
+                   && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
                 ).ToListAsync();
 
-             
+
 
             ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
             || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
@@ -77,7 +77,7 @@ namespace asivamosffie.services
                 switch (sesionComiteSolicitud.TipoSolicitudCodigo)
                 {
                     case ConstanCodigoTipoSolicitud.Contratacion:
-                        Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+                        Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
                         //  sesionComiteSolicitud.Contratacion = contratacion;
 
@@ -98,10 +98,10 @@ namespace asivamosffie.services
                         else
                         {
                             sesionComiteSolicitud.EstadoRegistro = true;
-                            sesionComiteSolicitud.EstadoDelRegistro = "Completo"; 
+                            sesionComiteSolicitud.EstadoDelRegistro = "Completo";
                         }
-               
-                       break;
+
+                        break;
 
                     case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
 
@@ -132,7 +132,7 @@ namespace asivamosffie.services
                       .Include(r => r.Contratista)
                       .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
-                            .ThenInclude(r => r.ProyectoAportante) 
+                            .ThenInclude(r => r.ProyectoAportante)
                     .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                               .ThenInclude(r => r.InstitucionEducativa)
@@ -158,13 +158,15 @@ namespace asivamosffie.services
 
             if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
             {
-                contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
+                if (allDigits)
+                {
+                    contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                }
             }
-
-
             return contratacion;
         }
-         
+
         public async Task<Respuesta> RegistrarTramiteContratacion(Contratacion pContratacion, IFormFile pFile, string pDirectorioBase, string pDirectorioMinuta)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contratacion, (int)EnumeratorTipoDominio.Acciones);
