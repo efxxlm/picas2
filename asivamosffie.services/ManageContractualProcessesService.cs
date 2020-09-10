@@ -149,7 +149,10 @@ namespace asivamosffie.services
                 .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                 .Include(r => r.ComiteTecnico).FirstOrDefault();
 
-          
+            if (!string.IsNullOrEmpty(contratacion.TipoContratacionCodigo))
+            { 
+               contratacion.TipoContratacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar && r.Codigo == contratacion.TipoContratacionCodigo).FirstOrDefault().Nombre;
+            } 
             if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
             {
                 sesionComiteSolicitud = null;
@@ -171,7 +174,14 @@ namespace asivamosffie.services
                 {
                     contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
                 }
+            } 
+            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+            {
+                ContratacionProyecto.Proyecto.TipoIntervencionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+             
             }
+
+
             return contratacion;
         }
 
