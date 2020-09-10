@@ -54,6 +54,19 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("UpdateStatus")]
+        [HttpGet]
+        public async Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status)
+        {
+            try
+            {
+                return await _managementCommitteeReportService.UpdateStatus(sesionComiteTecnicoCompromisoId,status);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [Route("CreateOrEditReportProgress")]
         [HttpPost]
