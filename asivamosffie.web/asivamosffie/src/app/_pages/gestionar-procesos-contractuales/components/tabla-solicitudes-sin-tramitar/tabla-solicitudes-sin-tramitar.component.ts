@@ -27,6 +27,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   ngOnInit() {
     this.$data.subscribe( resp => {
+      let dataTable = [];
       resp.push(
         {
           "numeroSolicitud": "CO_003",
@@ -73,8 +74,14 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
           "sesionSolicitudVoto": []
         }
       )
-      console.log( resp );
-      this.dataSource = new MatTableDataSource( resp );
+      
+      for ( let solicitud of resp ) {
+        if ( solicitud.estadoCodigo === '2' ) {
+          dataTable.push( solicitud )
+        }
+      }
+
+      this.dataSource = new MatTableDataSource( dataTable );
       this.dataSource.paginator              = this.paginator;
       this.dataSource.sort                   = this.sort;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

@@ -10,7 +10,7 @@
   border-bottom: solid .5px;
     padding: .5em;
     height: 20px;
-    width: 45em;
+    width: 55em;
     max-width: calc(100% - 9em);
     margin-right: 0.5em;
     display: inline-block;
@@ -24,7 +24,7 @@
 }
 
 .w-60 {
-  width: 60%;
+  width: 73%;
 };
 
 .w-20 {
@@ -45,4 +45,9 @@
 .mr-label {
   margin-right: 0.5em;
   margin-top: 1.5em;
+}
+
+.align-text {
+  margin-right: 7em;
+  color: #757575;
 }
