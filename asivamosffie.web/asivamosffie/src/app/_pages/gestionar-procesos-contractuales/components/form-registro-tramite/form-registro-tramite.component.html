@@ -28,10 +28,10 @@
                     (onContentChanged)="maxLength($event, 2000)" 
                     formControlName="observaciones"></quill-editor>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null">
-        {{3000 - textoLimpio(dataFormulario.get('observaciones').value)}}
+        {{2000 - textoLimpio(dataFormulario.get('observaciones').value)}}
       </span>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null">
-        3000
+        2000
       </span>
     </div>
 
@@ -52,8 +52,11 @@
                 type="file" 
                 id="file" 
                 formControlName="minuta" 
-                accept=".doc,.docx">
+                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
       </div>
+    </div>
+    <div class="container text-center">
+      <p class="align-text"><small>Adjunte el documento que contenga la minuta del contrato</small></p>
     </div>
 
     <div class="text-center w-90">

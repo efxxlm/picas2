@@ -111,7 +111,7 @@ export class FormModificacionContractualComponent implements OnInit {
   crearFormulario () {
     this.form = this.fb.group({
       fechaEnvioTramite: [ null, Validators.required ],
-      observaciones    : [ null, Validators.required ],
+      observaciones    : [ null ],
       minuta           : [ null ],
       minutaFile       : [ null ]
     });

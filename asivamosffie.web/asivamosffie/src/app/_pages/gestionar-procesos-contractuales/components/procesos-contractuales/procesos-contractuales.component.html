@@ -34,7 +34,7 @@
             Recibidas sin tramitar ante fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-solicitudes-sin-tramitar [data]="dataSinTramitar" [enviadasFiduciaria]="true"></app-tabla-solicitudes-sin-tramitar>
+        <app-tabla-solicitudes-sin-tramitar [$data]="$data"></app-tabla-solicitudes-sin-tramitar>
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
@@ -43,7 +43,7 @@
             Enviadas a la fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-solicitudes-sin-tramitar [data]="dataEnviadasFiduciaria" [enviadasFiduciaria]="false"></app-tabla-solicitudes-sin-tramitar>
+        <app-tabla-solicitudes-enviadas [$data]="$data"></app-tabla-solicitudes-enviadas>
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">

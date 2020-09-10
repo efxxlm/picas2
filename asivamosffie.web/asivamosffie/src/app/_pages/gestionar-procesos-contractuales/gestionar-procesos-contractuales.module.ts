@@ -20,10 +20,11 @@ import { TablaRecursosPagadosComponent } from './components/tabla-recursos-pagad
 import { TablaOtrosDescuentosComponent } from './components/tabla-otros-descuentos/tabla-otros-descuentos.component';
 import { FormEjecucionFinancieraComponent } from './components/form-ejecucion-financiera/form-ejecucion-financiera.component';
 import { FormRegistroTramiteComponent } from './components/form-registro-tramite/form-registro-tramite.component';
+import { TablaSolicitudesEnviadasComponent } from './components/tabla-solicitudes-enviadas/tabla-solicitudes-enviadas.component';
 
 
 @NgModule({
-  declarations: [ProcesosContractualesComponent, TablaSolicitudesSinTramitarComponent, FormContratacionComponent, FormAportantesComponent, FormModificacionContractualComponent, TablaProyectosAsociadosComponent, FormLiquidacionComponent, TablaRecursosCompartidosComponent, FormRecursosCompartidosComponent, TablaRecursosAportantesComponent, FormRecursosPagadosComponent, TablaRecursosPagadosComponent, TablaOtrosDescuentosComponent, FormEjecucionFinancieraComponent, FormRegistroTramiteComponent],
+  declarations: [ProcesosContractualesComponent, TablaSolicitudesSinTramitarComponent, FormContratacionComponent, FormAportantesComponent, FormModificacionContractualComponent, TablaProyectosAsociadosComponent, FormLiquidacionComponent, TablaRecursosCompartidosComponent, FormRecursosCompartidosComponent, TablaRecursosAportantesComponent, FormRecursosPagadosComponent, TablaRecursosPagadosComponent, TablaOtrosDescuentosComponent, FormEjecucionFinancieraComponent, FormRegistroTramiteComponent, TablaSolicitudesEnviadasComponent],
   imports: [
     CommonModule,
     MaterialModule,

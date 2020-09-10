@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 
 @Component({
   selector: 'app-form-registro-tramite',
@@ -24,7 +25,8 @@ export class FormRegistroTramiteComponent implements OnInit {
     ]
   };
 
-  constructor ( private dialog: MatDialog ) {
+  constructor ( private dialog: MatDialog,
+                private procesosContractualesSvc: ProcesosContractualesService ) {
   }
 
   ngOnInit(): void {
@@ -70,9 +72,15 @@ export class FormRegistroTramiteComponent implements OnInit {
       return;
     };
 
-    let formData = new FormData();
-    formData.append( 'file', this.dataFormulario.get('minutaFile').value );
-    this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+    const formulario = {
+      FechaEnvioDocumentacion: new Date(),
+      Observaciones: '123456'
+    }
+
+    this.procesosContractualesSvc.sendTramite( formulario, this.dataFormulario.get( 'minutaFile' ).value )
+      .subscribe( console.log );
+
+    //this.openDialog( 'La información ha sido guardada exitosamente.', '' );
   };
 
 };
