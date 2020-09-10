@@ -142,6 +142,10 @@ namespace asivamosffie.services
                 .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                 .Include(r => r.ComiteTecnico).FirstOrDefault();
 
+            if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString())) {
+                contratacion.FechaEnvioDocumentacion = DateTime.Now.Date.Add(new TimeSpan(0, 00, 0)); 
+            }
+      
             if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
             {
                 sesionComiteSolicitud = null;
