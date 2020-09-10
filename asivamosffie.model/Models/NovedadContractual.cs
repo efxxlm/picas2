@@ -23,5 +23,6 @@ namespace asivamosffie.model.Models
         public int? PlazoAdicionalMeses { get; set; }
         public string ClausulaModificar { get; set; }
         public string AjusteClausula { get; set; }
+        public int SolicitudId { get; set; }
     }
 }

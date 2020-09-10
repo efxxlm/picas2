@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using asivamosffie.services.PostParameters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -43,6 +44,21 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("GetAportantesByProyectoId")]
+        public async Task<IActionResult> GetAportantesByProyectoId(int proyectoId)
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetAportantesByProyectoId(proyectoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         [Route("CreateOrEditReportProgress")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditReportProgress([FromBody] CompromisoSeguimiento compromisoSeguimiento)
@@ -53,6 +69,26 @@ namespace asivamosffie.api.Controllers
 
                 compromisoSeguimiento.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditReportProgress(compromisoSeguimiento);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("CreateOrEditInfoAdditional")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditInfoAdditional([FromBody] PostParameter postParameter)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                string user = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional(postParameter, user);
                 return Ok(respuesta);
 
             }

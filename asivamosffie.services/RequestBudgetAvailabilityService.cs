@@ -3,11 +3,14 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using asivamosffie.services.PostParameters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,50 +18,25 @@ using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
-    public class RequestBudgetAvailabilityService: IRequestBudgetAvailabilityService
+    public class RequestBudgetAvailabilityService : IRequestBudgetAvailabilityService
     {
 
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly string _connectionString;
 
-        public RequestBudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService)
+
+
+        public RequestBudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConfiguration configuration)
         {
             _context = context;
             _commonService = commonService;
+            _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
+
 
         }
 
-        //Solicitudes de comite tecnico
-        public async Task<ActionResult<List<GridReuestCommittee>>> GetReuestCommittee()
-        {
-            try
-            {
 
-                return await (from ct in _context.Contratacion
-                              join dp in _context.DisponibilidadPresupuestal on  ct.ContratacionId equals dp.ContratacionId
-                              //where sc.EstadoCodigo == "18" //Aprobado por comite tecnico
-                              select new GridReuestCommittee
-                              {
-                                  ContratacionId = dp.ContratacionId,
-                                  FechaSolicitud = dp.FechaSolicitud,
-                                  TipoSolicitudCodigo = dp.TipoSolicitudCodigo,
-                                  TipoSolicitudText = _context.Dominio.Where(r => r.Codigo.Equals(dp.TipoSolicitudCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Solicitud).Select(r => r.Nombre).FirstOrDefault(),
-                                  NumeroSolicitud = dp.NumeroSolicitud,
-                                  OpcionContratar = _context.Dominio.Where(r => r.Codigo.Equals(dp.OpcionContratarCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).Select(r => r.Nombre).FirstOrDefault(),
-                                  ValorSolicitado = 0,
-                                  EstadoSolicitudCodigo = _context.Dominio.Where(r => r.Codigo.Equals(dp.EstadoSolicitudCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal).Select(r => r.Nombre).FirstOrDefault()
-                              })
-                              .OrderByDescending(sc => sc.FechaSolicitud)
-                              .ToListAsync();
-            }
-
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-        }
 
         //Avance compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento)
@@ -127,14 +105,18 @@ namespace asivamosffie.services
         }
 
 
-        //pendiente
-
-        public async Task<ActionResult<List<SesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int SesionComiteTecnicoCompromisoId)
+        //Detalle solicitud por id
+        public async Task<ActionResult<List<ContratacionProyectoAportante>>> GetAportantesByProyectoId(int proyectoId)
         {
-            try//GridComiteTecnicoCompromiso
+            try
             {
-                return await _context.SesionComiteTecnicoCompromiso.IncludeFilter(cm => cm.ComiteTecnico).Where(cm => (bool)!cm.Eliminado).ToListAsync();
+                return await (
+                                from ca in _context.ContratacionProyectoAportante
+                                join cfa in _context.CofinanciacionAportante on ca.ContratacionProyectoId equals cfa.CofinanciacionAportanteId
+                                where ca.ContratacionProyectoId == proyectoId && (bool)!ca.Eliminado 
+                                select ca).ToListAsync();
 
+               
             }
             catch (Exception)
             {
@@ -143,9 +125,111 @@ namespace asivamosffie.services
             }
         }
 
+        public Task<ActionResult<List<SesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        //Registrar informacion Adicional en una solicitud
+        public async Task<Respuesta> CreateOrEditInfoAdditional(PostParameter postParameter, string user)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Informacion_Adicional_Solicitud, (int)EnumeratorTipoDominio.Acciones);
+            DisponibilidadPresupuestal disponibilidadPresupuestal = null;
+            string strCrearEditar = string.Empty;
+
+            try
+            {
+                if (postParameter.plazoDias > 30)
+                    return respuesta = new Respuesta { IsSuccessful = false, Data = null, Code = ConstantMessagesSesionComiteTema.Error, Message = "El valor ingresado en dias no puede superior a 30" };
 
 
 
+                disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.FindAsync(postParameter.solicitudId);
+                if (disponibilidadPresupuestal != null)
+                {
+                    disponibilidadPresupuestal.Objeto = postParameter.Objeto;
+                    disponibilidadPresupuestal.PlazoDias = postParameter.plazoDias;
+                    disponibilidadPresupuestal.PlazoMeses = postParameter.plazoMeses;
+                    disponibilidadPresupuestal.AportanteId = postParameter.aportanteId;
+                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
 
+                }
+                   
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, user, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.Error, idAccion, user, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+
+        //Solicitudes de comite tecnico
+        public async Task<List<CustonReuestCommittee>> GetReuestCommittee()
+        {
+            using (SqlConnection sql = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetBudgetAvailabilityRequest", sql))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    var response = new List<CustonReuestCommittee>();
+                    await sql.OpenAsync();
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            response.Add(MapToValue(reader));
+                        }
+                    }
+
+                    return response;
+                }
+            }
+        }
+
+        public CustonReuestCommittee MapToValue(SqlDataReader reader)
+        {
+            return new CustonReuestCommittee()
+            {
+                ContratacionId = (int)reader["ContratacionId"],
+                DisponibilidadPresupuestalId = (int)reader["DisponibilidadPresupuestalId"],
+                SesionComiteSolicitudId = (int)reader["SesionComiteSolicitudId"],
+                FechaSolicitud = (DateTime)reader["FechaSolicitud"],
+                TipoSolicitudText = reader["TipoSolicitudText"].ToString(),
+                NumeroSolicitud = reader["NumeroSolicitud"].ToString(),
+                OpcionContratar = reader["OpcionContratar"].ToString(),
+                ValorSolicitud = (decimal)reader["ValorSolicitud"],
+                FechaComite = (DateTime)reader["FechaComite"],
+
+            };
+        }
+
+        public Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal)
+        {
+            throw new NotImplementedException("No implementado");
+        }
     }
 }
