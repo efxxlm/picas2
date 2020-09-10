@@ -40,7 +40,13 @@ namespace asivamosffie.api.Controllers
             var result = await _manageContractualProcessesService.GetContratacionByContratacionId(pContratacionId);
             return result;
         }
- 
+        [HttpGet]
+        [Route("GetDDPBySesionComiteSolicitudID")]
+        public async Task<FileResult> GetDDPBySesionComiteSolicitudID([FromQuery] int  pSesionComiteSolicitudID)
+        {
+            return File(await _manageContractualProcessesService.GetDDPBySesionComiteSolicitudID(pSesionComiteSolicitudID), "application/pdf");
+        }
+
 
         [Route("CambiarEstadoSesionComiteSolicitud")]
         [HttpPut]

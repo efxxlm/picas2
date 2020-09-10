@@ -26,6 +26,7 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
+        private byte[] emptyArray;
 
         public ManageContractualProcessesService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
@@ -51,9 +52,12 @@ namespace asivamosffie.services
             _context.SaveChanges();
             return new Respuesta();
          }
-        
-        
-     
+
+
+        public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID) {
+             
+            return  new byte[0];
+        }
 
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
