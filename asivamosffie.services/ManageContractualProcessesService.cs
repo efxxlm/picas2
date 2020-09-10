@@ -177,8 +177,12 @@ namespace asivamosffie.services
             } 
             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
             {
-                ContratacionProyecto.Proyecto.TipoIntervencionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-             
+
+                bool allDigits = ContratacionProyecto.Proyecto.TipoIntervencionCodigo.All(char.IsDigit);
+                if (allDigits)
+                {
+                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo  = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                }
             }
 
 
