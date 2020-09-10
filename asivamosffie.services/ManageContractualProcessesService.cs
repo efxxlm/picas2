@@ -90,7 +90,7 @@ namespace asivamosffie.services
                             && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
                             ).FirstOrDefault().Nombre;
 
-                        if (contratacion.RegistroCompleto == null || (bool)contratacion.RegistroCompleto)
+                        if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
                         {
                             sesionComiteSolicitud.EstadoRegistro = false;
                             sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
