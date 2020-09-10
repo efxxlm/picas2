@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 
 @Component({
   selector: 'app-form-contratacion',
@@ -70,8 +72,11 @@ export class FormContratacionComponent implements OnInit {
     }
   ]
 
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder,
+                private activatedRoute: ActivatedRoute,
+                private procesosContractualesSvc: ProcesosContractualesService ) {
     this.crearFormulario();
+    this.getContratacion( this.activatedRoute.snapshot.params.id );
   };
 
   ngOnInit(): void {
@@ -86,7 +91,12 @@ export class FormContratacionComponent implements OnInit {
     })
   };
 
-  
+  getContratacion ( id: number ) {
+
+    this.procesosContractualesSvc.getContratacion( id )
+      .subscribe( console.log );
+
+  };
 
   guardar () {
     console.log( this.form );
