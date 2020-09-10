@@ -53,7 +53,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 		Estado_Juridico_Predios = 25,
 		Tipo_Solicitud = 29,
-		EstadoComite = 38
+		EstadoComite = 38,
+
+		// Para disponibilidad presupuestal
+		Estado_Solicitud_Disponibilidad_Presupuestal = 39,
 
 	}
 }

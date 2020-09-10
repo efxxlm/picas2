@@ -1,7 +1,9 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using asivamosffie.services.QueryFilters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -39,9 +41,9 @@ namespace asivamosffie.services
                     Id = validacionPresupuestal.DisponibilidadPresupuestalId,
                     FechaSolicitud = validacionPresupuestal.FechaSolicitud,
                     NumeroSolicitud = validacionPresupuestal.NumeroSolicitud,
-                    TipoSolicitudCodigo = validacionPresupuestal.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(validacionPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud) : "",
-                    EstadoRegistro = (bool)validacionPresupuestal.RegistroCompleto,
-                    EstadoRegistroText = (bool)validacionPresupuestal.RegistroCompleto ? "Completo" : "Incompleto"
+                    TipoSolicitudCodigo = validacionPresupuestal.TipoSolicitudCodigo,
+                    TipoSolicitudText = validacionPresupuestal.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(validacionPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud) : "",
+                    EstadoRegistro = validacionPresupuestal.RegistroCompleto != null && validacionPresupuestal.RegistroCompleto != false ? true: false
                 };
 
                 ListGrillaDisponibilidadPresupuestal.Add(disponibilidadPresupuestal);
@@ -51,44 +53,116 @@ namespace asivamosffie.services
         }
 
 
-        //validar
+        //Detalle validacion presupiestal
         public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId)
         {
-            List<DisponibilidadPresupuestal> ListDP = await _context.DisponibilidadPresupuestal.Where(r => !r.Eliminado && r.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).ToListAsync();
-            List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
-
-            foreach (var detailDP in ListDP)
+            try
             {
-                DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
-                {
-                    //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
-                    Id = detailDP.DisponibilidadPresupuestalId,
-                    NumeroSolicitud = detailDP.NumeroSolicitud,
-                    TipoSolicitudCodigo = detailDP.TipoSolicitudCodigo,
-                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud) : "",
-                    NumeroDDP = detailDP.NumeroDdp,
-                    RubroPorFinanciar = "", // TODO: pendiente validar de donde biene este campo
-                    Objeto = detailDP.Objeto,
-                    ValorSolicitud = detailDP.ValorSolicitud,
-                    // Si es aproboda por comite tecnico se debe mostrar la fecha en la que fue aprobada. traer desde dbo.[Sesion]
-                    FechaComiteTecnico = (bool)detailDP.NumeroSolicitud.Contains("PI") ? detailDP.EstadoSolicitudCodigo == "1" ? detailDP.FechaDdp : DateTime.Now : null,// codigo 1, TipoDominioId = 31, TipoDominio, Lista = TipoSolicitud
-                                                                                                                                                                      
+                return null;
+                //return await _context.DisponibilidadPresupuestal.Include(x => x.DisponibilidadPresupuestalProyecto).Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).ToListAsync();
+            }
+            catch (Exception)
+            {
 
-                    //Aportantes
-
-                    //Fuentes
-
-                };
-
-                ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
+                throw;
             }
 
-
-            return ListDetailValidarDisponibilidadPresupuesal;
         }
 
 
 
+
+        //Devolver/Rechazar   TipoDominioId = 39 Codigo 3,2,6
+        public async Task<Respuesta> CreateOrEditObservations(ParametersFilter parametersFilter)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_DP, (int)EnumeratorTipoDominio.Acciones);
+
+            DisponibilidadPresupuestal  DP = null;
+
+            try
+            {
+
+                string strStatus = await _commonService.GetNombreDominioByCodigoAndTipoDominio(parametersFilter.newStatus, (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal);
+                DP = await _context.DisponibilidadPresupuestal.FindAsync(parametersFilter.requestId);
+
+                if (DP != null)
+                {
+
+                    DP.FechaModificacion = DateTime.Now;
+                    DP.UsuarioModificacion = parametersFilter.user;
+                    DP.EstadoSolicitudCodigo = parametersFilter.newStatus;
+                    DP.Observacion = parametersFilter.observation;
+                    _context.DisponibilidadPresupuestal.Update(DP);
+                }
+
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = DP,
+                    Code = ConstantMessagesDP.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesDP.OperacionExitosa, idAccion, parametersFilter.user, strStatus)
+
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesDP.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesDP.Error, idAccion, parametersFilter.user, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+        //Ver detalle Solicitud
+        public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetAvailabilityBudgetDetail(int solicitudId)
+        {
+            try
+            {
+                //var query = from dpPry in _context.DisponibilidadPresupuestalProyecto 
+                //            join proy in _context.Proyecto on dpPry.ProyectoId equals proy.ProyectoId
+                //            join pa in _context.ProyectoAportante on dpPry.ProyectoId equals pa.ProyectoId
+                //            join
+
+                return await (from dpProy in _context.DisponibilidadPresupuestalProyecto
+                              join dp in _context.DisponibilidadPresupuestal on dpProy.DisponibilidadPresupuestalId equals dp.DisponibilidadPresupuestalId
+                              where dp.DisponibilidadPresupuestalId == solicitudId
+                              select new DetailValidarDisponibilidadPresupuesal
+                              {
+                                  Id = dp.DisponibilidadPresupuestalId,
+                                  ProyectoId = dpProy.ProyectoId,
+                                  TipoSolicitudCodigo = dp.TipoSolicitudCodigo,
+                                  TipoSolicitudText = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(dp.TipoSolicitudCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Solicitud).Select(r => r.Nombre).FirstOrDefault(),
+                                  EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
+                                  EstadoSolicitudText = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(dp.EstadoSolicitudCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal).Select(r => r.Nombre).FirstOrDefault(),
+                                  Objeto = dp.Objeto,
+                                  ValorSolicitud = dp.ValorSolicitud,
+                                  //Si es DDP especial o DDP tradicional el rubro es "Proyecto de infraestructura" en este caso solo se estan creando dos típos de DDP
+                                  RubroPorFinanciar =  "Proyecto de infraestructura", 
+                                  PlazoMesesObra =  _context.InfraestructuraIntervenirProyecto.Where(inf => inf.ProyectoId == dpProy.ProyectoId).Select(s => s.PlazoMesesObra).FirstOrDefault(),
+                                  PlazoDiasObra = _context.InfraestructuraIntervenirProyecto.Where(inf => inf.ProyectoId == dpProy.ProyectoId).Select(s => s.PlazoDiasObra).FirstOrDefault(),
+                                  Observaciones = dp.Observacion,
+
+                                 
+                                  
+                              }).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
 
         //plantlla - rubro por financiar es infraestructura y el tipo de solicitud es contratación

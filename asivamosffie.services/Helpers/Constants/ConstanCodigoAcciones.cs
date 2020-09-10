@@ -27,5 +27,6 @@
         public const string Eliminar_Editar_Recursos_Control = "26";
 
         public const string Crear_Editar_Cofinanciacion = "31";
+        public const string Crear_Editar_Observacion_DP = "66";
     }
 }

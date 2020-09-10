@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using asivamosffie.model.APIModels;
+using asivamosffie.services.QueryFilters;
 
 namespace asivamosffie.api.Controllers
 {
@@ -18,6 +19,7 @@ namespace asivamosffie.api.Controllers
         private readonly IOptions<AppSettings> _settings;
         private readonly IConverter _converter;
 
+
         public AvailabilityBudgetProyectController(IOptions<AppSettings> settings, IConverter converter, IAvailabilityBudgetProyectService availabilityBudgetProyectService)
         {
             _availabilityBudgetProyectService = availabilityBudgetProyectService;
@@ -26,8 +28,8 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("GetAvailabilityBudgetProyect")]
-        public async Task<IActionResult> GetAvailabilityBudgetProyect()
+        [Route("GetBudgetavailabilityRequests")]
+        public async Task<IActionResult> GetBudgetavailabilityRequests()
         {
             try
             {
@@ -40,6 +42,47 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+
+        [Route("GetAvailabilityBudgetDetail")]
+        public async Task<IActionResult> GetAvailabilityBudgetDetail(int solicitudId)
+        {
+            try
+            {
+                var result = await _availabilityBudgetProyectService.GetAvailabilityBudgetDetail(solicitudId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+
+
+        [Route("CreateOrEditObservations")]
+        [HttpPost]
+        public async Task<Respuesta> CreateOrEditObservations([FromBody]  ParametersFilter parametersFilter)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string user = "forozco";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _availabilityBudgetProyectService.CreateOrEditObservations(parametersFilter);
+                return respuesta;
+                //
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+
+
+
 
         //Detalle de la solicitud
         [Route("GetDetailAvailabilityBudgetProyect")]
@@ -56,6 +99,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
 
         [HttpGet]
         [Route("StartDownloadPDF")]
