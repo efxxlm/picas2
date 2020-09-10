@@ -106,17 +106,24 @@ namespace asivamosffie.services
 
 
         //Detalle solicitud por id
-        public async Task<ActionResult<List<ContratacionProyectoAportante>>> GetAportantesByProyectoId(int proyectoId)
+        public async Task<ActionResult<List<ListAportantes>>> GetAportantesByProyectoId(int proyectoId)
         {
             try
             {
                 return await (
-                                from ca in _context.ContratacionProyectoAportante
-                                join cfa in _context.CofinanciacionAportante on ca.ContratacionProyectoId equals cfa.CofinanciacionAportanteId
-                                where ca.ContratacionProyectoId == proyectoId && (bool)!ca.Eliminado 
-                                select ca).ToListAsync();
+                                from ctp in _context.ContratacionProyecto
+                                join ct in _context.Contratacion on ctp.ContratacionId equals ct.ContratacionId
+                                join p in _context.Proyecto on ctp.ProyectoId equals p.ProyectoId
+                                join ca in _context.ContratacionProyectoAportante on ctp.ContratacionProyectoId equals ca.ContratacionProyectoId
+                                join cf in _context.CofinanciacionAportante on ca.CofinanciacionAportanteId equals cf.CofinanciacionAportanteId
+                                where p.ProyectoId == proyectoId 
+                                select new ListAportantes
+                                { 
+                                    
+                                }).ToListAsync();
 
-               
+
+
             }
             catch (Exception)
             {
