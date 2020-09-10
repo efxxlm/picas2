@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 
 @Component({
   selector: 'app-cancelar-ddp',
@@ -25,8 +26,9 @@ export class CancelarDdpComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  id: any;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService) {
     this.declararOnservaciones();
     this.minDate = new Date();
   }
@@ -58,7 +60,11 @@ export class CancelarDdpComponent implements OnInit {
 
   devolverSolicitud() {
     console.log(this.observaciones.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.observaciones.value};
+    this.disponibilidadServices.SetCancelDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
+      console.log(listas);
+      this.openDialog('', 'La información ha sido guardada exitosamente.');
+    });    
   }
 
 }

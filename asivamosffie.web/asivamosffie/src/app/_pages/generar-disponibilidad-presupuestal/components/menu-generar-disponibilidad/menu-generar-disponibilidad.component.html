@@ -29,15 +29,17 @@
   </div>
   <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngFor="let disponibilidad of listaDisponibilidades">
-      <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title sin-diligenciar"  [ngClass]="{'sin-diligenciar': disponibilidad.completo=='Incompleto', 'completo': disponibilidad.completo=='Completo'}">
+      <mat-expansion-panel-header class="expansion-style--header" *ngIf="disponibilidad.nombreEstado=='Con validación presupuestal' || disponibilidad.nombreEstado=='Devuelta por coordinación financiera' ||
+      disponibilidad.nombreEstado=='Con disponibilidad presupuestal'|| disponibilidad.nombreEstado=='Con disponibilidad cancelada'">
+        <mat-panel-title class="expansion-style--title sin-diligenciar" 
+        [ngClass]="{'sin-diligenciar': disponibilidad.completo=='Incompleto', 'completo': disponibilidad.completo=='Completo'}">
           {{disponibilidad.nombreEstado}}
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-tabla-con-validacion-presupuestal [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con validación presupuestal'"></app-tabla-con-validacion-presupuestal>
       <app-tabla-devuelta-por-coordinacion-financiera  [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Devuelta por coordinación financiera'"></app-tabla-devuelta-por-coordinacion-financiera>
       <app-tabla-con-disponibilidad-presupuestal [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con disponibilidad presupuestal'" ></app-tabla-con-disponibilidad-presupuestal>
-      <app-tabla-con-disponibilidad-cancelada  [disponibilidadPresupuestal]="disponibilidad" *ngIf="Con disponibilidad cancelada"></app-tabla-con-disponibilidad-cancelada>
+      <app-tabla-con-disponibilidad-cancelada  [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con disponibilidad cancelada'"></app-tabla-con-disponibilidad-cancelada>
     </mat-expansion-panel>    
   </mat-accordion>
 </section>

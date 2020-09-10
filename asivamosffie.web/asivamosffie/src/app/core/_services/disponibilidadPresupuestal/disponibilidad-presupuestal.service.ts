@@ -27,4 +27,17 @@ export class DisponibilidadPresupuestalService {
     var json = JSON.stringify(pdf[0]);
     return this.http.get<any>(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`);    
   }
+
+  CreateDDP(id)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/CreateDDP?id=${id}`,null);
+  }
+  SetReturnDDP(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetReturnDDP`,DisponibilidadPresupuestalObservacion);
+  }
+  SetCancelDDP(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetCancelDDP`,DisponibilidadPresupuestalObservacion);
+  }
 }

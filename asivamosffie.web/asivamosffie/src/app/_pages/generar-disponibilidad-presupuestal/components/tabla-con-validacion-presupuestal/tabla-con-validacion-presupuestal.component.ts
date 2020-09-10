@@ -35,6 +35,13 @@ export class TablaConValidacionPresupuestalComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    let elements:OrdenDelDia[]=[];
+    this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
+      elements.push({id:element.disponibilidadPresupuestalId,
+        fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
+        tipo:element.tipoSolicitud})
+    });
+    this.dataSource = new MatTableDataSource(elements);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
