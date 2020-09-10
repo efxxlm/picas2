@@ -79,8 +79,15 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoSolicitud.Contratacion:
                         Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
-                  // sesionComiteSolicitud.Contratacion = contratacion;
+                        // sesionComiteSolicitud.Contratacion = contratacion;
 
+                        sesionComiteSolicitud.EstaTramitado = false;
+
+                        if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString())) 
+                        {
+                            sesionComiteSolicitud.EstaTramitado = true;
+                        }
+                           
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
                         sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
@@ -142,10 +149,7 @@ namespace asivamosffie.services
                 .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                 .Include(r => r.ComiteTecnico).FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString())) {
-                contratacion.FechaEnvioDocumentacion = DateTime.Now.Date.Add(new TimeSpan(0, 00, 0)); 
-            }
-      
+          
             if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
             {
                 sesionComiteSolicitud = null;
