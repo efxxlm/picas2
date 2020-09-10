@@ -121,7 +121,7 @@ namespace asivamosffie.services
                     ValorSolicitado = dp.ValorSolicitud,
                     EstadoSolicitudCodigo = string.Empty, // Pendiente hacer la validacion
                     EstadoRegistro = dp.RegistroCompleto.Equals(true) ? "Completo" : ""
-
+                    
                 };
 
                 ListGrillaControlCronograma.Add(DisponibilidadPresupuestalGrilla);
