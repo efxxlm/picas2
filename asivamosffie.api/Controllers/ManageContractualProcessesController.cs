@@ -40,6 +40,25 @@ namespace asivamosffie.api.Controllers
             var result = await _manageContractualProcessesService.GetContratacionByContratacionId(pContratacionId);
             return result;
         }
+ 
+
+        [Route("CambiarEstadoSesionComiteSolicitud")]
+        [HttpPut]
+        public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteSolicitud.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
 
         [Route("RegistrarTramiteContratacion")]

@@ -34,6 +34,27 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
+        public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
+        { 
+            SesionComiteSolicitud sesionComiteSolicitudOld = await  _context.SesionComiteSolicitud.FindAsync(pSesionComiteSolicitud.SesionComiteSolicitudId);
+            sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+            sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
+            sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+
+            if (false) {
+                Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
+                contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                contratacion.FechaModificacion = DateTime.Now;
+                contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+            }
+             
+            _context.SaveChanges();
+            return new Respuesta();
+         }
+        
+        
+     
+
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             // Estado de la sesionComiteSolicitud
