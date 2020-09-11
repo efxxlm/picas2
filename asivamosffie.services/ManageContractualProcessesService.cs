@@ -37,21 +37,44 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
         {
-            SesionComiteSolicitud sesionComiteSolicitudOld = await _context.SesionComiteSolicitud.FindAsync(pSesionComiteSolicitud.SesionComiteSolicitudId);
-            sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
-            sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
-            sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
-            if (false)
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
+
+            try
             {
-                Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
-                contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                contratacion.FechaModificacion = DateTime.Now;
-                contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-            }
+                SesionComiteSolicitud sesionComiteSolicitudOld = await _context.SesionComiteSolicitud.FindAsync(pSesionComiteSolicitud.SesionComiteSolicitudId);
+                sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
+                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
-            _context.SaveChanges();
-            return new Respuesta();
+                if (false)
+                {
+                    Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
+                    contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                    contratacion.FechaModificacion = DateTime.Now;
+                    contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = false,
+                    IsValidation = true,
+                    Code = ConstantMessagesResourceControl.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, "", "ERROR CREAR CONTROL")
+                };
+            }
+            return new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesResourceControl.Error,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, "", "ERROR CREAR CONTROL")
+            };
         }
 
 
