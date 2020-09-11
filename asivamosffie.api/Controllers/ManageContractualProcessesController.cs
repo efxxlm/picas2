@@ -49,7 +49,7 @@ namespace asivamosffie.api.Controllers
 
 
         [Route("CambiarEstadoSesionComiteSolicitud")]
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
         {
             Respuesta respuesta = new Respuesta();

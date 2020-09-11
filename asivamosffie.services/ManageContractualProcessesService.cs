@@ -38,7 +38,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
         {
 
-            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -47,6 +47,7 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
+                //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion
                 if (false)
                 {
                     Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
@@ -55,6 +56,15 @@ namespace asivamosffie.services
                     contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                 }
                 _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = true,
+                    Code = ConstantMessagesResourceControl.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, pSesionComiteSolicitud.UsuarioCreacion, "CAMBIAR ESTADO SOLICITUD")
+                };
             }
             catch (Exception ex)
             {
@@ -64,17 +74,10 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = true,
                     Code = ConstantMessagesResourceControl.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, "", "ERROR CREAR CONTROL")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, pSesionComiteSolicitud.UsuarioCreacion, ex.InnerException.ToString())
                 };
             }
-            return new Respuesta
-            {
-                IsSuccessful = false,
-                IsException = false,
-                IsValidation = true,
-                Code = ConstantMessagesResourceControl.Error,
-                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, "", "ERROR CREAR CONTROL")
-            };
+           
         }
 
 
