@@ -205,6 +205,78 @@ namespace asivamosffie.services
         }
 
 
+        //Registrar nueva solicitud DDp Especial
+        public async Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_DDP_Especial, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            DisponibilidadPresupuestal disponibilidadPresupuestalAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(disponibilidadPresupuestal.DisponibilidadPresupuestalId.ToString()) || disponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
+                {
+                    //Auditoria
+
+                    strCrearEditar = "REGISTRAR SOLICITUD DDP ESPECIAL";
+                    disponibilidadPresupuestal.FechaCreacion = DateTime.Now;
+                    disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    disponibilidadPresupuestal.Eliminado = false;
+
+                    disponibilidadPresupuestal.EstadoSolicitudCodigo = "8"; // Sin registrar => TipoDominioId = 39
+                    disponibilidadPresupuestal.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
+                    disponibilidadPresupuestal.Objeto = disponibilidadPresupuestal.Objeto;
+                    disponibilidadPresupuestal.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
+                    _context.DisponibilidadPresupuestal.Add(disponibilidadPresupuestal);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT SOLICITUD DDP ESPECIAL";
+                    disponibilidadPresupuestalAntiguo = _context.DisponibilidadPresupuestal.Find(disponibilidadPresupuestal.DisponibilidadPresupuestalId);
+
+                    //Auditoria
+                    disponibilidadPresupuestalAntiguo.UsuarioModificacion = disponibilidadPresupuestal.UsuarioModificacion;
+                    disponibilidadPresupuestalAntiguo.Eliminado = false;
+
+
+                    //Registros
+                    disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto;
+                    disponibilidadPresupuestal.EstadoSolicitudCodigo = disponibilidadPresupuestal.EstadoSolicitudCodigo;
+                    disponibilidadPresupuestalAntiguo.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
+                    disponibilidadPresupuestalAntiguo.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
+                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestalAntiguo);
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, disponibilidadPresupuestal.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
 
         //Solicitudes de comite tecnico
         public async Task<List<CustonReuestCommittee>> GetReuestCommittee()

@@ -66,7 +66,8 @@
         public const string Eliminar_Comite_Tecnico = "64"; 
         public const string Vertificar_Tema_Compromisos = "65";
         public const string Registrar_Informacion_Adicional_Solicitud = "67";
-        
+        public const string Crear_Editar_Solicitud_DDP_Especial = "44";
+
 
 
 

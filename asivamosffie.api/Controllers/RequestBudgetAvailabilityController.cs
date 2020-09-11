@@ -104,6 +104,8 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+
         [Route("CreateOrEditInfoAdditional")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditInfoAdditional([FromBody] PostParameter postParameter)
@@ -123,5 +125,27 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+
+        [Route("CreateOrEditDDPRequest")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditDDPRequest([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                disponibilidadPresupuestal.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateOrEditDDPRequest(disponibilidadPresupuestal);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }
