@@ -11,17 +11,27 @@
 <div class="margin-90">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
+    <ng-container matColumnDef="fechaOrdenDia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaOrdenDia | date: 'dd/MM/yyyy' }} </td>
+    </ng-container>
+
     <ng-container *ngFor="let columna of ELEMENT_DATA" [matColumnDef]="columna.name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.titulo }} </th>
-      <td mat-cell *matCellDef="let element" align="center"> <b>{{element[columna.name]}}</b> </td>
+      <td mat-cell *matCellDef="let element" align="center"> {{element[columna.name]}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaCumplimiento">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha limite de cumplimiento </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaCumplimiento | date: 'dd/MM/yyyy' }} </td>
     </ng-container>
 
     <ng-container matColumnDef="estadoCompromiso">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del compromiso </th>
       <td mat-cell *matCellDef="let element" align="center">
-        <span *ngIf="element.estadoCompromiso.sinAvance">Sin avance</span>
-        <span *ngIf="element.estadoCompromiso.enProceso">En proceso</span>
-        <span *ngIf="element.estadoCompromiso.finalizado">Finalizada</span>
+        <span *ngIf="element.estadoCompromisoText === 'Sin iniciar'">Sin avance</span>
+        <span *ngIf="element.estadoCompromisoText === 'En proceso'">En proceso</span>
+        <span *ngIf="element.estadoCompromisoText === 'Convocada'">Finalizada</span>
       </td>
     </ng-container>
   
@@ -32,24 +42,26 @@
         <button mat-raised-button 
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoCompromiso.sinAvance"
-                (click)="reportProgress( element )">
+                *ngIf="element.estadoCompromisoText === 'Sin iniciar'"
+                (click)="reportProgress( element.comiteTecnicoId )">
           Reportar avance
         </button>
 
-        <button mat-raised-button 
+        <!--
+          <button mat-raised-button 
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.estadoCompromiso.enProceso"
                 (click)="reportProgress( element )">
                 Ver detalle/Editar
-        </button>
+          </button>
+        -->
   
         <button mat-raised-button 
                 color="accent"
                 class="btn-table"
-                *ngIf="element.estadoCompromiso.finalizado"
-                (click)="reportProgress( element )">
+                *ngIf="element.estadoComiteText === 'Convocada'"
+                (click)="reportProgress( element.comiteTecnicoId )">
           Ver detalle
         </button>
   

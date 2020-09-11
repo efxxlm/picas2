@@ -11,7 +11,7 @@ const routes: Routes = [
     component: CompromisosActasComponent
   },
   {
-    path: 'reporteAvanceCompromiso',
+    path: 'reporteAvanceCompromiso/:id',
     component: ReporteAvanceCompromisoComponent
   },
   {

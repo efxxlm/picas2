@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="estadoComite.length > 0">
 
   <div class="text-right">
     <a routerLink="/compromisosActasComite" mat-button color="primary" class="btn-regresar">
@@ -6,7 +6,7 @@
     </a>
   </div>
 
-  <div *ngIf="sinAvanceBoolean">
+  <div *ngIf="estadoComite === '1'">
     <div class="text-center">
       <h1 class="title-menu--h1">
         Reportar avance compromiso {{ compromiso.numeroComite }}
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div *ngIf="enProcesoBoolean">
+  <div *ngIf="estadoComite === '3'">
     <div class="text-center">
       <h1 class="title-menu--h1">
         Ver detalle/ Editar avance compromiso {{ compromiso.numeroComite }}
@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <div *ngIf="finalizadoBoolean">
+  <div *ngIf="estadoComite === '2'">
     <div class="text-center">
       <h1 class="title-menu--h1">
         Ver detalle compromiso {{ compromiso.numeroComite }}
@@ -45,9 +45,9 @@
     </div>
   </div>
 
-  <app-tabla-detalle-compromiso *ngIf="finalizadoBoolean || enProcesoBoolean" [dataTable]="compromiso"></app-tabla-detalle-compromiso>
+  <app-tabla-detalle-compromiso *ngIf="estadoComite === '2' || estadoComite === '3'" [dataTable]="compromiso"></app-tabla-detalle-compromiso>
 
-  <div class="text-center flex" *ngIf="sinAvanceBoolean || enProcesoBoolean">
+  <div class="text-center flex" *ngIf="estadoComite === '1' || estadoComite === '3'">
 
     <div class="mr-right-1">
       <h3>Estado del compromiso</h3>
@@ -65,7 +65,7 @@
 
   </div>
 
-  <div *ngIf="sinAvanceBoolean || enProcesoBoolean">
+  <div *ngIf="estadoComite === '1' || estadoComite === '3'">
     <form *ngIf="estadoBoolean" autocomplete="off" [formGroup]="reporte" (ngSubmit)="onSubmit()">
 
       <div class="d-flex align-items-center">

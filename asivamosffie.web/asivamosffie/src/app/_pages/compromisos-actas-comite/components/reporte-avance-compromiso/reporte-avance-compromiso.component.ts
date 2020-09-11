@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 
 @Component({
   selector: 'app-reporte-avance-compromiso',
@@ -14,9 +15,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
   compromiso       : any;
   reporte          :FormGroup;
   estadoBoolean    : boolean = false;
-  sinAvanceBoolean : boolean = false;
-  enProcesoBoolean : boolean = false;
-  finalizadoBoolean: boolean = false;
+  estadoComite     : string = '';
   estados          : any[] = [
     { value: 'sinAvance', viewValue: 'Sin iniciar' },
     { value: 'enProceso', viewValue: 'En proceso' },
@@ -36,16 +35,23 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
-                private fb: FormBuilder ) {
-    this.getCompromiso();
+                private fb: FormBuilder,
+                private activatedRoute: ActivatedRoute,
+                private compromisoSvc: CompromisosActasComiteService ) {
+    this.getCompromiso( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
   }
 
   ngOnInit(): void {
-    this.sinAvanceBoolean  = this.compromiso.estadoCompromiso.sinAvance;
-    this.enProcesoBoolean  = this.compromiso.estadoCompromiso.enProceso;
-    this.finalizadoBoolean = this.compromiso.estadoCompromiso.finalizado;
-  }
+  };
+
+  getCompromiso ( id: number ) {
+    this.compromisoSvc.getCompromiso( id )
+      .subscribe( ( resp: any ) => {
+        //this.estadoComite = resp[0].estadoCodigo;
+        console.log( resp );
+      } );
+  };
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -65,14 +71,6 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
       reporteEstado: [ null, Validators.required ]
     })
   };
-
-  getCompromiso () {
-    if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
-      this.routes.navigateByUrl( '/compromisosActasComite' );
-      return;
-    };
-    this.compromiso = this.routes.getCurrentNavigation().extras.state.compromiso;
-  }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
