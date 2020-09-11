@@ -16,7 +16,7 @@ export class CompromisosActasComiteService {
   };
 
   getCompromiso ( compromisoId: number ) {
-    return this.http.get( `${ this.url }/GetManagementCommitteeReportById?SesionComiteTecnicoCompromisoId=${ compromisoId }` )
+    return this.http.get( `${ this.url }/GetManagementCommitteeReportById?comiteTecnicoId=${ compromisoId }` )
   };
 
   getGrillaActas () {
