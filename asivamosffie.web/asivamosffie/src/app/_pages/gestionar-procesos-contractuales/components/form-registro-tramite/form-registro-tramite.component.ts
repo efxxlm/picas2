@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
-import { Contratacion } from '../../../../_interfaces/project-contracting';
+import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
 
 @Component({
   selector: 'app-form-registro-tramite',
@@ -14,7 +14,8 @@ export class FormRegistroTramiteComponent implements OnInit {
 
   archivo                : string;
   @Input() dataFormulario: FormGroup;
-  @Input() contratacion  : Contratacion;
+  @Input() contratacion  : DataSolicitud;
+  dataFormTramite: DataSolicitud = {};
   editorStyle = {
     height: '45px'
   };
@@ -74,10 +75,23 @@ export class FormRegistroTramiteComponent implements OnInit {
       return;
     };
 
-    this.contratacion.observaciones = this.dataFormulario.get( 'observaciones' ).value;
-    this.contratacion.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
+    let documento = this.dataFormulario.get( 'minutaFile' ).value
+    let formData = new FormData();
+    formData.append( 'file', documento, documento.name );
 
-    this.procesosContractualesSvc.sendTramite( this.contratacion, this.dataFormulario.get( 'minutaFile' ).value )
+    //this.dataFormTramite.contratacionId = 8;
+    this.dataFormTramite.observaciones = this.dataFormulario.get( 'observaciones' ).value;
+    this.dataFormTramite.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
+    this.dataFormTramite.pFile = formData.get( 'file' );
+
+    const dataContratacion = {
+      contratacionId: 8,
+      observaciones: this.dataFormulario.get( 'observaciones' ).value,
+      fechaEnvioDocumentacion: this.dataFormulario.get( 'fechaEnvioTramite' ).value,
+      pFile: formData.get( 'file' )
+    }
+
+    this.procesosContractualesSvc.sendTramite( dataContratacion )
       .subscribe( console.log );
 
     //this.openDialog( 'La información ha sido guardada exitosamente.', '' );

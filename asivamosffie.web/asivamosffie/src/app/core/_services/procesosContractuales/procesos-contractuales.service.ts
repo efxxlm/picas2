@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GrillaProcesosContractuales } from 'src/app/_interfaces/procesosContractuales.interface';
 import { map } from 'rxjs/operators';
 import { DataSolicitud } from '../../../_interfaces/procesosContractuales.interface';
-import { Contratacion } from '../../../_interfaces/project-contracting';
 
 @Injectable({
   providedIn: 'root'
@@ -39,21 +38,11 @@ export class ProcesosContractualesService {
     return this.http.get( `${ this.url }/GetDDPBySesionComiteSolicitudID?pSesionComiteSolicitudID=${ sesionComiteSolicitudId }` )
   };
 
-  sendTramite ( contratacion: Contratacion, documento: File ) {
+  sendTramite ( Contratacion: DataSolicitud ) {
 
-    let formData = new FormData();
-    formData.append( 'file', documento, documento.name );
+    console.log( Contratacion );
 
-    const minutaDoc = formData.get( 'file' );
-
-    const registroTramite = {
-      pContratacion: contratacion, 
-      pFile: minutaDoc
-    }
-
-    console.log( registroTramite.pFile );
-
-    return this.http.put( `${ this.url }/RegistrarTramiteContratacion`, registroTramite, {reportProgress: true, observe: 'events'} );
+    return this.http.put( `${ this.url }/RegistrarTramiteContratacion`, Contratacion );
   };
 
   sendCambioTramite ( solicitud: GrillaProcesosContractuales ) {

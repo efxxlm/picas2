@@ -27,25 +27,26 @@ export interface GrillaProcesosContractuales {
 };
 
 export interface DataSolicitud {
-  contratacionId: number;
-  consideracionDescripcion: string;
-  tipoSolicitudCodigo: string;
-  numeroSolicitud: string;
-  estadoSolicitudCodigo: string;
-  contratistaId: number;
-  usuarioCreacion: string;
-  fechaCreacion: string;
-  eliminado: boolean;
-  fechaEnvioDocumentacion: string;
-  observaciones: string;
-  rutaMinuta: string;
-  fechaTramite: string;
-  tipoContratacionCodigo: string;
-  registroCompleto: boolean;
-  contratista: Contratista;
-  contratacionProyecto: ContratacionProyecto2[];
-  contrato: any[];
-  disponibilidadPresupuestal: DisponibilidadPresupuestal[];
+  contratacionId?: number;
+  consideracionDescripcion?: string;
+  tipoSolicitudCodigo?: string;
+  numeroSolicitud?: string;
+  estadoSolicitudCodigo?: string;
+  contratistaId?: number;
+  usuarioCreacion?: string;
+  fechaCreacion?: string;
+  eliminado?: boolean;
+  fechaEnvioDocumentacion?: string;
+  observaciones?: string;
+  rutaMinuta?: string;
+  fechaTramite?: string;
+  tipoContratacionCodigo?: string;
+  registroCompleto?: boolean;
+  contratista?: Contratista;
+  contratacionProyecto?: ContratacionProyecto2[];
+  contrato?: any[];
+  disponibilidadPresupuestal?: DisponibilidadPresupuestal[];
+  pFile?: any;
 }
 
 interface DisponibilidadPresupuestal {
