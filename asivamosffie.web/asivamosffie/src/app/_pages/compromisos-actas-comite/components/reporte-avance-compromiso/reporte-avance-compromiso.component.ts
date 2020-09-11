@@ -12,10 +12,10 @@ import { CompromisosActasComiteService } from '../../../../core/_services/compro
 })
 export class ReporteAvanceCompromisoComponent implements OnInit {
 
-  compromiso       : any;
   reporte          :FormGroup;
   estadoBoolean    : boolean = false;
   estadoComite     : string = '';
+  comite: any = {};
   estados          : any[] = [
     { value: 'sinAvance', viewValue: 'Sin iniciar' },
     { value: 'enProceso', viewValue: 'En proceso' },
@@ -48,8 +48,9 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
   getCompromiso ( id: number ) {
     this.compromisoSvc.getCompromiso( id )
       .subscribe( ( resp: any ) => {
-        //this.estadoComite = resp[0].estadoCodigo;
-        console.log( resp );
+        this.estadoComite = resp[0].estadoCompromisoText;
+        this.comite = resp[0];
+        console.log( this.comite );
       } );
   };
 
@@ -81,20 +82,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
 
   getEstado ( value: string ) {
 
-    this.estadoBoolean = true;
-    
-    for ( let estado in this.compromiso.estadoCompromiso ) {
-      
-      if ( estado === value ) {
-
-        this.compromiso.estadoCompromiso[ estado ] = true;
-
-      } else {
-        this.compromiso.estadoCompromiso[ estado ] = false;
-
-      };
-
-    };
+    console.log( value );
     
   };
 
@@ -105,10 +93,16 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
       return;
     };
 
-    this.compromiso.fechaRegistro    = '29/06/2020';
-    this.compromiso.gestionRealizada = this.reporte.get( 'reporteEstado' ).value;
+    const seguimiento = {
+      DescripcionSeguimiento: this.reporte.get( 'reporteEstado' ).value,
+      SesionComiteTecnicoCompromisoId: this.comite.sesionComiteTecnicoCompromisoId
+    }
 
-    this.openDialog('La información ha sido guardada exitosamente', '');
+    this.compromisoSvc.postCompromisos( seguimiento, this.comite.comiteTecnicoId )
+      .subscribe( resp => {
+        console.log( resp );
+        this.openDialog('La información ha sido guardada exitosamente', '');
+      } );
 
   }
 

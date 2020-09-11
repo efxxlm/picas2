@@ -1,4 +1,4 @@
-<div class="container" *ngIf="estadoComite.length > 0">
+<div class="container">
 
   <div class="text-right">
     <a routerLink="/compromisosActasComite" mat-button color="primary" class="btn-regresar">
@@ -6,48 +6,48 @@
     </a>
   </div>
 
-  <div *ngIf="estadoComite === '1'">
+  <div *ngIf="estadoComite === 'Sin iniciar'">
     <div class="text-center">
       <h1 class="title-menu--h1">
-        Reportar avance compromiso {{ compromiso.numeroComite }}
+        Reportar avance compromiso {{ comite.numeroComite }}
       </h1>
     </div>
   
     <div class="text-center flex-column">
       <span>Realizar seguimiento semanal del cronograma</span>
-      <span> <b>Fecha limite</b>: {{ compromiso.fechaLimiteCumplimiento }} </span>
+      <span> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
     </div>
   </div>
 
-  <div *ngIf="estadoComite === '3'">
+  <div *ngIf="estadoComite === 'En proceso'">
     <div class="text-center">
       <h1 class="title-menu--h1">
-        Ver detalle/ Editar avance compromiso {{ compromiso.numeroComite }}
+        Ver detalle/ Editar avance compromiso {{ comite.numeroComite }}
       </h1>
     </div>
   
     <div class="text-center flex-column">
       <span>Realizar seguimiento semanal del cronograma</span>
-      <span> <b>Fecha limite</b>: {{ compromiso.fechaLimiteCumplimiento }} </span>
+      <span> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
     </div>
   </div>
 
-  <div *ngIf="estadoComite === '2'">
+  <div *ngIf="estadoComite === 'Convocada'">
     <div class="text-center">
       <h1 class="title-menu--h1">
-        Ver detalle compromiso {{ compromiso.numeroComite }}
+        Ver detalle compromiso {{ comite.numeroComite }}
       </h1>
     </div>
   
     <div class="text-center flex-column">
       <span>Realizar seguimiento semanal del cronograma</span>
-      <span> <b>Fecha limite</b>: {{ compromiso.fechaLimiteCumplimiento }} </span>
+      <span> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
     </div>
   </div>
 
-  <app-tabla-detalle-compromiso *ngIf="estadoComite === '2' || estadoComite === '3'" [dataTable]="compromiso"></app-tabla-detalle-compromiso>
+  <app-tabla-detalle-compromiso *ngIf="estadoComite === 'Convocada' || estadoComite === 'En proceso'" [dataTable]="comite"></app-tabla-detalle-compromiso>
 
-  <div class="text-center flex" *ngIf="estadoComite === '1' || estadoComite === '3'">
+  <div class="text-center flex" *ngIf="estadoComite === 'Sin iniciar' || estadoComite === 'En proceso'">
 
     <div class="mr-right-1">
       <h3>Estado del compromiso</h3>
@@ -65,8 +65,8 @@
 
   </div>
 
-  <div *ngIf="estadoComite === '1' || estadoComite === '3'">
-    <form *ngIf="estadoBoolean" autocomplete="off" [formGroup]="reporte" (ngSubmit)="onSubmit()">
+  <div *ngIf="estadoComite === 'Sin iniciar' || estadoComite === 'En proceso'">
+    <form autocomplete="off" [formGroup]="reporte" (ngSubmit)="onSubmit()">
 
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
