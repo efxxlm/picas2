@@ -55,7 +55,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                pSesionComiteSolicitud.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pSesionComiteSolicitud.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
                 respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud);
                 return Ok(respuesta);
             }

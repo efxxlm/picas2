@@ -25,6 +25,7 @@ export class ProcesosContractualesService {
             procesos.push( proceso );
           };
         };
+        console.log( procesos );
         return procesos;
       } )
     );
@@ -51,7 +52,10 @@ export class ProcesosContractualesService {
   };
 
   sendCambioTramite ( solicitud: any ) {
-    return this.http.put( `${ this.url }/CambiarEstadoSesionComiteSolicitud?pSesionComiteSolicitud=${ solicitud.sesionComiteSolicitudId }`, { solicitud } )
+    const pSesionComiteSolicitud = {
+      sesionComiteSolicitudId: solicitud.sesionComiteSolicitudId
+    };
+    return this.http.post( `${ this.url }/CambiarEstadoSesionComiteSolicitud`, { pSesionComiteSolicitud } );
   }
 
 };

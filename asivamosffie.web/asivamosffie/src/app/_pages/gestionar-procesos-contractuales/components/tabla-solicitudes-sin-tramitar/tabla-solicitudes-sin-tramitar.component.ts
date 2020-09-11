@@ -95,12 +95,14 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  gestionar ( tipoSolicitud: string, solicitudId: number ) {
+  gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number ) {
     
+    console.log( sesionComiteSolicitudId );
+
     switch ( tipoSolicitud ) {
 
       case 'Contratación':
-        this.routes.navigate( [ '/procesosContractuales/contratacion', solicitudId ] );
+        this.routes.navigate( [ '/procesosContractuales/contratacion', solicitudId ], { state: { sesionComiteSolicitudId } } );
       break;
       case 'Modificación contractual':
         /*Ejemplo para los 3 tipos de modificaciones contractuales*/

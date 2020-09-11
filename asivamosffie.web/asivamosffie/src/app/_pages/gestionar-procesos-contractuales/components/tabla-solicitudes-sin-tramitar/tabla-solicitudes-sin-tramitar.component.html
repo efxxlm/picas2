@@ -52,15 +52,14 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="!element.estadoRegistro && !element.estaTramitado"
-                (click)="gestionar( element.tipoSolicitud, element.solicitudId )">
+                (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.sesionComiteSolicitudId )">
                 Gestionar solicitud
         </button>
   
         <button mat-raised-button
                 color="accent"
                 class="btn-table"
-                (click)="sendCambioTramite( element )"
-                *ngIf="element.estadoRegistro">
+                (click)="sendCambioTramite( element )">
                 Enviar para trámite
         </button>
 
@@ -68,7 +67,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.estadoRegistro || (!element.estadoRegistro && element.estaTramitado)"
-                (click)="gestionar( element.tipoSolicitud, element.solicitudId )">
+                (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.sesionComiteSolicitudId )">
                 Ver detalle/Editar
         </button>
   

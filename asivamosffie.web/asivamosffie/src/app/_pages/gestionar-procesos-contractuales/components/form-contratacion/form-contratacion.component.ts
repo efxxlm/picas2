@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
 
@@ -12,6 +12,7 @@ import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.int
 export class FormContratacionComponent implements OnInit {
   
   form         : FormGroup;
+  sesionComiteId: number = 0;
   dataContratacion: DataSolicitud = {
     contratacionId: 0,
     consideracionDescripcion: '',
@@ -95,9 +96,11 @@ export class FormContratacionComponent implements OnInit {
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
+                private routes: Router,
                 private procesosContractualesSvc: ProcesosContractualesService ) {
     this.getContratacion( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
+    this.sesionComiteId = this.routes.getCurrentNavigation().extras.state.sesionComiteSolicitudId;
   };
 
   ngOnInit(): void {
@@ -129,6 +132,11 @@ export class FormContratacionComponent implements OnInit {
 
       } );
 
+  };
+
+  getDdp ( sesionComiteSolicitudId ) {
+    this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
+      .subscribe();
   };
 
   guardar () {
