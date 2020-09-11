@@ -27,23 +27,25 @@ export interface GrillaProcesosContractuales {
 };
 
 export interface DataSolicitud {
-  contratacionId?: number;
-  tipoSolicitudCodigo?: string;
-  numeroSolicitud?: string;
-  estadoSolicitudCodigo?: string;
-  contratistaId?: number;
-  usuarioCreacion?: string;
-  fechaCreacion?: string;
-  eliminado?: boolean;
-  fechaEnvioDocumentacion?: string;
-  observaciones?: string;
-  rutaMinuta?: string;
-  fechaTramite?: string;
-  registroCompleto?: boolean;
-  contratista?: Contratista;
-  contratacionProyecto?: ContratacionProyecto2[];
-  contrato?: any[];
-  disponibilidadPresupuestal?: any[];
+  contratacionId: number;
+  consideracionDescripcion: string;
+  tipoSolicitudCodigo: string;
+  numeroSolicitud: string;
+  estadoSolicitudCodigo: string;
+  contratistaId: number;
+  usuarioCreacion: string;
+  fechaCreacion: string;
+  eliminado: boolean;
+  fechaEnvioDocumentacion: string;
+  observaciones: string;
+  rutaMinuta: string;
+  fechaTramite: string;
+  tipoContratacionCodigo: string;
+  registroCompleto: boolean;
+  contratista: Contratista;
+  contratacionProyecto: ContratacionProyecto2[];
+  contrato: any[];
+  disponibilidadPresupuestal: DisponibilidadPresupuestal[];
 }
 
 interface DisponibilidadPresupuestal {
@@ -58,6 +60,8 @@ interface DisponibilidadPresupuestal {
   estadoSolicitudCodigo: string;
   objeto: string;
   eliminado: boolean;
+  plazoDias: number;
+  plazoMeses: number;
   fechaDdp: string;
   numeroDdp: string;
   rutaDdp: string;
@@ -67,6 +71,7 @@ interface DisponibilidadPresupuestal {
   usuarioModificacion: string;
   registroCompleto: boolean;
   contratacionId: number;
+  numeroDrp: string;
   disponibilidadPresupuestalObservacion: any[];
   disponibilidadPresupuestalProyecto: any[];
 }
@@ -78,6 +83,16 @@ interface ContratacionProyecto2 {
   fechaCreacion: string;
   usuarioCreacion: string;
   eliminado: boolean;
+  esReasignacion?: boolean;
+  porcentajeAvanceObra?: number;
+  requiereLicencia?: boolean;
+  licenciaVigente?: boolean;
+  numeroLicencia?: string;
+  fechaVigencia?: string;
+  usuarioModificacion?: string;
+  fechaModificacion?: string;
+  activo?: boolean;
+  esAvanceobra?: boolean;
   proyecto: Proyecto;
   contratacionProyectoAportante: any[];
   sesionSolicitudObservacionProyecto: any[];
@@ -140,16 +155,16 @@ interface ProyectoInstitucionEducativa2 {
   institucionEducativaId: number;
   sedeId: number;
   enConvocatoria: boolean;
-  convocatoriaId: number;
   cantPrediosPostulados: number;
   tipoPredioCodigo: string;
   predioPrincipalId: number;
+  valorObra: number;
+  valorInterventoria: number;
+  valorTotal: number;
   estadoProyectoCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;
-  fechaModificacion: string;
-  usuarioModificacion: string;
   estadoJuridicoCodigo: string;
   registroCompleto: boolean;
   contratacionProyecto: ContratacionProyecto[];
@@ -170,16 +185,16 @@ interface ProyectoInstitucionEducativa {
   institucionEducativaId: number;
   sedeId: number;
   enConvocatoria: boolean;
+  convocatoriaId: number;
   cantPrediosPostulados: number;
   tipoPredioCodigo: string;
   predioPrincipalId: number;
-  valorObra: number;
-  valorInterventoria: number;
-  valorTotal: number;
   estadoProyectoCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;
+  fechaModificacion: string;
+  usuarioModificacion: string;
   estadoJuridicoCodigo: string;
   registroCompleto: boolean;
   contratacionProyecto: ContratacionProyecto[];
@@ -211,6 +226,16 @@ interface ContratacionProyecto {
   fechaCreacion: string;
   usuarioCreacion: string;
   eliminado: boolean;
+  esReasignacion: boolean;
+  porcentajeAvanceObra: number;
+  requiereLicencia: boolean;
+  licenciaVigente: boolean;
+  numeroLicencia: string;
+  fechaVigencia: string;
+  usuarioModificacion: string;
+  fechaModificacion: string;
+  activo: boolean;
+  esAvanceobra: boolean;
   contratacionProyectoAportante: any[];
   sesionSolicitudObservacionProyecto: any[];
 }

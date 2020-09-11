@@ -1,4 +1,4 @@
-<div class="container text-center mt-2em">
+<div class="container text-center mt-2em" *ngIf="dataContratacion.numeroSolicitud.length > 0">
   <div class="text-right">
     <a routerLink="/procesosContractuales" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,23 +7,21 @@
 
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Gestionar solicitud PI_008
+      Gestionar solicitud {{ dataContratacion.numeroSolicitud }}
     </h1>
   </div>
   <div class="text-center flex">
-    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>15/06/2020</b></p>
-    <p class="color-titulo"><b>Contratación</b></p>
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>{{ dataContratacion.fechaCreacion | date: 'dd/MM/yyyy' }}</b></p>
+    <p class="color-titulo"><b *ngIf="(dataContratacion.tipoSolicitudCodigo === '1')">Contratación</b></p>
   </div>
   <div align="left">
     <mat-card class="border">
       <mat-card-content>
-        <p><b>Número DDP</b>: DDP_PI_005</p>
+        <p><b>Número DDP</b>: {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp }}</p>
         <p>
-          <b>Objeto</b>:  Contrato de modificación de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de estudios y
-                          diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las instituciones rurales.
-        </p>
-        <p><b>Número de comité fiduciario</b>: CF_002</p>
-        <p><b>Fecha de comité fiduciario</b>: 14/06/2020</p>
+          <b>Objeto</b>: {{ dataContratacion.disponibilidadPresupuestal[0].objeto }}</p>
+        <p><b>Número de comité fiduciario</b>: {{ dataContratacion.disponibilidadPresupuestal[0].numeroComiteFiduciario }}</p>
+        <p><b>Fecha de comité fiduciario</b>: {{ dataContratacion.disponibilidadPresupuestal[0].fechaComiteFiduciario }}</p>
       </mat-card-content>
   </mat-card>
   </div>
@@ -36,67 +34,59 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
-          <mat-expansion-panel-header class="expansion-style--header w-45">
-            <mat-panel-title class="expansion-style--title">
-              LL000007 - I.E De Desarrollo Rural Miguel Valencia - Única sede
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div class="text-center flex">
-            <p class="mr-right-8em"><b>Antioquia/Jardín</b></p>
-            <p><b>Ampliación</b></p>
-          </div>
-
-          <div align="left">
-            <mat-card class="border">
-              <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
-              <mat-card-content>
-                <p> 
-                  <b>
-                    ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
-                  </b>: No
-                </p>
-                <p><b>¿El proyecto es una reasignación?</b>: Sí</p>
-                <p><b>¿El proyecto tiene avance de obra?</b>: Sí</p>
-                <p><b>¿Cuál es el porcentaje de avance de obra?</b>: 30%</p>
-                <p><b>¿El proyecto requiere licencias?</b>: Sí</p>
-                <p><b>¿El proyecto tiene licencia vigente?</b>: Sí</p>
-                <p><b>Número de licencia</b>: 0930478</p>
-                <p><b>Fecha de vigencia</b>: 24/09/2020</p>
-              </mat-card-content>
-            </mat-card>
-          </div>
-
-        </mat-expansion-panel>
-
-        <mat-expansion-panel class="expansion-style">
-          <mat-expansion-panel-header class="expansion-style--header w-45">
-            <mat-panel-title class="expansion-style--title">
-              LL000007 - I.E Agroindustrial LA Pradera - Única sede
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div class="text-center flex">
-            <p class="mr-right-8em"><b>Boyacá/Belén</b></p>
-            <p><b>Reconstrucción</b></p>
-          </div>
-
-          <div align="left">
-            <mat-card class="border">
-              <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
-              <mat-card-content>
-                <p> 
-                  <b>
-                    ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?:
-                  </b> Sí
-                </p>
-                <p><b>¿El proyecto es una reasignación?</b>: No</p>
-                <p><b>¿El proyecto requiere licencias?</b>: No</p>
-              </mat-card-content>
-            </mat-card>
-          </div>
-
+        <mat-expansion-panel class="expansion-style" *ngFor="let data of dataContratacion.contratacionProyecto">
+            <mat-expansion-panel-header class="expansion-style--header w-45" *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa.length > 0">
+              <mat-panel-title class="expansion-style--title">
+                {{ data.proyecto.institucionEducativa.nombre }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+  
+            <div class="text-center flex" *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa.length > 0">
+              <p class="mr-right-8em"><b>{{ data.proyecto.institucionEducativa.localizacionIdMunicipio }}</b></p>
+              <p><b>{{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].tipoIntervencionCodigo }}</b></p>
+            </div>
+  
+            <div align="left" *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa.length > 0">
+              <mat-card class="border">
+                <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
+                <mat-card-content>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].activo"> 
+                    <b>
+                      ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
+                    </b>: No
+                  </p>
+                  <p *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].activo">
+                    <b>
+                      ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
+                    </b>: Sí
+                  </p>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esReasignacion">
+                    <b>¿El proyecto es una reasignación?</b>: Sí
+                  </p>
+                  <p *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esReasignacion">
+                    <b>¿El proyecto es una reasignación?</b>: No
+                  </p>
+                  <div *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esReasignacion">
+                    <p><b>¿El proyecto tiene avance de obra?</b>: Sí</p>
+                    <p>
+                      <b>¿Cuál es el porcentaje de avance de obra?</b>: 
+                      {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].porcentajeAvanceObra }}%
+                    </p>
+                    <p><b>¿El proyecto requiere licencias?</b>: Sí</p>
+                    <p><b>¿El proyecto tiene licencia vigente?</b>: Sí</p>
+                    <p>
+                      <b>Número de licencia</b>: {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].numeroLicencia }}
+                    </p>
+                    <p>
+                      <b>Fecha de vigencia</b>: {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
+                    </p>
+                  </div>
+                  <div *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esReasignacion">
+                    <p><b>¿El proyecto requiere licencias?</b>: No</p>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
         </mat-expansion-panel>
 
       </mat-expansion-panel>
@@ -111,11 +101,11 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
-              <p><b>Tipo de identificación</b>: NIT</p>
-              <p><b>Número de identificación</b>: 900.333.000-3</p>
-              <p><b>Nombre del representante legal</b>: Sergio Varón</p>
-              <p><b>Número de la invitación</b>: 00560</p>
+              <p><b>Nombre del contratista</b>: {{ dataContratacion.contratista.nombre }}</p>
+              <p><b>Tipo de identificación</b>: {{ dataContratacion.contratista.tipoIdentificacionCodigo }}</p>
+              <p><b>Número de identificación</b>: {{ dataContratacion.contratista.numeroIdentificacion }}</p>
+              <p><b>Nombre del representante legal</b>: {{ dataContratacion.contratista.representanteLegal }}</p>
+              <p><b>Número de la invitación</b>: {{ dataContratacion.contratista.numeroInvitacion }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -132,9 +122,9 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Tipo de contrato</b>: Obra</p>
-              <p><b>Plazo</b>: 12 meses / 20 días</p>
-              <p><b>Valor del contrato</b>: $178.000.000</p>
+              <p><b>Tipo de contrato</b>: {{ dataContratacion.tipoContratacionCodigo }}</p>
+              <p><b>Plazo</b>: {{ dataContratacion.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ dataContratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p><b>Valor del contrato</b>: ${{ dataContratacion.disponibilidadPresupuestal[0].valorSolicitud }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -152,7 +142,7 @@
           <mat-card class="border">
             <mat-card-content>
               <p>
-                No se debe girar el 60% de los recursos hasta que la fase inicial de infraestructura se encuentre en un 60% de ejecución.
+                {{ dataContratacion.consideracionDescripcion }}
               </p>
             </mat-card-content>
           </mat-card>
@@ -198,8 +188,8 @@
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
-        <p>Fecha del trámite <b class="color-titulo">16/06/2020</b></p>
-        <app-form-registro-tramite [dataFormulario]="form"></app-form-registro-tramite>
+        <p>Fecha del trámite <b class="color-titulo">{{ dataContratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
+        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="dataContratacion"></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

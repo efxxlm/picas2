@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
+import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
 
 @Component({
   selector: 'app-form-contratacion',
@@ -11,7 +12,27 @@ import { ProcesosContractualesService } from '../../../../core/_services/proceso
 export class FormContratacionComponent implements OnInit {
   
   form         : FormGroup;
-  observaciones: string;
+  dataContratacion: DataSolicitud = {
+    contratacionId: 0,
+    consideracionDescripcion: '',
+    tipoSolicitudCodigo: '',
+    numeroSolicitud: '',
+    estadoSolicitudCodigo: '',
+    contratistaId: 0,
+    usuarioCreacion: '',
+    fechaCreacion: '',
+    eliminado: false,
+    fechaEnvioDocumentacion: '',
+    observaciones: '',
+    rutaMinuta: '',
+    fechaTramite: '',
+    tipoContratacionCodigo: '',
+    registroCompleto: true,
+    contratista: null,
+    contratacionProyecto: null,
+    contrato: null,
+    disponibilidadPresupuestal: null,
+  };
   editorStyle = {
     height: '45px'
   };
@@ -75,8 +96,8 @@ export class FormContratacionComponent implements OnInit {
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private procesosContractualesSvc: ProcesosContractualesService ) {
-    this.crearFormulario();
     this.getContratacion( this.activatedRoute.snapshot.params.id );
+    this.crearFormulario();
   };
 
   ngOnInit(): void {
@@ -87,6 +108,7 @@ export class FormContratacionComponent implements OnInit {
       fechaEnvioTramite: [ null, Validators.required ],
       observaciones    : [ null ],
       minuta           : [ null ],
+      minutaName       : [ null ],
       minutaFile       : [ null ]
     })
   };
@@ -94,7 +116,18 @@ export class FormContratacionComponent implements OnInit {
   getContratacion ( id: number ) {
 
     this.procesosContractualesSvc.getContratacion( id )
-      .subscribe( console.log );
+      .subscribe( contratacion => {
+
+        console.log( contratacion );
+        this.dataContratacion = contratacion;
+        
+        this.form.reset({
+          fechaEnvioTramite: contratacion.fechaEnvioDocumentacion,
+          observaciones: contratacion.observaciones,
+          minutaName: contratacion.rutaMinuta
+        });
+
+      } );
 
   };
 

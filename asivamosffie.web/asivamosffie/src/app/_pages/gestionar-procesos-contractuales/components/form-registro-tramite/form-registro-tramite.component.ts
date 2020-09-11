@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
+import { Contratacion } from '../../../../_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-registro-tramite',
@@ -13,6 +14,7 @@ export class FormRegistroTramiteComponent implements OnInit {
 
   archivo                : string;
   @Input() dataFormulario: FormGroup;
+  @Input() contratacion  : Contratacion;
   editorStyle = {
     height: '45px'
   };
@@ -72,12 +74,10 @@ export class FormRegistroTramiteComponent implements OnInit {
       return;
     };
 
-    const formulario = {
-      FechaEnvioDocumentacion: new Date(),
-      Observaciones: '123456'
-    }
+    this.contratacion.observaciones = this.dataFormulario.get( 'observaciones' ).value;
+    this.contratacion.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
 
-    this.procesosContractualesSvc.sendTramite( formulario, this.dataFormulario.get( 'minutaFile' ).value )
+    this.procesosContractualesSvc.sendTramite( this.contratacion, this.dataFormulario.get( 'minutaFile' ).value )
       .subscribe( console.log );
 
     //this.openDialog( 'La información ha sido guardada exitosamente.', '' );

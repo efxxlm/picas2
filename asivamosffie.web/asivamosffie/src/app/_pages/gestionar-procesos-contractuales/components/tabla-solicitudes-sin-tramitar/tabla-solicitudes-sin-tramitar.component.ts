@@ -21,8 +21,10 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoDelRegistro', 'id' ];
   estadoCodigo: string;
+  estadoCodigoFiduciaria: string = "9";
 
-  constructor ( private routes: Router ) {
+  constructor ( private routes: Router,
+                private procesosContractualesSvc: ProcesosContractualesService ) {
   }
 
   ngOnInit() {
@@ -115,5 +117,14 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     };
 
   };
+
+  sendCambioTramite ( elemento: any ) {
+    
+    elemento.estadoCodigo = this.estadoCodigoFiduciaria;
+
+    this.procesosContractualesSvc.sendCambioTramite( elemento )
+      .subscribe( console.log );
+
+  }
 
 };
