@@ -17,6 +17,10 @@ using asivamosffie.services.Filters;
 using FluentValidation.AspNetCore;
 using System;
 using System.Text;
+using asivamosffie.api.Helpers;
+using System.IO;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 
 namespace asivamosffie.api
 {
@@ -96,7 +100,13 @@ namespace asivamosffie.api
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-           
+            #region A gregado pora implementacion de descargas de PDF
+            var context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
+            #endregion
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
