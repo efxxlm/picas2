@@ -106,7 +106,9 @@ namespace asivamosffie.services
 
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
-                   && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
+                //TODO Filtrar por los otros parametros
+                  // && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
+                 //poner el id 7 y el id otro 
                 ).ToListAsync();
 
 
