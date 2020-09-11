@@ -350,6 +350,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetSesionSolicitudObservacionProyecto")]
+        public async Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto([FromQuery] int pSesionComiteSolicitudId, int pContratacionProyectoId)
+        {
+            return await _registerSessionTechnicalCommitteeService.GetSesionSolicitudObservacionProyecto(pSesionComiteSolicitudId, pContratacionProyectoId);
+        }
+
+        [HttpGet]
         [Route("GetCompromisosByComiteTecnicoId")]
         public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId([FromQuery] int ComiteTecnicoId)
         {

@@ -43,6 +43,7 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
+                sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.RequiereVotacion = true;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
@@ -338,6 +339,19 @@ namespace asivamosffie.services
         #endregion
 
         #region Comite Tecnico
+
+        public async Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto(int pSesionComiteSolicitudId, int pContratacionProyectoId)
+        {
+            List<SesionSolicitudObservacionProyecto> lista = new List<SesionSolicitudObservacionProyecto>();
+
+            lista = await _context.SesionSolicitudObservacionProyecto
+                                .Where( s => s.SesionComiteSolicitudId == pSesionComiteSolicitudId &&
+                                                s.ContratacionProyectoId == pContratacionProyectoId )
+                                .Include( r => r.SesionParticipante )   
+                                    .ThenInclude( r => r.Usuario )
+                                .ToListAsync();
+           return lista;
+        }
 
         public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId)
         {
