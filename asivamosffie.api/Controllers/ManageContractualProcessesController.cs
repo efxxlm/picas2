@@ -68,7 +68,7 @@ namespace asivamosffie.api.Controllers
 
 
         [Route("RegistrarTramiteContratacion")]
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> RegistrarTramiteContratacion([FromBody] Contratacion pContratacion )
         {
             Respuesta respuesta = new Respuesta();
