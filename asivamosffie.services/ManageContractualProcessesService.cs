@@ -36,27 +36,29 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
-        { 
-            SesionComiteSolicitud sesionComiteSolicitudOld = await  _context.SesionComiteSolicitud.FindAsync(pSesionComiteSolicitud.SesionComiteSolicitudId);
+        {
+            SesionComiteSolicitud sesionComiteSolicitudOld = await _context.SesionComiteSolicitud.FindAsync(pSesionComiteSolicitud.SesionComiteSolicitudId);
             sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
             sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
             sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
-            if (false) {
+            if (false)
+            {
                 Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
                 contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 contratacion.FechaModificacion = DateTime.Now;
                 contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
             }
-             
+
             _context.SaveChanges();
             return new Respuesta();
-         }
+        }
 
 
-        public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID) {
-             
-            return  new byte[0];
+        public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID)
+        {
+
+            return new byte[0];
         }
 
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
@@ -108,11 +110,11 @@ namespace asivamosffie.services
 
                         sesionComiteSolicitud.EstaTramitado = false;
 
-                        if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString())) 
+                        if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
                         {
                             sesionComiteSolicitud.EstaTramitado = true;
                         }
-                           
+
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
                         sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
@@ -157,6 +159,7 @@ namespace asivamosffie.services
             //TODO: PENDIENTE por FAber Numero comite Fiduciario Fecha Comite Fiduciario
 
             List<Dominio> LisParametricas = _context.Dominio.ToList();
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
 
 
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
@@ -175,9 +178,9 @@ namespace asivamosffie.services
                 .Include(r => r.ComiteTecnico).FirstOrDefault();
 
             if (!string.IsNullOrEmpty(contratacion.TipoContratacionCodigo))
-            { 
-               contratacion.TipoContratacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar && r.Codigo == contratacion.TipoContratacionCodigo).FirstOrDefault().Nombre;
-            } 
+            {
+                contratacion.TipoContratacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar && r.Codigo == contratacion.TipoContratacionCodigo).FirstOrDefault().Nombre;
+            }
             if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
             {
                 sesionComiteSolicitud = null;
@@ -199,15 +202,23 @@ namespace asivamosffie.services
                 {
                     contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
                 }
-            } 
+            }
             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
             {
 
                 bool allDigits = ContratacionProyecto.Proyecto.TipoIntervencionCodigo.All(char.IsDigit);
                 if (allDigits)
                 {
-                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo  = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 }
+                bool allDigits2 = ContratacionProyecto.Proyecto.InstitucionEducativa.LocalizacionIdMunicipio.All(char.IsDigit);
+
+                if (allDigits2)
+                {
+                    ContratacionProyecto.Proyecto.InstitucionEducativa.Municipio = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.InstitucionEducativa.LocalizacionIdMunicipio).FirstOrDefault();
+                    ContratacionProyecto.Proyecto.InstitucionEducativa.Departamento = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.InstitucionEducativa.Municipio.IdPadre).FirstOrDefault();
+                }
+
             }
 
 
