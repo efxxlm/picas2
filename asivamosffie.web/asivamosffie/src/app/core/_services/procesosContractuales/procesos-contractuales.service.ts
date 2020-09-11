@@ -38,11 +38,13 @@ export class ProcesosContractualesService {
     return this.http.get( `${ this.url }/GetDDPBySesionComiteSolicitudID?pSesionComiteSolicitudID=${ sesionComiteSolicitudId }` )
   };
 
-  sendTramite ( Contratacion: DataSolicitud ) {
+  sendTramite ( contratacion: DataSolicitud ) {
 
-    console.log( Contratacion );
+    console.log( contratacion );
 
-    return this.http.put( `${ this.url }/RegistrarTramiteContratacion`, Contratacion );
+    let pContratacion = contratacion;
+
+    return this.http.post( `${ this.url }/RegistrarTramiteContratacion`, pContratacion );
   };
 
   sendCambioTramite ( solicitud: GrillaProcesosContractuales ) {

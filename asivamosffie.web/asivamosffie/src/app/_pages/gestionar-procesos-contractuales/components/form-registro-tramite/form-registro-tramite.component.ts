@@ -15,7 +15,6 @@ export class FormRegistroTramiteComponent implements OnInit {
   archivo                : string;
   @Input() dataFormulario: FormGroup;
   @Input() contratacion  : DataSolicitud;
-  dataFormTramite: DataSolicitud = {};
   editorStyle = {
     height: '45px'
   };
@@ -79,19 +78,11 @@ export class FormRegistroTramiteComponent implements OnInit {
     let formData = new FormData();
     formData.append( 'file', documento, documento.name );
 
-    //this.dataFormTramite.contratacionId = 8;
-    this.dataFormTramite.observaciones = this.dataFormulario.get( 'observaciones' ).value;
-    this.dataFormTramite.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
-    this.dataFormTramite.pFile = formData.get( 'file' );
+    this.contratacion.observaciones = this.dataFormulario.get( 'observaciones' ).value;
+    this.contratacion.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
+    this.contratacion.pFile = formData.get( 'file' );
 
-    const dataContratacion = {
-      contratacionId: 8,
-      observaciones: this.dataFormulario.get( 'observaciones' ).value,
-      fechaEnvioDocumentacion: this.dataFormulario.get( 'fechaEnvioTramite' ).value,
-      pFile: formData.get( 'file' )
-    }
-
-    this.procesosContractualesSvc.sendTramite( dataContratacion )
+    this.procesosContractualesSvc.sendTramite( this.contratacion )
       .subscribe( console.log );
 
     //this.openDialog( 'La información ha sido guardada exitosamente.', '' );
