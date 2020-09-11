@@ -60,6 +60,22 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("GetDDPEspecial")]
+        public async Task<IActionResult> GetDDPEspecial()
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetDDPEspecial();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
         [Route("GetDetailInfoAdditionalById")]
         public async Task<IActionResult> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
         {
@@ -105,7 +121,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                compromisoSeguimiento.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                compromisoSeguimiento.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditReportProgress(compromisoSeguimiento);
                 return Ok(respuesta);
 
@@ -127,7 +143,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                string user = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                string user = "forozco";//HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional(postParameter, user);
                 return Ok(respuesta);
 
@@ -140,6 +156,8 @@ namespace asivamosffie.api.Controllers
         }
 
 
+
+
         [Route("CreateOrEditDDPRequest")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditDDPRequest([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
@@ -148,7 +166,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                disponibilidadPresupuestal.UsuarioCreacion = "jsorozcof";//HttpContext.User.FindFirst("User").Value;
+                disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditDDPRequest(disponibilidadPresupuestal, proyectoId, disponibilidadPresupuestalId);
                 return Ok(respuesta);
 

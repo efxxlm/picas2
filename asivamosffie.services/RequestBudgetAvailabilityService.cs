@@ -213,6 +213,7 @@ namespace asivamosffie.services
 
             string strCrearEditar = string.Empty;
             DisponibilidadPresupuestal disponibilidadPresupuestalAntiguo = null;
+            int countMaxId = _context.DisponibilidadPresupuestal.Max(p => p.DisponibilidadPresupuestalId);
 
             try
             {
@@ -226,7 +227,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.Eliminado = false;
 
-                    disponibilidadPresupuestal.NumeroSolicitud = "Validando";
+                    disponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", countMaxId);
                     disponibilidadPresupuestal.OpcionContratarCodigo = "Validando";
                     disponibilidadPresupuestal.ValorSolicitud = 0;
                     disponibilidadPresupuestal.EstadoSolicitudCodigo = "8"; // Sin registrar => TipoDominioId = 39
@@ -234,7 +235,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestal.Objeto = disponibilidadPresupuestal.Objeto;
                     disponibilidadPresupuestal.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
-
+                    disponibilidadPresupuestal.RegistroCompleto = true;
                    _context.DisponibilidadPresupuestal.Add(disponibilidadPresupuestal);
                     var result = await _context.SaveChangesAsync();
 
@@ -298,6 +299,121 @@ namespace asivamosffie.services
                 };
             }
 
+        }
+
+
+        //Registrar Otros Costos/Servicio
+        public async Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_DDP_Especial, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            DisponibilidadPresupuestal disponibilidadPresupuestalAntiguo = null;
+            int countMaxId = _context.DisponibilidadPresupuestal.Max(p => p.DisponibilidadPresupuestalId);
+
+            try
+            {
+
+              
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, disponibilidadPresupuestal.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+        //Enviar solicitud
+        public async Task<Respuesta> SendRequest(int disponibilidadPresupuestalId)
+        {
+
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Solicitud_A_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            DisponibilidadPresupuestal disponibilidadPresupuestal = null;
+
+            try
+            {
+
+                disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.Where(d => d.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).FirstOrDefaultAsync();
+
+
+                if (disponibilidadPresupuestal != null)
+                {
+
+                    strCrearEditar = "ENVIAR SOLICITUD A DOSPONIBILIDAD PRESUPUESAL";
+                    disponibilidadPresupuestal.FechaModificacion = DateTime.Now;
+                    disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    disponibilidadPresupuestal.EstadoSolicitudCodigo = "1"; // Se cambia el estado a "En validación presupuestal" => TipoDominioId = 39
+                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
+                    
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, disponibilidadPresupuestal.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+
+        //Grilla DDP Especial
+        public async Task<ActionResult<List<DisponibilidadPresupuestal>>> GetDDPEspecial()
+        {
+            return await (
+                            from dp in _context.DisponibilidadPresupuestal
+                            where dp.NumeroSolicitud.Contains("DE_")
+                            select new DisponibilidadPresupuestal
+                            {
+                                DisponibilidadPresupuestalId = dp.DisponibilidadPresupuestalId,
+                                FechaSolicitud = dp.FechaSolicitud,
+                                NumeroSolicitud = dp.NumeroSolicitud,
+                                ValorSolicitud = dp.ValorSolicitud,
+                                EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
+                                RegistroCompleto = dp.RegistroCompleto
+
+                            }).ToListAsync();
         }
 
 
