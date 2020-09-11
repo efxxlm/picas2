@@ -69,13 +69,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("RegistrarTramiteContratacion")]
         [HttpPut]
-        public async Task<IActionResult> RegistrarTramiteContratacion([FromBody] Contratacion pContratacion , IFormFile pFile)
+        public async Task<IActionResult> RegistrarTramiteContratacion([FromBody] Contratacion pContratacion )
         {
             Respuesta respuesta = new Respuesta();
             try
             { 
                 pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion , pFile , _settings.Value.DirectoryBase , _settings.Value.DirectoryBaseContratacionMinuta);
+                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion , pContratacion.pFile
+                    , _settings.Value.DirectoryBase , _settings.Value.DirectoryBaseContratacionMinuta);
                 return Ok(respuesta);
             }
             catch (Exception ex)
