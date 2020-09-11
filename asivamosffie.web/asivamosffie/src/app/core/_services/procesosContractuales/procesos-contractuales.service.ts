@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GrillaProcesosContractuales } from 'src/app/_interfaces/procesosContractuales.interface';
 import { map } from 'rxjs/operators';
 import { DataSolicitud } from '../../../_interfaces/procesosContractuales.interface';
@@ -48,14 +48,16 @@ export class ProcesosContractualesService {
 
     console.log( contratacion, minutaDoc );
 
-    return this.http.put( `${ this.url }/RegistrarTramiteContratacion`, { pContratacion: contratacion, pFile: minutaDoc } );
+    const registroTramite = {
+      pContratacion: contratacion, 
+      pFile: formData
+    }
+
+    return this.http.put( `${ this.url }/RegistrarTramiteContratacion`, registroTramite, {reportProgress: true, observe: 'events'} );
   };
 
-  sendCambioTramite ( solicitud: any ) {
-    const pSesionComiteSolicitud = {
-      sesionComiteSolicitudId: solicitud.sesionComiteSolicitudId
-    };
-    return this.http.post( `${ this.url }/CambiarEstadoSesionComiteSolicitud`, { pSesionComiteSolicitud } );
+  sendCambioTramite ( solicitud: GrillaProcesosContractuales ) {
+    return this.http.post( `${ this.url }/CambiarEstadoSesionComiteSolicitud`, solicitud );
   }
 
 };

@@ -95,23 +95,23 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number ) {
+  gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
     
     console.log( sesionComiteSolicitudId );
 
     switch ( tipoSolicitud ) {
 
       case 'Contratación':
-        this.routes.navigate( [ '/procesosContractuales/contratacion', solicitudId ], { state: { sesionComiteSolicitudId } } );
+        this.routes.navigate( [ '/procesosContractuales/contratacion', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } );
       break;
       case 'Modificación contractual':
         /*Ejemplo para los 3 tipos de modificaciones contractuales*/
-        this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ] );
-        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: true, reinicio: false } } );
-        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: false, reinicio: true } } )
+        this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } );
+        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: true, reinicio: false, sesionComiteSolicitudId, estadoCodigo } } );
+        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: false, reinicio: true, sesionComiteSolicitudId, estadoCodigo } } )
       break;
       case 'Liquidación':
-        this.routes.navigate( [ '/procesosContractuales/liquidacion', solicitudId ] );
+        this.routes.navigate( [ '/procesosContractuales/liquidacion', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } );
       break;
       default:
         console.log( 'No es un tipo de solicitud valido.' );

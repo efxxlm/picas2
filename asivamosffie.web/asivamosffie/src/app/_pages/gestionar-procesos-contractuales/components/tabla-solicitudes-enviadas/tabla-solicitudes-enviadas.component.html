@@ -44,7 +44,8 @@
 
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
+                class="btn-table"
+                (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.sesionComiteSolicitudId, element.estadoCodigo )">
                 Ver detalle
         </button>
   

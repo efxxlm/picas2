@@ -6,6 +6,7 @@
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
+  padding: .5em;
 }
 
 .color-text {
@@ -15,4 +16,11 @@
 
 .mr-table {
   margin: 3em 0em;
+}
+
+.sub-item-table {
+  display: block;
+  &:not(:first-child) {
+      border-top: solid 1px #000000b8;
+  }
 }

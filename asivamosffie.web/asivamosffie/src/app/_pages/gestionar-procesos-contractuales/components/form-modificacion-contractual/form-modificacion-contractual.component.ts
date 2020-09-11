@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 
 @Component({
   selector: 'app-form-modificacion-contractual',
@@ -14,6 +15,8 @@ export class FormModificacionContractualComponent implements OnInit {
   observaciones    : string;
   reinicioBoolean  : boolean;
   suspensionBoolean: boolean;
+  sesionComiteId: number = 0;
+  estadoCodigo: string;
   editorStyle = {
     height: '45px'
   };
@@ -78,7 +81,8 @@ export class FormModificacionContractualComponent implements OnInit {
   ];
 
   constructor ( private fb: FormBuilder,
-                private routes: Router ) {
+                private routes: Router,
+                private procesosContractualesSvc: ProcesosContractualesService ) {
     this.crearFormulario();
     this.getMotivo();
   }
@@ -88,12 +92,13 @@ export class FormModificacionContractualComponent implements OnInit {
 
   getMotivo () {
 
-    if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl || undefined ) {
       this.reinicioBoolean   = false;
       this.suspensionBoolean = false;
       return;
     };
-
+    this.sesionComiteId = this.routes.getCurrentNavigation().extras.state.sesionComiteSolicitudId;
+    this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
     this.suspensionBoolean = this.routes.getCurrentNavigation().extras.state.suspension;
     this.reinicioBoolean   = this.routes.getCurrentNavigation().extras.state.reinicio;
 
@@ -115,6 +120,11 @@ export class FormModificacionContractualComponent implements OnInit {
       minuta           : [ null ],
       minutaFile       : [ null ]
     });
+  };
+
+  getDdp ( sesionComiteSolicitudId ) {
+    this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
+      .subscribe();
   };
 
 };

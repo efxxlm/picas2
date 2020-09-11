@@ -310,10 +310,30 @@
         </div>
 
       </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === '9'">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Información del trámite
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Fecha del trámite</b>: 16/06/2020</p>
+              <p><b>Fecha de envío de documentación física para el trámite</b>: 16/06/2020</p>
+              <p><b>Observaciones</b>: Se enviara por medio de mensajeria 472 para que el documento pueda ser radicado este mismo día</p>
+              <p><b>Minuta adjunta</b>: Minuta.doc</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
     </mat-accordion>
   </div>
 
-  <div class="mt-2em" align="left">
+  <div class="mt-2em" align="left" *ngIf="estadoCodigo === '2'">
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">

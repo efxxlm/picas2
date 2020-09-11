@@ -9,12 +9,11 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TablaRecursosCompartidosComponent implements OnInit {
 
   dataSource                 = new MatTableDataSource();
-  displayedColumns: string[] = [ 'nombre', 'valorAportante', 'valorModificacion', 'valorDespuesModificacion', 'total' ];
+  displayedColumns: string[] = [ 'nombre', 'valorAportante', 'valorModificacion', 'valorDespuesModificacion' ];
+  displayedColumnsFooter: string[] = [ 'nombre', 'valorAportante', 'valorModificacion', 'total' ];
   ELEMENT_DATA    : any[]    = [
-    { titulo: 'Nombre del aportante', name: 'nombre' },
     { titulo: 'Valor aportante', name: 'valorAportante' },
-    { titulo: 'Valor de la modificación', name: 'valorModificacion' },
-    { titulo: 'Valor despues de la modificación', name: 'valorDespuesModificacion' },
+    { titulo: 'Valor de la modificación', name: 'valorModificacion' }
   ];
   data: any[] = [
     {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-liquidacion',
@@ -10,6 +11,8 @@ export class FormLiquidacionComponent implements OnInit {
 
   form         : FormGroup;
   observaciones: string;
+  sesionComiteId: number = 0;
+  estadoCodigo: string;
   editorStyle = {
     height: '45px'
   };
@@ -66,8 +69,15 @@ export class FormLiquidacionComponent implements OnInit {
     { titulo: 'Validación', name: 'validacion' }
   ];
 
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder,
+                private routes: Router ) {
     this.crearFormulario();
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl || undefined ) {
+      this.routes.navigate([ '/procesosContractuales' ]);
+      return;
+    };
+    this.sesionComiteId = this.routes.getCurrentNavigation().extras.state.sesionComiteSolicitudId;
+    this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
   }
 
   ngOnInit(): void {

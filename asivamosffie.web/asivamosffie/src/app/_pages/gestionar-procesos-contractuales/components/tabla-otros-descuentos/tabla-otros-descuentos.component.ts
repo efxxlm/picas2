@@ -9,12 +9,14 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TablaOtrosDescuentosComponent implements OnInit {
 
   dataAportantes                      = new MatTableDataSource();
+  @Input() data            : any[]    = []; 
   @Input() displayedColumns: string[] = [];
   @Input() ELEMENT_DATA    : any[]    = [];
 
   constructor() { }
 
   ngOnInit(): void {
+    this.dataAportantes = new MatTableDataSource( this.data );
   }
 
 }

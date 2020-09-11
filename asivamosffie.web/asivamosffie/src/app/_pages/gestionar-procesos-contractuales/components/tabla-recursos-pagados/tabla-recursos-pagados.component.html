@@ -1,8 +1,57 @@
 <table mat-table [dataSource]="dataAportantes" matSort class="mat-elevation-z8 mr-table">
 
-  <ng-container *ngFor="let columna of ELEMENT_DATA" [matColumnDef]="columna.name">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> {{ columna.titulo }} </th>
-    <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{element[columna.name]}}</b> </td>
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Nombre del aportante </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.nombre }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="valorFacturado">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Valor facturado </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.valorFacturado }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="uso">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Uso </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+      <ng-container *ngFor="let item of element.uso">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="tipoPago">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Tipo de pago </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+      <ng-container *ngFor="let item of element.tipoPago">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="conceptoPago">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Concepto de pago </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+      <ng-container *ngFor="let item of element.conceptoPago">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="valorConceptoPago">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Valor concepto de pago </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text" style="padding-right: 0em !important;padding-left: 0em !important;">
+      <ng-container *ngFor="let item of element.valorConceptoPago">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -11,9 +60,64 @@
 
 <table mat-table [dataSource]="dataAportantes1" matSort class="mat-elevation-z8 mr-table">
 
-  <ng-container *ngFor="let columna of ELEMENT_DATA1" [matColumnDef]="columna.name">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> {{ columna.titulo }} </th>
-    <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{element[columna.name]}}</b> </td>
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Nombre del aportante </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.nombre }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="conceptoPago">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Concepto de pago </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+      <ng-container *ngFor="let item of element.conceptoPago">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ansAplicado">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> ANS aplicado </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+      <ng-container *ngFor="let item of element.ansAplicado">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="garantiaPagar">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Rete garantía a pagar </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+      <ng-container *ngFor="let item of element.garantiaPagar">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="otrosDescuentos">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Otros descuentos </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+      <ng-container *ngFor="let item of element.otrosDescuentos">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalDescuentos">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Valor total descuentos </th>
+    <td mat-cell *matCellDef="let element" align="center" class="color-text" style="padding-right: 0em !important;padding-left: 0em !important;">
+      <ng-container *ngFor="let item of element.totalDescuentos">
+        <td class="flex-td sub-item-table">
+          {{ item }}
+        </td>
+      </ng-container>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>

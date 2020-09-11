@@ -13,6 +13,7 @@ export class FormContratacionComponent implements OnInit {
   
   form         : FormGroup;
   sesionComiteId: number = 0;
+  estadoCodigo: string;
   dataContratacion: DataSolicitud = {
     contratacionId: 0,
     consideracionDescripcion: '',
@@ -100,7 +101,12 @@ export class FormContratacionComponent implements OnInit {
                 private procesosContractualesSvc: ProcesosContractualesService ) {
     this.getContratacion( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl || undefined ) {
+      this.routes.navigate([ '/procesosContractuales' ]);
+      return;
+    };
     this.sesionComiteId = this.routes.getCurrentNavigation().extras.state.sesionComiteSolicitudId;
+    this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
   };
 
   ngOnInit(): void {
