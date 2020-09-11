@@ -46,12 +46,12 @@ export class ProcesosContractualesService {
 
     const minutaDoc = formData.get( 'file' );
 
-    console.log( contratacion, minutaDoc );
-
     const registroTramite = {
       pContratacion: contratacion, 
-      pFile: formData
+      pFile: minutaDoc
     }
+
+    console.log( registroTramite.pFile );
 
     return this.http.put( `${ this.url }/RegistrarTramiteContratacion`, registroTramite, {reportProgress: true, observe: 'events'} );
   };
