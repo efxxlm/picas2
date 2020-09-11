@@ -79,14 +79,14 @@ namespace asivamosffie.services
 
 
         //Detalle gestion compromisos
-        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int comiteTecnicoId)
         {
             try
             {
 
                 return await (from a in _context.SesionComiteTecnicoCompromiso
                               join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
-                              where a.Eliminado != true && a.SesionComiteTecnicoCompromisoId == sesionComiteTecnicoCompromisoId
+                              where a.Eliminado != true && a.ComiteTecnicoId == comiteTecnicoId
                               select new GrillaSesionComiteTecnicoCompromiso
                               {
                                   ComiteTecnicoId = s.ComiteTecnicoId,
@@ -95,6 +95,8 @@ namespace asivamosffie.services
                                   FechaCumplimiento = a.FechaCumplimiento,
                                   EstadoCompromisoText = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(a.EstadoCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).Select(r => r.Nombre).FirstOrDefault(),
                               }).ToListAsync();
+
+
 
 
 

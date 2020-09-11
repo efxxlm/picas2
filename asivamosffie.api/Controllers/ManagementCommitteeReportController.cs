@@ -77,11 +77,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetManagementCommitteeReportById")]
         [HttpGet]
-        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int SesionComiteTecnicoCompromisoId)
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int comiteTecnicoId)
         {
             try
             {
-                return await _managementCommitteeReportService.GetManagementCommitteeReportById(SesionComiteTecnicoCompromisoId);
+                return await _managementCommitteeReportService.GetManagementCommitteeReportById(comiteTecnicoId);
             }
             catch (Exception ex)
             {
