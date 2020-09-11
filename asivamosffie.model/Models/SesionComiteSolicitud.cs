@@ -25,7 +25,7 @@ namespace asivamosffie.model.Models
         public string RutaSoporteVotacion { get; set; }
         public bool? GeneraCompromiso { get; set; }
         public int? CantCompromisos { get; set; }
-
+        public string EstadoActaCodigo { get; set; }
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual Contratacion Solicitud { get; set; }
         public virtual DefensaJudicial Solicitud1 { get; set; }

@@ -54,7 +54,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Estado_Juridico_Predios = 25,
 		Estado_Comite = 38,
 		Estado_Cronograma_Seguimiento = 40,
-	    Estado_Compromiso = 45
+	    Estado_Compromiso = 45,
+		EstadoAcataComiteTecnico = 47
 
 
 	}

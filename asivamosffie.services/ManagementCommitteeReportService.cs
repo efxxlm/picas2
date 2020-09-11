@@ -92,6 +92,36 @@ namespace asivamosffie.services
         }
 
 
+        //Lista gestion de actas
+        public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport()
+        {
+            try
+            {
+
+                return await (from a in _context.SesionComiteTecnicoCompromiso
+                              join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
+                              join sc in _context.SesionComiteSolicitud on a.ComiteTecnicoId equals sc.ComiteTecnicoId
+                              where s.Eliminado != true
+                              select new ComiteTecnico
+                              {
+                                  ComiteTecnicoId = s.ComiteTecnicoId,
+                                  FechaCreacion = s.FechaCreacion,
+                                  NumeroComite = s.NumeroComite,
+                                  EstadoComiteCodigo =  sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault(): "Sin revision",
+
+                              }).ToListAsync();
+
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
 
         //Reportar Avance Compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso)

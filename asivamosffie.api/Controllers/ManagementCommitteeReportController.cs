@@ -40,6 +40,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetManagementReport")]
+        [HttpGet]
+        public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport()
+        {
+            try
+            {
+                return await _managementCommitteeReportService.GetManagementReport();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
         [Route("GetManagementCommitteeReportById")]
         [HttpGet]
         public async Task<ActionResult<List<SesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int SesionComiteTecnicoCompromisoId)

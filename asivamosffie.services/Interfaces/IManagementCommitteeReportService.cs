@@ -13,6 +13,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<SesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int SesionComiteTecnicoCompromisoId);
         Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso);
         Task<Respuesta> CreateOrEditCommentReport(SesionComentario SesionComentario);
+        Task<ActionResult<List<ComiteTecnico>>> GetManagementReport();
         Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status);
     }
 }

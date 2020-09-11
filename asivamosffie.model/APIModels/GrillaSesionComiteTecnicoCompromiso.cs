@@ -9,6 +9,9 @@ namespace asivamosffie.model.APIModels
         public int ComiteTecnicoId { get; set; }
         public DateTime? FechaOrdenDia { get; set; }
         public string  NumeroComite { get; set; }
+        public string EstadoAcataCodigo { get; set; }
+        public string EstadoAcataText { get; set; }
+        public DateTime? FechaComite { get; set; }
         public string Tarea { get; set; }
         public int SesionComiteTecnicoCompromisoId { get; set; }
         public DateTime? FechaCumplimiento { get; set; }
