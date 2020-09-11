@@ -59,6 +59,31 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        [Route("GetDetailInfoAdditionalById")]
+        public async Task<IActionResult> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetDetailInfoAdditionalById(disponibilidadPresupuestalId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         [Route("CreateOrEditReportProgress")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditReportProgress([FromBody] CompromisoSeguimiento compromisoSeguimiento)

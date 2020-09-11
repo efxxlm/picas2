@@ -105,21 +105,31 @@ namespace asivamosffie.services
         }
 
 
-        //Detalle solicitud por id
+        //Aportantes por proyectoId
         public async Task<ActionResult<List<ListAportantes>>> GetAportantesByProyectoId(int proyectoId)
         {
             try
             {
+
+
                 return await (
-                                from ctp in _context.ContratacionProyecto
-                                join ct in _context.Contratacion on ctp.ContratacionId equals ct.ContratacionId
-                                join p in _context.Proyecto on ctp.ProyectoId equals p.ProyectoId
-                                join ca in _context.ContratacionProyectoAportante on ctp.ContratacionProyectoId equals ca.ContratacionProyectoId
-                                join cf in _context.CofinanciacionAportante on ca.CofinanciacionAportanteId equals cf.CofinanciacionAportanteId
+                                from cp in _context.ContratacionProyecto
+                                join ct in _context.Contratacion on cp.ContratacionId equals ct.ContratacionId
+                                join p in _context.Proyecto on cp.ProyectoId equals p.ProyectoId
+                                join ctp in _context.ContratacionProyectoAportante on cp.ContratacionProyectoId equals ctp.ContratacionProyectoId
+                                join cf in _context.CofinanciacionAportante on ctp.CofinanciacionAportanteId equals cf.CofinanciacionAportanteId
                                 where p.ProyectoId == proyectoId 
                                 select new ListAportantes
-                                { 
-                                    
+                                {
+                                    ContratacionId = ct.ContratacionId,
+                                    ContratacionProyectoId = ctp.ContratacionProyectoId,
+                                    CofinanciacionAportanteId = cf.CofinanciacionAportanteId,
+                                    ContratacionProyectoAportanteId = ctp.ContratacionProyectoAportanteId,
+                                    TipoAportanteId = cf.TipoAportanteId,
+                                    NombreAportanteId = cf.NombreAportanteId,
+                                    NombreAportante = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(cf.NombreAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante).Select(r => r.Nombre).FirstOrDefault(),
+                                    ValorAporte = ctp.ValorAporte,
+                                    TipoAportanteText =  _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(cf.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
                                 }).ToListAsync();
 
 
@@ -132,10 +142,6 @@ namespace asivamosffie.services
             }
         }
 
-        public Task<ActionResult<List<SesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
-        {
-            throw new NotImplementedException();
-        }
 
 
         //Registrar informacion Adicional en una solicitud
@@ -189,6 +195,13 @@ namespace asivamosffie.services
                 };
             }
 
+        }
+
+
+        //Ver detalle
+        public async Task<DisponibilidadPresupuestal> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
+        {
+            return await _context.DisponibilidadPresupuestal.Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).FirstOrDefaultAsync();
         }
 
 

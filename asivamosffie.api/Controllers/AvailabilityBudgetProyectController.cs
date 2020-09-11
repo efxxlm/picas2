@@ -26,20 +26,20 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("GetAvailabilityBudgetProyect")]
-        public async Task<IActionResult> GetAvailabilityBudgetProyect()
-        {
-            try
-            {
-                var result = await _availabilityBudgetProyectService.GetManagementCommitteeReport();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        //[Route("GetAvailabilityBudgetProyect")]
+        //public async Task<IActionResult> GetAvailabilityBudgetProyect()
+        //{
+        //    try
+        //    {
+        //        var result = await _availabilityBudgetProyectService.GetManagementCommitteeReport();
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw ex;
-            }
-        }
+        //        throw ex;
+        //    }
+        //}
 
 
 
