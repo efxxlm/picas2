@@ -225,7 +225,11 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.Eliminado = false;
 
+                    disponibilidadPresupuestal.NumeroSolicitud = "Validando";
+                    disponibilidadPresupuestal.OpcionContratarCodigo = "Validando";
+                    disponibilidadPresupuestal.ValorSolicitud = 0;
                     disponibilidadPresupuestal.EstadoSolicitudCodigo = "8"; // Sin registrar => TipoDominioId = 39
+                    disponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     disponibilidadPresupuestal.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestal.Objeto = disponibilidadPresupuestal.Objeto;
                     disponibilidadPresupuestal.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
@@ -242,6 +246,10 @@ namespace asivamosffie.services
 
 
                     //Registros
+                    disponibilidadPresupuestal.OpcionContratarCodigo = disponibilidadPresupuestal.OpcionContratarCodigo;
+                    disponibilidadPresupuestal.ValorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
+                    disponibilidadPresupuestal.NumeroSolicitud = disponibilidadPresupuestal.NumeroSolicitud;
+                    disponibilidadPresupuestal.FechaSolicitud = disponibilidadPresupuestal.FechaSolicitud;
                     disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto;
                     disponibilidadPresupuestal.EstadoSolicitudCodigo = disponibilidadPresupuestal.EstadoSolicitudCodigo;
                     disponibilidadPresupuestalAntiguo.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
