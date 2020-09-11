@@ -16,7 +16,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento);
         Task<Respuesta> CreateOrEditInfoAdditional(PostParameter postParameter, string user);
         Task<DisponibilidadPresupuestal> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId);
-        Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal);
+        Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId);
         Task<ActionResult<List<Proyecto>>> SearchLlaveMEN(string LlaveMEN);
         Task<List<CustonReuestCommittee>> GetReuestCommittee();
         CustonReuestCommittee MapToValue(SqlDataReader reader);

@@ -206,13 +206,14 @@ namespace asivamosffie.services
 
 
         //Registrar nueva solicitud DDp Especial
-        public async Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal)
+        public async Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
         {
             Respuesta respuesta = new Respuesta();
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_DDP_Especial, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
             DisponibilidadPresupuestal disponibilidadPresupuestalAntiguo = null;
+
             try
             {
 
@@ -233,7 +234,22 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestal.Objeto = disponibilidadPresupuestal.Objeto;
                     disponibilidadPresupuestal.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
-                    _context.DisponibilidadPresupuestal.Add(disponibilidadPresupuestal);
+
+                   _context.DisponibilidadPresupuestal.Add(disponibilidadPresupuestal);
+                    var result = await _context.SaveChangesAsync();
+
+                    if (result > 0)
+                    {
+                        DisponibilidadPresupuestalProyecto entity = new DisponibilidadPresupuestalProyecto();
+                        entity.ProyectoId = proyectoId;
+                        entity.DisponibilidadPresupuestalId = disponibilidadPresupuestalId;
+                        entity.FechaCreacion = DateTime.Now;
+                        entity.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                        entity.Eliminado = false;
+
+                        _context.DisponibilidadPresupuestalProyecto.Add(entity);
+                    }
+
                 }
                 else
                 {
