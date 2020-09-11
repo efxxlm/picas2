@@ -76,7 +76,20 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("SearchLlaveMEN")]
+        public async Task<IActionResult> SearchLlaveMEN(string LlaveMEN)
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.SearchLlaveMEN(LlaveMEN);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
 
+                throw ex;
+            }
+        }
 
 
 

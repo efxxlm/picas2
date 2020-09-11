@@ -327,6 +327,19 @@ namespace asivamosffie.services
             };
         }
 
+
+        public async Task<ActionResult<List<Proyecto>>> SearchLlaveMEN(string LlaveMEN)
+        {
+            var Id = await _context.Proyecto.Where(r => r.LlaveMen == LlaveMEN.ToString().Trim() && !(bool)r.Eliminado).Select(r => r.LlaveMen).FirstOrDefaultAsync();
+            if (!string.IsNullOrEmpty(Id))
+                return await _context.Proyecto.Where(r => r.LlaveMen.Equals(Id)).ToListAsync();
+
+            else
+                throw new Exception("Esta llave no existe, por favor verificar los datos registrados");
+
+        }
+
+
         public Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal)
         {
             throw new NotImplementedException("No implementado");
