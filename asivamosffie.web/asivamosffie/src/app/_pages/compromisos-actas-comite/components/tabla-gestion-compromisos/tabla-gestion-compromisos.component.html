@@ -47,20 +47,18 @@
           Reportar avance
         </button>
 
-        <!--
-          <button mat-raised-button 
-                color="accent" 
-                class="btn-table"
-                *ngIf="element.estadoCompromiso.enProceso"
-                (click)="reportProgress( element )">
-                Ver detalle/Editar
-          </button>
-        -->
+        <button mat-raised-button 
+              color="accent" 
+              class="btn-table"
+              *ngIf="element.estadoCompromisoText === 'En proceso'"
+              (click)="reportProgress( element )">
+              Ver detalle/Editar
+        </button>
   
         <button mat-raised-button 
                 color="accent"
                 class="btn-table"
-                *ngIf="element.estadoComiteText === 'Convocada'"
+                *ngIf="element.estadoCompromisoText === 'Convocada'"
                 (click)="reportProgress( element.comiteTecnicoId )">
           Ver detalle
         </button>
