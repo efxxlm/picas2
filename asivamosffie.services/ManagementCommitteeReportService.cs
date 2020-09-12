@@ -84,6 +84,7 @@ namespace asivamosffie.services
         {
             try
             {
+                //Actualizado
                 return await (from cs in _context.CompromisoSeguimiento
                               join stc in _context.SesionComiteTecnicoCompromiso on cs.SesionComiteTecnicoCompromisoId equals stc.SesionComiteTecnicoCompromisoId
 
