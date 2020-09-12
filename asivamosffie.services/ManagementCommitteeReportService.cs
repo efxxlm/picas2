@@ -53,7 +53,7 @@ namespace asivamosffie.services
                 return await (from ct in _context.ComiteTecnico 
                               join stc in _context.SesionComiteTecnicoCompromiso on ct.ComiteTecnicoId equals stc.ComiteTecnicoId
                               join scs in _context.SesionComiteSolicitud on ct.ComiteTecnicoId equals scs.ComiteTecnicoId
-                              where ct.EstadoComiteCodigo == "3"
+                              where ct.EstadoActaCodigo == "3"
 
                               select new GrillaSesionComiteTecnicoCompromiso
                               {

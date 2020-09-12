@@ -33,6 +33,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaOrdenDia { get; set; }
         public string NumeroComite { get; set; }
         public string EstadoComiteCodigo { get; set; }
+        public string EstadoActaCodigo { get; set; }
 
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
