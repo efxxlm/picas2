@@ -42,16 +42,15 @@
         <button mat-raised-button 
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoCompromisoText === 'Sin iniciar'"
-                (click)="reportProgress( element.comiteTecnicoId )">
+                
+                (click)="reportProgress( element.comiteTecnicoId )"> <!-- *ngIf="element.estadoCompromisoText === 'Sin iniciar'" -->
           Reportar avance
         </button>
 
         <button mat-raised-button 
               color="accent" 
               class="btn-table"
-              *ngIf="element.estadoCompromisoText === 'En proceso'"
-              (click)="reportProgress( element )">
+              (click)="reportProgress( element.comiteTecnicoId )"> <!-- *ngIf="element.estadoCompromisoText === 'En proceso'" -->
               Ver detalle/Editar
         </button>
   

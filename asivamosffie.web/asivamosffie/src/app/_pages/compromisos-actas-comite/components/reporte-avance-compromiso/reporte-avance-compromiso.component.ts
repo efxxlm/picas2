@@ -16,10 +16,11 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
   estadoBoolean    : boolean = false;
   estadoComite     : string = '';
   comite: any = {};
+  estadoCodigo: string;
   estados          : any[] = [
-    { value: 'sinAvance', viewValue: 'Sin iniciar' },
-    { value: 'enProceso', viewValue: 'En proceso' },
-    { value: 'finalizado', viewValue: 'Finalizada' }
+    { value: '1', viewValue: 'Sin iniciar' },
+    { value: '2', viewValue: 'En proceso' },
+    { value: '3', viewValue: 'Finalizada' }
   ];
   editorStyle = {
     height: '100px'
@@ -93,12 +94,9 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
       return;
     };
 
-    const seguimiento = {
-      DescripcionSeguimiento: this.reporte.get( 'reporteEstado' ).value,
-      SesionComiteTecnicoCompromisoId: this.comite.sesionComiteTecnicoCompromisoId
-    }
+    this.comite.tarea = this.reporte.get( 'reporteEstado' ).value;
 
-    this.compromisoSvc.postCompromisos( seguimiento, this.comite.comiteTecnicoId )
+    this.compromisoSvc.postCompromisos( this.comite, this.estadoCodigo )
       .subscribe( resp => {
         console.log( resp );
         this.openDialog('La información ha sido guardada exitosamente', '');
