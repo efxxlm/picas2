@@ -78,6 +78,23 @@ namespace asivamosffie.services
         }
 
 
+
+        //Detalle gestion compromisos
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetCompromisoSeguimientoById(int compromisoSeguimientoId)
+        {
+            return await (from a in _context.CompromisoSeguimiento
+                          join s in _context.SesionComiteTecnicoCompromiso on a.SesionComiteTecnicoCompromisoId equals s.SesionComiteTecnicoCompromisoId
+                          where a.Eliminado != true && a.CompromisoSeguimientoId == compromisoSeguimientoId
+                          select new GrillaSesionComiteTecnicoCompromiso
+                          {
+                              CompromisoSeguimientoId = a.CompromisoSeguimientoId,
+                              DescripcionSeguimiento = a.DescripcionSeguimiento,
+                              EstadoCodigo = s.EstadoCodigo
+                          }).ToListAsync();
+        }
+
+
+
         //Detalle gestion compromisos
         public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int comiteTecnicoId)
         {
@@ -86,11 +103,14 @@ namespace asivamosffie.services
 
                 return await (from a in _context.SesionComiteTecnicoCompromiso
                               join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
+                              join r in _context.CompromisoSeguimiento on a.ComiteTecnicoId equals r.SesionComiteTecnicoCompromisoId
                               where a.Eliminado != true && a.ComiteTecnicoId == comiteTecnicoId
                               select new GrillaSesionComiteTecnicoCompromiso
                               {
                                   ComiteTecnicoId = s.ComiteTecnicoId,
                                   SesionComiteTecnicoCompromisoId = a.SesionComiteTecnicoCompromisoId,
+                                  DescripcionSeguimiento = r.DescripcionSeguimiento,
+                                  CompromisoSeguimientoId = r.CompromisoSeguimientoId,
                                   EstadoCodigo = a.EstadoCodigo,
                                   NumeroComite = s.NumeroComite,
                                   Tarea = a.Tarea,
