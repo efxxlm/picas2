@@ -48,24 +48,23 @@ namespace asivamosffie.services
         {
             try
             {
-                
-                return await (from a in _context.SesionComiteTecnicoCompromiso
-                                join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
-                                where a.Eliminado != true
-                                select new GrillaSesionComiteTecnicoCompromiso
-                                {
-                                    ComiteTecnicoId = s.ComiteTecnicoId,
-                                    FechaOrdenDia = s.FechaOrdenDia,
-                                    NumeroComite = s.NumeroComite,
-                                    Tarea = a.Tarea,
-                                    SesionComiteTecnicoCompromisoId = a.SesionComiteTecnicoCompromisoId,
-                                    FechaCumplimiento = a.FechaCumplimiento,
-                                    EstadoCodigo = a.EstadoCodigo,
-                                    EstadoCompromisoText =  _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(a.EstadoCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).Select(r => r.Nombre).FirstOrDefault(),
-                                    EstadoComiteCodigo = s.EstadoComiteCodigo,
-                                    EstadoComiteText = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(s.EstadoComiteCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Comite).Select(r => r.Nombre).FirstOrDefault(),
 
-                                }).ToListAsync();
+
+                return await (from ct in _context.ComiteTecnico 
+                              join stc in _context.SesionComiteTecnicoCompromiso on ct.ComiteTecnicoId equals stc.ComiteTecnicoId
+                              join scs in _context.SesionComiteSolicitud on ct.ComiteTecnicoId equals scs.ComiteTecnicoId
+                              //where ct.EstadoComiteCodigo == "3"
+
+                              select new GrillaSesionComiteTecnicoCompromiso
+                              {
+                                  ComiteTecnicoId = ct.ComiteTecnicoId,
+                                  SesionComiteTecnicoCompromisoId = stc.SesionComiteTecnicoCompromisoId,
+                                  FechaComite = ct.FechaCreacion,
+                                  NumeroComite = ct.NumeroComite,
+                                  Compromiso = stc.Tarea,
+                                  FechaCumplimiento = stc.FechaCumplimiento,
+                                  EstadoCodigo = stc.EstadoCodigo
+                              }).ToListAsync();
 
 
 
@@ -78,45 +77,14 @@ namespace asivamosffie.services
         }
 
 
+        //stc.SesionComiteTecnicoCompromisoId,
 
         //Detalle gestion compromisos
-        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetCompromisoSeguimientoById(int compromisoSeguimientoId)
-        {
-            return await (from a in _context.CompromisoSeguimiento
-                          join s in _context.SesionComiteTecnicoCompromiso on a.SesionComiteTecnicoCompromisoId equals s.SesionComiteTecnicoCompromisoId
-                          where a.Eliminado != true && a.CompromisoSeguimientoId == compromisoSeguimientoId
-                          select new GrillaSesionComiteTecnicoCompromiso
-                          {
-                              CompromisoSeguimientoId = a.CompromisoSeguimientoId,
-                              DescripcionSeguimiento = a.DescripcionSeguimiento,
-                              EstadoCodigo = s.EstadoCodigo
-                          }).ToListAsync();
-        }
-
-
-
-        //Detalle gestion compromisos
-        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int comiteTecnicoId)
+        public async Task<ActionResult<List<CompromisoSeguimiento>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
         {
             try
             {
-
-                return await (from a in _context.SesionComiteTecnicoCompromiso
-                              join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
-                              join r in _context.CompromisoSeguimiento on a.ComiteTecnicoId equals r.SesionComiteTecnicoCompromisoId
-                              where a.Eliminado != true && a.ComiteTecnicoId == comiteTecnicoId
-                              select new GrillaSesionComiteTecnicoCompromiso
-                              {
-                                  ComiteTecnicoId = s.ComiteTecnicoId,
-                                  SesionComiteTecnicoCompromisoId = a.SesionComiteTecnicoCompromisoId,
-                                  DescripcionSeguimiento = r.DescripcionSeguimiento,
-                                  CompromisoSeguimientoId = r.CompromisoSeguimientoId,
-                                  EstadoCodigo = a.EstadoCodigo,
-                                  NumeroComite = s.NumeroComite,
-                                  Tarea = a.Tarea,
-                                  FechaCumplimiento = a.FechaCumplimiento,
-                                  EstadoCompromisoText = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(a.EstadoCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).Select(r => r.Nombre).FirstOrDefault(),
-                              }).ToListAsync();
+                return await _context.CompromisoSeguimiento.Where(x => x.SesionComiteTecnicoCompromisoId == sesionComiteTecnicoCompromisoId).ToListAsync();
 
             }
             catch (Exception)

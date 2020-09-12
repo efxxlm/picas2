@@ -77,11 +77,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetManagementCommitteeReportById")]
         [HttpGet]
-        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int comiteTecnicoId)
+        public async Task<ActionResult<List<CompromisoSeguimiento>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
         {
             try
             {
-                return await _managementCommitteeReportService.GetManagementCommitteeReportById(comiteTecnicoId);
+                return await _managementCommitteeReportService.GetManagementCommitteeReportById(sesionComiteTecnicoCompromisoId);
             }
             catch (Exception ex)
             {
@@ -89,19 +89,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("GetCompromisoSeguimientoById")]
-        [HttpGet]
-        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetCompromisoSeguimientoById(int compromisoSeguimientoId)
-        {
-            try
-            {
-                return await _managementCommitteeReportService.GetCompromisoSeguimientoById(compromisoSeguimientoId);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+
 
         [Route("CreateOrEditReportProgress")]
         [HttpPost]

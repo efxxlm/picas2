@@ -12,7 +12,7 @@ namespace asivamosffie.model.APIModels
         public string EstadoAcataCodigo { get; set; }
         public string EstadoAcataText { get; set; }
         public DateTime? FechaComite { get; set; }
-        public string Tarea { get; set; }
+        public string Compromiso { get; set; }
         public int SesionComiteTecnicoCompromisoId { get; set; }
         public DateTime? FechaCumplimiento { get; set; }
         public string EstadoCodigo { get; set; }
