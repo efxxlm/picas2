@@ -290,9 +290,60 @@ namespace asivamosffie.services
                     IsSuccessful = false,
                     IsException = true,
                     IsValidation = false,
-                    Data = SesionComentario,
+                    Data = null,
                     Code = ConstantMessagesSesionComiteTema.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, SesionComentario.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+        //Aprobar Acta
+        public async Task<Respuesta> AcceptReport(int comiteTecnicoId, string user)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Acta, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            ComiteTecnico comiteTecnico = null;
+            try
+            {
+                comiteTecnico = await _context.ComiteTecnico.Where(c => c.ComiteTecnicoId == comiteTecnicoId).FirstOrDefaultAsync();
+
+                if (comiteTecnico != null)
+                {
+                    //Auditoria
+                    strCrearEditar = "APROBAR ACTA";
+
+                    comiteTecnico.UsuarioModificacion = user;
+                    comiteTecnico.EstadoActaCodigo = "3";
+                    _context.ComiteTecnico.Update(comiteTecnico);
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = comiteTecnico,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, user, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, user, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
 

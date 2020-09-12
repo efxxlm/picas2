@@ -132,6 +132,26 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("AcceptReport")]
+        [HttpPost]
+        public async Task<IActionResult> AcceptReport(int comiteTecnicoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                string user = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId,user);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
         //Descargar acta
         [HttpGet]

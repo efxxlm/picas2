@@ -34,5 +34,6 @@
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
         public const string Crear_Editar_Seguimiento_Compromiso = "60";
         public const string Crear_Editar_Comentario_Acta = "63";
+        public const string Aprobar_Acta = "73";
     }
 }
