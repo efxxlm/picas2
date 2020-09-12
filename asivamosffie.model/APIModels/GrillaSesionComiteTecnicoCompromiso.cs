@@ -15,6 +15,7 @@ namespace asivamosffie.model.APIModels
         public string Compromiso { get; set; }
         public int SesionComiteTecnicoCompromisoId { get; set; }
         public DateTime? FechaCumplimiento { get; set; }
+        public DateTime FechaRegistroAvanceCompromiso { get; set; }
         public string EstadoCodigo { get; set; }
         public string EstadoCompromisoText { get; set; }
         public string DescripcionSeguimiento { get; set; }

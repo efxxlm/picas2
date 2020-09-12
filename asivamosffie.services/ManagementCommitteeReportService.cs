@@ -53,7 +53,7 @@ namespace asivamosffie.services
                 return await (from ct in _context.ComiteTecnico 
                               join stc in _context.SesionComiteTecnicoCompromiso on ct.ComiteTecnicoId equals stc.ComiteTecnicoId
                               join scs in _context.SesionComiteSolicitud on ct.ComiteTecnicoId equals scs.ComiteTecnicoId
-                              //where ct.EstadoComiteCodigo == "3"
+                              where ct.EstadoComiteCodigo == "3"
 
                               select new GrillaSesionComiteTecnicoCompromiso
                               {
@@ -77,14 +77,26 @@ namespace asivamosffie.services
         }
 
 
-        //stc.SesionComiteTecnicoCompromisoId,
+
 
         //Detalle gestion compromisos
-        public async Task<ActionResult<List<CompromisoSeguimiento>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
         {
             try
             {
-                return await _context.CompromisoSeguimiento.Where(x => x.SesionComiteTecnicoCompromisoId == sesionComiteTecnicoCompromisoId).ToListAsync();
+                return await (from cs in _context.CompromisoSeguimiento
+                              join stc in _context.SesionComiteTecnicoCompromiso on cs.SesionComiteTecnicoCompromisoId equals stc.SesionComiteTecnicoCompromisoId
+
+                              where cs.SesionComiteTecnicoCompromisoId == sesionComiteTecnicoCompromisoId
+                              select new GrillaSesionComiteTecnicoCompromiso
+                              {
+
+                                  SesionComiteTecnicoCompromisoId = stc.SesionComiteTecnicoCompromisoId,
+                                  DescripcionSeguimiento = cs.DescripcionSeguimiento,
+                                  FechaRegistroAvanceCompromiso = cs.FechaCreacion,
+                                  EstadoCodigo = stc.EstadoCodigo
+
+                              }).ToListAsync();
 
             }
             catch (Exception)
