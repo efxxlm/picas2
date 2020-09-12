@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -24,11 +24,21 @@ export class CompromisosActasComiteService {
   };
 
   postCompromisos ( seguimiento: any, estadoId: string ) {
-    seguimiento = {
-      "DescripcionSeguimiento": "Hola c:",
-      "SesionComiteTecnicoCompromisoId": 1
+
+    const descripcion = seguimiento.tarea;
+    const sesionComiteTecnicoCompromisoId = seguimiento.sesionComiteTecnicoCompromisoId
+
+    const compromisoSeguimiento = {
+      descripcionSeguimiento: `${ descripcion }`,
+      sesionComiteTecnicoCompromisoId: `${ sesionComiteTecnicoCompromisoId }`
     }
-    return this.http.post( `${ this.url }/CreateOrEditReportProgress?estadoCompromiso=${ estadoId }`, seguimiento )
+
+    const headers = new HttpHeaders({
+      'Content-Type':'application/json'
+    })
+
+    console.log( compromisoSeguimiento, estadoId );
+    return this.http.post( `${ this.url }/CreateOrEditReportProgress?estadoCompromiso=${ estadoId }`, compromisoSeguimiento, { headers } )
   };
 
   postComentariosActa () {
