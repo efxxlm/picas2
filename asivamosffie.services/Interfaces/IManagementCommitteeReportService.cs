@@ -17,6 +17,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<ComiteTecnico>>> GetManagementReportById(int comiteTecnicoId);
         //Task<ActionResult<List<ComiteTecnico>>> GetManagementReport(int comiteTecnicoId);
         Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status);
+        Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetCompromisoSeguimientoById(int compromisoSeguimientoId);
         Task<HTMLContent> GetHTMLString(ActaComite obj);
     }
 }

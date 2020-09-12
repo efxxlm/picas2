@@ -89,7 +89,19 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
+        [Route("GetCompromisoSeguimientoById")]
+        [HttpGet]
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetCompromisoSeguimientoById(int compromisoSeguimientoId)
+        {
+            try
+            {
+                return await _managementCommitteeReportService.GetCompromisoSeguimientoById(compromisoSeguimientoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [Route("CreateOrEditReportProgress")]
         [HttpPost]
