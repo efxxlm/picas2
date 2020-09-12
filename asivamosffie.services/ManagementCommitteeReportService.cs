@@ -120,7 +120,8 @@ namespace asivamosffie.services
                              ComiteTecnicoId = s.ComiteTecnicoId,
                              FechaCreacion = s.FechaCreacion,
                              NumeroComite = s.NumeroComite,
-                             EstadoComiteCodigo = sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
+                             EstadoComiteCodigo = s.EstadoActaCodigo
+                             //sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
 
                          }).ToListAsync();
         }
