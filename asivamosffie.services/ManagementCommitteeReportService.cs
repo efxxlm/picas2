@@ -90,15 +90,13 @@ namespace asivamosffie.services
                               select new GrillaSesionComiteTecnicoCompromiso
                               {
                                   ComiteTecnicoId = s.ComiteTecnicoId,
+                                  SesionComiteTecnicoCompromisoId = a.SesionComiteTecnicoCompromisoId,
+                                  EstadoCodigo = a.EstadoCodigo,
                                   NumeroComite = s.NumeroComite,
                                   Tarea = a.Tarea,
                                   FechaCumplimiento = a.FechaCumplimiento,
                                   EstadoCompromisoText = _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(a.EstadoCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).Select(r => r.Nombre).FirstOrDefault(),
                               }).ToListAsync();
-
-
-
-
 
             }
             catch (Exception)
