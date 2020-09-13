@@ -23,7 +23,7 @@ namespace asivamosffie.services.Interfaces
         CustonReuestCommittee MapToValue(SqlDataReader reader);
         Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal);
         Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId);
-
+        Task<Respuesta> SendRequest(int disponibilidadPresupuestalId);
     }
     
 }
