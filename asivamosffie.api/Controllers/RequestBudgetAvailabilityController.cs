@@ -156,14 +156,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateOrEditInfoAdditional")]
         [HttpPost]
-        public async Task<IActionResult> CreateOrEditInfoAdditional([FromBody] PostParameter postParameter)
+        public async Task<IActionResult> CreateOrEditInfoAdditional([FromBody] DisponibilidadPresupuestal pDisponibilidad)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
                 string user = "forozco";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional(postParameter, user);
+                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional( pDisponibilidad, user);
                 return Ok(respuesta);
 
             }

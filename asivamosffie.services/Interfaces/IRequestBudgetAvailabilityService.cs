@@ -14,7 +14,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<ActionResult<List<ListAportantes>>> GetAportantesByProyectoId(int proyectoId);
         Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento);
-        Task<Respuesta> CreateOrEditInfoAdditional(PostParameter postParameter, string user);
+        Task<Respuesta> CreateOrEditInfoAdditional(DisponibilidadPresupuestal pDisponibilidad, string user);
         Task<DisponibilidadPresupuestal> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId);
         Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId);
         Task<ActionResult<List<Proyecto>>> SearchLlaveMEN(string LlaveMEN);

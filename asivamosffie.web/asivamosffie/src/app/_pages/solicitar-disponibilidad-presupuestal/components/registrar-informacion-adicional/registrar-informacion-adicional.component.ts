@@ -16,10 +16,8 @@ import { ProjectService, Proyecto } from 'src/app/core/_services/project/project
 })
 export class RegistrarInformacionAdicionalComponent implements OnInit {
 
-  objetoDisponibilidad: DisponibilidadPresupuestal;
+  objetoDisponibilidad: DisponibilidadPresupuestal = {};
   listaProyectos: Proyecto[] = [];
-
-  idContratacion = 9;
 
   addressForm = this.fb.group({
     plazoMeses: [null, Validators.required],
@@ -51,37 +49,74 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
   ) { }
 
+  cargarDisponibilidadPre() {
+
+    this.budgetAvailabilityService.getDisponibilidadPresupuestalById(this.objetoDisponibilidad.disponibilidadPresupuestalId)
+      .subscribe(response => {
+        this.objetoDisponibilidad = response;
+
+        this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
+        this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
+        this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
+
+        this.objetoDisponibilidad.disponibilidadPresupuestalProyecto.forEach(dp => {
+          this.projectService.getProjectById(dp.proyectoId)
+            .subscribe(proyecto => {
+              dp.proyecto = proyecto;
+              console.log(proyecto);
+
+              this.listaProyectos.push(proyecto);
+
+            })
+        });
+      })
+
+  }
+
+  cargarDisponibilidadNueva() {
+
+    this.objetoDisponibilidad.disponibilidadPresupuestalProyecto = [];
+
+    this.objetoDisponibilidad.fechaSolicitud = new Date;
+    this.objetoDisponibilidad.numeroSolicitud = 'dp';
+    this.objetoDisponibilidad.opcionContratarCodigo = '1'
+    this.objetoDisponibilidad.valorSolicitud = 200;
+    this.objetoDisponibilidad.tipoSolicitudCodigo = '1'
+
+
+    this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
+      .subscribe(contratacion => {
+
+        contratacion.contratacionProyecto.forEach(cp => {
+          this.projectService.getProjectById(cp.proyectoId)
+            .subscribe(proyecto => {
+              cp.proyecto = proyecto;
+              console.log(proyecto);
+
+              this.listaProyectos.push(proyecto);
+
+            })
+        });
+      });
+
+  }
+
   ngOnInit(): void {
 
 
 
     this.activatedroute.params.subscribe((params: Params) => {
-      const id = params.id;
+      this.objetoDisponibilidad.contratacionId = params.idContratacion;
+      this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
 
-      this.budgetAvailabilityService.getDisponibilidadPresupuestalById(id)
-        .subscribe(response => {
-          this.objetoDisponibilidad = response;
+      if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
+        this.cargarDisponibilidadPre();
 
-          this.addressForm.get('objeto').setValue( this.objetoDisponibilidad.objeto );
-          //this.addressForm.get('plazoMeses').setValue( this.objetoDisponibilidad.plazoMeses );
-          //this.addressForm.get('plazoDias').setValue( this.objetoDisponibilidad.plazoDias );
+      } else {
+        this.cargarDisponibilidadNueva();
+      }
 
-          //this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
-          //  .subscribe( contratacion => {
-            console.log( response );
-              
-              this.objetoDisponibilidad.disponibilidadPresupuestalProyecto.forEach( dp => {
-                this.projectService.getProjectById( dp.proyectoId )
-                .subscribe( proyecto => {
-                  dp.proyecto = proyecto;
-                  console.log( proyecto );
 
-                  this.listaProyectos.push( proyecto );
-
-                })
-              });
-            //})
-        })
     });
   }
 
@@ -116,7 +151,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
     this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
 
-    this.budgetAvailabilityService.createEditarDP(this.objetoDisponibilidad)
+    this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code == "200")

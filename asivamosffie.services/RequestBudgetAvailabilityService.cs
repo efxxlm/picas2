@@ -145,7 +145,7 @@ namespace asivamosffie.services
 
 
         //Registrar informacion Adicional en una solicitud
-        public async Task<Respuesta> CreateOrEditInfoAdditional(PostParameter postParameter, string user)
+        public async Task<Respuesta> CreateOrEditInfoAdditional(DisponibilidadPresupuestal pDisponibilidad, string user)
         {
             Respuesta respuesta = new Respuesta();
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Informacion_Adicional_Solicitud, (int)EnumeratorTipoDominio.Acciones);
@@ -154,20 +154,30 @@ namespace asivamosffie.services
 
             try
             {
-                if (postParameter.plazoDias > 30)
+                if (pDisponibilidad.PlazoDias > 30)
                     return respuesta = new Respuesta { IsSuccessful = false, Data = null, Code = ConstantMessagesSesionComiteTema.Error, Message = "El valor ingresado en dias no puede superior a 30" };
 
 
 
-                disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.FindAsync(postParameter.solicitudId);
+                disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.FindAsync(pDisponibilidad.DisponibilidadPresupuestalId);
                 if (disponibilidadPresupuestal != null)
                 {
-                    disponibilidadPresupuestal.Objeto = postParameter.Objeto;
-                    disponibilidadPresupuestal.PlazoDias = postParameter.plazoDias;
-                    disponibilidadPresupuestal.PlazoMeses = postParameter.plazoMeses;
-                    disponibilidadPresupuestal.AportanteId = postParameter.aportanteId;
+                    pDisponibilidad.UsuarioModificacion = user;
+                    pDisponibilidad.FechaModificacion = DateTime.Now;
+
+                    disponibilidadPresupuestal.Objeto = pDisponibilidad.Objeto;
+                    disponibilidadPresupuestal.PlazoDias = pDisponibilidad.PlazoDias;
+                    disponibilidadPresupuestal.PlazoMeses = pDisponibilidad.PlazoMeses;
+                    //disponibilidadPresupuestal.AportanteId = pdo.aportanteId;
                     _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
 
+                }else{
+                    pDisponibilidad.UsuarioCreacion = user;
+                    pDisponibilidad.FechaCreacion = DateTime.Now;
+                    pDisponibilidad.EstadoSolicitudCodigo = "1";
+                    pDisponibilidad.Eliminado = false;
+
+                    _context.DisponibilidadPresupuestal.Add( pDisponibilidad );
                 }
                    
                 return respuesta = new Respuesta
@@ -455,6 +465,7 @@ namespace asivamosffie.services
                 OpcionContratar = reader["OpcionContratar"].ToString(),
                 ValorSolicitud = (decimal)reader["ValorSolicitud"],
                 FechaComite = (DateTime)reader["FechaComite"],
+                EstadoSolicitudText = reader["EstadoSolicitudText"].ToString(),
 
             };
         }

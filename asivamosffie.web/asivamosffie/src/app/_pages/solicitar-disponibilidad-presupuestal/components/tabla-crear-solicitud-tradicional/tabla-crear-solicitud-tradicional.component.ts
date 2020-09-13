@@ -53,7 +53,7 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
       this.budgetAvailabilityService.getReuestCommittee(),
 
     ]).subscribe( response => {
-        this.listaSolicitudes = response[0].value;
+        this.listaSolicitudes = response[1];
         this.dataSource = new MatTableDataSource( this.listaSolicitudes) ;
         console.log( response[1] );
       })

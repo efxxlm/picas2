@@ -31,4 +31,9 @@ export class BudgetAvailabilityService {
     return this.http.get<any>(`${environment.apiUrl}/RequestBudgetAvailability/GetReuestCommittee`);
   }
 
+  createOrEditInfoAdditional( disponibilidadPresupuestal: DisponibilidadPresupuestal ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/createOrEditInfoAdditional`, disponibilidadPresupuestal);
+
+  }
+
 }
