@@ -175,7 +175,25 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("SendRequest")]
+        [HttpPost]
+        public async Task<IActionResult> SendRequest(int disponibilidadPresupuestalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
 
+                string user = "forozco";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         [Route("CreateOrEditDDPRequest")]
         [HttpPost]
