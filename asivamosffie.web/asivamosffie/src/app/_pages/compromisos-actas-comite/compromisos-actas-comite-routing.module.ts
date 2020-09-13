@@ -15,7 +15,7 @@ const routes: Routes = [
     component: ReporteAvanceCompromisoComponent
   },
   {
-    path: 'revisionActa',
+    path: 'revisionActa/:id',
     component: RevisionActaComponent
   }
 ];

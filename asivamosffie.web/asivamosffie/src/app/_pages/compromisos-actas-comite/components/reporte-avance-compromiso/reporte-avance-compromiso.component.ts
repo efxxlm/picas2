@@ -39,20 +39,21 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
                 private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private compromisoSvc: CompromisosActasComiteService ) {
-    this.getCompromiso( this.activatedRoute.snapshot.params.id );
+    this.getComite();
+    //this.getCompromiso( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
   }
 
   ngOnInit(): void {
   };
 
-  getCompromiso ( id: number ) {
-    this.compromisoSvc.getCompromiso( id )
-      .subscribe( ( resp: any ) => {
-        this.estadoComite = resp[0].estadoCompromisoText;
-        this.comite = resp[0];
-        console.log( this.comite );
-      } );
+  getComite () {
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl || undefined ) {
+      this.routes.navigate( [ '/compromisosActasComite' ] );
+      return;
+    }
+    this.comite = this.routes.getCurrentNavigation().extras.state.elemento;
+    console.log( this.comite );
   };
 
   maxLength(e: any, n: number) {
@@ -65,6 +66,13 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
+    };
+  };
+
+  textoLimpioMessage(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio;
     };
   };
 
@@ -97,10 +105,16 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
     this.comite.tarea = this.reporte.get( 'reporteEstado' ).value;
 
     this.compromisoSvc.postCompromisos( this.comite, this.estadoCodigo )
-      .subscribe( resp => {
-        console.log( resp );
-        this.openDialog('La información ha sido guardada exitosamente', '');
-      } );
+      .subscribe( 
+        ( resp: any ) => {
+          console.log( resp );
+          this.openDialog( this.textoLimpioMessage( resp.message ), '');
+          this.routes.navigate( [ '/compromisosActasComite' ] )
+        },
+        ( error: any ) => {
+          console.log( error );
+        }
+      );
 
   }
 

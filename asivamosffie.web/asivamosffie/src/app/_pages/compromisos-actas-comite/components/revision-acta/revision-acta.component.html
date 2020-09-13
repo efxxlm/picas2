@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="acta !== undefined">
 
   <div class="text-right">
     <a routerLink="/compromisosActasComite" mat-button color="primary" class="btn-regresar">
@@ -92,7 +92,7 @@
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
-          (click)="descargarActa()">
+          (click)="getActaPdf( acta.comiteTecnicoId, acta.numeroComite )">
           Descargar acta preliminar
   </button>
 </div>

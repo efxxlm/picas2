@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 
 @Component({
   selector: 'app-revision-acta',
@@ -29,13 +30,23 @@ export class RevisionActaComponent implements OnInit {
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
-                private fb: FormBuilder ) {
-    this.getActa();
+                private fb: FormBuilder,
+                private activatedRoute: ActivatedRoute,
+                private compromisoSvc: CompromisosActasComiteService ) {
+    this.getActa( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
-    console.log( this.acta );
   };
 
   ngOnInit(): void { };
+
+  getActa ( comiteTecnicoId: number ) {
+    this.compromisoSvc.getActa( comiteTecnicoId )
+      .subscribe( resp => {
+        this.acta = resp[0];
+        console.log( resp );
+      } )
+  }
+
   //Formulario comentario de actas
   crearFormulario(){
     this.form = this.fb.group({
@@ -43,14 +54,6 @@ export class RevisionActaComponent implements OnInit {
     });
   };
 
-  //getData del acta
-  getActa () {
-    if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
-      this.routes.navigateByUrl( '/compromisosActasComite' );
-      return;
-    };
-    this.acta = this.routes.getCurrentNavigation().extras.state.acta;
-  }
   //Limite maximo Quill Editor
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -84,7 +87,10 @@ export class RevisionActaComponent implements OnInit {
 
     console.log( comentario );
 
-    this.openDialog('La información ha sido guardada exitosamente', '');
+    this.compromisoSvc.postComentariosActa()
+      .subscribe( console.log )
+
+    //this.openDialog('La información ha sido guardada exitosamente', '');
 
   };
   //Aprobar acta
@@ -93,8 +99,20 @@ export class RevisionActaComponent implements OnInit {
     this.routes.navigate( ['/compromisosActasComite'] );
   };
   //Descargar acta en formato pdf
-  descargarActa () {
+  getActaPdf( comiteTecnicoId, numeroComite ) {
+    this.compromisoSvc.getActaPdf( comiteTecnicoId )
+    .subscribe( ( resp: any ) => {
 
-  };
+      const documento = `Acta Preliminar ${ numeroComite }.pdf`;
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+      
+    } )
+  }
 
 };

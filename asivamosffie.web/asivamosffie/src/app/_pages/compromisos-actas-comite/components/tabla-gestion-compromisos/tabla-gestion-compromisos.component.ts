@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -16,10 +17,10 @@ export class TablaGestionCompromisosComponent implements OnInit {
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
   data: any[] = [];
-  displayedColumns: string[] = [ 'fechaOrdenDia', 'numeroComite', 'tarea', 'fechaCumplimiento', 'estadoCompromiso', 'gestion' ];
+  displayedColumns: string[] = [ 'fechaComite', 'numeroComite', 'compromiso', 'fechaCumplimiento', 'estadoCompromiso', 'gestion' ];
   ELEMENT_DATA: any[] = [
     { titulo: 'Número de comité', name: 'numeroComite' },
-    { titulo: 'Compromiso', name: 'tarea' }
+    { titulo: 'Compromiso', name: 'compromiso' }
   ];
 
   constructor ( private routes: Router,
@@ -49,8 +50,8 @@ export class TablaGestionCompromisosComponent implements OnInit {
   };
 
   //Reportar Avance
-  reportProgress ( sesionComiteTecnicoCompromisoId: number ) {
-    this.routes.navigate( [ '/compromisosActasComite/reporteAvanceCompromiso', sesionComiteTecnicoCompromisoId ] )
+  reportProgress ( sesionComiteTecnicoCompromisoId: number, elemento: any ) {
+    this.routes.navigate( [ '/compromisosActasComite/reporteAvanceCompromiso', sesionComiteTecnicoCompromisoId ], { state: { elemento } } )
   }
 
 }
