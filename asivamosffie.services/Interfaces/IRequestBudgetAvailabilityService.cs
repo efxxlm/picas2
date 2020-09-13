@@ -22,7 +22,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<DisponibilidadPresupuestal>>> GetDDPEspecial();
         CustonReuestCommittee MapToValue(SqlDataReader reader);
         Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal);
-        Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId);
+        Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId);
         Task<Respuesta> SendRequest(int disponibilidadPresupuestalId);
     }
     

@@ -135,14 +135,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateOrEditServiceCosts")]
         [HttpPost]
-        public async Task<IActionResult> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
+        public async Task<IActionResult> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
                 disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal,proyectoId,disponibilidadPresupuestalId);
+                respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal,proyectoId);
                 return Ok(respuesta);
 
             }
