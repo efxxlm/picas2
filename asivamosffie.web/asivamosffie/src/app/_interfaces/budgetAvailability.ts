@@ -51,3 +51,20 @@ export interface DisponibilidadPresupuestalProyecto{
     
 
 }
+
+export interface CustonReuestCommittee{
+    contratacionId?: number,
+    disponibilidadPresupuestalId?: number,
+    sesionComiteSolicitudId?: number,
+    fechaSolicitud?: Date,
+    fechaComite?: Date,
+    tipoSolicitudCodigo?: string,
+    numeroSolicitud?: string,
+    valorSolicitud?: number,
+    tipoSolicitudText?: string,
+    opcionContratar?: string,
+    valorSolicitado?: number,
+    estadoSolicitudCodigo?: string,
+    estadoSolicitudText?: string,
+    
+}

@@ -6,6 +6,7 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { GrillaDisponibilidadPresupuestal } from 'src/app/_interfaces/budgetAvailability';
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -47,11 +48,14 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.budgetAvailabilityService.getGridBudgetAvailability()
-      .subscribe( response => {
-        this.listaSolicitudes = response.value;
+    forkJoin([
+      this.budgetAvailabilityService.getGridBudgetAvailability(),
+      this.budgetAvailabilityService.getReuestCommittee(),
+
+    ]).subscribe( response => {
+        this.listaSolicitudes = response[0].value;
         this.dataSource = new MatTableDataSource( this.listaSolicitudes) ;
-        console.log( response );
+        console.log( response[1] );
       })
 
     this.dataSource.sort = this.sort;

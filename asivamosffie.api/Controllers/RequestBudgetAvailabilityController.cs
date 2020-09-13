@@ -141,7 +141,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                compromisoSeguimiento.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal,proyectoId,disponibilidadPresupuestalId);
                 return Ok(respuesta);
 
