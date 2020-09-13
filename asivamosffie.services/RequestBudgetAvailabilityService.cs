@@ -313,10 +313,10 @@ namespace asivamosffie.services
 
 
         //Registrar Otros Costos/Servicio
-        public async Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
+        public async Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_DDP_Especial, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_DDP_OtrosCostosServicio, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
             DisponibilidadPresupuestal disponibilidadPresupuestalAntiguo = null;
@@ -325,7 +325,63 @@ namespace asivamosffie.services
             try
             {
 
-              
+                if (string.IsNullOrEmpty(disponibilidadPresupuestal.DisponibilidadPresupuestalId.ToString()) || disponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
+                {
+                    //Auditoria
+
+                    strCrearEditar = "REGISTRAR SOLICITUD DDP OTROS COSTOS SERVICIOS";
+                    disponibilidadPresupuestal.FechaCreacion = DateTime.Now;
+                    disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    disponibilidadPresupuestal.Eliminado = false;
+
+                    disponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", countMaxId);
+                    disponibilidadPresupuestal.OpcionContratarCodigo = "Validando";
+                    disponibilidadPresupuestal.ValorSolicitud = 0;
+                    disponibilidadPresupuestal.TipoSolicitudCodigo = "1";
+                    disponibilidadPresupuestal.EstadoSolicitudCodigo = "8"; // Sin registrar => TipoDominioId = 39
+                    disponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
+                    disponibilidadPresupuestal.Objeto = disponibilidadPresupuestal.Objeto;
+                    disponibilidadPresupuestal.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
+                    disponibilidadPresupuestal.RegistroCompleto = true;
+                    _context.DisponibilidadPresupuestal.Add(disponibilidadPresupuestal);
+                    var result = await _context.SaveChangesAsync();
+
+                    var newDisponibilidadPresupuestalId = disponibilidadPresupuestal.DisponibilidadPresupuestalId;
+
+                    if (result > 0)
+                    {
+                        DisponibilidadPresupuestalProyecto entity = new DisponibilidadPresupuestalProyecto();
+                        entity.ProyectoId = proyectoId;
+                        entity.DisponibilidadPresupuestalId = newDisponibilidadPresupuestalId;
+                        entity.FechaCreacion = DateTime.Now;
+                        entity.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                        entity.Eliminado = false;
+
+                        _context.DisponibilidadPresupuestalProyecto.Add(entity);
+                    }
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT SOLICITUD DDP ESPECIAL";
+                    disponibilidadPresupuestalAntiguo = _context.DisponibilidadPresupuestal.Find(disponibilidadPresupuestal.DisponibilidadPresupuestalId);
+
+                    //Auditoria
+                    disponibilidadPresupuestalAntiguo.UsuarioModificacion = disponibilidadPresupuestal.UsuarioModificacion;
+                    disponibilidadPresupuestalAntiguo.Eliminado = false;
+
+
+                    //Registros
+                    disponibilidadPresupuestal.OpcionContratarCodigo = disponibilidadPresupuestal.OpcionContratarCodigo;
+                    disponibilidadPresupuestal.ValorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
+                    disponibilidadPresupuestal.NumeroSolicitud = disponibilidadPresupuestal.NumeroSolicitud;
+                    disponibilidadPresupuestal.FechaSolicitud = disponibilidadPresupuestal.FechaSolicitud;
+                    disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto;
+                    disponibilidadPresupuestal.EstadoSolicitudCodigo = disponibilidadPresupuestal.EstadoSolicitudCodigo;
+                    disponibilidadPresupuestalAntiguo.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
+                    disponibilidadPresupuestalAntiguo.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
+                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestalAntiguo);
+                }
 
                 return respuesta = new Respuesta
                 {
