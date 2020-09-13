@@ -461,6 +461,7 @@ namespace asivamosffie.services
                 SesionComiteSolicitudId = (int)reader["SesionComiteSolicitudId"],
                 FechaSolicitud = (DateTime)reader["FechaSolicitud"],
                 TipoSolicitudText = reader["TipoSolicitudText"].ToString(),
+                TipoSolicitudCodigo = reader["TipoSolicitudCodigo"].ToString(),
                 NumeroSolicitud = reader["NumeroSolicitud"].ToString(),
                 OpcionContratar = reader["OpcionContratar"].ToString(),
                 ValorSolicitud = (decimal)reader["ValorSolicitud"],

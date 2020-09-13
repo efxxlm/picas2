@@ -77,12 +77,20 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
     this.objetoDisponibilidad.disponibilidadPresupuestalProyecto = [];
 
-    this.objetoDisponibilidad.fechaSolicitud = new Date;
-    this.objetoDisponibilidad.numeroSolicitud = 'dp';
-    this.objetoDisponibilidad.opcionContratarCodigo = '1'
-    this.objetoDisponibilidad.valorSolicitud = 200;
-    this.objetoDisponibilidad.tipoSolicitudCodigo = '1'
+    
 
+    this.budgetAvailabilityService.getReuestCommittee()
+      .subscribe( listaSolicitudes => {
+        listaSolicitudes.forEach( solicitud => {
+          if ( solicitud.contratacionId == this.objetoDisponibilidad.contratacionId ){
+            this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
+            this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
+            this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
+            this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
+            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo;
+          }
+        })
+      })
 
     this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
       .subscribe(contratacion => {
