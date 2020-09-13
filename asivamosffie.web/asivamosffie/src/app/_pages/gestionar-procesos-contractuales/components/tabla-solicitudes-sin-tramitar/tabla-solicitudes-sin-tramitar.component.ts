@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,6 +16,7 @@ import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.int
 export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   @Input() $data: Observable<GrillaProcesosContractuales[]>;
+  @Output() estadoAcordeon = new EventEmitter<string>();
   dataSource = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
@@ -28,67 +29,39 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getDataGrilla();
+  };
+
+  getDataGrilla () {
     this.$data.subscribe( resp => {
       let dataTable = [];
-      resp.push(
-        {
-          "numeroSolicitud": "CO_003",
-          "fechaSolicitud": "2020-08-19T22:47:16",
-          "tipoSolicitud": "Modificación contractual",
-          "estadoDelRegistro": "Incompleto",
-          "estadoRegistro": false,
-          "sesionComiteSolicitudId": 14,
-          "tipoSolicitudCodigo": "2",
-          "solicitudId": 6,
-          "fechaCreacion": "2020-09-01T18:15:13.377",
-          "usuarioCreacion": "diegoaes@yopmail.com",
-          "fechaModificacion": "2020-09-04T11:29:02.81",
-          "comiteTecnicoId": 18,
-          "estadoCodigo": "2",
-          "generaCompromiso": true,
-          "cantCompromisos": 1,
-          "eliminado": false,
-          "requiereVotacion": true,
-          "sesionSolicitudCompromiso": [],
-          "sesionSolicitudObservacionProyecto": [],
-          "sesionSolicitudVoto": []
-        },
-        {
-          "numeroSolicitud": "SL_001",
-          "fechaSolicitud": "2020-08-19T22:47:16",
-          "tipoSolicitud": "Liquidación",
-          "estadoDelRegistro": "Incompleto",
-          "estadoRegistro": false,
-          "sesionComiteSolicitudId": 14,
-          "tipoSolicitudCodigo": "2",
-          "solicitudId": 6,
-          "fechaCreacion": "2020-09-01T18:15:13.377",
-          "usuarioCreacion": "diegoaes@yopmail.com",
-          "fechaModificacion": "2020-09-04T11:29:02.81",
-          "comiteTecnicoId": 18,
-          "estadoCodigo": "2",
-          "generaCompromiso": true,
-          "cantCompromisos": 1,
-          "eliminado": false,
-          "requiereVotacion": true,
-          "sesionSolicitudCompromiso": [],
-          "sesionSolicitudObservacionProyecto": [],
-          "sesionSolicitudVoto": []
-        }
-      )
+      let conTrue = 0;
+      let conFalse = 0;
       
       for ( let solicitud of resp ) {
+
         if ( solicitud.estadoCodigo === '2' ) {
-          dataTable.push( solicitud )
-        }
+
+          ( solicitud.estadoRegistro ) ? conTrue+=1 : conFalse+=1;
+
+          dataTable.push( solicitud );
+        };
       }
+
+      if ( conTrue === dataTable.length ) {
+        this.estadoAcordeon.emit( 'completo' );
+      } else if ( conFalse === dataTable.length ) {
+        this.estadoAcordeon.emit( 'sin-diligenciar' );
+      } else if ( conTrue > conFalse || conTrue < conFalse ) {
+        this.estadoAcordeon.emit( 'en-proceso' );
+      };
 
       this.dataSource = new MatTableDataSource( dataTable );
       this.dataSource.paginator              = this.paginator;
       this.dataSource.sort                   = this.sort;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     } );
-  };
+  }
 
   applyFilter ( event: Event ) {
     const filterValue      = (event.target as HTMLInputElement).value;

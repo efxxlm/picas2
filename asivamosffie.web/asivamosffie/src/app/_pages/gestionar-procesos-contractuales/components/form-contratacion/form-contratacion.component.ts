@@ -140,9 +140,18 @@ export class FormContratacionComponent implements OnInit {
 
   };
 
-  getDdp ( sesionComiteSolicitudId ) {
+  getDdp ( sesionComiteSolicitudId, numeroDdp ) {
     this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
-      .subscribe();
+      .subscribe( resp => {
+        const documento = `DDP ${ numeroDdp }.pdf`;
+        const text = documento,
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+      } );
   };
 
   guardar () {

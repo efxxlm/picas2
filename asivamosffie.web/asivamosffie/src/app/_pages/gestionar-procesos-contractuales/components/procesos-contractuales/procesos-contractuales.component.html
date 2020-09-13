@@ -30,16 +30,16 @@
     <mat-accordion>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title sin-diligenciar">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon">
             Recibidas sin tramitar ante fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-solicitudes-sin-tramitar [$data]="$data"></app-tabla-solicitudes-sin-tramitar>
+        <app-tabla-solicitudes-sin-tramitar [$data]="$data" (estadoAcordeon)="estadoAcordeon = $event"></app-tabla-solicitudes-sin-tramitar>
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title en-proceso">
+          <mat-panel-title class="expansion-style--title">
             Enviadas a la fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -48,7 +48,7 @@
 
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title completo">
+          <mat-panel-title class="expansion-style--title">
             Registradas por la fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>

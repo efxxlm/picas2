@@ -12,6 +12,7 @@ export class ProcesosContractualesComponent implements OnInit {
 
   verAyuda = false;
   $data: Observable<GrillaProcesosContractuales[]>;
+  estadoAcordeon: string;
 
   constructor ( private procesosContractualesSvc: ProcesosContractualesService ) {
     this.$data = this.procesosContractualesSvc.getGrilla();

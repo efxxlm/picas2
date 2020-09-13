@@ -35,7 +35,7 @@ export class ProcesosContractualesService {
   };
 
   getDdp ( sesionComiteSolicitudId: number ) {
-    return this.http.get( `${ this.url }/GetDDPBySesionComiteSolicitudID?pSesionComiteSolicitudID=${ sesionComiteSolicitudId }` )
+    return this.http.get( `${ this.url }/GetDDPBySesionComiteSolicitudID?pSesionComiteSolicitudID=${ sesionComiteSolicitudId }`, { responseType: "blob" } )
   };
 
   sendTramite ( contratacion: DataSolicitud ) {

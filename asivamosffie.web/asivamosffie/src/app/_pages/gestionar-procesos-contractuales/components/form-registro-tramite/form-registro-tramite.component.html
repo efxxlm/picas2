@@ -37,7 +37,7 @@
 
     <div class="d-flex">
       <label class="mr-3em">Minuta adjunta</label>
-      <div class="input">
+      <div class="input w-80">
         <span class="input-file-text text-center">{{archivo}}</span>
         <button mat-raised-button 
                 color="primary" 
@@ -64,7 +64,7 @@
               color="warn" 
               class="btn-guardar" 
               type="submit" 
-              [disabled]="dataFormulario.get('fechaEnvioTramite').value===null">
+              [attr.disabled]="dataFormulario.get('fechaEnvioTramite').value===null">
               <img  src="assets/img/icon/guardar.svg" 
                     alt="Regresar">
       </button>

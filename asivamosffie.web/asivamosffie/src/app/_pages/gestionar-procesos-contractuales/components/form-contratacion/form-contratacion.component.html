@@ -16,7 +16,7 @@
   </div>
   <div align="left">
     <mat-card class="border">
-      <mat-card-content>
+      <mat-card-content class="mt-1em">
         <p><b>Número DDP</b>: {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp }}</p>
         <p>
           <b>Objeto</b>: {{ dataContratacion.disponibilidadPresupuestal[0].objeto }}</p>
@@ -49,7 +49,7 @@
             <div align="left" *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa.length > 0">
               <mat-card class="border">
                 <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
-                <mat-card-content>
+                <mat-card-content class="mt-1em">
                   <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].activo"> 
                     <b>
                       ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
@@ -66,24 +66,34 @@
                   <p *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esReasignacion">
                     <b>¿El proyecto es una reasignación?</b>: No
                   </p>
-                  <div *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esReasignacion">
-                    <p><b>¿El proyecto tiene avance de obra?</b>: Sí</p>
-                    <p>
-                      <b>¿Cuál es el porcentaje de avance de obra?</b>: 
-                      {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].porcentajeAvanceObra }}%
-                    </p>
-                    <p><b>¿El proyecto requiere licencias?</b>: Sí</p>
-                    <p><b>¿El proyecto tiene licencia vigente?</b>: Sí</p>
-                    <p>
-                      <b>Número de licencia</b>: {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].numeroLicencia }}
-                    </p>
-                    <p>
-                      <b>Fecha de vigencia</b>: {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
-                    </p>
-                  </div>
-                  <div *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esReasignacion">
-                    <p><b>¿El proyecto requiere licencias?</b>: No</p>
-                  </div>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esAvanceobra">
+                    <b>¿El proyecto tiene avance de obra?</b>: Sí
+                  </p>
+                  <p *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].esAvanceobra">
+                    <b>¿El proyecto tiene avance de obra?</b>: No
+                  </p>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].porcentajeAvanceObra !== 0">
+                    <b>¿Cuál es el porcentaje de avance de obra?</b>: 
+                    {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].porcentajeAvanceObra }}%
+                  </p>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].requiereLicencia">
+                    <b>¿El proyecto requiere licencias?</b>: Sí
+                  </p>
+                  <p *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].requiereLicencia">
+                    <b>¿El proyecto requiere licencias?</b>: No
+                  </p>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].licenciaVigente">
+                    <b>¿El proyecto tiene licencia vigente?</b>: Sí
+                  </p>
+                  <p *ngIf="!data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].licenciaVigente">
+                    <b>¿El proyecto tiene licencia vigente?</b>: No
+                  </p>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].numeroLicencia.length > 0">
+                    <b>Número de licencia</b>: {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].numeroLicencia }}
+                  </p>
+                  <p *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].fechaVigencia.length > 0">
+                    <b>Fecha de vigencia</b>: {{ data.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
+                  </p>
                 </mat-card-content>
               </mat-card>
             </div>
@@ -100,7 +110,7 @@
 
         <div align="left">
           <mat-card class="border">
-            <mat-card-content>
+            <mat-card-content class="mt-1em">
               <p><b>Nombre del contratista</b>: {{ dataContratacion.contratista.nombre }}</p>
               <p><b>Tipo de identificación</b>: {{ dataContratacion.contratista.tipoIdentificacionCodigo }}</p>
               <p><b>Número de identificación</b>: {{ dataContratacion.contratista.numeroIdentificacion }}</p>
@@ -121,7 +131,7 @@
 
         <div align="left">
           <mat-card class="border">
-            <mat-card-content>
+            <mat-card-content class="mt-1em">
               <p><b>Tipo de contrato</b>: {{ dataContratacion.tipoContratacionCodigo }}</p>
               <p><b>Plazo</b>: {{ dataContratacion.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ dataContratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
               <p><b>Valor del contrato</b>: ${{ dataContratacion.disponibilidadPresupuestal[0].valorSolicitud }}</p>
@@ -140,7 +150,7 @@
 
         <div align="center">
           <mat-card class="border">
-            <mat-card-content>
+            <mat-card-content class="mt-1em">
               <p>
                 {{ dataContratacion.consideracionDescripcion }}
               </p>
@@ -160,7 +170,7 @@
         <mat-expansion-panel class="expansion-style">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              DDP_PI_005
+              DDP {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
@@ -176,7 +186,7 @@
           <button mat-raised-button
                   color="accent" 
                   class="btn-table"
-                  (click)="getDdp( sesionComiteId )">
+                  (click)="getDdp( sesionComiteId, dataContratacion.disponibilidadPresupuestal[0].numeroDdp )">
                   Descargar DDP
           </button>
         </div>

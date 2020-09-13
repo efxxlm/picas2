@@ -74,13 +74,15 @@ export class FormRegistroTramiteComponent implements OnInit {
       return;
     };
 
-    let documento = this.dataFormulario.get( 'minutaFile' ).value
-    let formData = new FormData();
-    formData.append( 'file', documento, documento.name );
+    if ( this.dataFormulario.get( 'minutaFile' ).value ) {
+      let documento = this.dataFormulario.get( 'minutaFile' ).value;
+      let formData = new FormData();
+      formData.append( 'file', documento, documento.name );
+      this.contratacion.pFile = formData.get( 'file' );
+    };
 
     this.contratacion.observaciones = this.dataFormulario.get( 'observaciones' ).value;
     this.contratacion.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
-    this.contratacion.pFile = formData.get( 'file' );
 
     this.procesosContractualesSvc.sendTramite( this.contratacion )
       .subscribe( console.log );
