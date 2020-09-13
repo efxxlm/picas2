@@ -133,6 +133,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateOrEditServiceCosts")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                compromisoSeguimiento.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal,proyectoId,disponibilidadPresupuestalId);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
 
         [Route("CreateOrEditInfoAdditional")]
