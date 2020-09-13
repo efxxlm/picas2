@@ -7,6 +7,8 @@ import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSess
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { GrillaDisponibilidadPresupuestal } from 'src/app/_interfaces/budgetAvailability';
 import { forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 @Component({
@@ -40,7 +42,9 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
   }
 
   constructor(
-                private budgetAvailabilityService: BudgetAvailabilityService
+                private budgetAvailabilityService: BudgetAvailabilityService,
+                public dialog: MatDialog,
+                
              )
   {
 
@@ -72,8 +76,21 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
     };
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   enviarSolicitud(e: number) {
     console.log(e);
+    this.budgetAvailabilityService.sendRequest( e )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message );
+        if (respuesta.code == "200")
+          this.ngOnInit();
+      })
   }
 
   verDetalle(e: number) {

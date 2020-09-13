@@ -174,7 +174,6 @@ namespace asivamosffie.services
                 }else{
                     pDisponibilidad.UsuarioCreacion = user;
                     pDisponibilidad.FechaCreacion = DateTime.Now;
-                    pDisponibilidad.EstadoSolicitudCodigo = "1";
                     pDisponibilidad.Eliminado = false;
 
                     _context.DisponibilidadPresupuestal.Add( pDisponibilidad );

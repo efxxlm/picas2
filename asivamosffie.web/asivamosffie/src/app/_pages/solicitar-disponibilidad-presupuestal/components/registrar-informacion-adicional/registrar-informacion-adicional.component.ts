@@ -155,6 +155,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
   onSubmit() {
 
+    if ( this.addressForm.valid ){
+
     this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
     this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
     this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
@@ -166,6 +168,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
           this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
       })
 
+    }
+    
     console.log(this.objetoDisponibilidad);
   }
 

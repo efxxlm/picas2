@@ -33,7 +33,10 @@ export class BudgetAvailabilityService {
 
   createOrEditInfoAdditional( disponibilidadPresupuestal: DisponibilidadPresupuestal ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/createOrEditInfoAdditional`, disponibilidadPresupuestal);
+  }
 
+  sendRequest( id: number ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/sendRequest?disponibilidadPresupuestalId=${ id }`, null);
   }
 
 }
