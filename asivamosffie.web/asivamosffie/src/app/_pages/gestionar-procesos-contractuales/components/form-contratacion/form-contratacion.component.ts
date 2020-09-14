@@ -14,6 +14,7 @@ export class FormContratacionComponent implements OnInit {
   form         : FormGroup;
   sesionComiteId: number = 0;
   estadoCodigo: string;
+  valorTotalDdp: number = 0;
   dataContratacion: DataSolicitud = {
     contratacionId: 0,
     consideracionDescripcion: '',
@@ -46,54 +47,6 @@ export class FormContratacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  dataForm: any[] = [
-    {
-      nombre            : 'LL000007 - I.E De Desarrollo Rural Miguel Valencia - Única sede',
-      tipoIntervencion  : 'Remodelación',
-      departamento      : 'Antioquia',
-      municipio         : 'Bello',
-      valorTotalProyecto: '230.000.000',
-      aportantes        : [
-        {
-          tipoAportante         : 'ET',
-          nombreAportante       : 'Gobernación de Antioquia',
-          valorAportanteProyecto: '150.000.000',
-          fuente                : 'Recursos propios',
-          valorSolicitado       : '150.000.000'
-        },
-        {
-          tipoAportante         : 'FFIE',
-          nombreAportante       : 'FFIE',
-          valorAportanteProyecto: '80.000.000',
-          fuente                : 'Contingencias',
-          valorSolicitado       : '80.000.000'
-        },
-      ]
-    },
-    {
-      nombre            : 'LL000117 - I.E Miguel Suarez - Única sede',
-      tipoIntervencion  : 'Remodelación',
-      departamento      : 'Boyacá',
-      municipio         : 'Paipa',
-      valorTotalProyecto: '370.000.000',
-      aportantes        : [
-        {
-          tipoAportante         : 'ET',
-          nombreAportante       : 'Gobernación de Boyacá',
-          valorAportanteProyecto: '200.000.000',
-          fuente                : 'Recursos propios',
-          valorSolicitado       : '200.000.000'
-        },
-        {
-          tipoAportante         : 'FFIE',
-          nombreAportante       : 'FFIE',
-          valorAportanteProyecto: '170.000.000',
-          fuente                : 'Contingencias',
-          valorSolicitado       : '170.000.000'
-        },
-      ]
-    }
-  ]
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -135,6 +88,14 @@ export class FormContratacionComponent implements OnInit {
           observaciones: contratacion.observaciones,
           minutaName: contratacion.rutaMinuta
         });
+
+        for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
+          if ( contratacionProyecto.proyecto.institucionEducativa.proyectoInstitucionEducativa[0]?.proyectoAportante !== undefined ) {
+            if ( contratacionProyecto.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].valorTotal !== undefined ) {
+              this.valorTotalDdp += contratacionProyecto.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].valorTotal;
+            };
+          };
+        };
 
       } );
 
