@@ -72,8 +72,8 @@
         public const string Cambiar_Estado_Sesion_Comite_Solicitud = "71";
 
         public const string Crear_contratistas_desde_proponentes = "";
-        public const string Crear_Observacion_Contratacion = "";
-        public const string Cambiar_Estado_Acta = "";
+        public const string Crear_Observacion_Contratacion = "69";
+        public const string Cambiar_Estado_Acta = "70";
 
 
     }
