@@ -1977,7 +1977,7 @@ namespace asivamosffie.services
                 PagesCount = true,
                 HtmlContent = pPlantilla.Contenido,
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18, Right = "Poner logo" },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18  },
                 FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
             };
 

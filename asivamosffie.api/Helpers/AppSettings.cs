@@ -8,6 +8,8 @@
         
         public string MailServer { get; set; }
 
+        public string RutaLogo { get; set; }
+         
         public int MailPort { get; set; }
 
         public bool EnableSSL { get; set; }

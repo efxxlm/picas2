@@ -84,7 +84,7 @@ namespace asivamosffie.services
 
         }
          
-        public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID)
+        public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID , string pPatchLogo)
         {
             //Al modificar verificar a que tipo de solicitud corresponde el comite y hacer switch         
             SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitudID)
@@ -106,15 +106,17 @@ namespace asivamosffie.services
 
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion, sesionComiteSolicitud);
 
-            return ConvertirPDF(Plantilla);
+            return ConvertirPDF(Plantilla , pPatchLogo);
         }
 
-        public byte[] ConvertirPDF(Plantilla pPlantilla)
+        public byte[] ConvertirPDF(Plantilla pPlantilla , string pPatchLogo)
         {
             string strEncabezado = "";
             if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
-            {
-                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            { 
+                 pPlantilla.Encabezado.Contenido = pPlantilla.Encabezado.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+              strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+                //strEncabezado = pPlantilla.Encabezado.Contenido;
             }
 
             var globalSettings = new GlobalSettings
@@ -133,14 +135,15 @@ namespace asivamosffie.services
                 },
                 DocumentTitle = DateTime.Now.ToString(),
             };
+             string ImageIcon = "<img src= '"+ Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png") + " >";
 
             var objectSettings = new ObjectSettings
             {
                 PagesCount = true,
                 HtmlContent = pPlantilla.Contenido,
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18, Right = "Poner logo" },
-                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 , Right =""},
+                FooterSettings = {  FontName = "Ariel", FontSize = 10, Center = "[page]" ,  },
             };
 
             var pdf = new HtmlToPdfDocument()
@@ -266,8 +269,8 @@ namespace asivamosffie.services
                 TotalRegistrosContratacionProyectos += PlantillaRegistrosProyectosContratacion;
                 foreach (Dominio placeholderDominio in placeholders)
                 { 
-                    InstitucionEducativaSede Sede = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
-                    InstitucionEducativaSede institucionEducativa = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
+                    InstitucionEducativaSede Sede = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
+                    InstitucionEducativaSede institucionEducativa = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
 
 
                     switch (placeholderDominio.Codigo)

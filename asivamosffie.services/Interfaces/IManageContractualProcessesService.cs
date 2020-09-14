@@ -10,7 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IManageContractualProcessesService
     {
-        Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID);
+        Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID ,string pPatchLogo);
 
         Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud);
 

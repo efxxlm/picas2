@@ -46,7 +46,9 @@ namespace asivamosffie.api.Controllers
         [Route("GetDDPBySesionComiteSolicitudID")]
         public async Task<FileResult> GetDDPBySesionComiteSolicitudID([FromQuery] int  pSesionComiteSolicitudID)
         {
-            return File(await _manageContractualProcessesService.GetDDPBySesionComiteSolicitudID(pSesionComiteSolicitudID), "application/pdf");
+            string pPatchLogo = Path.Combine(_settings.Value.Dominio, _settings.Value.RutaLogo);
+
+            return File(await _manageContractualProcessesService.GetDDPBySesionComiteSolicitudID(pSesionComiteSolicitudID, pPatchLogo), "application/pdf");
         }
 
 
@@ -87,7 +89,8 @@ namespace asivamosffie.api.Controllers
                     }
         
                 pContratacion.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
+
+               respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
                   , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
 
                 return Ok(respuesta);
