@@ -33,7 +33,11 @@
 .expansion-style {
     box-shadow: none !important;
     &--header {
+<<<<<<< HEAD
         width: 25em;
+=======
+        width: 28em;
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
         max-width: 100%;
         min-width: max-content;
         background-color: transparent;
@@ -64,6 +68,7 @@
 
     }
 }
+<<<<<<< HEAD
 
 span.mat-expansion-indicator::after {
     color: #174193;
@@ -75,3 +80,5 @@ span.mat-expansion-indicator::after {
     transform: rotate(0deg);
     padding: 1px;
 }
+=======
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación

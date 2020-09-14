@@ -64,11 +64,12 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
-        public async Task<ActionResult<List<Localicacion>>> GetListMunicipio(string idDepartamento)
+        public async Task<ActionResult<List<Localicacion>>> GetListDepartamento(string idDepartamento)
         {
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
+
 
         [HttpGet]
         [Route("ListMunicipiosByIdMunicipio")]
@@ -95,6 +96,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+
         [Route("ListRegion")]
         public async Task<ActionResult<List<Localicacion>>> ListRegion(string idDepartamento)
         {
@@ -106,6 +108,7 @@ namespace asivamosffie.api.Controllers
         [Route("ListVigenciaAporte")]
         public async Task<ActionResult<List<int>>> GetListVigenciaAportes()
         {
+
             var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente, _settings.Value.YearSiguienteEsVigente);
             return result;
         }
@@ -123,21 +126,6 @@ namespace asivamosffie.api.Controllers
         public async Task<ActionResult<List<InstitucionEducativaSede>>> ListSedeByInstitucionEducativaId(int idInstitucionEducativaId)
         {
             var result = await common.ListSedeByInstitucionEducativaId(idInstitucionEducativaId);
-            return result;
-        }
-
-        [HttpGet]
-        [Route("GetInstitucionEducativaById")]
-        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int idInstitucionEducativaId)
-        {
-            var result = await common.GetInstitucionEducativaById(idInstitucionEducativaId);
-            return result;
-        }
-
-        [HttpGet]
-        [Route("GetUsuariosByPerfil")]
-        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil ){
-            var result = await common.GetUsuariosByPerfil(pIdPerfil);
             return result;
         }
     }

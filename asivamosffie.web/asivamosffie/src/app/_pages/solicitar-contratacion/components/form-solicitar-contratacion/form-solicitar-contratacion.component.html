@@ -1,0 +1,181 @@
+<div class="container mb-2em">
+  <div class="text-right">
+    <a routerLink="/solicitarContratacion" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Registrar nueva solicitud de contratación
+    </h1>
+  </div>
+
+  <div class="row justify-content-center m1">
+    <div class="pr-1">
+      <label class="label-left" for="esMultiple">¿Es multi proyecto?</label>
+    </div>
+    <mat-radio-group class="radioInput" [formControl]="esMultiple">
+      <mat-radio-button value="si">Sí</mat-radio-button>
+      <mat-radio-button value="no">No</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div class="text-center">
+    <button mat-raised-button color="primary" class="btn-cargar-proyecto" (click)="verBusqueda = !verBusqueda">Gestionar busqueda de proyectos</button>
+  </div>
+
+  <div class="animatedDown" *ngIf="verBusqueda">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+      <mat-card class="shipping-card">
+        <button type="button" mat-icon-button (click)="verBusqueda = false" class="text-info--close">
+          <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar">
+        </button>
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Filtro de busqueda
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="tipoInterventor">Tipo de intervención</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="tipoInterventor">
+                      <mat-option ></mat-option>
+                      <mat-option *ngFor="let tipoInterventor of selectTipoInterventor" [value]="tipoInterventor.value">
+                        {{ tipoInterventor.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="llaveMEN">Llave MEN</label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #llaveMEN type="number" maxlength="12" formControlName="llaveMEN"
+                      (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  </mat-form-field>
+                  <span class="contador">{{12 - llaveMEN.value.length}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="region">Región</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="region">
+                      <mat-option ></mat-option>
+                      <mat-option *ngFor="let region of selectRegion" [value]="region.value">
+                        {{ region.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="departamento">Departamento</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="departamento">
+                      <mat-option ></mat-option>
+                      <mat-option *ngFor="let departamento of selectDepartamento" [value]="departamento.value">
+                        {{ departamento.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="municipio">Municipio</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="municipio">
+                      <mat-option ></mat-option>
+                      <mat-option *ngFor="let municipio of selectMunicipio" [value]="municipio.value">
+                        {{ municipio.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="institucionEducativa">Institución Educativa</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="institucionEducativa">
+                      <mat-option ></mat-option>
+                      <mat-option *ngFor="let institucionEducativa of selectinstitucionEducativa"
+                        [value]="institucionEducativa.value">
+                        {{ institucionEducativa.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="sede">Sede</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="sede">
+                      <mat-option ></mat-option>
+                      <mat-option *ngFor="let sede of selectSede" [value]="sede.value">
+                        {{ sede.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="text-center">
+          <button mat-button color="primary" class="btn-buscar" type="submit" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
+            <img src="assets/img/icon/lupa.svg" alt="buscar"> Buscar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</div>
+<app-tabla-resultados></app-tabla-resultados>

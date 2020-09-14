@@ -9,15 +9,24 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+<<<<<<< HEAD
 
 
+=======
+using asivamosffie.model.APIModels;
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
     {
+<<<<<<< HEAD
  
+=======
+
+        private readonly IDocumentService _documentService;
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
         private readonly IProjectService _projectService;
         private readonly IOptions<AppSettings> _settings;
 
@@ -26,7 +35,11 @@ namespace asivamosffie.api.Controllers
         {
             _projectService = projectService;
             _settings = settings;
+<<<<<<< HEAD
         
+=======
+            _documentService = documentService;
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
         }
 
         [Route("CreateOrEditAdministrativeProject")]
@@ -35,9 +48,16 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
+<<<<<<< HEAD
             { 
                 //string pUsuarioModifico = " ";
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+=======
+            {
+                 
+                string pUsuarioModifico = " ";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
                 pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectService.CreateOrEditAdministrativeProject(pProyectoAdministrativo);
                 return Ok(respuesta);
@@ -45,7 +65,11 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 respuesta.Data = ex.ToString();
+<<<<<<< HEAD
                 return Ok(respuesta);
+=======
+                return BadRequest(respuesta);
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
             }
         }
 
@@ -59,9 +83,14 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
+<<<<<<< HEAD
                     //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
                     respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), strUsuario);
+=======
+                    //string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), " ");
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
                 }
                 return Ok(respuesta);
             }
@@ -98,24 +127,47 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
+<<<<<<< HEAD
             { 
                 pProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+=======
+            {
+               
+
+                string pUsuarioModifico = " ";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                pProyecto.UsuarioCreacion = pUsuarioModifico;
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
                 respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
             }
             catch (Exception ex)
             {
                 respuesta.Data = ex.ToString();
+<<<<<<< HEAD
                 return Ok(respuesta);
             }
         }
          
+=======
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
 
         [Route("ListAdministrativeProject")]
         [HttpGet]
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProjects()
         { 
+<<<<<<< HEAD
             string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+=======
+            string pUsuarioModifico = "";
+            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
             var respuesta = await _projectService.ListAdministrativeProyectos(pUsuarioModifico);
             return respuesta;
 
@@ -125,8 +177,12 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
         {
+<<<<<<< HEAD
             string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
+=======
+            var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId);
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
             return respuesta;
         }
 
@@ -136,16 +192,28 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
         {
+<<<<<<< HEAD
             string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
             var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
+=======
+            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId);
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
             return respuesta;
         }
 
         [Route("ListProject")]
         [HttpGet]
         public async Task<List<ProyectoGrilla>> ListProjects()
+<<<<<<< HEAD
         { 
             var respuesta = await _projectService.ListProyectos();
+=======
+        {
+
+            string pUsuarioModifico = "";
+            //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _projectService.ListProyectos(pUsuarioModifico);
+>>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
             return respuesta;
 
         }

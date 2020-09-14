@@ -1,0 +1,19 @@
+.container-valor {
+    border: solid 1px var(--mainColor);
+    border-radius: .8em;
+    padding: 1em 2em;
+    display: flex;
+    justify-content: space-between;
+
+    p {
+        margin-bottom: 0;
+        b {
+            color: var(--mainColor);
+        }
+    }
+}
+
+.valor-input {
+    color: var(--mainColor);
+    margin-top: 0.5em;
+}
