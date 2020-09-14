@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -17,11 +20,14 @@ namespace asivamosffie.api.Controllers
     {
         private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
         private readonly IOptions<AppSettings> _settings;
+        private readonly IConverter _converter;
 
-        public CommitteeSessionFiduciarioController(IOptions<AppSettings> settings, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService)
+        public CommitteeSessionFiduciarioController(IOptions<AppSettings> settings, IConverter converter, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService)
         {
             _committeeSessionFiduciarioService = committeeSessionFiduciarioService;
             _settings = settings;
+            _converter = converter;
+
 
         }
 
@@ -131,11 +137,11 @@ namespace asivamosffie.api.Controllers
         #region "SESIONES DE COMITE FIDUCIARIO";
 
         [Route("GetConvokeSessionFiduciario")]
-        public async Task<IActionResult> GetConvokeSessionFiduciario()
+        public async Task<IActionResult> GetConvokeSessionFiduciario(int? estadoComiteCodigo)
         {
             try
             {
-                var result = await _committeeSessionFiduciarioService.GetConvokeSessionFiduciario();
+                var result = await _committeeSessionFiduciarioService.GetConvokeSessionFiduciario(estadoComiteCodigo);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -145,11 +151,26 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetListParticipantes")]
+        public async Task<IActionResult> GetListParticipantes()
+        {
+            try
+            {
+                var result = await _committeeSessionFiduciarioService.GetListParticipantes();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
 
+                throw ex;
+            }
+        }
+
+        
         #endregion
 
 
-        
+
 
 
 
@@ -339,7 +360,60 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-       
+
+        #region "Descargas PDF";
+        //Descargar acta
+        [HttpGet]
+        [Route("StartDownloadResumenFichaSolicitud")]
+        public async Task<IActionResult> StartDownloadResumenFichaSolicitud(int sesionTemaId)
+        {
+            try
+            {
+
+                //var result = await _managementCommitteeReportService.GetHTMLString(actaComite);
+                var globalSettings = new GlobalSettings
+                {
+                    ColorMode = ColorMode.Color,
+                    Orientation = Orientation.Portrait,
+                    PaperSize = PaperKind.A4,
+                    Margins = new MarginSettings { Top = 10 },
+                    DocumentTitle = "Acata Comite Tecnico"
+                    //detailValidarDisponibilidadPresupuesal.NumeroSolicitud != null ? detailValidarDisponibilidadPresupuesal.NumeroSolicitud.ToString() : "",
+                };
+
+                var objectSettings = new ObjectSettings
+                {
+                    PagesCount = true,
+                    HtmlContent = "<html><body><h1>HTML Pendiente Back... </h1></body> </html>", //detailValidarDisponibilidadPresupuesal.htmlContent.ToString(),
+                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
+                    HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Pagina [page] de [toPage]", Line = false },
+                    //FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Footer" }
+                };
+
+                var pdf = new HtmlToPdfDocument()
+                {
+                    GlobalSettings = globalSettings,
+                    Objects = { objectSettings },
+
+                };
+
+                var file = _converter.Convert(pdf);
+
+                //return Ok("El documento PDF fue descargado.");
+                //return File(file, "application/pdf", "DDP_.pdf");
+                return File(file, "application/pdf", "Ficha Resumen" + ".pdf"); //detailValidarDisponibilidadPresupuesal.NumeroSolicitud.ToString()
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+        }
+
+
+
+        #endregion
 
 
     }

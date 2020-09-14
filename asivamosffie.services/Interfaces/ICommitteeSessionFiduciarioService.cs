@@ -24,8 +24,8 @@ namespace asivamosffie.services.Interfaces
 
 
         #region "SESIONES DE COMITE FIDUCIARIO";
-        Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario();
-
+        Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario(int? estadoComiteCodigo);
+        Task<ActionResult<List<Usuario>>> GetListParticipantes();
         #endregion
 
 

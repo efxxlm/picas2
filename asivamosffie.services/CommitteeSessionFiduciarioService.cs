@@ -3,6 +3,9 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using DinkToPdf;
+using System.IO;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +40,7 @@ namespace asivamosffie.services
         {
             _context = context;
             _commonService = commonService;
+   
         }
 
 
@@ -279,11 +283,14 @@ namespace asivamosffie.services
         #region "SESIONES DE COMITE FIDUCIARIO";
 
         //Grilla sesiones programadas en estado Convocada.
-        public async Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario()
+        public async Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario(int? estadoComiteCodigo)
         {
             try
             {
-                return await _context.ComiteTecnico.Include(st => st.SesionComiteTema).Where(cm => !(bool)cm.Eliminado && cm.EstadoComiteCodigo == "2").ToListAsync();
+                if(estadoComiteCodigo != null)  
+                     return await _context.ComiteTecnico.Include(st => st.SesionComiteTema).Where(cm => !(bool)cm.Eliminado && cm.EstadoComiteCodigo == Convert.ToString(estadoComiteCodigo) && cm.EsComiteFiduciario == true).ToListAsync();
+                else
+                    return await _context.ComiteTecnico.Include(st => st.SesionComiteTema).Where(cm => !(bool)cm.Eliminado && cm.EsComiteFiduciario == true).ToListAsync();
 
             }
             catch (Exception)
@@ -293,6 +300,62 @@ namespace asivamosffie.services
             }
         }
 
+
+        //Grilla validacion de solicitudes contractuales
+        //TODO: No hay  tablas para crear esta relacion
+        public async Task<ActionResult<List<SesionComiteSolicitud>>> GetValidationRequests()
+        {
+          
+            try
+            {
+                return null;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        //Ver soporte
+        public async Task<ActionResult<List<SesionComiteSolicitud>>> StartDownloadResumenFichaSolicitud()
+        {
+
+            try
+            {
+                return null;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        //Lista participantes
+        public async Task<ActionResult<List<Usuario>>> GetListParticipantes()
+        {
+
+            try
+            {
+                return await (from u in _context.Usuario where u.Eliminado == false && u.Activo == true
+                        select new Usuario
+                        {
+                            UsuarioId = u.UsuarioId,
+                            Email = u.Email,
+                            Nombres = string.Concat(u.Nombres, " ", u.Apellidos)
+                        }).ToListAsync();
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         #endregion
 
@@ -788,8 +851,13 @@ namespace asivamosffie.services
 
 
 
-       
+
 
         #endregion
+
+
+
+
+
     }
 }
