@@ -47,7 +47,7 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
-                //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion
+                //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
                 if (false)
                 {
                     Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
@@ -77,7 +77,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, pSesionComiteSolicitud.UsuarioCreacion, ex.InnerException.ToString())
                 };
             }
-           
+
         }
 
 
@@ -107,8 +107,8 @@ namespace asivamosffie.services
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
                 //TODO Filtrar por los otros parametros
-                  // && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
-                 //poner el id 7 y el id otro 
+                // && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
+                //poner el id 7 y el id otro 
                 ).ToListAsync();
 
 
@@ -196,6 +196,9 @@ namespace asivamosffie.services
                       .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                             .ThenInclude(r => r.ProyectoAportante)
+                               .ThenInclude(r => r.Aportante)
+                                 .ThenInclude(r => r.FuenteFinanciacion)
+                                    .ThenInclude(r => r.GestionFuenteFinanciacion)
                     .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                               .ThenInclude(r => r.InstitucionEducativa)
@@ -247,6 +250,40 @@ namespace asivamosffie.services
                     ContratacionProyecto.Proyecto.InstitucionEducativa.Departamento = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.InstitucionEducativa.Municipio.IdPadre).FirstOrDefault();
                 }
 
+
+                foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+                {
+                    if (ProyectoAportante.Aportante.TipoAportanteId > 0)
+                    {
+                        ProyectoAportante.Aportante.TipoAportante = LisParametricas
+                            .Where(r => r.DominioId == ProyectoAportante.Aportante.TipoAportanteId)
+                            .FirstOrDefault().Nombre;
+                    }
+                    if (ProyectoAportante.Aportante.NombreAportanteId > 0)
+                    {
+
+                        ProyectoAportante.Aportante.NombreAportante = LisParametricas
+                            .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
+                            .FirstOrDefault().Nombre;
+                    }
+
+
+                    foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
+                    {
+
+                        bool allDigits3 = FuenteFinanciacion.FuenteRecursosCodigo.All(char.IsDigit);
+
+                        if (allDigits3 &&  !string.IsNullOrEmpty(FuenteFinanciacion.FuenteRecursosCodigo))
+                        {
+                            FuenteFinanciacion.FuenteRecursosCodigo = LisParametricas
+                                  .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuente_de_Recurso
+                                  && r.Codigo == FuenteFinanciacion.FuenteRecursosCodigo
+                                  ).FirstOrDefault().Nombre;
+                        }
+
+                    }
+
+                }
             }
 
 
