@@ -128,36 +128,20 @@ namespace asivamosffie.api
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<IProjectContractingService, ProjectContractingService>();
-            services.AddTransient<IResourceControlService, ResourceControlService>();
- 
-            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
-            services.AddTransient<IProjectContractingService, ProjectContractingService>();
-            services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IProjectContractingService, ProjectContractingService>();            
             services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();      
-            services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
- 
-            //services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
-
-            
-            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>(); 
             services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
-
-             
-            services.AddTransient<ISelectionProcessService, SelectionProcessService>();  
-            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();  
-            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
-            //services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
-
-
-            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
+            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();             
             services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
-
+            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IProjectService, ProjectService>();
             
+
+
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
