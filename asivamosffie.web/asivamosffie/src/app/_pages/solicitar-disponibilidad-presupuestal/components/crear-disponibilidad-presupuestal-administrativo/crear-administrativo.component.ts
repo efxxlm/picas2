@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-crear-disponibilidad-presupuestal',
-  templateUrl: './crear-disponibilidad-presupuestal.component.html',
-  styleUrls: ['./crear-disponibilidad-presupuestal.component.scss']
+  selector: 'app-crear-administrativo',
+  templateUrl: './crear-administrativo.component.html',
+  styleUrls: ['./crear-administrativo.component.scss']
 })
-export class CrearSolicitudDeDisponibilidadPresupuestalComponent implements OnInit {
+export class CrearDisponibilidadPresupuestalAdministrativoComponent implements OnInit {
 
   objeto: FormControl;
   consecutivo: FormControl;
