@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" [formGroup]="formulario">
     <div class="text-right">
         <a routerLink="../.." mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -54,7 +54,7 @@
     <div class="d-flex align-items-center">
         <div class="text-area-quill">
             <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
-            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+            <quill-editor class="quill-editor-style" #objeto [styles]="editorStyle" [modules]="config"
                 (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
         </div>
         <span class="contador miles" *ngIf="objeto.value">

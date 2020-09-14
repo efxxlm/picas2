@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-crear-administrativo',
@@ -8,8 +8,11 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class CrearDisponibilidadPresupuestalAdministrativoComponent implements OnInit {
 
-  objeto: FormControl;
-  consecutivo: FormControl;
+  formulario = this.fb.group({
+    objeto: [null, Validators.required],
+    consecutivo: [null, Validators.required],
+
+  })
 
   editorStyle = {
     height: '45px'
@@ -24,20 +27,14 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
     ]
   };
 
-  constructor() {
-    this.declararObjeto();
-    this.declararConsecutivo();
+  constructor(
+    private fb: FormBuilder,
+
+  ) 
+  {
   }
 
   ngOnInit(): void {
-  }
-
-  private declararObjeto() {
-    this.objeto = new FormControl(null, [Validators.required]);
-  }
-
-  private declararConsecutivo() {
-    this.consecutivo = new FormControl(null, [Validators.required]);
   }
 
   maxLength(e: any, n: number) {
@@ -52,7 +49,8 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
   }
 
   enviarObjeto() {
-    console.log(this.objeto.value);
+     console.log( this.formulario.get('objeto').value );
+    
   }
 
 }
