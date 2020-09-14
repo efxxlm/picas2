@@ -5,10 +5,14 @@ body {
 b,
 strong {
     font-weight: 500;
-    
+
     .ql-editor & {
         font-weight: 700;
     }
+}
+
+.mat-typography p {
+    margin: 0 0 6px;
 }
 
 .font-weight-lighter {

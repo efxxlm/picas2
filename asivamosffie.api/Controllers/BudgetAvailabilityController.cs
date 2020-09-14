@@ -70,14 +70,15 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.3*/
         [Route("SetCancelDDP")]
         [HttpPost]
-        public async Task<IActionResult> SetCancelarDDP(int id, string observacion)
+        public async Task<IActionResult> SetCancelarDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
         {
 
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.SetCancelDisponibilidadPresupuestal(id, UsuarioModificacion, observacion);
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                Task<Respuesta> result = _budgetAvailabilityService.SetCancelDisponibilidadPresupuestal(pDisponibilidadPresObservacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -92,14 +93,15 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.3*/
         [Route("SetReturnDDP")]
         [HttpPost]
-        public async Task<IActionResult> SetReturnDDP(int id, string observacion)
+        public async Task<IActionResult> SetReturnDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
         {
 
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.returnDDP(id, UsuarioModificacion, observacion);
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                Task<Respuesta> result = _budgetAvailabilityService.returnDDP(pDisponibilidadPresObservacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }

@@ -125,7 +125,7 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
-                pSesionComiteSolicitud.RequiereVotacion = false;
+                
                 pSesionComiteSolicitud.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                 pSesionComiteSolicitud.FechaModificacion = DateTime.Now;
 
@@ -175,15 +175,15 @@ namespace asivamosffie.services
                         CrearEditar = "CREAR SESIÓN TEMA VOTO";
                         SesionTemaVoto.UsuarioCreacion = pSesionComiteTema.UsuarioCreacion;
                         SesionTemaVoto.FechaCreacion = DateTime.Now;
-                        SesionTemaVoto.Eliminado = false;
+                        //SesionTemaVoto.Eliminado = false;
                         _context.SesionTemaVoto.Add(SesionTemaVoto);
                     }
                     else
                     {
                         CrearEditar = "EDITAR SESIÓN TEMA VOTO";
                         SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaVotoId);
-                        SesionTemaVotoOld.FechaModificacion = DateTime.Now;
-                        SesionTemaVotoOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
+                        //SesionTemaVotoOld.FechaModificacion = DateTime.Now;
+                        //SesionTemaVotoOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
 
                         SesionTemaVotoOld.EsAprobado = SesionTemaVoto.EsAprobado;
                         SesionTemaVotoOld.Observacion = SesionTemaVoto.Observacion;
@@ -690,8 +690,8 @@ namespace asivamosffie.services
 
             //Quitar los que ya estan en sesionComiteSolicitud
 
-            List<int> LisIdContratacion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r => r.SolicitudId).ToList();
-            List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
+            List<int> LisIdContratacion = _context.SesionComiteSolicitud.Where(r =>  r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r => r.SolicitudId).ToList();
+            List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
 
             //Se comentan ya que no esta listo el caso de uso
             //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
@@ -786,7 +786,7 @@ namespace asivamosffie.services
                         //Auditoria
                         SesionComiteSolicitud.FechaCreacion = DateTime.Now;
                         SesionComiteSolicitud.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
-                        SesionComiteSolicitud.Eliminado = false;
+                        //SesionComiteSolicitud.Eliminado = false;
                     }
                     _context.ComiteTecnico.Add(pComiteTecnico);
                 }
@@ -796,7 +796,7 @@ namespace asivamosffie.services
 
                     ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
-                        .IncludeFilter(r => r.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado))
+                        .IncludeFilter(r => r.SesionComiteSolicitud)
                         .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado)).FirstOrDefault();
 
                     //Auditoria 
@@ -858,7 +858,7 @@ namespace asivamosffie.services
                             //Auditoria 
                             SesionComiteSolicitud.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
                             SesionComiteSolicitud.FechaCreacion = DateTime.Now;
-                            SesionComiteSolicitud.Eliminado = false;
+                            //SesionComiteSolicitud.Eliminado = false;
                             _context.SesionComiteSolicitud.Add(SesionComiteSolicitud);
                         }
                         else
@@ -968,7 +968,7 @@ namespace asivamosffie.services
                 .FirstOrDefaultAsync();
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
-            comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+            comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.ToList();
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
             {
