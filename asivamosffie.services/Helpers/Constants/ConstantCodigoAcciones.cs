@@ -80,9 +80,9 @@
         public const string Crear_Editar_Solicitud_DDP_Especial = "44";
         public const string Crear_Editar_Solicitud_DDP_OtrosCostosServicio = "74";
         public const string Enviar_Solicitud_A_Disponibilidad_Presupuestal = "44";
-
-
-
-
-    }
+         
+        public const string Registrar_Tramite_Contratacion = "68";
+         
+        public const string Cambiar_Estado_Sesion_Comite_Solicitud = "71";
+    } 
 }

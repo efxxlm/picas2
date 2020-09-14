@@ -26,6 +26,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         GenerarDisponibilidadPresupuestal = 28,
 
         RegistrarComiteTecnico = 24
+        RegistrarComiteTecnico = 24,
+
+        Gestionar_Procesos_Contractuales = 31
     }
 
     public enum enumeratorAccion

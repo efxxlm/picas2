@@ -95,7 +95,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -866,6 +865,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DisponibilidadPresupuestal>(entity =>
             {
+                entity.Property(e => e.AportanteId)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -880,6 +883,14 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
+
+                entity.Property(e => e.LimitacionEspecial)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroDdp)
                     .HasColumnName("NumeroDDP")
@@ -924,6 +935,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ValorAportante).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
 

@@ -17,7 +17,11 @@
         Proceso_de_seleccion_Abierta = 11,
         Convocar_Comite_Tecnico = 12,
         Tabla_Orden_Del_Dia = 13,
-        Aplazar_Comite_Tecnico = 14
-
+        Aplazar_Comite_Tecnico = 14,
+         
+        DDP_Contratacion_Rubro_Administrativo = 23,
+        DDP_Registros_Tabla_Aportante = 24,
+        Registros_Proyectos_Contratacion_DDP = 25,
+        DDP_Contratacion_Rubro_Por_Financiar = 26,
     }
 }

@@ -1,0 +1,59 @@
+<div class="container text-center">
+  <div class="text-right">
+      <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+          <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Gestionar procesos contractuales
+  </h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+      <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+          <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+      </button>
+      Bienvenida/o, aquí podrá realizar la solicitud de procesos contractuales, ya sean contrataciones nuevas o modificaciones asociadas
+      a los proyectos de infraestructura que ejecutará el FFIE, que han surtido el trámite de los comités y que en caso de requerirlo tienen
+      disponibilidad presupuestal.
+  </div>
+
+  <section class="container">
+    <div class="text-center">
+        <p class="info-container">
+          <span class="info-text sin-diligenciar">Sin diligenciar</span>
+          <span class="info-text en-proceso">En proceso</span>
+          <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon">
+            Recibidas sin tramitar ante fiduciaria
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-tabla-solicitudes-sin-tramitar [$data]="$data" (estadoAcordeon)="estadoAcordeon = $event"></app-tabla-solicitudes-sin-tramitar>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Enviadas a la fiduciaria
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-tabla-solicitudes-enviadas [$data]="$data"></app-tabla-solicitudes-enviadas>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Registradas por la fiduciaria
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </section>
+
+</div>

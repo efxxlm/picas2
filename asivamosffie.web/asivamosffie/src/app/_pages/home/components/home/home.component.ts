@@ -72,7 +72,8 @@ export class HomeComponent implements OnInit {
         //console.log(element);
         this.menu.push({title:element.menu.nombre,link:element.menu.rutaFormulario});
       });
-      console.log(this.menu);    
+      this.menu.push({title:'Gestionar procesos contractuales',link:'/procesosContractuales'})
+      console.log(this.menu);
     });
   }
 
