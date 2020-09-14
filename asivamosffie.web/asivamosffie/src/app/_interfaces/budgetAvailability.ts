@@ -39,7 +39,7 @@ export interface DisponibilidadPresupuestal{
     plazoMeses?: number,
     plazoDias?: number,
     cuentaCartaAutorizacion?: boolean,
-    aportanteId?: string,
+    aportanteId?: number,
     valorAportante?: number,
     numeroContrato?: string,
     limitacionEspecial?: string,

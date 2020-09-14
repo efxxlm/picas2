@@ -519,7 +519,8 @@ namespace asivamosffie.services
                                 EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
                                 RegistroCompleto = dp.RegistroCompleto,
                                 EstadoSolicitudNombre = _context.Dominio.Where(r => (bool)r.Activo &&
-                                                                             r.Codigo.Equals(dp.EstadoSolicitudCodigo))
+                                                                             r.Codigo.Equals(dp.EstadoSolicitudCodigo) && 
+                                                                             r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
 
                             }).ToListAsync();

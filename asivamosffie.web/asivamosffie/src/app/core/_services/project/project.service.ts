@@ -131,41 +131,41 @@ export interface Listados{
 }
 
 export interface Proyecto{
-  proyectoId:number,
+  proyectoId?:number,
   fechaSesionJunta?: Date,
-  numeroActaJunta:number,
-  tipoIntervencionCodigo:number,
-  llaveMen:string,
-  localizacionIdMunicipio:string,
-  institucionEducativaId:number,
-  sedeId:number,
-  enConvocatoria:boolean,
+  numeroActaJunta?:number,
+  tipoIntervencionCodigo?:number,
+  llaveMen?:string,
+  localizacionIdMunicipio?:string,
+  institucionEducativaId?:number,
+  sedeId?:number,
+  enConvocatoria?:boolean,
   convocatoriaId?:number,
-  cantPrediosPostulados:number,
-  tipoPredioCodigo:string,
-  predioPrincipalId:number,
-  valorObra:number,
-  valorInterventoria:number,
-  valorTotal:number,
-  estadoProyectoCodigo:string,
+  cantPrediosPostulados?:number,
+  tipoPredioCodigo?:string,
+  predioPrincipalId?:number,
+  valorObra?:number,
+  valorInterventoria?:number,
+  valorTotal?:number,
+  estadoProyectoCodigo?:string,
   eliminado?:boolean,
-  fechaCreacion: Date,
-  usuarioCreacion:string,
+  fechaCreacion?: Date,
+  usuarioCreacion?:string,
   fechaModificacion?: Date,
-  usuarioModificacion:string,
+  usuarioModificacion?:string,
   //no modelado
-  cantidadAportantes:number;
+  cantidadAportantes?:number;
   regid?:string;
   depid?:string;
 
   institucionEducativa?:InstitucionEducativa
-  institucionEducativaSede:InstitucionEducativa,
-  localizacionIdMunicipioNavigation: Localizacion,
-  predioPrincipal: Predio,
-  sede:InstitucionEducativa,
-  infraestructuraIntervenirProyecto:InfraestructuraIntervenirProyecto[],
-  proyectoAportante:ProyectoAportante[],
-  proyectoPredio:ProyectoPredio[],
+  institucionEducativaSede?:InstitucionEducativa,
+  localizacionIdMunicipioNavigation?: Localizacion,
+  predioPrincipal?: Predio,
+  sede?:InstitucionEducativa,
+  infraestructuraIntervenirProyecto?:InfraestructuraIntervenirProyecto[],
+  proyectoAportante?:ProyectoAportante[],
+  proyectoPredio?:ProyectoPredio[],
   
 }
 

@@ -31,7 +31,7 @@
 
     <ng-container matColumnDef="estadoRegistro">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-        <td mat-cell *matCellDef="let element"> {{element.registroCompleto}} </td>
+        <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table" [ngClass]="{'completo': element.registroCompleto === true, 'sin-diligenciar': element.registroCompleto === false}"></span> </td>
     </ng-container>
 
     <ng-container matColumnDef="id">

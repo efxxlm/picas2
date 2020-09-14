@@ -91,6 +91,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           this.addressForm.get('llaveMEN').setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen)
           this.buscarProyecto( true, disponibilidad.aportanteId );
 
+    
         }
 
 
@@ -125,9 +126,16 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     });
   }
 
-  buscarProyecto( esModoEdit: boolean, aportanteId: string ) {
+  buscarProyecto( esModoEdit: boolean, aportanteId: number ) {
+
+    this.proyectoEncontrado = false;
+    this.proyecto = {};
+    this.addressForm.get('valor').setValue('')
+    this.addressForm.get('nombreAportante').setValue('')
+    this.listaAportante = []; 
+
     let llameMen: string = this.addressForm.get('llaveMEN').value;
-    console.log(llameMen);
+
     if (llameMen) {
       this.budgetAvailabilityService.searchLlaveMEN(llameMen)
         .subscribe(listaProyectos => {
@@ -144,8 +152,9 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 this.listaAportante = listaApo;
                 console.log(this.listaAportante)
                 if ( esModoEdit ){
-                   let aportanteNombreSeleccionado: ListAportantes = this.listaAportante.find( t => t.cofinanciacionAportanteId.toString() == aportanteId ); 
+                   let aportanteNombreSeleccionado: ListAportantes = this.listaAportante.find( t => t.cofinanciacionAportanteId == aportanteId ); 
                    this.addressForm.get('nombreAportante').setValue( aportanteNombreSeleccionado );
+                   this.changeAportante();
                 }
 
 
@@ -187,7 +196,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   }
 
   changeAportante() {
-    this.addressForm.get('valor').setValue(this.addressForm.get('nombreAportante').value.valorAporte);
+    this.addressForm.get('valor').setValue(this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.valorAporte : null);
   }
 
   onSubmit() {
@@ -219,7 +228,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
             if (this.proyecto){
               let disponibilidadPresupuestalProyecto: DisponibilidadPresupuestalProyecto = {
-                disponibilidadPresupuestalId: this.addressForm.get('disponibilidadPresupuestalId').value,
+                disponibilidadPresupuestalProyectoId: this.addressForm.get('disponibilidadPresupuestalProyectoId').value,
                 proyectoId: this.proyecto.proyectoId,
                 
               }
