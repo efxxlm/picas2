@@ -68,6 +68,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_de_Solicitud_Obra_Interventorias = 37,
 
+        Tipo_Disponibilidad_Presupuestal = 36,
         Opcion_Por_Contratar = 37,
 
         Estado_Comite = 38,
