@@ -2,6 +2,7 @@ import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
 import { Contratacion } from './project-contracting';
 import { Proyecto } from '../core/_services/project/project.service';
 import { dashCaseToCamelCase } from '@angular/compiler/src/util';
+import { ProcesoSeleccion } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface SolicitudesContractuales{
     id?: number,
@@ -97,6 +98,7 @@ export interface SesionComiteSolicitud {
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
     sesionSolicitudCompromiso?: SesionSolicitudCompromiso[],
     contratacion?: Contratacion,
+    procesoSeleccion?: ProcesoSeleccion,
 
 
 }
@@ -204,6 +206,12 @@ export interface SesionSolicitudCompromiso{
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
+    estadoCodigo?: string,
+
+    nombreResponsable?: string,
+    responsableSesionParticipante?: SesionParticipante,
+    nombreEstado?: string,
+
 }
 
 export interface TemaCompromiso{
@@ -217,6 +225,12 @@ export interface TemaCompromiso{
     fechaModificacion?: Date,
     usuarioModificacion?: Date,
     eliminado?: boolean,
+    estadoCodigo?: string,
+
+    nombreResponsable?: string,
+    responsableNavigation?: SesionParticipante,
+    nombreEstado?: string,
+
 }
 
 interface EstadoComite{

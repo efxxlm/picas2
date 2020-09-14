@@ -78,6 +78,9 @@ export class FormOtrosTemasComponent implements OnInit {
         this.listaResponsables = response[1];
       })
 
+    this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
+
+
   }
 
   maxLength(e: any, n: number) {

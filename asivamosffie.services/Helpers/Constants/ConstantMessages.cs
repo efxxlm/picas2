@@ -36,7 +36,7 @@ namespace asivamosffie.services.Helpers.Constant
     public class ConstantMessagesContrasena
     {
         #region Mensajes Informativos
-
+       
         //cambio de contraseña
         public const string ErrorContrasenaAntigua = "101";
         public const string ErrorSesion = "102";
@@ -62,7 +62,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CreadoCorrrectamente = "103";
         public const string RecursoNoEncontrado = "104";
 
-
+        
 
         #endregion Mensajes Informativos
 
@@ -77,7 +77,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string DirecCambioContrasena = "301";
 
         #endregion Mensajes Redireccion
-
+        
     }
 
     public class ConstantMessagesContributor
@@ -209,159 +209,12 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
-    public class ConstantMessagesProcesoSeleccion
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
-
-    public class ConstantMessagesProcessSchedule
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
-
-    public class ConstantMessagesProcessQuotation
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
-
-    public class ConstantMessagesSelectionProcessGroup
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
 
     public class ConstantMessagesFuentesFinanciacion
     {
 
         #region Mensajes Informativos
-
+        
 
         #endregion Mensajes Informativos
 

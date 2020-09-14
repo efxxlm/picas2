@@ -4,6 +4,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { ProjectService } from 'src/app/core/_services/project/project.service';
+import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,6 +17,9 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 export class TablaFormSolicitudMultipleComponent implements OnInit {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
+  listaEstados: Dominio[] = [];
+  estadosValidos: string[] = ['1','3','5']
+  estadosSolicitud = EstadosSolicitud;
 
   displayedColumns: string[] = [
     'idMen',
@@ -35,13 +41,24 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
   }
 
   constructor(
-                private projectService: ProjectService
+                private projectService: ProjectService,
+                private commonService: CommonService,
+                private router: Router,
+
              ) 
   {
 
   }
 
   ngOnInit(): void {
+
+    this.commonService.listaEstadoSolicitud()
+    .subscribe( estados => {
+      this.listaEstados = estados;
+      this.listaEstados = this.listaEstados.filter( e => this.estadosValidos.includes( e.codigo ));
+    })
+
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -59,6 +76,16 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
     };
     this.cargarRegistro();
   }
+  Observaciones( contratacionProyectoid: number, contratacionid: number ){
+    this.router.navigate(['/comiteTecnico/crearActa',
+                            this.sesionComiteSolicitud.comiteTecnicoId,
+                            'observacion',
+                            this.sesionComiteSolicitud.sesionComiteSolicitudId,
+                            this.sesionComiteSolicitud.comiteTecnicoId,
+                            contratacionProyectoid,
+                            contratacionid
+                           ])
+  }
 
   cargarRegistro(){
 
@@ -66,11 +93,11 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
 
     if (this.sesionComiteSolicitud.contratacion){
       this.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {
-        // this.projectService.getProyectoGrillaByProyectoId( cp.proyectoId )
-        //   .subscribe( proy => {
-        //     cp.proyecto = proy; 
-        //     console.log( proy ); 
-        //   })
+        this.projectService.getProyectoGrillaByProyectoId( cp.proyectoId )
+          .subscribe( proy => {
+            cp.proyecto = proy; 
+            console.log( proy ); 
+          })
       })
       console.log( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
       this.dataSource = new MatTableDataSource( this.sesionComiteSolicitud.contratacion.contratacionProyecto );

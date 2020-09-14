@@ -60,12 +60,15 @@
         style="display: none;"
         id="btnSolicitudMultiple"
         type="button"
+        *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.Contratacion"
+
       >
       </button>
 
       <app-tabla-form-solicitud-multiple
         #solicitudMultiple
         [sesionComiteSolicitud]="sesionComiteSolicitud"
+        [style.display]="getMostrarProyectos()"
       >
       </app-tabla-form-solicitud-multiple>
 

@@ -71,7 +71,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
-        public async Task<ActionResult<List<Localicacion>>> GetListMunicipio(string idDepartamento)
+        public async Task<ActionResult<List<Localicacion>>> GetListDepartamento(string idDepartamento)
         {
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;

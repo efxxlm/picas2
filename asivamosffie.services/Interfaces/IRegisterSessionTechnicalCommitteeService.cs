@@ -9,6 +9,16 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
+        Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto(int pSesionComiteSolicitudId, int pContratacionProyectoId);
+        
+        Task<Respuesta> CambiarEstadoActa(int pSesionComiteSolicitud, string pCodigoEstado, string pUsuarioModifica);
+
+        Task<Respuesta> CrearObservacionProyecto(ContratacionObservacion pContratacionObservacion);
+             
+        Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico);
+
+        Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId);
+
         Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId, string pUsuarioModifico);
 
         Task<Respuesta> CreateEditSesionSolicitudObservacionProyecto(SesionSolicitudObservacionProyecto pSesionSolicitudObservacionProyecto);

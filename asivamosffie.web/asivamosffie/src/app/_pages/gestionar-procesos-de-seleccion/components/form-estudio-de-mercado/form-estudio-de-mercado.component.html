@@ -1,35 +1,46 @@
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
-        <div class="pr-1">
-          <label for="cuantasCotizaciones" class="label-left">¿Cuántos grupos?</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #cuantasCotizaciones type="number" min="1" max="99" formControlName="cuantasCotizaciones" (keyup)="CambioNumeroCotizantes()">
-          </mat-form-field>
-          <span class="contador">{{2 - cuantasCotizaciones.value.length}}</span>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label for="cuantasCotizaciones" class="label-left">¿Cuántos grupos?</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #cuantasCotizaciones type="number" min="1" max="99"
+                  formControlName="cuantasCotizaciones" (keyup)="CambioNumeroCotizantes()">
+              </mat-form-field>
+              <span class="contador">{{2 - cuantasCotizaciones.value.length}}</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div formGroupName="cotizaciones">
+        <h2 class="card-subTitle">Cotizaciones</h2>
         <div *ngFor="let cotizacion of cotizaciones.controls; let i = index">
           <div [formGroupName]="i">
-            <h2 class="card-subTitle">Cotizaciones</h2>
+            
             <mat-card-title class="header-card--text sub-text">
               Cotización {{ i + 1 }}
             </mat-card-title>
             <div class="row">
-              <div class="pr-1">
-                <label for="nombreOrganizacion" class="label-left">Nombre de la organización</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #nombreOrganizacion type="text" maxlength="500" formControlName="nombreOrganizacion">
-                  <input type="hidden" formControlName="procesoSeleccionCotizacionId">
-                </mat-form-field>
-                <span class="contador">{{500 - nombreOrganizacion.value.length}}</span>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="nombreOrganizacion" class="label-left">Nombre de la organización</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput #nombreOrganizacion type="text" maxlength="500"
+                        formControlName="nombreOrganizacion" required>
+                      <input type="hidden" formControlName="procesoSeleccionCotizacionId">
+                    </mat-form-field>
+                    <span class="contador">{{500 - nombreOrganizacion.value.length}}</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -40,7 +51,7 @@
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #valor type="number" maxlength="20" formControlName="valor">
+                      <input matInput #valor type="number" maxlength="20" formControlName="valor" required>
                     </mat-form-field>
                     <span class="contador">{{20 - valor.value.length}}</span>
                   </div>
@@ -48,18 +59,24 @@
               </div>
             </div>
             <div class="row">
-              <div class="pr-1">
-                <label for="descripcion" class="label-left">Descripción</label>
-              </div>
-              <div class="col d-flex">
-                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                  (onContentChanged)="maxLength($event, 3000)" formControlName="descripcion"></quill-editor>
-                <!-- <span class="contador" *ngIf="addressForm.get('descripcion').value !== null">
-                  {{3000 - addressForm.get('descripcion').value.length}}
-                </span>
-                <span class="contador" *ngIf="addressForm.get('descripcion').value === null">
-                  3000
-                </span> -->
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="descripcion" class="label-left">Descripción</label>
+                  </div>
+                  <div class="col d-flex">
+                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+                      (onContentChanged)="maxLength($event, 3000)" formControlName="descripcion" required></quill-editor>
+                      <div class="d-flex align-items-center">
+                        <span class="contador miles" *ngIf="cotizacion.get('descripcion').value !== null">
+                          {{3000 - textoLimpio(cotizacion.get('descripcion').value)}}
+                        </span>
+                        <span class="contador miles" *ngIf="cotizacion.get('descripcion').value === null">
+                          3000
+                        </span>
+                      </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -73,8 +90,7 @@
               </div>
             </div>
             <div class="col-md-4 text-right" *ngIf="addressForm.value.cotizaciones.length > 1">
-              <button mat-button color="warn" type="button" class="btn-eliminar"
-                (click)="borrarArray(cotizaciones, i)">
+              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(cotizaciones, i)">
                 <img src="assets/img/icon/menos.svg" alt="Eliminar cotización">
                 Eliminar cotización
               </button>
