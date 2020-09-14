@@ -46,59 +46,38 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //Es igual a estado Proyecto 
         Estado_Registro = 23,
-
-		Tipo_Proceso_Seleccion = 27,
-		Etapa_Proceso_Seleccion = 34,
-		Tipo_Documento = 30,
-		Tipo_Proponente = 28,
-		Estado_Proceso_Seleccion = 35,
-		Estado_Juridico_Predios = 25,
-		Estado_Cronograma_Seguimiento = 40,
-
-     	Estado_Solicitud_Presupuestal = 33,
-
-       
-        Tipo_de_Solicitud = 29,       
-        Estado_Solicitud = 31,
-		Tipo_Solicitud = 29,
-		EstadoComite = 38,
         Estado_Juridico_Predios = 25,
 
-        Estado_Juridico_Predios = 25,
         Tipo_Proceso_Seleccion = 27,
         Tipo_Proponente = 28,
-        Tipo_Solicitud = 29,
-        Tipo_Documento = 30,
-
-        // Para disponibilidad presupuestal
-
-        Estado_Proceso_Seleccion = 35,
-        Opcion_Por_Contratar = 37,
-        Estado_Cronograma_Seguimiento = 40,
         Tipo_de_Solicitud = 29,
+        Tipo_Solicitud = 29,
 
-
-        //Es para proyecto ?
+        Tipo_Documento = 30,
         Estado_Solicitud = 31,
 
-        // Para disponibilidad presupuestal
+        Estado_Solicitud_Presupuestal = 33,
 
         Etapa_Proceso_Seleccion = 34,
+		Estado_Proceso_Seleccion = 35,
+        EstadoComite = 38,
 
-        Estado_Proceso_Seleccion = 35,
+        Estado_Cronograma_Seguimiento = 40,
+     
+
+        Opcion_Por_Contratar = 37,
+
+        // Para disponibilidad presupuestal
+
 
         // Para disponibilidad presupuestal        
         
         Tipo_de_Solicitud_Obra_Interventorias = 37,
 
         Tipo_Disponibilidad_Presupuestal = 36,
-        Opcion_Por_Contratar = 37,
-
+    
         Estado_Comite = 38,
- 
-
-        Estado_Cronograma_Seguimiento = 40,
-
+         
         Dias_Comite = 43,
 
         PlaceHolder = 44,
@@ -107,7 +86,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         //RESPONSABLES DE TEMAS
         Miembros_Comite_Tecnico = 46,
         Estado_Solicitud_Disponibilidad_Presupuestal = 39,
-        Tipo_DDP_Espacial = 49
+        Tipo_DDP_Espacial = 49,
 
         Estados_Acta = 47
 

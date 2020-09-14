@@ -141,7 +141,7 @@ namespace asivamosffie.api
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
  
-            services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
+            //services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
 
             
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>(); 
@@ -151,7 +151,7 @@ namespace asivamosffie.api
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();  
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();  
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
-            services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
+            //services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
 
 
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo

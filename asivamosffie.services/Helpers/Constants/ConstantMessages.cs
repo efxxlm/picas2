@@ -432,4 +432,178 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
+    public class ConstantMessagesProcessSchedule
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+    }
+
+    public class ConstantMessagesProcessQuotation
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+    }
+
+    public class ConstantMessagesProcesoSeleccion
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+    }
+
+    
+
+   
+
+    public class ConstantMessagesSesionComiteTema
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesSelectionProcessGroup
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+    }
 }

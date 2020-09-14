@@ -865,12 +865,11 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DisponibilidadPresupuestal>(entity =>
             {
-                /*entity.Property(e => e.AportanteId)
+                entity.Property(e => e.AportanteId)
                     .HasMaxLength(10)
                     .IsFixedLength();
-                    */
+
                 entity.Property(e => e.EstadoSolicitudCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -884,14 +883,14 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
-                /*entity.Property(e => e.LimitacionEspecial)
+                entity.Property(e => e.LimitacionEspecial)
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
                     .IsUnicode(false);
-                    */
+
                 entity.Property(e => e.NumeroDdp)
                     .HasColumnName("NumeroDDP")
                     .HasMaxLength(200)
@@ -900,6 +899,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroDrp)
                     .HasColumnName("NumeroDRP")
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroRadicadoSolicitud)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
@@ -936,7 +939,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                //entity.Property(e => e.ValorAportante).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ValorAportante).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
 
