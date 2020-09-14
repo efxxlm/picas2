@@ -170,7 +170,7 @@ namespace asivamosffie.services
             {
                 TotalPlantillaRegistrosAportante += TipoPlantillaDDPRegistrosTablaAportante;
 
-                foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+                foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r=> !(bool)r.Eliminado))
                 {
                     foreach (Dominio placeholderDominio in placeholders)
                     {
@@ -232,7 +232,7 @@ namespace asivamosffie.services
                 }
             } 
             //Registros Proyectos
-            foreach (var ContratacionProyecto in pContratacion.ContratacionProyecto)
+            foreach (var ContratacionProyecto in pContratacion.ContratacionProyecto.Where(r=> !(bool)r.Eliminado))
             {
                 foreach (Dominio placeholderDominio in placeholders)
                 {
@@ -245,18 +245,29 @@ namespace asivamosffie.services
                     switch (placeholderDominio.Codigo)
                     {
                         case ConstanCodigoVariablesPlaceHolders.LLAVE_MEN:
+
+
+
                             TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
                                 .Replace(placeholderDominio.Nombre, ContratacionProyecto.Proyecto.LlaveMen);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.INSTITUCION_EDUCATIVA:
+                            string NombreInstitucionEducativa = "";
+                            if (institucionEducativa != null) {
+                                NombreInstitucionEducativa = institucionEducativa.Nombre;
+                            }
                             TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                .Replace(placeholderDominio.Nombre, institucionEducativa.Nombre);
+                                .Replace(placeholderDominio.Nombre, NombreInstitucionEducativa);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SEDE:
+                            string NombreSede = "";
+                            if (Sede != null) {
+                                NombreSede = Sede.Nombre;
+                            }
                             TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                .Replace(placeholderDominio.Nombre, Sede.Nombre);
+                                .Replace(placeholderDominio.Nombre, NombreSede);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.NOMBRE_APORTANTE:
@@ -359,16 +370,21 @@ namespace asivamosffie.services
 
 
                     case ConstanCodigoVariablesPlaceHolders.OPCION_CONTRATAR:
-                        string opcionContratar = "";
+                  
+                        string TipoContratacion = "";
                         if (!string.IsNullOrEmpty(pContratacion.TipoContratacionCodigo))
-                        {
-                            opcionContratar = LisParametricas
+                        { 
+                            bool allDigits = pContratacion.TipoContratacionCodigo.All(char.IsDigit);
+                            if (allDigits)
+                            {
+                                TipoContratacion = LisParametricas
                             .Where(r => r.Codigo == pContratacion.TipoContratacionCodigo
                             && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar)
                             .FirstOrDefault().Nombre;
+                            }
                         }
                         pPlantilla = pPlantilla
-                            .Replace(placeholderDominio.Nombre, opcionContratar);
+                            .Replace(placeholderDominio.Nombre, TipoContratacion);
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.OBJETO:
