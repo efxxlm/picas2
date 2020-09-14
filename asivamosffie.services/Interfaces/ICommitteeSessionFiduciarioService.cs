@@ -18,9 +18,15 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession();
 
         Task<Respuesta> CallCommitteeSession(int comiteTecnicoId, string user);
-
+        Task<bool> DeleteTema(int sesionTemaId, string user);
         #endregion
 
+
+
+        #region "SESIONES DE COMITE FIDUCIARIO";
+        Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario();
+
+        #endregion
 
 
 
@@ -35,7 +41,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSessionTemaById(int sessionTemaId);
         Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate, string usuarioModifico);
         Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico);
-        Task<bool> DeleteTema(int temaId);
+
 
     }
 }

@@ -15,12 +15,12 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class CommitteeSessionFiduciarioController : ControllerBase
     {
-        private readonly ICommitteeSessionFiduciarioService _committeeSessionService;
+        private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
         private readonly IOptions<AppSettings> _settings;
 
-        public CommitteeSessionFiduciarioController(IOptions<AppSettings> settings, ICommitteeSessionFiduciarioService committeeSessionService)
+        public CommitteeSessionFiduciarioController(IOptions<AppSettings> settings, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService)
         {
-            _committeeSessionService = committeeSessionService;
+            _committeeSessionFiduciarioService = committeeSessionFiduciarioService;
             _settings = settings;
 
         }
@@ -33,7 +33,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _committeeSessionService.GetRequestCommitteeSessionById(comiteTecnicoId);
+                var result = await _committeeSessionFiduciarioService.GetRequestCommitteeSessionById(comiteTecnicoId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _committeeSessionService.GetCommitteeSessionByComiteTecnicoId(comiteTecnicoId);
+                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionByComiteTecnicoId(comiteTecnicoId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _committeeSessionService.GetCommitteeSession();
+                var result = await _committeeSessionFiduciarioService.GetCommitteeSession();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -85,7 +85,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 sesionComiteTema.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionService.CreateOrEditTema(sesionComiteTema, fechaComite);
+                respuesta = await _committeeSessionFiduciarioService.CreateOrEditTema(sesionComiteTema, fechaComite);
                 return Ok(respuesta);
 
             }
@@ -105,7 +105,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 string user = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionService.CallCommitteeSession(comiteTecnicoId, user);
+                respuesta = await _committeeSessionFiduciarioService.CallCommitteeSession(comiteTecnicoId, user);
                 return Ok(respuesta);
 
             }
@@ -116,13 +116,40 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        //DeleteTema(int temaId, string user);
+        [Route("DeleteTema")]
+        [HttpGet]
+        public async Task<bool> DeleteTema(int sesionTemaId)
+        {
+            string user = "forozco"; //HttpContext.User.FindFirst("User").Value;
+            var respuesta = await _committeeSessionFiduciarioService.DeleteTema(sesionTemaId, user);
+            return respuesta;
+        }
         #endregion
 
 
+        #region "SESIONES DE COMITE FIDUCIARIO";
+
+        [Route("GetConvokeSessionFiduciario")]
+        public async Task<IActionResult> GetConvokeSessionFiduciario()
+        {
+            try
+            {
+                var result = await _committeeSessionFiduciarioService.GetConvokeSessionFiduciario();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
 
+        #endregion
 
 
+        
 
 
 
@@ -148,7 +175,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _committeeSessionService.GetSesionGuesById(sesionInvitadoId);
+                var result = await _committeeSessionFiduciarioService.GetSesionGuesById(sesionInvitadoId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -163,7 +190,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _committeeSessionService.GetSesionSinActa();
+                var result = await _committeeSessionFiduciarioService.GetSesionSinActa();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -181,7 +208,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _committeeSessionService.GetCommitteeSessionTemaById(sessionTemaId);
+                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionTemaById(sessionTemaId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -196,7 +223,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _committeeSessionService.GetCommitteeSessionFiduciario();
+                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -215,7 +242,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 sesionComiteTema.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionService.CreateOrEditCommitteeSession(sesionComiteTema);
+                respuesta = await _committeeSessionFiduciarioService.CreateOrEditCommitteeSession(sesionComiteTema);
                 return Ok(respuesta);
                 
             }
@@ -239,7 +266,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 temaCompromiso.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionService.CreateOrEditSubjects(temaCompromiso);
+                respuesta = await _committeeSessionFiduciarioService.CreateOrEditSubjects(temaCompromiso);
                 return Ok(respuesta);
 
             }
@@ -263,7 +290,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 sesionInvitado.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionService.CreateOrEditGuest(sesionInvitado);
+                respuesta = await _committeeSessionFiduciarioService.CreateOrEditGuest(sesionInvitado);
                 return Ok(respuesta);
 
             }
@@ -284,7 +311,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 string usuarioModifico = HttpContext.User.FindFirst("User").Value;
-                return await _committeeSessionService.SessionPostpone(ComiteTecnicoId, newDate, usuarioModifico);
+                return await _committeeSessionFiduciarioService.SessionPostpone(ComiteTecnicoId, newDate, usuarioModifico);
 
             }
             catch (Exception)
@@ -303,7 +330,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 string usuarioModifico = HttpContext.User.FindFirst("User").Value;
-                return await _committeeSessionService.SessionDeclaredFailed(ComiteTecnicoId, usuarioModifico);
+                return await _committeeSessionFiduciarioService.SessionDeclaredFailed(ComiteTecnicoId, usuarioModifico);
 
             }
             catch (Exception)
@@ -312,13 +339,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("DeleteTema")]
-        [HttpGet]
-        public async Task<bool> DeleteTema(int temaId)
-        {
-            var respuesta = await _committeeSessionService.DeleteTema(temaId);
-            return respuesta;
-        }
+       
 
 
     }

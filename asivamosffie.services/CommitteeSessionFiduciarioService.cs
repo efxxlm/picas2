@@ -238,7 +238,65 @@ namespace asivamosffie.services
 
 
 
+        //Eliminar Tema
+        public async Task<bool> DeleteTema(int sesionTemaId, string user)
+        {
+            SesionComiteTema sesionComiteTema = await _context.SesionComiteTema.FindAsync(sesionTemaId);
+            bool status = false;
+            try
+            {
+                status = sesionComiteTema.GeneraCompromiso.HasValue ? sesionComiteTema.GeneraCompromiso.Value : false;
+                Console.Write(status);
+                if (!status)
+                {
+                    // Se puede eliminar
+                    sesionComiteTema.Eliminado = true;
+                    sesionComiteTema.UsuarioCreacion = user;
+                    sesionComiteTema.FechaModificacion = DateTime.Now;
+
+                    _context.Remove(sesionComiteTema);
+                    var resultado = await _context.SaveChangesAsync();
+                    if (resultado > 0)
+                        return true;
+                }
+
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+           
+        }
+
+
+
         #endregion
+
+
+
+        #region "SESIONES DE COMITE FIDUCIARIO";
+
+        //Grilla sesiones programadas en estado Convocada.
+        public async Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario()
+        {
+            try
+            {
+                return await _context.ComiteTecnico.Include(st => st.SesionComiteTema).Where(cm => !(bool)cm.Eliminado && cm.EstadoComiteCodigo == "2").ToListAsync();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        #endregion
+
+
 
 
 
@@ -367,20 +425,6 @@ namespace asivamosffie.services
             }
         }
 
-
-        // orden del dia [Fecha Solicitud, Numero Solicitud, TipoSolicitud,FechaDecomiteTecnico,NumeroComiteTecnico]
-        //public async Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession()
-        //{
-        //    try
-        //    {
-        //        return await _context.ComiteTecnico.Where(sc => sc.EstadoComiteCodigo == "2" && !(bool)sc.Eliminado).ToListAsync();
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
 
 
         //Aplazar sesion
@@ -744,22 +788,7 @@ namespace asivamosffie.services
 
 
 
-        //Eliminar Sesion
-        public async Task<bool> DeleteTema(int temaId)
-        {
-            ComiteTecnico tema = await _context.ComiteTecnico.FindAsync(temaId);
-            bool retorno = true;
-            try
-            {
-                tema.Eliminado = true;
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-            return retorno;
-        }
+       
 
         #endregion
     }
