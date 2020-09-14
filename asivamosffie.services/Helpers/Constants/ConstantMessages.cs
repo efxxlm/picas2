@@ -386,12 +386,12 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-    public class ConstantMessagesSesionComiteTema
+    public class ConstantMessagesGenerateBudget
     {
 
         #region Mensajes Informativos
-
-
+        public const string CanceladoCorrrectamente = "201";
+        public const string DevueltoCorrrectamente = "202";
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso

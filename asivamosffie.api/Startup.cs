@@ -136,6 +136,14 @@ namespace asivamosffie.api
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
+            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();      
+            services.AddTransient<IBankAccountService, BankAccountService>();
+            services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
+ 
+            services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
+
+            
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>(); 
             services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
 

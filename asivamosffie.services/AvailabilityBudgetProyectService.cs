@@ -41,20 +41,28 @@ namespace asivamosffie.services
             {
                 using (SqlCommand cmd = new SqlCommand("GetReuestCommittee", sql))
                 {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    var response = new List<CustonReuestCommittee>();
-                    await sql.OpenAsync();
+                    //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
+                    Id = detailDP.DisponibilidadPresupuestalId,
+                    NumeroSolicitud = detailDP.NumeroSolicitud,
+                    TipoSolicitudCodigo = detailDP.TipoSolicitudCodigo,
+                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud) : "",
+                    NumeroDDP = detailDP.NumeroDdp,
+                    RubroPorFinanciar = "", // TODO: pendiente validar de donde biene este campo
+                    Objeto = detailDP.Objeto,
+                    ValorSolicitud = detailDP.ValorSolicitud,
+                    // Si es aproboda por comite tecnico se debe mostrar la fecha en la que fue aprobada. traer desde dbo.[Sesion]
+                    FechaComiteTecnico = (bool)detailDP.NumeroSolicitud.Contains("PI") ? detailDP.EstadoSolicitudCodigo == "1" ? detailDP.FechaDdp : DateTime.Now : null,// codigo 1, TipoDominioId = 31, TipoDominio, Lista = TipoSolicitud
 
-                    using (var reader = await cmd.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            response.Add(MapToValue(reader));
-                        }
-                    }
+                    /*//*y las modificacioens?????//*/
 
-                    return response;
-                }
+                    //Aportantes
+                    /*//*?????//*/
+                    //Fuentes
+                    /*//*?????//*/
+                    //proyectos???????
+                };
+
+                ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
             }
         }
 

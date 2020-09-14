@@ -1,35 +1,24 @@
-﻿using asivamosffie.model.APIModels;
-using asivamosffie.model.Models;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+
 
 namespace asivamosffie.services.Interfaces
 {
     public interface IBudgetAvailabilityService
-    {
-        #region "Disponibilidad presupuestal";
-        Task<List<DisponibilidadPresupuestal>> GetBudgetAvailability();
+    { 
+        Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestal();
 
-        Task<DisponibilidadPresupuestal> GetBudgetAvailabilityById(int id);
+        Task<FuenteFinanciacion> GetFuenteFinanciacionByIdAportanteId(int pAportanteId);
 
-        Task<ActionResult<List<GrillaDisponibilidadPresupuestal>>> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId);
-        Task<Respuesta> CreateEditarDisponibilidadPresupuestal(DisponibilidadPresupuestal DP);
-
-
-        Task<Respuesta> DeleteBudgetAvailability(int id, string UsuarioModifico);
-        #endregion
-
-
-        #region " Disponibilidad presupuestal proyecto";
-        Task<List<DisponibilidadPresupuestalProyecto>> GetAssociatedProjects(int ProyectoId);
-
-        Task<Respuesta> CreateEditarDPProyecto(DisponibilidadPresupuestalProyecto dpProyecto);
-
-        #endregion
-         
-        Task<List<GrillaDisponibilidadPresupuestal2>> GetGrillaDisponibilidadPresupuestal2(string pConnectionStrings);
+        Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud);
+        Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal();
+        Task<Respuesta> SetCancelDisponibilidadPresupuestal(int pId,string pUsuarioModificacion, string pObservacion);
+        Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
+        Task<Respuesta> returnDDP(int pId, string pUsuarioModificacion, string pObservacion);
+        Task<Byte[]> GetPDFDDP(int id,string pUsurioGenero);
     }
 }

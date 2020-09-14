@@ -22,6 +22,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         SesionComiteTema = 26,
         RegistrarComiteTecnico = 24,
 
+
+        GenerarDisponibilidadPresupuestal = 28,
+
+        RegistrarComiteTecnico = 24
     }
 
     public enum enumeratorAccion
