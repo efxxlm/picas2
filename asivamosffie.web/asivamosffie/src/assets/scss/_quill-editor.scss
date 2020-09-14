@@ -60,4 +60,16 @@
             border-bottom: var(--fontColor) solid 1px;
         }
     }
+
+    &[required] {
+        position: relative;
+        &::after {
+            content: "*";
+            position: absolute;
+            right: .8em;
+            font-weight: 600;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
 }

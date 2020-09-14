@@ -85,10 +85,17 @@ namespace asivamosffie.services
 
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
+
+                    //int? countMaxId = _context.ProcesoSeleccion.Max(p => (int?)p.ProcesoSeleccionId);
+                    int countMax = _context.ProcesoSeleccion.Count(p => p.TipoProcesoCodigo == procesoSeleccion.TipoProcesoCodigo);
+
                     //Auditoria
                     strCrearEditar = "CREAR PPROCESO SELECCION";
                     procesoSeleccion.FechaCreacion = DateTime.Now;
                     procesoSeleccion.Eliminado = false;
+                    procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
+                    procesoSeleccion.NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax);
+                    procesoSeleccion.EstadoProcesoSeleccionCodigo = "1";
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
                     
@@ -126,6 +133,9 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
                     ProcesoSeleccionAntiguo.UrlSoporteEvaluacion = procesoSeleccion.UrlSoporteEvaluacion;
                     ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
+                    ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
+                    ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
+                    
                     //ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     ProcesoSeleccionAntiguo.Eliminado = false;
                     //ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
@@ -624,11 +634,17 @@ namespace asivamosffie.services
                 {
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION PROPONENTE";
+                    procesoSeleccionProponente.FechaCreacion = DateTime.Now;
+                    procesoSeleccionProponente.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion;
+                    procesoSeleccionProponente.Eliminado = false;
                     _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
                 }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO SELECCION PROPONENTE";
+                    ProcesoSeleccionProponenteAntiguo.FechaModificacion = DateTime.Now;
+                    ProcesoSeleccionProponenteAntiguo.Eliminado = false;
+                    ProcesoSeleccionProponenteAntiguo.UsuarioModificacion = procesoSeleccionProponente.UsuarioModificacion;
                     ProcesoSeleccionProponenteAntiguo = _context.ProcesoSeleccionProponente.Find(procesoSeleccionProponente.ProcesoSeleccionProponenteId);
 
                     //Registros
@@ -830,6 +846,62 @@ namespace asivamosffie.services
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, cronogramaSeguimiento.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+
+        //Registrar Seguimiento cronograma
+        public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_contratistas_desde_proponentes, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+            CronogramaSeguimiento cronogramaSeguimientoAntiguo = null;
+            try
+            {
+
+                pProcesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach( p => {
+                    Contratista contratista = new Contratista();
+
+                    contratista.TipoIdentificacionCodigo =  ( p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2" ) ? "3" : "1"; //Nit - cedula
+                    contratista.NumeroIdentificacion =  string.IsNullOrEmpty( p.NumeroIdentificacion ) ? "0" : p.NumeroIdentificacion;
+                    contratista.Nombre = p.NombreProponente;
+                    contratista.RepresentanteLegal = string.IsNullOrEmpty( p.NombreRepresentanteLegal ) ? p.NombreProponente : p.NombreRepresentanteLegal;
+                    contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
+                    contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
+                    contratista.Activo = true;
+                    contratista.FechaCreacion = DateTime.Now;
+                    contratista.UsuarioCreacion = pUsuarioCreo;
+                    
+                    _context.Contratista.Add( contratista );
+
+                });
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = cronogramaSeguimientoAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, pUsuarioCreo, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, pUsuarioCreo, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
@@ -1208,6 +1280,36 @@ namespace asivamosffie.services
 
         }
 
+        public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
+        {
+            if (
+                 string.IsNullOrEmpty(procesoSeleccion.Objeto)
+                 || !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
+                 || !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CriteriosSeleccion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantGrupos))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesJuridicasHabilitantes)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesFinancierasHabilitantes)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesAsignacionPuntaje)
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadProponentes))
+                 || !string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
+
+                )
+                 return false;
+            else
+                return true;
+        }
 
 
         public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico)

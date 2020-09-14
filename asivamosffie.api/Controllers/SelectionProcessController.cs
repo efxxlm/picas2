@@ -418,29 +418,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        // [Route("GetViewSchedules")]
-        // public async Task<IActionResult> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
-        // {
-        //     try
-        //     {
-        //         var result = await _selectionProcessService.GetViewSchedules(ProcesoSeleccionCronogramaId);
-        //         return Ok(result);
-        //     }
-        //     catch (Exception ex)
-        //     {
-
-        //         throw ex;
-        //     }
-        // }
-
-
-
-
-
-
-
-
-
+        [Route("CreateContractorsFromProponent")]
+        [HttpPost]
+        public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion){
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string usuario = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _selectionProcessService.CreateContractorsFromProponent( pProcesoSeleccion, usuario );
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
 
 
         [Route("UploadMassiveLoadElegibilidad")]

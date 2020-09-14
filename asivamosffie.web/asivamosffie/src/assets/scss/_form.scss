@@ -1,26 +1,19 @@
 .mat-form-field-appearance-outline .mat-form-field-outline,
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: #174193;;
     color: var(--mainColor);
 }
 
 .mat-form-field .mat-select.mat-select-invalid .mat-select-arrow,
 .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
+    color: #d21e18;
     color: var(--secondaryColor);
 }
 
 label.mat-form-field-label {
     font-weight: 500;
+    color: #174193;;
     color: var(--mainColor);
-}
-
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: var(--mainColor);
-}
-
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background,
-.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
-.mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
-    background-color: var(--mainColor);
 }
 
 input.mat-input-element {
@@ -46,7 +39,7 @@ mat-form-field {
 
 .mat-form-field-appearance-outline .mat-form-field-prefix,
 .mat-form-field-appearance-outline .mat-form-field-suffix {
-    top: 0 !important; //no pude sobreescribir usando especificidad
+    bottom: 0 !important; //no pude sobreescribir usando especificidad
 }
 
 .label-left {
@@ -60,17 +53,19 @@ mat-form-field {
 }
 
 .mat-select-value {
+    color: #174193;;
     color: var(--mainColor);
     text-align: center;
 }
 
 .mat-select-arrow-wrapper {
     position: relative;
-    right: -2.65em;
+    right: -1.7em;
     top: .3em
 }
 
 div.mat-select-arrow {
+    color: #174193;;
     color: var(--mainColor);
     border-left: .5em solid transparent;
     border-right: .5em solid transparent;
@@ -83,8 +78,10 @@ div.mat-select-arrow {
 }
 
 .contador {
+    color: #174193;;
     color: var(--mainColor);
     font-weight: 500;
+    min-width: 2.4em;
     height: 2em;
     width: 2em;
     min-width: 2em;
@@ -94,6 +91,11 @@ div.mat-select-arrow {
     justify-content: center;
     align-items: center;
     margin-left: .8em;
+
+    &.miles {
+        height: 2.4em;
+        min-width: 2.4em;
+    }
 }
 
 .mat-form-field-appearance-legacy .mat-form-field-wrapper {
@@ -101,13 +103,74 @@ div.mat-select-arrow {
 }
 
 .radioInput > .mat-radio-button {
-    display: inline-block !important;
-    margin: 5px 1em !important;
+    display: inline-block;
+    margin: 5px 1em;
 }
 
 .sub-label {
     font-weight: 600;
+    color: #174193;;
     color: var(--mainColor);
     margin-left: 1em;
     margin-right: .5em;
+}
+
+.mat-form-field input:required ~ .mat-form-field-label-wrapper::after{
+    content: "*";
+    position: absolute;
+    right: 0;
+    top: 45%;
+    font-weight: 600;
+}
+
+.mat-select[required]::after {
+    content: "*";
+    position: absolute;
+    right: 0;
+    font-weight: 600;
+    top: 25%;
+}
+
+.mat-placeholder-required {
+    display: none;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-label {
+    text-align: center;
+}
+.mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    opacity: 0;
+}
+
+.required-form-group {
+    font-weight: 600;
+    margin-left: -.5em;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+    background-color: #174193;
+    background-color: var(--mainColor);
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #174193;
+    border-color: var(--mainColor);
+}
+
+.calendar-class .mat-form-field-appearance-legacy .mat-form-field-underline {
+    background-color: transparent !important;
+}
+
+.iniciarSesion {
+    .mat-form-field-appearance-outline .mat-form-field-label {
+        top: 2.2em;
+    }
+
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+        transform: translateY(-1.3em) scale(.82);
+    }
+
+    .mat-form-field input:required~.mat-form-field-label-wrapper:after {
+        display: none;
+    }
 }

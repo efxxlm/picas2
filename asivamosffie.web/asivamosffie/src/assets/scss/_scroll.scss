@@ -1,0 +1,42 @@
+:root {
+    --thumb-color: #acacac;
+    --thumb-color-hover: #acacac;
+    --track-color: #f4f4f4;
+    --scroll-size: 10px;
+    --scroll-radius: calc(var(--scroll-size) / 2);
+}
+
+body,
+[class*="scroll"] {
+    &::-webkit-scrollbar {
+        width: var(--scroll-size);
+        height: var(--scroll-size);
+        &-thumb {
+            background: var(--thumb-color);
+            border-radius: var(--scroll-radius);
+            &:hover,
+            &:active {
+                background: var(--thumb-color-hover);
+            }
+        }
+        &-track {
+            background: var(--track-color);
+            border-radius: var(--scroll-radius);
+        }
+    }
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+[class*="scroll"] {
+    overflow: auto;
+}
+
+.scroll-mainColor {
+    --thumb-color: var(--mainColor);
+    --thumb-color-hover: var(--mainColor);
+    --track-color: #e8e8e8;
+}

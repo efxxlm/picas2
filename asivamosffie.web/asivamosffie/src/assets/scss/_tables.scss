@@ -16,24 +16,35 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     border-right: solid .5px;
 }
 
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding: 0 .8em !important;
+}
+
 th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
     border-right: none;
+    padding: 0 .8em !important;
 }
 
 .mat-cell, .mat-footer-cell {
+    color: #174193;
     color: var(--mainColor);
 }
 
 mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-bottom-color: #174193;
     border-bottom-color: var(--mainColor);
+}
+
+td.mat-cell:first-of-type {
+    border-left: solid 1px;
+}
+
+td.mat-cell:last-of-type {
+    border-right: solid 1px;
 }
 
 table {
     width: 100%;
-}
-
-.table-responsive {
-    overflow-x: auto;
 }
 
 .busqueda {
@@ -46,9 +57,9 @@ table {
     }
     &--img {
         margin-bottom: 1em !important;
-        margin-left: .5em;
-        padding: .5em;
-        min-width: 0;
+        margin-left: .5em !important;
+        padding: .5em !important;
+        min-width: 0 !important;
 
         img {
             height: 2.5em;
@@ -68,16 +79,14 @@ table {
 div.mat-paginator {
     &-page-size {
         order: 2;
-        padding-right: 2em;
-        @media only screen and (min-width: 48em) {
-            position: absolute;
-        }
     }
 
     &-range-actions {
         order: 1;
         margin: auto;
-        // padding-left: 9.6em;
+        @media only screen and (min-width: 48em) {
+            padding-left: 9.6em;
+        }
     }
 
     &-range-label {
@@ -127,6 +136,7 @@ div.mat-paginator {
 
 %botones-paginador {
     content: "";
+    color: #174193;
     color: var(--mainColor);
     border-top: 1em solid transparent;
     border-bottom: 1em solid transparent;
@@ -135,18 +145,123 @@ div.mat-paginator {
     top: .5em;
 }
 
-.info-table {
-    &--img {
-        height: 1.5em;
-        transform: translateY(5px);
-    }
-}
-
-.btn-table {
-    margin: .5em;
+.btn-table,
+.btn-table.mat-raised-button.mat-accent {
+    margin: .5em .2em !important;
     line-height: 1;
     display: block;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     width: 100%;
+    min-width: 9em;
+
+    .mat-button-wrapper {
+        white-space: break-spaces;
+    }
+}
+.btn-table:hover {
+    background-color: #d1d1d1;
+    background-color: var(--grayColor);
+    color: #174193;;
+    color: var(--mainColor);
+}
+.mat-header-cell{
+    font-style: italic;
+}
+.mat-paginator-navigation-next::after{
+    content:" Siguiente";
+    margin-left: 2.5em;
+}
+.mat-paginator-navigation-previous::after{
+    content:" Anterior";
+    margin-left: -5.5em;
+}
+
+.table-form {
+    td.mat-cell {
+        border-bottom: 1px solid;
+    }
+    td.mat-cell:first-child {
+        border-left: 1px solid;
+    }
+    td.mat-cell:last-child {
+        border-right: 1px solid;
+    }
+    .mat-form-field-appearance-legacy .mat-form-field-underline {
+        height: 0;
+        background-color: transparent;
+    }
+    th.mat-header-cell {
+        padding: 1em !important;
+    }
+
+    .mat-form-field {
+        display: block;
+        width: 10em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &--2 {
+        .ql-toolbar,
+        .ql-container {
+            width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+    &--3 {
+        .ql-toolbar,
+        .ql-container {
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+.table-form {
+    td.mat-cell {
+        border-bottom: 1px solid;
+    }
+    td.mat-cell:first-child {
+        border-left: 1px solid;
+    }
+    td.mat-cell:last-child {
+        border-right: 1px solid;
+    }
+    .mat-form-field-appearance-legacy .mat-form-field-underline {
+        height: 0;
+        background-color: transparent;
+    }
+    th.mat-header-cell {
+        padding: 1em;
+    }
+    .mat-form-field {
+        display: block;
+        width: 10em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    &--2 {
+        .ql-toolbar,
+        .ql-container {
+            width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+    &--3 {
+        .ql-toolbar,
+        .ql-container {
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+.table-responsive {
+    max-width: 100%;
+    overflow: auto;
 }
