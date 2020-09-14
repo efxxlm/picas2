@@ -725,7 +725,7 @@ namespace asivamosffie.services
                 else {
                     if (pFile.Length > 0) {
                         strFilePatch = Path.Combine(pDirectorioBase, pDirectorioMinuta, pContratacion.ContratacionId.ToString());
-                        await _documentService.SaveFileContratacion(pFile, strFilePatch, pContratacion.ContratacionId);
+                        await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
 
                     }
                 }
@@ -739,8 +739,9 @@ namespace asivamosffie.services
                 contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
-                contratacionOld.RutaMinuta = pContratacion.RutaMinuta;
-
+                contratacionOld.RutaMinuta = strFilePatch +"//" + pFile.FileName;
+                contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
+                 
                 await _context.SaveChangesAsync();
 
                 return
@@ -767,7 +768,24 @@ namespace asivamosffie.services
               };
             }
         }
-         
+
+
+
+        public static bool ValidarCamposContratacion(Contratacion pContratacion) {
+
+            if (
+                    !string.IsNullOrEmpty(pContratacion.TipoSolicitudCodigo)
+                   || !string.IsNullOrEmpty(pContratacion.NumeroSolicitud.ToString())
+                   || !string.IsNullOrEmpty(pContratacion.EstadoSolicitudCodigo)
+                   || !string.IsNullOrEmpty(pContratacion.Observaciones)
+                   || !string.IsNullOrEmpty(pContratacion.RutaMinuta)
+                   || !string.IsNullOrEmpty(pContratacion.FechaEnvioDocumentacion.ToString())
+                   || !string.IsNullOrEmpty(pContratacion.ConsideracionDescripcion.ToString())
+                    ) {
+                return true;
+            }
+            return false;
+        }
     }
 
 }

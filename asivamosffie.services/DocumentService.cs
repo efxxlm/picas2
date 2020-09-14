@@ -72,7 +72,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<bool> SaveFileContratacion(IFormFile pFile, string pFilePatch ,int idOrigen)
+        public async Task<bool> SaveFileContratacion(IFormFile pFile, string pFilePatch ,string pNameFile)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace asivamosffie.services
                 {
                     Directory.CreateDirectory(pFilePatch);
                 }
-                var streamFile = new FileStream(pFilePatch + "/" + idOrigen, FileMode.Create);
+                var streamFile = new FileStream(pFilePatch + "/" + pNameFile, FileMode.Create);
                 using (streamFile)
                 {
                     await pFile.CopyToAsync(streamFile);

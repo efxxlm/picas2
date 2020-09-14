@@ -12,7 +12,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./form-registro-tramite.component.scss']
 })
 export class FormRegistroTramiteComponent implements OnInit {
-
+  fechaSesionString: string;
+  fechaSesion: Date;
   archivo                : string;
   @Input() dataFormulario: FormGroup;
   @Input() contratacion  : DataSolicitud;
@@ -77,7 +78,11 @@ export class FormRegistroTramiteComponent implements OnInit {
     };
 
     this.contratacion.observaciones = this.dataFormulario.get( 'observaciones' ).value;
-    this.contratacion.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
+
+    let fecha = Date.parse(this.dataFormulario.get( 'fechaEnvioTramite' ).value);
+    this.fechaSesion = new Date(fecha); 
+    this.fechaSesionString = `${ this.fechaSesion.getFullYear() }/${ this.fechaSesion.getMonth() + 1 }/${ this.fechaSesion.getDate() }` 
+    this.contratacion.fechaEnvioDocumentacion =   this.fechaSesionString 
     let documento: any = document.getElementById('file');
 
     this.procesosContractualesSvc.sendTramite( this.contratacion, documento.files[0] )

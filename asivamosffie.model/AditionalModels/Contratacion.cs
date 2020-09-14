@@ -17,7 +17,7 @@ namespace asivamosffie.model.Models
 {
     public partial class Contratacion
     {
-        //[NotMapped]
-        //public IFormFile? pFile  { get; set; } 
+        [NotMapped]
+        public IFormFile? pFile { get; set; }
     }
 }

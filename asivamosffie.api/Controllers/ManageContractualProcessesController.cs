@@ -79,19 +79,15 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarTramiteContratacion([FromForm] Contratacion pContratacion, string FechaEnvioDocumentacion)
         {
-            Respuesta respuesta = new Respuesta();
-            string JsonContratacion = JsonConvert.SerializeObject(pContratacion);
+            Respuesta respuesta = new Respuesta(); 
             try
             {
-                Type myType = pContratacion.GetType();
-                IList<PropertyInfo> props = new List<PropertyInfo>(myType.GetProperties());
-
-
-                Contratacion contratacion =JsonConvert.DeserializeObject<Contratacion>(JsonContratacion);
-
-
-                contratacion.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(contratacion, null
+                if (!string.IsNullOrEmpty(FechaEnvioDocumentacion)) {
+                    pContratacion.FechaEnvioDocumentacion = DateTime.Parse(FechaEnvioDocumentacion);
+                    }
+        
+                pContratacion.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
                   , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
 
                 return Ok(respuesta);
