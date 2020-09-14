@@ -25,6 +25,7 @@ namespace asivamosffie.api.Controllers
 
         }
 
+
         #region "ORDEN DEL DIA";
 
         [Route("GetRequestCommitteeSessionById")]
@@ -43,16 +44,48 @@ namespace asivamosffie.api.Controllers
         }
 
 
+
+        [Route("GetCommitteeSessionByComiteTecnicoId")]
+        public async Task<IActionResult> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
+        {
+            try
+            {
+                var result = await _committeeSessionService.GetCommitteeSessionByComiteTecnicoId(comiteTecnicoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [Route("GetCommitteeSession")]
+        public async Task<IActionResult> GetCommitteeSession()
+        {
+            try
+            {
+                var result = await _committeeSessionService.GetCommitteeSession();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
         [Route("CreateOrEditTema")]
         [HttpPost]
-        public async Task<IActionResult> CreateOrEditTema([FromBody] SesionComiteTema sesionComiteTema)
+        public async Task<IActionResult> CreateOrEditTema([FromBody] SesionComiteTema sesionComiteTema, DateTime fechaComite)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
                 sesionComiteTema.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionService.CreateOrEditTema(sesionComiteTema);
+                respuesta = await _committeeSessionService.CreateOrEditTema(sesionComiteTema, fechaComite);
                 return Ok(respuesta);
 
             }
@@ -63,7 +96,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CallCommitteeSession")]
+        [HttpPost]
+        public async Task<IActionResult> CallCommitteeSession(int comiteTecnicoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
 
+                string user = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionService.CallCommitteeSession(comiteTecnicoId, user);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         #endregion
 
@@ -77,20 +128,20 @@ namespace asivamosffie.api.Controllers
 
 
 
-        [Route("GetSesion")]
-        public async Task<IActionResult> GetSesion(int? sessionId)
-        {   
-            try
-            {
-                var result = await _committeeSessionService.GetCommitteeSession(sessionId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        //[Route("GetSesion")]
+        //public async Task<IActionResult> GetSesion(int? sessionId)
+        //{   
+        //    try
+        //    {
+        //        var result = await _committeeSessionService.GetCommitteeSession(sessionId);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw ex;
-            }
-        }
+        //        throw ex;
+        //    }
+        //}
 
         [Route("GetSesionGuesById")]
         public async Task<IActionResult> GetSesionGuesById(int sesionInvitadoId)

@@ -85,7 +85,7 @@ namespace asivamosffie.services.Helpers
             //Comite Fiduciario
             if (input == "CF")
             {
-                return $"{"CF_"}{(++number).ToString("D4")}";
+                return $"{"CF_"}{(++number).ToString("D5")}";
             }
 
             //Invitacion Cerrada SC

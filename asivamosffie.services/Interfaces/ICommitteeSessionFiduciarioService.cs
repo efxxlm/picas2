@@ -10,9 +10,15 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommitteeSessionFiduciarioService
     {
+
         #region "ORDEN DEL DIA";
         Task<ActionResult<List<ComiteTecnico>>> GetRequestCommitteeSessionById(int comiteTecnicoId);
-        Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema);
+        Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite);
+        Task<ActionResult<List<SesionComiteTema>>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId);
+        Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession();
+
+        Task<Respuesta> CallCommitteeSession(int comiteTecnicoId, string user);
+
         #endregion
 
 
@@ -22,7 +28,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateOrEditGuest(SesionInvitado sesionInvitado);
         Task<Respuesta> CreateOrEditSesioncomment(SesionComentario sesionComentario);
         Task<Respuesta> CreateOrEditSubjects(TemaCompromiso temaCompromiso);
-        Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSession(int? sessionId);
+        
         Task<SesionInvitado> GetSesionGuesById(int sesionInvitadoId);
         Task<ActionResult<List<ComiteTecnico>>> GetSesionSinActa();
         Task<ActionResult<List<GridCommitteeSession>>> GetCommitteeSessionFiduciario();

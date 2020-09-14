@@ -59,7 +59,7 @@ namespace asivamosffie.services
 
 
         //Crear un nuevo tema
-        public async Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema)
+        public async Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite)
         {
             Respuesta respuesta = new Respuesta();
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
@@ -80,7 +80,7 @@ namespace asivamosffie.services
                     int countMaxId = _context.ComiteTecnico.Max(cm => cm.ComiteTecnicoId);
 
                     ComiteTecnico comiteTecnico = new ComiteTecnico();
-                    comiteTecnico.FechaCreacion = DateTime.Now;
+                    comiteTecnico.FechaCreacion = fechaComite;
                     comiteTecnico.UsuarioCreacion = sesionComiteTema.UsuarioCreacion;
                     comiteTecnico.EsComiteFiduciario = true;
                     comiteTecnico.EstadoComiteCodigo = "1";
@@ -150,11 +150,96 @@ namespace asivamosffie.services
         }
 
 
+        //Ver detalle grilla comite tecnico
+        public async Task<ActionResult<List<SesionComiteTema>>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
+        {
+            try
+            {
+                return await _context.SesionComiteTema.Include(st => st.ComiteTecnico).Where(cm => !(bool)cm.Eliminado && cm.ComiteTecnicoId == comiteTecnicoId).ToListAsync();            
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        
+
+        //Get all seseion comite tecnico fiduciario
+        public async Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession()
+        {
+            try
+            {
+                return await _context.ComiteTecnico.Where(cm => !(bool)cm.Eliminado && (bool)cm.EsComiteFiduciario).ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+
+        //Convocar sesión de comité
+        public async Task<Respuesta> CallCommitteeSession(int comiteTecnicoId, string user)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Convocar_Sesion_Comite, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            ComiteTecnico comiteTecnico = null;
+            try
+            {
+
+
+                strCrearEditar = "CONVOCAR SESION COMITE";
+                comiteTecnico = await _context.ComiteTecnico.FindAsync(comiteTecnicoId);
+
+                //Auditoria
+                comiteTecnico.UsuarioModificacion = user;
+                comiteTecnico.FechaModificacion = DateTime.Now;
+
+
+                //Registros
+                comiteTecnico.EstadoComiteCodigo = "2";
+                _context.ComiteTecnico.Update(comiteTecnico);
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                {
+                    //Enviar notificacion
+                }
+
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = comiteTecnico,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, user, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, user, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
 
         #endregion
-                                                                                                                                                                               
+
 
 
         #region "Gestion de actas";
@@ -195,29 +280,29 @@ namespace asivamosffie.services
 
 
         //Grilla sesion comite
-        public async Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSession(int? comiteTecnicoId)
-        {
+        //public async Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSession(int? comiteTecnicoId)
+        //{
 
-            List<ComiteTecnico> ListSesion = (comiteTecnicoId != null ? await _context.ComiteTecnico.Where(s => s.ComiteTecnicoId == comiteTecnicoId && (bool)!s.Eliminado).ToListAsync() : await _context.ComiteTecnico.Where(s => (bool)!s.Eliminado).ToListAsync());
+        //    List<ComiteTecnico> ListSesion = (comiteTecnicoId != null ? await _context.ComiteTecnico.Where(s => s.ComiteTecnicoId == comiteTecnicoId && (bool)!s.Eliminado).ToListAsync() : await _context.ComiteTecnico.Where(s => (bool)!s.Eliminado).ToListAsync());
 
-            List<GridCommitteeSession> ListGridCommitteeSession = new List<GridCommitteeSession>();
+        //    List<GridCommitteeSession> ListGridCommitteeSession = new List<GridCommitteeSession>();
 
 
-            foreach (var ss in ListSesion)
-            {
-                GridCommitteeSession SesionGrid = new GridCommitteeSession
-                {
-                    ComiteTecnicoId = ss.ComiteTecnicoId,
-                    FechaDeComite = ss.FechaOrdenDia,
-                    EstadoComiteCodigo = ss.EstadoComiteCodigo,
-                    NumeroComite = ss.NumeroComite,
-                    EstadoComiteText = ss.EstadoComiteCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ss.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite) : "",
-                };
-                ListGridCommitteeSession.Add(SesionGrid);
-            }
+        //    foreach (var ss in ListSesion)
+        //    {
+        //        GridCommitteeSession SesionGrid = new GridCommitteeSession
+        //        {
+        //            ComiteTecnicoId = ss.ComiteTecnicoId,
+        //            FechaDeComite = ss.FechaOrdenDia,
+        //            EstadoComiteCodigo = ss.EstadoComiteCodigo,
+        //            NumeroComite = ss.NumeroComite,
+        //            EstadoComiteText = ss.EstadoComiteCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ss.EstadoComiteCodigo, (int)EnumeratorTipoDominio.Estado_Comite) : "",
+        //        };
+        //        ListGridCommitteeSession.Add(SesionGrid);
+        //    }
 
-            return ListGridCommitteeSession;
-        }
+        //    return ListGridCommitteeSession;
+        //}
 
 
         // Ver detalle
@@ -284,18 +369,18 @@ namespace asivamosffie.services
 
 
         // orden del dia [Fecha Solicitud, Numero Solicitud, TipoSolicitud,FechaDecomiteTecnico,NumeroComiteTecnico]
-        public async Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession()
-        {
-            try
-            {
-                return await _context.ComiteTecnico.Where(sc => sc.EstadoComiteCodigo == "2" && !(bool)sc.Eliminado).ToListAsync();
-            }
-            catch (Exception)
-            {
+        //public async Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession()
+        //{
+        //    try
+        //    {
+        //        return await _context.ComiteTecnico.Where(sc => sc.EstadoComiteCodigo == "2" && !(bool)sc.Eliminado).ToListAsync();
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
 
         //Aplazar sesion
