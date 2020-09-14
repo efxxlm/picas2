@@ -77,7 +77,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("RegistrarTramiteContratacion")]
         [HttpPost]
-        public async Task<IActionResult> RegistrarTramiteContratacion([FromBody] object pContratacion ) 
+        public async Task<IActionResult> RegistrarTramiteContratacion([FromForm] Contratacion pContratacion, string FechaEnvioDocumentacion)
         {
             Respuesta respuesta = new Respuesta();
             string JsonContratacion = JsonConvert.SerializeObject(pContratacion);

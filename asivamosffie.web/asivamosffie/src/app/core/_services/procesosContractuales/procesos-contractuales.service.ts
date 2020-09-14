@@ -38,13 +38,14 @@ export class ProcesosContractualesService {
     return this.http.get( `${ this.url }/GetDDPBySesionComiteSolicitudID?pSesionComiteSolicitudID=${ sesionComiteSolicitudId }`, { responseType: "blob" } )
   };
 
-  sendTramite ( contratacion: DataSolicitud ) {
+  sendTramite ( contratacion: DataSolicitud, documento: File ) {
 
-    console.log( contratacion );
+    const formData = new FormData();
+    formData.append( 'contratacionId', `${ contratacion.contratacionId }` );
+    formData.append( 'observaciones', contratacion.observaciones );
+    formData.append('pFile', documento, documento.name);
 
-    let pContratacion = contratacion;
-
-    return this.http.post( `${ this.url }/RegistrarTramiteContratacion`, pContratacion );
+    return this.http.post( `${ this.url }/RegistrarTramiteContratacion?FechaEnvioDocumentacion=${ contratacion.fechaEnvioDocumentacion }`, formData );
   };
 
   sendCambioTramite ( solicitud: GrillaProcesosContractuales ) {
