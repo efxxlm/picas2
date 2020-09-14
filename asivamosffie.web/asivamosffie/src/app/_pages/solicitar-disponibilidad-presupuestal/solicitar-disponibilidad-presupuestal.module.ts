@@ -13,7 +13,6 @@ import { RegistrarInformacionAdicionalComponent } from './components/registrar-i
 import { CrearSolicitudEspecialComponent } from './components/crear-solicitud-especial/crear-solicitud-especial.component';
 import { NuevaSolicitudEspecialComponent } from './components/nueva-solicitud-especial/nueva-solicitud-especial.component';
 import { TablaCrearSolicitudEspecialComponent } from './components/tabla-crear-solicitud-especial/tabla-crear-solicitud-especial.component';
-import { CrearDisponibilidadPresupuestalAdministrativoComponent } from './components/crear-disponibilidad-presupuestal-administrativo/crear-disponibilidad-presupuestal-administrativo.component';
 import { CrearSolicitudDeDisponibilidadPresupuestalComponent } from './components/crear-disponibilidad-presupuestal/crear-disponibilidad-presupuestal.component';
 
 
