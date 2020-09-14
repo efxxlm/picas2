@@ -23,16 +23,26 @@ export class GestionarPolizasComponent {
     valorAmparo: [null, Validators.compose([
       Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     ],
+    polizasYSeguros: [null, Validators.required],
+    buenManejoCorrectaInversionAnticipo: [null, Validators.required],
+    estabilidadYCalidad: [null, Validators.required],
+    cumpleAsegurado: [null, Validators.required],
+    cumpleBeneficiario: [null, Validators.required],
+    cumpleAfianzado: [null, Validators.required],
+    reciboDePago: [null, Validators.required],
+    condicionesGenerales: [null, Validators.required],
+    fechaRevision: [null, Validators.required],
+    estadoRevision: [null, Validators.required],
   });
 
-  states = [
-    {name: 'Alabama', value: 'AL'},
-    {name: 'Alaska', value: 'AK'},
-    {name: 'American Samoa', value: 'AS'},
-    {name: 'Arizona', value: 'AZ'},
-    {name: 'Arkansas', value: 'AR'},
-    {name: 'California', value: 'CA'},
-    {name: 'Colorado', value: 'CO'}
+  polizasYSegurosArray = [
+    {name: 'Buen manejo y correcta inversión del anticipo', value: '1'},
+    {name: 'Garantía de estabilidad y calidad de la obra', value: '2'},
+    {name: 'Póliza de cumplimiento', value: '3'},
+    {name: 'Garantía de estabilidad y calidad de la obra', value: '4'}
+  ];
+  estadoArray = [
+    {name: 'Devuelta', value: '1'}
   ];
 
   constructor(private fb: FormBuilder) {
