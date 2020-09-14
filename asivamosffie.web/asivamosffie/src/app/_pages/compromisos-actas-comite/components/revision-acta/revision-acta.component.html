@@ -25,6 +25,8 @@
         </mat-card-header>
         <mat-card-content class="colorMainColor">
           Juan Lizcano Garcia, Fernando José Aldemar Rojas, Gonzalo Díaz Mesa.
+          <br>
+          El servicio del lado del servidor para obtener los detalles del acta no esta completo por que depende del CU 4.1.6.2
         </mat-card-content>
     </mat-card>
     <div class="text-center">
@@ -80,7 +82,7 @@
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
-          (click)="aprobarActa()">
+          (click)="aprobarActa( acta.comiteTecnicoId )">
           Aprobar acta
   </button>
   <button mat-raised-button 

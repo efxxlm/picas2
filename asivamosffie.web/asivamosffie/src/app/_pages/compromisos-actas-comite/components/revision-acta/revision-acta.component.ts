@@ -52,6 +52,9 @@ export class RevisionActaComponent implements OnInit {
     this.form = this.fb.group({
       comentarioActa: [ null, Validators.required ]
     });
+    this.form.reset({
+      comentarioActa: 'El servicio para comentar y devolver acta se esta enviando la informacion pero el servicio no esta completo en el servidor'
+    })
   };
 
   //Limite maximo Quill Editor
@@ -65,6 +68,13 @@ export class RevisionActaComponent implements OnInit {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
+    };
+  };
+
+  textoLimpioMessage(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio;
     };
   };
   //Modal
@@ -82,21 +92,29 @@ export class RevisionActaComponent implements OnInit {
       return;
     };
 
-    const value      = String( this.form.get( 'comentarioActa' ).value );
-    const comentario = value.slice( 0, value.length - 1 );
+    const value = String( this.form.get( 'comentarioActa' ).value );
+    const observaciones = {
+      comiteTecnicoId: this.acta.comiteTecnicoId,
+      observaciones: value,
+      fecha: new Date(),
+      sesionComentarioId: 0 // no esta llegando este id del servidor
+    };
 
-    console.log( comentario );
-
-    this.compromisoSvc.postComentariosActa()
-      .subscribe( console.log )
-
-    //this.openDialog('La información ha sido guardada exitosamente', '');
+    this.compromisoSvc.postComentariosActa( observaciones )
+      .subscribe( ( resp: any ) => {
+        this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+        this.routes.navigate( ['/compromisosActasComite'] );
+      } );
 
   };
   //Aprobar acta
-  aprobarActa () {
+  aprobarActa ( comiteTecnicoId ) {
     //Al aprobar acta redirige al componente principal
-    this.routes.navigate( ['/compromisosActasComite'] );
+    this.compromisoSvc.aprobarActa( comiteTecnicoId )
+      .subscribe( ( resp: any ) => {
+        this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+        this.routes.navigate( ['/compromisosActasComite'] );
+      } )
   };
   //Descargar acta en formato pdf
   getActaPdf( comiteTecnicoId, numeroComite ) {
@@ -113,6 +131,6 @@ export class RevisionActaComponent implements OnInit {
       anchor.click();
       
     } )
-  }
+  };
 
 };

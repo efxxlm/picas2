@@ -10,10 +10,10 @@ export class CompromisosActasComiteService {
 
   private url: string = `${ environment.apiUrl }/ManagementCommitteeReport`;
   devolverActa: DevolverActa = {
-    comiteTecnicoId: 14,
-    fecha: new Date(),
+    comiteTecnicoId: 0,
+    fecha: null,
     sesionComentarioId: 0,
-    observacion: 'Probando'
+    observacion: ''
   }
 
   constructor ( private http: HttpClient ) {};
@@ -33,6 +33,10 @@ export class CompromisosActasComiteService {
 
   getActa ( comiteTecnicoId: number ) {
     return this.http.get( `${ this.url }/GetManagementReportById?comiteTecnicoId=${ comiteTecnicoId }` )
+  }
+
+  aprobarActa ( comiteTecnicoId: number ) {
+    return this.http.post( `${ this.url }/AcceptReport?comiteTecnicoId=${ comiteTecnicoId }`, '' );
   }
 
   postCompromisos ( seguimiento: any, estadoId: string ) {
@@ -56,7 +60,12 @@ export class CompromisosActasComiteService {
     return this.http.get( `${ this.url }/StartDownloadPDF?comiteTecnicoId=${ comiteTecnicoId }`, { responseType: "blob" } )
   }
 
-  postComentariosActa () {
+  postComentariosActa ( acta: any ) {
+
+    this.devolverActa.comiteTecnicoId = acta.comiteTecnicoId;
+    this.devolverActa.fecha = acta.fecha;
+    this.devolverActa.observacion = acta.observaciones;
+    this.devolverActa.sesionComentarioId = acta.sesionComentarioId;
 
     const headers = new HttpHeaders({
       'Content-Type':'application/json'
