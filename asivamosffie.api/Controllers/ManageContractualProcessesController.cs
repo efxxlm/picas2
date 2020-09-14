@@ -9,6 +9,8 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.APIModels;
 using System.IO;
 using Microsoft.Extensions.Options;
+using System.Reflection;
+using Newtonsoft.Json;
 
 namespace asivamosffie.api.Controllers
 {
@@ -66,20 +68,31 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        public object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperties()
+                  .Single(pi => pi.Name == propName)
+                  .GetValue(src, null);
+        }
 
         [Route("RegistrarTramiteContratacion")]
         [HttpPost]
-        public async Task<IActionResult> RegistrarTramiteContratacion([FromBody] object pContratacion )
-
+        public async Task<IActionResult> RegistrarTramiteContratacion([FromBody] object pContratacion ) 
         {
             Respuesta respuesta = new Respuesta();
+            string JsonContratacion = JsonConvert.SerializeObject(pContratacion);
             try
             {
+                Type myType = pContratacion.GetType();
+                IList<PropertyInfo> props = new List<PropertyInfo>(myType.GetProperties());
 
-                 
-             //   pContratacion.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
-              //  respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion , null
-                //    , _settings.Value.DirectoryBase , _settings.Value.DirectoryBaseContratacionMinuta);
+
+                Contratacion contratacion =JsonConvert.DeserializeObject<Contratacion>(JsonContratacion);
+
+
+                contratacion.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(contratacion, null
+                  , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
 
                 return Ok(respuesta);
             }

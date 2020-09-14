@@ -83,8 +83,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID)
         {
             //Al modificar verificar a que tipo de solicitud corresponde el comite y hacer switch         
@@ -224,7 +223,7 @@ namespace asivamosffie.services
                                            .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion
                                            && r.Codigo == FuenteFinanciacionNombre
                                            ).FirstOrDefault().Nombre;
-                                        FuenteFinanciacionNombre = FuenteFinanciacion.FuenteRecursosCodigo;
+                              
                                     }
                                 }
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
@@ -718,10 +717,18 @@ namespace asivamosffie.services
 
             try
             {
+                string strFilePatch = "";
                 //Save Files  
-                string strFilePatch = Path.Combine(pDirectorioBase, pDirectorioMinuta, pContratacion.ContratacionId.ToString());
-                await _documentService.SaveFileContratacion(pFile, strFilePatch, pContratacion.ContratacionId);
+                if (pFile == null)
+                {
+                 }
+                else {
+                    if (pFile.Length > 0) {
+                        strFilePatch = Path.Combine(pDirectorioBase, pDirectorioMinuta, pContratacion.ContratacionId.ToString());
+                        await _documentService.SaveFileContratacion(pFile, strFilePatch, pContratacion.ContratacionId);
 
+                    }
+                }
 
                 Contratacion contratacionOld = _context.Contratacion.Find(pContratacion.ContratacionId);
                 //Auditoria
@@ -760,8 +767,7 @@ namespace asivamosffie.services
               };
             }
         }
-
-
+         
     }
 
 }
