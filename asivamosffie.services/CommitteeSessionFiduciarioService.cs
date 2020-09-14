@@ -14,16 +14,147 @@ using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
-    public class CommitteeSessionService : ICommitteeSessionService
+
+    /*
+       PARAMETRICAS
+
+     Tipo tema = 1. Solicitudes contractuales, 2. Tema nuevo
+     TipoDominioId = 42
+    ------------------------------------
+
+     MiembrosComiteTecnico = 1.	Dirección técnica, 2.	Dirección financiera, 3.	Dirección jurídica, 4.	Fiduciaria, 5.	Dirección administrativa
+     TipoDominioId = 46
+    ------------------------------------
+
+    */
+
+    public class CommitteeSessionFiduciarioService : ICommitteeSessionFiduciarioService
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
 
-        public CommitteeSessionService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public CommitteeSessionFiduciarioService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
             _commonService = commonService;
         }
+
+
+        #region "ORDEN DEL DIA";
+
+        //Solicitudes acordeon => Para seleccion de solicitudes contractuales y tema nuevo
+        public async Task<ActionResult<List<ComiteTecnico>>> GetRequestCommitteeSessionById(int comiteTecnicoId)
+        {
+            try
+            {
+                return await _context.ComiteTecnico.Include(cm => cm.SesionComiteTema).Where(sc => sc.ComiteTecnicoId == comiteTecnicoId && !(bool)sc.Eliminado).ToListAsync();
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        //Crear un nuevo tema
+        public async Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            SesionComiteTema sesionComiteTemaAntiguo = null;
+            var newComiteTecnicoId = 0;
+            try
+            {
+
+                if (string.IsNullOrEmpty(sesionComiteTema.SesionTemaId.ToString()) || sesionComiteTema.SesionTemaId == 0)
+                {
+
+                    //Auditoria
+                    strCrearEditar = "CREAR COMITE TECNICO FIDUCIARIO@#CREAR NUEVO TEMA";
+
+                    //Crear Comite tecnico fiduciario inicial
+                    int countMaxId = _context.ComiteTecnico.Max(cm => cm.ComiteTecnicoId);
+
+                    ComiteTecnico comiteTecnico = new ComiteTecnico();
+                    comiteTecnico.FechaCreacion = DateTime.Now;
+                    comiteTecnico.UsuarioCreacion = sesionComiteTema.UsuarioCreacion;
+                    comiteTecnico.EsComiteFiduciario = true;
+                    comiteTecnico.EstadoComiteCodigo = "1";
+                    comiteTecnico.EsCompleto = false;
+                    comiteTecnico.EsAprobado = false;
+                    comiteTecnico.Eliminado = false;
+                    comiteTecnico.NumeroComite = Helpers.Helpers.Consecutive("CF", countMaxId);
+
+                    _context.ComiteTecnico.Add(comiteTecnico);
+                    var result = await _context.SaveChangesAsync();
+
+                    if (result > 0)
+                    {
+                        newComiteTecnicoId = comiteTecnico.ComiteTecnicoId;
+                        sesionComiteTema.ComiteTecnicoId = newComiteTecnicoId;
+                        sesionComiteTema.FechaCreacion = DateTime.Now;
+                        sesionComiteTema.UsuarioCreacion = sesionComiteTema.UsuarioCreacion;
+                        sesionComiteTema.Eliminado = false;
+
+                        _context.SesionComiteTema.Add(sesionComiteTema);
+                    }
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT TEMA";
+                    sesionComiteTemaAntiguo = _context.SesionComiteTema.Find(sesionComiteTema.SesionTemaId);
+
+                    //Auditoria
+                    sesionComiteTemaAntiguo.UsuarioModificacion = sesionComiteTema.UsuarioModificacion;
+                    sesionComiteTemaAntiguo.Eliminado = false;
+
+
+                    //Registros
+                    sesionComiteTemaAntiguo.Tema = sesionComiteTema.Tema;
+                    sesionComiteTemaAntiguo.ResponsableCodigo = sesionComiteTema.ResponsableCodigo;
+                    sesionComiteTemaAntiguo.TiempoIntervencion = sesionComiteTema.TiempoIntervencion;
+                    _context.SesionComiteTema.Add(sesionComiteTema);
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = sesionComiteTema,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, sesionComiteTema.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, sesionComiteTema.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+
+        
+
+        #endregion
+                                                                                                                                                                               
 
 
         #region "Gestion de actas";
@@ -544,6 +675,7 @@ namespace asivamosffie.services
             }
             return retorno;
         }
+
         #endregion
     }
 }

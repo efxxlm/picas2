@@ -7,7 +7,6 @@ namespace asivamosffie.model.Models
     {
         public ContratacionProyecto()
         {
-            ComiteTecnicoProyecto = new HashSet<ComiteTecnicoProyecto>();
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
         }
@@ -31,7 +30,6 @@ namespace asivamosffie.model.Models
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
-        public virtual ICollection<ComiteTecnicoProyecto> ComiteTecnicoProyecto { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
     }

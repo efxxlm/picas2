@@ -13,17 +13,69 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommitteeSessionController : ControllerBase
+    public class CommitteeSessionFiduciarioController : ControllerBase
     {
-        private readonly ICommitteeSessionService _committeeSessionService;
+        private readonly ICommitteeSessionFiduciarioService _committeeSessionService;
         private readonly IOptions<AppSettings> _settings;
 
-        public CommitteeSessionController(IOptions<AppSettings> settings, ICommitteeSessionService committeeSessionService)
+        public CommitteeSessionFiduciarioController(IOptions<AppSettings> settings, ICommitteeSessionFiduciarioService committeeSessionService)
         {
             _committeeSessionService = committeeSessionService;
             _settings = settings;
 
         }
+
+        #region "ORDEN DEL DIA";
+
+        [Route("GetRequestCommitteeSessionById")]
+        public async Task<IActionResult> GetRequestCommitteeSessionById(int comiteTecnicoId)
+        {
+            try
+            {
+                var result = await _committeeSessionService.GetRequestCommitteeSessionById(comiteTecnicoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        [Route("CreateOrEditTema")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditTema([FromBody] SesionComiteTema sesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                sesionComiteTema.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionService.CreateOrEditTema(sesionComiteTema);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
+        #endregion
+
+
+
+
+
+
+
+
+
+
 
         [Route("GetSesion")]
         public async Task<IActionResult> GetSesion(int? sessionId)
@@ -216,6 +268,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _committeeSessionService.DeleteTema(temaId);
             return respuesta;
         }
+
 
     }
 }

@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.services.Interfaces
 {
-    public interface ICommitteeSessionService
+    public interface ICommitteeSessionFiduciarioService
     {
+        #region "ORDEN DEL DIA";
+        Task<ActionResult<List<ComiteTecnico>>> GetRequestCommitteeSessionById(int comiteTecnicoId);
+        Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema);
+        #endregion
+
+
+
+
         Task<Respuesta> CreateOrEditCommitteeSession(SesionComiteTema sesionComiteTema);
         Task<Respuesta> CreateOrEditGuest(SesionInvitado sesionInvitado);
         Task<Respuesta> CreateOrEditSesioncomment(SesionComentario sesionComentario);
