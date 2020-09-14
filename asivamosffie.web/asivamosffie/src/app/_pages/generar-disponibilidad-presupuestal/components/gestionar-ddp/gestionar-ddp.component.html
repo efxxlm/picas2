@@ -5,11 +5,11 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Gestionar DDP solicitud PI_004
+        Gestionar DDP solicitud {{detailavailabilityBudget.numeroSolicitud}}
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de la solicitud: <b>02/07/2020</b></span>
-        <span><b>Contratación</b></span>
+        <span>Fecha de la solicitud: <b>{{detailavailabilityBudget.fechaComiteTecnico}}</b></span>
+        <span><b>{{detailavailabilityBudget.tipoSolicitudText}}</b></span>
     </p>
 
 </section>
@@ -42,7 +42,7 @@
             </p>
             <p>
                 <strong>Fecha comité técnico:</strong>
-                03/07/2020
+                {{detailavailabilityBudget.fechaComiteTecnico}}
             </p>
 
         </mat-card-content>
@@ -128,7 +128,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion>
+            <mat-accordion *ngIf="false">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title">
