@@ -134,7 +134,7 @@
             <mat-card-content class="mt-1em">
               <p><b>Tipo de contrato</b>: {{ dataContratacion.tipoContratacionCodigo }}</p>
               <p><b>Plazo</b>: {{ dataContratacion.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ dataContratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
-              <p><b>Valor del contrato</b>: ${{ dataContratacion.disponibilidadPresupuestal[0].valorSolicitud }}</p>
+              <p><b>Valor del contrato</b>: {{ dataContratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -175,10 +175,10 @@
           </mat-expansion-panel-header>
 
           <div class="text-center">
-            <p><b>Valor del DDP</b> $600.000.000</p>
+            <p><b>Valor del DDP</b> {{ valorTotalDdp | currency:'COP':'symbol-narrow':'.0-0' }}</p>
           </div>
 
-          <app-form-aportantes [data]="dataForm"></app-form-aportantes>
+          <app-form-aportantes [data]="dataContratacion.contratacionProyecto"></app-form-aportantes>
 
         </mat-expansion-panel>
 

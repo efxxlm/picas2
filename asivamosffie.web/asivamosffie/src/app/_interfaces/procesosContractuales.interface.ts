@@ -204,6 +204,7 @@ interface ProyectoInstitucionEducativa {
   proyectoAportante: ProyectoAportante[];
   proyectoPredio: any[];
   proyectoRequisitoTecnico: any[];
+  valorTotal: number;
 }
 
 interface ProyectoAportante {

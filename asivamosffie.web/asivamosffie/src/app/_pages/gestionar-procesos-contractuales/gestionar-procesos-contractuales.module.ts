@@ -22,9 +22,8 @@ import { FormEjecucionFinancieraComponent } from './components/form-ejecucion-fi
 import { FormRegistroTramiteComponent } from './components/form-registro-tramite/form-registro-tramite.component';
 import { TablaSolicitudesEnviadasComponent } from './components/tabla-solicitudes-enviadas/tabla-solicitudes-enviadas.component';
 
-
 @NgModule({
-  declarations: [ProcesosContractualesComponent, TablaSolicitudesSinTramitarComponent, FormContratacionComponent, FormAportantesComponent, FormModificacionContractualComponent, TablaProyectosAsociadosComponent, FormLiquidacionComponent, TablaRecursosCompartidosComponent, FormRecursosCompartidosComponent, TablaRecursosAportantesComponent, FormRecursosPagadosComponent, TablaRecursosPagadosComponent, TablaOtrosDescuentosComponent, FormEjecucionFinancieraComponent, FormRegistroTramiteComponent, TablaSolicitudesEnviadasComponent],
+  declarations: [ ProcesosContractualesComponent, TablaSolicitudesSinTramitarComponent, FormContratacionComponent, FormAportantesComponent, FormModificacionContractualComponent, TablaProyectosAsociadosComponent, FormLiquidacionComponent, TablaRecursosCompartidosComponent, FormRecursosCompartidosComponent, TablaRecursosAportantesComponent, FormRecursosPagadosComponent, TablaRecursosPagadosComponent, TablaOtrosDescuentosComponent, FormEjecucionFinancieraComponent, FormRegistroTramiteComponent, TablaSolicitudesEnviadasComponent],
   imports: [
     CommonModule,
     MaterialModule,

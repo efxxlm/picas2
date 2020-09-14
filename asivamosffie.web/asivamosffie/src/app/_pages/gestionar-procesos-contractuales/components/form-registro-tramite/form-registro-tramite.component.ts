@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-registro-tramite',
@@ -28,7 +29,8 @@ export class FormRegistroTramiteComponent implements OnInit {
   };
 
   constructor ( private dialog: MatDialog,
-                private procesosContractualesSvc: ProcesosContractualesService ) {
+                private procesosContractualesSvc: ProcesosContractualesService,
+                private routes: Router ) {
   }
 
   ngOnInit(): void {
@@ -85,9 +87,17 @@ export class FormRegistroTramiteComponent implements OnInit {
     this.contratacion.fechaEnvioDocumentacion = this.dataFormulario.get( 'fechaEnvioTramite' ).value;
 
     this.procesosContractualesSvc.sendTramite( this.contratacion )
-      .subscribe( console.log );
+      .subscribe( 
+        () => {
+        this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+        this.routes.navigate( [ '/procesosContractuales' ] );
+        },
+        () => {
+          this.openDialog( 'Ha ocurrido un error.', '' );
+        } 
+      );
 
-    //this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+    //
   };
 
 };

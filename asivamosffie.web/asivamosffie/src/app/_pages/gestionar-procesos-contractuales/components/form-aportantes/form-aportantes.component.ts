@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-form-aportantes',
@@ -8,10 +8,20 @@ import { Component, Input, OnInit } from '@angular/core';
 export class FormAportantesComponent implements OnInit {
 
   @Input() data: any[] = [];
+  institucionesEducativa: any[] = []
+  totalDdp: number = 0;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.getData();
+  }
+
+  getData () {
+    this.data.forEach( contratacion => {
+      this.institucionesEducativa.push( contratacion.proyecto.institucionEducativa )
+    } );
+    console.log( this.institucionesEducativa );
   }
 
 }
