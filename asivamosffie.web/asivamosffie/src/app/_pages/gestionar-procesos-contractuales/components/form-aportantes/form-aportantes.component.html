@@ -19,7 +19,7 @@
               <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante.valorTotalAportante | currency:'COP':'symbol-narrow':'.0-0' }}</p>
             </div>
             <div *ngFor="let fuente of proyectoAportante.aportante.fuenteFinanciacion; let j = index">
-              <h3><b>Fuente</b></h3>
+              <h3><b>Fuente {{ j+1 }}</b></h3>
               <div>
                 <p><b>Fuente</b>: {{ fuente.fuenteRecursosCodigo }}</p>
                 <p><b>Valor solicitado de la fuente</b>: {{ fuente.valorFuente | currency:'COP':'symbol-narrow':'.0-0' }}</p>
