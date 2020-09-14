@@ -30,14 +30,20 @@
     }
 }
 
+.info-button {
+
+    &::after {
+        @extend %ayuda-color;
+        margin-left: .2em;
+        position: relative;
+        top: 2px;
+    }
+}
+
 .expansion-style {
     box-shadow: none !important;
     &--header {
-<<<<<<< HEAD
-        width: 25em;
-=======
         width: 28em;
->>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación
         max-width: 100%;
         min-width: max-content;
         background-color: transparent;
@@ -65,10 +71,21 @@
             top: 50%;
             transform: translateY(-50%);
         }
+    }
 
+    &.sub-expansion {
+        .expansion-style--title {
+            background-color: #d1d1d1;
+            font-weight: 500;
+            color: #0b254f;
+            padding: .1em 1.5em;
+        }
+
+        span.mat-expansion-indicator::after{
+            color: #d1d1d1;
+        }
     }
 }
-<<<<<<< HEAD
 
 span.mat-expansion-indicator::after {
     color: #174193;
@@ -80,5 +97,3 @@ span.mat-expansion-indicator::after {
     transform: rotate(0deg);
     padding: 1px;
 }
-=======
->>>>>>> 3.1.5-Solicitar-sesión-de-comité-técnico---contratación

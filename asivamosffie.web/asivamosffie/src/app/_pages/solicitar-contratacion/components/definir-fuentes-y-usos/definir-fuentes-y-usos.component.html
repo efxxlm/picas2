@@ -1,187 +1,218 @@
 <div class="container">
-    <div class="text-right">
-        <a routerLink="/solicitarContratacion/solicitud/0" mat-button color="primary" class="btn-regresar">
-            <img src="assets/img/icon/regresar.svg" alt="Regresar">
-        </a>
-    </div>
-    <div class="text-center mb-2em">
-        <h1 class="title-menu--h1 ">
-            Defenir fuentes y usos
-        </h1>
-    </div>
+  <div class="text-right">
+    <a [routerLink]="['/solicitarContratacion/solicitud/', idSolicitud]" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center mb-2em">
+    <h1 class="title-menu--h1 ">
+      Defenir fuentes y usos
+    </h1>
+  </div>
 
-    <p class="text-detalle">
-        <span>Ampliación</span>
-        <span><b>I.E Alfredo Bonilla Montaño - Única sede</b></span>
-        <span>Jamundí - Valle del Cauca</span>
-    </p>
+  <p class="text-detalle" *ngIf="contratacionProyecto">
+    <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
+    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+  </p>
 
-    <div class="container-valor">
-        <p>Valor total del proyecto <b>$660.000.000</b></p>
-        <p>Valor obra Valor interventoría <b>$600.000.000</b></p>
-        <p>Valor interventoría <b>$60.000.000</b></p>
-    </div>
+  <div class="container-valor" *ngIf="contratacionProyecto">
+    <p>Valor total del proyecto <b>${{ contratacionProyecto.proyecto.valorTotal }}</b></p>
+    <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra }}</b></p>
+    <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria }}</b></p>
+  </div>
 
-    <div class="text-center mb-2em">
-        <h1 class="title-menu--h1">
-            Obra
-        </h1>
-    </div>
-    <p class="text-center info-container">
-        <span class="info-text sin-diligenciar">Sin diligenciar</span>
-        <span class="info-text en-proceso">En proceso</span>
-        <span class="info-text completo">Completo</span>
-    </p>
+  <div class="text-center mb-2em">
+    <h1 class="title-menu--h1" *ngIf="contratacionProyecto">
+      <!-- {{ contratacionProyecto.tipoSolicitudCodigo == 2 ? 'Intervención' : 'Obra'  }} -->
+    </h1>
+  </div>
+  <p class="text-center info-container">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
 
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
-                    Aportante 1
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
 
-            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-                <mat-card class="shipping-card">
-                    <mat-card-content>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="pr-1">
-                                        <label class="label-left">Nombre del aportante:</label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <b class="valor-input">FFIE</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="pr-1">
-                                        <label class="label-left" for="valorAportanteProyecto">Valor del aportante al
-                                            proyecto</label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <mat-form-field class="full-width">
-                                            <input matInput #valorAportante maxlength="20" min="1" required
-                                                type="number" formControlName="valorAportanteProyecto">
-                                        </mat-form-field>
-                                        <span class="contador">{{2 - valorAportante.value.length}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="animatedDown">
-                            <h2 class="card-subTitle">Usos</h2>
-                            <div formGroupName="componentes">
-                                <div class="animatedDown" *ngFor="let conponente of componentes.controls; let i = index">
-                                    <div [formGroupName]="i">
-                                        <mat-card-title class="header-card--text sub-text">
-                                            Componente {{i + 1}}
-                                        </mat-card-title>
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="row">
-                                                    <div class="pr-1">
-                                                        <label class="label-left" for="componente">Componente</label>
-                                                    </div>
-                                                    <div class="col">
-                                                        <mat-form-field class="select-width">
-                                                            <mat-select required formControlName="componente">
-                                                                <mat-option></mat-option>
-                                                                <mat-option *ngFor="let componente of componentesSelect"
-                                                                    [value]="componente.value">
-                                                                    {{ componente.name }}
-                                                                </mat-option>
-                                                            </mat-select>
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div formArrayName="usos">
-                                            <div class="row animatedDown" *ngFor="let control of usos.controls; let j = index">
-                                                <div class="col-md-8">
-                                                    <div class="row">
-                                                        <div class="pr-1">
-                                                            <label class="label-left">Uso {{ j }}</label>
-                                                        </div>
-                                                        <div class="col">
-                                                            <mat-form-field class="select-width" [formControlName]="j">
-                                                                <mat-select required>
-                                                                    <mat-option></mat-option>
-                                                                    <mat-option *ngFor="let uso of usosSelect"
-                                                                        [value]="uso.value">
-                                                                        {{ uso.name }}
-                                                                    </mat-option>
-                                                                </mat-select>
-                                                            </mat-form-field>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 text-right">
-                                                    <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                                        *ngIf="usos.length > 1" (click)="borrarArray(usos, j)">
-                                                        <img src="assets/img/icon/menos.svg" alt="Eliminar uso">
-                                                        Eliminar uso
-                                                    </button>
-                                                    <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                                        *ngIf="j === usos.length" (click)="addUso()">
-                                                        <img src="assets/img/icon/mas.svg" alt="Agregar otro uso">
-                                                        Agregar otro uso
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div> -->
+  <mat-accordion formGroupName="aportantes" *ngFor="let aportante of aportantes.controls; let j = index" >
+    <mat-expansion-panel class="expansion-style" [formGroupName]="j">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title completo">
+          Aportante {{ j + 1 }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="row">
-                                                    <div class="pr-1">
-                                                        <label class="label-left" for="valorDeLaFuente">Valor de la
-                                                            fuente</label>
-                                                    </div>
-                                                    <div class="col d-flex">
-                                                        <mat-form-field class="full-width">
-                                                            <input matInput #valorUso maxlength="20" min="1" required
-                                                                type="number" formControlName="valorDeLaFuente">
-                                                        </mat-form-field>
-                                                        <span class="contador">{{20 - valorUso.length}}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 text-right animatedOpacity" *ngIf="componentes.length > 1">
-                                                <button mat-button color="warn" type="button" class="btn-eliminar"
-                                                    (click)="borrarArray(componentes, i)">
-                                                    <img src="assets/img/icon/menos.svg" alt="Eliminar componente">
-                                                    Eliminar componente
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right mt-1em">
-                                <button mat-button color="warn" type="button" class="btn-eliminar"
-                                    (click)="addComponent()">
-                                    <img src="assets/img/icon/mas.svg" alt="Agregar otro componente">
-                                    Agregar otro componente
-                                </button>
-                            </div>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-                <div class="text-center">
-                    <button mat-button color="warn" class="btn-guardar" type="submit">
-                        <img src="assets/img/icon/guardar.svg" alt="guardar">
-                    </button>
+      
+        <mat-card class="shipping-card">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left">Nombre del aportante:</label>
+                  </div>
+                  <div class="col d-flex">
+                    <b class="valor-input">FFIE</b>
+                  </div>
                 </div>
-            </form>
-
-        </mat-expansion-panel>
-    </mat-accordion>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="valorAportanteProyecto">Valor del aportante al
+                      proyecto</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <!-- <input matInput #valorAportante maxlength="20" min="1" required
+                                                type="number" formControlName="valorAportanteProyecto"> -->
+                      <input matInput #valorAportante currencyMask required maxLength="20"
+                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                        formControlName="valorAportanteProyecto">
+                        <input type="hidden" formControlName="contratacionProyectoAportanteId" >
+                        <input type="hidden" formControlName="proyectoAportanteId" >
+                        
+                    </mat-form-field>
+                    <span class="contador">{{20 - valorAportante.value.length}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="animatedDown">
+              <h2 class="card-subTitle">Usos</h2>
+              <div formGroupName="componentes">
+                <div class="animatedDown" *ngFor="let conponente of componentes(j).controls; let i = index">
+                  <div [formGroupName]="i">
+                    <mat-card-title class="header-card--text sub-text">
+                      Componente {{i + 1}}
+                    </mat-card-title>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left" for="fase">Fase</label>
+                          </div>
+                          <div class="col">
+                            <mat-form-field class="select-width">
+                              <mat-select required formControlName="fase">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let fase of fasesSelect" [value]="fase">
+                                  {{ fase.nombre }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left" for="componente">Componente</label>
+                          </div>
+                          <div class="col">
+                            <mat-form-field class="select-width">
+                              <mat-select required formControlName="componente">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let componente of componentesSelect" [value]="componente">
+                                  {{ componente.nombre }}
+                                </mat-option>
+                              </mat-select>
+                              <input type="hidden" formControlName="componenteAportanteId">
+                              <input type="hidden" formControlName="contratacionProyectoAportanteId">
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div formGroupName="usos">
+                      <div class="animatedDown" *ngFor="let uso of usos(j, i).controls; let k = index">
+                        <div [formGroupName]="k">
+                          <div class="row">
+                            <div class="col-md-8">
+                              <div class="row">
+                                <div class="pr-1">
+                                  <label class="label-left">Uso {{ k + 1 }}</label>
+                                </div>
+                                <div class="col">
+                                  <mat-form-field class="select-width" >
+                                    <mat-select required formControlName="usoDescripcion">
+                                      <mat-option></mat-option>
+                                      <mat-option *ngFor="let u of usosSelect" [value]="u">
+                                        {{ u.nombre }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4 text-right p-0">
+                              <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+                                *ngIf="usos(j, i).length > 1" (click)="borrarArray(usos(j, i), k)">
+                                <img src="assets/img/icon/menos.svg" alt="Eliminar uso">
+                                Eliminar uso
+                              </button>
+                              <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+                                *ngIf="k + 1 === usos(j, i).length" (click)="addUso(j, i)">
+                                <img src="assets/img/icon/mas.svg" alt="Agregar otro uso">
+                                Agregar otro uso
+                              </button>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-8">
+                              <div class="row">
+                                <div class="pr-1">
+                                  <label class="label-left">Valor del uso</label>
+                                </div>
+                                <div class="col d-flex">
+                                  <mat-form-field class="full-width">
+                                    <input matInput #valorUso currencyMask required maxLength="20"
+                                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                                      formControlName="valorUso">
+                                      <input type="hidden" formControlName="componenteUsoId">
+                                      <input type="hidden" formControlName="componenteAportanteId">
+                                  </mat-form-field>
+                                  <span class="contador">{{20 - valorUso.value.length}}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-right mt-1em">
+                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length > 1"
+                        (click)="borrarArray(componentes, i)">
+                        <img src="assets/img/icon/menos.svg" alt="Eliminar componente">
+                        Eliminar componente
+                      </button>
+                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length === i + 1"
+                        (click)="addComponent( i )">
+                        <img src="assets/img/icon/mas.svg" alt="Agregar otro componente">
+                        Agregar otro componente
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <div class="text-center">
+          <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="guardar">
+          </button>
+        </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</form>
 </div>
 
 <!-- <pre class="container">

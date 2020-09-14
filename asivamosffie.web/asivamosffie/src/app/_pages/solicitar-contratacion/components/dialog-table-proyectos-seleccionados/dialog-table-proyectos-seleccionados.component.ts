@@ -32,6 +32,8 @@ export class DialogTableProyectosSeleccionadosComponent implements OnInit {
     'id'
   ];
 
+  listaEliminados: TableElement[] = [];
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -48,6 +50,24 @@ export class DialogTableProyectosSeleccionadosComponent implements OnInit {
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
+  }
+
+  addRemoveElement(seleccionado: boolean, elemento: any) {
+    if (seleccionado){
+      console.log( this.data.indexOf( elemento ) );
+      this.listaEliminados.push( elemento );
+    }
+  }
+
+  actualizar(){
+    this.listaEliminados.forEach( e => {
+      let i = this.data.indexOf( e );
+      if (i > -1){
+        this.data.splice(i,1);
+        console.log(e);
+      }
+    })
+    console.log(this.data);
   }
 
 }

@@ -1,25 +1,32 @@
 .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary{
+    color: #174193;;
     color: var(--mainColor);
 }
 
 .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
+    background-color: #174193;;
     background-color: var(--mainColor);
 }
 
 .mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn {
+    background-color: #d21e18;
     background-color: var(--secondaryColor);
-}
-
-.mat-button.mat-primary[disabled], .mat-button.mat-accent[disabled], .mat-button.mat-warn[disabled], .mat-button[disabled][disabled], .mat-icon-button.mat-primary[disabled], .mat-icon-button.mat-accent[disabled], .mat-icon-button.mat-warn[disabled], .mat-icon-button[disabled][disabled], .mat-stroked-button.mat-primary[disabled], .mat-stroked-button.mat-accent[disabled], .mat-stroked-button.mat-warn[disabled], .mat-stroked-button[disabled][disabled] {
-    color: var(--mainColor);
-    opacity: .6;
 }
 
 .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent,
 .mat-raised-button.mat-accent[disabled],
 .mat-raised-button[disabled][disabled] {
+    background-color: #fdc101;
     background-color: var(--tertiaryColor);
+    color: #604500;
     color: var(--tertiaryColorFont);
+
+    &:hover {
+        background-color: #d1d1d1;
+        background-color: var(--grayColor);
+        color: #174193;;
+        color: var(--mainColor);
+    }
 }
 
 .mat-raised-button[disabled][disabled],
@@ -33,14 +40,6 @@ button.mat-raised-button {
     padding: 0 1.5em;
 }
 
-.btn-eliminar {
-    img {
-        height: 2em;
-        margin-top: -.2em;
-        margin-right: .3em;
-    }
-}
-
 .btn-calendario {
     padding: 0;
     min-width: 2.2em;
@@ -49,16 +48,38 @@ button.mat-raised-button {
     img {
         height: 2.2em;
     }
+}
 
-    &-container {
-        position: absolute;
-        top: 0;
-        width: 100%;
+.btn-descargar {
+    margin-top: 2em;
+    margin-bottom: 2em;
 
-        .required-form-group {
-            margin-left: .5em;
-            margin-top: .75em;
-        }
+    &--img {
+        height: 1.5em;
+        margin-right: .2em;
+    }
+}
+
+.input-file {
+    margin-top: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
+    color: var(--mainColor);
+
+    &--text {
+        border: solid .5px;
+        padding: .5em;
+        border-radius: .7em;
+        height: 20px;
+        width: 40em;
+        max-width: calc(100% - 9em);
+        margin-right: 0.5em;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -68,8 +89,9 @@ button.mat-raised-button {
     }
 }
 
-
+.btn-descargar-plantilla,
 .btn-eliminar {
+    font-style: italic;
     img {
         height: 2em;
         margin-top: -.2em;
@@ -83,7 +105,6 @@ button.mat-raised-button {
     }
 }
 
-
 button.btn-calendario {
     padding: 0;
     min-width: 2.2em;
@@ -94,9 +115,12 @@ button.btn-calendario {
     }
 }
 
-.mat-tooltip.cantidad-seleccionados--tooltip-accent {
-    background-color: var(--tertiaryColor);
-    color: var(--tertiaryColorFont);
-    font-weight: 500;
-    border-radius: 2em;
+.mat-dialog-actions {
+    justify-content: center;
+}
+
+.mat-dialog-actions button {
+    background-color: #174193;;
+    background-color: var(--mainColor);
+    color: white;
 }

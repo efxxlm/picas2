@@ -1,44 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogTableProyectosSeleccionadosComponent } from '../dialog-table-proyectos-seleccionados/dialog-table-proyectos-seleccionados.component';
+import { AsociadaComponent } from '../asociada/asociada.component';
+import { ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 
-export interface TableElement {
-  id: number;
-  tipoInterventor: string;
-  llaveMEN: string;
-  region: string;
-  departamento: string;
-  municipio: string;
-  institucionEducativa: string;
-  sede: string;
-}
 
-const ELEMENT_DATA: TableElement[] = [
-  {
-    id: 0,
-    tipoInterventor: 'Reconstrucción',
-    llaveMEN: 'MY567890',
-    region: 'Caribe',
-    departamento: 'Baranoa',
-    municipio: 'Atlántico',
-    institucionEducativa: 'Sede 2 - María Inmaculada',
-    sede: 'Sede 2',
-  },
-  {
-    id: 1,
-    tipoInterventor: 'Reconstrucción',
-    llaveMEN: 'LJ867890',
-    region: 'Caribe',
-    departamento: 'Galapa',
-    municipio: 'Atlántico',
-    institucionEducativa: 'I.E María Auxiliadora',
-    sede: 'Única sede',
-  }
-];
 
 @Component({
   selector: 'app-tabla-resultados',
@@ -47,6 +17,9 @@ const ELEMENT_DATA: TableElement[] = [
 })
 
 export class TablaResultadosComponent implements OnInit {
+
+  @Input() listaResultados: ProyectoGrilla[];
+  @Input() esMultiproyecto;
 
   displayedColumns: string[] = [
     'tipoInterventor',
@@ -57,16 +30,21 @@ export class TablaResultadosComponent implements OnInit {
     'sede',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource(this.listaResultados);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   elementosSelecciondos: any[] = [];
+   
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    console.log('lista', this.esMultiproyecto );
+
+    this.dataSource = new MatTableDataSource(this.listaResultados);
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -74,15 +52,21 @@ export class TablaResultadosComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  addElement(event: any, elemento: any) {
-    console.log(event);
-    this.elementosSelecciondos.push(elemento);
+  addElement(seleccionado: boolean, elemento: any) {
+    if (seleccionado)
+      this.elementosSelecciondos.push(elemento);
   }
 
   verSeleccionados() {
     console.log(this.elementosSelecciondos);
     const dialogRef = this.dialog.open(DialogTableProyectosSeleccionadosComponent, {
       data: this.elementosSelecciondos
+    });
+  }
+
+  openPopup() {
+    this.dialog.open(AsociadaComponent, {
+      data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto}
     });
   }
 }

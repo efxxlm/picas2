@@ -24,6 +24,7 @@ using asivamosffie.services.Validators;
 using asivamosffie.services.Filters;
 using System.Data.Common;
 using Z.EntityFramework.Plus;
+
 namespace asivamosffie.services
 {
     public class ProjectService : IProjectService
@@ -37,6 +38,55 @@ namespace asivamosffie.services
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
+        }
+        public async Task<ProyectoGrilla> GetProyectoGrillaByProyectoId(int idProyecto)
+        {
+            Proyecto pProyecto = _context.Proyecto.Find(idProyecto);
+            if (pProyecto != null)
+            {
+
+                List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+                List<Dominio> ListParametricas = _context.Dominio
+                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Juridico_Predios
+                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion
+                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                    ).ToList();
+                try
+                {
+                    Localizacion municipio = ListLocalizacion.Where(r => r.LocalizacionId == pProyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                    Localizacion departamento = ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
+
+                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(pProyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
+                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    {
+                        LlaveMen =pProyecto.LlaveMen,
+                        ProyectoId = pProyecto.ProyectoId,
+                        Departamento = departamento.Descripcion,
+                        Municipio = municipio.Descripcion,
+                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(pProyecto.InstitucionEducativaId).Nombre,
+                        Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
+                        EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
+                        TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                        Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
+                        EstadoRegistro = "COMPLETO"
+                    };
+
+                    if (!(bool)pProyecto.RegistroCompleto)
+                    {
+                        proyectoGrilla.EstadoRegistro = "INCOMPLETO";
+                    }
+                    return proyectoGrilla;
+                }
+                catch (Exception)
+                {
+                    return new ProyectoGrilla();
+                }
+            }
+            else
+            {
+                return new ProyectoGrilla();
+            } 
         }
 
         public static bool ValidarRegistroEDITAR(Proyecto proyecto)
@@ -119,9 +169,7 @@ namespace asivamosffie.services
                          || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.Cantidad.ToString())
                          || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesObra.ToString())
                          || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
                          || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesInterventoria.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasInterventoria.ToString())
                          || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo.ToString())
                         )
                     {
@@ -238,52 +286,98 @@ namespace asivamosffie.services
         {
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
 
-
             List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r => r.ProyectoPredio).Distinct().ToListAsync();
+
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            List<Dominio> ListParametricas = _context.Dominio
+                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Juridico_Predios
+                || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion
+                || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                ).ToList();
 
 
             foreach (var proyecto in ListProyectos)
             {
                 try
                 {
-                    Localizacion municipio = await _commonService.GetLocalizacionByLocalizacionId(proyecto.LocalizacionIdMunicipio);
-                    Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
-                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
-                    {
-                        ProyectoId = proyecto.ProyectoId,
-                        Departamento = departamento.Descripcion,
-                        Municipio = municipio.Descripcion,
-                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
-                        Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
-                        EstadoJuridicoPredios = EstadoJuridicoPredios.Nombre,
-                        Fecha = proyecto.FechaCreacion != null ? Convert.ToDateTime(proyecto.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
-                        EstadoRegistro = "COMPLETO"
-                    };
+                
+                        Localizacion municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                        Localizacion departamento = ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
+                        ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                        {
 
-                    if (!(bool)proyecto.RegistroCompleto)
-                    {
-                        proyectoGrilla.EstadoRegistro = "INCOMPLETO";
-                    }
-                    ListProyectoGrilla.Add(proyectoGrilla);
+                            ProyectoId = proyecto.ProyectoId,
+                            Departamento = departamento.Descripcion,
+                            Municipio = municipio.Descripcion,
+                            InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
+                            Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
+                            EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == proyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
+                            TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                            EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == proyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                            Fecha = proyecto.FechaCreacion != null ? Convert.ToDateTime(proyecto.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
+                            EstadoRegistro = "COMPLETO"
+                        }; 
+                        if (!(bool)proyecto.RegistroCompleto)
+                        {
+                            proyectoGrilla.EstadoRegistro = "INCOMPLETO";
+                        }
+                        ListProyectoGrilla.Add(proyectoGrilla);
+                
                 }
-                catch (Exception e)
-                {
-                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
-                    {
-                        Departamento = proyecto.ProyectoId.ToString(),
-                        Municipio = e.ToString(),
-                        InstitucionEducativa = e.InnerException.ToString(),
-                        Sede = "ERROR",
-                        EstadoJuridicoPredios = "ERROR",
-                        Fecha = "ERROR",
-                        EstadoRegistro = "ERROR",
-                    };
-                    ListProyectoGrilla.Add(proyectoGrilla);
+                catch (Exception)
+                {  
                 }
             }
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
 
+        }
+
+        public async Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto)
+        {
+            if (!(bool)pProyecto.Eliminado)
+            {
+                List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+                List<Dominio> ListParametricas = _context.Dominio
+                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Juridico_Predios
+                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion
+                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                    ).ToList();
+                try
+                {
+                    Localizacion municipio = ListLocalizacion.Where(r => r.LocalizacionId == pProyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                    Localizacion departamento = ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
+
+                    Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(pProyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
+                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    {
+
+                        ProyectoId = pProyecto.ProyectoId,
+                        Departamento = departamento.Descripcion,
+                        Municipio = municipio.Descripcion,
+                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(pProyecto.InstitucionEducativaId).Nombre,
+                        Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
+                        EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
+                        TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                        Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
+                        EstadoRegistro = "COMPLETO"
+                    };
+
+                    if (!(bool)pProyecto.RegistroCompleto)
+                    {
+                        proyectoGrilla.EstadoRegistro = "INCOMPLETO";
+                    }
+                    return proyectoGrilla;
+                }
+                catch (Exception e)
+                {
+                    return new ProyectoGrilla();
+                }
+            }
+            else
+            {
+                return new ProyectoGrilla();
+            }
         }
 
         public async Task<Respuesta> CreateProyect(Proyecto pProyecto)
@@ -710,11 +804,6 @@ namespace asivamosffie.services
             }
         }
 
-        public static string GetCodigoDominioByNameTipoDominioId(List<Dominio> ListaDominioActivo,string Nombre, int TipoDominioId) 
-        {
-           return ListaDominioActivo.Where(r => r.Nombre.ToUpper().Trim() == Nombre.ToUpper().Trim() && r.TipoDominioId == TipoDominioId).FirstOrDefault().Codigo;
-        }
-
         public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
         {
             int CantidadRegistrosVacios = 0;
@@ -734,104 +823,13 @@ namespace asivamosffie.services
                 await pFile.CopyToAsync(stream);
                 using var package = new ExcelPackage(stream);
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                List<ProyectoListTemporal> ListaRevisada = new List<ProyectoListTemporal>
-                {
-                    new ProyectoListTemporal
-                    {
-                        Estado_Registro = "Estado Registro",
-                        Fecha_de_Sesion_Junta = "Fecha de sesión junta",
-                        Numero_de_acta_de_la_junta = "Número de acta de la junta",
-                        Tipo_de_Intervencion = "Tipo de Intervención*",
-                        Llave_MEN = "Llave MEN*",
-                        Region = "Región*",
-                        Departamento = "Departamento*",
-                        Municipio = "Municipio*",
-                        Institucion_Educativa = "Institución Educativa*",
-                        Codigo_DANE_IE = "Código DANE IE",
-                        Sede = "Sede*",
-                        Codigo_DANE_SEDE = "Código DANE SEDE",
-                        Se_encuentra_dentro_de_una_convocatoria = "¿Se encuentra dentro de una convocatoria?*",
-                        Convocatoria = "Convocatoria*",
-                        Numero_de_predios_postulados = "Número de predios postulados*",
-                        Tipo_de_predio = "Tipo de predio(s)*",
-                        Ubicacion_del_predio_principal_Latitud = "Ubicación del predio principal /Latitud*",
-                        Ubicacion_del_predio_principal_Longitud = "Ubicación del predio principal /Longitud*",
-                        Direccion_del_predio_principal = "Dirección del predio principal",
-                        Documento_de_acreditacion_del_predio = "Documento de acreditación del predio",
-                        Número_del_documento_de_acreditacion = "Número del documento de acreditación",
-                        Cedula_Catastral_del_predio = "Cédula Catastral del predio",
-                        Tipo_de_aportante_1 = "Tipo de aportante 1",
-                        Aportante_1 = "Aportante 1",
-                        Tipo_de_aportante_2 = "Tipo de aportante 2",
-                        Aportante_2 = "Tipo de aportante 2",
-                        Tipo_de_aportante_3 = "Tipo de aportante 3",
-                        Aportante_3 = "Aportante 3",
-                        Vigencia_del_acuerdo_de_cofinanciación = "Vigencia del acuerdo de cofinanciación",
-                        Valor_obra = "Valor obra*",
-                        Valor_interventoria = "Valor interventoría*",
-                        Valor_Total = "Valor Total*",
-                        Espacios_a_intervenir = "Espacios a intervenir",
-                        Cantidad = "Cantidad",
-                        Plazo_de_obra_Meses = "Plazo de obra Meses",
-                        Plazo_de_obra_Dias = "Plazo de obra Días",
-                        Plazo_de_Interventoria_Meses = "Plazo de Interventoría Meses",
-                        Plazo_de_Interventoroa_Dias = "Plazo de Interventoría Días",
-                        Coordinacion_Responsable = "Coordinación responsable"
-                    }
-                };
-                //Controlar Registros 
-                //No comienza desde 0 por lo tanto el = no es necesario 
-                 
-                List<Dominio> dominioListGrillas =await _context.Dominio
-                       .Where(p => (bool)p.Activo)
-                       .ToListAsync();
- 
+                //Controlar Registros
+                //Filas <=
+                //No comienza desde 0 por lo tanto el = no es necesario
                 for (int i = 2; i < worksheet.Dimension.Rows; i++)
                 {
                     try
                     {
-                        ProyectoListTemporal RegistroExcel = new ProyectoListTemporal
-                        {
-                            Fecha_de_Sesion_Junta = worksheet.Cells[i, 1].Text,
-                            Numero_de_acta_de_la_junta = worksheet.Cells[i, 2].Text,
-                            Tipo_de_Intervencion = worksheet.Cells[i, 3].Text,
-                            Llave_MEN = worksheet.Cells[i, 4].Text,
-                            Region = worksheet.Cells[i, 5].Text,
-                            Departamento = worksheet.Cells[i, 6].Text,
-                            Municipio = worksheet.Cells[i, 7].Text,
-                            Institucion_Educativa = worksheet.Cells[i, 8].Text,
-                            Codigo_DANE_IE = worksheet.Cells[i, 9].Text,
-                            Sede = worksheet.Cells[i, 10].Text,
-                            Codigo_DANE_SEDE = worksheet.Cells[i, 11].Text,
-                            Se_encuentra_dentro_de_una_convocatoria = worksheet.Cells[i, 12].Text,
-                            Convocatoria = worksheet.Cells[i, 13].Text,
-                            Numero_de_predios_postulados = worksheet.Cells[i, 14].Text,
-                            Tipo_de_predio = worksheet.Cells[i, 15].Text,
-                            Ubicacion_del_predio_principal_Latitud = worksheet.Cells[i, 16].Text,
-                            Ubicacion_del_predio_principal_Longitud = worksheet.Cells[i, 17].Text,
-                            Direccion_del_predio_principal = worksheet.Cells[i, 18].Text,
-                            Documento_de_acreditacion_del_predio = worksheet.Cells[i, 19].Text,
-                            Número_del_documento_de_acreditacion = worksheet.Cells[i, 20].Text,
-                            Cedula_Catastral_del_predio = worksheet.Cells[i, 21].Text,
-                            Tipo_de_aportante_1 = worksheet.Cells[i, 22].Text,
-                            Aportante_1 = worksheet.Cells[i, 23].Text,
-                            Tipo_de_aportante_2 = worksheet.Cells[i, 24].Text,
-                            Aportante_2 = worksheet.Cells[i, 25].Text,
-                            Tipo_de_aportante_3 = worksheet.Cells[i, 26].Text,
-                            Aportante_3 = worksheet.Cells[i, 27].Text,
-                            Vigencia_del_acuerdo_de_cofinanciación = worksheet.Cells[i, 28].Text,
-                            Valor_obra = worksheet.Cells[i, 29].Text,
-                            Valor_interventoria = worksheet.Cells[i, 30].Text,
-                            Valor_Total = worksheet.Cells[i, 31].Text,
-                            Espacios_a_intervenir = worksheet.Cells[i, 32].Text,
-                            Cantidad = worksheet.Cells[i, 33].Text,
-                            Plazo_de_obra_Meses = worksheet.Cells[i, 34].Text,
-                            Plazo_de_obra_Dias = worksheet.Cells[i, 35].Text,
-                            Plazo_de_Interventoria_Meses = worksheet.Cells[i, 35].Text,
-                            Plazo_de_Interventoroa_Dias = worksheet.Cells[i, 37].Text,
-                            Coordinacion_Responsable = worksheet.Cells[i, 38].Text
-                        };
-
                         /* Columnas Obligatorias de excel
                          2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
                         Campos Obligatorios Validos   */
@@ -879,7 +877,7 @@ namespace asivamosffie.services
 
                             //#3
                             // Tipo de Intervención 
-                            temporalProyecto.TipoIntervencionId = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 3].Text, (int)EnumeratorTipoDominio.Tipo_de_Intervencion));
+                            temporalProyecto.TipoIntervencionId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 3].Text, (int)EnumeratorTipoDominio.Tipo_de_Intervencion));
 
                             //#4
                             // Llave MEN  
@@ -908,10 +906,8 @@ namespace asivamosffie.services
                             }
                             else
                             {
-                                CantidadRegistrosInvalidos++;
-                                RegistroExcel.Estado_Registro = "Registro inválido";
-                                ListaRevisada.Add(RegistroExcel);
-                                continue;
+                                archivoCarge.CantidadRegistrosInvalidos++;
+                                break;
                             }
 
                             //#9
@@ -924,15 +920,11 @@ namespace asivamosffie.services
                             //Volver a dejar como estaba buscando con nombre
                             int SedeId = await _commonService.getSedeInstitucionEducativaIdByNameAndInstitucionPadre(worksheet.Cells[i, 10].Text, idInstitucionEducativaSede);
                             if (SedeId > 0)
-                            {
-                                temporalProyecto.SedeId = SedeId;
-                            }
+                            { temporalProyecto.SedeId = SedeId; }
                             else
                             {
-                                CantidadRegistrosInvalidos++;
-                                RegistroExcel.Estado_Registro = "Registro inválido";
-                                ListaRevisada.Add(RegistroExcel);
-                                continue;
+                                archivoCarge.CantidadRegistrosInvalidos++;
+                                break;
                             }
 
                             //#11
@@ -947,7 +939,7 @@ namespace asivamosffie.services
 
                             //#13
                             //Convocatoria
-                            temporalProyecto.ConvocatoriaId = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 13].Text, (int)EnumeratorTipoDominio.Convocatoria));
+                            temporalProyecto.ConvocatoriaId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 13].Text, (int)EnumeratorTipoDominio.Convocatoria));
 
                             //#14
                             //Número de predios postulados
@@ -955,7 +947,7 @@ namespace asivamosffie.services
 
                             //#15
                             //Tipo de predio(s) 
-                            temporalProyecto.TipoPredioId = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 15].Text, (int)EnumeratorTipoDominio.Tipo_de_Predios));
+                            temporalProyecto.TipoPredioId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 15].Text, (int)EnumeratorTipoDominio.Tipo_de_Predios));
 
                             //#16
                             //Ubicación del predio principal latitud
@@ -971,7 +963,7 @@ namespace asivamosffie.services
 
                             //#19
                             //Documento de acreditación del predio 
-                            temporalProyecto.DocumentoAcreditacionPredioId = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 19].Text, (int)EnumeratorTipoDominio.Documento_Acreditacion));
+                            temporalProyecto.DocumentoAcreditacionPredioId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 19].Text, (int)EnumeratorTipoDominio.Documento_Acreditacion));
 
                             //#20
                             //Número del documento de acreditación 
@@ -985,31 +977,31 @@ namespace asivamosffie.services
                             //Tipo de aportante 1 
                             if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text))
                             {
-                                temporalProyecto.TipoAportanteId1 = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 22].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
+                                temporalProyecto.TipoAportanteId1 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 22].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
 
                                 //#23
                                 //Aportante 1 
-                                temporalProyecto.Aportante1 = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 23].Text, (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante));
+                                temporalProyecto.Aportante1 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 23].Text, (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante));
                             }
                             //#24
                             //Tipo de aportante 2
                             if (!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text))
                             {
-                                temporalProyecto.TipoAportanteId2 = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 24].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
+                                temporalProyecto.TipoAportanteId2 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 24].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
 
                                 //#25
                                 //Aportante 2
-                                temporalProyecto.Aportante2 = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 25].Text, (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante));
+                                temporalProyecto.Aportante2 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 25].Text, (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante));
                             }
                             //#26
                             //Tipo de aportante 3
                             if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text))
                             {
-                                temporalProyecto.TipoAportanteId3 = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 26].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
+                                temporalProyecto.TipoAportanteId3 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 26].Text, (int)EnumeratorTipoDominio.Tipo_de_aportante));
 
                                 //#27
                                 //Aportante 3
-                                temporalProyecto.Aportante3 = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 27].Text, (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante));
+                                temporalProyecto.Aportante3 = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 27].Text, (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante));
                             }
                             //#28
                             //Vigencia del acuerdo de cofinanciación 
@@ -1033,7 +1025,7 @@ namespace asivamosffie.services
 
                             //#32
                             //Infraestructura para intervenir 
-                            temporalProyecto.EspacioIntervenirId = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 32].Text, (int)EnumeratorTipoDominio.Espacios_Intervenir));
+                            temporalProyecto.EspacioIntervenirId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 32].Text, (int)EnumeratorTipoDominio.Espacios_Intervenir));
 
                             //#33
                             //Cantidad 
@@ -1067,25 +1059,22 @@ namespace asivamosffie.services
                             //Coordinación responsable 
                             if (!string.IsNullOrEmpty(worksheet.Cells[i, 38].Text))
                             {
-                                temporalProyecto.CoordinacionResponsableId = Int32.Parse(GetCodigoDominioByNameTipoDominioId(dominioListGrillas,worksheet.Cells[i, 38].Text, (int)EnumeratorTipoDominio.Coordinaciones));
+                                temporalProyecto.CoordinacionResponsableId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 38].Text, (int)EnumeratorTipoDominio.Coordinaciones));
                             }
 
-                            //Guarda Cambios en una tabla temporal 
-                     
-                      
+                            //Guarda Cambios en una tabla temporal
+
+                            _context.TemporalProyecto.Add(temporalProyecto);
                             _context.SaveChanges();
 
                             if (temporalProyecto.TemporalProyectoId > 0)
                             {
-                                RegistroExcel.Estado_Registro = "Registro válido";
-                                ListaRevisada.Add(RegistroExcel);
                                 CantidadResgistrosValidos++;
                             }
                             else
                             {
-                                RegistroExcel.Estado_Registro = "Registro inválido";
-                                ListaRevisada.Add(RegistroExcel);
                                 CantidadRegistrosInvalidos++;
+                                worksheet.Cells[i, 1].Value = "Estructura invalida";
                             }
                         }
                         else
@@ -1094,7 +1083,7 @@ namespace asivamosffie.services
                             string strValidateCampNullsOrEmpty = "";
                             //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
 
-                            for (int j = 1; j < 38; j++)
+                            for (int j = 1; j < 37; j++)
                             {
                                 strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
                             }
@@ -1105,38 +1094,37 @@ namespace asivamosffie.services
                             else
                             {
                                 CantidadRegistrosInvalidos++;
-                                worksheet.Cells[i, 1].Value = "Registro invalido";
-                                //    worksheet.Cells[i, 1].Value = "Campos vacios";
+                                worksheet.Cells[i, 1].Value = "Campos vacios";
                             }
                         }
+
                     }
                     catch (Exception)
                     {
                         CantidadRegistrosInvalidos++;
                     }
                 }
+
+
                 //como ya quedo en temporal, voy a consultarla y generar el archvio revisado
                 var streams = new MemoryStream();
-         
-                archivoCarge.Nombre += "_rev";
-                _context.SaveChanges();
-                Helpers.Helpers.SaveListToExcel(ListaRevisada, pFilePatch + "/" + archivoCarge.Nombre + ".xlsx", "Formato cargue masivo proyectos", false);
 
-                //using (var packages = new ExcelPackage(streams))
-                //{
-                //    var workSheet = packages.Workbook.Worksheets.Add("Sheet1");
-                //    workSheet.Cells.LoadFromCollection(ListaRevisada);
+                using (var packages = new ExcelPackage(streams))
+                {
+                    var workSheet = packages.Workbook.Worksheets.Add("Sheet1");
+                    workSheet.Cells.LoadFromCollection(_context.TemporalProyecto.Where(x => x.ArchivoCargueId == archivoCarge.ArchivoCargueId).ToList(), true);
+                    packages.Save();
+                    //convert the excel package to a byte array
+                    byte[] bin = packages.GetAsByteArray();
 
-                //    packages.Save();
-                //    //convert the excel package to a byte array
-                //    byte[] bin = packages.GetAsByteArray();
+                    //the path of the file
+                    string filePath = pFilePatch + "/" + archivoCarge.Nombre + "_rev.xlsx";
 
-                //    //the path of the file
-                //    string filePath = pFilePatch + "/" + archivoCarge.ArchivoCargueId + "_rev.xlsx";
+                    //write the file to the disk
+                    File.WriteAllBytes(filePath, bin);
+                }
 
-                //    //write the file to the disk
-                //    File.WriteAllBytes(filePath, bin);
-                //} 
+
 
                 //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
                 //-2 ya los registros comienzan desde esta fila

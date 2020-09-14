@@ -6,9 +6,9 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Detallar la solicitud P.I-0001
+            Detallar la solicitud {{ contratacion.numeroSolicitud }}
         </h1>
-        <p class="text-primary">Proyectos incluidos: <b>2</b></p>
+        <p class="text-primary" *ngIf="contratacion.contratacionProyecto" >Proyectos incluidos: <b>{{ contratacion.contratacionProyecto.length }}</b></p>
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
             <span class="info-text en-proceso">En proceso</span>
@@ -23,7 +23,16 @@
                     Proyectos de la solicitud
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-table-proyectos-de-la-solicitud></app-table-proyectos-de-la-solicitud>
+            <button 
+                type="button" 
+                (click)="tablaProyectos.cargarRegistros()" 
+                id="btnTablaProyectos" 
+                style="display: none;"
+                ></button>
+            <app-table-proyectos-de-la-solicitud
+            #tablaProyectos
+            [contratacion]="contratacion" >
+        </app-table-proyectos-de-la-solicitud>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -31,7 +40,19 @@
                     Datos del contratista
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-resultados-contratistas></app-tabla-resultados-contratistas>
+            <button 
+                type="button" 
+                (click)="tablaContratistas.cargarRegistros()" 
+                id="btnTablaContratistas" 
+                style="display: none;"
+                >
+            </button>
+            <app-tabla-resultados-contratistas
+                #tablaContratistas 
+                [contratacion]="contratacion"
+                (guardar)="onSubmit()"
+                >
+            </app-tabla-resultados-contratistas>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -39,7 +60,17 @@
                     Características técnicas y jurídicas especiales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-table-caracteristicas-especiales></app-table-caracteristicas-especiales>
+            <button 
+                type="button" 
+                (click)="tablacaracteristicas.cargarRegistros()" 
+                id="btnTablacaracteristicas" 
+                style="display: none;"
+                >
+            </button>
+            <app-table-caracteristicas-especiales
+                #tablacaracteristicas 
+                [contratacion]="contratacion">
+            </app-table-caracteristicas-especiales>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -47,7 +78,19 @@
                     Consideraciones especiales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-consideraciones-especiales></app-consideraciones-especiales>
+            <button 
+                type="button" 
+                (click)="consideraciones.cargarRegistros()" 
+                id="btnconsideraciones" 
+                style="display: none;"
+                >
+            </button>
+            <app-consideraciones-especiales
+                #consideraciones 
+                [contratacion]="contratacion"
+                (guardar)="onSubmit()"
+            >
+            </app-consideraciones-especiales>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -55,7 +98,18 @@
                     Fuentes y usos
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-table-fuentes-y-usos></app-table-fuentes-y-usos>
+            <button 
+                type="button" 
+                (click)="fuentesUsos.cargarRegistros()" 
+                id="btnFuentesUsos" 
+                style="display: none;"
+                >
+            </button>
+            <app-table-fuentes-y-usos
+                #fuentesUsos 
+                [contratacion]="contratacion"
+                >
+        </app-table-fuentes-y-usos>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

@@ -9,15 +9,9 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
-using ClosedXML.Excel;
-using System;
-using System.Collections.Generic;
+using System; 
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
+using asivamosffie.model.APIModels;
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -28,85 +22,24 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
-         
-        public static bool SaveListToExcel<T>(List<T> lista,string pFilePatch, string pNombreHoja , bool TieneEncabezado)
+        public static string HtmlConvertirTextoPlano(string origen)
         {
-            try
-            {
-                MemoryStream stream = new MemoryStream();
-                var workbook = new XLWorkbook();
-                var ws = workbook.Worksheets.Add(pNombreHoja);
-
-                int i = 1;
-                bool columnas = TieneEncabezado;
-                foreach (var item in lista)
-                {
-                    List<Type> primitivos = (new Type[] { typeof(int), typeof(float), typeof(decimal), typeof(string), typeof(byte[]), typeof(bool), typeof(DateTime?), typeof(int?), typeof(float?), typeof(decimal?), typeof(DateTime) }).ToList();
-                    int j = 1;
-                    foreach (PropertyInfo propInfo in item.GetType().GetProperties())
-                    {
-                        try
-                        {
-                            ////Copia solo los no indexados y los que sean primitivos
-                            if (propInfo.GetIndexParameters().Length == 0 && primitivos.Any(tip => tip.Name.Equals(propInfo.PropertyType.Name)))
-                            {
-                                if (columnas)
-                                {
-                                    ws.Cell(1, j).Value = propInfo.Name;
-                                }
-                                object valorOriginal = propInfo.GetValue(item, null);
-                                // set the value of the new object
-                                if (valorOriginal != null)
-                                {
-                                    if (typeof(string).Name.Equals(propInfo.PropertyType.Name))
-                                    {
-                                        ws.Cell(i + 1, j).SetValue(valorOriginal);
-                                    }
-                                    else
-                                    {
-                                        ws.Cell(i + 1, j).Value = valorOriginal;
-                                    }
-
-                                }
-                            }
-                        }
-                        catch (Exception)
-                        { 
-                        }
-                        j++;
-                    }
-                    columnas = false;
-                    i++;
-                } 
-                workbook.SaveAs(stream); 
-                byte[] bin = stream.ToArray();  
-                string filePath = pFilePatch;  
-                File.WriteAllBytes(filePath, bin); 
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-          
-
+            DocumentoHtml documento = new DocumentoHtml();
+            origen = documento.ConvertirATextoPlano(origen);
+            return origen.Replace("<", "").Replace(">", "").Replace("/", "").Replace("\\", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "");
+        }
+        public static string HtmlStringLimpio(string valor)
+        {
+            valor = Regex.Replace(valor, @"\t|\n|\r", "");
+            return HtmlConvertirTextoPlano(valor);
         }
 
-        //TODO: Modificar como obtener el numero de contratacion
-        public  string GetNumeroSolicitudContratacion()
-        { 
-            int? idContratacion = _context.Contratacion.LastOrDefault().ContratistaId;
 
-            if (idContratacion == null)
-            {
-                return "1";
-            }
-            else
-            {
-                return (idContratacion + 1).ToString();
-            } 
+        public double CentimetrosAMedidaPDF(double centimetros)
+        {
+            return (double)(centimetros * 0.393701 * 72);
         }
-
+         
         public static string encryptSha1(string password)
         {
 
@@ -151,31 +84,6 @@ namespace asivamosffie.services.Helpers
 
             return text;
         }
-
-        public static string Consecutive(string input, int countMax)
-        {
-            //("D4") indica la cantidad de ceros a la izquierda (0001) ver mas => https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
-            var number = Convert.ToInt32(countMax);
-
-            //Seleccion privada SP
-            if (input == "1")
-            {
-                return $"{"SP"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
-            }
-
-            //Invitacion Cerrada SC
-            else if (input == "2")
-            {
-                return $"{"SC"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
-            }
-
-            //Invitacion Abierta SA
-            else
-            {
-                return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
-            }
-        }
-
 
         public static object ConvertToUpercase(object dataObject)
         {
@@ -291,6 +199,5 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
-
     }
 }

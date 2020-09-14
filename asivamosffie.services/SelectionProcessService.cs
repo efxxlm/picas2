@@ -251,13 +251,13 @@ namespace asivamosffie.services
                     strCrearEditar = "CAMBIAR ESTADO PROCESO SELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
                     //Auditoria
-                    //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                    ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
                     ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     //Registros
                     ProcesoSeleccionAntiguo.EstadoProcesoSeleccionCodigo = pCodigoEstado;
 
-                    _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
+                    //_context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
 
                 
 

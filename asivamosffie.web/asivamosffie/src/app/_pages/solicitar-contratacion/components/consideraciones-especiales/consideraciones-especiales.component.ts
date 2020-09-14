@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Contratacion } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-consideraciones-especiales',
@@ -8,8 +9,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class ConsideracionesEspecialesComponent implements OnInit {
 
+  @Input() contratacion: Contratacion
+  @Output() guardar: EventEmitter<any> = new EventEmitter()
+
   addressForm = this.fb.group({
-    reasignacion: ['free', Validators.required],
+    reasignacion: ['', Validators.required],
     descripcion: null
   });
 
@@ -19,7 +23,19 @@ export class ConsideracionesEspecialesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+
+    this.contratacion.esObligacionEspecial = this.addressForm.get('reasignacion').value;
+    this.contratacion.consideracionDescripcion = this.addressForm.get('descripcion').value;
+
+    this.guardar.emit(null);
+    
+  }
+
+  cargarRegistros(){
+
+    this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial ? this.contratacion.esObligacionEspecial.toString() : false );
+    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion );
+
   }
 
 }

@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-contracting';
 
 export interface TableElement {
   id: number;
@@ -43,6 +44,8 @@ const ELEMENT_DATA: TableElement[] = [
 })
 export class TableProyectosDeLaSolicitudComponent implements OnInit {
 
+  @Input() contratacion: Contratacion;
+
   displayedColumns: string[] = [
     'tipoInterventor',
     'llaveMEN',
@@ -51,7 +54,7 @@ export class TableProyectosDeLaSolicitudComponent implements OnInit {
     'institucionEducativa',
     'sede'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -59,6 +62,10 @@ export class TableProyectosDeLaSolicitudComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
+  }
+
+  cargarRegistros(){
+    this.dataSource = new MatTableDataSource(this.contratacion.contratacionProyecto);
   }
 
 }

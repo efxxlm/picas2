@@ -1,0 +1,16 @@
+.row {
+    width: 45em;
+    margin-bottom: 1em;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.col:last-child {
+    margin-right: 0;
+}

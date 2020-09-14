@@ -22,6 +22,13 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
+         
+        [HttpGet]
+        [Route("GetUsuarioByPerfil")]
+        public Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
+        {  
+            return  common.GetUsuarioByPerfil(idPerfil);
+         }
 
         [HttpGet]
         [Route("GetMenuByRol")]
@@ -126,6 +133,21 @@ namespace asivamosffie.api.Controllers
         public async Task<ActionResult<List<InstitucionEducativaSede>>> ListSedeByInstitucionEducativaId(int idInstitucionEducativaId)
         {
             var result = await common.ListSedeByInstitucionEducativaId(idInstitucionEducativaId);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetInstitucionEducativaById")]
+        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int idInstitucionEducativaId)
+        {
+            var result = await common.GetInstitucionEducativaById(idInstitucionEducativaId);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetUsuariosByPerfil")]
+        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil ){
+            var result = await common.GetUsuariosByPerfil(pIdPerfil);
             return result;
         }
     }
