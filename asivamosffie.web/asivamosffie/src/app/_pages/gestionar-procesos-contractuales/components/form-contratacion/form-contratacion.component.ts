@@ -82,11 +82,11 @@ export class FormContratacionComponent implements OnInit {
 
         console.log( contratacion );
         this.dataContratacion = contratacion;
-        
+        const rutaDocumento = contratacion.rutaMinuta.split( '/' );
         this.form.reset({
           fechaEnvioTramite: contratacion.fechaEnvioDocumentacion,
           observaciones: contratacion.observaciones,
-          minutaName: contratacion.rutaMinuta
+          minutaName: rutaDocumento[ rutaDocumento.length-1 ]
         });
 
         for ( let contratacionProyecto of contratacion.contratacionProyecto ) {

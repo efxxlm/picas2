@@ -35,6 +35,7 @@ export class FormRegistroTramiteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.archivo = this.dataFormulario.get( 'minutaName' ).value;
   }
 
   fileName ( event: any ) {
@@ -80,7 +81,7 @@ export class FormRegistroTramiteComponent implements OnInit {
     this.contratacion.observaciones = this.dataFormulario.get( 'observaciones' ).value;
 
     let fecha = Date.parse(this.dataFormulario.get( 'fechaEnvioTramite' ).value);
-    this.fechaSesion = new Date(fecha); 
+    this.fechaSesion = new Date(fecha);
     this.fechaSesionString = `${ this.fechaSesion.getFullYear() }/${ this.fechaSesion.getMonth() + 1 }/${ this.fechaSesion.getDate() }` 
     this.contratacion.fechaEnvioDocumentacion =   this.fechaSesionString 
     let documento: any = document.getElementById('file');
