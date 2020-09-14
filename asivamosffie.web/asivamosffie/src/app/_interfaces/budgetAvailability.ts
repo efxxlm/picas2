@@ -44,6 +44,7 @@ export interface DisponibilidadPresupuestal{
     numeroContrato?: string,
     limitacionEspecial?: string,
     numeroRadicadoSolicitud?: string,
+    urlSoporte?: string,
 
     disponibilidadPresupuestalProyecto?: DisponibilidadPresupuestalProyecto[],
 
@@ -79,4 +80,16 @@ export interface CustonReuestCommittee{
     estadoSolicitudCodigo?: string,
     estadoSolicitudText?: string,
     
+}
+
+export interface ListAportantes{
+    contratacionProyectoId?: number,
+    contratacionProyectoAportanteId?: number,
+    contratacionId?: number,
+    cofinanciacionAportanteId?: number,
+    tipoAportanteId?: number,
+    tipoAportanteText?: string,
+    nombreAportanteId?: number,
+    nombreAportante?: string,
+    valorAporte?: number,
 }

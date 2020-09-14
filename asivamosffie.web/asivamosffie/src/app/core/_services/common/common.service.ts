@@ -218,6 +218,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=22`);
   }
 
+  listaTipoDDPEspecial(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=49`);
+  }
+
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];

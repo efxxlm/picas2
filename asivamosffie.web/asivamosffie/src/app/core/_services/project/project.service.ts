@@ -111,11 +111,13 @@ export interface ProyectoAdministrativo
 }
 export interface Aportante
 {
-  aportanteId:number;
-  tipoAportanteId:number;
-  nombreAportanteId:number;
+  aportanteId?:number;
+  tipoAportanteId?:number;
+  nombreAportanteId?:number;
 
-  fuenteFinanciacion:FuenteFinanciacion[],
+  nombreAportante?: string;
+
+  fuenteFinanciacion?:FuenteFinanciacion[],
 }
 
 export interface FuenteFinanciacion{  

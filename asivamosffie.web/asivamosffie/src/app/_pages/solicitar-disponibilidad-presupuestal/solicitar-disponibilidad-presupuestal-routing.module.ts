@@ -24,7 +24,7 @@ const routes: Routes = [
     component: CrearSolicitudEspecialComponent
   },
   {
-    path: 'crearSolicitudEspecial/nueva',
+    path: 'crearSolicitudEspecial/nueva/:id',
     component: NuevaSolicitudEspecialComponent
   },
 ];
