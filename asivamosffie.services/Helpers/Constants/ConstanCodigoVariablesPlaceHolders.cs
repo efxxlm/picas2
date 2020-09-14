@@ -122,6 +122,8 @@
         public const string SALDO_ACTUAL_FUENTE = "99";
         public const string VALOR_SOLICITADO_FUENTE = "100";
         public const string NUEVO_SALDO_FUENTE = "101"; 
+        public const string FUNCIONALIDAD_ESPECIAL = "102";
+
         #endregion
     }
 }
