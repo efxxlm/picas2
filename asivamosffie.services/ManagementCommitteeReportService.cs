@@ -183,8 +183,8 @@ namespace asivamosffie.services
                     _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
                     var result = await _context.SaveChangesAsync();
 
-                    if (result > 0)
-                       await UpdateStatus(compromisoSeguimiento.SesionComiteTecnicoCompromisoId, estadoCompromiso);
+                    /*if (result > 0)
+                       await UpdateStatus(compromisoSeguimiento.SesionComiteTecnicoCompromisoId, estadoCompromiso);*/
                 }
                 else
                 {

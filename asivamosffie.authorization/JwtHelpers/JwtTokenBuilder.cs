@@ -17,6 +17,7 @@ namespace asivamosffie.api.Controllers
         private string audience = "";
         private Dictionary<string, string> claims = new Dictionary<string, string>();
         private int expiryInDays = 30;
+        private int expiryInMinutes = 15;
 
         public JwtTokenBuilder AddSecurityKey(SecurityKey securityKey)
         {
@@ -91,7 +92,7 @@ namespace asivamosffie.api.Controllers
                               issuer: this.issuer,
                               audience: this.audience,
                               claims: claims,
-                              expires: DateTime.UtcNow.AddDays(expiryInDays),
+                              expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
                               signingCredentials: new SigningCredentials(
                                                         this.securityKey,
                                                         SecurityAlgorithms.HmacSha256));

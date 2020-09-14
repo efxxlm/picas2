@@ -871,7 +871,7 @@ namespace asivamosffie.services
                     contratista.Nombre = p.NombreProponente;
                     contratista.RepresentanteLegal = string.IsNullOrEmpty( p.NombreRepresentanteLegal ) ? p.NombreProponente : p.NombreRepresentanteLegal;
                     contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
-                    contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
+                    //contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
                     contratista.Activo = true;
                     contratista.FechaCreacion = DateTime.Now;
                     contratista.UsuarioCreacion = pUsuarioCreo;

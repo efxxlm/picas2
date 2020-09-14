@@ -5,15 +5,7 @@ using System.Text;
 namespace asivamosffie.model.APIModels
 {
 
-
-    public class HTMLContent
-    {
-        public string HTML { get; set; }
-        public HTMLContent(string sHTML)
-        {
-            HTML = sHTML;
-        }
-    }
+    
 
     public class GrillaValidarDisponibilidadPresupuesal
     {
@@ -23,7 +15,7 @@ namespace asivamosffie.model.APIModels
         public string TipoSolicitudCodigo { get; set; }
         public string TipoSolicitudText { get; set; }
         public bool EstadoRegistro { get; set; }
-        public string  EstadoRegistroText { get; set; }
+        public string EstadoRegistroText { get; set; }
     }
 
     public class DetailValidarDisponibilidadPresupuesal

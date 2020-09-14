@@ -23,8 +23,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         SesionComiteTema = 26,
         RegistrarComiteTecnico = 24,
 
-        SesionComiteTema = 26
-
         GenerarDisponibilidadPresupuestal = 28,
         
 
