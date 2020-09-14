@@ -9,7 +9,7 @@ import {
   MomentDateAdapter,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { LayoutComponent } from './layout/layout.component';
 
@@ -49,7 +49,7 @@ const routes: Routes = [
       {
         path: 'gestionarAcuerdos',
         loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
-        .then(m => m.GestionarAcuerdoCofinanciacionModule)
+          .then(m => m.GestionarAcuerdoCofinanciacionModule)
       },
       {
         path: 'crearProyecto',
@@ -66,7 +66,7 @@ const routes: Routes = [
       {
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
-        .then(m => m.GestionarFuentesDeFinanciacionModule)
+          .then(m => m.GestionarFuentesDeFinanciacionModule)
       },
       {
         path: 'registrarAcuerdos/:id',
@@ -80,7 +80,7 @@ const routes: Routes = [
       {
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
-        .then(m => m.GestionarFuentesDeFinanciacionModule)
+          .then(m => m.GestionarFuentesDeFinanciacionModule)
       },
       {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
@@ -93,17 +93,22 @@ const routes: Routes = [
       {
         path: 'seleccion',
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
-        .then(m => m.GestionarProcesosDeSeleccionModule)
+          .then(m => m.GestionarProcesosDeSeleccionModule)
       },
       {
         path: 'solicitarContratacion',
         loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
-        .then(m => m.SolicitarContratacionModule)
+          .then(m => m.SolicitarContratacionModule)
       },
       {
         path: 'generarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
-        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+          .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'generarPolizasYGarantias',
+        loadChildren: () => import('./_pages/generar-polizas-y-garantias/generar-polizas-y-garantias.module')
+          .then(m => m.GenerarPolizasYGarantiasModule)
       },
     ]
 
@@ -118,11 +123,11 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, {
     preloadingStrategy: PreloadAllModules
   }),
-  MatMomentDateModule,
-  MatDatepickerModule],
+    MatMomentDateModule,
+    MatDatepickerModule],
   exports: [RouterModule],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'es'}
+    { provide: MAT_DATE_LOCALE, useValue: 'es' }
   ]
 })
 export class AppRoutingModule { }

@@ -1,0 +1,179 @@
+<section class="container text-center">
+  <div class="text-right">
+    <a routerLink="/generarPolizasYGarantias" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Ver detalle solicitud PI_003
+  </h1>
+  <p class="info-sub-title">
+    <span>Fecha de firma del contrato <b>29/06/2020</b></span>
+    <span><b>Contratación</b></span>
+    <span>Estado: <b>Sin radicación de pólizas</b></span>
+  </p>
+
+</section>
+<section class="container">
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>Tipo de contrato:</strong>
+        Obra
+      </p>
+      <p>
+        <strong>Objeto:</strong>
+      </p>
+      <p>
+        Contrato de modificación de obra que compromete el diagnóstico y/o actualización y/o complementación y/o
+        elaboración de estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
+        instituciones rurales.
+      </p>
+      <p>
+        <strong>Nombre del contratista:</strong>
+        Constructora Colpatria
+      </p>
+      <p>
+        <strong>Tipo de identificación:</strong>
+        NIT
+      </p>
+      <p>
+        <strong>Número de identificación:</strong>
+        900.675.987-4
+      </p>
+      <p>
+        <strong>Valor del contrato:</strong>
+        $ 180.000.000
+      </p>
+      <p>
+        <strong>Plazo:</strong>
+        21meses / 10 días
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-content>
+        <div class="row">
+          <div class="pr-1">
+            <label for="nombre" class="label-left">Nombre del grupo</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #nombre type="text" maxlength="50" formControlName="nombre" required>
+            </mat-form-field>
+            <span class="contador">{{50 - nombre.value.length}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="numeroPoliza" class="label-left">Número de la póliza</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #numeroPoliza type="text" maxlength="20" formControlName="numeroPoliza" required>
+                </mat-form-field>
+                <span class="contador">{{20 - numeroPoliza.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="numeroCertificado" class="label-left">Número de certificado</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #numeroCertificado type="text" maxlength="20" formControlName="numeroCertificado" required>
+                </mat-form-field>
+                <span class="contador">{{20 - numeroCertificado.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Fecha del acta</label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="fecha" [matDatepicker]="pickerActa" [min]="minDate" readonly (click)="pickerActa.open()" required>
+                  <mat-datepicker #pickerActa></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerActa.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Vigencia del amparo</label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="vigenciaPoliza" [matDatepicker]="pickerActa" [min]="minDate" readonly (click)="pickerActa.open()" required>
+                  <mat-datepicker #pickerActa></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerActa.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Valor del amparo</label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="vigenciaAmparo" [matDatepicker]="pickerActa" [min]="minDate" readonly (click)="pickerActa.open()" required>
+                  <mat-datepicker #pickerActa></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerActa.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">
+                  Valor del amparo
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #valorAmparo maxlength="3" type="number" required
+                    formControlName="valorAmparo" (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador">{{3 - valorAmparo.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
+</section>
