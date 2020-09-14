@@ -25,7 +25,7 @@ import { CrearSolicitudDeDisponibilidadPresupuestalComponent } from './component
     NuevaSolicitudEspecialComponent,
     TablaCrearSolicitudEspecialComponent,
     CrearSolicitudDeDisponibilidadPresupuestalComponent,
-    CrearDisponibilidadPresupuestalAdministrativoComponent
+    //CrearDisponibilidadPresupuestalAdministrativoComponent
   ],
   imports: [
     CommonModule,
