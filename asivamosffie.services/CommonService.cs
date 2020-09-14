@@ -275,7 +275,12 @@ namespace asivamosffie.services
 
         public async Task<string> GetNombreDominioByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
-            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.Nombre).FirstOrDefaultAsync();
+            string strNombreDominio = await _context.Dominio.Where(r => r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.Nombre).FirstOrDefaultAsync();
+            if (string.IsNullOrEmpty(strNombreDominio))
+            {
+                return "Error Parametrica";
+            }
+            return strNombreDominio;
         }
 
         public async Task<string> GetNombreDominioByDominioID(int pDominioID)

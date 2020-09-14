@@ -87,6 +87,11 @@ const routes: Routes = [
         component: RegistrarComponent,
       },
       {
+        path: 'solicitarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
+          .then(m => m.SolicitarDisponibilidadPresupuestalModule)
+      },
+      {
         path: 'comiteTecnico',
         loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
       },

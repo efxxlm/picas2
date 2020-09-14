@@ -1,0 +1,29 @@
+<div class="container text-right">
+    <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+</div>
+<div class="container text-center">
+    <h1 class="title-menu--h1">
+        Solicitar disponibilidad presupuestal
+    </h1>
+    <div class="row justify-content-center mb-2rem">
+        <div class="pr-1">
+            <label class="label-left">Tipo de disponibilidad: </label>
+        </div>
+        <div class="col">
+            <mat-form-field class="select-width">
+                <mat-select [formControl]="tipoDisponibilidad" required>
+                    <mat-option *ngFor="let control of selectDisponibilidad" [value]="control">
+                        {{ control.nombre }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <button mat-raised-button color="accent" class="btn-cargar-proyecto"
+        (click)="crearSolicitud()" [disabled]="tipoDisponibilidad.invalid">
+        Crear solicitud
+    </button>
+</div>

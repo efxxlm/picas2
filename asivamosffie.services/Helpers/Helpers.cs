@@ -85,6 +85,35 @@ namespace asivamosffie.services.Helpers
             return text;
         }
 
+        public static string Consecutive(string input, int countMax)
+        {
+            //("D4") indica la cantidad de ceros a la izquierda (0001) ver mas => https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
+            var number = Convert.ToInt32(countMax);
+
+            //Seleccion privada SP
+            if (input == "1")
+            {
+                return $"{"SP"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
+
+            if (input == "DE")
+            {
+                return $"{"DE_"}{(++number).ToString("D4")}";
+            }
+
+            //Invitacion Cerrada SC
+            else if (input == "2")
+            {
+                return $"{"SC"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
+
+            //Invitacion Abierta SA
+            else
+            {
+                return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
+        }
+
         public static object ConvertToUpercase(object dataObject)
         {
             try

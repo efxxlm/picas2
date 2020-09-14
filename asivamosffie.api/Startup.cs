@@ -28,6 +28,8 @@ namespace asivamosffie.api
         {
             Configuration = configuration;
         }
+
+
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
@@ -129,12 +131,13 @@ namespace asivamosffie.api
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
  
+            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>(); 
-            services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
+            services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
 
              
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo

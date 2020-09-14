@@ -14,11 +14,11 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class AvailabilityBudgetProyectController : ControllerBase
     {
-        private readonly IAvailabilityBudgetProyectService _availabilityBudgetProyectService;
+        private readonly IRequestBudgetAvailabilityService _availabilityBudgetProyectService;
         private readonly IOptions<AppSettings> _settings;
         private readonly IConverter _converter;
 
-        public AvailabilityBudgetProyectController(IOptions<AppSettings> settings, IConverter converter, IAvailabilityBudgetProyectService availabilityBudgetProyectService)
+        public AvailabilityBudgetProyectController(IOptions<AppSettings> settings, IConverter converter, IRequestBudgetAvailabilityService availabilityBudgetProyectService)
         {
             _availabilityBudgetProyectService = availabilityBudgetProyectService;
             _settings = settings;
@@ -26,36 +26,22 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("GetAvailabilityBudgetProyect")]
-        public async Task<IActionResult> GetAvailabilityBudgetProyect()
-        {
-            try
-            {
-                var result = await _availabilityBudgetProyectService.GetBudgetavailabilityRequests();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        //[Route("GetAvailabilityBudgetProyect")]
+        //public async Task<IActionResult> GetAvailabilityBudgetProyect()
+        //{
+        //    try
+        //    {
+        //        var result = await _availabilityBudgetProyectService.GetManagementCommitteeReport();
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw ex;
-            }
-        }
+        //        throw ex;
+        //    }
+        //}
 
-        //Detalle de la solicitud
-        [Route("GetDetailAvailabilityBudgetProyect")]
-        public async Task<IActionResult> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId)
-        {
-            try
-            {
-                var result = await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyect(rubroAfinanciarId, disponibilidadPresupuestalId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
 
-                throw ex;
-            }
-        }
 
         [HttpGet]
         [Route("StartDownloadPDF")]

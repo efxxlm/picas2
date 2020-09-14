@@ -36,6 +36,9 @@
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
+        public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
+        public const string Eliminar_Disponibilidad_Presupuestal = "33";
+        public const string Crear_Editar_DP_Proyecto = "34";
 
         public const string Crear_Proceso_Seleccion = "18";
          public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
@@ -63,15 +66,23 @@
         public const string Crear_Editar_Comite_Tema_Voto = "56";
         public const string No_Requiere_Votacion_Sesion_Comite_Tema = "57";
         public const string Aplazar_Sesion_De_Comite = "58";
-        public const string Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS = "59";
-
-        public const string Crear_Editar_Temas_Compromiso = "61";
+        public const string Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS ="59";
+        public const string Crear_Editar_Seguimiento_Compromiso = "60";
+        
+        public const string Crear_Editar_Temas_Compromiso = "61";  
         public const string Crear_Edit_Sesion_Observacion_Proyecto = "62";
 
         public const string Eliminar_Comite_Tecnico = "64";
         public const string Vertificar_Tema_Compromisos = "65";
         public const string Crear_Observacion_Contratacion = "69"; 
         public const string Cambiar_Estado_Acta = "70";
+        public const string Registrar_Informacion_Adicional_Solicitud = "67";
+        public const string Crear_Editar_Solicitud_DDP_Especial = "44";
+        public const string Crear_Editar_Solicitud_DDP_OtrosCostosServicio = "74";
+        public const string Enviar_Solicitud_A_Disponibilidad_Presupuestal = "44";
+
+
+
 
     }
 }

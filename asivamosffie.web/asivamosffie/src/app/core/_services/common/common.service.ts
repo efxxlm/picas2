@@ -129,6 +129,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
   }
 
+  listaTipoDisponibilidadPresupuestal(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);
+  }
+
   listaEstadoCronogramaSeguimiento(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=40`);
   }
@@ -212,6 +216,10 @@ export class CommonService {
 
   listaBancos(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=22`);
+  }
+
+  listaTipoDDPEspecial(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=49`);
   }
 
   vigenciasDesde2015(): number[]{

@@ -18,7 +18,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Procesos_Seleccion_Grupo = 21,
         CargueMasivoOrdenes = 22,
         CronogramaSeguimiento = 23,
-        RegistrarComiteTecnico = 24
+        DisponibilidadPresupuestal = 30,
+        SesionComiteTema = 26,
+        RegistrarComiteTecnico = 24,
+
     }
 
     public enum enumeratorAccion
