@@ -9,9 +9,13 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
-using System; 
 using System.IO;
 using asivamosffie.model.APIModels;
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Reflection;
+
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -113,6 +117,44 @@ namespace asivamosffie.services.Helpers
                 return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
             }
         }
+
+        //TODO: Implementacion para cosultas complejas
+        public static List<T> ExecuteQuery<T>(string query) where T : class, new()
+        {
+            devAsiVamosFFIEContext _context = new devAsiVamosFFIEContext();
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+
+                _context.Database.OpenConnection();
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var lst = new List<T>();
+                    var lstColumns = new T().GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).ToList();
+                    while (reader.Read())
+                    {
+                        var newObject = new T();
+                        for (var i = 0; i < reader.FieldCount; i++)
+                        {
+                            var name = reader.GetName(i);
+                            PropertyInfo prop = lstColumns.FirstOrDefault(a => a.Name.ToLower().Equals(name.ToLower()));
+                            if (prop == null)
+                            {
+                                continue;
+                            }
+                            var val = reader.IsDBNull(i) ? null : reader[i];
+                            prop.SetValue(newObject, val, null);
+                        }
+                        lst.Add(newObject);
+                    }
+
+                    return lst;
+                }
+            }
+        }
+
 
         public static object ConvertToUpercase(object dataObject)
         {

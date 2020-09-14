@@ -87,6 +87,11 @@ namespace asivamosffie.services.Helpers.Enumerator
         Miembros_Comite_Tecnico = 46,
         Estado_Solicitud_Disponibilidad_Presupuestal = 39,
         Tipo_DDP_Espacial = 49,
+		Estado_Juridico_Predios = 25,
+		Estado_Comite = 38,
+		Estado_Cronograma_Seguimiento = 40,
+	    Estado_Compromiso = 45,
+		EstadoAcataComiteTecnico = 47
 
         Estados_Acta = 47
 

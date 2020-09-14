@@ -154,6 +154,10 @@ namespace asivamosffie.api
             //services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
 
 
+            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
+            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
+
+            
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

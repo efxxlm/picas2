@@ -122,6 +122,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
         .then(m => m.GenerarDisponibilidadPresupuestalModule)
       },
+      {
+        path: 'compromisosActasComite',
+        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
+          .then( module => module.CompromisosActasComiteModule )
+      }
     ]
 
   },
