@@ -643,11 +643,11 @@ namespace asivamosffie.services
 
             if (sesionComiteSolicitud != null)
             {
-              /*  if (sesionComiteSolicitud.FechaComiteFiduciario != null)
+                if (sesionComiteSolicitud.FechaComiteFiduciario != null)
                 {
-                    contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
+                    //contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
                 }
-                contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;*/
+                //contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
             }
 
             if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))

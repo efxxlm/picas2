@@ -102,7 +102,8 @@ namespace asivamosffie.api
 
             #region A gregado pora implementacion de descargas de PDF
             var context = new CustomAssemblyLoadContext();
-            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            
+            context.LoadUnmanagedLibrary(Path.GetFullPath(@"C:\inetpub\wwwbackend\libwkhtmltox.dll"));
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             #endregion
