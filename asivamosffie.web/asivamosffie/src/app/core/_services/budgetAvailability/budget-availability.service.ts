@@ -16,9 +16,9 @@ export class BudgetAvailabilityService {
 
   }
 
-  getGridBudgetAvailability() {
-    return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetGridBudgetAvailability`);
-  }
+  // getGridBudgetAvailability() {
+  //   return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetGridBudgetAvailability`);
+  // }
 
   getDisponibilidadPresupuestalById( id: number ){
     return this.http.get<DisponibilidadPresupuestal>(`${environment.apiUrl}/BudgetAvailability/${ id }`);

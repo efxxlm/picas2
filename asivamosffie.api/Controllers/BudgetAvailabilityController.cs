@@ -150,5 +150,57 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var result = await _budgetAvailabilityService.GetBudgetAvailabilityById(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        
+
+        [Route("GetGridBudgetAvailability")]
+        public async Task<IActionResult> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId)
+        {
+            try
+            {
+                var result = await _budgetAvailabilityService.GetGridBudgetAvailability(DisponibilidadPresupuestalId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditarDP")]
+        public async Task<IActionResult> CreateEditarDP([FromBody] DisponibilidadPresupuestal DP)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                DP.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _budgetAvailabilityService.CreateEditarDisponibilidadPresupuestal(DP);
+                return Ok(respuesta);
+                //
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }

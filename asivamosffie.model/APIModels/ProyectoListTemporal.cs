@@ -26,7 +26,7 @@ namespace asivamosffie.model.APIModels
         public string Ubicacion_del_predio_principal_Longitud { get; set; }
         public string Direccion_del_predio_principal { get; set; }
         public string Documento_de_acreditacion_del_predio { get; set; }
-        public string Número_del_documento_de_acreditacion { get; set; }
+        public string NÃºmero_del_documento_de_acreditacion { get; set; }
         public string Cedula_Catastral_del_predio { get; set; }
         public string Tipo_de_aportante_1 { get; set; }
         public string Aportante_1 { get; set; }
@@ -34,7 +34,7 @@ namespace asivamosffie.model.APIModels
         public string Aportante_2 { get; set; }
         public string Tipo_de_aportante_3 { get; set; }
         public string Aportante_3 { get; set; }
-        public string Vigencia_del_acuerdo_de_cofinanciación { get; set; }
+        public string Vigencia_del_acuerdo_de_cofinanciaciÃ³n { get; set; }
         public string Valor_obra { get; set; }
         public string Valor_interventoria { get; set; }
         public string Valor_Total { get; set; }

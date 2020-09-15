@@ -34,6 +34,7 @@
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
         public const string Crear_Editar_Cofinanciacion = "31";
+        public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
 
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
         public const string Crear_Editar_SesionComiteTema = "38";

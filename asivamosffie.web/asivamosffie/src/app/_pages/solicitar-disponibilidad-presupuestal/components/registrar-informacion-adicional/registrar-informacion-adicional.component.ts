@@ -54,7 +54,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.budgetAvailabilityService.getDisponibilidadPresupuestalById(this.objetoDisponibilidad.disponibilidadPresupuestalId)
       .subscribe(response => {
         this.objetoDisponibilidad = response;
-
+        console.log(response);
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
@@ -63,7 +63,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
           this.projectService.getProjectById(dp.proyectoId)
             .subscribe(proyecto => {
               dp.proyecto = proyecto;
-              console.log(proyecto);
+              
 
               this.listaProyectos.push(proyecto);
 
@@ -94,7 +94,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
     this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
       .subscribe(contratacion => {
-
+        console.log(contratacion, '0');
         contratacion.contratacionProyecto.forEach(cp => {
           this.projectService.getProjectById(cp.proyectoId)
             .subscribe(proyecto => {

@@ -53,13 +53,13 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
   ngOnInit(): void {
 
     forkJoin([
-      this.budgetAvailabilityService.getGridBudgetAvailability(),
+      //this.budgetAvailabilityService.getGridBudgetAvailability(),
       this.budgetAvailabilityService.getReuestCommittee(),
 
     ]).subscribe( response => {
-        this.listaSolicitudes = response[1];
+        this.listaSolicitudes = response[0];
         this.dataSource = new MatTableDataSource( this.listaSolicitudes) ;
-        console.log( response[1] );
+        console.log( response[0] );
       })
 
     this.dataSource.sort = this.sort;

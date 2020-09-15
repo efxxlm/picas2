@@ -20,5 +20,9 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> returnDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion);
         Task<Byte[]> GetPDFDDP(int id,string pUsurioGenero);
+        Task<List<GrillaDisponibilidadPresupuestal>> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId);
+        Task<DisponibilidadPresupuestal> GetBudgetAvailabilityById(int id);
+
+        Task<Respuesta> CreateEditarDisponibilidadPresupuestal(DisponibilidadPresupuestal DP);
     }
 }
