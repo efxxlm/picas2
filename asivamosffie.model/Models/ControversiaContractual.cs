@@ -11,5 +11,6 @@ namespace asivamosffie.model.Models
         public string NumeroSolicitud { get; set; }
         public string EstadoCodigo { get; set; }
         public bool EsCompleto { get; set; }
+        public int SolicitudId { get; set; }
     }
 }

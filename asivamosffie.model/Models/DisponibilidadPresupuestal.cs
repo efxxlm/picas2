@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public DisponibilidadPresupuestal()
         {
+            DisponibilidadPresupuestalObservacion = new HashSet<DisponibilidadPresupuestalObservacion>();
             DisponibilidadPresupuestalProyecto = new HashSet<DisponibilidadPresupuestalProyecto>();
         }
 
@@ -22,13 +23,23 @@ namespace asivamosffie.model.Models
         public DateTime? FechaDdp { get; set; }
         public string NumeroDdp { get; set; }
         public string RutaDdp { get; set; }
-        public string Observacion { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public int? ContratacionId { get; set; }
+        public string NumeroDrp { get; set; }
+        public int? PlazoMeses { get; set; }
+        public int? PlazoDias { get; set; }
+        public bool? CuentaCartaAutorizacion { get; set; }
+        public string AportanteId { get; set; }
+        public decimal? ValorAportante { get; set; }
+        public string NumeroContrato { get; set; }
+        public string LimitacionEspecial { get; set; }
 
+        public virtual Contratacion Contratacion { get; set; }
+        public virtual ICollection<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
     }
 }

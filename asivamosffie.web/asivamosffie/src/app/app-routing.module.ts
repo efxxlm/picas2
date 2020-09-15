@@ -87,21 +87,37 @@ const routes: Routes = [
         component: RegistrarComponent,
       },
       {
+        path: 'comiteTecnico',
+        loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
+      },
+      {
         path: 'seleccion',
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
+
       },{
         path: 'contratosModificacionesContractuales',
         loadChildren: () => import( './_pages/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.module' )
           .then( module => module.ContratosModificacionesContractualesModule )
-      }
-    ]
-
+      },
+      {
+ 
+        path: 'procesosContractuales',
+        loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
+          .then( module => module.GestionarProcesosContractualesModule )
+      },
+      {
+ 
+        path: 'solicitarContratacion',
+        loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
+        .then(m => m.SolicitarContratacionModule)
+      },
+    ] 
   },
   {
     path: '**',
-    redirectTo: '/inicio',
-    // loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    // redirectTo: '/inicio',
+    loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 @NgModule({
