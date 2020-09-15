@@ -1,27 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 
-export interface Solicitudes {
-  id: number;
-  fecha: string;
-  numero: string;
-  valorSolicitado: number;
-  estadoSolicitud: string;
-  estadoRegistro: string;
-}
-
-const ELEMENT_DATA: Solicitudes[] = [
-  {
-    id: 1,
-    fecha: '08/07/2020',
-    numero: 'DE_001',
-    valorSolicitado: 7500000,
-    estadoSolicitud: 'Sin registrar',
-    estadoRegistro: 'Completo'
-  },
-];
 
 @Component({
   selector: 'app-tabla-crear-solicitud-especial',
@@ -38,7 +22,7 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
     'estadoRegistro',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -48,9 +32,21 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+    private budgetAvailabilityService: BudgetAvailabilityService,
+    public dialog: MatDialog,
+    private router: Router,
+
+
+  ) { }
 
   ngOnInit(): void {
+
+    this.budgetAvailabilityService.getDDPEspecial()
+      .subscribe( listaDDP => {
+        this.dataSource = new MatTableDataSource(listaDDP);
+      })
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -71,6 +67,7 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
   editar(e: number) {
     console.log(e);
+    this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial/nueva',e]);
   }
 
   eliminar(e: number) {

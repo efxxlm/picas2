@@ -7,7 +7,7 @@
     <h1 class="title-menu--h1">
         Solicitar disponibilidad presupuestal
     </h1>
-    <div class="row justify-content-center mb-2rem">
+    <div class="row justify-content-center mb-2rem" *ngIf="perfil != 5">
         <div class="pr-1">
             <label class="label-left">Tipo de disponibilidad: </label>
         </div>
@@ -23,7 +23,7 @@
     </div>
 
     <button mat-raised-button color="accent" class="btn-cargar-proyecto"
-        (click)="crearSolicitud()" [disabled]="tipoDisponibilidad.invalid">
+        (click)="crearSolicitud()" [disabled]="tipoDisponibilidad.invalid && perfil != 5">
         Crear solicitud
     </button>
 </div>

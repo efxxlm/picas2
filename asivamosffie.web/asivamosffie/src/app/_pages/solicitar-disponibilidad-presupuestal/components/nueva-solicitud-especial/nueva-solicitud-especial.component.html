@@ -45,6 +45,8 @@
                         <div class="col d-flex">
                             <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                 required (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
+                                <input type="hidden" formControlName="disponibilidadPresupuestalId" >
+                                <input type="hidden" formControlName="disponibilidadPresupuestalProyectoId" >
                             <div class="d-flex align-items-center">
                                 <span class="contador miles" *ngIf="addressForm.get('objeto').value !== null">
                                     {{1000 - textoLimpio(addressForm.get('objeto').value)}}
@@ -97,8 +99,8 @@
                                 </div>
                                 <div class="col">
                                     <mat-radio-group class="radioInput" formControlName="cartaAutorizacionET">
-                                        <mat-radio-button value="si">Sí</mat-radio-button>
-                                        <mat-radio-button value="no">No</mat-radio-button>
+                                        <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
                                     </mat-radio-group>
                                 </div>
                             </div>
@@ -112,10 +114,10 @@
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
-                                        <mat-select formControlName="departemento">
-                                            <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
-                                                [value]="tipoSolicitud">
-                                                {{ tipoSolicitud.nombre }}
+                                        <mat-select formControlName="departemento" (selectionChange)="changeDepartamento()">
+                                            <mat-option *ngFor="let departamento of listaDepartamento"
+                                                [value]="departamento">
+                                                {{ departamento.descripcion }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -132,9 +134,9 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="municipio">
-                                            <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
-                                                [value]="tipoSolicitud.value">
-                                                {{ tipoSolicitud.name }}
+                                            <mat-option *ngFor="let tipoSolicitud of listaMunicipio"
+                                                [value]="tipoSolicitud">
+                                                {{ tipoSolicitud.descripcion }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -150,7 +152,7 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
-                                        <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN">
+                                        <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN" (click)="buscarProyecto(false,0)">
                                     </mat-form-field>
                                     <span class="contador">{{8 - llaveMEN.value.length}}</span>
                                 </div>
@@ -181,36 +183,36 @@
             </mat-card-content>
         </mat-card>
 
-        <mat-card class="shipping-card var-main-gris animatedDown">
+        <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="proyectoEncontrado">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
-                    LL45231
+                    {{ proyecto.llaveMen }}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
                 <p>
                     <b>Tipo de intervención:</b>
-                    Reconstrucción
+                    {{ proyecto.tipoIntervencionCodigo }}
                 </p>
                 <p>
                     <b>Nombre de la I.E:</b>
-                    Colegio Juan XXIII
+                    {{ proyecto.institucionEducativa.nombre }}
                 </p>
                 <p>
                     <b>Sede:</b>
-                    Única sede
+                    {{ proyecto.sede.nombre }}
                 </p>
             </mat-card-content>
         </mat-card>
 
-        <mat-card class="shipping-card animatedDown">
+        <mat-card class="shipping-card animatedDown" *ngIf="proyectoEncontrado">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
                     Aportante
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <div class="row">
+                <div class="row" *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '2'">
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
@@ -237,10 +239,10 @@
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
-                                    <mat-select formControlName="nombreAportante">
-                                        <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
-                                            [value]="tipoSolicitud.value">
-                                            {{ tipoSolicitud.name }}
+                                    <mat-select formControlName="nombreAportante" (selectionChange)="changeAportante()">
+                                        <mat-option *ngFor="let tipoSolicitud of listaAportante"
+                                            [value]="tipoSolicitud">
+                                            {{ tipoSolicitud.nombreAportante }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

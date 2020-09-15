@@ -236,14 +236,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateOrEditDDPRequest")]
         [HttpPost]
-        public async Task<IActionResult> CreateOrEditDDPRequest([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)
+        public async Task<IActionResult> CreateOrEditDDPRequest([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
                 disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.CreateOrEditDDPRequest(disponibilidadPresupuestal);
+                respuesta = await _managementCommitteeReportService.CreateOrEditDDPRequest(disponibilidadPresupuestal, proyectoId, disponibilidadPresupuestalId);
                 return Ok(respuesta);
 
             }

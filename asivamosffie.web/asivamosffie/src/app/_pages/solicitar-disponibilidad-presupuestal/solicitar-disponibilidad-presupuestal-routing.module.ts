@@ -5,6 +5,7 @@ import { TablaCrearSolicitudTradicionalComponent } from './components/tabla-crea
 import { RegistrarInformacionAdicionalComponent } from './components/registrar-informacion-adicional/registrar-informacion-adicional.component';
 import { CrearSolicitudEspecialComponent } from './components/crear-solicitud-especial/crear-solicitud-especial.component';
 import { NuevaSolicitudEspecialComponent } from './components/nueva-solicitud-especial/nueva-solicitud-especial.component';
+import { CrearDisponibilidadPresupuestalAdministrativoComponent } from './components/crear-disponibilidad-presupuestal-administrativo/crear-administrativo.component';
 
 const routes: Routes = [
   {
@@ -24,9 +25,13 @@ const routes: Routes = [
     component: CrearSolicitudEspecialComponent
   },
   {
-    path: 'crearSolicitudEspecial/nueva',
+    path: 'crearSolicitudEspecial/nueva/:id',
     component: NuevaSolicitudEspecialComponent
   },
+  {
+    path: 'crearSolicitudAdministrativa/nueva/:id',
+    component: CrearDisponibilidadPresupuestalAdministrativoComponent
+  }
 ];
 
 @NgModule({
