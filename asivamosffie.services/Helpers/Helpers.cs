@@ -107,6 +107,13 @@ namespace asivamosffie.services.Helpers
                 return $"{"SC"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
             }
 
+            //Concecutivo Proyecto Administrativo
+            if (input == "D4")
+            {
+                return $"{(number).ToString("D4")}";
+            }
+
+
             //Invitacion Abierta SA
             else
             {

@@ -91,6 +91,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetListCocecutivoProyecto")]
+        public async Task<IActionResult> GetListCocecutivoProyecto()
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetListCocecutivoProyecto();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
         [Route("SearchLlaveMEN")]
         public async Task<IActionResult> SearchLlaveMEN(string LlaveMEN)
@@ -132,6 +146,31 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+
+        [Route("CreateOrEditProyectoAdministrtivo")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditProyectoAdministrtivo([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateOrEditProyectoAdministrtivo(disponibilidadPresupuestal);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
+
 
         [Route("CreateOrEditServiceCosts")]
         [HttpPost]
