@@ -21,6 +21,7 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.IO;
 using asivamosffie.api.Helpers;
+using asivamosffie.api.Controllers;
 
 namespace asivamosffie.api
 {
@@ -130,16 +131,14 @@ namespace asivamosffie.api
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
- 
-            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
+            services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();  
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();  
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
             services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
-
-
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

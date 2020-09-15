@@ -315,7 +315,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoUsoCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -567,6 +566,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaEnvioFirma).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
@@ -574,6 +575,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaFirmaContrato).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFirmaFiduciaria).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
@@ -599,6 +602,14 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoContratoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
@@ -870,7 +881,6 @@ namespace asivamosffie.model.Models
                     .IsFixedLength();
 
                 entity.Property(e => e.EstadoSolicitudCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -900,6 +910,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroDrp)
                     .HasColumnName("NumeroDRP")
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroRadicadoSolicitud)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)

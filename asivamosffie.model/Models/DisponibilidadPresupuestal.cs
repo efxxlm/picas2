@@ -37,6 +37,7 @@ namespace asivamosffie.model.Models
         public decimal? ValorAportante { get; set; }
         public string NumeroContrato { get; set; }
         public string LimitacionEspecial { get; set; }
+        public string NumeroRadicadoSolicitud { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
