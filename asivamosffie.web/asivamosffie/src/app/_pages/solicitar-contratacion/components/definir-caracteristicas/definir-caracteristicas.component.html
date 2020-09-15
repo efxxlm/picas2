@@ -26,8 +26,8 @@
           </div>
           <div class="col">
             <mat-radio-group class="radioInput" formControlName="completada">
-              <mat-radio-button value="true">Sí</mat-radio-button>
-              <mat-radio-button value="false">No</mat-radio-button>
+              <mat-radio-button [value]="true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
@@ -39,14 +39,14 @@
               </div>
               <div class="col">
                 <mat-radio-group class="radioInput" formControlName="reasignacion">
-                  <mat-radio-button value="true">Sí</mat-radio-button>
-                  <mat-radio-button value="false">No</mat-radio-button>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.controls.reasignacion.value === 'true' || addressForm.controls.reasignacion.value === 'false'">
+        <div class="row animatedDown" *ngIf="addressForm.controls.reasignacion.value == true || addressForm.controls.reasignacion.value == false">
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
@@ -54,14 +54,14 @@
               </div>
               <div class="col">
                 <mat-radio-group class="radioInput" formControlName="avanceObra">
-                  <mat-radio-button value="true">Sí</mat-radio-button>
-                  <mat-radio-button value="false">No</mat-radio-button>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.controls.avanceObra.value === 'true'">
+        <div class="row animatedDown" *ngIf="addressForm.controls.avanceObra.value == true">
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
@@ -85,14 +85,14 @@
               </div>
               <div class="col">
                 <mat-radio-group class="radioInput" formControlName="requiereLicencias">
-                  <mat-radio-button value="true">Sí</mat-radio-button>
-                  <mat-radio-button value="false">No</mat-radio-button>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.controls.requiereLicencias.value === 'true'">
+        <div class="row animatedDown" *ngIf="addressForm.controls.requiereLicencias.value == true">
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
@@ -100,14 +100,14 @@
               </div>
               <div class="col">
                 <mat-radio-group class="radioInput" formControlName="licenciaVigente">
-                  <mat-radio-button value="true">Sí</mat-radio-button>
-                  <mat-radio-button value="false">No</mat-radio-button>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.controls.licenciaVigente.value === 'true'">
+        <div class="row animatedDown" *ngIf="addressForm.controls.licenciaVigente.value == true">
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
@@ -122,7 +122,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.controls.licenciaVigente.value === 'true'">
+        <div class="row animatedDown" *ngIf="addressForm.controls.licenciaVigente.value == true">
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
@@ -144,19 +144,19 @@
       </mat-card-content>
     </mat-card>
     <div class="text-center animatedDown" *ngIf="
-        addressForm.controls.reasignacion.value === 'false' && addressForm.controls.avanceObra.value === 'false' ||
-        addressForm.controls.reasignacion.value === 'true' && addressForm.controls.avanceObra.value === 'false' ||
-        addressForm.controls.avanceObra.value === 'true' &&
+        addressForm.controls.reasignacion.value == false && addressForm.controls.avanceObra.value == false ||
+        addressForm.controls.reasignacion.value == true && addressForm.controls.avanceObra.value == false ||
+        addressForm.controls.avanceObra.value == true &&
         addressForm.controls.porcentajeAvanceObra.value &&
-        addressForm.controls.requiereLicencias.value === 'false' ||
-        addressForm.controls.avanceObra.value === 'true' &&
+        addressForm.controls.requiereLicencias.value == false ||
+        addressForm.controls.avanceObra.value == true &&
         addressForm.controls.porcentajeAvanceObra.value &&
-        addressForm.controls.requiereLicencias.value === 'true' &&
-        addressForm.controls.licenciaVigente.value === 'true' ||
+        addressForm.controls.requiereLicencias.value == true &&
+        addressForm.controls.licenciaVigente.value == true ||
         addressForm.controls.reasignacion.value &&
-        addressForm.controls.avanceObra.value === 'true' &&
+        addressForm.controls.avanceObra.value == true &&
         addressForm.controls.porcentajeAvanceObra.value &&
-        addressForm.controls.requiereLicencias.value === 'true' &&
+        addressForm.controls.requiereLicencias.value == true &&
         addressForm.controls.licenciaVigente.value &&
         addressForm.controls.numeroLicencia.value &&
         addressForm.controls.fechaVigencia.value

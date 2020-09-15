@@ -50,14 +50,14 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
           setTimeout(() => {
 
-            this.addressForm.get('reasignacion').setValue( this.contratacionProyecto.esReasignacion ? this.contratacionProyecto.esReasignacion.toString() : false );    
-            this.addressForm.get('avanceObra').setValue( this.contratacionProyecto.esAvanceObra ? this.contratacionProyecto.esAvanceObra.toString() : false );    
+            this.addressForm.get('reasignacion').setValue( (this.contratacionProyecto.esReasignacion ? this.contratacionProyecto.esReasignacion : false) );    
+            this.addressForm.get('avanceObra').setValue( (this.contratacionProyecto.esAvanceobra ? this.contratacionProyecto.esAvanceobra : false) );    
             this.addressForm.get('porcentajeAvanceObra').setValue( this.contratacionProyecto.porcentajeAvanceObra );    
-            this.addressForm.get('requiereLicencias').setValue( this.contratacionProyecto.requiereLicencia ? this.contratacionProyecto.requiereLicencia.toString() : false );    
-            this.addressForm.get('licenciaVigente').setValue( this.contratacionProyecto.licenciaVigente ? this.contratacionProyecto.licenciaVigente.toString() : false );    
+            this.addressForm.get('requiereLicencias').setValue( (this.contratacionProyecto.requiereLicencia ? this.contratacionProyecto.requiereLicencia : false) );    
+            this.addressForm.get('licenciaVigente').setValue( (this.contratacionProyecto.licenciaVigente ? this.contratacionProyecto.licenciaVigente : false) );    
             this.addressForm.get('numeroLicencia').setValue( this.contratacionProyecto.numeroLicencia );    
             this.addressForm.get('fechaVigencia').setValue( this.contratacionProyecto.fechaVigencia );
-            this.addressForm.get('completada').setValue( this.contratacionProyecto.contempladaServicioMonitoreo ? this.contratacionProyecto.contempladaServicioMonitoreo.toString() : false ) ;    
+            this.addressForm.get('completada').setValue( (this.contratacionProyecto.contempladaServicioMonitoreo ? this.contratacionProyecto.contempladaServicioMonitoreo : false) ) ;    
 
             this.idSolicitud = this.contratacionProyecto.contratacionId;
 
@@ -80,7 +80,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
   onSubmit() {
 
     this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;    
-    this.contratacionProyecto.esAvanceObra = this.addressForm.get('avanceObra').value;    
+    this.contratacionProyecto.esAvanceobra = this.addressForm.get('avanceObra').value;    
     this.contratacionProyecto.porcentajeAvanceObra = this.addressForm.get('porcentajeAvanceObra').value;    
     this.contratacionProyecto.requiereLicencia = this.addressForm.get('requiereLicencias').value;    
     this.contratacionProyecto.licenciaVigente = this.addressForm.get('licenciaVigente').value;    
@@ -88,7 +88,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
     this.contratacionProyecto.fechaVigencia = this.addressForm.get('fechaVigencia').value;
     this.contratacionProyecto.contempladaServicioMonitoreo = this.addressForm.get('completada').value;  
 
-    this.projectContractingService.createContratacionProyecto( this.contratacionProyecto )
+    this.projectContractingService.createEditContratacionProyecto( this.contratacionProyecto )
       .subscribe( respuesta => {
 
         this.openDialog( "Solicitud Contratación", respuesta.message )

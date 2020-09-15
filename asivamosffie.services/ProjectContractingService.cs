@@ -617,6 +617,7 @@ namespace asivamosffie.services
                     contratacionProyectoAntiguo.ProyectoId = pContratacionProyecto.ProyectoId;
                     contratacionProyectoAntiguo.EsReasignacion = pContratacionProyecto.EsReasignacion;
                     contratacionProyectoAntiguo.EsAvanceobra = pContratacionProyecto.EsAvanceobra;
+                    contratacionProyectoAntiguo.PorcentajeAvanceObra = pContratacionProyecto.PorcentajeAvanceObra;
 
                     contratacionProyectoAntiguo.RequiereLicencia = pContratacionProyecto.RequiereLicencia;
                     contratacionProyectoAntiguo.LicenciaVigente = pContratacionProyecto.LicenciaVigente;
@@ -831,7 +832,7 @@ namespace asivamosffie.services
                     listaAportantes.ForEach( apo => {
                         ContratacionProyectoAportante contratacionProyectoAportante = new ContratacionProyectoAportante();
 
-                        contratacionProyectoAportante.ContratacionProyectoAportanteId = apo.ProyectoAportanteId;
+                        contratacionProyectoAportante.CofinanciacionAportanteId = apo.AportanteId;
                         contratacionProyectoAportante.FechaCreacion = DateTime.Now;
                         contratacionProyectoAportante.UsuarioCreacion = usuarioCreacion;
 

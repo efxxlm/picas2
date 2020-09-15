@@ -24,7 +24,7 @@ export interface ContratacionProyecto{
     usuarioCreacion?: string,
     eliminado?: boolean,
     esReasignacion?: boolean,
-    esAvanceObra?: boolean,
+    esAvanceobra?: boolean,
     porcentajeAvanceObra?: number,
     requiereLicencia?: boolean,
     licenciaVigente?: boolean,
