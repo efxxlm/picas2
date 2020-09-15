@@ -504,6 +504,29 @@ namespace asivamosffie.services
 
         }
 
+        //Grilla disponibilidad presupuestal.
+        public async Task<ActionResult<List<GrillaValidarDisponibilidadPresupuesal>>> GetBudgetavailabilityRequests()
+        {
+            List<DisponibilidadPresupuestal> ListDP = await _context.DisponibilidadPresupuestal.Where(r => !r.Eliminado).ToListAsync();
+            List<GrillaValidarDisponibilidadPresupuesal> ListGrillaDisponibilidadPresupuestal = new List<GrillaValidarDisponibilidadPresupuesal>();
+
+            foreach (var validacionPresupuestal in ListDP)
+            {
+                GrillaValidarDisponibilidadPresupuesal disponibilidadPresupuestal = new GrillaValidarDisponibilidadPresupuesal
+                {
+                    Id = validacionPresupuestal.DisponibilidadPresupuestalId,
+                    FechaSolicitud = validacionPresupuestal.FechaSolicitud,
+                    NumeroSolicitud = validacionPresupuestal.NumeroSolicitud,
+                    TipoSolicitudCodigo = validacionPresupuestal.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(validacionPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud) : "",
+                    EstadoRegistro = (bool)validacionPresupuestal.RegistroCompleto,
+                    EstadoRegistroText = (bool)validacionPresupuestal.RegistroCompleto ? "Completo" : "Incompleto"
+                };
+
+                ListGrillaDisponibilidadPresupuestal.Add(disponibilidadPresupuestal);
+            }
+
+            return ListGrillaDisponibilidadPresupuestal;
+        }
 
     }
 }

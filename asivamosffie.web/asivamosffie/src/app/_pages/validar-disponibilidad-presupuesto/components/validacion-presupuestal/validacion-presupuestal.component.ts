@@ -15,6 +15,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router) { }
     detailavailabilityBudget:any=null;
+    esModificacion=false;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
