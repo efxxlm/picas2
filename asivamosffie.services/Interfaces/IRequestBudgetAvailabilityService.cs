@@ -22,8 +22,10 @@ namespace asivamosffie.services.Interfaces
         Task<List<DisponibilidadPresupuestal>> GetDDPEspecial();
         CustonReuestCommittee MapToValue(SqlDataReader reader);
         Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal);
+        Task<ActionResult<List<GrillaValidarDisponibilidadPresupuesal>>> GetBudgetavailabilityRequests();
         Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId);
         Task<Respuesta> SendRequest(int disponibilidadPresupuestalId);
+        Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId);
     }
     
 }

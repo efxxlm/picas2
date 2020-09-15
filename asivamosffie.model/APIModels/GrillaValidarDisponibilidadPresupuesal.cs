@@ -1,4 +1,5 @@
-﻿using System;
+﻿using asivamosffie.model.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,6 +17,7 @@ namespace asivamosffie.model.APIModels
         public string TipoSolicitudText { get; set; }
         public bool EstadoRegistro { get; set; }
         public string EstadoRegistroText { get; set; }
+
     }
 
     public class DetailValidarDisponibilidadPresupuesal
@@ -50,5 +52,11 @@ namespace asivamosffie.model.APIModels
         public string EstadosDeLasFuentes { get; set; }
         public string Observaciones { get; set; }
         public StringBuilder htmlContent { get; set; }
+        public DateTime FechaSolicitud { get; set; }
+        public string EstadoStr { get; set; }
+        public string Plazo { get; set; }
+        public List<DisponibilidadPresupuestalProyecto> Proyectos { get; set; }
+        public List<CofinanciacionAportante> Aportantes { get; set; }
+        public List<FuenteFinanciacion> Fuentes { get; set; }
     }
 }
