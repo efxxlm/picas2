@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { ProyectoAdministrativo, ProyectoAdministrativoAportante } from 'src/app/core/_services/project/project.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -15,6 +16,9 @@ import { DisponibilidadPresupuestal, DisponibilidadPresupuestalProyecto, ListAdm
 export class CrearDisponibilidadPresupuestalAdministrativoComponent implements OnInit {
 
   formulario = this.fb.group({
+    disponibilidadPresupuestalId: [],
+    proyectoAdministrativoId: [],
+
     objeto: [null, Validators.required],
     consecutivo: [null, Validators.required],
 
@@ -22,6 +26,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
   listaProyectos: ListConcecutivoProyectoAdministrativo[] = []
   listaAportantes: ListAdminProyect[] = []
+  objetoDispinibilidad: DisponibilidadPresupuestal = {}
 
   editorStyle = {
     height: '45px'
@@ -41,6 +46,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
     private budgetAvailabilityService: BudgetAvailabilityService,
     public dialog: MatDialog,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
 
   ) 
   {
@@ -48,15 +54,38 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
   ngOnInit(): void {
 
-    this.budgetAvailabilityService.getListCocecutivoProyecto()
-      .subscribe( lista => {
-        this.listaProyectos = lista;
-      })
+    this.activatedRoute.params.subscribe( parametros => {
+      forkJoin([
+        this.budgetAvailabilityService.getListCocecutivoProyecto(),
+        this.budgetAvailabilityService.getDisponibilidadPresupuestalById( parametros.id )
+      ]).subscribe( respuesta => {
+          this.listaProyectos = respuesta[0];
+
+          this.objetoDispinibilidad = respuesta[1];
+
+          //console.log( this.objetoDispinibilidad );
+
+          let proyecto = this.objetoDispinibilidad.disponibilidadPresupuestalProyecto[0];
+
+          let proyectoSeleccionado = this.listaProyectos.find( p => p.proyectoId == proyecto.proyectoAdministrativoId );
+
+          this.formulario.get('consecutivo').setValue( proyectoSeleccionado )
+          this.formulario.get('objeto').setValue( this.objetoDispinibilidad.objeto )
+          this.formulario.get('proyectoAdministrativoId').setValue( proyecto.proyectoAdministrativoId )
+          this.formulario.get('disponibilidadPresupuestalId').setValue( this.objetoDispinibilidad.disponibilidadPresupuestalId )
+
+          this.changeProyecto();
+
+        })
+    })
+
+    
   }
 
   changeProyecto(){
 
     let proyecto = this.formulario.get('consecutivo').value;
+    console.log( proyecto )
     this.budgetAvailabilityService.getAportantesByProyectoAdminId( proyecto.proyectoId )
       .subscribe( lista  => {
         this.listaAportantes = lista;
@@ -83,9 +112,13 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
   enviarObjeto() {
 
+    let aportante = this.listaAportantes[0];
+
     let disponibilidad: DisponibilidadPresupuestal = {
+      disponibilidadPresupuestalId: this.formulario.get('disponibilidadPresupuestalId').value,
       objeto: this.formulario.get('objeto').value,
       tipoSolicitudCodigo: '3',
+      valorSolicitud: aportante ? aportante.valorAporte : 0,
      
       disponibilidadPresupuestalProyecto: []
       
@@ -94,6 +127,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
     let proyectoSeleccionado = this.formulario.get('consecutivo').value
 
     let proyecto: DisponibilidadPresupuestalProyecto = {
+       disponibilidadPresupuestalProyectoId: this.formulario.get('proyectoAdministrativoId').value,
       proyectoAdministrativoId: proyectoSeleccionado ? proyectoSeleccionado.proyectoId : null,
     }
 

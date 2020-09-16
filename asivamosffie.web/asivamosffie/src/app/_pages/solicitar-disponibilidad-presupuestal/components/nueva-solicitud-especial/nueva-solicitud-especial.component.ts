@@ -145,7 +145,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           } else {
             this.proyectoEncontrado = true;
             this.proyecto = listaProyectos[0];
-            console.log(this.proyecto)
+            //console.log('pro',this.proyecto)
             this.budgetAvailabilityService.getAportantesByProyectoId(this.proyecto.proyectoId)
               .subscribe(listaApo => {
 

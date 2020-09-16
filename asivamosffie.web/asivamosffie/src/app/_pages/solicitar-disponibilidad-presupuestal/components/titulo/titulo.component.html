@@ -26,4 +26,6 @@
         (click)="crearSolicitud()" [disabled]="tipoDisponibilidad.invalid && perfil != 5">
         Crear solicitud
     </button>
+
+    <app-tabla-crear-solicitud-administrativa *ngIf="perfil == 5"></app-tabla-crear-solicitud-administrativa>
 </div>

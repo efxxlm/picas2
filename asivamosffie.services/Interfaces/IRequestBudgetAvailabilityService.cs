@@ -12,11 +12,12 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRequestBudgetAvailabilityService
     {
-        Task<List<ListAdminProyect>> GetAportantesByProyectoId(int proyectoId);
+        Task<List<ListAportantes>> GetAportantesByProyectoId(int proyectoId);
+        Task<List<ListAdminProyect>> GetAportantesByProyectoAdministrativoId(int proyectoId);
         Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento);
         Task<Respuesta> CreateOrEditInfoAdditional(DisponibilidadPresupuestal pDisponibilidad, string user);
         Task<DisponibilidadPresupuestal> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId);
-        Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId);
+        Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal);
         Task<List<Proyecto>> SearchLlaveMEN(string LlaveMEN);
         Task<List<CustonReuestCommittee>> GetReuestCommittee();
         Task<List<DisponibilidadPresupuestal>> GetDDPEspecial();
@@ -26,6 +27,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<ListConcecutivoProyectoAdministrativo>> GetListCocecutivoProyecto();
         Task<Respuesta> SendRequest(int disponibilidadPresupuestalId);
         Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad);
+        Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa();
     }
     
 }

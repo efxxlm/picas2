@@ -65,11 +65,15 @@ export class BudgetAvailabilityService {
   }
 
   getAportantesByProyectoAdminId( id: number ){
-    return this.http.get<ListAdminProyect[]>(`${environment.apiUrl}/RequestBudgetAvailability/getAportantesByProyectoId?proyectoId=${ id }`);    
+    return this.http.get<ListAdminProyect[]>(`${environment.apiUrl}/RequestBudgetAvailability/GetAportantesByProyectoAdministrativoId?proyectoId=${ id }`);    
   }
 
   createOrEditProyectoAdministrtivo( disponibilidad: DisponibilidadPresupuestal ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/createOrEditProyectoAdministrtivo`, disponibilidad);
+  }
+
+  getDDPAdministrativa(){
+    return this.http.get<DisponibilidadPresupuestal[]>(`${environment.apiUrl}/RequestBudgetAvailability/getDDPAdministrativa`);    
   }
 
 }

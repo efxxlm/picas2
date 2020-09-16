@@ -1,6 +1,6 @@
 <section class="container" [formGroup]="formulario">
     <div class="text-right">
-        <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -56,6 +56,8 @@
             <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
             <quill-editor class="quill-editor-style" #objeto [styles]="editorStyle" [modules]="config"
                 (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
+                <input type="hidden" formControlName="proyectoAdministrativoId">
+                <input type="hidden" formControlName="disponibilidadPresupuestalId">
         </div>
         <span class="contador miles" *ngIf="formulario.get('objeto').value">
             {{1000 - textoLimpio(formulario.get('objeto').value)}}

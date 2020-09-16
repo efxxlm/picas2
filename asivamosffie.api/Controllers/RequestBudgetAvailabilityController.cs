@@ -59,6 +59,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetAportantesByProyectoAdministrativoId")]
+        public async Task<IActionResult> GetAportantesByProyectoAdministrativoId(int proyectoId)
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetAportantesByProyectoAdministrativoId(proyectoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
 
         [Route("GetDDPEspecial")]
         public async Task<IActionResult> GetDDPEspecial()
@@ -66,6 +82,21 @@ namespace asivamosffie.api.Controllers
             try
             {
                 var result = await _managementCommitteeReportService.GetDDPEspecial();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [Route("GetDDPAdministrativa")]
+        public async Task<IActionResult> GetDDPAdministrativa()
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetDDPAdministrativa();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -236,14 +267,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateOrEditDDPRequest")]
         [HttpPost]
-        public async Task<IActionResult> CreateOrEditDDPRequest([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId, int disponibilidadPresupuestalId)
+        public async Task<IActionResult> CreateOrEditDDPRequest([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
                 disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.CreateOrEditDDPRequest(disponibilidadPresupuestal, proyectoId, disponibilidadPresupuestalId);
+                respuesta = await _managementCommitteeReportService.CreateOrEditDDPRequest(disponibilidadPresupuestal);
                 return Ok(respuesta);
 
             }
