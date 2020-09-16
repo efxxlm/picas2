@@ -166,7 +166,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
+        [Route("GetValidationRequests")]
+        public async Task<IActionResult> GetValidationRequests(string tipoSolicitudCodigo)
+        {
+            try
+            {
+                var result = await _committeeSessionFiduciarioService.GetValidationRequests(tipoSolicitudCodigo);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         #endregion
 
 

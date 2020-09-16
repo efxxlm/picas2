@@ -303,12 +303,27 @@ namespace asivamosffie.services
 
         //Grilla validacion de solicitudes contractuales
         //TODO: No hay  tablas para crear esta relacion
-        public async Task<ActionResult<List<SesionComiteSolicitud>>> GetValidationRequests()
+        public async Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo)
         {
           
             try
             {
-                return null;
+
+                return await (from ct in _context.ComiteTecnico
+                              join sc in _context.SesionComiteSolicitud on ct.ComiteTecnicoId equals sc.ComiteTecnicoId
+                              where sc.TipoSolicitudCodigo == tipoSolicitudCodigo && !(bool)sc.Eliminado
+                              select new GridValidationRequests
+                              {
+                                  ComiteTecnicoId = ct.ComiteTecnicoId,
+                                  SesionComiteSolicitudId = sc.SesionComiteSolicitudId,
+                                  TipoSolicitudCodigo = sc.TipoSolicitudCodigo,
+                                  TipoSolicitudText =  _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.TipoSolicitudCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Solicitud).Select(r => r.Nombre).FirstOrDefault(),
+                                  NumeroComite = ct.NumeroComite,
+                                  FechaComiteTecnico = ct.FechaCreacion,
+                                  TemaRequiereVotacion = sc.RequiereVotacion
+
+                              }).ToListAsync();
+
 
             }
             catch (Exception)
@@ -358,10 +373,6 @@ namespace asivamosffie.services
         }
 
         #endregion
-
-
-
-
 
         #region "Gestion de actas";
         //Grilla sesion comite, => sesiones desarrolladas sin actas.
@@ -777,6 +788,7 @@ namespace asivamosffie.services
             }
         }
 
+
         //Crear orden del dia de comité fiduciario
         public async Task<Respuesta> CreateOrEditCommitteeSession(SesionComiteTema sesionComiteTema)
         {
@@ -849,7 +861,76 @@ namespace asivamosffie.services
         }
 
 
+        //Registrar participantes
+        public async Task<Respuesta> CreateOrEditParticipantes(SesionComiteTema sesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
 
+            string strCrearEditar = string.Empty;
+            SesionComiteTema sesionComiteTemaAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(sesionComiteTema.SesionTemaId.ToString()) || sesionComiteTema.SesionTemaId == 0)
+                {
+                    //TODO: recorrer objeto SesionComiteTema, Se puede guardar uno o varios temas.
+
+                    //Auditoria
+                    strCrearEditar = "CREAR SESION COMITÉ TEMA";
+                    sesionComiteTema.FechaCreacion = DateTime.Now;
+                    sesionComiteTema.Eliminado = false;
+
+                    //Registros
+                    sesionComiteTema.EsAprobado = false;
+                    sesionComiteTema.ResponsableCodigo = string.IsNullOrEmpty(sesionComiteTema.ResponsableCodigo) ? string.Empty : sesionComiteTema.ResponsableCodigo;
+                    _context.SesionComiteTema.Add(sesionComiteTema);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT SESION COMITÉ TEMA";
+                    sesionComiteTemaAntiguo = _context.SesionComiteTema.Find(sesionComiteTema.SesionTemaId);
+                    //Auditoria
+                    sesionComiteTemaAntiguo.UsuarioModificacion = sesionComiteTema.UsuarioModificacion;
+                    sesionComiteTemaAntiguo.FechaModificacion = DateTime.Now;
+
+
+                    //Registros
+
+                    sesionComiteTemaAntiguo.SesionTemaId = sesionComiteTema.SesionTemaId;
+                    sesionComiteTemaAntiguo.Tema = sesionComiteTema.Tema;
+                    sesionComiteTemaAntiguo.ResponsableCodigo = sesionComiteTema.ResponsableCodigo;
+                    sesionComiteTemaAntiguo.TiempoIntervencion = sesionComiteTema.TiempoIntervencion; // En minutos
+
+                    _context.SesionComiteTema.Update(sesionComiteTemaAntiguo);
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = sesionComiteTema,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, sesionComiteTema.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, sesionComiteTemaAntiguo.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
 
 
 
