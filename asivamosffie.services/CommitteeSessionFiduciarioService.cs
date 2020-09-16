@@ -372,6 +372,70 @@ namespace asivamosffie.services
             }
         }
 
+
+        //Registrar Mienbros invitados.
+        public async Task<Respuesta> CreateOrEditInvitedMembers(SesionParticipante sesionParticipante)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Mienbros_Invitados, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            SesionParticipante _sesionParticipante = null;
+
+            try
+            {
+
+                if (string.IsNullOrEmpty(sesionParticipante.SesionParticipanteId.ToString()) || sesionParticipante.SesionParticipanteId == 0)
+                {
+
+                    //Auditoria
+                    strCrearEditar = "CREAR MIENBROS INVITADOS";
+                    if (sesionParticipante.UsersIds.Count > 0)
+                    {
+                        foreach (var list in sesionParticipante.UsersIds)
+                        {
+                            _sesionParticipante = new SesionParticipante();
+                            _sesionParticipante.ComiteTecnicoId = sesionParticipante.ComiteTecnicoId;
+                            _sesionParticipante.UsuarioId = list.UsuarioId;
+                            _sesionParticipante.FechaCreacion = DateTime.Now;
+                            _sesionParticipante.UsuarioCreacion = sesionParticipante.UsuarioCreacion;
+                            _sesionParticipante.Eliminado = false;
+                            _context.SesionParticipante.Add(_sesionParticipante);
+                        }
+                    }
+                }
+              
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = _sesionParticipante,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, sesionParticipante.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, sesionParticipante.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
+
+
+
         #endregion
 
         #region "Gestion de actas";
