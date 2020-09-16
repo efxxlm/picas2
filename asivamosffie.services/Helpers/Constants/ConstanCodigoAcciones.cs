@@ -37,5 +37,6 @@
         public const string Crear_Editar_Sesion_comentario = "47";
         public const string Crear_Editar_Tema_Compromiso = "48";
         public const string Convocar_Sesion_Comite = "75";
+        public const string Registrar_Mienbros_Invitados = "79";
     }
 }
