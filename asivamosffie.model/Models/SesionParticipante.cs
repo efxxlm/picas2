@@ -28,6 +28,7 @@ namespace asivamosffie.model.Models
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual Usuario Usuario { get; set; }
+        public virtual ICollection<Usuario> UsersIds { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionParticipanteVoto> SesionParticipanteVoto { get; set; }
