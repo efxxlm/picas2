@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
@@ -7,16 +8,21 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
 {
-    public class RegisterContractsAndContractualModifications : Controller
+    public class RegisterContractsAndContractualModificationsController : Controller
     {
         public readonly IRegisterContractsAndContractualModificationsService _registerContractsService;
-
-        public RegisterContractsAndContractualModifications(IRegisterContractsAndContractualModificationsService registerContractsService)
+        private readonly IOptions<AppSettings> _settings;
+        public RegisterContractsAndContractualModificationsController(
+            IRegisterContractsAndContractualModificationsService registerContractsService,
+            IOptions<AppSettings> settings
+            )
         {
             _registerContractsService = registerContractsService;
+            _settings = settings;
         }
     
         [HttpGet]
@@ -42,7 +48,8 @@ namespace asivamosffie.api.Controllers
             { 
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 pContrato.UsuarioCreacion = pUsuarioModifico;
-                respuesta = await _registerContractsService.RegistrarTramiteContrato(pContrato);
+                respuesta = await _registerContractsService.RegistrarTramiteContrato(pContrato,
+               Path.Combine(_settings.Value.DirectoryBase ,_settings.Value.DirectoryBaseRutaDocumentoContrato));
                 return Ok(respuesta);
             }
             catch (Exception ex)

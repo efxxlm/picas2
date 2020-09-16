@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,9 +19,11 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly IDocumentService _documentService;
 
-        public RegisterContractsAndContractualModificationsService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public RegisterContractsAndContractualModificationsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _documentService = documentService;
             _commonService = commonService;
             _context = context;
         }
@@ -145,8 +148,9 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato)
+        public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile)
         {
+
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
             Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
@@ -156,6 +160,16 @@ namespace asivamosffie.services
             contratoOld.Observaciones = pContrato.Observaciones;
             contratoOld.UsuarioModificacion = pContrato.UsuarioModificacion;
             contratoOld.FechaModificacion = pContrato.FechaModificacion;
+
+            string strFilePatch = "";
+            //Save Files  
+
+
+            if (pContrato.pFile != null && pContrato.pFile.Length > 0)
+            {
+                await _documentService.SaveFileContratacion(pContrato.pFile, strFilePatch, pContrato.pFile.FileName);
+                contratoOld.RutaDocumento = Path.Combine(pPatchfile, contratoOld.ContratoId.ToString(), pContrato.pFile.FileName);
+            }
 
             _context.SaveChanges();
             try

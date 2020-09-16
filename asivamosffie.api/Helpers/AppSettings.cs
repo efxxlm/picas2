@@ -39,5 +39,7 @@
         public string DirectoryBaseOrdeELegibilidad { get; set; }
          
         public string DirectoryBaseContratacionMinuta { get; set; }
+         
+        public string DirectoryBaseRutaDocumentoContrato { get; set; }
     }
 }
