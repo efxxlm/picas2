@@ -101,6 +101,11 @@ namespace asivamosffie.services.Helpers
                 return $"{"DE_"}{(++number).ToString("D4")}";
             }
 
+            if (input == "PA")
+            {
+                return $"{"PA_"}{(++number).ToString("D4")}";
+            }
+
             //Invitacion Cerrada SC
             else if (input == "2")
             {

@@ -104,10 +104,32 @@ export interface RespuestaProyecto{
   llaveConsulta: string
 }
 
+export interface ProyectoAdministrativoAportante {
+  proyectoAdministrativoAportanteId?: number,
+  proyectoAdminstrativoId?: number,
+  aportanteId?: number,
+  eliminado?: boolean,
+  usuarioCreacion?: string,
+  fechaCreacion?: Date,
+  usuarioEdicion?: string,
+  fechaEdicion?: Date,
+
+  cofinanciacionAportante?: Aportante
+}
+
 export interface ProyectoAdministrativo
 {
-  Aportante:Aportante[],  
-  identificador:string
+  proyectoAdministrativoId?: number,
+  enviado?: boolean,
+  fechaCreado?: Date,
+  usuarioCreacion?: string,
+  fechaModificacion?: Date,
+  usuarioModificacion?: string,
+  eliminado?: boolean,
+  registroCompleto?: boolean,
+
+  Aportante?:Aportante[],  
+  identificador?:string
 }
 export interface Aportante
 {

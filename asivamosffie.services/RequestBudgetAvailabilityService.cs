@@ -107,7 +107,7 @@ namespace asivamosffie.services
 
 
         //Aportantes por proyectoId
-        public async Task<ActionResult<List<ListAdminProyect>>> GetAportantesByProyectoId(int proyectoId)
+        public async Task<List<ListAdminProyect>> GetAportantesByProyectoId(int proyectoId)
         {
             try
             {
@@ -164,11 +164,19 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR SOLICITUD DISPONIBILIDAD PRESUPUESTAL";
                     disponibilidad.FechaCreacion = DateTime.Now;
                     disponibilidad.UsuarioCreacion = disponibilidad.UsuarioCreacion;
-                    disponibilidad.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", countMaxId);
-                    //disponibilidad.TipoSolicitudCodigo = "1";
-                    //disponibilidad.OpcionContratarCodigo = "1";
-                    //disponibilidad.EstadoSolicitudCodigo = "8";
+                    disponibilidad.NumeroSolicitud = Helpers.Helpers.Consecutive("PA", countMaxId);
+                    disponibilidad.FechaSolicitud = DateTime.Now;
+                    disponibilidad.OpcionContratarCodigo = "";
+                    disponibilidad.EstadoSolicitudCodigo = "8";
                     disponibilidad.Eliminado = false;
+
+                    disponibilidad.DisponibilidadPresupuestalProyecto.ToList().ForEach( pro => {
+                        pro.UsuarioCreacion = disponibilidad.UsuarioCreacion;
+                        pro.FechaCreacion = disponibilidad.FechaCreacion;
+                        
+
+                    });
+
                     _context.DisponibilidadPresupuestal.Add(disponibilidad);
                 }
                 else
@@ -183,9 +191,36 @@ namespace asivamosffie.services
                     //Registros
                     disponibilidadPresupuestalAntiguo.Objeto = disponibilidad.Objeto;
                     disponibilidadPresupuestalAntiguo.AportanteId = disponibilidad.AportanteId;
-                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestalAntiguo);
+                    
+
+                    disponibilidad.DisponibilidadPresupuestalProyecto.ToList().ForEach( pro => {
+                        if ( string.IsNullOrEmpty(pro.DisponibilidadPresupuestalProyectoId.ToString()) || pro.DisponibilidadPresupuestalProyectoId == 0 )
+                        {
+                            DisponibilidadPresupuestalProyecto proyecto = new DisponibilidadPresupuestalProyecto();
+
+                            proyecto.UsuarioModificacion = disponibilidad.UsuarioCreacion;
+                            proyecto.FechaModificacion = disponibilidad.FechaModificacion;
+
+                            proyecto.DisponibilidadPresupuestalId = disponibilidad.DisponibilidadPresupuestalId;
+                            proyecto.ProyectoAdministrativoId = pro.ProyectoAdministrativoId;
+
+                            disponibilidadPresupuestalAntiguo.DisponibilidadPresupuestalProyecto.Add( proyecto );
+                        }else
+                        {
+                            DisponibilidadPresupuestalProyecto proyecto = _context.DisponibilidadPresupuestalProyecto.Find( pro.DisponibilidadPresupuestalProyectoId );
+
+                            proyecto.UsuarioModificacion = disponibilidad.UsuarioCreacion;
+                            proyecto.FechaModificacion = disponibilidad.FechaModificacion;
+
+                            proyecto.ProyectoAdministrativoId = pro.ProyectoAdministrativoId;
+                        }
+
+                    });
+
 
                 }
+
+                _context.SaveChanges();
 
                 return respuesta = new Respuesta
                 {
@@ -538,7 +573,7 @@ namespace asivamosffie.services
 
 
         //Grilla DDP Especial
-        public async Task<ActionResult<List<DisponibilidadPresupuestal>>> GetDDPEspecial()
+        public async Task<List<DisponibilidadPresupuestal>> GetDDPEspecial()
         {
             return await (
                             from dp in _context.DisponibilidadPresupuestal
@@ -618,7 +653,7 @@ namespace asivamosffie.services
         }
 
         //Lista Concecutivo admnistrativo
-        public async Task<ActionResult<List<ListConcecutivoProyectoAdministrativo>>> GetListCocecutivoProyecto()
+        public async Task<List<ListConcecutivoProyectoAdministrativo>> GetListCocecutivoProyecto()
         {
             try
             {
@@ -638,7 +673,7 @@ namespace asivamosffie.services
 
 
 
-        public async Task<ActionResult<List<Proyecto>>> SearchLlaveMEN(string LlaveMEN)
+        public async Task<List<Proyecto>> SearchLlaveMEN(string LlaveMEN)
         {
             var Id = await _context.Proyecto.Where(r => r.LlaveMen == LlaveMEN.ToString().Trim() && !(bool)r.Eliminado).Select(r => r.LlaveMen).FirstOrDefaultAsync();
             if (!string.IsNullOrEmpty(Id))

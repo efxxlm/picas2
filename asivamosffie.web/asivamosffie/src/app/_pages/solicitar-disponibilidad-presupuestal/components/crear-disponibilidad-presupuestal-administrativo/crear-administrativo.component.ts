@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { ProyectoAdministrativo, ProyectoAdministrativoAportante } from 'src/app/core/_services/project/project.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DisponibilidadPresupuestal, DisponibilidadPresupuestalProyecto, ListAdminProyect, ListConcecutivoProyectoAdministrativo } from 'src/app/_interfaces/budgetAvailability';
 
 @Component({
   selector: 'app-crear-administrativo',
@@ -13,6 +19,9 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
     consecutivo: [null, Validators.required],
 
   })
+
+  listaProyectos: ListConcecutivoProyectoAdministrativo[] = []
+  listaAportantes: ListAdminProyect[] = []
 
   editorStyle = {
     height: '45px'
@@ -29,12 +38,29 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
   constructor(
     private fb: FormBuilder,
+    private budgetAvailabilityService: BudgetAvailabilityService,
+    public dialog: MatDialog,
+    private router: Router,
 
   ) 
   {
   }
 
   ngOnInit(): void {
+
+    this.budgetAvailabilityService.getListCocecutivoProyecto()
+      .subscribe( lista => {
+        this.listaProyectos = lista;
+      })
+  }
+
+  changeProyecto(){
+
+    let proyecto = this.formulario.get('consecutivo').value;
+    this.budgetAvailabilityService.getAportantesByProyectoAdminId( proyecto.proyectoId )
+      .subscribe( lista  => {
+        this.listaAportantes = lista;
+      })
   }
 
   maxLength(e: any, n: number) {
@@ -48,8 +74,39 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
     return textolimpio.length;
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   enviarObjeto() {
-     console.log( this.formulario.get('objeto').value );
+
+    let disponibilidad: DisponibilidadPresupuestal = {
+      objeto: this.formulario.get('objeto').value,
+      tipoSolicitudCodigo: '3',
+     
+      disponibilidadPresupuestalProyecto: []
+      
+    }
+
+    let proyectoSeleccionado = this.formulario.get('consecutivo').value
+
+    let proyecto: DisponibilidadPresupuestalProyecto = {
+      proyectoAdministrativoId: proyectoSeleccionado ? proyectoSeleccionado.proyectoId : null,
+    }
+
+    disponibilidad.disponibilidadPresupuestalProyecto.push( proyecto );
+
+    this.budgetAvailabilityService.createOrEditProyectoAdministrtivo( disponibilidad )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message )
+        if ( respuesta.code == "200" )
+          this.router.navigate(['/solicitarDisponibilidadPresupuestal'])
+      })
+
+     console.log( disponibilidad, this.formulario.get('consecutivo').value.proyectoId );
     
   }
 

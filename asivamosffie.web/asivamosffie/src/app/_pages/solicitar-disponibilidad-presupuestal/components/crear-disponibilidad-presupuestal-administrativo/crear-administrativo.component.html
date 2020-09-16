@@ -16,9 +16,9 @@
         </div>
         <div class="col">
             <mat-form-field class="select-width">
-                <mat-select formControlName="consecutivo" required>
-                    <mat-option>
-                        option
+                <mat-select formControlName="consecutivo" required (selectionChange)="changeProyecto()">
+                    <mat-option *ngFor="let proyecto of listaProyectos" [value]="proyecto">
+                        {{proyecto.proyectoId}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -26,27 +26,27 @@
     </div>
 
     <mat-card class="shipping-card var-main-gris">
-        <mat-card-content>
+        <mat-card-content *ngFor=" let aportante of listaAportantes; let i = index ">
 
             <mat-card-title class="header-card--text">
-                Aportante 1
+                Aportante {{ i + 1 }}
             </mat-card-title>
 
             <p>
                 <strong>Valor del aportante al proyecto:</strong>
-                $70.000.000
+                {{ aportante.valorAporte }}
             </p>
             <p>
                 <strong>Nombre del aportante:</strong>
-                FFIE
+                {{ aportante.nombreAportante }}
             </p>
             <p>
                 <strong>Fuente 1:</strong>
-                Contingencia
+                {{ aportante.nombreFuente }}
             </p>
             <p>
                 <strong>Valor fuente 1:</strong>
-                $70.000.000
+                {{ aportante.valorFuente | currency }}
             </p>
         </mat-card-content>
     </mat-card>
@@ -57,10 +57,10 @@
             <quill-editor class="quill-editor-style" #objeto [styles]="editorStyle" [modules]="config"
                 (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
         </div>
-        <span class="contador miles" *ngIf="objeto.value">
-            {{1000 - textoLimpio(objeto.value)}}
+        <span class="contador miles" *ngIf="formulario.get('objeto').value">
+            {{1000 - textoLimpio(formulario.get('objeto').value)}}
         </span>
-        <span class="contador miles" *ngIf="objeto.value">
+        <span class="contador miles" *ngIf="formulario.get('objeto').value">
             1000
         </span>
     </div>

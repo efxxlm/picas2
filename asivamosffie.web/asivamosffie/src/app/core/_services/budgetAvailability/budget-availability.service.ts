@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { GrillaDisponibilidadPresupuestal, DisponibilidadPresupuestal, CustonReuestCommittee, ListAportantes } from 'src/app/_interfaces/budgetAvailability';
+import { GrillaDisponibilidadPresupuestal, DisponibilidadPresupuestal, CustonReuestCommittee, ListAportantes, ListConcecutivoProyectoAdministrativo, ListAdminProyect } from 'src/app/_interfaces/budgetAvailability';
 import { Respuesta } from '../common/common.service';
 import { Proyecto } from '../project/project.service';
 
@@ -58,7 +58,18 @@ export class BudgetAvailabilityService {
 
   getDetailInfoAdditionalById( id: number ){
     return this.http.get<DisponibilidadPresupuestal>(`${environment.apiUrl}/RequestBudgetAvailability/getDetailInfoAdditionalById?disponibilidadPresupuestalId=${ id }`);    
+  }
 
+  getListCocecutivoProyecto(){
+    return this.http.get<ListConcecutivoProyectoAdministrativo[]>(`${environment.apiUrl}/RequestBudgetAvailability/getListCocecutivoProyecto`);    
+  }
+
+  getAportantesByProyectoAdminId( id: number ){
+    return this.http.get<ListAdminProyect[]>(`${environment.apiUrl}/RequestBudgetAvailability/getAportantesByProyectoId?proyectoId=${ id }`);    
+  }
+
+  createOrEditProyectoAdministrtivo( disponibilidad: DisponibilidadPresupuestal ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/createOrEditProyectoAdministrtivo`, disponibilidad);
   }
 
 }
