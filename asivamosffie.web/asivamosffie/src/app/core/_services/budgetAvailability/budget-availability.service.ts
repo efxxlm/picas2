@@ -76,4 +76,8 @@ export class BudgetAvailabilityService {
     return this.http.get<DisponibilidadPresupuestal[]>(`${environment.apiUrl}/RequestBudgetAvailability/getDDPAdministrativa`);    
   }
 
+  eliminarDisponibilidad( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/eliminarDisponibilidad?disponibilidadPresupuestalId=${ id }`);    
+  }
+
 }

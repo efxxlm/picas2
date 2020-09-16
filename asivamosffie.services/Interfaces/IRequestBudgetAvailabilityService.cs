@@ -28,6 +28,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> SendRequest(int disponibilidadPresupuestalId);
         Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad);
         Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa();
+        Task<Respuesta> EliminarDisponibilidad(int disponibilidadPresupuestalId);
     }
     
 }

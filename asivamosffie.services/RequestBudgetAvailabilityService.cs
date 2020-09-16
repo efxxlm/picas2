@@ -649,6 +649,57 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> EliminarDisponibilidad(int disponibilidadPresupuestalId)
+        {
+
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.eliminar_Solicitud_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            DisponibilidadPresupuestal disponibilidadPresupuestal = null;
+
+            try
+            {
+
+                disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.Where(d => d.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).FirstOrDefaultAsync();
+
+
+                if (disponibilidadPresupuestal != null)
+                {
+
+                    strCrearEditar = "Eliminar DISPONIBILIDAD PRESUPUESAL";
+                    disponibilidadPresupuestal.FechaModificacion = DateTime.Now;
+                    disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    disponibilidadPresupuestal.Eliminado = true;
+                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = disponibilidadPresupuestal,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, disponibilidadPresupuestal.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
 
         //Grilla DDP Especial
         public async Task<List<DisponibilidadPresupuestal>> GetDDPEspecial()
@@ -676,7 +727,7 @@ namespace asivamosffie.services
         {
             return await (
                             from dp in _context.DisponibilidadPresupuestal
-                            where dp.NumeroSolicitud.Contains("PA_")
+                            where dp.NumeroSolicitud.Contains("PA_") && dp.Eliminado != true
                             select new DisponibilidadPresupuestal
                             {
                                 DisponibilidadPresupuestalId = dp.DisponibilidadPresupuestalId,

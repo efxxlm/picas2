@@ -71,6 +71,7 @@
         public const string Enviar_Solicitud_A_Disponibilidad_Presupuestal = "44";
         public const string Crear_Editar_ProyectoAdministrativo = "44";
         public const string Crear_Editar_Solicitud_Disponibilidad_Presupuestal = "77";
+        public const string eliminar_Solicitud_Disponibilidad_Presupuestal = "80";
 
 
 
