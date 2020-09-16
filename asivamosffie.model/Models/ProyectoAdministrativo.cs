@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public ProyectoAdministrativo()
         {
+            DisponibilidadPresupuestalProyecto = new HashSet<DisponibilidadPresupuestalProyecto>();
             ProyectoAdministrativoAportante = new HashSet<ProyectoAdministrativoAportante>();
         }
 
@@ -19,6 +20,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
 
+        public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
         public virtual ICollection<ProyectoAdministrativoAportante> ProyectoAdministrativoAportante { get; set; }
     }
 }

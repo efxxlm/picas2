@@ -10,6 +10,9 @@ namespace asivamosffie.model.Models
         public string Observaciones { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
+        public bool? EsActa { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
     }
