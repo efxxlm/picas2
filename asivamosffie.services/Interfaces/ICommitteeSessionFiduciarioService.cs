@@ -42,7 +42,7 @@ namespace asivamosffie.services.Interfaces
         Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate, string usuarioModifico);
         Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico);
         Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo);
-
+        Task<Respuesta> CreateOrEditInvitedMembers(SesionParticipante sesionParticipante);
 
     }
 }
