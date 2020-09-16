@@ -8,11 +8,13 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CommonController : ControllerBase
     {
         public readonly ICommonService common;
