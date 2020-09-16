@@ -1,4 +1,4 @@
-<div class="container text-center">
+<div class="container text-center recuperar-pass">
     <!--<button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
 
     <div class="text-info" *ngIf="verAyuda">
@@ -13,7 +13,7 @@
             <mat-label>Contraseña Actual</mat-label>
             <input matInput [type]="verClaveActual ? 'password' : 'text'"
                 (keyup)="validatePass()"
-             [readonly]="passwordRecovered!=null" required formControlName="currentPassword">
+                [readonly]="passwordRecovered!=null" required formControlName="currentPassword">
             <button mat-icon-button matSuffix (click)="verClaveActual = !verClaveActual" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClaveActual" class="ver-contrasena" type="button">
                 <img [src]="verClaveActual ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">
             </button>

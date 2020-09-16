@@ -20,7 +20,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   }
 
   editorStyle = {
-    height: '45px'
+    height: '50px'
   };
 
   config = {

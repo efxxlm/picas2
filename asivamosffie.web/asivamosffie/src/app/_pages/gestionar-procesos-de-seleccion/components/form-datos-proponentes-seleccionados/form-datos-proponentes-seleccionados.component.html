@@ -169,14 +169,18 @@
         </div>
       </div>
       <div class="row">
-        <div class="pr-1">
-          <label for="representanteLegal" class="label-left">Representante legal</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #representanteLegal2 type="text" maxlength="100" formControlName="representanteLegal" required>
-          </mat-form-field>
-          <span class="contador">{{100 - representanteLegal2.value.length}}</span>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label for="representanteLegal" class="label-left">Representante legal</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #representanteLegal2 type="text" maxlength="100" formControlName="representanteLegal" required>
+              </mat-form-field>
+              <span class="contador">{{100 - representanteLegal2.value.length}}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -231,14 +235,18 @@
         </div>
       </div>
       <div class="row">
-        <div class="pr-1">
-          <label for="direccion" class="label-left">Dirección del proponente</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #direccion2 type="text" maxlength="100" formControlName="direccion" required>
-          </mat-form-field>
-          <span class="contador">{{100 - direccion2.value.length}}</span>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label for="direccion" class="label-left">Dirección del proponente</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #direccion2 type="text" maxlength="100" formControlName="direccion" required>
+              </mat-form-field>
+              <span class="contador">{{100 - direccion2.value.length}}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -257,14 +265,18 @@
         </div>
       </div>
       <div class="row">
-        <div class="pr-1">
-          <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #correoElectronico2 type="text" maxlength="100" formControlName="correoElectronico" required>
-          </mat-form-field>
-          <span class="contador">{{100 - correoElectronico2.value.length}}</span>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #correoElectronico2 type="text" maxlength="100" formControlName="correoElectronico" required>
+              </mat-form-field>
+              <span class="contador">{{100 - correoElectronico2.value.length}}</span>
+            </div>
+          </div>
         </div>
       </div>
     </mat-card-content>
@@ -299,14 +311,18 @@
       </div>
       <div *ngIf="unionTemporalForm.controls.cuantasEntidades.value > 0 && unionTemporalForm.controls.cuantasEntidades.value < 100">
         <div class="row">
-          <div class="pr-1">
-            <label for="nombreConsorcio" class="label-left">Nombre de la UT o Consorcio</label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input matInput #nombre3 type="text" maxlength="100" formControlName="nombreConsorcio" required>
-            </mat-form-field>
-            <span class="contador">{{100 - nombre3.value.length}}</span>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label for="nombreConsorcio" class="label-left">Nombre de la UT o Consorcio</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #nombre3 type="text" maxlength="100" formControlName="nombreConsorcio" required>
+                </mat-form-field>
+                <span class="contador">{{100 - nombre3.value.length}}</span>
+              </div>
+            </div>
           </div>
         </div>
         <h2 class="card-subTitle">Datos del representante legal</h2>
@@ -317,14 +333,18 @@
                 Integrante {{ i + 1 }}
               </mat-card-title>
               <div class="row">
-                <div class="pr-1">
-                  <label for="nombre" class="label-left">Nombre</label>
-                </div>
-                <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required>
-                  </mat-form-field>
-                  <span class="contador">{{100 - nombre3.value.length}}</span>
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label for="nombre" class="label-left">Nombre</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required>
+                      </mat-form-field>
+                      <span class="contador">{{100 - nombre3.value.length}}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -370,14 +390,18 @@
           </div>
         </div>
         <div class="row">
-          <div class="pr-1">
-            <label for="representanteLegal" class="label-left">Representante legal</label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input matInput #nombre type="text" maxlength="100" formControlName="nombre" required>
-            </mat-form-field>
-            <span class="contador">{{100 - nombre.value.length}}</span>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label for="representanteLegal" class="label-left">Representante legal</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #nombre type="text" maxlength="100" formControlName="nombre" required>
+                </mat-form-field>
+                <span class="contador">{{100 - nombre.value.length}}</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -432,14 +456,18 @@
           </div>
         </div>
         <div class="row">
-          <div class="pr-1">
-            <label for="direccion" class="label-left">Dirección del proponente</label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input matInput #direccion3 type="text" maxlength="100" formControlName="direccion" required>
-            </mat-form-field>
-            <span class="contador">{{100 - direccion3.value.length}}</span>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label for="direccion" class="label-left">Dirección del proponente</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #direccion3 type="text" maxlength="100" formControlName="direccion" required>
+                </mat-form-field>
+                <span class="contador">{{100 - direccion3.value.length}}</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -458,14 +486,18 @@
           </div>
         </div>
         <div class="row">
-          <div class="pr-1">
-            <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input matInput #correoElectronico3 type="text" maxlength="100" formControlName="correoElectronico" required>
-            </mat-form-field>
-            <span class="contador">{{100 - correoElectronico3.value.length}}</span>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #correoElectronico3 type="text" maxlength="100" formControlName="correoElectronico" required>
+                </mat-form-field>
+                <span class="contador">{{100 - correoElectronico3.value.length}}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 3000)" formControlName="criterios" required></quill-editor>
     </div>
-    <span class="contador miles" *ngIf="addressForm.get('justificacion').value">
+    <span class="contador miles" *ngIf="addressForm.get('criterios').value">
       {{3000 - textoLimpio(addressForm.get('criterios').value)}}
     </span>
     <span class="contador miles" *ngIf="addressForm.get('criterios').value === null">
@@ -262,10 +262,10 @@
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
                     <div class="d-flex justify-content-center">
-                      <span class="contador" *ngIf="cronograma.get('descripcion').value">
+                      <span class="contador mt-1em" *ngIf="cronograma.get('descripcion').value">
                         {{500 - textoLimpio(cronograma.get('descripcion').value)}}
                       </span>
-                      <span class="contador" *ngIf="cronograma.get('descripcion').value === null">
+                      <span class="contador mt-1em" *ngIf="cronograma.get('descripcion').value === null">
                         500
                       </span>
                     </div>
@@ -278,7 +278,7 @@
                       <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
-                      <span class="required-form-group">*</span>
+                      <span class="required-form-group required-calendar">*</span>
                     </div>
                     <mat-form-field class="example-full-width">
                       <input matInput [matDatepicker]="picker" formControlName="fechaMaxima" (click)="picker.open()" readonly>

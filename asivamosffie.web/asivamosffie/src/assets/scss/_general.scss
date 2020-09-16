@@ -71,7 +71,7 @@ strong {
         text-align: center;
         color: var(--mainColor);
         font-weight: 500;
-        margin-top: 1.5em;
+        // margin-top: 1.5em;
         margin-bottom: 0;
         display: inline-block;
 
@@ -100,6 +100,10 @@ strong {
         margin-left: 1em;
         margin-right: 1em;
     }
+}
+
+.mb-0 {
+    margin-bottom: 0;
 }
 
 .mt-1em {
@@ -182,4 +186,8 @@ input[type=number]::-webkit-outer-spin-button {
 .icon {
     height: 1.4em;
     margin-bottom: -.3em;
+}
+
+.position-relative {
+    position: relative;
 }

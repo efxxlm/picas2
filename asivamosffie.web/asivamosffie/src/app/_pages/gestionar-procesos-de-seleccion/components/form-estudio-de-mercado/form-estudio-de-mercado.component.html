@@ -65,7 +65,7 @@
                     <label for="descripcion" class="label-left">Descripción</label>
                   </div>
                   <div class="col d-flex">
-                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+                    <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config" required
                       (onContentChanged)="maxLength($event, 3000)" formControlName="descripcion" required></quill-editor>
                       <div class="d-flex align-items-center">
                         <span class="contador miles" *ngIf="cotizacion.get('descripcion').value !== null">
@@ -89,7 +89,7 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="col-md-4 text-right" *ngIf="addressForm.value.cotizaciones.length > 1">
+            <div class="text-right" *ngIf="addressForm.value.cotizaciones.length > 1">
               <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(cotizaciones, i)">
                 <img src="assets/img/icon/menos.svg" alt="Eliminar cotización">
                 Eliminar cotización

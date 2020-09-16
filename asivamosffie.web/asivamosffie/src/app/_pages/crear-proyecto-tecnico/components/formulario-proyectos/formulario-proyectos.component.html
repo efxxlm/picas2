@@ -332,29 +332,35 @@
         </div>
       </div>
       <div class="row">
-        <div class="pr-1">
-          <label class="label-left">Dirección del predio principal</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text">
-          </mat-form-field>
-          <span
-            class="contador">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Dirección del predio principal</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text">
+              </mat-form-field>
+              <span
+                class="contador">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="pr-1">
-          <label class="label-left">Documento de acreditación del predio</label>
-        </div>
-        <div class="col">
-          <mat-form-field class="select-width">
-            <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo">
-              <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
-                {{ listado.nombre }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+      <div class="row col-md-12">
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left">Documento de acreditación del predio</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo">
+                <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
+                  {{ listado.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -601,18 +607,22 @@
           Infraestructura {{i+1}}
         </mat-card-title>
         <div class="row">
-          <div class="pr-1">
-            <label class="label-left">Infraestructura a intervenir</label>
-          </div>
-          <div class="col">
-            <mat-form-field class="select-width">
-              {{infraestructura.infraestructuraCodigo}}
-              <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo">
-                <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
-                  {{ listado.nombre }} {{listado.codigo}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Infraestructura a intervenir</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <!-- {{infraestructura.infraestructuraCodigo}} -->
+                  <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo">
+                    <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
+                      {{ listado.nombre }} {{listado.codigo}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
