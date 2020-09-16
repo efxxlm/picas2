@@ -337,6 +337,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateOrEditInvitedMembers")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditInvitedMembers([FromBody] SesionParticipante sesionParticipante)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                sesionParticipante.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateOrEditInvitedMembers(sesionParticipante);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         //Aplazar sesion
         [Route("SessionPostpone")]
