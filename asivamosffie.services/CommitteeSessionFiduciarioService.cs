@@ -302,35 +302,51 @@ namespace asivamosffie.services
 
 
         //Grilla validacion de solicitudes contractuales
-        //TODO: No hay  tablas para crear esta relacion
-        public async Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo)
+               //Grilla validacion de solicitudes contractuales
+        public async Task<List<GridValidationRequests>> GetValidationRequests()
         {
-          
-            try
-            {
+            //sc.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+            return await
+                (from sc in _context.SesionComiteSolicitud
+                 join ct in _context.ComiteTecnico on sc.ComiteTecnicoId equals ct.ComiteTecnicoId
+                 join ps in _context.ProcesoSeleccion on sc.SolicitudId equals ps.SolicitudId
+                 where !(bool)ct.Eliminado && !(bool)ps.Eliminado && !(bool)sc.Eliminado
 
-                return await (from ct in _context.ComiteTecnico
-                              join sc in _context.SesionComiteSolicitud on ct.ComiteTecnicoId equals sc.ComiteTecnicoId
-                              where sc.TipoSolicitudCodigo == tipoSolicitudCodigo && !(bool)sc.Eliminado
-                              select new GridValidationRequests
-                              {
-                                  ComiteTecnicoId = ct.ComiteTecnicoId,
-                                  SesionComiteSolicitudId = sc.SesionComiteSolicitudId,
-                                  TipoSolicitudCodigo = sc.TipoSolicitudCodigo,
-                                  TipoSolicitudText =  _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.TipoSolicitudCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Solicitud).Select(r => r.Nombre).FirstOrDefault(),
-                                  NumeroComite = ct.NumeroComite,
-                                  FechaComiteTecnico = ct.FechaCreacion,
-                                  TemaRequiereVotacion = sc.RequiereVotacion
+                 select new GridValidationRequests
+                 {
+                     ComiteTecnicoId = ct.ComiteTecnicoId,
+                     FechaSolicitud = ps.FechaCreacion,
+                     NumeroSolicitud = ps.NumeroProceso,
+                     ProcesoSeleccionId = ps.ProcesoSeleccionId,
+                     TipoSolicitudCodigo = sc.TipoSolicitudCodigo,
+                     TipoSolicitudText = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(sc.TipoSolicitudCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).Select(r => r.Nombre).FirstOrDefault(),
+                     FechaComiteTecnico = ct.FechaCreacion,
+                     NumeroComite = ct.NumeroComite,
+                     TemaRequiereVotacion = sc.RequiereVotacion,
+                     sesionParticipanteVoto = (List<SesionParticipanteVoto>)(from v in _context.SesionParticipanteVoto 
+                                               where v.ComiteTecnicoId == ct.ComiteTecnicoId 
+                                               select new SesionParticipanteVoto
+                                               {
+                                                   SesionParticipanteVotoId = v.SesionParticipanteId,
+                                                   ListaSesionParticipante =
+                                                   (List<SesionParticipante>)(from sp in _context.SesionParticipante
+                                                                    where sp.SesionParticipanteId == v.SesionParticipanteId && !(bool)sp.Eliminado
+                                                                        select new SesionParticipante
+                                                                        {
+                                                                            ComiteTecnicoId = sp.ComiteTecnicoId,
+                                                                            UsuarioId = sp.UsuarioId,
+                                                                            Nombres = _context.Usuario.Where(u => (bool)u.Activo && u.UsuarioId.Equals(sp.UsuarioId)).Select(u => string.Concat(u.Nombres, " ", u.Apellidos)).FirstOrDefault(),
+                                                                        }),
+                                                   SesionParticipanteId = v.SesionParticipanteId,
+                                                   EsAprobado = v.EsAprobado,
+                                                   Observaciones = v.Observaciones,
+                                                   ObservacionesDevolucion = v.ObservacionesDevolucion
 
-                              }).ToListAsync();
+                                               })
 
 
-            }
-            catch (Exception)
-            {
+        }).ToListAsync();
 
-                throw;
-            }
         }
 
         //Ver soporte
