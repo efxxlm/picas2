@@ -17,7 +17,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.authe.actualUser$.subscribe(user => {
-      this.actualUser = user;
+      this.roles="";
+      this.actualUser = user;     
       if(this.actualUser)
       {        
         this.actualUser.rol.forEach(element => {

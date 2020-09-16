@@ -47,7 +47,7 @@ export class InicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.autenticacionService.logout();
+    this.autenticacionService.logout(true);
     this.buildForm();
 
     

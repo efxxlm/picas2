@@ -70,6 +70,11 @@ namespace asivamosffie.api.Controllers
             this.expiryInDays = expiryInDays;
             return this;
         }
+        public JwtTokenBuilder AddExpiryinMinute(int expiryInMinute)
+        {
+            this.expiryInMinutes = expiryInMinute;
+            return this;
+        }
 
         public JwtTokenBuilder AddExpiryInDays(int expiryInDays)
         {

@@ -73,6 +73,7 @@ namespace asivamosffie.api
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = appSettings.asivamosffieIssuerJwt,
                             ValidAudience = appSettings.asivamosffieAudienceJwt,
+                            ClockSkew = TimeSpan.Zero,
                             IssuerSigningKey = new SymmetricSecurityKey(
                                 Encoding.ASCII.GetBytes("asivamosffie@2020application"))
 

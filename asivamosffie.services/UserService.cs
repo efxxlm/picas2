@@ -180,5 +180,13 @@ namespace asivamosffie.services
             }
             return respuesta;
         }
+
+        public async Task<Respuesta> CloseSesion(int v)
+        {
+            var usuario = _context.Usuario.Find(v);
+            var respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa };
+            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, usuario.Email, "Cerrar sesión");
+            return respuesta;
+        }
     }
 }
