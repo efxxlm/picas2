@@ -9,10 +9,13 @@ import { FormContratacionComponent } from './components/form-contratacion/form-c
 import { FormModificacionContractualComponent } from './components/form-modificacion-contractual/form-modificacion-contractual.component';
 import { FormRegistroTramiteComponent } from './components/form-registro-tramite/form-registro-tramite.component';
 import { QuillModule } from 'ngx-quill';
+import { TablaProcesoFirmasComponent } from './components/tabla-proceso-firmas/tabla-proceso-firmas.component';
+import { FormRegistroModificacionContractualComponent } from './components/form-registro-modificacion-contractual/form-registro-modificacion-contractual.component';
+import { TablaRegistradosComponent } from './components/tabla-registrados/tabla-registrados.component';
 
 
 @NgModule({
-  declarations: [ContratosModificacionesContractualesComponent, TablaSinRegistroContratoComponent, FormContratacionComponent, FormModificacionContractualComponent, FormRegistroTramiteComponent],
+  declarations: [ContratosModificacionesContractualesComponent, TablaSinRegistroContratoComponent, FormContratacionComponent, FormModificacionContractualComponent, FormRegistroTramiteComponent, TablaProcesoFirmasComponent, FormRegistroModificacionContractualComponent, TablaRegistradosComponent],
   imports: [
     CommonModule,
     MaterialModule,

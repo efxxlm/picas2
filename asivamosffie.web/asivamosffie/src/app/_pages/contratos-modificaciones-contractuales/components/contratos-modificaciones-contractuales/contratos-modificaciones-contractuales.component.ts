@@ -9,7 +9,7 @@ export class ContratosModificacionesContractualesComponent implements OnInit {
 
   verAyuda = false;
   
-  dataTable: any[] = [
+  dataTableSinregistro: any[] = [
     {
       fechaSolicitud: '19/06/2020',
       numeroSolicitud: 'PI_007',
@@ -24,6 +24,24 @@ export class ContratosModificacionesContractualesComponent implements OnInit {
       tipoSolicitud: 'Modificación contractual',
       estadoRegistro: false,
       estadoDocumento: 'En revisión',
+      id: 1
+    },
+  ];
+  dataTableProcesoFirmas: any[] = [
+    {
+      fechaSolicitud: '19/06/2020',
+      numeroSolicitud: 'PI_007',
+      tipoSolicitud: 'Contratación',
+      estadoRegistro: true,
+      estadoDocumento: 'Firmado',
+      id: 0
+    },
+    {
+      fechaSolicitud: '20/05/2020',
+      numeroSolicitud: '000003',
+      tipoSolicitud: 'Modificación contractual',
+      estadoRegistro: true,
+      estadoDocumento: 'Firmado',
       id: 1
     },
   ];

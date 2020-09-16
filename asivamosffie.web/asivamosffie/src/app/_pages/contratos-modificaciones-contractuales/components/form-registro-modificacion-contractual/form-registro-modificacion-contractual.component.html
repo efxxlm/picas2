@@ -1,18 +1,18 @@
 <form autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
   <div class="container">
     <div class="d-flex mt-1em">
-        <label class="mr-label" for="numeroContrato" class="label-left"><b>Nombre del grupo</b></label>
+        <label class="mr-label" for="numeroContrato" class="label-left"><b>Número de otrosí</b></label>
       <div class="col d-flex">
         <mat-form-field class="w-20">
-          <input matInput type="text" maxlength="10" formControlName="numeroContrato">          
+          <input matInput type="text" maxlength="10" formControlName="numeroOtroSi">          
         </mat-form-field>
-        <span class="contador">{{10 - dataFormulario.get( 'numeroContrato' ).value.length}}</span>
+        <span class="contador">{{10 - dataFormulario.get( 'numeroOtroSi' ).value.length}}</span>
       </div>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'numeroContrato' ).value.length > 0">
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'numeroOtroSi' ).value.length > 0">
       <label class="mr-label"><b>Fecha de envío para firma del contratista</b></label>
-      <mat-form-field class="w-20 ml-1em" 
+      <mat-form-field class="w-20" 
                       appearance="fill">
         <input  matInput 
                 [matDatepicker]="pickerFechaEnvioTramite" 
@@ -33,7 +33,7 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte del contratista</b></label>
-      <mat-form-field class="w-20 ml-1em" 
+      <mat-form-field class="w-20" 
                       appearance="fill">
         <input  matInput 
                 [matDatepicker]="pickerFechaFirmaContratista" 
@@ -54,7 +54,7 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de envío para la firma de la fiduciaria</b></label>
-      <mat-form-field class="w-20 ml-1em" 
+      <mat-form-field class="w-20" 
                       appearance="fill">
         <input  matInput 
                 [matDatepicker]="pickerFechaEnvioFirmaFiduciaria" 
@@ -75,7 +75,7 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte de la fiduciaria</b></label>
-      <mat-form-field class="w-20 ml-1em" 
+      <mat-form-field class="w-20" 
                       appearance="fill">
         <input  matInput 
                 [matDatepicker]="pickerFechaFirmaFiduciaria" 
@@ -96,7 +96,7 @@
 
     <div class="d-flex mt-1em">
       <label class="mr-label"><b>Observaciones</b></label>
-      <quill-editor class="quill-editor-style w-60 ml-1em" 
+      <quill-editor class="quill-editor-style w-60" 
                     [styles]="editorStyle"
                     [modules]="config"
                     (onContentChanged)="maxLength($event, 2000)" 

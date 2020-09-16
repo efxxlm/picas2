@@ -1,33 +1,37 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-tabla-sin-registro-contrato',
-  templateUrl: './tabla-sin-registro-contrato.component.html',
-  styleUrls: ['./tabla-sin-registro-contrato.component.scss']
+  selector: 'app-tabla-registrados',
+  templateUrl: './tabla-registrados.component.html',
+  styleUrls: ['./tabla-registrados.component.scss']
 })
-export class TablaSinRegistroContratoComponent implements OnInit {
+export class TablaRegistradosComponent implements OnInit {
 
-  @Input() dataTable: any[] = [];
   dataSource                = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
-  displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'estadoDocumento', 'id' ];
-  ELEMENT_DATA    : any[]    = [
-    { titulo: 'Número de solicitud', name: 'numeroSolicitud' },
-    { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
+  displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
+  dataTable: any[] = [
+    {
+      fechaSolicitud: '19/06/2020',
+      numeroSolicitud: 'PI_007',
+      tipoSolicitud: 'Contratación',
+      estadoRegistro: true,
+      estadoDocumento: 'Completo',
+      id: 0
+    }
   ];
 
-  constructor ( private routes: Router ) { };
+  constructor ( private routes: Router ) { }
 
   ngOnInit(): void {
     this.dataSource                        = new MatTableDataSource( this.dataTable );
     this.dataSource.paginator              = this.paginator;
     this.dataSource.sort                   = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   };
 
   applyFilter ( event: Event ) {

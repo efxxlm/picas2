@@ -5,11 +5,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-tabla-sin-registro-contrato',
-  templateUrl: './tabla-sin-registro-contrato.component.html',
-  styleUrls: ['./tabla-sin-registro-contrato.component.scss']
+  selector: 'app-tabla-proceso-firmas',
+  templateUrl: './tabla-proceso-firmas.component.html',
+  styleUrls: ['./tabla-proceso-firmas.component.scss']
 })
-export class TablaSinRegistroContratoComponent implements OnInit {
+export class TablaProcesoFirmasComponent implements OnInit {
 
   @Input() dataTable: any[] = [];
   dataSource                = new MatTableDataSource();
@@ -21,13 +21,12 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
 
-  constructor ( private routes: Router ) { };
+  constructor ( private routes: Router ) { }
 
   ngOnInit(): void {
     this.dataSource                        = new MatTableDataSource( this.dataTable );
     this.dataSource.paginator              = this.paginator;
     this.dataSource.sort                   = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   };
 
   applyFilter ( event: Event ) {
@@ -53,4 +52,4 @@ export class TablaSinRegistroContratoComponent implements OnInit {
 
   };
 
-};
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-form-modificacion-contractual',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormModificacionContractualComponent implements OnInit {
 
-  constructor() { }
+  formModificacionContractual: FormGroup;
+
+  constructor ( private fb: FormBuilder ) {
+    this.crearFormulario();
+  }
 
   ngOnInit(): void {
-  }
+  };
+
+  crearFormulario () {
+    this.formModificacionContractual = this.fb.group({
+      numeroOtroSi                  : [ '' ],
+      fechaEnvioParaFirmaContratista: [ null ],
+      fechaFirmaPorParteContratista : [ null ],
+      fechaEnvioParaFirmaFiduciaria : [ null ],
+      fechaFirmaPorParteFiduciaria  : [ null ],
+      observaciones                 : [ null ],
+      documento                     : [ null ],
+      documentoFile                 : [ null ]
+    });
+  };
 
 }

@@ -1,18 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-form-registro-tramite',
-  templateUrl: './form-registro-tramite.component.html',
-  styleUrls: ['./form-registro-tramite.component.scss']
+  selector: 'app-form-registro-modificacion-contractual',
+  templateUrl: './form-registro-modificacion-contractual.component.html',
+  styleUrls: ['./form-registro-modificacion-contractual.component.scss']
 })
-export class FormRegistroTramiteComponent implements OnInit {
+export class FormRegistroModificacionContractualComponent implements OnInit {
 
-  archivo                : string;
   @Input() dataFormulario: FormGroup;
+  archivo                : string;
   editorStyle = {
     height: '45px'
   };

@@ -1,1 +1,102 @@
-<p>form-modificacion-contractual works!</p>
+<div class="container text-center mt-2em">
+  <div class="text-right">
+    <a routerLink="/contratosModificacionesContractuales" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Gestonar solicitud 000003
+    </h1>
+  </div>
+  <div class="text-center flex">
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>19/06/2020</b></p>
+    <p class="color-titulo"><b>Modificación contractual</b></p>
+  </div>
+  <div align="left">
+    <mat-card class="border">
+      <mat-card-content>
+        <p><b>Número de comité técnico</b>: CT_0016</p>
+        <p><b>Fecha de comité técnico</b>: 12/06/2020</p>
+        <p><b>Número de comité fiduciario</b>: CF_0019</p>
+        <p><b>Fecha de comité fiduciario</b>: 18/06/2020</p>
+      </mat-card-content>
+  </mat-card>
+  </div>
+  <div class="text-center">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos de contratista
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
+              <p><b>Tipo de identificación</b>: NIT</p>
+              <p><b>Número de identificación</b>: 900.675.987-4</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos del contrato
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Tipo de contrato</b>: Obra</p>
+              <p><b>Valor del contrato</b>: $30.000.000</p>
+              <p><b>Plazo</b>: 12 meses / 20 días</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Detalle de modificación
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Tipo de modificación</b>: Adición, Prorroga</p>
+              <p><b>Presupuesto adicional solicitado</b>: $7.000.000</p>
+              <p><b>Valor después de la modificación</b>: $72.000.000</p>
+              <p><b>Plazo adicional solicitado</b>: 23 meses, 13 días</p>
+              <p><b>Plazo después de la modificación</b>: 33 meses, 11 días</p>
+              <p><b>Detalle de la modificación</b>: Se solicita adición y plazo para realizar obras extras en el proyecto</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="mt-2em" align="left">
+    <mat-card class="border">
+      <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
+      <mat-card-content class="mt-2em">
+        <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em">20/06/2020</span></p>
+        <p><b>Número del contrato</b> <span class="color-titulo ml-1em">A886675445</span></p>
+        <app-form-registro-modificacion-contractual [dataFormulario]="formModificacionContractual"></app-form-registro-modificacion-contractual>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>
