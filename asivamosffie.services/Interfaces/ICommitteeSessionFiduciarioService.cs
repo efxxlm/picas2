@@ -41,6 +41,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSessionTemaById(int sessionTemaId);
         Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate, string usuarioModifico);
         Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico);
+         Task<List<GridValidationRequests>> GetValidationRequests();
         Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo);
         Task<Respuesta> CreateOrEditInvitedMembers(SesionParticipante sesionParticipante);
 
