@@ -28,32 +28,31 @@ namespace asivamosffie.api.Controllers
             _registerContractsService = registerContractsService;
             _settings = settings;
         }
-    
+
         [HttpGet]
         [Route("GetListSesionComiteSolicitud")]
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
-        { 
-            return await _registerContractsService.GetListSesionComiteSolicitud(); 
+        {
+            return await _registerContractsService.GetListSesionComiteSolicitud();
         }
-         
+
         [HttpGet]
         [Route("GetContratacionByContratacionId")]
         public async Task<Contratacion> GetContratacionByContratacionId([FromQuery] int ContratacionId)
         {
             return await _registerContractsService.GetContratacionByContratacionId(ContratacionId);
         }
-     
+
         [Route("RegistrarTramiteContrato")]
         [HttpPost]
-        public async Task<IActionResult> RegistrarTramiteContrato([FromForm] Contrato pContrato)
+        public async Task<IActionResult> RegistrarTramiteContrato([FromForm] Contrato pContrato, string pEstadoCodigo)
         {
             Respuesta respuesta = new Respuesta();
             try
             { 
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                pContrato.UsuarioCreacion = pUsuarioModifico;
+                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _registerContractsService.RegistrarTramiteContrato(pContrato,
-               Path.Combine(_settings.Value.DirectoryBase ,_settings.Value.DirectoryBaseRutaDocumentoContrato));
+               Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseRutaDocumentoContrato), pEstadoCodigo);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -62,6 +61,6 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-          
+
     }
 }

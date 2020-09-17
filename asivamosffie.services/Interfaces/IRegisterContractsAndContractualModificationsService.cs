@@ -14,6 +14,6 @@ namespace asivamosffie.services.Interfaces
 
         Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);
 
-        Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato ,string pPatchfile);
+        Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato ,string pPatchfile,string pEstadoCodigo);
     }
 }

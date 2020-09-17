@@ -148,23 +148,50 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile)
+        public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile, string pEstadoCodigo)
         {
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
-            Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
-
+            Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.Contratacion).FirstOrDefault();
+            //contratacion
+            contratoOld.Contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
+            contratoOld.Contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
+            contratoOld.Contratacion.FechaModificacion = pContrato.FechaModificacion;
+            contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
+            //Contrato 
             contratoOld.NumeroContrato = pContrato.NumeroContrato;
-            contratoOld.FechaFirmaContratista = pContrato.FechaFirmaContratista;
-            contratoOld.Observaciones = pContrato.Observaciones;
-            contratoOld.UsuarioModificacion = pContrato.UsuarioModificacion;
-            contratoOld.FechaModificacion = pContrato.FechaModificacion;
+            //Fecha envio para la firma contratista
+            if (!string.IsNullOrEmpty(pContrato.FechaEnvioFirma.ToString()))
+            {
+                contratoOld.FechaEnvioFirma = pContrato.FechaEnvioFirma;
+            }
+
+            //Fecha envio por parte del contratista 
+            if (!string.IsNullOrEmpty(pContrato.FechaFirmaContratista.ToString()))
+            {
+                contratoOld.FechaFirmaContratista = pContrato.FechaFirmaContratista;
+            }
+
+            //Fecha de envio para la firma de la fiduciaria
+            if (!string.IsNullOrEmpty(pContrato.FechaFirmaFiduciaria.ToString()))
+            {
+                contratoOld.FechaFirmaFiduciaria = pContrato.FechaFirmaFiduciaria;
+            }
+            //Fecha de Firma por parte de la fiduciaria
+            if (!string.IsNullOrEmpty(pContrato.FechaFirmaContrato.ToString()))
+            {
+                contratoOld.FechaFirmaContrato = pContrato.FechaFirmaContrato;
+            }
+
+            if (!string.IsNullOrEmpty(pContrato.Observaciones))
+            {
+                contratoOld.Observaciones = pContrato.Observaciones;
+            }
+
 
             string strFilePatch = "";
             //Save Files  
-
-
             if (pContrato.pFile != null && pContrato.pFile.Length > 0)
             {
                 await _documentService.SaveFileContratacion(pContrato.pFile, strFilePatch, pContrato.pFile.FileName);
@@ -196,6 +223,32 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, contratoOld.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+        private bool ValidarRegistroCompletoContrato(Contrato contratoOld)
+        {
+            if (
+               string.IsNullOrEmpty(contratoOld.FechaTramite.ToString())
+               || string.IsNullOrEmpty(contratoOld.TipoContratoCodigo)
+               || string.IsNullOrEmpty(contratoOld.NumeroContrato)
+               || string.IsNullOrEmpty(contratoOld.EstadoDocumentoCodigo)
+               || string.IsNullOrEmpty(contratoOld.FechaEnvioFirma.ToString())
+               || string.IsNullOrEmpty(contratoOld.FechaFirmaContratista.ToString())
+               || string.IsNullOrEmpty(contratoOld.FechaFirmaFiduciaria.ToString())
+               || string.IsNullOrEmpty(contratoOld.FechaFirmaContrato.ToString())
+               || string.IsNullOrEmpty(contratoOld.Observaciones)
+               || string.IsNullOrEmpty(contratoOld.RutaDocumento)
+               || string.IsNullOrEmpty(contratoOld.Objeto)
+               || string.IsNullOrEmpty(contratoOld.Valor.ToString())
+               || string.IsNullOrEmpty(contratoOld.Plazo.ToString())
+                || string.IsNullOrEmpty(contratoOld.CantidadPerfiles.ToString())
+                || string.IsNullOrEmpty(contratoOld.EstadoVerificacionCodigo.ToString())
+                || string.IsNullOrEmpty(contratoOld.EstadoFase1.ToString())
+                || string.IsNullOrEmpty(contratoOld.EstadoActa.ToString())
+
+                ) { return false; }
+
+            return true;
         }
     }
 }
