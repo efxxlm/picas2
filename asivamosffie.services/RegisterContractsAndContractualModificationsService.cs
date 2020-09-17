@@ -59,6 +59,7 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoSolicitud.Contratacion:
                         Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
+                        //TODO: validar si viene le objeto
                         try
                         {
                             if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
