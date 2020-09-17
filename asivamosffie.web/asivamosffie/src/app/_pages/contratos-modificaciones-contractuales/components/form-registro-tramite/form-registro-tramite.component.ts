@@ -13,6 +13,7 @@ export class FormRegistroTramiteComponent implements OnInit {
 
   archivo                : string;
   @Input() dataFormulario: FormGroup;
+  @Input() estadoCodigo  : string;
   editorStyle = {
     height: '45px'
   };
@@ -29,6 +30,7 @@ export class FormRegistroTramiteComponent implements OnInit {
                 private routes: Router ) { }
 
   ngOnInit(): void {
+    console.log( this.estadoCodigo );
   };
 
   fileName ( event: any ) {

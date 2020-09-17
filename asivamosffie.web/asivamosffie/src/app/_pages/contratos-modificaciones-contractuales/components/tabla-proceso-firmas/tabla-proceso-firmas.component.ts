@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 
 @Component({
   selector: 'app-tabla-proceso-firmas',
@@ -20,14 +21,43 @@ export class TablaProcesoFirmasComponent implements OnInit {
     { titulo: 'Número de solicitud', name: 'numeroSolicitud' },
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
+  estadoCodigo: string;
+  estadoCodigos = {
+    enFirmaFiduciaria: '11',
+    firmado: '12',
+    registrado: '13'
+  }
 
-  constructor ( private routes: Router ) { }
+  constructor ( private routes: Router,
+                private contratosContractualesSvc: ContratosModificacionesContractualesService ) { }
 
   ngOnInit(): void {
-    this.dataSource                        = new MatTableDataSource( this.dataTable );
-    this.dataSource.paginator              = this.paginator;
-    this.dataSource.sort                   = this.sort;
+    this.getGrilla();
   };
+
+  getGrilla () {
+    this.contratosContractualesSvc.getGrilla()
+      .subscribe( ( resp: any ) => {
+        const dataTable = [];
+        
+        for ( let contratacion of resp ) {
+          if ( contratacion.estadoCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
+            dataTable.push( contratacion );
+            this.estadoCodigo = this.estadoCodigos.firmado;
+          };
+          if ( contratacion.estadoCodigo === this.estadoCodigos.firmado ) {
+            dataTable.push( contratacion );
+            this.estadoCodigo = this.estadoCodigos.firmado;
+          };
+        };
+
+        console.log( resp );
+        this.dataSource                        = new MatTableDataSource( dataTable );
+        this.dataSource.paginator              = this.paginator;
+        this.dataSource.sort                   = this.sort;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      } );
+  }
 
   applyFilter ( event: Event ) {
     const filterValue      = (event.target as HTMLInputElement).value;
@@ -39,7 +69,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
     switch ( tipoSolicitud ) {
 
       case "Contratación":
-        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ] );
+        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo: this.estadoCodigo } } );
       break;
 
       case "Modificación contractual":
@@ -52,4 +82,8 @@ export class TablaProcesoFirmasComponent implements OnInit {
 
   };
 
-}
+  cambioEstadoRegistrado ( elemento ) {
+    console.log( elemento, this.estadoCodigos.registrado );
+  }
+
+};

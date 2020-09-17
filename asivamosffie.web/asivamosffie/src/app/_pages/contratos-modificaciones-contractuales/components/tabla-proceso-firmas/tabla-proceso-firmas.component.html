@@ -12,11 +12,11 @@
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="fechaSolicitud">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-      <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaSolicitud }}</b> </td>
+      <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaSolicitud }} </b> </td>
     </ng-container>
     <ng-container *ngFor="let columna of ELEMENT_DATA" [matColumnDef]="columna.name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.titulo }} </th>
-      <td mat-cell *matCellDef="let element" align="center"> {{element[columna.name]}} </td>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element[columna.name] }} </td>
     </ng-container>
 
     <ng-container matColumnDef="estadoRegistro">
@@ -34,26 +34,27 @@
 
     <ng-container matColumnDef="estadoDocumento">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del documento </th>
-      <td mat-cell *matCellDef="let element" align="center">{{ element.estadoDocumento }}</td>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoDocumento }} </td>
     </ng-container>
   
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
       <td mat-cell *matCellDef="let element">
-  
+
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="!element.estadoRegistro"
-                (click)="gestionar( element.tipoSolicitud, element.id )">
-                Gestionar solicitud
+                (click)="gestionar( element.tipoSolicitud, element.id )"
+                *ngIf="element.estadoCodigo === '11'">
+                Ver detalle/Editar
         </button>
 
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoRegistro">
-                Ver detalle/Editar
+                *ngIf="element.estadoCodigo === '12'"
+                (click)="cambioEstadoRegistrado( element )">
+                Registrar
         </button>
   
       </td>
