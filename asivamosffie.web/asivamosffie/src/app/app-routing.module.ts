@@ -89,6 +89,10 @@ const routes: Routes = [
         component: RegistrarComponent,
       },
       {
+        path: 'comiteTecnico',
+        loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
+      },
+      {
         path: 'seleccion',
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
@@ -97,14 +101,19 @@ const routes: Routes = [
         path: 'comiteFiduciario',
         loadChildren: () => import( './_pages/sesion-comite-fiduciario/comite-fiduciario.module' )
           .then( module => module.ComiteFiduciarioModule )
-      }
+      },
+      {
+        path: 'solicitarContratacion',
+        loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
+        .then(m => m.SolicitarContratacionModule)
+      },
     ]
 
   },
   {
     path: '**',
-    redirectTo: '/inicio',
-    // loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    // redirectTo: '/inicio',
+    loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 @NgModule({

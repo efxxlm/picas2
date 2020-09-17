@@ -120,6 +120,15 @@ interface EstadoSolicitud{
     DevueltaPorComiteFiduciario: '6',
     EnTramite: '7',
   }
+
+  export interface ContratacionObservacion{
+    contratacionObservacionId?: number,
+    contratacionId?: number,
+    observacion?: string,
+    usuarioCreacion?: string,
+    fechaCreacion?: Date,
+    comiteTecnicoId?: number,
+  }
   
 
 

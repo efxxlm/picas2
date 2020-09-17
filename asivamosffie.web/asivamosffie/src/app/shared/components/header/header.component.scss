@@ -10,7 +10,7 @@
     flex-wrap: wrap;
 
     @media only screen and (min-width: 48em) {
-        padding: 1em 12em;
+        padding: 1em 17em;
     }
 
     &--logo {
@@ -29,9 +29,10 @@
         line-height: 1.2;
         color: #174193;;
         color: var(--mainColor);
+        max-width: 16.2em;
         @media only screen and (min-width: 48em) {
             position: absolute;
-            right: 2px;
+            right: .5em;
             top: 50%;
             transform: translateY(-50%);
         }

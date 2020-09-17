@@ -76,7 +76,9 @@ div.mat-paginator {
     &-range-actions {
         order: 1;
         margin: auto;
-        padding-left: 9.6em;
+        @media only screen and (min-width: 48em) {
+            padding-left: 9.6em;
+        }
     }
 
     &-range-label {
@@ -212,4 +214,10 @@ div.mat-paginator {
 
 .mat-paginator-container {
     width: 95% !important;
+}
+
+.info-table--img {
+    height: 2em;
+    margin-bottom: -.65em;
+    margin-right: .5em;
 }

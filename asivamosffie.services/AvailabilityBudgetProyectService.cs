@@ -39,7 +39,7 @@ namespace asivamosffie.services
                     Id = validacionPresupuestal.DisponibilidadPresupuestalId,
                     FechaSolicitud = validacionPresupuestal.FechaSolicitud,
                     NumeroSolicitud = validacionPresupuestal.NumeroSolicitud,
-                    TipoSolicitudCodigo = validacionPresupuestal.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(validacionPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud) : "",
+                    TipoSolicitudCodigo = validacionPresupuestal.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(validacionPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud) : "",
                     EstadoRegistro = (bool)validacionPresupuestal.RegistroCompleto,
                     EstadoRegistroText = (bool)validacionPresupuestal.RegistroCompleto ? "Completo" : "Incompleto"
                 };
@@ -65,7 +65,7 @@ namespace asivamosffie.services
                     Id = detailDP.DisponibilidadPresupuestalId,
                     NumeroSolicitud = detailDP.NumeroSolicitud,
                     TipoSolicitudCodigo = detailDP.TipoSolicitudCodigo,
-                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud) : "",
+                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud) : "",
                     NumeroDDP = detailDP.NumeroDdp,
                     RubroPorFinanciar = "", // TODO: pendiente validar de donde biene este campo
                     Objeto = detailDP.Objeto,
