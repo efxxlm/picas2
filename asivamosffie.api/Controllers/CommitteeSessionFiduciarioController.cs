@@ -375,7 +375,26 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateOrEditVotacionSolicitud")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditVotacionSolicitud([FromBody] List<SesionSolicitudVoto> listSolicitudVoto)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
 
+                listSolicitudVoto.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateOrEditVotacionSolicitud(listSolicitudVoto);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+        
         //Declarar fallida
         [Route("SessionDeclaredFailed")]
         [HttpGet]
