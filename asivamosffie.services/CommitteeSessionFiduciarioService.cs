@@ -188,7 +188,7 @@ namespace asivamosffie.services
             try
             {
                 return await (from n in _context.SesionComiteTecnicoCompromiso
-                              where  !(bool)!n.Eliminado
+                              where  !(bool)n.Eliminado
                               select new GridComiteTecnicoCompromiso
                               {
                                   Tarea = n.Tarea,
@@ -196,7 +196,7 @@ namespace asivamosffie.services
                                   FechaCumplimiento = n.FechaCumplimiento,
                                   FechaReporte = n.FechaCreacion,
                                   EstadoReporte = n.EstadoCodigo
-                              }).OrderByDescending(s => s.FechaCumplimiento).ToListAsync();
+                              }).OrderByDescending(n => n.FechaCumplimiento).ToListAsync();
             }
             catch (Exception)
             {
