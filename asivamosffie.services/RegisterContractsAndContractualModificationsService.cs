@@ -235,9 +235,13 @@ namespace asivamosffie.services
                 pContrato.Eliminado = false;
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
-                if (pContrato.pFile != null || pContrato.pFile.Length > 0)
+
+                if (pContrato.pFile != null)
                 {
-                    pContrato.RutaDocumento = Path.Combine(pPatchfile, pContrato.ContratoId.ToString(), pContrato.pFile.FileName);
+                    if (pContrato.pFile.Length > 0)
+                    {
+                        pContrato.RutaDocumento = Path.Combine(pPatchfile, pContrato.ContratoId.ToString(), pContrato.pFile.FileName);
+                    }
                 }
             }
             string strFilePatch = "";
