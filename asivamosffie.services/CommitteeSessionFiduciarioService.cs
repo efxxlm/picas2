@@ -182,6 +182,28 @@ namespace asivamosffie.services
         }
 
 
+        //Grilla vefificar complimiento de compromisos
+        public async Task<ActionResult<List<GridComiteTecnicoCompromiso>>> GetCompromisosSolicitud()
+        {
+            try
+            {
+                return await (from n in _context.SesionComiteTecnicoCompromiso
+                              where  !(bool)!n.Eliminado
+                              select new GridComiteTecnicoCompromiso
+                              {
+                                  Tarea = n.Tarea,
+                                  Responzable = n.Responsable,
+                                  FechaCumplimiento = n.FechaCumplimiento,
+                                  FechaReporte = n.FechaCreacion,
+                                  EstadoReporte = n.EstadoCodigo
+                              }).OrderByDescending(s => s.FechaCumplimiento).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         //Convocar sesión de comité
         public async Task<Respuesta> CallCommitteeSession(int comiteTecnicoId, string user)
