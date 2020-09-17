@@ -302,8 +302,7 @@ namespace asivamosffie.services
 
 
         //Grilla validacion de solicitudes contractuales
-               //Grilla validacion de solicitudes contractuales
-        public async Task<List<GridValidationRequests>> GetValidationRequests()
+         public async Task<List<GridValidationRequests>> GetValidationRequests()
         {
             //sc.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
             return await
@@ -315,6 +314,7 @@ namespace asivamosffie.services
                  select new GridValidationRequests
                  {
                      ComiteTecnicoId = ct.ComiteTecnicoId,
+                     SesionComiteSolicitudId = sc.SesionComiteSolicitudId,
                      FechaSolicitud = ps.FechaCreacion,
                      NumeroSolicitud = ps.NumeroProceso,
                      ProcesoSeleccionId = ps.ProcesoSeleccionId,
@@ -330,7 +330,7 @@ namespace asivamosffie.services
                                                    SesionParticipanteVotoId = v.SesionParticipanteId,
                                                    ListaSesionParticipante =
                                                    (List<SesionParticipante>)(from sp in _context.SesionParticipante
-                                                                    where sp.SesionParticipanteId == v.SesionParticipanteId && !(bool)sp.Eliminado
+                                                                    where sp.ComiteTecnicoId == v.ComiteTecnicoId && !(bool)sp.Eliminado
                                                                         select new SesionParticipante
                                                                         {
                                                                             ComiteTecnicoId = sp.ComiteTecnicoId,
@@ -348,6 +348,7 @@ namespace asivamosffie.services
         }).ToListAsync();
 
         }
+        
 
         //Ver soporte
         public async Task<ActionResult<List<SesionComiteSolicitud>>> StartDownloadResumenFichaSolicitud()
