@@ -28,9 +28,16 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? RegistroCompleto { get; set; }
-
         public int? ContratacionId { get; set; }
         public string NumeroDrp { get; set; }
+        public int? PlazoMeses { get; set; }
+        public int? PlazoDias { get; set; }
+        public bool? CuentaCartaAutorizacion { get; set; }
+        public string AportanteId { get; set; }
+        public decimal? ValorAportante { get; set; }
+        public string NumeroContrato { get; set; }
+        public string LimitacionEspecial { get; set; }
+        public string NumeroRadicadoSolicitud { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
