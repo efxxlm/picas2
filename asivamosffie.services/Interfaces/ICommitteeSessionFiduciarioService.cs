@@ -45,6 +45,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo);
         Task<Respuesta> CreateOrEditVotacionSolicitud(List<SesionSolicitudVoto> listSolicitudVoto);
         Task<Respuesta> CreateOrEditInvitedMembers(SesionParticipante sesionParticipante);
+        Task<ActionResult<List<GridComiteTecnicoCompromiso>>> GetCompromisosSolicitud();
 
     }
 }
