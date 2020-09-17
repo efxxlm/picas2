@@ -59,13 +59,23 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoSolicitud.Contratacion:
                         Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
-                        if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
+                        try
                         {
-                            sesionComiteSolicitud.EstaTramitado = true;
+                            if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
+                            {
+                                sesionComiteSolicitud.EstaTramitado = true;
+                            }
+                            else
+                            {
+                                sesionComiteSolicitud.EstaTramitado = false;
+                            }
                         }
-                        else {
+                        catch (Exception)
+                        {
+
                             sesionComiteSolicitud.EstaTramitado = false;
                         }
+                     
                           
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
