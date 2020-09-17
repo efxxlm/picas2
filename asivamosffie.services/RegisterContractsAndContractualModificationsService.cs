@@ -46,11 +46,8 @@ namespace asivamosffie.services
             List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
             List<Contratacion> ListContratacion = _context.Contratacion
-                .Where(r => !(bool)r.Eliminado)
-                //.Include(r => r.ContratacionProyecto)
-                //.ThenInclude(r => r.Proyecto)
-                //.ThenInclude(r => r.DisponibilidadPresupuestalProyecto)
-                //.ThenInclude(r => r.Proyecto) 
+                .Where(r => !(bool)r.Eliminado).Include(r=> r.Contrato)
+            
                 .ToList();
 
             List<Contratista> ListContratista = _context.Contratista.ToList();
@@ -62,13 +59,14 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoSolicitud.Contratacion:
                         Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
-                        sesionComiteSolicitud.EstaTramitado = false;
-
-                        if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
+                        if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
                         {
                             sesionComiteSolicitud.EstaTramitado = true;
                         }
-
+                        else {
+                            sesionComiteSolicitud.EstaTramitado = false;
+                        }
+                          
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
                         sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
