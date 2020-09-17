@@ -13,6 +13,8 @@ import { TablaEnRevisionDePolizasComponent } from './components/tabla-en-revisio
 import { TablaConPolizaObservadaYDevueltaComponent } from './components/tabla-con-poliza-observada-y-devuelta/tabla-con-poliza-observada-y-devuelta.component';
 import { TablaConAprobacionDePolizasComponent } from './components/tabla-con-aprobacion-de-polizas/tabla-con-aprobacion-de-polizas.component';
 import { GestionarPolizasComponent } from './components/gestionar-polizas/gestionar-polizas.component';
+import { EditarEnRevisionComponent } from './components/editar-en-revision/editar-en-revision.component';
+import { EditarObservadaODevueltaComponent } from './components/editar-observada-o-devuelta/editar-observada-o-devuelta.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { GestionarPolizasComponent } from './components/gestionar-polizas/gestio
     TablaEnRevisionDePolizasComponent,
     TablaConPolizaObservadaYDevueltaComponent,
     TablaConAprobacionDePolizasComponent,
-    GestionarPolizasComponent
+    GestionarPolizasComponent,
+    EditarEnRevisionComponent,
+    EditarObservadaODevueltaComponent
   ],
   imports: [
     CommonModule,

@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-gestionar-polizas',
-  templateUrl: './gestionar-polizas.component.html',
-  styleUrls: ['./gestionar-polizas.component.scss']
+  selector: 'app-editar-en-revision',
+  templateUrl: './editar-en-revision.component.html',
+  styleUrls: ['./editar-en-revision.component.scss']
 })
-export class GestionarPolizasComponent {
+export class EditarEnRevisionComponent implements OnInit {
+
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([
       Validators.required, Validators.minLength(5), Validators.maxLength(50)])
@@ -70,6 +71,8 @@ export class GestionarPolizasComponent {
     this.minDate = new Date();
   }
 
+  ngOnInit(): void { }
+
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -99,4 +102,5 @@ export class GestionarPolizasComponent {
     console.log(this.addressForm.value);
     this.openDialog('', 'La información ha sido guardada exitosamente.');
   }
+
 }
