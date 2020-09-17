@@ -182,6 +182,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        [Route("GetCompromisosSolicitud")]
+        public async Task<IActionResult> GetCompromisosSolicitud()
+        {
+            try
+            {
+                var result = await _committeeSessionFiduciarioService.GetCompromisosSolicitud();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        
         #endregion
 
 
