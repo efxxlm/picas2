@@ -141,6 +141,7 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors(MyAllowSpecificOrigins);
