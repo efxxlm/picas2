@@ -25,6 +25,7 @@ namespace asivamosffie.model.Models
         public string RutaSoporteVotacion { get; set; }
         public bool? GeneraCompromiso { get; set; }
         public int? CantCompromisos { get; set; }
+<<<<<<< HEAD
         public bool? Eliminado { get; set; }
         public bool? RequiereVotacion { get; set; }
         public int? ComiteTecnicoFiduciarioId { get; set; }
@@ -33,6 +34,15 @@ namespace asivamosffie.model.Models
         public string EstadoActaCodigo { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
+=======
+
+        public virtual ComiteTecnico ComiteTecnico { get; set; }
+        public virtual Contratacion Solicitud { get; set; }
+        public virtual DefensaJudicial Solicitud1 { get; set; }
+        public virtual NovedadContractual Solicitud2 { get; set; }
+        public virtual ProcesoSeleccion Solicitud3 { get; set; }
+        public virtual ControversiaContractual SolicitudNavigation { get; set; }
+>>>>>>> 44c6d1719f3208074f5544eb7da53e1ff00c009a
         public virtual ICollection<SesionSolicitudCompromiso> SesionSolicitudCompromiso { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
         public virtual ICollection<SesionSolicitudVoto> SesionSolicitudVoto { get; set; }

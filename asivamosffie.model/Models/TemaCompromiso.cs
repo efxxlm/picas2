@@ -18,9 +18,14 @@ namespace asivamosffie.model.Models
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+<<<<<<< HEAD
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public string EstadoCodigo { get; set; }
+=======
+        public DateTime? UsuarioModificacion { get; set; }
+        public bool? Eliminado { get; set; }
+>>>>>>> 44c6d1719f3208074f5544eb7da53e1ff00c009a
 
         public virtual SesionParticipante ResponsableNavigation { get; set; }
         public virtual SesionComiteTema SesionTema { get; set; }

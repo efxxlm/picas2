@@ -1,0 +1,68 @@
+<section class="container">
+    <div class="text-right">
+        <a routerLink="/comiteTecnico" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Crear acta CT_00001
+        </h1>
+        <b>24/06/2020</b>
+    </div>
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
+                Miembros participantes
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="colorMainColor">
+            Juan Lizcano Garcia, Fernando José Aldemar Rojas, Gonzalo Díaz Mesa
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Validación de solicitudes contractuales
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title completo">
+                            Solicitud SA0006
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-solicitud></app-form-solicitud>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Otros temas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Proposiciones y varios
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

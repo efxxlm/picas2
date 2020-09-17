@@ -2,6 +2,27 @@ body {
     color: var(--fontColor);
 }
 
+b,
+strong {
+    font-weight: 500;
+
+    .ql-editor & {
+        font-weight: 700;
+    }
+}
+
+.mat-typography p {
+    margin: 0 0 6px;
+}
+
+.font-weight-lighter {
+    font-weight: lighter;
+}
+
+.colorMainColor {
+    color: var(--mainColor);
+}
+
 .color-secondaryColor {
     color: #d21e18;
     color: var(--secondaryColor);
@@ -65,16 +86,24 @@ body {
     }
 }
 
+.info-sub-title,
+.mat-typography .info-sub-title {
+    margin-top: .8em;
+    margin-bottom: 1.2em;
+    color: var(--mainColor);
+
+    span {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+}
+
 .mt-1em {
-    margin-top: 1em;
+    margin-top: 1em !important;
 }
 
 .mb-1em {
     margin-bottom: 1em;
-}
-
-.mt-3em {
-    margin-top: 3em;
 }
 
 .pr-0 {
@@ -83,6 +112,10 @@ body {
 
 .pr-1 {
     padding-right: .5em;
+}
+
+.pt-1 {
+    padding-top: .5em;
 }
 
 .d-flex {
@@ -104,6 +137,10 @@ body {
 .mt-2em,
 .card-subTitle.var-main-gris.mt-2em {
     margin-top: 2em;
+}
+
+.mb-2em {
+    margin-bottom: 2em;
 }
 
 .m05_important{
@@ -136,4 +173,9 @@ input[type=number]::-webkit-outer-spin-button {
 
     animation-duration: .3s;
     animation-name: animatedOpacity;
+}
+
+.icon {
+    height: 1.4em;
+    margin-bottom: -.3em;
 }

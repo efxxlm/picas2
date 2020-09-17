@@ -466,4 +466,71 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
+
+    public class ConstantSesionComiteTecnico
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+    public class ConstantMessagesContratacionProyecto
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+    public class ConstantMessagesGenerateBudget
+    {
+
+        #region Mensajes Informativos
+        public const string CanceladoCorrrectamente = "201";
+        public const string DevueltoCorrrectamente = "202";
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
 }

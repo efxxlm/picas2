@@ -7,12 +7,18 @@ namespace asivamosffie.model.Models
     {
         public ComiteTecnico()
         {
+<<<<<<< HEAD
             ContratacionObservacion = new HashSet<ContratacionObservacion>();
             SesionComentario = new HashSet<SesionComentario>();
             SesionComiteSolicitud = new HashSet<SesionComiteSolicitud>();
             SesionComiteTecnicoCompromiso = new HashSet<SesionComiteTecnicoCompromiso>();
             SesionComiteTema = new HashSet<SesionComiteTema>();
             SesionInvitado = new HashSet<SesionInvitado>();
+=======
+            SesionComentario = new HashSet<SesionComentario>();
+            SesionComiteSolicitud = new HashSet<SesionComiteSolicitud>();
+            SesionComiteTecnicoCompromiso = new HashSet<SesionComiteTecnicoCompromiso>();
+>>>>>>> 44c6d1719f3208074f5544eb7da53e1ff00c009a
             SesionParticipante = new HashSet<SesionParticipante>();
             SesionParticipanteVoto = new HashSet<SesionParticipanteVoto>();
         }
@@ -36,6 +42,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaOrdenDia { get; set; }
         public string NumeroComite { get; set; }
         public string EstadoComiteCodigo { get; set; }
+<<<<<<< HEAD
         public string EstadoActaCodigo { get; set; }
         public bool? EsComiteFiduciario { get; set; }
         public string TipoTemaFiduciarioCodigo { get; set; }
@@ -46,6 +53,12 @@ namespace asivamosffie.model.Models
         public virtual ICollection<SesionComiteTecnicoCompromiso> SesionComiteTecnicoCompromiso { get; set; }
         public virtual ICollection<SesionComiteTema> SesionComiteTema { get; set; }
         public virtual ICollection<SesionInvitado> SesionInvitado { get; set; }
+=======
+
+        public virtual ICollection<SesionComentario> SesionComentario { get; set; }
+        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
+        public virtual ICollection<SesionComiteTecnicoCompromiso> SesionComiteTecnicoCompromiso { get; set; }
+>>>>>>> 44c6d1719f3208074f5544eb7da53e1ff00c009a
         public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }
         public virtual ICollection<SesionParticipanteVoto> SesionParticipanteVoto { get; set; }
     }

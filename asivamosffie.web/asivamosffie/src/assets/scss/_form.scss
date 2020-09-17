@@ -1,6 +1,29 @@
+.full-width {
+    width: 100%;
+}
+
+.shipping-card {
+    min-width: 120px;
+    margin: 20px auto;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.col:last-child {
+    margin-right: 0;
+}
+
 .mat-form-field-appearance-outline .mat-form-field-outline,
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-    color: #174193;;
+    color: #174193;
     color: var(--mainColor);
 }
 
@@ -12,7 +35,7 @@
 
 label.mat-form-field-label {
     font-weight: 500;
-    color: #174193;;
+    color: #174193;
     color: var(--mainColor);
 }
 
@@ -53,7 +76,7 @@ mat-form-field {
 }
 
 .mat-select-value {
-    color: #174193;;
+    color: #174193;
     color: var(--mainColor);
     text-align: center;
 }
@@ -65,7 +88,7 @@ mat-form-field {
 }
 
 div.mat-select-arrow {
-    color: #174193;;
+    color: #174193;
     color: var(--mainColor);
     border-left: .5em solid transparent;
     border-right: .5em solid transparent;
@@ -78,12 +101,9 @@ div.mat-select-arrow {
 }
 
 .contador {
-    color: #174193;;
+    color: #174193;
     color: var(--mainColor);
     font-weight: 500;
-    height: 2.4em;
-    width: 2.4em;
-    min-width: 2.4em;
     height: 2em;
     width: 2em;
     min-width: 2em;
@@ -93,6 +113,11 @@ div.mat-select-arrow {
     justify-content: center;
     align-items: center;
     margin-left: .8em;
+
+    &.miles {
+        height: 2.4em;
+        min-width: 2.4em;
+    }
 }
 
 .mat-form-field-appearance-legacy .mat-form-field-wrapper {
@@ -101,12 +126,12 @@ div.mat-select-arrow {
 
 .radioInput > .mat-radio-button {
     display: inline-block;
-    margin: 5px 1em;
+    margin: 5px .5em;
 }
 
 .sub-label {
     font-weight: 600;
-    color: #174193;;
+    color: #174193;
     color: var(--mainColor);
     margin-left: 1em;
     margin-right: .5em;
@@ -144,6 +169,7 @@ div.mat-select-arrow {
     margin-left: -.5em;
 }
 
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background,
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
     background-color: #174193;
     background-color: var(--mainColor);
@@ -156,4 +182,13 @@ div.mat-select-arrow {
 
 .calendar-class .mat-form-field-appearance-legacy .mat-form-field-underline {
     background-color: transparent !important;
+}
+
+.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
+    background: #174193 !important;
+    background: var(--mainColor) !important;
+}
+
+.sin-contador{
+    padding-right: 2.9em;
 }

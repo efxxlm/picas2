@@ -1,39 +1,53 @@
 .sin-diligenciar {
-    --color-info: #D21E17;
+    --color-info: #d21e17;
 }
 .en-proceso {
-    --color-info: #FCC101;
+    --color-info: #fcc101;
 }
 .completo {
-    --color-info: #06B935;
+    --color-info: #06b935;
 }
 
 %ayuda-color {
-    content: '';
+    content: "";
     display: inline-block;
     background-color: var(--color-info);
-    height: .8em;
-    width: .8em;
+    height: 0.8em;
+    width: 0.8em;
     border-radius: 50%;
-    border: solid .5px #fff;
+    border: solid 0.5px #fff;
 }
 
 .info-text {
     display: inline-block;
     margin-right: 2em;
 
+    &.tabla {
+        display: block;
+        margin-right: 0;
+    }
+
     &::before {
         @extend %ayuda-color;
-        margin-right: .2em;
+        margin-right: 0.2em;
         position: relative;
         top: 2px;
+    }
+
+    &__table {
+        display: block;
+        margin: 0;
+
+        &::before {
+            margin: 0;
+        }
     }
 }
 
 .expansion-style {
     box-shadow: none !important;
     &--header {
-        width: 25em;
+        width: 28em;
         max-width: 100%;
         min-width: max-content;
         background-color: transparent;
@@ -48,8 +62,8 @@
         background-color: var(--mainColor);
         color: #fff;
         justify-content: center;
-        padding: .3em 1.5em;
-        border-radius: .5em;
+        padding: 0.3em 1.5em;
+        border-radius: 0.5em;
         position: relative;
 
         &.sin-diligenciar::after,
@@ -61,17 +75,34 @@
             top: 50%;
             transform: translateY(-50%);
         }
+    }
 
+    &.sub-expansion {
+        .expansion-style--title {
+            background-color: #d1d1d1;
+            font-weight: 500;
+            color: #0b254f;
+            padding: 0.1em 1.5em;
+        }
+
+        span.mat-expansion-indicator::after {
+            color: #d1d1d1;
+        }
     }
 }
 
 span.mat-expansion-indicator::after {
     color: #174193;
     color: var(--mainColor);
-    border-left: .5em solid transparent;
-    border-right: .5em solid transparent;
+    border-left: 0.5em solid transparent;
+    border-right: 0.5em solid transparent;
     border-top: 1em solid;
     border-bottom: 0;
     transform: rotate(0deg);
     padding: 1px;
+}
+
+.tabla-expansion-panel {
+    max-width: 55em;
+    margin: auto;
 }
