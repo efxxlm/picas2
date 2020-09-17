@@ -223,9 +223,13 @@ namespace asivamosffie.services
 
                     contratoOld.Observaciones = pContrato.Observaciones;
                 }
-                if (pContrato.pFile != null || pContrato.pFile.Length > 0)
+
+                if (pContrato.pFile != null)
                 {
-                    contratoOld.RutaDocumento = Path.Combine(pPatchfile, contratoOld.ContratoId.ToString(), pContrato.pFile.FileName);
+                    if (pContrato.pFile.Length > 0)
+                    {
+                        contratoOld.RutaDocumento = Path.Combine(pPatchfile, contratoOld.ContratoId.ToString(), pContrato.pFile.FileName);
+                    }
                 }
             }
             //Contrato Nuevo
@@ -235,6 +239,7 @@ namespace asivamosffie.services
                 pContrato.Eliminado = false;
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
+
 
                 if (pContrato.pFile != null)
                 {
