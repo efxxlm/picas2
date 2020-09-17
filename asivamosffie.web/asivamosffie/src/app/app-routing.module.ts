@@ -83,6 +83,11 @@ const routes: Routes = [
         .then(m => m.GestionarFuentesDeFinanciacionModule)
       },
       {
+        path: 'generarRegistroPresupuestal',
+        loadChildren: () => import('./_pages/generar-registro-presupuestal/generar-registro-presupuestal.module')
+        .then(m => m.GenerarRegistroPresupuestalModule)
+      },
+      {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
