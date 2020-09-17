@@ -349,7 +349,73 @@ namespace asivamosffie.services
 
         }
         
+        public async Task<Respuesta> CreateOrEditVotacionSolicitud(List<SesionSolicitudVoto> listSolicitudVoto)
+        {
 
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Votacion_Solicitud_Participante, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            SesionSolicitudVoto solicitudVoto = null; ;
+
+            try
+            {
+
+
+
+                //Auditoria
+                strCrearEditar = "VOTACION SOLICITUD PARTICIPANTE";
+                if (listSolicitudVoto.Count > 0)
+                {
+
+                    foreach (var list in listSolicitudVoto)
+                    {
+
+                        if (string.IsNullOrEmpty(list.SesionSolicitudVotoId.ToString()) || list.SesionSolicitudVotoId == 0)
+                        {
+                            listSolicitudVoto = new List<SesionSolicitudVoto>();
+                            solicitudVoto.SesionComiteSolicitudId = list.SesionComiteSolicitudId;
+                            solicitudVoto.SesionParticipanteId = list.SesionParticipanteId;
+                            solicitudVoto.EsAprobado = list.EsAprobado;
+                            solicitudVoto.Observacion = list.Observacion;
+
+
+                            solicitudVoto.FechaCreacion = DateTime.Now;
+                            solicitudVoto.UsuarioCreacion = list.UsuarioCreacion;
+                            _context.SesionSolicitudVoto.Add(solicitudVoto);
+                        }
+                    }
+
+                }
+
+
+
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = listSolicitudVoto,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, listSolicitudVoto.FirstOrDefault().UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, listSolicitudVoto.FirstOrDefault().UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
         //Ver soporte
         public async Task<ActionResult<List<SesionComiteSolicitud>>> StartDownloadResumenFichaSolicitud()
         {
