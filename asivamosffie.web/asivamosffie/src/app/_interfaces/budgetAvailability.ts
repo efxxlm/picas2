@@ -1,3 +1,4 @@
+import { CofinanciacionAportante } from '../core/_services/Cofinanciacion/cofinanciacion.service';
 import { Proyecto } from '../core/_services/project/project.service';
 
 export interface GrillaDisponibilidadPresupuestal{
@@ -59,6 +60,7 @@ export interface DisponibilidadPresupuestalProyecto{
     usuarioModificacion?: string,
     fechaModificacion?: Date,
     eliminado?: boolean,
+    proyectoAdministrativoId?: number,
 
     proyecto?: Proyecto,
     
@@ -92,4 +94,23 @@ export interface ListAportantes{
     nombreAportanteId?: number,
     nombreAportante?: string,
     valorAporte?: number,
+}
+
+export interface ListConcecutivoProyectoAdministrativo {
+    proyectoId?: number,
+    concecutivo?: string,
+    listaAportantes?: CofinanciacionAportante[],
+
+}
+
+export interface ListAdminProyect{
+    proyectoId?: number,
+    valorAporte?: number,
+    aportanteId?: number,
+    valorFuente?: number,
+    nombreAportanteId?: number,
+    nombreAportante?: string,
+    fuenteAportanteId?: number,
+    fuenteRecursosCodigo?: string,
+    nombreFuente?: string,
 }

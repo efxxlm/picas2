@@ -71,6 +71,9 @@
         public const string Crear_Editar_Solicitud_DDP_OtrosCostosServicio = "74";
         public const string Enviar_Solicitud_A_Disponibilidad_Presupuestal = "44";
         public const string Cambiar_Estado_Sesion_Comite_Solicitud = "71";
+        public const string Crear_Editar_ProyectoAdministrativo = "44";
+        public const string Crear_Editar_Solicitud_Disponibilidad_Presupuestal = "77";
+        public const string eliminar_Solicitud_Disponibilidad_Presupuestal = "80";
 
         public const string Crear_contratistas_desde_proponentes = "45";
         public const string Crear_Observacion_Contratacion = "69";

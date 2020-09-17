@@ -13,6 +13,7 @@ export class TituloComponent implements OnInit {
   tipoDisponibilidad: FormControl;
 
   selectDisponibilidad: Dominio[] = [];
+  perfil: number = 0;
     
   constructor(
               private router: Router,
@@ -21,6 +22,18 @@ export class TituloComponent implements OnInit {
   { }
 
   ngOnInit(): void {
+
+    let session =  JSON.parse(localStorage.getItem('actualUser'));
+    if ( session ){
+      session.rol.forEach(element => {
+        this.perfil = element.perfilId;
+      });
+    }
+
+    if ( this.perfil == 5 ){
+
+    }
+
     this.declararSelect();
     
     this.commonService.listaTipoDisponibilidadPresupuestal().subscribe( respuesta =>  {
@@ -34,15 +47,19 @@ export class TituloComponent implements OnInit {
   }
 
   crearSolicitud() {
-    
-    switch (this.tipoDisponibilidad.value.codigo) {
-      case "1":
-        this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
-        break;
-      case "2":
-        this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial']);
-        break;
+
+
+    if ( this.perfil == 5 ){
+      this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudAdministrativa/nueva',0])
+    }else {
+      switch (this.tipoDisponibilidad.value.codigo) {
+        case "1":
+          this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
+          break;
+        case "2":
+          this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial']);
+          break;
+      }
     }
   }
-
 }

@@ -9,18 +9,17 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 
 
 @Component({
-  selector: 'app-tabla-crear-solicitud-especial',
-  templateUrl: './tabla-crear-solicitud-especial.component.html',
-  styleUrls: ['./tabla-crear-solicitud-especial.component.scss']
+  selector: 'app-tabla-crear-solicitud-administrativa',
+  templateUrl: './tabla-crear-solicitud-administrativa.component.html',
+  styleUrls: ['./tabla-crear-solicitud-administrativa.component.scss']
 })
-export class TablaCrearSolicitudEspecialComponent implements OnInit {
+export class TablaCrearSolicitudadministrativaComponent implements OnInit {
 
   displayedColumns: string[] = [
     'fecha',
     'numero',
     'valorSolicitado',
     'estadoSolicitud',
-    'estadoRegistro',
     'id'
   ];
   dataSource = new MatTableDataSource();
@@ -43,8 +42,9 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.budgetAvailabilityService.getDDPEspecial()
+    this.budgetAvailabilityService.getDDPAdministrativa()
       .subscribe( listaDDP => {
+        //console.log( listaDDP )
         this.dataSource = new MatTableDataSource(listaDDP);
       })
 
@@ -81,7 +81,7 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
   editar(e: number) {
     console.log(e);
-    this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial/nueva',e]);
+    this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudAdministrativa/nueva', e]);
   }
 
   eliminar(e: number) {

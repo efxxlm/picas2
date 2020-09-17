@@ -59,6 +59,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetAportantesByProyectoAdministrativoId")]
+        public async Task<IActionResult> GetAportantesByProyectoAdministrativoId(int proyectoId)
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetAportantesByProyectoAdministrativoId(proyectoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
 
         [Route("GetDDPEspecial")]
         public async Task<IActionResult> GetDDPEspecial()
@@ -66,6 +82,21 @@ namespace asivamosffie.api.Controllers
             try
             {
                 var result = await _managementCommitteeReportService.GetDDPEspecial();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [Route("GetDDPAdministrativa")]
+        public async Task<IActionResult> GetDDPAdministrativa()
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetDDPAdministrativa();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -91,6 +122,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetListCocecutivoProyecto")]
+        public async Task<IActionResult> GetListCocecutivoProyecto()
+        {
+            try
+            {
+                var result = await _managementCommitteeReportService.GetListCocecutivoProyecto();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
         [Route("SearchLlaveMEN")]
         public async Task<IActionResult> SearchLlaveMEN(string LlaveMEN)
@@ -132,6 +177,31 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+
+        [Route("CreateOrEditProyectoAdministrtivo")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrEditProyectoAdministrtivo([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateOrEditProyectoAdministrtivo(disponibilidadPresupuestal);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
+
 
         [Route("CreateOrEditServiceCosts")]
         [HttpPost]
@@ -185,6 +255,26 @@ namespace asivamosffie.api.Controllers
 
                 string user = "forozco";//HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("EliminarDisponibilidad")]
+        [HttpDelete]
+        public async Task<IActionResult> EliminarDisponibilidad(int disponibilidadPresupuestalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                string user = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.EliminarDisponibilidad(disponibilidadPresupuestalId);
                 return Ok(respuesta);
 
             }
