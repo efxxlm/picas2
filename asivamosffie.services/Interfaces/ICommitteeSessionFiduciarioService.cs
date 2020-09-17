@@ -43,6 +43,7 @@ namespace asivamosffie.services.Interfaces
         Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico);
          Task<List<GridValidationRequests>> GetValidationRequests();
         Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo);
+        Task<Respuesta> CreateOrEditVotacionSolicitud(List<SesionSolicitudVoto> listSolicitudVoto);
         Task<Respuesta> CreateOrEditInvitedMembers(SesionParticipante sesionParticipante);
 
     }
