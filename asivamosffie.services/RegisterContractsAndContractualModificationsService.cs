@@ -177,28 +177,50 @@ namespace asivamosffie.services
                 //Fecha envio para la firma contratista
                 if (!string.IsNullOrEmpty(pContrato.FechaEnvioFirma.ToString()))
                 {
-                    contratoOld.FechaEnvioFirma = pContrato.FechaEnvioFirma;
+                    if (pContrato.FechaEnvioFirma.Year > 2000)
+                    {
+                        contratoOld.FechaEnvioFirma = pContrato.FechaEnvioFirma;
+                    }
                 }
 
                 //Fecha envio por parte del contratista 
                 if (!string.IsNullOrEmpty(pContrato.FechaFirmaContratista.ToString()))
                 {
-                    contratoOld.FechaFirmaContratista = pContrato.FechaFirmaContratista;
+                    if (pContrato.FechaEnvioFirma.Year > 2000)
+                    {
+                        contratoOld.FechaFirmaContratista = pContrato.FechaFirmaContratista;
+                    }
                 }
 
                 //Fecha de envio para la firma de la fiduciaria
                 if (!string.IsNullOrEmpty(pContrato.FechaFirmaFiduciaria.ToString()))
                 {
-                    contratoOld.FechaFirmaFiduciaria = pContrato.FechaFirmaFiduciaria;
+                    if (pContrato.FechaEnvioFirma.Year > 2000)
+                    {
+                        contratoOld.FechaFirmaFiduciaria = pContrato.FechaFirmaFiduciaria;
+                    }
                 }
                 //Fecha de Firma por parte de la fiduciaria
                 if (!string.IsNullOrEmpty(pContrato.FechaFirmaContrato.ToString()))
                 {
-                    contratoOld.FechaFirmaContrato = pContrato.FechaFirmaContrato;
+                    if (pContrato.FechaEnvioFirma.Year > 2000)
+                    {
+                        contratoOld.FechaFirmaContrato = pContrato.FechaFirmaContrato;
+                    }
+                }
+
+                // Fecha Tramite
+                if (!string.IsNullOrEmpty(pContrato.FechaTramite.ToString()))
+                {
+                    if (pContrato.FechaTramite.Year > 2000)
+                    {
+                        contratoOld.FechaTramite = pContrato.FechaTramite;
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(pContrato.Observaciones))
                 {
+
                     contratoOld.Observaciones = pContrato.Observaciones;
                 }
                 if (pContrato.pFile != null || pContrato.pFile.Length > 0)
