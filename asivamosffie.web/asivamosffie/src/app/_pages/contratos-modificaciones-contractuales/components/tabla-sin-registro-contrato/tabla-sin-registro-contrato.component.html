@@ -44,7 +44,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="!element.estaTramitado"
-                (click)="gestionar( element.tipoSolicitud, element.solicitudId )">
+                (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.estadoCodigo )">
                 Gestionar solicitud
         </button>
 
@@ -52,7 +52,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.estaTramitado"
-                (click)="gestionar( element.tipoSolicitud, element.solicitudId )">
+                (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.estadoCodigo )">
                 Ver detalle/Editar
         </button>
   

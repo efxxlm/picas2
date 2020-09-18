@@ -23,8 +23,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
   estadoCodigos = {
-    enRevision: '9',
-    enFirmaFiduciaria: '11'
+    enRevision: '9'
   }
 
   constructor ( private routes: Router,
@@ -42,7 +41,6 @@ export class TablaSinRegistroContratoComponent implements OnInit {
         for ( let contratacion of resp ) {
           if ( contratacion.estadoCodigo === this.estadoCodigos.enRevision ) {
             dataTable.push( contratacion );
-            this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
           };
         };
 
@@ -59,12 +57,12 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  gestionar ( tipoSolicitud: string, id: number ) {
+  gestionar ( tipoSolicitud: string, id: number, estadoCodigo: string ) {
 
     switch ( tipoSolicitud ) {
 
       case "Contratación":
-        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo: this.estadoCodigo } } );
+        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo } } );
       break;
 
       case "Modificación contractual":

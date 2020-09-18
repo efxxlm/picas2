@@ -11,7 +11,13 @@ import { ContratosModificacionesContractualesService } from '../../../../core/_s
 export class FormContratacionComponent implements OnInit {
 
   form: FormGroup;
-  @Input() estadoCodigo: string;
+  estadoCodigo: string;
+  estadoCodigos = {
+    enRevision: '9',
+    enFirmaFiduciaria: '11'
+  }
+  contratacion: any;
+
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private routes: Router,
@@ -25,8 +31,12 @@ export class FormContratacionComponent implements OnInit {
   };
 
   getContratacionId ( id ) {
+    console.log( id );
     this.contratosContractualesSvc.getContratacionId( id )
-      .subscribe( console.log );
+      .subscribe( ( resp: any ) => {
+        this.contratacion = resp;
+        console.log( this.contratacion );
+      } );
   };
 
   getEstadoCodigo () {
@@ -35,8 +45,10 @@ export class FormContratacionComponent implements OnInit {
       return;
     }
     
-    this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
-    console.log( this.estadoCodigo );
+    if ( this.routes.getCurrentNavigation().extras.state.estadoCodigo === this.estadoCodigos.enRevision ) {
+      this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
+    }
+    
   }
 
   crearFormulario () {
