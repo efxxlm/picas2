@@ -186,7 +186,7 @@ namespace asivamosffie.services
                 //Fecha envio por parte del contratista 
                 if (!string.IsNullOrEmpty(pContrato.FechaFirmaContratista.ToString()))
                 {
-                    if (pContrato.FechaEnvioFirma.Year > 2000)
+                    if (pContrato.FechaFirmaContratista.Year > 2000)
                     {
                         contratoOld.FechaFirmaContratista = pContrato.FechaFirmaContratista;
                     }
@@ -195,7 +195,7 @@ namespace asivamosffie.services
                 //Fecha de envio para la firma de la fiduciaria
                 if (!string.IsNullOrEmpty(pContrato.FechaFirmaFiduciaria.ToString()))
                 {
-                    if (pContrato.FechaEnvioFirma.Year > 2000)
+                    if (pContrato.FechaFirmaFiduciaria.Year > 2000)
                     {
                         contratoOld.FechaFirmaFiduciaria = pContrato.FechaFirmaFiduciaria;
                     }
@@ -203,7 +203,7 @@ namespace asivamosffie.services
                 //Fecha de Firma por parte de la fiduciaria
                 if (!string.IsNullOrEmpty(pContrato.FechaFirmaContrato.ToString()))
                 {
-                    if (pContrato.FechaEnvioFirma.Year > 2000)
+                    if (pContrato.FechaFirmaContrato.Year > 2000)
                     {
                         contratoOld.FechaFirmaContrato = pContrato.FechaFirmaContrato;
                     }
