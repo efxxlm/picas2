@@ -1204,7 +1204,7 @@ namespace asivamosffie.services
             List<ComiteGrilla> ListComiteGrilla = new List<ComiteGrilla>();
             try
             {
-                var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).Select(x => new
+                var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario).Select(x => new
                 {
                     Id = x.ComiteTecnicoId,
                     FechaComite = x.FechaOrdenDia.ToString(),
