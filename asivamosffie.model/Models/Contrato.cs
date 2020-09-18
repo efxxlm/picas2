@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
 
         public int ContratoId { get; set; }
         public int ContratacionId { get; set; }
-        public DateTime FechaTramite { get; set; }
+        public DateTime? FechaTramite { get; set; }
         public string TipoContratoCodigo { get; set; }
         public string NumeroContrato { get; set; }
         public string EstadoDocumentoCodigo { get; set; }

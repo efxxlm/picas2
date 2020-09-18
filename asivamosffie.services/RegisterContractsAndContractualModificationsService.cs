@@ -144,6 +144,7 @@ namespace asivamosffie.services
                 }
                 foreach (var Contrato in contratacion.Contrato)
                 {
+
                     if (!string.IsNullOrEmpty(Contrato.TipoContratoCodigo))
                     {
                         Contrato.TipoContratoCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).FirstOrDefault().Nombre;
@@ -215,7 +216,7 @@ namespace asivamosffie.services
                 // Fecha Tramite
                 if (!string.IsNullOrEmpty(pContrato.FechaTramite.ToString()))
                 {
-                    if (pContrato.FechaTramite.Year > 2000)
+                    if (((DateTime)pContrato.FechaTramite).Year > 2000)
                     {
                         contratoOld.FechaTramite = pContrato.FechaTramite;
                     }
@@ -235,6 +236,7 @@ namespace asivamosffie.services
                     }
                 }
             }
+
             //Contrato Nuevo
             else
             {

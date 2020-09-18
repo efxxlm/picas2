@@ -2363,8 +2363,13 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ComiteTecnicoFiduciario)
+                    .WithMany(p => p.SesionComiteSolicitudComiteTecnicoFiduciario)
+                    .HasForeignKey(d => d.ComiteTecnicoFiduciarioId)
+                    .HasConstraintName("FK_SesionComiteSolicitud_ComiteTecnico1");
+
                 entity.HasOne(d => d.ComiteTecnico)
-                    .WithMany(p => p.SesionComiteSolicitud)
+                    .WithMany(p => p.SesionComiteSolicitudComiteTecnico)
                     .HasForeignKey(d => d.ComiteTecnicoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SesionComiteSolicitud_ComiteTecnico");
