@@ -22,9 +22,8 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource();
-
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -32,13 +31,11 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   }
 
   constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-                private router: Router,
-                public dialog: MatDialog,
-                private commonService: CommonService,
-                
-             ) 
-  {
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+    private router: Router,
+    public dialog: MatDialog,
+    private commonService: CommonService
+  ) {
 
   }
 
@@ -46,12 +43,12 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
     forkJoin([
       this.technicalCommitteeSessionService.getListComiteGrilla(),
-      //this.commonService.listaMiembrosComiteTecnico(),
+      // this.commonService.listaMiembrosComiteTecnico(),
 
-    ]).subscribe( response => {
-        this.dataSource = new MatTableDataSource( response[0] );
-        this.listaMiembrosComite
-      })
+    ]).subscribe(response => {
+      this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+      this.listaMiembrosComite;
+    });
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -78,44 +75,43 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   }
 
   onEdit(e: number) {
-    this.router.navigate(['/comiteTecnico/crearOrdenDelDia',e ,'']);
+    this.router.navigate(['/comiteTecnico/crearOrdenDelDia', e, '']);
   }
 
-  onConvocar(e: number){
+  onConvocar(e: number) {
 
-    let comite: ComiteTecnico = {
+    const comite: ComiteTecnico = {
       comiteTecnicoId: e,
       estadoComiteCodigo: this.estadosComite.convocada
-    }
+    };
 
-    this.technicalCommitteeSessionService.convocarComiteTecnico( comite )
-      .subscribe( respuesta => {
+    this.technicalCommitteeSessionService.convocarComiteTecnico(comite)
+      .subscribe(respuesta => {
 
-        this.openDialog( ' sesión comité ', respuesta.message )
+        this.openDialog(' sesión comité ', respuesta.message);
 
         this.ngOnInit();
 
-      })
+      });
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data: { modalTitle, modalText, siNoBoton:true }
-    });   
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
     dialogRef.afterClosed().subscribe(result => {
-      if(result)
-      {
-        this.OnDelete(e)
-      }           
+      if (result) {
+        this.OnDelete(e);
+      }
     });
   }
 
-  OnDelete(e: number){
-    this.technicalCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId( e )
-      .subscribe( respuesta => {
-        this.openDialog('', '“La información se ha eliminado correctamente”,')
+  OnDelete(e: number) {
+    this.technicalCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId(e)
+      .subscribe(respuesta => {
+        this.openDialog('', '“La información se ha eliminado correctamente”,');
         this.ngOnInit();
-      })
+      });
   }
 }
