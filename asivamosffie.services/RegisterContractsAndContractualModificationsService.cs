@@ -37,17 +37,16 @@ namespace asivamosffie.services
              
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado 
-                   && r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario
+                   &&  (r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario || r.EstadoCodigo ==  ConstanCodigoEstadoSesionComiteSolicitud.Registrar)
                    &&( r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual )
                 ).ToListAsync();
-     
+             
+            ListSesionComiteSolicitud = ListSesionComiteSolicitud
+                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+            || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
             List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
-            List<Contratacion> ListContratacion = _context.Contratacion
-                .Where(r => !(bool)r.Eliminado).Include(r => r.Contrato)
-
-                .ToList();
-
+  
             List<Contratista> ListContratista = _context.Contratista.ToList();
 
             foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
