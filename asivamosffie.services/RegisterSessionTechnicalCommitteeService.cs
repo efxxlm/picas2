@@ -125,7 +125,7 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
-                
+
                 pSesionComiteSolicitud.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                 pSesionComiteSolicitud.FechaModificacion = DateTime.Now;
 
@@ -345,12 +345,12 @@ namespace asivamosffie.services
             List<SesionSolicitudObservacionProyecto> lista = new List<SesionSolicitudObservacionProyecto>();
 
             lista = await _context.SesionSolicitudObservacionProyecto
-                                .Where( s => s.SesionComiteSolicitudId == pSesionComiteSolicitudId &&
-                                                s.ContratacionProyectoId == pContratacionProyectoId )
-                                .Include( r => r.SesionParticipante )   
-                                    .ThenInclude( r => r.Usuario )
+                                .Where(s => s.SesionComiteSolicitudId == pSesionComiteSolicitudId &&
+                                               s.ContratacionProyectoId == pContratacionProyectoId)
+                                .Include(r => r.SesionParticipante)
+                                    .ThenInclude(r => r.Usuario)
                                 .ToListAsync();
-           return lista;
+            return lista;
         }
 
         public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId)
@@ -690,7 +690,7 @@ namespace asivamosffie.services
 
             //Quitar los que ya estan en sesionComiteSolicitud
 
-            List<int> LisIdContratacion = _context.SesionComiteSolicitud.Where(r =>  r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r => r.SolicitudId).ToList();
+            List<int> LisIdContratacion = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r => r.SolicitudId).ToList();
             List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
 
             //Se comentan ya que no esta listo el caso de uso
@@ -766,7 +766,7 @@ namespace asivamosffie.services
                     //Auditoria
                     pComiteTecnico.FechaCreacion = DateTime.Now;
                     pComiteTecnico.Eliminado = false;
-
+                    pComiteTecnico.EsComiteFiduciario = false;
                     //Registros
                     pComiteTecnico.EsCompleto = ValidarCamposComiteTecnico(pComiteTecnico);
 
@@ -1204,25 +1204,29 @@ namespace asivamosffie.services
             List<ComiteGrilla> ListComiteGrilla = new List<ComiteGrilla>();
             try
             {
-                var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado).Select(x => new
+                var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario).Select(x => new
                 {
                     Id = x.ComiteTecnicoId,
                     FechaComite = x.FechaOrdenDia.ToString(),
                     EstadoComite = x.EstadoComiteCodigo,
-                    x.NumeroComite
+                    x.NumeroComite,
+                    x.EsComiteFiduciario
                 }).Distinct().OrderByDescending(r => r.Id).ToListAsync();
 
                 foreach (var comite in ListComiteTecnico)
                 {
-                    ComiteGrilla comiteGrilla = new ComiteGrilla
+                    if (!(bool)comite.EsComiteFiduciario)
                     {
-                        Id = comite.Id,
-                        FechaComite = comite.FechaComite,
-                        EstadoComiteCodigo = comite.EstadoComite,
-                        EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "---",
-                        NumeroComite = comite.NumeroComite
-                    };
-                    ListComiteGrilla.Add(comiteGrilla);
+                        ComiteGrilla comiteGrilla = new ComiteGrilla
+                        {
+                            Id = comite.Id,
+                            FechaComite = comite.FechaComite,
+                            EstadoComiteCodigo = comite.EstadoComite,
+                            EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "---",
+                            NumeroComite = comite.NumeroComite
+                        };
+                        ListComiteGrilla.Add(comiteGrilla);
+                    }
                 }
             }
             catch (Exception)
@@ -1397,8 +1401,12 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.GeneraCompromiso = pSesionComiteSolicitud.GeneraCompromiso;
                 sesionComiteSolicitudOld.CantCompromisos = pSesionComiteSolicitud.CantCompromisos;
+                sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                sesionComiteSolicitudOld.Observaciones = pSesionComiteSolicitud.Observaciones;
+                sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
 
 
+                
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
                     if (SesionSolicitudCompromiso.SesionSolicitudCompromisoId == 0)
@@ -2046,7 +2054,7 @@ namespace asivamosffie.services
                 PagesCount = true,
                 HtmlContent = pPlantilla.Contenido,
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18  },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
                 FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
             };
 
@@ -2158,7 +2166,7 @@ namespace asivamosffie.services
 
         }
 
-         
+
         public async Task<Respuesta> CambiarEstadoActa(int pSesionComiteSolicitud, string pCodigoEstado, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Acta, (int)EnumeratorTipoDominio.Acciones);
