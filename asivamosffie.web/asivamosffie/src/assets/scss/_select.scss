@@ -1,0 +1,83 @@
+.mat-select-panel {
+    border-radius: 2em !important;
+    // border: solid 1px var(--mainColor);
+    padding: 0 1em !important;
+    box-shadow: 0 0 0 1.2em #fff,
+                0 0 0 calc(1.2em + 1px) var(--mainColor) !important;
+    overflow: auto;
+    --thumb-color: var(--mainColor);
+    --thumb-color-hover: var(--mainColor);
+    --track-color: #e8e8e8;
+
+    &::-webkit-scrollbar {
+        width: var(--scroll-size);
+        height: var(--scroll-size);
+        &-thumb {
+            background: var(--thumb-color);
+            border-radius: var(--scroll-radius);
+            &:hover,
+            &:active {
+                background: var(--thumb-color-hover);
+            }
+        }
+        &-track {
+            background: var(--track-color);
+            border-radius: var(--scroll-radius);
+        }
+    }
+}
+
+.mat-option {
+    position: relative;
+
+    &-text {
+        color: var(--mainColor);
+        // border-bottom: solid 1px;
+        position: relative;
+
+        &::after {
+            content: "";
+            display: block;
+            background-color: var(--mainColor);
+            height: 1px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: calc(50% + .5em);
+        }
+    }
+
+    &::before {
+        content: "";
+        display: inline-block;
+        border: solid 1px var(--mainColor);
+        border-radius: 50%;
+        height: 1.5em;
+        min-width: 1.5em;
+        margin-right: 1em;
+        background-color: #fff;
+    }
+    &::after {
+        content: "";
+        display: block;
+        background-color: var(--mainColor);
+        border-radius: 50%;
+        height: 17px;
+        width: 17px;
+        position: absolute;
+        left: 1.35em;
+        transition: transform 0.3s;
+        transform: scale(0);
+    }
+
+    &:hover::after,
+    .mat-option:focus::after {
+        transform: scale(1);
+    }
+}
+
+.mat-option.mat-active,
+.mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple),
+.mat-option:hover:not(.mat-option-disabled), .mat-option:focus:not(.mat-option-disabled) {
+    background-color: transparent;
+}

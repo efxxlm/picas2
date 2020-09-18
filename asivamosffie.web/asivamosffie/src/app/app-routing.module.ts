@@ -92,17 +92,53 @@ const routes: Routes = [
         component: RegistrarComponent,
       },
       {
+        path: 'solicitarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
+          .then(m => m.SolicitarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'validarDisponibilidadPresupuesto',
+        loadChildren: () => import('./_pages/validar-disponibilidad-presupuesto/validar-disponibilidad-presupuesto.module')
+        .then(m => m.ValidarDisponibilidadPresupuestoModule)
+      },
+      {
+        path: 'comiteTecnico',
+        loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
+      },
+      {
         path: 'seleccion',
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
       },
+      {
+ 
+        path: 'procesosContractuales',
+        loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
+          .then( module => module.GestionarProcesosContractualesModule )
+      },
+      {
+ 
+        path: 'solicitarContratacion',
+        loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
+        .then(m => m.SolicitarContratacionModule)
+      },
+      {
+        path: 'generarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'compromisosActasComite',
+        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
+          .then( module => module.CompromisosActasComiteModule )
+      }
     ]
 
   },
   {
     path: '**',
-    redirectTo: '/inicio',
-    // loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    // redirectTo: '/inicio',
+    loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 @NgModule({

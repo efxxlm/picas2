@@ -1,0 +1,169 @@
+<div class="container">
+  <div class="text-right">
+    <a [routerLink]="['/solicitarContratacion/solicitud/', idSolicitud]" mat-button color="primary"
+      class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Defenir características
+    </h1>
+  </div>
+
+  <p class="text-detalle" *ngIf="contratacionProyecto">
+    <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
+    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+  </p>
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-content>
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left" for="reasignacion">¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web? </label>
+          </div>
+          <div class="col">
+            <mat-radio-group class="radioInput" formControlName="completada">
+              <mat-radio-button [value]="true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="reasignacion">¿El proyecto es una reasignación?</label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="reasignacion">
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.controls.reasignacion.value == true || addressForm.controls.reasignacion.value == false">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="avanceObra">¿El proyecto tiene avance de obra?</label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="avanceObra">
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.controls.avanceObra.value == true">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="pr-1">
+                <label for="porcentajeAvanceObra" class="label-left">¿Cuál es el porcentaje de avance de obra?</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput type="number" min="1" max="100" formControlName="porcentajeAvanceObra">
+                </mat-form-field>
+                <span class="contador">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown"
+          *ngIf="addressForm.controls.porcentajeAvanceObra.value > 0 && addressForm.controls.porcentajeAvanceObra.value <= 100">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="requiereLicencias">¿El proyecto requiere licencias?</label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="requiereLicencias">
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.controls.requiereLicencias.value == true">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="licenciaVigente">¿El proyecto tiene licencia vigente?</label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="licenciaVigente">
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.controls.licenciaVigente.value == true">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="numeroLicencia">Número de licencia</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #numeroLicencia type="number" maxlength="12" formControlName="numeroLicencia">
+                </mat-form-field>
+                <span class="contador">{{12 - numeroLicencia.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.controls.licenciaVigente.value == true">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaVigencia">Fecha de vigencia</label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="picker" formControlName="fechaVigencia" readonly
+                    (click)="picker.open()">
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div class="text-center animatedDown" *ngIf="
+        addressForm.controls.reasignacion.value == false && addressForm.controls.avanceObra.value == false ||
+        addressForm.controls.reasignacion.value == true && addressForm.controls.avanceObra.value == false ||
+        addressForm.controls.avanceObra.value == true &&
+        addressForm.controls.porcentajeAvanceObra.value &&
+        addressForm.controls.requiereLicencias.value == false ||
+        addressForm.controls.avanceObra.value == true &&
+        addressForm.controls.porcentajeAvanceObra.value &&
+        addressForm.controls.requiereLicencias.value == true &&
+        addressForm.controls.licenciaVigente.value == true ||
+        addressForm.controls.reasignacion.value &&
+        addressForm.controls.avanceObra.value == true &&
+        addressForm.controls.porcentajeAvanceObra.value &&
+        addressForm.controls.requiereLicencias.value == true &&
+        addressForm.controls.licenciaVigente.value &&
+        addressForm.controls.numeroLicencia.value &&
+        addressForm.controls.fechaVigencia.value
+      ">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="guardar">
+      </button>
+    </div>
+  </form>
+</div>

@@ -71,9 +71,33 @@ namespace asivamosffie.services
 
         }
 
+
+        public async Task<bool> SaveFileContratacion(IFormFile pFile, string pFilePatch ,string pNameFile)
+        {
+            try
+            {
+                if (!Directory.Exists(pFilePatch))
+                {
+                    Directory.CreateDirectory(pFilePatch);
+                }
+                var streamFile = new FileStream(pFilePatch + "/" + pNameFile, FileMode.Create);
+                using (streamFile)
+                {
+                    await pFile.CopyToAsync(streamFile);
+           
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
         public async  Task <List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1")
         {
-            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
         }
 
         public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser) {

@@ -1,0 +1,14 @@
+.reparacion-card {
+  margin: -1.8em -4.05em 1em;
+
+  .col-md-4 {
+    padding: 1em;
+    text-align: center;
+    border-bottom: solid 1px var(--mainColor);
+    margin: 0;
+    &:not(:last-child) {
+      border-right: solid 1px var(--mainColor);
+    }
+  }
+}
+

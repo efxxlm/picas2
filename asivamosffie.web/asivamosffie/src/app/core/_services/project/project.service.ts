@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { CofinanciacionAportante, CofinanciacionDocumento } from '../Cofinanciacion/cofinanciacion.service';
 import { Observable, forkJoin } from 'rxjs';
+import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-contracting';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,17 @@ export class ProjectService {
   public listaFuentes(pAportanteId:number) {
     return this.http.get<any>(`${environment.apiUrl}/Project/GetFontsByAportantID?pAportanteId=${pAportanteId}`);
   }
+
+  public listaProyectoConFiltros(pTipoIntervencion: string, pLlaveMen: string, pMunicipio: string, pIdInstitucionEducativa: number, pIdSede: number){
+    return this.http.get<ProyectoGrilla[]>(`${environment.apiUrl}/ProjectContracting/getListProyectsByFilters?pTipoIntervencion=${
+      pTipoIntervencion }&pLlaveMen=${ pLlaveMen }&pMunicipio=${ pMunicipio }&pIdInstitucionEducativa=${ pIdInstitucionEducativa }&pIdSede=${ pIdSede }`);
+  }
+
+  getProyectoGrillaByProyectoId( id: number ){
+    return this.http.get<ProyectoGrilla>(`${environment.apiUrl}/Project/getProyectoGrillaByProyectoId?idProyecto=${ id }`);
+   }
+  
+
 }
 export interface RespuestaProyecto{
   cantidadDeRegistros: number,
@@ -92,18 +104,42 @@ export interface RespuestaProyecto{
   llaveConsulta: string
 }
 
+export interface ProyectoAdministrativoAportante {
+  proyectoAdministrativoAportanteId?: number,
+  proyectoAdminstrativoId?: number,
+  aportanteId?: number,
+  eliminado?: boolean,
+  usuarioCreacion?: string,
+  fechaCreacion?: Date,
+  usuarioEdicion?: string,
+  fechaEdicion?: Date,
+
+  cofinanciacionAportante?: Aportante
+}
+
 export interface ProyectoAdministrativo
 {
-  Aportante:Aportante[],  
-  identificador:string
+  proyectoAdministrativoId?: number,
+  enviado?: boolean,
+  fechaCreado?: Date,
+  usuarioCreacion?: string,
+  fechaModificacion?: Date,
+  usuarioModificacion?: string,
+  eliminado?: boolean,
+  registroCompleto?: boolean,
+
+  Aportante?:Aportante[],  
+  identificador?:string
 }
 export interface Aportante
 {
-  aportanteId:number;
-  tipoAportanteId:number;
-  nombreAportanteId:number;
+  aportanteId?:number;
+  tipoAportanteId?:number;
+  nombreAportanteId?:number;
 
-  fuenteFinanciacion:FuenteFinanciacion[],
+  nombreAportante?: string;
+
+  fuenteFinanciacion?:FuenteFinanciacion[],
 }
 
 export interface FuenteFinanciacion{  
@@ -117,41 +153,41 @@ export interface Listados{
 }
 
 export interface Proyecto{
-  proyectoId:number,
+  proyectoId?:number,
   fechaSesionJunta?: Date,
-  numeroActaJunta:number,
-  tipoIntervencionCodigo:number,
-  llaveMen:string,
-  localizacionIdMunicipio:string,
-  institucionEducativaId:number,
-  sedeId:number,
-  enConvocatoria:boolean,
+  numeroActaJunta?:number,
+  tipoIntervencionCodigo?:number,
+  llaveMen?:string,
+  localizacionIdMunicipio?:string,
+  institucionEducativaId?:number,
+  sedeId?:number,
+  enConvocatoria?:boolean,
   convocatoriaId?:number,
-  cantPrediosPostulados:number,
-  tipoPredioCodigo:string,
-  predioPrincipalId:number,
-  valorObra:number,
-  valorInterventoria:number,
-  valorTotal:number,
-  estadoProyectoCodigo:string,
+  cantPrediosPostulados?:number,
+  tipoPredioCodigo?:string,
+  predioPrincipalId?:number,
+  valorObra?:number,
+  valorInterventoria?:number,
+  valorTotal?:number,
+  estadoProyectoCodigo?:string,
   eliminado?:boolean,
-  fechaCreacion: Date,
-  usuarioCreacion:string,
+  fechaCreacion?: Date,
+  usuarioCreacion?:string,
   fechaModificacion?: Date,
-  usuarioModificacion:string,
+  usuarioModificacion?:string,
   //no modelado
-  cantidadAportantes:number;
+  cantidadAportantes?:number;
   regid?:string;
   depid?:string;
 
   institucionEducativa?:InstitucionEducativa
-  institucionEducativaSede:InstitucionEducativa,
-  localizacionIdMunicipioNavigation: Localizacion,
-  predioPrincipal: Predio,
-  sede:InstitucionEducativa,
-  infraestructuraIntervenirProyecto:InfraestructuraIntervenirProyecto[],
-  proyectoAportante:ProyectoAportante[],
-  proyectoPredio:ProyectoPredio[],
+  institucionEducativaSede?:InstitucionEducativa,
+  localizacionIdMunicipioNavigation?: Localizacion,
+  predioPrincipal?: Predio,
+  sede?:InstitucionEducativa,
+  infraestructuraIntervenirProyecto?:InfraestructuraIntervenirProyecto[],
+  proyectoAportante?:ProyectoAportante[],
+  proyectoPredio?:ProyectoPredio[],
   
 }
 
@@ -228,4 +264,18 @@ export interface ProyectoPredio{
   FechaCreacion?:Date ,
   UsuarioCreacion:string ,
   Predio:Predio
+}
+
+export interface ProyectoGrilla{
+  proyectoId?: number,
+  departamento?: string,
+  municipio?: string,
+  institucionEducativa?: string,
+  sede?: string,
+  estadoRegistro?: string,
+  estadoJuridicoPredios?: string,
+  fecha?: string,
+  tipoIntervencion?: string,
+  llaveMen?: string,
+
 }
