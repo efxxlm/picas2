@@ -105,5 +105,9 @@ export class TechnicalCommitteSessionService {
    getSesionSolicitudObservacionProyecto( pSesionComiteSolicitudId: number, pContratacionProyectoId: number ){
     return this.http.get<SesionSolicitudObservacionProyecto[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getSesionSolicitudObservacionProyecto?pSesionComiteSolicitudId=${ pSesionComiteSolicitudId }&pContratacionProyectoId=${ pContratacionProyectoId }`);
    }
+
+   getPlantillaByTablaIdRegistroId( pTablaId: string, pRegistroId: number ){
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getPlantillaByTablaIdRegistroId?pTablaId=${ pTablaId }&pRegistroId=${ pRegistroId }`, { responseType: "blob" } );
+   }
   
 }
