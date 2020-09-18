@@ -76,7 +76,7 @@ namespace asivamosffie.services
                             sesionComiteSolicitud.EstaTramitado = false;
                         }
 
-
+                        sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
 
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
@@ -168,6 +168,8 @@ namespace asivamosffie.services
             {
                 Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.Contratacion).FirstOrDefault();
                 //contratacion
+    
+
                 contratoOld.Contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
                 contratoOld.Contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratoOld.Contratacion.FechaModificacion = pContrato.FechaModificacion;
