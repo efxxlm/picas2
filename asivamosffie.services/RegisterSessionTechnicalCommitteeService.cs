@@ -766,7 +766,7 @@ namespace asivamosffie.services
                     //Auditoria
                     pComiteTecnico.FechaCreacion = DateTime.Now;
                     pComiteTecnico.Eliminado = false;
-
+                    pComiteTecnico.EsComiteFiduciario = false;
                     //Registros
                     pComiteTecnico.EsCompleto = ValidarCamposComiteTecnico(pComiteTecnico);
 
