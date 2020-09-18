@@ -354,7 +354,7 @@ namespace asivamosffie.services
         }
 
         public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId)
-        { 
+        {
             //Dominio estado reportado 48 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
                 .Include(r => r.SesionComiteTema)
@@ -940,14 +940,14 @@ namespace asivamosffie.services
         }
 
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
-        { 
+        {
             if (pComiteTecnicoId == 0)
             {
 
                 return new ComiteTecnico();
             }
-            List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
-            
+            //  List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
+             
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                  .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
 
@@ -959,13 +959,13 @@ namespace asivamosffie.services
                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
-                     .ThenInclude(r => r.TemaCompromiso) 
+                     .ThenInclude(r => r.TemaCompromiso)
                  .FirstOrDefaultAsync();
 
-            comiteTecnico.SesionParticipante = sesionParticipantes;
+            //    comiteTecnico.SesionParticipante = sesionParticipantes;
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
-       
+
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
             {
@@ -983,20 +983,7 @@ namespace asivamosffie.services
                 _context.ProcesoSeleccion
                 .Where(r => !(bool)r.Eliminado).ToList();
 
-
-            List<Contratacion> ListContratacion = _context.Contratacion
-                .Where(r => !(bool)r.Eliminado)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
-                .ToList();
-
-
-            foreach (var contratacion in ListContratacion)
-            {
-                contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
-            }
+            List<Contratacion> ListContratacion = _context.Contratacion.ToList();
 
             foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
             {
@@ -1004,18 +991,14 @@ namespace asivamosffie.services
                 switch (sesionComiteSolicitud.TipoSolicitudCodigo)
                 {
                     case ConstanCodigoTipoSolicitud.Contratacion:
-                        sesionComiteSolicitud.FechaSolicitud = (DateTime)ListContratacion
-                      .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
-                      .FirstOrDefault()
-                      .FechaCreacion;
 
-                        sesionComiteSolicitud.NumeroSolicitud = ListContratacion
-                             .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
-                             .FirstOrDefault()
-                             .NumeroSolicitud;
-                        sesionComiteSolicitud.Contratacion = ListContratacion
-                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
-                                .FirstOrDefault();
+                        Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaCreacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
+
+                        sesionComiteSolicitud.Contratacion = contratacion;
 
                         break;
 
@@ -1403,7 +1386,7 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
 
 
-                
+
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
                     if (SesionSolicitudCompromiso.SesionSolicitudCompromisoId == 0)
