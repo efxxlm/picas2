@@ -50,7 +50,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Juridico_Predios = 25,
 
         Tipo_Proceso_Seleccion = 27,
- 
+
         Tipo_Proponente = 28,
 
         Tipo_de_Solicitud = 29,
@@ -59,7 +59,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //Es para proyecto ?
         Estado_Solicitud = 31,
- 
+
         // Para disponibilidad presupuestal
 
         Etapa_Proceso_Seleccion = 34,
@@ -74,14 +74,14 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Comite = 38,
 
         Estado_Cronograma_Seguimiento = 40,
- 
+
         Dias_Comite = 43,
 
         PlaceHolder = 44,
 
         //RESPONSABLES DE TEMAS
-        Miembros_Comite_Tecnico = 46
+        Miembros_Comite_Tecnico = 46,
 
-
+        Estado_Sesion_Comite_Solicitud = 50
     }
 }

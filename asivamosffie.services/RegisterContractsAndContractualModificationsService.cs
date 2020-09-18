@@ -34,14 +34,15 @@ namespace asivamosffie.services
             //• Sin registro
             //• En proceso de firmas
             //• Registrados 
-
-            string CodigoContratacion = ConstanCodigoTipoSolicitud.Contratacion;
+             
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                .Where(r => !(bool)r.Eliminado && r.TipoSolicitudCodigo == CodigoContratacion
+                .Where(r => !(bool)r.Eliminado 
+                   && r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario
+                   &&( r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual )
                 ).ToListAsync();
-
-
-            ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+             
+            ListSesionComiteSolicitud = ListSesionComiteSolicitud
+                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
             || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
             List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
