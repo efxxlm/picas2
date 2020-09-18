@@ -268,9 +268,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
+         
         [HttpPost]
         [Route("CreateEditSesionComiteTema")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)

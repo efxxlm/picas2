@@ -1401,8 +1401,12 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.GeneraCompromiso = pSesionComiteSolicitud.GeneraCompromiso;
                 sesionComiteSolicitudOld.CantCompromisos = pSesionComiteSolicitud.CantCompromisos;
+                sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                sesionComiteSolicitudOld.Observaciones = pSesionComiteSolicitud.Observaciones;
+                sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
 
 
+                
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
                     if (SesionSolicitudCompromiso.SesionSolicitudCompromisoId == 0)
