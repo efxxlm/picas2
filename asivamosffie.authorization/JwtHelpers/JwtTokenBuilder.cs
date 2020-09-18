@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
         private string audience = "";
         private Dictionary<string, string> claims = new Dictionary<string, string>();
         private int expiryInDays = 30;
-        private int expiryInMinutes = 15;
+        private int expiryInMinutes = 300;
 
         public JwtTokenBuilder AddSecurityKey(SecurityKey securityKey)
         {
