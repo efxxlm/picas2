@@ -1,5 +1,5 @@
 export interface Contrato {
-  contratoId?: number;
+  contratoId: number;
   contratacionId: number;
   numeroContrato: string;
   fechaEnvioFirma?: Date;

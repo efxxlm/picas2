@@ -61,6 +61,13 @@ export class FormRegistroTramiteComponent implements OnInit {
     };
   };
 
+  textoLimpioMessage (texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio;
+    };
+  };
+
   maxLength (e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
@@ -102,7 +109,8 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null ) {
       let fechaFirmaContratista = this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value;
-      fechaFirmaContratista = `${ fechaFirmaContratista.getFullYear() }/${ fechaFirmaContratista.getMonth() + 1 }/${ fechaFirmaContratista.getDate() }`;
+      //fechaFirmaContratista = `${ fechaFirmaContratista.getFullYear() }/${ fechaFirmaContratista.getMonth() + 1 }/${ fechaFirmaContratista.getDate() }`;
+      fechaFirmaContratista = fechaFirmaContratista.toISOString();
       pContrato.append( 'fechaFirmaContratista', `${ fechaFirmaContratista }` );
     } else {
       pContrato.append( 'fechaFirmaContratista', null );
@@ -110,7 +118,8 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null ) {
       let fechaFirmaFiduciaria = this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value;
-      fechaFirmaFiduciaria = `${ fechaFirmaFiduciaria.getFullYear() }/${ fechaFirmaFiduciaria.getMonth() + 1 }/${ fechaFirmaFiduciaria.getDate() }`; 
+      //fechaFirmaFiduciaria = `${ fechaFirmaFiduciaria.getFullYear() }/${ fechaFirmaFiduciaria.getMonth() + 1 }/${ fechaFirmaFiduciaria.getDate() }`; 
+      fechaFirmaFiduciaria = fechaFirmaFiduciaria.toISOString();
       pContrato.append( 'fechaFirmaFiduciaria', `${ fechaFirmaFiduciaria }` );
     } else {
       pContrato.append( 'fechaFirmaFiduciaria', null );
@@ -118,7 +127,8 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null ) {
       let fechaFirmaContrato = this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value;
-      fechaFirmaContrato = `${ fechaFirmaContrato.getFullYear() }/${ fechaFirmaContrato.getMonth() + 1 }/${ fechaFirmaContrato.getDate() }`;
+      //fechaFirmaContrato = `${ fechaFirmaContrato.getFullYear() }/${ fechaFirmaContrato.getMonth() + 1 }/${ fechaFirmaContrato.getDate() }`;
+      fechaFirmaContrato = fechaFirmaContrato.toISOString();
       pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContrato }` );
     } else {
       pContrato.append( 'fechaFirmaContrato', null );
@@ -134,10 +144,18 @@ export class FormRegistroTramiteComponent implements OnInit {
     }
 
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigo )
-      .subscribe( console.log );
+      .subscribe( 
+        ( resp: any ) => {
+          this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+          this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
+        },
+        () => {
+          this.openDialog( 'Ha ocurrido un error.', '' );
+        }
+      );
 
-    //this.openDialog( 'La información ha sido guardada exitosamente.', '' );
-    //this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
+    //
+    //
   };
 
 }

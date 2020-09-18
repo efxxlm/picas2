@@ -1,4 +1,4 @@
-<div class="container text-center mt-2em">
+<div class="container text-center mt-2em" *ngIf="contratacion !== null">
   <div class="text-right">
     <a routerLink="/contratosModificacionesContractuales" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,20 +7,24 @@
 
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Gestionar solicitud PI_007
+      Gestionar solicitud {{ contratacion?.numeroSolicitud }}
     </h1>
   </div>
   <div class="text-center flex">
-    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>19/06/2020</b></p>
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>{{ contratacion?.fechaCreacion | date: 'dd/MM/yyyy' }}</b></p>
     <p class="color-titulo"><b>Contratación</b></p>
   </div>
   <div align="left">
     <mat-card class="border">
-      <mat-card-content>
-        <p><b>Número de comité técnico</b>: CT_0016</p>
-        <p><b>Fecha de comité técnico</b>: 12/06/2020</p>
-        <p><b>Número de comité fiduciario</b>: CF_0019</p>
-        <p><b>Fecha de comité fiduciario</b>: 18/06/2020</p>
+      <mat-card-content *ngFor="let sesion of contratacion?.sesionComiteSolicitud">
+        <div *ngIf="!sesion.comiteTecnico.esComiteFiduciario">
+          <p><b>Número de comité técnico</b>: {{ sesion.comiteTecnico.numeroComite }} </p>
+          <p><b>Fecha de comité técnico</b>: {{ sesion.comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
+        </div>
+        <div *ngIf="sesion.comiteTecnico.esComiteFiduciario">
+          <p><b>Número de comité fiduciario</b>: {{ sesion.comiteTecnico.numeroComite }} </p>
+          <p><b>Fecha de comité fiduciario</b>: {{ sesion.comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
+        </div>
       </mat-card-content>
   </mat-card>
   </div>
@@ -36,9 +40,9 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
-              <p><b>Tipo de identificación</b>: NIT</p>
-              <p><b>Número de identificación</b>: 900.675.987-4</p>
+              <p><b>Nombre del contratista</b>: {{ contratacion?.contratista.nombre }} </p>
+              <p><b>Tipo de identificación</b>: {{ contratacion?.contratista.tipoIdentificacionCodigo }} </p>
+              <p><b>Número de identificación</b>: {{ contratacion?.contratista.numeroIdentificacion }} </p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -55,7 +59,7 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Tipo de contrato</b>: Obra</p>
+              <p><b>Tipo de contrato</b>: {{ contratacion?.contrato[0].tipoContratoCodigo }} </p>
               <p><b>Valor del contrato</b>: $30.000.000</p>
               <p><b>Plazo</b>: 12 meses / 20 días</p>
             </mat-card-content>
@@ -70,7 +74,7 @@
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
-        <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em">20/06/2020</span></p>
+        <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em"> {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </span></p>
         <app-form-registro-tramite [dataFormulario]="form" [contratacionId]="contratacion?.contratacionId" [contratoId]="contratacion?.contrato[0].contratoId"></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>

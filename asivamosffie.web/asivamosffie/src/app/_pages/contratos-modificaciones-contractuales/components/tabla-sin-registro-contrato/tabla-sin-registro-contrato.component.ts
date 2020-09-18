@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,8 @@ import { ContratosModificacionesContractualesService } from '../../../../core/_s
 })
 export class TablaSinRegistroContratoComponent implements OnInit {
 
-  @Input() dataTable: any[] = [];
+  dataTable: any[] = [];
+  @Output() sinData = new EventEmitter<boolean>();
   dataSource                = new MatTableDataSource();
   estadoCodigo: string;
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -27,25 +28,29 @@ export class TablaSinRegistroContratoComponent implements OnInit {
   }
 
   constructor ( private routes: Router,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) { };
+                private contratosContractualesSvc: ContratosModificacionesContractualesService ) {
+    this.getGrilla();
+  };
 
   ngOnInit(): void {
-    this.getGrilla();
   };
 
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
       .subscribe( ( resp: any ) => {
-        const dataTable = [];
         
-        for ( let contratacion of resp ) {
-          if ( contratacion.estadoCodigo === this.estadoCodigos.enRevision ) {
-            dataTable.push( contratacion );
+        for ( let contrataciones of resp ) {
+          if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enRevision ) {
+            this.dataTable.push( contrataciones );
           };
         };
 
+        if ( this.dataTable.length === 0 ) {
+          this.sinData.emit( false );
+        }
+
         console.log( resp );
-        this.dataSource                        = new MatTableDataSource( dataTable );
+        this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
