@@ -796,8 +796,8 @@ namespace asivamosffie.services
 
                     ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
-                        .IncludeFilter(r => r.SesionComiteSolicitud)
-                        .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado)).FirstOrDefault();
+                            .Include(r => r.SesionComiteSolicitud)
+                            .Include(r => r.SesionComiteTema).FirstOrDefault();
 
                     //Auditoria 
                     comiteTecnicoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
