@@ -56,7 +56,6 @@ namespace asivamosffie.model.APIModels
         public string EstadoStr { get; set; }
         public string Plazo { get; set; }
         public List<DisponibilidadPresupuestalProyecto> Proyectos { get; set; }
-        public List<CofinanciacionAportante> Aportantes { get; set; }
-        public List<FuenteFinanciacion> Fuentes { get; set; }
+        public List<CofinanicacionAportanteGrilla> Aportantes { get; set; }        
     }
 }
