@@ -76,7 +76,7 @@ namespace asivamosffie.services
                             sesionComiteSolicitud.EstaTramitado = false;
                         }
 
-                        sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
+                        sesionComiteSolicitud.Contratacion = contratacion;
 
                         sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
