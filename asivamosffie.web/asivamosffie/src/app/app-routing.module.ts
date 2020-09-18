@@ -88,6 +88,11 @@ const routes: Routes = [
         .then(m => m.GenerarRegistroPresupuestalModule)
       },
       {
+        path: 'generarActaInicioFase1Preconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-fase1-preconstruccion/generar-acta-inicio-fase1-preconstruccion.module')
+        .then(m => m.GenerarActaInicioFase1PreconstruccionModule)
+      },
+      {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },

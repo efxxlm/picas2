@@ -41,7 +41,7 @@ export const customCurrencyMaskConfig = {
     AppComponent,
     TestComponent,
     LayoutComponent,
-    SafePipe
+    SafePipe,
   ],
   imports: [
     BrowserModule,
