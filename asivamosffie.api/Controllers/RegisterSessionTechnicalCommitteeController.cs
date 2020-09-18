@@ -63,8 +63,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [HttpPost]
         [Route("CreateEditTemasCompromiso")]
         public async Task<IActionResult> CreateEditTemasCompromiso([FromBody] SesionComiteTema pSesionComiteTema)
@@ -101,8 +99,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [HttpPost]
         [Route("CreateEditActasSesionSolicitudCompromiso")]
         public async Task<IActionResult> CreateEditActasSesionSolicitudCompromiso([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
@@ -121,9 +117,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
-
         [HttpPut]
         [Route("CambiarEstadoActa")]
         public async Task<IActionResult> CambiarEstadoActa([FromQuery] int pSesionComiteSolicitud, string pCodigoEstado)
@@ -141,7 +134,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-     
         [HttpPost]
         [Route("AplazarSesionComite")]
         public async Task<IActionResult> AplazarSesionComite([FromBody] ComiteTecnico pComiteTecnico)
@@ -248,9 +240,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
+         
         [HttpPost]
         [Route("VerificarTemasCompromisos")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] ComiteTecnico pComiteTecnico)

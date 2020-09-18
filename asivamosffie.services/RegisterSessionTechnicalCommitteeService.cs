@@ -354,11 +354,8 @@ namespace asivamosffie.services
         }
 
         public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId)
-        {
-
-
-            //Dominio estado reportado 48
-
+        { 
+            //Dominio estado reportado 48 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.TemaCompromiso)
@@ -943,32 +940,32 @@ namespace asivamosffie.services
         }
 
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
-        {
-            List<ComiteTecnico> comiteTecnicos = _context.ComiteTecnico.ToList();
-
-            if (pComiteTecnicoId == 0 || comiteTecnicos.Where(r => r.ComiteTecnicoId == pComiteTecnicoId).Count() == 0)
+        { 
+            if (pComiteTecnicoId == 0)
             {
 
                 return new ComiteTecnico();
             }
-
+            List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
+            
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
-                .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                .Include(r => r.SesionComiteSolicitud)
-                   .ThenInclude(r => r.SesionSolicitudVoto)
-                .Include(r => r.SesionComiteSolicitud)
-                   .ThenInclude(r => r.SesionSolicitudCompromiso)
-                .Include(r => r.SesionComiteTema)
-                   .ThenInclude(r => r.SesionTemaVoto)
-                .Include(r => r.SesionComiteTema)
-                   .ThenInclude(r => r.TemaCompromiso)
-                .IncludeFilter(r => r.SesionParticipante.Where(r => !(bool)r.Eliminado))
-                .IncludeFilter(r => r.SesionInvitado.Where(r => !(bool)r.Eliminado)
-                )
-                .FirstOrDefaultAsync();
+                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
+
+                  .Include(r => r.SesionInvitado)
+                  .Include(r => r.SesionComiteSolicitud)
+                     .ThenInclude(r => r.SesionSolicitudVoto)
+                  .Include(r => r.SesionComiteSolicitud)
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
+                  .Include(r => r.SesionComiteTema)
+                     .ThenInclude(r => r.SesionTemaVoto)
+                  .Include(r => r.SesionComiteTema)
+                     .ThenInclude(r => r.TemaCompromiso) 
+                 .FirstOrDefaultAsync();
+
+            comiteTecnico.SesionParticipante = sesionParticipantes;
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
-            comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.ToList();
+       
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
             {
