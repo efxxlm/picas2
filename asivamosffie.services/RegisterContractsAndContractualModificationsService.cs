@@ -113,7 +113,7 @@ namespace asivamosffie.services
                         break;
                 }
             }
-            return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).ToList();
+            return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).Distinct().ToList();
 
         }
 
@@ -166,13 +166,14 @@ namespace asivamosffie.services
             //Contrato Modificar
             if (pContrato.ContratoId > 0)
             {
-                Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.Contratacion).FirstOrDefault();
+                Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).FirstOrDefault();
                 //contratacion
-    
+                Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
-                contratoOld.Contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
-                contratoOld.Contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
-                contratoOld.Contratacion.FechaModificacion = pContrato.FechaModificacion;
+                contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
+                contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
+                contratacionOld.FechaModificacion = pContrato.FechaModificacion;
+
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
                 //Contrato 
                 contratoOld.NumeroContrato = pContrato.NumeroContrato;
