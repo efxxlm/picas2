@@ -34,19 +34,19 @@ namespace asivamosffie.services
             //• Sin registro
             //• En proceso de firmas
             //• Registrados 
-             
+
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                .Where(r => !(bool)r.Eliminado 
-                   &&  (r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario || r.EstadoCodigo ==  ConstanCodigoEstadoSesionComiteSolicitud.Registrar)
-                   &&( r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual )
+                .Where(r => !(bool)r.Eliminado
+                   && (r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario || r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Registrar)
+                   && (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
                 ).ToListAsync();
-             
+
             ListSesionComiteSolicitud = ListSesionComiteSolicitud
                 .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
             || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
             List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
-  
+
             List<Contratista> ListContratista = _context.Contratista.ToList();
 
             foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
@@ -115,9 +115,9 @@ namespace asivamosffie.services
                 catch (Exception ex)
                 {
                     string Error = ex.InnerException.ToString();
-                  
+
                 }
-               
+
             }
             return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).Distinct().ToList();
 
@@ -177,7 +177,18 @@ namespace asivamosffie.services
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
-                contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
+
+                if (!string.IsNullOrEmpty(pEstadoCodigo))
+                {
+                    //Sesion Comite Solicitud 
+                    SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud
+                          .Where(r => r.SolicitudId == contratoOld.ContratacionId
+                           && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                          .Include(r => r.ComiteTecnico).FirstOrDefault();
+
+                    sesionComiteSolicitudOld.EstadoCodigo = pEstadoCodigo;
+                }
+
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratacionOld.FechaModificacion = pContrato.FechaModificacion;
 
