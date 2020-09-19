@@ -188,7 +188,7 @@ namespace asivamosffie.services
 
                     sesionComiteSolicitudOld.EstadoCodigo = pEstadoCodigo;
                 }
-
+                contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratacionOld.FechaModificacion = pContrato.FechaModificacion;
 
@@ -256,7 +256,7 @@ namespace asivamosffie.services
 
             //Contrato Nuevo
             else
-            {
+            { 
                 pContrato.FechaCreacion = DateTime.Now;
                 pContrato.Eliminado = false;
                 _context.Contrato.Add(pContrato);
