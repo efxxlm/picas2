@@ -24,7 +24,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
   estadoCodigos = {
-    enRevision: '9'
+    enRevision: '2'
   }
 
   constructor ( private routes: Router,

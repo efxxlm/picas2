@@ -19,10 +19,10 @@ export class FormRegistroTramiteComponent implements OnInit {
   @Input() contratacionId: number;
   estadoCodigo  : string;
   estadoCodigos = {
-    enRevision: '9',
-    enFirmaFiduciaria: '11',
-    firmado: '12'
-  }
+    enRevision: '2',
+    enFirmaFiduciaria: '5',
+    firmado: '8'
+  };
   editorStyle = {
     height: '45px'
   };
@@ -98,38 +98,36 @@ export class FormRegistroTramiteComponent implements OnInit {
     }
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null ) {
-      let fechaEnvioFirma = this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value;
+      let fechaEnvioFirma = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value );
       //fechaEnvioFirma = `${ fechaEnvioFirma.getFullYear() }/${ fechaEnvioFirma.getMonth() + 1 }/${ fechaEnvioFirma.getDate() }`;
-      fechaEnvioFirma = fechaEnvioFirma.toISOString();
-      pContrato.append( 'fechaEnvioFirma', `${ fechaEnvioFirma }` );
+      let fechaEnvioFirmas = fechaEnvioFirma.toISOString();
+      pContrato.append( 'fechaEnvioFirma', `${ fechaEnvioFirmas }` );
       this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
     }
 
-    console.log( pContrato.get( 'fechaEnvioFirma' ) );
-
     if ( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null ) {
-      let fechaFirmaContratista = this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value;
+      let fechaFirmaContratista = new Date( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value );
       //fechaFirmaContratista = `${ fechaFirmaContratista.getFullYear() }/${ fechaFirmaContratista.getMonth() + 1 }/${ fechaFirmaContratista.getDate() }`;
-      fechaFirmaContratista = fechaFirmaContratista.toISOString();
-      pContrato.append( 'fechaFirmaContratista', `${ fechaFirmaContratista }` );
+      let fechaFirmaContratistas = fechaFirmaContratista.toISOString();
+      pContrato.append( 'fechaFirmaContratista', `${ fechaFirmaContratistas }` );
     } else {
       pContrato.append( 'fechaFirmaContratista', null );
     }
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null ) {
-      let fechaFirmaFiduciaria = this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value;
+      let fechaFirmaFiduciaria = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value );
       //fechaFirmaFiduciaria = `${ fechaFirmaFiduciaria.getFullYear() }/${ fechaFirmaFiduciaria.getMonth() + 1 }/${ fechaFirmaFiduciaria.getDate() }`; 
-      fechaFirmaFiduciaria = fechaFirmaFiduciaria.toISOString();
-      pContrato.append( 'fechaFirmaFiduciaria', `${ fechaFirmaFiduciaria }` );
+      let fechaFirmaFiduciarias = fechaFirmaFiduciaria.toISOString();
+      pContrato.append( 'fechaFirmaFiduciaria', `${ fechaFirmaFiduciarias }` );
     } else {
       pContrato.append( 'fechaFirmaFiduciaria', null );
     }
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null ) {
-      let fechaFirmaContrato = this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value;
+      let fechaFirmaContrato = new Date( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value );
       //fechaFirmaContrato = `${ fechaFirmaContrato.getFullYear() }/${ fechaFirmaContrato.getMonth() + 1 }/${ fechaFirmaContrato.getDate() }`;
-      fechaFirmaContrato = fechaFirmaContrato.toISOString();
-      pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContrato }` );
+      let fechaFirmaContratos = fechaFirmaContrato.toISOString();
+      pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContratos }` );
     } else {
       pContrato.append( 'fechaFirmaContrato', null );
     }
@@ -149,8 +147,9 @@ export class FormRegistroTramiteComponent implements OnInit {
           this.openDialog( this.textoLimpioMessage( resp.message ), '' );
           this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
         },
-        () => {
-          this.openDialog( 'Ha ocurrido un error.', '' );
+        ( error: any ) => {
+          console.log( error );
+          this.openDialog( error.message, '' );
         }
       );
 

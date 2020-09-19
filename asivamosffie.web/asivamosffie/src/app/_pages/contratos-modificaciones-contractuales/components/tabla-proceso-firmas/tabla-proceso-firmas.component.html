@@ -57,7 +57,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.estadoCodigo )"
+                (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.contratacion.estadoSolicitudCodigo )"
                 *ngIf="element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaFiduciaria">
                 Ver detalle/Editar
         </button>

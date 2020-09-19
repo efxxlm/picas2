@@ -25,9 +25,9 @@ export class TablaProcesoFirmasComponent implements OnInit {
   dataTable: any[] = [];
   estadoCodigo: string;
   estadoCodigos = {
-    enFirmaFiduciaria: '11',
-    firmado: '12',
-    registrado: '13'
+    enFirmaFiduciaria: '5',
+    firmado: '8',
+    registrado: '6'
   }
 
   constructor ( private routes: Router,
@@ -53,6 +53,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
         }
+        console.log( resp );
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;
@@ -86,10 +87,33 @@ export class TablaProcesoFirmasComponent implements OnInit {
   cambioEstadoRegistrado ( elemento ) {
     elemento.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
     elemento.estadoCodigo = this.estadoCodigos.registrado
-    this.procesosContractualesSvc.sendCambioTramite( elemento )
+
+    const pContrato = new FormData();
+
+    pContrato.append( 'contratacionId', `${ elemento.contratacion.contrato[0].contratacionId }` );
+    pContrato.append( 'contratoId', `${ elemento.contratacion.contrato[0].contratoId }` );
+
+    this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
       .subscribe( () => {
-        this.getGrilla();
-      } );
+        this.dataTable = [];
+        this.contratosContractualesSvc.getGrilla()
+          .subscribe( ( resp: any ) => {
+            
+            for ( let contrataciones of resp ) {
+              if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
+                this.dataTable.push( contrataciones );
+              } else if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.firmado ) {
+                this.dataTable.push( contrataciones );
+              };
+            };
+            if ( this.dataTable.length === 0 ) {
+              this.sinData.emit( false );
+            };
+            console.log( resp );
+            this.dataSource = new MatTableDataSource( this.dataTable );
+
+          } )
+      } )
   }
 
 };

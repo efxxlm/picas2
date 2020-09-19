@@ -67,10 +67,34 @@
         </div>
 
       </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === estadoCodigos.firmado">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Detalle de modificación
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Fecha del trámite</b>: {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Número del contrato</b>: {{ form.get( 'numeroContrato' ).value }} </p>
+              <p><b>Fecha de envío para firma del contratista</b>: {{ form.get( 'fechaEnvioParaFirmaContratista' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Fecha de firma por parte del contratista</b>: {{ form.get( 'fechaFirmaPorParteContratista' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Fecha de envío para la firma de la fiduciaria</b>: {{ form.get( 'fechaEnvioParaFirmaFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Fecha de de firma por parte de la fiduciaria</b>: {{ form.get( 'fechaFirmaPorParteFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Observaciones</b>: {{ form.get( 'observaciones' ).value}} </p>
+              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'nombreDocumento' ).value }} </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
     </mat-accordion>
   </div>
 
-  <div class="mt-2em" align="left">
+  <div class="mt-2em" align="left" *ngIf="estadoCodigo !== estadoCodigos.firmado">
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">

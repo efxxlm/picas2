@@ -112,7 +112,7 @@
     <div class="d-flex" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
       <label class="mr-3em"><b>Adjuntar documento suscrito</b></label>
       <div class="input w-65">
-        <span class="input-file-text text-center">{{archivo}}</span>
+        <span class="input-file-text text-center">{{ dataFormulario.get( 'nombreDocumento' ).value || archivo }}</span>
         <button mat-raised-button 
                 color="primary" 
                 type="button" 

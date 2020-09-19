@@ -19,8 +19,8 @@ export class TablaRegistradosComponent implements OnInit {
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
   dataTable: any[] = [];
   estadoCodigos = {
-    registrado: '13'
-  }
+    registrado: '6'
+  };
 
   constructor ( private routes: Router,
                 private contratosContractualesSvc: ContratosModificacionesContractualesService ) {
