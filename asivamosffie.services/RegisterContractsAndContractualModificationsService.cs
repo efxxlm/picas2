@@ -178,16 +178,16 @@ namespace asivamosffie.services
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
 
-                if (!string.IsNullOrEmpty(pEstadoCodigo))
-                {
-                    //Sesion Comite Solicitud 
-                    SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud
-                          .Where(r => r.SolicitudId == contratoOld.ContratacionId
-                           && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                          .Include(r => r.ComiteTecnico).FirstOrDefault();
+                //if (!string.IsNullOrEmpty(pEstadoCodigo))
+                //{
+                //    //Sesion Comite Solicitud 
+                //    SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud
+                //          .Where(r => r.SolicitudId == contratoOld.ContratacionId
+                //           && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                //          .Include(r => r.ComiteTecnico).FirstOrDefault();
 
-                    sesionComiteSolicitudOld.EstadoCodigo = pEstadoCodigo;
-                }
+                //    sesionComiteSolicitudOld.EstadoCodigo = pEstadoCodigo;
+                //}
                 contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratacionOld.FechaModificacion = pContrato.FechaModificacion;
