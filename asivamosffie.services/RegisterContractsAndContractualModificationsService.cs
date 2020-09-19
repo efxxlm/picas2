@@ -194,7 +194,11 @@ namespace asivamosffie.services
 
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
                 //Contrato 
-                contratoOld.NumeroContrato = pContrato.NumeroContrato;
+          
+                if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
+                {
+                    contratoOld.NumeroContrato = pContrato.NumeroContrato;
+                }
                 //Fecha envio para la firma contratista
                 if (!string.IsNullOrEmpty(pContrato.FechaEnvioFirma.ToString()))
                 {
