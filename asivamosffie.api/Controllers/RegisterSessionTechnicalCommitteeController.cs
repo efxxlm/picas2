@@ -401,6 +401,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetSesionParticipantesByIdComite")]
+        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId )
+        {
+            return await _registerSessionTechnicalCommitteeService.GetSesionParticipantesByIdComite( pComiteId );
+        }
+
+        [HttpGet]
         [Route("GetListComiteGrilla")]
         public async Task<List<ComiteGrilla>> GetListComiteGrilla()
         {

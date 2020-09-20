@@ -118,7 +118,7 @@ export class AutenticacionService {
 
 export interface Usuario{
   usuarioId?: number;
-  Email: string;
+  Email?: string;
   Contrasena?: string;
   Activo?: boolean;
   Bloqueado?: boolean;

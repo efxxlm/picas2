@@ -1215,6 +1215,26 @@ namespace asivamosffie.services
             return ListComiteGrilla;
         }
 
+        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId )
+        {
+            List<SesionParticipante> ListaParticipantes = new List<SesionParticipante>();
+            try
+            {
+
+                ListaParticipantes = await _context.SesionParticipante
+                .Where(r => r.ComiteTecnicoId == pComiteId && !(bool)r.Eliminado)
+                .Include( r => r.SesionSolicitudObservacionProyecto )
+                .ToListAsync();
+
+                return ListaParticipantes; 
+
+            }
+            catch (Exception)
+            {
+                return ListaParticipantes;
+            }
+        }
+
         public static bool ValidarCamposComiteTecnico(ComiteTecnico pComiteTecnico)
         {
             if (
