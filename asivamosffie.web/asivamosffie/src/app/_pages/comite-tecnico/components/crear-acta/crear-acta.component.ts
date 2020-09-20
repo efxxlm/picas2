@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-crear-acta',
@@ -44,18 +45,21 @@ export class CrearActaComponent implements OnInit {
       this.commonService.listaUsuarios().then((respuesta) => {
         this.listaMiembros = respuesta;
 
-        this.technicalCommitteeSessionService.getComiteTecnicoByComiteTecnicoId(parametros.id)
-          .subscribe(response => {
-            this.objetoComiteTecnico = response;
+        forkJoin([
+          this.technicalCommitteeSessionService.getComiteTecnicoByComiteTecnicoId( parametros.id ),
+          this.technicalCommitteeSessionService.getSesionParticipantesByIdComite( parametros.id ),
 
-            this.listaTemas = response.sesionComiteTema.filter( t => t.esProposicionesVarios != true )
-            this.listaProposiciones = response.sesionComiteTema.filter( t => t.esProposicionesVarios == true )
+        ]).subscribe(response => {
+            response[0].sesionParticipante = response[1];
+            this.objetoComiteTecnico = response[0];
+
+
+            this.listaTemas = this.objetoComiteTecnico.sesionComiteTema.filter( t => t.esProposicionesVarios != true )
+            this.listaProposiciones = this.objetoComiteTecnico.sesionComiteTema.filter( t => t.esProposicionesVarios == true )
 
             console.log(response)
 
             setTimeout(() => {
-
-              
 
               this.objetoComiteTecnico.sesionParticipante.forEach(p => {
                 let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)

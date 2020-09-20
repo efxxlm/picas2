@@ -154,12 +154,12 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("NoRequiereVotacionSesionComiteTema")]
-        public async Task<IActionResult> NoRequiereVotacionSesionComiteTema([FromQuery] int idSesionComiteTema)
+        public async Task<IActionResult> NoRequiereVotacionSesionComiteTema([FromQuery] int idSesionComiteTema, bool pRequiereVotacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _registerSessionTechnicalCommitteeService.NoRequiereVotacionSesionComiteTema(idSesionComiteTema, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _registerSessionTechnicalCommitteeService.NoRequiereVotacionSesionComiteTema(idSesionComiteTema, pRequiereVotacion, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

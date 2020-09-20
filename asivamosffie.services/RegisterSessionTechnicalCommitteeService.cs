@@ -126,8 +126,9 @@ namespace asivamosffie.services
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
 
-                pSesionComiteSolicitud.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                pSesionComiteSolicitud.FechaModificacion = DateTime.Now;
+                sesionComiteSolicitudOld.RequiereVotacion = pSesionComiteSolicitud.RequiereVotacion;
+                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
 
                 _context.SaveChanges();
                 return
@@ -215,13 +216,13 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> NoRequiereVotacionSesionComiteTema(int idSesionComiteTema, string pUsuarioCreacion)
+        public async Task<Respuesta> NoRequiereVotacionSesionComiteTema(int idSesionComiteTema, bool pRequiereVotacion, string pUsuarioCreacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.No_Requiere_Votacion_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
             try
             {
                 SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(idSesionComiteTema);
-                sesionComiteTemaOld.RequiereVotacion = false;
+                sesionComiteTemaOld.RequiereVotacion = pRequiereVotacion;
                 sesionComiteTemaOld.UsuarioModificacion = pUsuarioCreacion;
                 sesionComiteTemaOld.FechaModificacion = DateTime.Now;
 
@@ -1187,7 +1188,7 @@ namespace asivamosffie.services
                 var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario).Select(x => new
                 {
                     Id = x.ComiteTecnicoId,
-                    FechaComite = x.FechaOrdenDia.ToString(),
+                    FechaComite = x.FechaOrdenDia,
                     EstadoComite = x.EstadoComiteCodigo,
                     x.NumeroComite,
                     x.EsComiteFiduciario
@@ -1200,7 +1201,7 @@ namespace asivamosffie.services
                         ComiteGrilla comiteGrilla = new ComiteGrilla
                         {
                             Id = comite.Id,
-                            FechaComite = comite.FechaComite,
+                            FechaComite = comite.FechaComite.Value,
                             EstadoComiteCodigo = comite.EstadoComite,
                             EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "---",
                             NumeroComite = comite.NumeroComite
@@ -1336,6 +1337,11 @@ namespace asivamosffie.services
                 SesionComiteTemadOld.FechaModificacion = DateTime.Now;
                 SesionComiteTemadOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
 
+                SesionComiteTemadOld.EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo;
+                SesionComiteTemadOld.CantCompromisos = pSesionComiteTema.CantCompromisos;
+                SesionComiteTemadOld.GeneraCompromiso = pSesionComiteTema.GeneraCompromiso;
+                SesionComiteTemadOld.Observaciones = pSesionComiteTema.Observaciones;
+                SesionComiteTemadOld.ObservacionesDecision = pSesionComiteTema.ObservacionesDecision;
 
                 foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
                 {

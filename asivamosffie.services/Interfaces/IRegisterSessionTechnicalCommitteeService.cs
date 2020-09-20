@@ -56,7 +56,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema);
 
-        Task<Respuesta> NoRequiereVotacionSesionComiteTema(int idSesionComiteTema, string pUsuarioCreacion);
+        Task<Respuesta> NoRequiereVotacionSesionComiteTema(int idSesionComiteTema, bool pRequiereVotacion, string pUsuarioCreacion);
 
         Task<Respuesta> AplazarSesionComite(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
 

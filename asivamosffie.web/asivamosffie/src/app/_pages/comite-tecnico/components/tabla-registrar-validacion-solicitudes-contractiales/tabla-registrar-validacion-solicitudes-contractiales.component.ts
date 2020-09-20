@@ -121,17 +121,17 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   changeRequiere(check: boolean, solicitud: SesionComiteSolicitud) {
 
     this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach(sc => {
-      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId)
-        if (check) {
-          sc.completo = false
-        } else {
-          sc.completo = true
-          this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud(solicitud)
-            .subscribe(respuesta => {
 
-            })
-        }
+      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId){
+        solicitud.requiereVotacion = check;
+        this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud(solicitud)
+        .subscribe(respuesta => {
+          sc.completo = !check;
+          this.validar.emit(null);
+        })
+      }
     })
+
   }
 
   abrirPopupVotacion(elemento: SesionComiteSolicitud) {
@@ -152,6 +152,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
             .subscribe(response => {
               this.ObjetoComiteTecnico = response;
+              this.validarRegistros();
               this.validar.emit(null);
             })
         }
@@ -170,6 +171,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
             .subscribe(response => {
               this.ObjetoComiteTecnico = response;
+              this.validarRegistros();
               this.validar.emit(null);
             })
         }
@@ -206,8 +208,20 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     };
   }
 
+  validarRegistros(){
+    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach( sc => {
+      sc.completo = true;
+      sc.sesionSolicitudVoto.forEach( ss => {
+        if ( ss.esAprobado != true && ss.esAprobado != false ){
+          sc.completo = false;
+        }
+      })
+    })
+  }
+
   cargarRegistro() {
-    console.log(this.ObjetoComiteTecnico.sesionComiteSolicitud)
+
+    this.validarRegistros();
 
     this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitud);
   }

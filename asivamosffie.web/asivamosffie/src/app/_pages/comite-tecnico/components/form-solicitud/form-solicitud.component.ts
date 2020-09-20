@@ -225,9 +225,11 @@ export class FormSolicitudComponent implements OnInit {
     else
       this.resultadoVotacion = 'Aprobó'
 
-    let btnSolicitudMultiple = document.getElementById( 'btnSolicitudMultiple' );
+    let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
     
-    btnSolicitudMultiple.click();
+    btnSolicitudMultiple.forEach( element =>{
+      element.click();
+    })
     
 
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion){

@@ -78,55 +78,52 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           return u
         })
 
-        console.log( this.miembrosArray )
-
-
         forkJoin([
-          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( id ),
-          this.technicalCommitteSessionService.getSesionParticipantesByIdComite( id ),
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(id),
+          this.technicalCommitteSessionService.getSesionParticipantesByIdComite(id),
 
         ]).subscribe(response => {
-            response[0].sesionParticipante = response[1];
-            this.objetoComiteTecnico = response[0];
+          response[0].sesionParticipante = response[1];
+          this.objetoComiteTecnico = response[0];
 
-            setTimeout(() => {
-
-              this.onUpdate();
-            }, 1000);
-
-            let listaSeleccionados = [];
-            this.objetoComiteTecnico.sesionParticipante.forEach(p => {
-              let participante: any = {}
-              participante = this.miembrosArray.find(m => m.usuarioId == p.usuarioId)
-              console.log( this.miembrosArray, participante )
-
-              participante.sesionParticipanteId = p.sesionParticipanteId
-
-              
-
-              listaSeleccionados.push(participante);
-            });
-
-            this.addressForm.get('miembrosParticipantes').setValue(listaSeleccionados)
+          console.log(this.objetoComiteTecnico)
 
 
-            if (this.objetoComiteTecnico.sesionInvitado.length > 0) {
+          setTimeout(() => {
 
-              this.invitados.clear();
+            this.onUpdate();
+          }, 1000);
 
-              this.objetoComiteTecnico.sesionInvitado.forEach(i => {
-                let grupoInvitado = this.crearInvitado();
+          let listaSeleccionados = [];
+          this.objetoComiteTecnico.sesionParticipante.forEach(p => {
+            let participante: any = {}
+            participante = this.miembrosArray.find(m => m.usuarioId == p.usuarioId)
 
-                grupoInvitado.get('nombre').setValue(i.nombre)
-                grupoInvitado.get('cargo').setValue(i.cargo)
-                grupoInvitado.get('entidad').setValue(i.entidad)
-                grupoInvitado.get('sesionInvitadoId').setValue(i.sesionInvitadoId)
+            participante.sesionParticipanteId = p.sesionParticipanteId
 
-                this.invitados.push(grupoInvitado);
-              })
-            }
+            listaSeleccionados.push(participante);
+          });
 
-          })
+          this.addressForm.get('miembrosParticipantes').setValue(listaSeleccionados)
+
+
+          if (this.objetoComiteTecnico.sesionInvitado.length > 0) {
+
+            this.invitados.clear();
+
+            this.objetoComiteTecnico.sesionInvitado.forEach(i => {
+              let grupoInvitado = this.crearInvitado();
+
+              grupoInvitado.get('nombre').setValue(i.nombre)
+              grupoInvitado.get('cargo').setValue(i.cargo)
+              grupoInvitado.get('entidad').setValue(i.entidad)
+              grupoInvitado.get('sesionInvitadoId').setValue(i.sesionInvitadoId)
+
+              this.invitados.push(grupoInvitado);
+            })
+          }
+
+        })
 
       })
     })
@@ -175,18 +172,16 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     this.objetoComiteTecnico.sesionComiteSolicitud.forEach(sol => {
       sol.completo = true;
       if (sol.requiereVotacion == true) {
-        this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-          if (par.sesionSolicitudVoto.length == 0)
-            cantidadSolicitudes++;
+        if (sol.sesionSolicitudVoto.length == 0)
+          cantidadSolicitudes++;
 
-          par.sesionSolicitudVoto.forEach(vot => {
-            cantidadSolicitudes++;
-            if (vot.esAprobado == false || vot.esAprobado == true) {
-              cantidadSolicitudesCompletas++;
-            } else {
-              sol.completo = false;
-            }
-          })
+        sol.sesionSolicitudVoto.forEach(vot => {
+          cantidadSolicitudes++;
+          if (vot.esAprobado == false || vot.esAprobado == true) {
+            cantidadSolicitudesCompletas++;
+          } else {
+            sol.completo = false;
+          }
         })
       } else if (sol.requiereVotacion == false) {
         cantidadSolicitudes++;
@@ -213,13 +208,13 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         tem.completo = true;
 
         if (tem.requiereVotacion == true) {
-          this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-            if (par.sesionTemaVoto.filter(tv => tv.sesionTemaId == tem.sesionTemaId).length == 0)
+          //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
+            if (tem.sesionTemaVoto.length == 0)
               cantidadTemas++;
 
-            par.sesionTemaVoto.filter(tv => tv.sesionTemaId == tem.sesionTemaId).forEach(vot => {
+            tem.sesionTemaVoto.forEach(vot => {
               cantidadTemas++;
-              console.log(vot.esAprobado)
+              
               if (vot.esAprobado == false || vot.esAprobado == true) {
                 cantidadTemasCompletas++;
               } else {
@@ -227,7 +222,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
               }
             })
-          })
+          //})
         } else if (tem.requiereVotacion == false) {
           cantidadTemas++;
           cantidadTemasCompletas++;
