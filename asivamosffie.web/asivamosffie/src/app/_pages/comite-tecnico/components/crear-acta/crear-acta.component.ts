@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
@@ -19,12 +19,16 @@ export class CrearActaComponent implements OnInit {
   nombresParticipantes: string = '';
   listaTemas: SesionComiteTema[] = [];
   listaProposiciones: SesionComiteTema[] = [];
+  temasCompletos: boolean = false;
+  proposicionesCompletos: boolean = false;
+  solicitudesCompletas: boolean = false;
 
   constructor(
     public dialog: MatDialog,
     private technicalCommitteeSessionService: TechnicalCommitteSessionService,
     private activatedRoute: ActivatedRoute,
     private commonService: CommonService,
+    private router: Router,
 
   ) {
 
@@ -76,6 +80,8 @@ export class CrearActaComponent implements OnInit {
                this.callChildren( btnOtros );
                this.callChildren( btnProposiciones );
 
+               this.validarCompletos();
+
             }, 1000);
 
           })
@@ -83,6 +89,35 @@ export class CrearActaComponent implements OnInit {
     })
 
 
+  }
+
+  validarCompletos(){
+    this.solicitudesCompletas = true;
+    this.temasCompletos = true;
+    this.proposicionesCompletos = true;  
+
+    this.objetoComiteTecnico.sesionComiteSolicitud.forEach( cs => {
+      if ( !cs.registroCompleto )
+        this.solicitudesCompletas = false;
+    })
+
+    this.listaTemas.forEach( t => {
+      if ( !t.registroCompleto )
+        this.temasCompletos = false;
+    })
+
+    this.listaProposiciones.forEach( p => {
+      if ( !p.registroCompleto )
+        this.proposicionesCompletos = false;
+    })
+
+  }
+
+  habilitar( e ){
+    
+    if (e){
+      this.router.navigate(['/comiteTecnico'])
+    }
   }
 
 }

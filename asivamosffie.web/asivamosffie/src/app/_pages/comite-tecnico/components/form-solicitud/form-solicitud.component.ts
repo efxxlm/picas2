@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudCompromiso, SesionParticipante, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -18,6 +18,7 @@ export class FormSolicitudComponent implements OnInit {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
+  @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   tiposSolicitud = TiposSolicitud;
 
@@ -147,6 +148,7 @@ export class FormSolicitudComponent implements OnInit {
 
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
+      comiteTecnicoId: this.sesionComiteSolicitud.comiteTecnicoId,
       estadoCodigo: this.addressForm.get('estadoSolicitud').value ? this.addressForm.get('estadoSolicitud').value.codigo : null,
       observaciones: this.addressForm.get('observaciones').value,
       rutaSoporteVotacion: this.addressForm.get('url').value,
@@ -174,7 +176,9 @@ export class FormSolicitudComponent implements OnInit {
     this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
-        if (respuesta.code == "200")
+        console.log( respuesta.data )
+        this.validar.emit( respuesta.data );
+        if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
       })
 
