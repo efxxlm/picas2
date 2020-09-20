@@ -23,5 +23,12 @@
         DDP_Registros_Tabla_Aportante = 24,
         Registros_Proyectos_Contratacion_DDP = 25,
         DDP_Contratacion_Rubro_Por_Financiar = 26,
+
+        dos_pregunta_tecnica_o_juidica =27,
+        tres_pregunta_tecnica_o_juidica =28,
+        cuatro_pregunta_tecnica_o_juridica =29,
+        cinco_pregunta_tecnica_o_juridica =30,
+        seis_pregunta_tecnica_o_juridica =31,
+        Registros_Fuentes_Uso =32,
     }
 }
