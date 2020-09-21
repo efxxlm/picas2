@@ -45,15 +45,15 @@ namespace asivamosffie.services
         {
             int cantidadDeResgistros = _context.ComiteTecnico.Count();
             string Nomeclatura = "CT_"; 
-            string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo );
         }
         
         public async Task<string> EnumeradorContratacion()
         { 
             int cantidadDeResgistros =  _context.Contratacion.Count();
-            string Nomeclatura = "P.I-";
-            string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
+            string Nomeclatura = "PI_";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo);
         }
 
