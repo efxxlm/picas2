@@ -17,6 +17,8 @@
         public const string RegistrarAportante = "13";
         public const string Crear_Proyecto_Administrativo = "15";
         public const string Eliminar_Cofinanciacion = "17 ";
+        public const string Crear_Editar_Contratacion_Proyecto = "18";
+        public const string Crear_Editar_Contratacion_Proyecto_Aportante = "19";
         public const string Crear_Editar_Fuentes_Financiacion = "20";
         public const string Eliminar_Fuentes_Financiacion = "21";
 

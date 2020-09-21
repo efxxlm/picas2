@@ -1,30 +1,13 @@
-<<<<<<< HEAD
-=======
 import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
 import { Contratacion } from './project-contracting';
 import { Proyecto } from '../core/_services/project/project.service';
 import { dashCaseToCamelCase } from '@angular/compiler/src/util';
 import { ProcesoSeleccion } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
 
->>>>>>> origin/4.1.6.1-Registrar-sesión-de-comité-técnico
 export interface SolicitudesContractuales{
     id?: number,
     fechaSolicitud?: Date,
     tipoSolicitud?: string,
-<<<<<<< HEAD
-    tipoSolicitudNumeroTabla?: number,
-    numeroSolicitud?: string,
-
-}
-
-export interface Sesion{
-    sesionId?: number,
-    fechaOrdenDia?: Date,
-    numeroComite?: string,
-    estadoComiteCodigo?: string,
-    esCompleto?: boolean,
-    rutaActaSesion?: string,
-=======
     tipoSolicitudNumeroTabla?: string,
     numeroSolicitud?: string,
     sesionComiteSolicitudId?: number,
@@ -34,15 +17,11 @@ export interface Sesion{
 
 export interface ComiteTecnico{
     comiteTecnicoId?: number,
->>>>>>> origin/4.1.6.1-Registrar-sesión-de-comité-técnico
     fechaCreacion?: Date,
     usuarioCreacion?: string,
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
-<<<<<<< HEAD
-    sesionComiteTema?: SesionComiteTema[],
-=======
     esCompleto?: boolean,
     requiereVotacion?: boolean,
     justificacion?: string,
@@ -61,16 +40,11 @@ export interface ComiteTecnico{
     sesionComiteSolicitud?: SesionComiteSolicitud[],
     sesionParticipante?: SesionParticipante[],
     sesionInvitado?: SesionInvitado[],
->>>>>>> origin/4.1.6.1-Registrar-sesión-de-comité-técnico
 
 }
 
 export interface SesionComiteTema{
     sesionTemaId?: number,
-<<<<<<< HEAD
-    sesionId?: number,
-=======
->>>>>>> origin/4.1.6.1-Registrar-sesión-de-comité-técnico
     tema?: string,
     responsableCodigo?: string,
     tiempoIntervencion?: number,
@@ -83,27 +57,6 @@ export interface SesionComiteTema{
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
-<<<<<<< HEAD
-
-}
-
-export interface SesionComiteTecnico{
-    sesionComiteTecnicoId?: number,
-    sesionId?: number,
-    comiteTecnicoId?: number,
-    requiereVotacion?: boolean,
-    justificacion?: string,
-    esAprobado?: boolean,
-    observaciones?: string,
-    rutaSoporteVotacion?: string,
-    tieneCompromisos?: boolean,
-    cantCompromisos?: number,
-    usuarioCreacion?: string,
-    fechaCreacion?: Date,
-    usuarioModificacion?: string,
-    fechaModificacion?: Date,
-    eliminado?: boolean,
-=======
     comiteTecnicoId?: number,
     esProposicionesVarios?: boolean,
     requiereVotacion?: boolean,
@@ -214,7 +167,6 @@ export interface SesionTemaVoto{
 
     nombreParticipante?: string,
 
->>>>>>> origin/4.1.6.1-Registrar-sesión-de-comité-técnico
 }
 
 export interface ComiteGrilla{
@@ -226,8 +178,6 @@ export interface ComiteGrilla{
     
 }
 
-<<<<<<< HEAD
-=======
 export interface SesionSolicitudObservacionProyecto{
     sesionSolicitudObservacionProyectoId?: number,
     sesionComiteSolicitudId?: number,
@@ -284,7 +234,6 @@ export interface TemaCompromiso{
 
 }
 
->>>>>>> origin/4.1.6.1-Registrar-sesión-de-comité-técnico
 interface EstadoComite{
     sinConvocatoria?: string,
     convocada?: string,
@@ -305,8 +254,6 @@ interface EstadoComite{
     fallida: "7",
 
   }
-<<<<<<< HEAD
-=======
 
   interface TipoSolicitud{
     AperturaDeProcesoDeSeleccion?: string,
@@ -322,4 +269,3 @@ interface EstadoComite{
 
   }
 
->>>>>>> origin/4.1.6.1-Registrar-sesión-de-comité-técnico
