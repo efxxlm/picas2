@@ -14,15 +14,15 @@ namespace asivamosffie.model.Models
 
         public int ContratoId { get; set; }
         public int ContratacionId { get; set; }
-        public DateTime FechaTramite { get; set; }
+        public DateTime? FechaTramite { get; set; }
         public string TipoContratoCodigo { get; set; }
         public string NumeroContrato { get; set; }
         public string EstadoDocumentoCodigo { get; set; }
-        public bool Estado { get; set; }
-        public DateTime FechaEnvioFirma { get; set; }
-        public DateTime FechaFirmaContratista { get; set; }
-        public DateTime FechaFirmaFiduciaria { get; set; }
-        public DateTime FechaFirmaContrato { get; set; }
+        public bool? Estado { get; set; }
+        public DateTime? FechaEnvioFirma { get; set; }
+        public DateTime? FechaFirmaContratista { get; set; }
+        public DateTime? FechaFirmaFiduciaria { get; set; }
+        public DateTime? FechaFirmaContrato { get; set; }
         public string Observaciones { get; set; }
         public string RutaDocumento { get; set; }
         public string Objeto { get; set; }
@@ -47,6 +47,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaFirmaActaContratista { get; set; }
         public DateTime? FechaFirmaActaContratistaInterventoria { get; set; }
         public string RutaActa { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }
