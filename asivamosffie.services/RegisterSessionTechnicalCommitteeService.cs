@@ -390,8 +390,14 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
                       //       .ThenInclude(r => r.ResponsableSesionParticipante)
                       .FirstOrDefaultAsync();
-            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
-            comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+            //if (comiteTecnico.SesionComiteTema.Count() > 0) 
+            //{ 
+            //    comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList(); 
+            //}
+            //if (comiteTecnico.SesionComiteSolicitud.Count() > 0)
+            //{
+            //    comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+            //}
 
 
             List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
