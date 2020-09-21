@@ -41,9 +41,6 @@ namespace asivamosffie.services
                    && (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
                 ).ToListAsync();
 
-            ListSesionComiteSolicitud = ListSesionComiteSolicitud
-                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
-            || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
             List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
 
@@ -139,13 +136,15 @@ namespace asivamosffie.services
                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                     .Include(r => r.ComiteTecnico).ToList();
 
-
-                if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
+                if (contratacion.Contratista != null)
                 {
-                    bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
-                    if (allDigits)
+                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
                     {
-                        contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                        bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
+                        if (allDigits)
+                        {
+                            contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                        }
                     }
                 }
                 foreach (var Contrato in contratacion.Contrato)
@@ -194,7 +193,7 @@ namespace asivamosffie.services
 
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
                 //Contrato 
-          
+
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
                 {
                     contratoOld.NumeroContrato = pContrato.NumeroContrato;
@@ -260,7 +259,7 @@ namespace asivamosffie.services
 
             //Contrato Nuevo
             else
-            { 
+            {
                 pContrato.FechaCreacion = DateTime.Now;
                 pContrato.Eliminado = false;
                 _context.Contrato.Add(pContrato);
