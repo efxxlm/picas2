@@ -168,7 +168,7 @@ namespace asivamosffie.services
                 sesionComiteTemaOld.RequiereVotacion = true;
                 sesionComiteTemaOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
                 sesionComiteTemaOld.FechaModificacion = DateTime.Now;
-
+                sesionComiteTemaOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(sesionComiteTemaOld);
                 foreach (var SesionTemaVoto in pSesionComiteTema.SesionTemaVoto)
                 {
                     if (SesionTemaVoto.SesionTemaVotoId == 0)
@@ -213,6 +213,27 @@ namespace asivamosffie.services
                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pSesionComiteTema.UsuarioCreacion, ex.InnerException.ToString())
                };
             }
+
+        }
+
+        private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld)
+        {
+            if (!string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
+                || !string.IsNullOrEmpty(sesionComiteTemaOld.ResponsableCodigo)
+                || !string.IsNullOrEmpty(sesionComiteTemaOld.TiempoIntervencion.ToString())
+                || !string.IsNullOrEmpty(sesionComiteTemaOld.RutaSoporte)
+                || !string.IsNullOrEmpty(sesionComiteTemaOld.Observaciones.ToString())
+                || sesionComiteTemaOld.EsAprobado == null
+                || sesionComiteTemaOld.RequiereVotacion == null
+                || sesionComiteTemaOld.EsProposicionesVarios == null
+                || sesionComiteTemaOld.GeneraCompromiso == null
+                )
+            {
+
+                return false;
+            }
+
+            return true;
 
         }
 
@@ -777,6 +798,7 @@ namespace asivamosffie.services
                         //Auditoria
                         SesionComiteTema.FechaCreacion = DateTime.Now;
                         SesionComiteTema.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
+                        SesionComiteTema.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTema);
                         SesionComiteTema.Eliminado = false;
                     }
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
@@ -784,7 +806,8 @@ namespace asivamosffie.services
                         //Auditoria
                         SesionComiteSolicitud.FechaCreacion = DateTime.Now;
                         SesionComiteSolicitud.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
-                        //SesionComiteSolicitud.Eliminado = false;
+                        SesionComiteSolicitud.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud);
+                        SesionComiteSolicitud.Eliminado = false;
                     }
                     _context.ComiteTecnico.Add(pComiteTecnico);
                 }
@@ -825,6 +848,7 @@ namespace asivamosffie.services
                             SesionComiteTema.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
                             SesionComiteTema.FechaCreacion = DateTime.Now;
                             SesionComiteTema.Eliminado = false;
+                            SesionComiteTema.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTema);
                             //Registros
                             SesionComiteTema.ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId;
                             _context.SesionComiteTema.Add(SesionComiteTema);
@@ -845,18 +869,19 @@ namespace asivamosffie.services
                             sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
                             sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.Observaciones;
                             sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
+                            sesionComiteTemaOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(sesionComiteTemaOld);
                         }
                     }
 
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
                     {
                         if (SesionComiteSolicitud.SesionComiteSolicitudId == 0)
-                        {
-
+                        { 
                             //Auditoria 
                             SesionComiteSolicitud.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
                             SesionComiteSolicitud.FechaCreacion = DateTime.Now;
-                            //SesionComiteSolicitud.Eliminado = false;
+                            SesionComiteSolicitud.Eliminado = false;
+                            SesionComiteSolicitud.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud);
                             _context.SesionComiteSolicitud.Add(SesionComiteSolicitud);
                         }
                         else
@@ -874,6 +899,7 @@ namespace asivamosffie.services
                             SesionComiteSolicitudOld.RutaSoporteVotacion = SesionComiteSolicitud.RutaSoporteVotacion;
                             SesionComiteSolicitudOld.GeneraCompromiso = SesionComiteSolicitud.GeneraCompromiso;
                             SesionComiteSolicitudOld.CantCompromisos = SesionComiteSolicitud.CantCompromisos;
+                            SesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitudOld);
                         }
                     }
                 }
@@ -898,6 +924,24 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionCrearComiteTecnico, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+        private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
+        {
+            if (
+               sesionComiteSolicitud.Observaciones == null ||
+               sesionComiteSolicitud.RutaSoporteVotacion == null ||
+               sesionComiteSolicitud.GeneraCompromiso == null ||
+               sesionComiteSolicitud.RequiereVotacion == null ||
+               sesionComiteSolicitud.ComiteTecnicoFiduciarioId > 0 ||
+               sesionComiteSolicitud.FechaComiteFiduciario == null ||
+               sesionComiteSolicitud.UsuarioComiteFiduciario == null ||
+               sesionComiteSolicitud.EstadoActaCodigo == null
+                )
+            {
+                return false;
+            } 
+            return true;
         }
 
         public async Task<Respuesta> CambiarEstadoComiteTecnico(ComiteTecnico pComiteTecnico)
@@ -1372,7 +1416,7 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
-                       Data = validarcompletosActa( pSesionComiteTema.ComiteTecnicoId.Value ),
+                       Data = validarcompletosActa(pSesionComiteTema.ComiteTecnicoId.Value),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
@@ -1394,25 +1438,29 @@ namespace asivamosffie.services
             }
         }
 
-        private bool validarcompletosActa( int pComiteTecnicoId ){
+        private bool validarcompletosActa(int pComiteTecnicoId)
+        {
             bool estaCompleto = true;
 
-            ComiteTecnico comite = _context.ComiteTecnico.Where( ct => ct.ComiteTecnicoId == pComiteTecnicoId )
-                                                         .Include( r => r.SesionComiteSolicitud )
-                                                         .Include( r => r.SesionComiteTema )
+            ComiteTecnico comite = _context.ComiteTecnico.Where(ct => ct.ComiteTecnicoId == pComiteTecnicoId)
+                                                         .Include(r => r.SesionComiteSolicitud)
+                                                         .Include(r => r.SesionComiteTema)
                                                         .FirstOrDefault();
 
-            comite.SesionComiteSolicitud.ToList().ForEach( cs => {
-                if ( (cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
+            comite.SesionComiteSolicitud.ToList().ForEach(cs =>
+            {
+                if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
                     estaCompleto = false;
             });
 
-            comite.SesionComiteTema.ToList().ForEach( ct => {
-                if ( (ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false ) == false)
+            comite.SesionComiteTema.ToList().ForEach(ct =>
+            {
+                if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
                     estaCompleto = false;
             });
 
-            if ( estaCompleto ){
+            if (estaCompleto)
+            {
                 comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
                 _context.SaveChanges();
             }
@@ -1469,7 +1517,7 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
-                       Data = validarcompletosActa( pSesionComiteSolicitud.ComiteTecnicoId ),
+                       Data = validarcompletosActa(pSesionComiteSolicitud.ComiteTecnicoId),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
@@ -2055,26 +2103,26 @@ namespace asivamosffie.services
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, DetallesProyectos);
                         break;
 
-                    case ConstanCodigoVariablesPlaceHolders.NUMERO_DE_LICENCIA: 
+                    case ConstanCodigoVariablesPlaceHolders.NUMERO_DE_LICENCIA:
                         string numeroLicencia = "";
-                        if (pContratacion.ContratacionProyecto.Count()>0)
+                        if (pContratacion.ContratacionProyecto.Count() > 0)
                         {
                             numeroLicencia = pContratacion.ContratacionProyecto.FirstOrDefault().NumeroLicencia;
                         }
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, numeroLicencia); 
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, numeroLicencia);
                         break;
 
-                    case ConstanCodigoVariablesPlaceHolders.FECHA_DE_VIGENCIA: 
+                    case ConstanCodigoVariablesPlaceHolders.FECHA_DE_VIGENCIA:
                         string fechaVigencia = "";
                         if (pContratacion.ContratacionProyecto.Count() > 0)
                         {
                             fechaVigencia = ((DateTime)pContratacion.ContratacionProyecto.FirstOrDefault().FechaVigencia).ToString("yy-MM-dd");
                         }
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, fechaVigencia); 
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, fechaVigencia);
                         break;
-                         
-                    case ConstanCodigoVariablesPlaceHolders.CONSIDERACIONES_ESPECIALES: 
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.ConsideracionDescripcion); 
+
+                    case ConstanCodigoVariablesPlaceHolders.CONSIDERACIONES_ESPECIALES:
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.ConsideracionDescripcion);
                         break;
 
 
@@ -2109,7 +2157,7 @@ namespace asivamosffie.services
                 {
                     //Si la respuesta a la pregunta 1, fue “No”, el sistema mostrará la pregunta 4
                     strPregunta_1 = " no";
-                  // strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
+                    // strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
                 }
                 else
                 {
@@ -2139,29 +2187,30 @@ namespace asivamosffie.services
                         if (pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra == null
                            || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra)
                         {
-                        
+
                         }
                         else
                         {
-                            
+
                             strPregunta_3 = ContenidoPregunta3 + " si";
                             strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
                             //pregunta 5
-                            if (pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia ==null
-                                ||!(bool)pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia)
+                            if (pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia == null
+                                || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia)
                             {
 
                             }
                             else
-                            { 
+                            {
                                 strPregunta_5 = ContenidoPregunta5 + " si";
-                                if (pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente == null || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente) {
+                                if (pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente == null || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente)
+                                {
                                     strPregunta_6 = ContenidoPregunta6 + " no";
                                 }
                                 {
                                     strPregunta_6 = ContenidoPregunta6 + " si";
                                 }
-                                
+
                             }
 
                         }

@@ -18,6 +18,5 @@ namespace asivamosffie.model.Models
         public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }
         public virtual Proyecto Proyecto { get; set; }
         public virtual ProyectoAdministrativo ProyectoAdministrativo { get; set; }
-
     }
 }
