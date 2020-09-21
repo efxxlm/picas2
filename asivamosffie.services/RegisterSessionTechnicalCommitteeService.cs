@@ -647,7 +647,34 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Sesion_Invitado, (int)EnumeratorTipoDominio.Acciones);
             try
             {
+
+                if (pSesionInvitadoId == 0)
+                {
+                    return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = false,
+                         IsValidation = true,
+                         Code = ConstantSesionComiteTecnico.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION INVITADO")
+                     };
+
+                }
                 SesionInvitado sesionInvitadoOld = await _context.SesionInvitado.FindAsync(pSesionInvitadoId);
+
+                if (sesionInvitadoOld == null) {
+                    return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = false,
+                         IsValidation = true,
+                         Code = ConstantSesionComiteTecnico.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION INVITADO")
+                     };
+
+                }
                 sesionInvitadoOld.UsuarioModificacion = pUsuarioModificacion;
                 sesionInvitadoOld.FechaModificacion = DateTime.Now;
                 sesionInvitadoOld.Eliminado = true;
