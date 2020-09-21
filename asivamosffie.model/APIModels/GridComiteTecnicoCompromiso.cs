@@ -11,6 +11,12 @@ namespace asivamosffie.model.APIModels
         public DateTime FechaCumplimiento { get; set; }
         public string EstadoCodigo { get; set; }
         public string EstadoCompromiso { get; set; }
+
+        public string Tarea { get; set;}
+        public string Responzable { get; set;}
+        public DateTime FechaReporte { get; set;}
+        public string EstadoReporte { get; set;}
+
         public ICollection<ComiteTecnico> ComiteTecnicoLista { get; set; }
     }
 }

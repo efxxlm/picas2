@@ -63,6 +63,9 @@
         public const string Vertificar_Tema_Compromisos = "65";
         public const string Crear_Observacion_Contratacion = "69"; 
         public const string Cambiar_Estado_Acta = "70";
+        public const string Convocar_Sesion_Comite = "75";
+        public const string Registrar_Mienbros_Invitados = "79";
+          public const string Votacion_Solicitud_Participante = "79";
 
     }
 }

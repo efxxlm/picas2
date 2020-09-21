@@ -350,8 +350,8 @@ namespace asivamosffie.services
                                                select new SesionParticipanteVoto
                                                {
                                                    SesionParticipanteVotoId = v.SesionParticipanteId,
-                                                   ListaSesionParticipante =
-                                                   (List<SesionParticipante>)(from sp in _context.SesionParticipante
+                                                   SesionParticipante =
+                                                   (SesionParticipante)(from sp in _context.SesionParticipante
                                                                     where sp.ComiteTecnicoId == v.ComiteTecnicoId && !(bool)sp.Eliminado
                                                                         select new SesionParticipante
                                                                         {
@@ -750,7 +750,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateOrEditGuest(SesionInvitado sesionInvitado)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_invitado, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = 0; //await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_invitado, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
             SesionInvitado sesionInvitadoAntiguo = null;
@@ -817,7 +817,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateOrEditSesioncomment(SesionComentario sesionComentario)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_comentario, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = 0; //await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_comentario, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
             SesionComentario sesionComentarioAntiguo = null;
@@ -882,7 +882,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateOrEditSubjects(TemaCompromiso temaCompromiso)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Tema_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = 0; //await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Tema_Compromiso, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
             TemaCompromiso temaCompromisoAntiguo = null;
@@ -1099,6 +1099,11 @@ namespace asivamosffie.services
                 };
             }
 
+        }
+
+        public Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo)
+        {
+            throw new NotImplementedException();
         }
 
 

@@ -19,7 +19,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Procesos_Seleccion_Grupo = 21,
         CargueMasivoOrdenes = 22,
         CronogramaSeguimiento = 23,
-        SesionComiteTema = 26
+        SesionComiteTema = 26,
 
         RegistrarComiteTecnico = 24
     }
