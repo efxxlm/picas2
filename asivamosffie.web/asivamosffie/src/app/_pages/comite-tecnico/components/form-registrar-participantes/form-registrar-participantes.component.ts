@@ -61,7 +61,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.agregaInvitado();
+    //this.agregaInvitado();
     let lista: any[] = [];
 
     this.activatedRoute.params.subscribe(parametros => {
@@ -274,7 +274,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   onDelete(i: number) {
     let grupo = this.invitados.controls[i] as FormGroup;
     console.log(grupo, this.invitados, i)
-    this.technicalCommitteSessionService.deleteSesionInvitado(grupo.get('sesionInvitadoId').value)
+    let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
+    this.technicalCommitteSessionService.deleteSesionInvitado( idInvitado )
       .subscribe(respuesta => {
         this.openDialog('', 'La información se ha eliminado correctamente.')
         this.borrarArray(this.invitados, i)

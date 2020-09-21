@@ -166,6 +166,7 @@ namespace asivamosffie.services
                 SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
                 string CrearEditar = "";
                 sesionComiteTemaOld.RequiereVotacion = true;
+                sesionComiteTemaOld.EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo;
                 sesionComiteTemaOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
                 sesionComiteTemaOld.FechaModificacion = DateTime.Now;
                 sesionComiteTemaOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(sesionComiteTemaOld);
