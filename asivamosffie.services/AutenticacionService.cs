@@ -36,8 +36,8 @@ namespace asivamosffie.services
             try
             {
 
-                Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
-                Usuario usuario = await result;
+                //Task<Usuario> result = 
+                Usuario usuario = await this.GetUserByMail(pUsuario.Email);;
                 List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
 
                
@@ -72,7 +72,7 @@ namespace asivamosffie.services
                   
                 }
 
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesión");    
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesiï¿½n");    
 
                 return respuesta;
             }
@@ -104,7 +104,7 @@ namespace asivamosffie.services
             try
             {
                 Usuario usuario = await _context.Usuario.Where(u => u.Email == pMail
-                                                 && u.Eliminado.Value == false).SingleOrDefaultAsync();              
+                                                 && u.Eliminado.Value == false).FirstOrDefaultAsync();              
                 return usuario;
 
             }

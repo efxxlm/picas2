@@ -167,36 +167,36 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("GetValidationRequests")]
-        public async Task<IActionResult> GetValidationRequests(string tipoSolicitudCodigo)
-        {
-            try
-            {
-                var result = await _committeeSessionFiduciarioService.GetValidationRequests(tipoSolicitudCodigo);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        // [Route("GetValidationRequests")]
+        // public async Task<IActionResult> GetValidationRequests(string tipoSolicitudCodigo)
+        // {
+        //     try
+        //     {
+        //         var result = await _committeeSessionFiduciarioService.GetValidationRequests(tipoSolicitudCodigo);
+        //         return Ok(result);
+        //     }
+        //     catch (Exception ex)
+        //     {
 
-                throw ex;
-            }
-        }
+        //         throw ex;
+        //     }
+        // }
 
 
-        [Route("GetCompromisosSolicitud")]
-        public async Task<IActionResult> GetCompromisosSolicitud()
-        {
-            try
-            {
-                var result = await _committeeSessionFiduciarioService.GetCompromisosSolicitud();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        // [Route("GetCompromisosSolicitud")]
+        // public async Task<IActionResult> GetCompromisosSolicitud()
+        // {
+        //     try
+        //     {
+        //         var result = await _committeeSessionFiduciarioService.GetCompromisosSolicitud();
+        //         return Ok(result);
+        //     }
+        //     catch (Exception ex)
+        //     {
 
-                throw ex;
-            }
-        }
+        //         throw ex;
+        //     }
+        // }
 
         
         #endregion
@@ -255,36 +255,36 @@ namespace asivamosffie.api.Controllers
 
 
 
-        [Route("GetCommitteeSessionTemaById")]
-        [HttpGet]
-        public async Task<IActionResult> GetCommitteeSessionTemaById(int sessionTemaId)
-        {
-            try
-            {
-                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionTemaById(sessionTemaId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        // [Route("GetCommitteeSessionTemaById")]
+        // [HttpGet]
+        // public async Task<IActionResult> GetCommitteeSessionTemaById(int sessionTemaId)
+        // {
+        //     try
+        //     {
+        //         var result = await _committeeSessionFiduciarioService.GetCommitteeSessionTemaById(sessionTemaId);
+        //         return Ok(result);
+        //     }
+        //     catch (Exception ex)
+        //     {
 
-                throw ex;
-            }
-        }
+        //         throw ex;
+        //     }
+        // }
 
-        [Route("GetCommitteeSessionFiduciario")]
-        public async Task<IActionResult> GetCommitteeSessionFiduciario()
-        {
-            try
-            {
-                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        // [Route("GetCommitteeSessionFiduciario")]
+        // public async Task<IActionResult> GetCommitteeSessionFiduciario()
+        // {
+        //     try
+        //     {
+        //         var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
+        //         return Ok(result);
+        //     }
+        //     catch (Exception ex)
+        //     {
 
-                throw ex;
-            }
-        }
+        //         throw ex;
+        //     }
+        // }
 
         [Route("CreateOrEditCommitteeSession")]
         [HttpPost]

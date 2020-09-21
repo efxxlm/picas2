@@ -30,7 +30,7 @@ namespace asivamosffie.model.Models
         public virtual Usuario Usuario { get; set; }
         
         public string Nombres { get; set; }
-        public virtual ICollection<Usuario> UsersIds { get; set; }
+        //public virtual ICollection<Usuario> UsersIds { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionParticipanteVoto> SesionParticipanteVoto { get; set; }

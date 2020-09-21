@@ -7,6 +7,7 @@ import { SolicitudesContractuales, Sesion, SesionComiteTema, EstadosComite } fro
 import { forkJoin } from 'rxjs';
 import { ColumnasTabla, DataTable, SolicitudContractual } from 'src/app/_interfaces/comiteFiduciario.interfaces';
 import { DatePipe } from '@angular/common';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 
 @Component({
   selector: 'app-crear-orden-del-dia',
@@ -48,7 +49,10 @@ export class CrearOrdenDelDiaComponent implements OnInit {
                 public dialog: MatDialog,
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
-                private datepipe: DatePipe ) 
+                private datepipe: DatePipe,
+                private fiduciaryCommitteeSession : FiduciaryCommitteeSessionService, 
+                
+                ) 
   {
     this.getFecha();
   };
@@ -88,35 +92,41 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   //Obtener data de sesiones de solicitudes contractuales
   getSolicitudesContractuales () {
-    this.dataSolicitudContractual = [
-      {
-        nombreSesion: 'CT_00001',
-        fecha: '24/06/2020',
-        data: [
-          {
-            fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
-            numeroSolicitud: 'SC0005',
-            tipoSolicitud: 'Evaluación de proceso de selección'
-          }
-        ]
-      },
-      {
-        nombreSesion: 'CT_00002',
-        fecha: '30/06/2020',
-        data: [
-          {
-            fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
-            numeroSolicitud: 'PI0004',
-            tipoSolicitud: 'Contratación'
-          },
-          {
-            fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
-            numeroSolicitud: '000003',
-            tipoSolicitud: 'Modificación contractual'
-          },
-        ]
-      }
-    ];
+
+    this.fiduciaryCommitteeSession.getCommitteeSessionFiduciario()
+    .subscribe( response => {
+      this.dataSolicitudContractual = response;  
+    })
+
+    // this.dataSolicitudContractual = [
+    //   {
+    //     nombreSesion: 'CT_00001',
+    //     fecha: '24/06/2020',
+    //     data: [
+    //       {
+    //         fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
+    //         numeroSolicitud: 'SC0005',
+    //         tipoSolicitud: 'Evaluación de proceso de selección'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     nombreSesion: 'CT_00002',
+    //     fecha: '30/06/2020',
+    //     data: [
+    //       {
+    //         fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
+    //         numeroSolicitud: 'PI0004',
+    //         tipoSolicitud: 'Contratación'
+    //       },
+    //       {
+    //         fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
+    //         numeroSolicitud: '000003',
+    //         tipoSolicitud: 'Modificación contractual'
+    //       },
+    //     ]
+    //   }
+    // ];
   };
 
   //Contador solicitudes seleccionadas

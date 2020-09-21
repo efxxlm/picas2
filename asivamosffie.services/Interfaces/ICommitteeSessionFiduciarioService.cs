@@ -12,10 +12,10 @@ namespace asivamosffie.services.Interfaces
     {
 
         #region "ORDEN DEL DIA";
-        Task<ActionResult<List<ComiteTecnico>>> GetRequestCommitteeSessionById(int comiteTecnicoId);
+        Task<List<ComiteTecnico>> GetRequestCommitteeSessionById(int comiteTecnicoId);
         Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite);
-        Task<ActionResult<List<SesionComiteTema>>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId);
-        Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession();
+        Task<List<SesionComiteTema>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId);
+        Task<List<ComiteTecnico>> GetCommitteeSession();
 
         Task<Respuesta> CallCommitteeSession(int comiteTecnicoId, string user);
         Task<bool> DeleteTema(int sesionTemaId, string user);
@@ -24,8 +24,8 @@ namespace asivamosffie.services.Interfaces
 
 
         #region "SESIONES DE COMITE FIDUCIARIO";
-        Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario(int? estadoComiteCodigo);
-        Task<ActionResult<List<Usuario>>> GetListParticipantes();
+        Task<List<ComiteTecnico>> GetConvokeSessionFiduciario(int? estadoComiteCodigo);
+        Task<List<Usuario>> GetListParticipantes();
         #endregion
 
 
@@ -36,16 +36,15 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateOrEditSubjects(TemaCompromiso temaCompromiso);
         
         Task<SesionInvitado> GetSesionGuesById(int sesionInvitadoId);
-        Task<ActionResult<List<ComiteTecnico>>> GetSesionSinActa();
-        Task<ActionResult<List<GridCommitteeSession>>> GetCommitteeSessionFiduciario();
-        Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSessionTemaById(int sessionTemaId);
+        Task<List<ComiteTecnico>> GetSesionSinActa();
+        Task<List<dynamic>> GetCommitteeSessionFiduciario();
+        Task<IEnumerable<GridCommitteeSession>> GetCommitteeSessionTemaById(int sessionTemaId);
         Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate, string usuarioModifico);
         Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico);
          Task<List<GridValidationRequests>> GetValidationRequests();
-        Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo);
         Task<Respuesta> CreateOrEditVotacionSolicitud(List<SesionSolicitudVoto> listSolicitudVoto);
         Task<Respuesta> CreateOrEditInvitedMembers(SesionParticipante sesionParticipante);
-        Task<ActionResult<List<GridComiteTecnicoCompromiso>>> GetCompromisosSolicitud();
+        Task<List<GridComiteTecnicoCompromiso>> GetCompromisosSolicitud();
 
     }
 }

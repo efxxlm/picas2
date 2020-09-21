@@ -40,19 +40,19 @@ namespace asivamosffie.services
         {
             _context = context;
             _commonService = commonService;
-   
+
         }
 
 
         #region "ORDEN DEL DIA";
 
         //Solicitudes acordeon => Para seleccion de solicitudes contractuales y tema nuevo
-        public async Task<ActionResult<List<ComiteTecnico>>> GetRequestCommitteeSessionById(int comiteTecnicoId)
+        public async Task<List<ComiteTecnico>> GetRequestCommitteeSessionById(int comiteTecnicoId)
         {
             try
             {
                 return await _context.ComiteTecnico.Include(cm => cm.SesionComiteTema).Where(sc => sc.ComiteTecnicoId == comiteTecnicoId && !(bool)sc.Eliminado).ToListAsync();
-                
+
             }
             catch (Exception)
             {
@@ -155,11 +155,11 @@ namespace asivamosffie.services
 
 
         //Ver detalle grilla comite tecnico
-        public async Task<ActionResult<List<SesionComiteTema>>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
+        public async Task<List<SesionComiteTema>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
         {
             try
             {
-                return await _context.SesionComiteTema.Include(st => st.ComiteTecnico).Where(cm => !(bool)cm.Eliminado && cm.ComiteTecnicoId == comiteTecnicoId).ToListAsync();            
+                return await _context.SesionComiteTema.Include(st => st.ComiteTecnico).Where(cm => !(bool)cm.Eliminado && cm.ComiteTecnicoId == comiteTecnicoId).ToListAsync();
             }
             catch (Exception)
             {
@@ -169,7 +169,7 @@ namespace asivamosffie.services
 
 
         //Get all seseion comite tecnico fiduciario
-        public async Task<ActionResult<List<ComiteTecnico>>> GetCommitteeSession()
+        public async Task<List<ComiteTecnico>> GetCommitteeSession()
         {
             try
             {
@@ -183,12 +183,12 @@ namespace asivamosffie.services
 
 
         //Grilla vefificar complimiento de compromisos
-        public async Task<ActionResult<List<GridComiteTecnicoCompromiso>>> GetCompromisosSolicitud()
+        public async Task<List<GridComiteTecnicoCompromiso>> GetCompromisosSolicitud()
         {
             try
             {
                 return await (from n in _context.SesionComiteTecnicoCompromiso
-                              where  !(bool)n.Eliminado
+                              where !(bool)n.Eliminado
                               select new GridComiteTecnicoCompromiso
                               {
                                   Tarea = n.Tarea,
@@ -293,7 +293,7 @@ namespace asivamosffie.services
             {
                 return false;
             }
-           
+
         }
 
 
@@ -305,12 +305,12 @@ namespace asivamosffie.services
         #region "SESIONES DE COMITE FIDUCIARIO";
 
         //Grilla sesiones programadas en estado Convocada.
-        public async Task<ActionResult<List<ComiteTecnico>>> GetConvokeSessionFiduciario(int? estadoComiteCodigo)
+        public async Task<List<ComiteTecnico>> GetConvokeSessionFiduciario(int? estadoComiteCodigo)
         {
             try
             {
-                if(estadoComiteCodigo != null)  
-                     return await _context.ComiteTecnico.Include(st => st.SesionComiteTema).Where(cm => !(bool)cm.Eliminado && cm.EstadoComiteCodigo == Convert.ToString(estadoComiteCodigo) && cm.EsComiteFiduciario == true).ToListAsync();
+                if (estadoComiteCodigo != null)
+                    return await _context.ComiteTecnico.Include(st => st.SesionComiteTema).Where(cm => !(bool)cm.Eliminado && cm.EstadoComiteCodigo == Convert.ToString(estadoComiteCodigo) && cm.EsComiteFiduciario == true).ToListAsync();
                 else
                     return await _context.ComiteTecnico.Include(st => st.SesionComiteTema).Where(cm => !(bool)cm.Eliminado && cm.EsComiteFiduciario == true).ToListAsync();
 
@@ -324,7 +324,7 @@ namespace asivamosffie.services
 
 
         //Grilla validacion de solicitudes contractuales
-         public async Task<List<GridValidationRequests>> GetValidationRequests()
+        public async Task<List<GridValidationRequests>> GetValidationRequests()
         {
             //sc.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
             return await
@@ -345,32 +345,32 @@ namespace asivamosffie.services
                      FechaComiteTecnico = ct.FechaCreacion,
                      NumeroComite = ct.NumeroComite,
                      TemaRequiereVotacion = sc.RequiereVotacion,
-                     sesionParticipanteVoto = (List<SesionParticipanteVoto>)(from v in _context.SesionParticipanteVoto 
-                                               where v.ComiteTecnicoId == ct.ComiteTecnicoId 
-                                               select new SesionParticipanteVoto
-                                               {
-                                                   SesionParticipanteVotoId = v.SesionParticipanteId,
-                                                   SesionParticipante =
-                                                   (SesionParticipante)(from sp in _context.SesionParticipante
-                                                                    where sp.ComiteTecnicoId == v.ComiteTecnicoId && !(bool)sp.Eliminado
-                                                                        select new SesionParticipante
-                                                                        {
-                                                                            ComiteTecnicoId = sp.ComiteTecnicoId,
-                                                                            UsuarioId = sp.UsuarioId,
-                                                                            Nombres = _context.Usuario.Where(u => (bool)u.Activo && u.UsuarioId.Equals(sp.UsuarioId)).Select(u => string.Concat(u.Nombres, " ", u.Apellidos)).FirstOrDefault(),
-                                                                        }),
-                                                   SesionParticipanteId = v.SesionParticipanteId,
-                                                   EsAprobado = v.EsAprobado,
-                                                   Observaciones = v.Observaciones,
-                                                   ObservacionesDevolucion = v.ObservacionesDevolucion
+                     sesionParticipanteVoto = (List<SesionParticipanteVoto>)(from v in _context.SesionParticipanteVoto
+                                                                             where v.ComiteTecnicoId == ct.ComiteTecnicoId
+                                                                             select new SesionParticipanteVoto
+                                                                             {
+                                                                                 SesionParticipanteVotoId = v.SesionParticipanteId,
+                                                                                 SesionParticipante =
+                                                                                 (SesionParticipante)(from sp in _context.SesionParticipante
+                                                                                                      where sp.ComiteTecnicoId == v.ComiteTecnicoId && !(bool)sp.Eliminado
+                                                                                                      select new SesionParticipante
+                                                                                                      {
+                                                                                                          ComiteTecnicoId = sp.ComiteTecnicoId,
+                                                                                                          UsuarioId = sp.UsuarioId,
+                                                                                                          Nombres = _context.Usuario.Where(u => (bool)u.Activo && u.UsuarioId.Equals(sp.UsuarioId)).Select(u => string.Concat(u.Nombres, " ", u.Apellidos)).FirstOrDefault(),
+                                                                                                      }),
+                                                                                 SesionParticipanteId = v.SesionParticipanteId,
+                                                                                 EsAprobado = v.EsAprobado,
+                                                                                 Observaciones = v.Observaciones,
+                                                                                 ObservacionesDevolucion = v.ObservacionesDevolucion
 
-                                               })
+                                                                             })
 
 
-        }).ToListAsync();
+                 }).ToListAsync();
 
         }
-        
+
         public async Task<Respuesta> CreateOrEditVotacionSolicitud(List<SesionSolicitudVoto> listSolicitudVoto)
         {
 
@@ -439,7 +439,7 @@ namespace asivamosffie.services
             }
         }
         //Ver soporte
-        public async Task<ActionResult<List<SesionComiteSolicitud>>> StartDownloadResumenFichaSolicitud()
+        public async Task<List<SesionComiteSolicitud>> StartDownloadResumenFichaSolicitud()
         {
 
             try
@@ -456,19 +456,20 @@ namespace asivamosffie.services
 
 
         //Lista participantes
-        public async Task<ActionResult<List<Usuario>>> GetListParticipantes()
+        public async Task<List<Usuario>> GetListParticipantes()
         {
 
             try
             {
-                return await (from u in _context.Usuario where u.Eliminado == false && u.Activo == true
-                        select new Usuario
-                        {
-                            UsuarioId = u.UsuarioId,
-                            Email = u.Email,
-                            Nombres = string.Concat(u.Nombres, " ", u.Apellidos)
-                        }).ToListAsync();
-                
+                return await (from u in _context.Usuario
+                              where u.Eliminado == false && u.Activo == true
+                              select new Usuario
+                              {
+                                  UsuarioId = u.UsuarioId,
+                                  Email = u.Email,
+                                  Nombres = string.Concat(u.Nombres, " ", u.Apellidos)
+                              }).ToListAsync();
+
             }
             catch (Exception)
             {
@@ -495,21 +496,21 @@ namespace asivamosffie.services
 
                     //Auditoria
                     strCrearEditar = "CREAR MIENBROS INVITADOS";
-                    if (sesionParticipante.UsersIds.Count > 0)
-                    {
-                        foreach (var list in sesionParticipante.UsersIds)
-                        {
-                            _sesionParticipante = new SesionParticipante();
-                            _sesionParticipante.ComiteTecnicoId = sesionParticipante.ComiteTecnicoId;
-                            _sesionParticipante.UsuarioId = list.UsuarioId;
-                            _sesionParticipante.FechaCreacion = DateTime.Now;
-                            _sesionParticipante.UsuarioCreacion = sesionParticipante.UsuarioCreacion;
-                            _sesionParticipante.Eliminado = false;
-                            _context.SesionParticipante.Add(_sesionParticipante);
-                        }
-                    }
+                    // if (sesionParticipante.UsersIds.Count > 0)
+                    // {
+                    //     foreach (var list in sesionParticipante.UsersIds)
+                    //     {
+                    //         _sesionParticipante = new SesionParticipante();
+                    //         _sesionParticipante.ComiteTecnicoId = sesionParticipante.ComiteTecnicoId;
+                    //         _sesionParticipante.UsuarioId = list.UsuarioId;
+                    //         _sesionParticipante.FechaCreacion = DateTime.Now;
+                    //         _sesionParticipante.UsuarioCreacion = sesionParticipante.UsuarioCreacion;
+                    //         _sesionParticipante.Eliminado = false;
+                    //         _context.SesionParticipante.Add(_sesionParticipante);
+                    //     }
+                    // }
                 }
-              
+
 
                 return respuesta = new Respuesta
                 {
@@ -545,21 +546,21 @@ namespace asivamosffie.services
 
         #region "Gestion de actas";
         //Grilla sesion comite, => sesiones desarrolladas sin actas.
-        public async Task<ActionResult<List<ComiteTecnico>>> GetSesionSinActa()
+        public async Task<List<ComiteTecnico>> GetSesionSinActa()
         {
             try
             {
-                 return await (from n in _context.ComiteTecnico
-                                where n.EstadoComiteCodigo == "3" && (bool)!n.Eliminado
-                                select new ComiteTecnico
-                                {
-                                    ComiteTecnicoId = n.ComiteTecnicoId,
-                                    NumeroComite = n.NumeroComite,
-                                    FechaOrdenDia = n.FechaOrdenDia,
-                                    //TipoDominioId = 38 -> Estado comite
-                                    EstadoComiteCodigo = n.EstadoComiteCodigo == "3" ? "Sin acta" : n.EstadoComiteCodigo == "4" ? "En proceso de aprobación" : n.EstadoComiteCodigo == "5" ? "Aprobada": "Devuelta" ,
-                                    EsCompleto = n.EsCompleto
-                                }).OrderByDescending(s => s.FechaOrdenDia).ToListAsync();
+                return await (from n in _context.ComiteTecnico
+                              where n.EstadoComiteCodigo == "3" && (bool)!n.Eliminado
+                              select new ComiteTecnico
+                              {
+                                  ComiteTecnicoId = n.ComiteTecnicoId,
+                                  NumeroComite = n.NumeroComite,
+                                  FechaOrdenDia = n.FechaOrdenDia,
+                                  //TipoDominioId = 38 -> Estado comite
+                                  EstadoComiteCodigo = n.EstadoComiteCodigo == "3" ? "Sin acta" : n.EstadoComiteCodigo == "4" ? "En proceso de aprobación" : n.EstadoComiteCodigo == "5" ? "Aprobada" : "Devuelta",
+                                  EsCompleto = n.EsCompleto
+                              }).OrderByDescending(s => s.FechaOrdenDia).ToListAsync();
 
 
             }
@@ -607,7 +608,7 @@ namespace asivamosffie.services
 
 
         // Ver detalle
-        public async Task<ActionResult<IEnumerable<GridCommitteeSession>>> GetCommitteeSessionTemaById(int sessionTemaId)
+        public async Task<IEnumerable<GridCommitteeSession>> GetCommitteeSessionTemaById(int sessionTemaId)
         {
 
             List<SesionComiteTema> ListSesionComiteTema = await _context.SesionComiteTema.Where(s => s.ComiteTecnicoId == sessionTemaId && (bool)!s.Eliminado).ToListAsync();
@@ -639,27 +640,56 @@ namespace asivamosffie.services
 
         //todas las solicitudes que fueron aprobadas por el comite tecnico.
         //TipoDominioId = 38, Codigo = 2, Nombre = Convocada
-        public async Task<ActionResult<List<GridCommitteeSession>>> GetCommitteeSessionFiduciario()
+        public async Task<List<dynamic>> GetCommitteeSessionFiduciario()
         {
+            List<dynamic> listaSolicitudesGrilla = new List<dynamic>();
+
             try
             {
-                List<ComiteTecnico> ListSesion = await _context.ComiteTecnico.Where(s => s.EstadoComiteCodigo == "2").ToListAsync();
-                List<GridCommitteeSession> ListGridCommitteeSessionFiduciario = new List<GridCommitteeSession>();
+                List<SesionComiteSolicitud> listaSolicitudes = await _context.SesionComiteSolicitud
+                                                                            .Where(cs => cs.EstadoCodigo == "1")
+                                                                            .Include(r => r.ComiteTecnico)
+                                                                            .ToListAsync(); //Aprobadas
 
-                foreach (var ss in ListSesion)
+                List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
+
+                foreach (var ss in listaSolicitudes)
                 {
-                    GridCommitteeSession SesionGrid = new GridCommitteeSession
+                    switch (ss.TipoSolicitudCodigo)
                     {
-                        SesionComiteTemaId = ss.ComiteTecnicoId,
-                        FechaDeComite = ss.FechaOrdenDia,
-                        NumeroComite = ss.NumeroComite,
-                    };
+                        case ConstanCodigoTipoSolicitud.Contratacion:
+                            {
+                                Contratacion contratacion = _context.Contratacion.Find(ss.SolicitudId);
 
-                    ListGridCommitteeSessionFiduciario.Add(SesionGrid);
+                                listaSolicitudesGrilla.Add(new
+                                {
+                                    Id = contratacion.ContratacionId,
+                                    FechaSolicitud = contratacion.FechaTramite.HasValue ? (DateTime?)contratacion.FechaTramite.Value : null,
+                                    NumeroSolicitud = contratacion.NumeroSolicitud,
+                                    TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                                    tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Contratacion
+                                });
+                                break;
+                            }
+
+                        case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                            {
+                                ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
+                                listaSolicitudesGrilla.Add(new
+                                {
+                                    Id = procesoSeleccion.ProcesoSeleccionId,
+                                    FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion),
+                                    NumeroSolicitud = procesoSeleccion.NumeroProceso,
+                                    TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                                    tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
+                                });
+
+                                break;
+                            }
+                    }
                 }
 
-                return ListGridCommitteeSessionFiduciario;
-
+                return listaSolicitudesGrilla;
             }
             catch (Exception)
             {
@@ -785,7 +815,7 @@ namespace asivamosffie.services
 
                 }
 
-                return respuesta = new Respuesta        
+                return respuesta = new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
@@ -1000,7 +1030,7 @@ namespace asivamosffie.services
                     sesionComiteTemaAntiguo.TiempoIntervencion = sesionComiteTema.TiempoIntervencion; // En minutos
 
                     _context.SesionComiteTema.Update(sesionComiteTemaAntiguo);
-                   
+
                 }
 
                 return respuesta = new Respuesta
@@ -1100,13 +1130,6 @@ namespace asivamosffie.services
             }
 
         }
-
-        public Task<ActionResult<List<GridValidationRequests>>> GetValidationRequests(string tipoSolicitudCodigo)
-        {
-            throw new NotImplementedException();
-        }
-
-
 
         #endregion
 
