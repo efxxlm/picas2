@@ -211,7 +211,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
       sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
     })
 
-    console.log( sesionComiteSolicitud );
+    console.log( sesionComiteSolicitud ); 
 
     this.technicalCommitteSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
     .subscribe( respuesta => {

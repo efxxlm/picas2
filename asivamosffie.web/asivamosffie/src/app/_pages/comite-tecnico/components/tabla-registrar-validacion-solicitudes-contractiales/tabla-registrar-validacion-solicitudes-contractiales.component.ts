@@ -211,6 +211,9 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   validarRegistros(){
     this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach( sc => {
       sc.completo = true;
+
+      if ( sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0 ) { sc.completo = false }
+
       sc.sesionSolicitudVoto.forEach( ss => {
         if ( ss.esAprobado != true && ss.esAprobado != false ){
           sc.completo = false;

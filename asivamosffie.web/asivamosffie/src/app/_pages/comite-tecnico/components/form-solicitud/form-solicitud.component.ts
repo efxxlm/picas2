@@ -8,6 +8,7 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -185,6 +186,12 @@ export class FormSolicitudComponent implements OnInit {
   }
 
   cargarRegistro() {
+
+    if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
+      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+    }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
+      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+    }
 
     let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
 

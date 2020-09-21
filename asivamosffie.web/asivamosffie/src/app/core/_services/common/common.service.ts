@@ -158,7 +158,7 @@ export class CommonService {
   }
 
   listaEstadoSolicitud(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=50`);
   }
 
   listaEstadoCompromisos(){

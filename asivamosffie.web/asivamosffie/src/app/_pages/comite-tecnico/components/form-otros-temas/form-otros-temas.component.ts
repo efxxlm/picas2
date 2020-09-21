@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-otros-temas',
@@ -178,6 +179,12 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   cargarRegistro() {
+
+    if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
+      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+    }else if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
+      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+    }
 
     this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
 

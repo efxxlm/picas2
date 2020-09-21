@@ -5,6 +5,7 @@ import { SesionComiteSolicitud, SesionSolicitudVoto, ComiteTecnico } from 'src/a
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 
 @Component({
@@ -132,6 +133,12 @@ export class VotacionSolicitudComponent implements OnInit{
       }
 
       sesionComiteSolicitud.sesionSolicitudVoto.push( sesionSolicitudVoto );
+    })
+    
+    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
+    sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
+      if ( sv.esAprobado != true )
+      sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
     })
 
     console.log( sesionComiteSolicitud );
