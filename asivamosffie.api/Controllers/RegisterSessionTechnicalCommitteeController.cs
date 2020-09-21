@@ -25,7 +25,13 @@ namespace asivamosffie.api.Controllers
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
 
-
+        [HttpGet]
+        [Route("GetPlantillaActaBySesionComiteSolicitudId")]
+        public async Task<FileResult> GetPlantillaActaBySesionComiteSolicitudId(int SesionComiteSolicitudId)
+        {
+            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaBySesionComiteSolicitudId(SesionComiteSolicitudId), "application/pdf");
+        }
+         
 
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
