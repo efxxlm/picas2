@@ -81,7 +81,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //RESPONSABLES DE TEMAS
         Miembros_Comite_Tecnico = 46,
-
-        Estado_Sesion_Comite_Solicitud = 50
+ 
+        Estado_Sesion_Comite_Solicitud = 50,
+ 
+        Estado_Verificacion_Contrato = 53
+ 
     }
 }
