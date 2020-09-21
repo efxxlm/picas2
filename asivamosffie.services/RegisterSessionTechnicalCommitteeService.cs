@@ -675,8 +675,7 @@ namespace asivamosffie.services
                          IsValidation = true,
                          Code = ConstantSesionComiteTecnico.Error,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION INVITADO")
-                     };
-
+                     }; 
                 }
                 sesionInvitadoOld.UsuarioModificacion = pUsuarioModificacion;
                 sesionInvitadoOld.FechaModificacion = DateTime.Now;
