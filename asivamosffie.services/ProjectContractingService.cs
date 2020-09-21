@@ -76,8 +76,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         public async Task<Respuesta> DeleteContratacionByIdContratacion(int idContratacion , string pUsusarioElimino) 
         {
             int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Contratacion, (int)EnumeratorTipoDominio.Acciones);
@@ -112,8 +111,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         public async Task<Contratacion> GetAllContratacionByContratacionId(int pContratacionId)
         {
             return  await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
@@ -172,8 +170,7 @@ namespace asivamosffie.services
 
             return contratacion;
         }
-
-       
+         
         public async Task<List<ContratacionProyecto>> GetListContratacionProyectoByContratacionId(int idContratacion)
         {
 
@@ -192,7 +189,7 @@ namespace asivamosffie.services
                 foreach (var ContratacionProyectoAportante in item.ContratacionProyectoAportante)
                 {
                     //TODO:Se daño por la Modificacion de comite sesion arquitecto y mergue 25/08/2020
-                    //ContratacionProyectoAportante.ProyectoAportante = await _context.ProyectoAportante.Where(r => !(bool)r.Eliminado && r.ProyectoAportanteId == ContratacionProyectoAportante.ProyectoAportanteId ).FirstOrDefaultAsync();
+                   //  ContratacionProyectoAportante.ContratacionProyectoAportanteId = await _context.ProyectoAportante.Where(r => !(bool)r.Eliminado && r.ProyectoAportanteId == ContratacionProyectoAportante.ProyectoAportanteId ).FirstOrDefaultAsync();
                 }
             }
             return ListContratacionProyecto; 
@@ -803,7 +800,8 @@ namespace asivamosffie.services
                     //Registros 
                     TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
                     FechaTramite = DateTime.Now,
-                    NumeroSolicitud = await _commonService.EnumeradorContratacion()
+                    NumeroSolicitud = await _commonService.EnumeradorContratacion(),
+                    EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.En_Revision,
                     //Contratista = ContratistaId 
                     //EsObligacionEspecial = (bool),
                     //ConsideracionDescripcion = "" 
@@ -811,6 +809,8 @@ namespace asivamosffie.services
                 contratacion.RegistroCompleto = ValidarEstado(contratacion);
                 //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
 
+
+ 
 
                 foreach (ContratacionProyecto c in pContratacion.ContratacionProyecto)
                 {
@@ -826,18 +826,17 @@ namespace asivamosffie.services
                         ProyectoId = c.ProyectoId,
 
                     };
-
+              
                     List<ProyectoAportante> listaAportantes = _context.ProyectoAportante.Where( a => !(bool)a.Eliminado && a.ProyectoId == c.ProyectoId ).ToList();
 
                     listaAportantes.ForEach( apo => {
-                        ContratacionProyectoAportante contratacionProyectoAportante = new ContratacionProyectoAportante();
-
-                        contratacionProyectoAportante.CofinanciacionAportanteId = apo.AportanteId;
-                        contratacionProyectoAportante.FechaCreacion = DateTime.Now;
-                        contratacionProyectoAportante.UsuarioCreacion = usuarioCreacion;
-
-                        contratacionProyecto.ContratacionProyectoAportante.Add( contratacionProyectoAportante );
-
+                        ContratacionProyectoAportante contratacionProyectoAportante = new ContratacionProyectoAportante
+                        {
+                            CofinanciacionAportanteId = apo.AportanteId,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = usuarioCreacion
+                        }; 
+                        contratacionProyecto.ContratacionProyectoAportante.Add( contratacionProyectoAportante ); 
                     });
 
                     contratacion.ContratacionProyecto.Add(contratacionProyecto);
