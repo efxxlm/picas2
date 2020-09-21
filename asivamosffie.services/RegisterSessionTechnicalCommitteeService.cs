@@ -948,7 +948,7 @@ namespace asivamosffie.services
                 return new ComiteTecnico();
             }
             //  List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
-             
+
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                  .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
 
@@ -1216,7 +1216,7 @@ namespace asivamosffie.services
             return ListComiteGrilla;
         }
 
-        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId )
+        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId)
         {
             List<SesionParticipante> ListaParticipantes = new List<SesionParticipante>();
             try
@@ -1224,10 +1224,10 @@ namespace asivamosffie.services
 
                 ListaParticipantes = await _context.SesionParticipante
                 .Where(r => r.ComiteTecnicoId == pComiteId && !(bool)r.Eliminado)
-                .Include( r => r.SesionSolicitudObservacionProyecto )
+                .Include(r => r.SesionSolicitudObservacionProyecto)
                 .ToListAsync();
 
-                return ListaParticipantes; 
+                return ListaParticipantes;
 
             }
             catch (Exception)
@@ -1714,7 +1714,7 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_PRIVADA_PS:
 
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0) ? pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreProponente :"");
+                                  Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0) ? pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreProponente : "");
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_DOCUMENTO_PRIVADA_PS:
@@ -1727,7 +1727,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_REPRESENTANTE_LEGAL_PRIVADA_PS:
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                               Replace(placeholderDominio.Nombre,(pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0) ? pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreRepresentanteLegal :"");
+                               Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0) ? pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreRepresentanteLegal : "");
 
                                 break;
                         }
@@ -1842,6 +1842,7 @@ namespace asivamosffie.services
             List<InstitucionEducativaSede> ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
             //Se crea el detalle de los proyectos asociado a contratacion - contratacionProyecto 
             int enumProyecto = 1;
+
             foreach (var proyecto in pContratacion.ContratacionProyecto)
             {
                 //Se crear una nueva plantilla por cada vez que entra
@@ -1971,7 +1972,9 @@ namespace asivamosffie.services
                             DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorTotal));
                             break;
 
-
+                        case ConstanCodigoVariablesPlaceHolders.REGISTROS_FUENTES_USO:
+                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, " ");
+                            break;
                     }
                 }
             }
@@ -2027,8 +2030,131 @@ namespace asivamosffie.services
                     case ConstanCodigoVariablesPlaceHolders.DETALLES_PROYECTOS:
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, DetallesProyectos);
                         break;
+
+                    case ConstanCodigoVariablesPlaceHolders.NUMERO_DE_LICENCIA: 
+                        string numeroLicencia = "";
+                        if (pContratacion.ContratacionProyecto.Count()>0)
+                        {
+                            numeroLicencia = pContratacion.ContratacionProyecto.FirstOrDefault().NumeroLicencia;
+                        }
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, numeroLicencia); 
+                        break;
+
+                    case ConstanCodigoVariablesPlaceHolders.FECHA_DE_VIGENCIA: 
+                        string fechaVigencia = "";
+                        if (pContratacion.ContratacionProyecto.Count() > 0)
+                        {
+                            fechaVigencia = ((DateTime)pContratacion.ContratacionProyecto.FirstOrDefault().FechaVigencia).ToString("yy-MM-dd");
+                        }
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, fechaVigencia); 
+                        break;
+                         
+                    case ConstanCodigoVariablesPlaceHolders.CONSIDERACIONES_ESPECIALES: 
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.ConsideracionDescripcion); 
+                        break;
+
+
                 }
             }
+            //Preguntas    //Preguntas 
+            //Preguntas    //Preguntas 
+            string strPregunta_1 = " ";
+
+            string strPregunta_2 = "";
+            string ContenidoPregunta2 = _context.Plantilla.Where(r => r.Codigo.Equals(((int)ConstanCodigoPlantillas.dos_pregunta_tecnica_o_juridica).ToString())).FirstOrDefault().Contenido;
+
+            string strPregunta_3 = "";
+            string ContenidoPregunta3 = _context.Plantilla.Where(r => r.Codigo.Equals(((int)ConstanCodigoPlantillas.tres_pregunta_tecnica_o_juridica).ToString())).FirstOrDefault().Contenido;
+
+            string strPregunta_4 = "";
+            string ContenidoPregunta4 = _context.Plantilla.Where(r => r.Codigo.Equals(((int)ConstanCodigoPlantillas.cuatro_pregunta_tecnica_o_juridica).ToString())).FirstOrDefault().Contenido;
+
+            string strPregunta_5 = "";
+            string ContenidoPregunta5 = _context.Plantilla.Where(r => r.Codigo.Equals(((int)ConstanCodigoPlantillas.cinco_pregunta_tecnica_o_juridica).ToString())).FirstOrDefault().Contenido;
+
+            string strPregunta_6 = "";
+            string ContenidoPregunta6 = _context.Plantilla.Where(r => r.Codigo.Equals(((int)ConstanCodigoPlantillas.seis_pregunta_tecnica_o_juridica).ToString())).FirstOrDefault().Contenido;
+
+
+            if (pContratacion.ContratacionProyecto.Count() > 0)
+            {
+
+                //Pregunta 1 
+                if (pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreWeb == null ||
+                    !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreWeb)
+                {
+                    //Si la respuesta a la pregunta 1, fue “No”, el sistema mostrará la pregunta 4
+                    strPregunta_1 = " no";
+                  // strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
+                }
+                else
+                {
+                    //Si la respuesta fue “Si”, el sistema mostrará la pregunta 2.  
+                    strPregunta_1 = " si";
+
+                    //pregunta 2
+                    if (pContratacion.ContratacionProyecto.FirstOrDefault().EsReasignacion == null
+                        || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().EsReasignacion)
+                    {
+                        //pregunta 5
+                        if (pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia == null
+                            || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia)
+                        {
+
+                        }
+                        else
+                        {
+                            strPregunta_5 = ContenidoPregunta5 + " si";
+                            strPregunta_6 = ContenidoPregunta6 + " " + pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente;
+                        }
+                    }
+                    else
+                    {
+                        strPregunta_2 = ContenidoPregunta2 + " si";
+                        //pregunta 3
+                        if (pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra == null
+                           || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra)
+                        {
+                        
+                        }
+                        else
+                        {
+                            
+                            strPregunta_3 = ContenidoPregunta3 + " si";
+                            strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
+                            //pregunta 5
+                            if (pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia ==null
+                                ||!(bool)pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia)
+                            {
+
+                            }
+                            else
+                            { 
+                                strPregunta_5 = ContenidoPregunta5 + " si";
+                                if (pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente == null || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente) {
+                                    strPregunta_6 = ContenidoPregunta6 + " no";
+                                }
+                                {
+                                    strPregunta_6 = ContenidoPregunta6 + " si";
+                                }
+                                
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+
+
+
+            pPlantilla = pPlantilla.Replace("[PREGUNTA_1]", strPregunta_1);
+            pPlantilla = pPlantilla.Replace("[PREGUNTA_2]", strPregunta_2);
+            pPlantilla = pPlantilla.Replace("[PREGUNTA_3]", strPregunta_3);
+            pPlantilla = pPlantilla.Replace("[PREGUNTA_4]", strPregunta_4);
+            pPlantilla = pPlantilla.Replace("[PREGUNTA_5]", strPregunta_5);
+            pPlantilla = pPlantilla.Replace("[PREGUNTA_6]", strPregunta_6);
             return pPlantilla;
         }
 

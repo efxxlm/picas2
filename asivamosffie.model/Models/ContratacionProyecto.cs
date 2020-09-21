@@ -21,6 +21,7 @@ namespace asivamosffie.model.Models
         public decimal? PorcentajeAvanceObra { get; set; }
         public bool? RequiereLicencia { get; set; }
         public bool? LicenciaVigente { get; set; }
+        public bool? TieneMonitoreWeb { get; set; } 
         public string NumeroLicencia { get; set; }
         public DateTime? FechaVigencia { get; set; }
         public string UsuarioModificacion { get; set; }

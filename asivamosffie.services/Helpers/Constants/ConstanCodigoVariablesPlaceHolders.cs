@@ -140,6 +140,8 @@
         public const string FU_FASE = "116";
         public const string FU_USO = "117";
         public const string VALOR_DE_USO = "118";
+        public const string REGISTROS_FUENTES_USO = "119"; 
+
         #endregion
     }
 }
