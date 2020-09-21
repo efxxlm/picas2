@@ -47,7 +47,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaFirmaActaContratista { get; set; }
         public DateTime? FechaFirmaActaContratistaInterventoria { get; set; }
         public string RutaActa { get; set; }
-        public bool? RegistroCompleto { get; set; } 
+        public bool? RegistroCompleto { get; set; }
+
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
