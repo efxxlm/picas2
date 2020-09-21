@@ -24,18 +24,21 @@ namespace asivamosffie.services
 
             List<dynamic> ListContratacion = new List<dynamic>();
 
-            List<Contrato> listContratos = _context.Contrato.Where(r => !(bool)r.Eliminado)
+            List<Contrato> listContratos = _context.Contrato
+                .Where(r => !(bool)r.Eliminado)
                    .Include(r => r.ContratoPoliza)
                       .ThenInclude(r => r.PolizaGarantia)
                    .Include(r => r.ContratoPoliza)
                       .ThenInclude(r => r.PolizaObservacion).ToList();
 
-            foreach (var Contrato in listContratos)
+            foreach (var Contrato in listContratos.Where(r=> r.ContratoPoliza.Count() > 0))
             {
 
                 if (!string.IsNullOrEmpty(Contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion.ToString()))
                     ListContratacion.Add(new
                     {
+                        Contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion,
+                        Contrato.NumeroContrato,
 
 
 
