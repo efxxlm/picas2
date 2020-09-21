@@ -1291,7 +1291,8 @@ namespace asivamosffie.services
                             NumeroComite = comite.NumeroComite, 
                             EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
                             EstadoActaCodigo = comite.EstadoActaCodigo,
-                            RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto"
+                            RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
+                            RegistroCompleto = comite.EsCompleto 
                         };
                          
                         ListComiteGrilla.Add(comiteGrilla);
