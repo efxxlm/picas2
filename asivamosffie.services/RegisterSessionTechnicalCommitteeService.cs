@@ -712,7 +712,7 @@ namespace asivamosffie.services
                         SesionComiteTema.UsuarioCreacion = pComiteTecnico.UsuarioCreacion;
                         SesionComiteTema.Eliminado = false;
                     }
-                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
+                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
                         //Auditoria
                         SesionComiteSolicitud.FechaCreacion = DateTime.Now;
@@ -727,7 +727,7 @@ namespace asivamosffie.services
 
                     ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
-                        .IncludeFilter(r => r.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado))
+                        .IncludeFilter(r => r.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado))
                         .IncludeFilter(r => r.SesionComiteTema.Where(r => !(bool)r.Eliminado)).FirstOrDefault();
 
                     //Auditoria 
@@ -781,7 +781,7 @@ namespace asivamosffie.services
                         }
                     }
 
-                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
+                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
                         if (SesionComiteSolicitud.SesionComiteSolicitudId == 0)
                         {
@@ -885,9 +885,9 @@ namespace asivamosffie.services
 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                .Include(r => r.SesionComiteSolicitud)
+                .Include(r => r.SesionComiteSolicitudComiteTecnico)
                    .ThenInclude(r => r.SesionSolicitudVoto)
-                .Include(r => r.SesionComiteSolicitud)
+                .Include(r => r.SesionComiteSolicitudComiteTecnico)
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.SesionTemaVoto)
@@ -899,15 +899,15 @@ namespace asivamosffie.services
                 .FirstOrDefaultAsync();
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
-            comiteTecnico.SesionComiteSolicitud = comiteTecnico.SesionComiteSolicitud.Where(r => !(bool)r.Eliminado).ToList();
+            comiteTecnico.SesionComiteSolicitudComiteTecnico = comiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado).ToList();
 
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
             }
 
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
             }
@@ -932,7 +932,7 @@ namespace asivamosffie.services
                 contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
             }
 
-            foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
 
                 switch (sesionComiteSolicitud.TipoSolicitudCodigo)
