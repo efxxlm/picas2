@@ -43,7 +43,7 @@
             </p>
             <p>
                 <strong>Fecha comité técnico:</strong>
-                {{detailavailabilityBudget[0].fechaComiteTecnico}}
+                {{detailavailabilityBudget[0].fechaComiteTecnico | date: 'dd/MM/yyyy' }}
             </p>
             <p *ngIf="esModificacion">
                 <strong>Tipo de modificación:</strong>
@@ -118,6 +118,6 @@
         <button mat-raised-button color="accent">Rechazar por <br> validación presupuestal</button>
     </div>
 
-    <app-tabla-gestionar-validacion></app-tabla-gestionar-validacion>
+    <app-tabla-gestionar-validacion ></app-tabla-gestionar-validacion>
 </section>
 

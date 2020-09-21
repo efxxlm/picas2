@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -75,6 +75,8 @@ export class TablaGestionarValidacionComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
 
+  @Input()proyectos: any;
+  
   ngOnInit(): void {
     this.inicializarTabla();
   }
