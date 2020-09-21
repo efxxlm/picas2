@@ -985,7 +985,12 @@ namespace asivamosffie.services
 
                 ComiteTecnicoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                 ComiteTecnicoOld.FechaModificacion = DateTime.Now;
+
                 ComiteTecnicoOld.EstadoComiteCodigo = pComiteTecnico.EstadoComiteCodigo;
+
+                if ( ComiteTecnicoOld.EstadoComiteCodigo == ConstanCodigoEstadoComite.Desarrollada_Sin_Acta ){
+                    ComiteTecnicoOld.EstadoActaCodigo = "1"; //Sin Acta
+                }
 
                 _context.SaveChanges();
                 return
@@ -1502,6 +1507,7 @@ namespace asivamosffie.services
             if (estaCompleto)
             {
                 comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
+                comite.EsCompleto = true;   
                 _context.SaveChanges();
             }
 
