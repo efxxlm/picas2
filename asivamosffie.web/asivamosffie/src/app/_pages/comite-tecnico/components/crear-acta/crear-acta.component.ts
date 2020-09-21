@@ -42,6 +42,7 @@ export class CrearActaComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.listaMiembros = [];
     this.objetoComiteTecnico.fechaOrdenDia
 
     this.activatedRoute.params.subscribe(parametros => {
@@ -117,6 +118,8 @@ export class CrearActaComponent implements OnInit {
     
     if (e){
       this.router.navigate(['/comiteTecnico'])
+    }else{
+      this.ngOnInit();
     }
   }
 

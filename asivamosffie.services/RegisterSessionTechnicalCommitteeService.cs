@@ -218,15 +218,18 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld)
         {
-            if (!string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
-                || !string.IsNullOrEmpty(sesionComiteTemaOld.ResponsableCodigo)
-                || !string.IsNullOrEmpty(sesionComiteTemaOld.TiempoIntervencion.ToString())
-                || !string.IsNullOrEmpty(sesionComiteTemaOld.RutaSoporte)
-                || !string.IsNullOrEmpty(sesionComiteTemaOld.Observaciones.ToString())
+            if (string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
+                || string.IsNullOrEmpty(sesionComiteTemaOld.ResponsableCodigo)
+                || string.IsNullOrEmpty(sesionComiteTemaOld.TiempoIntervencion.ToString())
+                //|| !string.IsNullOrEmpty(sesionComiteTemaOld.RutaSoporte)
+                || string.IsNullOrEmpty(sesionComiteTemaOld.Observaciones)
                 || sesionComiteTemaOld.EsAprobado == null
                 || sesionComiteTemaOld.RequiereVotacion == null
-                || sesionComiteTemaOld.EsProposicionesVarios == null
+                //|| sesionComiteTemaOld.EsProposicionesVarios == null
                 || sesionComiteTemaOld.GeneraCompromiso == null
+                || string.IsNullOrEmpty(sesionComiteTemaOld.ObservacionesDecision)
+                || sesionComiteTemaOld.EstadoTemaCodigo == null
+
                 )
             {
 
@@ -926,14 +929,16 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
-               sesionComiteSolicitud.Observaciones == null ||
                sesionComiteSolicitud.RutaSoporteVotacion == null ||
                sesionComiteSolicitud.GeneraCompromiso == null ||
                sesionComiteSolicitud.RequiereVotacion == null ||
-               sesionComiteSolicitud.ComiteTecnicoFiduciarioId > 0 ||
-               sesionComiteSolicitud.FechaComiteFiduciario == null ||
-               sesionComiteSolicitud.UsuarioComiteFiduciario == null ||
-               sesionComiteSolicitud.EstadoActaCodigo == null
+               //sesionComiteSolicitud.ComiteTecnicoFiduciarioId > 0 ||
+               //sesionComiteSolicitud.FechaComiteFiduciario == null ||
+               //sesionComiteSolicitud.UsuarioComiteFiduciario == null ||
+               //sesionComiteSolicitud.EstadoActaCodigo == null ||
+               sesionComiteSolicitud.EstadoCodigo == null ||
+               string.IsNullOrEmpty( sesionComiteSolicitud.Observaciones ) ||
+               string.IsNullOrEmpty( sesionComiteSolicitud.RutaSoporteVotacion )
                 )
             {
                 return false;
@@ -1383,6 +1388,7 @@ namespace asivamosffie.services
                 SesionComiteTemadOld.GeneraCompromiso = pSesionComiteTema.GeneraCompromiso;
                 SesionComiteTemadOld.Observaciones = pSesionComiteTema.Observaciones;
                 SesionComiteTemadOld.ObservacionesDecision = pSesionComiteTema.ObservacionesDecision;
+                SesionComiteTemadOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema( SesionComiteTemadOld );
 
                 foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
                 {
@@ -1481,7 +1487,7 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.Observaciones = pSesionComiteSolicitud.Observaciones;
                 sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
-
+                sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud( sesionComiteSolicitudOld );
 
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
