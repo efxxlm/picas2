@@ -1372,6 +1372,7 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
+                       Data = validarcompletosActa( pSesionComiteTema.ComiteTecnicoId.Value ),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
@@ -1393,6 +1394,31 @@ namespace asivamosffie.services
             }
         }
 
+        private bool validarcompletosActa( int pComiteTecnicoId ){
+            bool estaCompleto = true;
+
+            ComiteTecnico comite = _context.ComiteTecnico.Where( ct => ct.ComiteTecnicoId == pComiteTecnicoId )
+                                                         .Include( r => r.SesionComiteSolicitud )
+                                                         .Include( r => r.SesionComiteTema )
+                                                        .FirstOrDefault();
+
+            comite.SesionComiteSolicitud.ToList().ForEach( cs => {
+                if ( (cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
+                    estaCompleto = false;
+            });
+
+            comite.SesionComiteTema.ToList().ForEach( ct => {
+                if ( (ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false ) == false)
+                    estaCompleto = false;
+            });
+
+            if ( estaCompleto ){
+                comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
+                _context.SaveChanges();
+            }
+
+            return estaCompleto;
+        }
 
         public async Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud)
         {
@@ -1443,9 +1469,7 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
-                       Data = _context.SesionComiteSolicitud
-                          .Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
-                          .IncludeFilter(r => r.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado)).FirstOrDefault(),
+                       Data = validarcompletosActa( pSesionComiteSolicitud.ComiteTecnicoId ),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,

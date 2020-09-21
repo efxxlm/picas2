@@ -63,6 +63,7 @@ export interface SesionComiteTema{
     estadoTemaCodigo?: string,
     generaCompromiso?: boolean,
     cantCompromisos?: number,
+    registroCompleto?: boolean,
 
     completo?: boolean,
 
@@ -87,7 +88,7 @@ export interface SesionComiteSolicitud {
     cantCompromisos?: number,
     eliminado?: boolean,
     requiereVotacion?: boolean,
-
+    registroCompleto?: boolean,
 
     tipoSolicitud?: string,
     numeroSolicitud?: string,
