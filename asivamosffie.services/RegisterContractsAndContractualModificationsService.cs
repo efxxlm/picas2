@@ -262,6 +262,7 @@ namespace asivamosffie.services
             {
                 pContrato.FechaCreacion = DateTime.Now;
                 pContrato.Eliminado = false;
+                pContrato.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.Sin_aprobacion_de_requisitos_tecnicos;
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
 
