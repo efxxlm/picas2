@@ -1000,6 +1000,11 @@ namespace asivamosffie.services
                     ComiteTecnicoOld.EstadoActaCodigo = "1"; //Sin Acta
                 }
 
+                if (ComiteTecnicoOld.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
+                {
+                    ComiteTecnicoOld.EstadoActaCodigo = "2"; //Sin Acta
+                }
+
                 _context.SaveChanges();
                 return
                     new Respuesta

@@ -22,18 +22,47 @@
 
     <ng-container matColumnDef="estadoAprobacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del aprobación del acta </th>
-        <td mat-cell *matCellDef="let element"> {{element.estadoAprobacion}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.estadoActa}} </td>
     </ng-container>
 
     <ng-container matColumnDef="estadoRegistro">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-        <td mat-cell *matCellDef="let element"> {{element.estadoComite}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.registroCompletoNombre}} </td>
     </ng-container>
 
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <a [routerLink]="['crearActa', element.id]" mat-raised-button color="accent" class="btn-table">Crear acta</a>
+            <a *ngIf="!element.registroCompleto && element.estadoActa == 'Sin Acta'" 
+                    [routerLink]="['crearActa', element.id]" 
+                    mat-raised-button 
+                    color="accent" 
+                    class="btn-table">
+            Crear acta</a>
+
+            <a *ngIf="element.registroCompleto && element.estadoActa == 'En proceso de aprobación'" 
+                    [routerLink]="['crearActa', element.id]" 
+                    mat-raised-button 
+                    color="accent" 
+                    class="btn-table">
+            Ver detalle</a>
+
+            <button type="button" 
+                    *ngIf="element.registroCompleto && element.estadoActa == 'Sin Acta'" 
+                    (click)="enviarSolicitud(element.id)" 
+                    mat-raised-button color="accent" 
+                    class="btn-table">
+                    Enviar para aprobación
+            </button>
+
+            <button type="button" 
+                    *ngIf="element.estadoActa == 'Aprobada'" 
+                    (click)="descargarActa(element.id)" 
+                    mat-raised-button color="accent" 
+                    class="btn-table">
+                    Descargar acta aprobada
+            </button>
+            
         </td>
     </ng-container>
 

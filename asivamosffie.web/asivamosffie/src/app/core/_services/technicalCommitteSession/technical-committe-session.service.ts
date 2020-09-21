@@ -113,5 +113,9 @@ export class TechnicalCommitteSessionService {
    getSesionParticipantesByIdComite( id: number ){
     return this.http.get<SesionParticipante[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getSesionParticipantesByIdComite?pComiteId=${ id }`);
    }
+
+   getPlantillaActaBySesionComiteSolicitudId( id: number ){
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getPlantillaActaBySesionComiteSolicitudId?SesionComiteSolicitudId=${ id }`, { responseType: "blob" } );
+   }
   
 }

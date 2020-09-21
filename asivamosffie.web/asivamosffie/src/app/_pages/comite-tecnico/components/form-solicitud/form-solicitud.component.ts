@@ -187,6 +187,8 @@ export class FormSolicitudComponent implements OnInit {
 
   cargarRegistro() {
 
+    console.log( this.sesionComiteSolicitud )
+
     if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
       this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
     }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
