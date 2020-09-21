@@ -1256,6 +1256,9 @@ namespace asivamosffie.services
                 .ToListAsync();
 
             List<ComiteGrilla> ListComiteGrilla = new List<ComiteGrilla>();
+            List<Dominio> ListaEstadoActa = await _context.Dominio
+          .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Acta && (bool)r.Activo)
+          .ToListAsync();
             try
             {
                 var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario).Select(x => new
@@ -1264,7 +1267,10 @@ namespace asivamosffie.services
                     FechaComite = x.FechaOrdenDia,
                     EstadoComite = x.EstadoComiteCodigo,
                     x.NumeroComite,
-                    x.EsComiteFiduciario
+                    x.EsComiteFiduciario, 
+                    x.EstadoActaCodigo,
+                    x.EsCompleto
+                
                 }).Distinct().OrderByDescending(r => r.Id).ToListAsync();
 
                 foreach (var comite in ListComiteTecnico)
@@ -1277,8 +1283,12 @@ namespace asivamosffie.services
                             FechaComite = comite.FechaComite.Value,
                             EstadoComiteCodigo = comite.EstadoComite,
                             EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "---",
-                            NumeroComite = comite.NumeroComite
+                            NumeroComite = comite.NumeroComite, 
+                            EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "---",
+                            EstadoActaCodigo = comite.EstadoActaCodigo,
+                            RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto"
                         };
+                         
                         ListComiteGrilla.Add(comiteGrilla);
                     }
                 }
