@@ -14,11 +14,11 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class AvailabilityBudgetProyectController : ControllerBase
     {
-        private readonly IAvailabilityBudgetProyectService _availabilityBudgetProyectService;
+        private readonly IRequestBudgetAvailabilityService _availabilityBudgetProyectService;
         private readonly IOptions<AppSettings> _settings;
         private readonly IConverter _converter;
 
-        public AvailabilityBudgetProyectController(IOptions<AppSettings> settings, IConverter converter, IAvailabilityBudgetProyectService availabilityBudgetProyectService)
+        public AvailabilityBudgetProyectController(IOptions<AppSettings> settings, IConverter converter, IRequestBudgetAvailabilityService availabilityBudgetProyectService)
         {
             _availabilityBudgetProyectService = availabilityBudgetProyectService;
             _settings = settings;
@@ -56,6 +56,8 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+
 
         [HttpGet]
         [Route("StartDownloadPDF")]

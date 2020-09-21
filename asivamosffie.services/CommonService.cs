@@ -45,15 +45,15 @@ namespace asivamosffie.services
         {
             int cantidadDeResgistros = _context.ComiteTecnico.Count();
             string Nomeclatura = "CT_"; 
-            string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo );
         }
         
         public async Task<string> EnumeradorContratacion()
         { 
             int cantidadDeResgistros =  _context.Contratacion.Count();
-            string Nomeclatura = "P.I-";
-            string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
+            string Nomeclatura = "PI_";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo);
         }
 
@@ -279,14 +279,19 @@ namespace asivamosffie.services
 
         public async Task<string> GetNombreDominioByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId)
         {
-            return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.Nombre).FirstOrDefaultAsync();
+            string strNombreDominio = await _context.Dominio.Where(r => r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.Nombre).FirstOrDefaultAsync();
+            if (string.IsNullOrEmpty(strNombreDominio))
+            {
+                return "Error Parametrica";
+            }
+            return strNombreDominio;
         }
 
         public async Task<string> GetNombreDominioByDominioID(int pDominioID)
         {
             return await _context.Dominio.Where(r => r.DominioId == pDominioID).Select(r => r.Nombre).FirstOrDefaultAsync();
         }
-
+         
         public async Task<List<Localicacion>> GetListMunicipioByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -314,13 +319,12 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-
+         
         public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
         {
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
-
-
+ 
     }
 
 }

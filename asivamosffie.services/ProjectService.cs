@@ -930,7 +930,7 @@ namespace asivamosffie.services
                             //#11
                             //Código DANE SEDE 
                             //          temporalProyecto.CodigoDaneSede = Int32.Parse(worksheet.Cells[i, 11].Text);
-
+                              
                             //#12
                             //¿Se encuentra dentro de una convocatoria? 
                             if ((worksheet.Cells[i, 12].Text).ToString().ToUpper().Contains("SI") || Int32.Parse(worksheet.Cells[i, 12].Text).ToString().ToUpper().Contains("VERDADERO"))
@@ -1445,8 +1445,17 @@ namespace asivamosffie.services
 
         public async Task<Proyecto> GetProyectoByProyectoId(int idProyecto)
         {
-            Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto).Include(y => y.InstitucionEducativa).FirstOrDefaultAsync();
-            proyecto.ProyectoAportante = _context.ProyectoAportante.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false).Include(y => y.Aportante).Include(z => z.CofinanciacionDocumento).ToList();
+            Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto)
+                                                        .Include(y => y.InstitucionEducativa)
+                                                        .Include( y => y.Sede )
+                                                        .Include( y => y.LocalizacionIdMunicipioNavigation )
+                                                        .FirstOrDefaultAsync();
+
+            proyecto.ProyectoAportante = _context.ProyectoAportante.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false)
+                                                                    .Include(y => y.Aportante)
+                                                                    .Include(z => z.CofinanciacionDocumento)
+                                                                    .ToList();
+
             proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();
             List<InfraestructuraIntervenirProyecto> infraestructuras = _context.InfraestructuraIntervenirProyecto.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false).ToList();
             foreach (var infraestructura in infraestructuras)

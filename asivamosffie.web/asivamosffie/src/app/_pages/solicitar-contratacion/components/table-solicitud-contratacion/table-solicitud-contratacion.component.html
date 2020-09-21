@@ -12,7 +12,7 @@
 
         <ng-container matColumnDef="fecha">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fechaSolicitud | date: ' dd/MM/yyyy '}}</b> </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion | date: ' dd/MM/yyyy '}}</b> </td>
         </ng-container>
 
         <ng-container matColumnDef="numero">
@@ -21,34 +21,46 @@
         </ng-container>
 
         <ng-container matColumnDef="opcionPorContratar">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción por contratar  </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción por contratar </th>
             <td mat-cell *matCellDef="let element"> {{element.tipoSolicitudCodigo}} </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoSolicitud">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de solicitud  </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de solicitud </th>
             <td mat-cell *matCellDef="let element"> {{element.estadoSolicitudCodigo}} </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoDelIngreso">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element"> {{element.registroCompleto}} </td>
+            <td mat-cell *matCellDef="let element" align="center">
+                <div class="flex-span" *ngIf="element.registroCompleto">
+                    <span class="info-text completo mr-auto"></span>
+                    <span>
+                        {{ 'Completo' }}
+                    </span>
+                </div>
+                <div class="flex-span" *ngIf="!element.registroCompleto">
+                    <span class="info-text sin-diligenciar mr-auto"></span>
+                    <span>
+                        {{ 'Incompleto' }}
+                    </span>
+                </div>
+            </td>
         </ng-container>
+
+
 
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a mat-raised-button color="accent" class="btn-table" [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]">Detallar la <br> solicitud</a>
-                <button mat-raised-button color="accent" 
-                        class="btn-table" 
-                        (click)="onDelete(element.contratacionId)"
-                        *ngIf="!element.estadoSolicitudCodigo"
-                        >Eliminar</button>
-                <button mat-raised-button color="accent" 
-                        class="btn-table" 
-                        (click)="enviarSolicitud(element.contratacionId)"
-                        *ngIf="!element.estadoSolicitudCodigo"
-                        >Enviar Solicitud.</button>
+                <a mat-raised-button color="accent" class="btn-table"
+                    [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]">Detallar la <br>
+                    solicitud</a>
+                <button mat-raised-button color="accent" class="btn-table" (click)="onDelete(element.contratacionId)"
+                    *ngIf="!element.estadoSolicitudCodigo">Eliminar</button>
+                <button mat-raised-button color="accent" class="btn-table"
+                    (click)="enviarSolicitud(element.contratacionId)" *ngIf="!element.estadoSolicitudCodigo">Enviar
+                    Solicitud.</button>
             </td>
         </ng-container>
 

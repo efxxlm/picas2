@@ -89,6 +89,16 @@ const routes: Routes = [
         component: RegistrarComponent,
       },
       {
+        path: 'solicitarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
+          .then(m => m.SolicitarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'validarDisponibilidadPresupuesto',
+        loadChildren: () => import('./_pages/validar-disponibilidad-presupuesto/validar-disponibilidad-presupuesto.module')
+        .then(m => m.ValidarDisponibilidadPresupuestoModule)
+      },
+      {
         path: 'comiteTecnico',
         loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
       },
@@ -103,10 +113,27 @@ const routes: Routes = [
           .then( module => module.ComiteFiduciarioModule )
       },
       {
+ 
+        path: 'procesosContractuales',
+        loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
+          .then( module => module.GestionarProcesosContractualesModule )
+      },
+      {
+ 
         path: 'solicitarContratacion',
         loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
         .then(m => m.SolicitarContratacionModule)
       },
+      {
+        path: 'generarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'compromisosActasComite',
+        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
+          .then( module => module.CompromisosActasComiteModule )
+      }
     ]
 
   },

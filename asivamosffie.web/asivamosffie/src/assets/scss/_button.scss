@@ -21,7 +21,7 @@
     color: #604500;
     color: var(--tertiaryColorFont);
 
-    &:hover {
+    &:not([disabled]):hover {
         background-color: #d1d1d1;
         background-color: var(--grayColor);
         color: #174193;;
@@ -92,6 +92,9 @@ button.mat-raised-button {
 .btn-descargar-plantilla,
 .btn-eliminar {
     font-style: italic;
+    margin-top: 1em;
+    margin-bottom: .8em;
+
     img {
         height: 2em;
         margin-top: -.2em;

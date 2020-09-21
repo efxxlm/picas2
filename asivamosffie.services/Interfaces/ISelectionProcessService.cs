@@ -43,5 +43,6 @@ namespace asivamosffie.services.Interfaces
          Task<Respuesta> DeleteProcesoSeleccion( int pId, string pUsuarioModificacion );
          Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado );
          Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes();
+         Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo);
     }
 }

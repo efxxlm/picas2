@@ -27,6 +27,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Activo { get; set; }
         public bool? EsAvanceobra { get; set; }
+        public bool? TieneMonitoreWeb { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }

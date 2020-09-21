@@ -18,7 +18,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_de_documento_cofinanciacion = 7,
 
-        Fuentes_de_financiación = 8,
+        Fuentes_de_financiacion = 8,
 
         Tipo_de_alcance = 9,
 
@@ -61,12 +61,21 @@ namespace asivamosffie.services.Helpers.Enumerator
         //Es para proyecto ?
         Estado_Solicitud = 31,
 
-        // Para disponibilidad presupuestal
-
-        Tipo_de_Solicitud_Obra_Interventorias = 37,
+        Estado_Solicitud_Presupuestal = 33,
 
         Opcion_Por_Contratar = 37,
 
+        EstadoComite = 38,
+
+        // Para disponibilidad presupuestal
+
+
+        // Para disponibilidad presupuestal        
+        
+        Tipo_de_Solicitud_Obra_Interventorias = 37,
+
+        Tipo_Disponibilidad_Presupuestal = 36,
+    
         Dias_Comite = 43,
 
         PlaceHolder = 44,
@@ -74,6 +83,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Compromisos = 45,
         //RESPONSABLES DE TEMAS
         Miembros_Comite_Tecnico = 46,
+        Estado_Solicitud_Disponibilidad_Presupuestal = 39,
+        Tipo_DDP_Espacial = 49,		
+	    Estado_Compromiso = 45,
+		EstadoAcataComiteTecnico = 47,
 
         Estados_Acta = 47
 

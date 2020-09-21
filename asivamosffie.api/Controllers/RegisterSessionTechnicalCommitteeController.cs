@@ -25,7 +25,13 @@ namespace asivamosffie.api.Controllers
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
         }
 
-
+        [HttpGet]
+        [Route("GetPlantillaActaBySesionComiteSolicitudId")]
+        public async Task<FileResult> GetPlantillaActaBySesionComiteSolicitudId(int SesionComiteSolicitudId)
+        {
+            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaBySesionComiteSolicitudId(SesionComiteSolicitudId), "application/pdf");
+        }
+         
 
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
@@ -63,8 +69,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [HttpPost]
         [Route("CreateEditTemasCompromiso")]
         public async Task<IActionResult> CreateEditTemasCompromiso([FromBody] SesionComiteTema pSesionComiteTema)
@@ -101,8 +105,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [HttpPost]
         [Route("CreateEditActasSesionSolicitudCompromiso")]
         public async Task<IActionResult> CreateEditActasSesionSolicitudCompromiso([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
@@ -121,9 +123,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
-
         [HttpPut]
         [Route("CambiarEstadoActa")]
         public async Task<IActionResult> CambiarEstadoActa([FromQuery] int pSesionComiteSolicitud, string pCodigoEstado)
@@ -141,7 +140,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-     
         [HttpPost]
         [Route("AplazarSesionComite")]
         public async Task<IActionResult> AplazarSesionComite([FromBody] ComiteTecnico pComiteTecnico)
@@ -162,12 +160,12 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("NoRequiereVotacionSesionComiteTema")]
-        public async Task<IActionResult> NoRequiereVotacionSesionComiteTema([FromQuery] int idSesionComiteTema)
+        public async Task<IActionResult> NoRequiereVotacionSesionComiteTema([FromQuery] int idSesionComiteTema, bool pRequiereVotacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _registerSessionTechnicalCommitteeService.NoRequiereVotacionSesionComiteTema(idSesionComiteTema, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _registerSessionTechnicalCommitteeService.NoRequiereVotacionSesionComiteTema(idSesionComiteTema, pRequiereVotacion, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -248,9 +246,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
+         
         [HttpPost]
         [Route("VerificarTemasCompromisos")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] ComiteTecnico pComiteTecnico)
@@ -268,9 +264,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
+         
         [HttpPost]
         [Route("CreateEditSesionComiteTema")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)
@@ -410,6 +404,13 @@ namespace asivamosffie.api.Controllers
         public async Task<FileResult> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId)
         {
             return File(await _registerSessionTechnicalCommitteeService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
+        }
+
+        [HttpGet]
+        [Route("GetSesionParticipantesByIdComite")]
+        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId )
+        {
+            return await _registerSessionTechnicalCommitteeService.GetSesionParticipantesByIdComite( pComiteId );
         }
 
         [HttpGet]

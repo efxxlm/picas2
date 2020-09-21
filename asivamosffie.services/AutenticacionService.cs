@@ -90,7 +90,7 @@ namespace asivamosffie.services
             .AddSecurityKey(JwtSecurityKey.Create(prmSecret))
             .AddIssuer(prmIssuer)
             .AddAudience(prmAudience)
-            .AddExpiry(1)
+            .AddExpiryinMinute(300)
             //.AddClaim("Name", result.Primernombre+" "+result.Primerapellido)
             .AddClaim("User", prmUser.Email)
             .AddClaim("UserId", prmUser.UsuarioId.ToString())

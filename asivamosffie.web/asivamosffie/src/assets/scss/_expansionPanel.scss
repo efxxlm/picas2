@@ -22,6 +22,11 @@
     display: inline-block;
     margin-right: 2em;
 
+    &.tabla {
+        display: block;
+        margin-right: 0;
+    }
+
     &::before {
         @extend %ayuda-color;
         margin-right: .2em;

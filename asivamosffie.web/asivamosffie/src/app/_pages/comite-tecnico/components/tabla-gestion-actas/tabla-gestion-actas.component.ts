@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { ComiteGrilla, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ComiteGrilla, ComiteTecnico, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-tabla-gestion-actas',
@@ -27,6 +29,7 @@ export class TablaGestionActasComponent implements OnInit {
 
   constructor(
                 private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+                public dialog: MatDialog,
                 
              ) 
   {
@@ -37,7 +40,7 @@ export class TablaGestionActasComponent implements OnInit {
 
     this.technicalCommitteeSessionService.getListComiteGrilla()
       .subscribe( response => {
-        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.desarrolladaSinActa )
+        let lista: ComiteGrilla[] = response.filter( c => [EstadosComite.desarrolladaSinActa, EstadosComite.conActaDeSesionEnviada].includes( c.estadoComiteCodigo ) )
         this.dataSource = new MatTableDataSource( lista );
       })
 
@@ -56,6 +59,42 @@ export class TablaGestionActasComponent implements OnInit {
           startIndex + pageSize;
         return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
       };
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  enviarSolicitud( id: number ){
+    let comite: ComiteTecnico = {
+      comiteTecnicoId: id,
+      estadoComiteCodigo: EstadosComite.conActaDeSesionEnviada,
+
+    }
+    this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
+    .subscribe( respuesta => {
+      this.openDialog( '', respuesta.message);
+      if ( respuesta.code == "200" )
+        this.ngOnInit();  
+    })
+  }
+
+  descargarActa( id: number ){
+    this.technicalCommitteeSessionService.getPlantillaActaBySesionComiteSolicitudId(id)
+      .subscribe(resp => {
+        console.log(resp);
+        const documento = `DDP ${ id }.pdf`;
+        const text = documento,
+          blob = new Blob([resp], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
   }
 
 }

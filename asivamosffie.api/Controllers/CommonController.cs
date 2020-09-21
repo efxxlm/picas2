@@ -8,11 +8,13 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CommonController : ControllerBase
     {
         public readonly ICommonService common;
@@ -71,7 +73,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
-        public async Task<ActionResult<List<Localicacion>>> GetListMunicipio(string idDepartamento)
+        public async Task<ActionResult<List<Localicacion>>> GetListDepartamento(string idDepartamento)
         {
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
