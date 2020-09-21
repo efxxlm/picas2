@@ -287,7 +287,7 @@ namespace asivamosffie.services
                 ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(pComiteTecnico.ComiteTecnicoId);
                 comiteTecnicoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                 comiteTecnicoOld.FechaModificacion = DateTime.Now;
-
+                comiteTecnicoOld.FechaOrdenDia = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.FechaAplazamiento = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
 
@@ -726,7 +726,7 @@ namespace asivamosffie.services
                 _context.ProcesoSeleccion
                 .Where(r => !(bool)r.Eliminado
                  && r.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite
-                 && r.FechaModificacion < pFechaOrdenDelDia
+                 && r.FechaCreacion < pFechaOrdenDelDia
                  )
                 .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
 
@@ -739,8 +739,8 @@ namespace asivamosffie.services
 
             //Quitar los que ya estan en sesionComiteSolicitud
 
-            List<int> LisIdContratacion = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r => r.SolicitudId).ToList();
-            List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
+            List<int> LisIdContratacion = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString()).Select(r => r.SolicitudId).Distinct().ToList();
+            List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).Distinct().ToList();
 
             //Se comentan ya que no esta listo el caso de uso
             //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
@@ -749,8 +749,8 @@ namespace asivamosffie.services
             //a1.RemoveAll(a => !b1.Exists(b => a.number == b.number));
 
             //TODO Diego dijo que fresco
-            ListContratacion.RemoveAll(item => !LisIdContratacion.Contains(item.ContratacionId));
-            ListProcesoSeleccion.RemoveAll(item => !ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
+            ListContratacion.RemoveAll(item => LisIdContratacion.Contains(item.ContratacionId));
+            ListProcesoSeleccion.RemoveAll(item => ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
              
             try
             {
