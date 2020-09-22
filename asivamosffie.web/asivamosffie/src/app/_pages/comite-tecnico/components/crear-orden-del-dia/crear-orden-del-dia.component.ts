@@ -64,8 +64,6 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         this.editMode();
        }else{
 
-        this.agregaTema();
-
         forkJoin([
           this.techicalCommitteeSessionService.getListSolicitudesContractuales( this.fechaSesionString ),
           this.commonService.listaMiembrosComiteTecnico(),
@@ -155,10 +153,12 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     let grupo = this.addressForm.get('tema') as FormArray;
     let tema = grupo.controls[i];
 
-    this.techicalCommitteeSessionService.deleteSesionComiteTema( tema.value.sesionTemaId )
+    console.log( tema )
+
+    this.techicalCommitteeSessionService.deleteSesionComiteTema( tema.get('sesionTemaId').value ? tema.get('sesionTemaId').value.sesionTemaId : 0 )
       .subscribe( respuesta => {
         this.borrarArray(grupo, i)
-        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.openDialog('', 'La información se ha eliminado correctamente.') 
         this.ngOnInit();
       })
     
