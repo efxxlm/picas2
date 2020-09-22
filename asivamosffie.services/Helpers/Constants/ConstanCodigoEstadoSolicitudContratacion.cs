@@ -12,5 +12,6 @@
         public const string Registradas_por_la_fiduciaria = "7";
         public const string Firmado = "8";
         public const string No_aplica = "9";
+        public const string En_firma_del_contratista = "10";
     }
 }
