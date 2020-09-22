@@ -66,5 +66,11 @@
         public const string Cambiar_Estado_Sesion_Comite_Solicitud = "71";
          
         public const string Registrar_Tramite_Contrato = "78";
+         
+        public const string Crear_Editar_Contrato_Perfil = "82";
+
+        public const string Eliminar_Contrato_Perfil = "83";
+
+        public const string  Aprobar_Inicio_Contrato = "84";
     } 
 }

@@ -81,9 +81,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //RESPONSABLES DE TEMAS
         Miembros_Comite_Tecnico = 46,
+         
+        Estado_Verificacion_Contrato = 53,
 
-
-
-        Estado_Verificacion_Contrato = 53
+        Tipo_Observacion_Contrato_Perfil_Observacion = 54
     }
 }

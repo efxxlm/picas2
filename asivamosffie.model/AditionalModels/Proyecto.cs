@@ -11,12 +11,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.model.Models
 {
-    public partial class Contrato
+    public partial class Proyecto
     {
         [NotMapped]
-        public IFormFile pFile { get; set; }
+        public string Departamento {  get; set; }
 
- 
+        [NotMapped]
+        public string Municipio { get; set; }
 
     }
 }
