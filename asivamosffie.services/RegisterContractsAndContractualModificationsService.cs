@@ -134,7 +134,9 @@ namespace asivamosffie.services
 
                 contratacion.sesionComiteSolicitud = _context.SesionComiteSolicitud
                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                    .Include(r => r.ComiteTecnico).ToList();
+                    .Include(r => r.ComiteTecnico)
+                    .Include(r => r.ComiteTecnicoFiduciario)
+                    .ToList();
 
                 if (contratacion.Contratista != null)
                 {
