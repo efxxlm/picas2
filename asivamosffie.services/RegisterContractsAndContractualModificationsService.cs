@@ -178,23 +178,21 @@ namespace asivamosffie.services
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
-
-                //if (!string.IsNullOrEmpty(pEstadoCodigo))
-                //{
-                //    //Sesion Comite Solicitud 
-                //    SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud
-                //          .Where(r => r.SolicitudId == contratoOld.ContratacionId
-                //           && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                //          .Include(r => r.ComiteTecnico).FirstOrDefault();
-
-                //    sesionComiteSolicitudOld.EstadoCodigo = pEstadoCodigo;
-                //}
+                if (contratacionOld.FechaTramite != null)
+                { 
+                    contratacionOld.FechaTramite = DateTime.Now;
+                }
+              
                 contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratacionOld.FechaModificacion = pContrato.FechaModificacion;
 
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
                 //Contrato 
+                if (contratoOld.FechaTramite != null)
+                {
+                    contratoOld.FechaTramite = DateTime.Now;
+                }
 
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
                 {
@@ -262,6 +260,7 @@ namespace asivamosffie.services
             //Contrato Nuevo
             else
             {
+                pContrato.FechaTramite = DateTime.Now;
                 pContrato.FechaCreacion = DateTime.Now;
                 pContrato.Eliminado = false;
                 pContrato.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.Sin_aprobacion_de_requisitos_tecnicos;
