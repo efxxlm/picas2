@@ -1202,6 +1202,18 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteTema sesionComiteTemaOld = await _context.SesionComiteTema.Where(r => r.SesionTemaId == pSesionComiteTemaId).FirstOrDefaultAsync();
+                if (sesionComiteTemaOld == null) {
+                return 
+                new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "NO SE ENCONTRO REGISTRO")
+                    };
+                }
+                
                 sesionComiteTemaOld.Eliminado = true;
                 sesionComiteTemaOld.FechaModificacion = DateTime.Now;
                 sesionComiteTemaOld.UsuarioCreacion = pUsuarioModificacion;
