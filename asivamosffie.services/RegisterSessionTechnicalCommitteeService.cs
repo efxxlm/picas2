@@ -386,7 +386,7 @@ namespace asivamosffie.services
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.TemaCompromiso)
                //     .ThenInclude(r => r.Responsable)
-               .Include(r => r.SesionComiteSolicitud)
+               .Include(r => r.SesionComiteSolicitudComiteTecnico)
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
                       //       .ThenInclude(r => r.ResponsableSesionParticipante)
                       .FirstOrDefaultAsync();
@@ -418,7 +418,7 @@ namespace asivamosffie.services
                 }
             }
 
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
@@ -835,7 +835,7 @@ namespace asivamosffie.services
                         SesionComiteTema.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTema);
                         SesionComiteTema.Eliminado = false;
                     }
-                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
+                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
                         //Auditoria
                         SesionComiteSolicitud.FechaCreacion = DateTime.Now;
@@ -851,7 +851,7 @@ namespace asivamosffie.services
 
                     ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
-                            .Include(r => r.SesionComiteSolicitud)
+                            .Include(r => r.SesionComiteSolicitudComiteTecnico)
                             .Include(r => r.SesionComiteTema).FirstOrDefault();
 
                     //Auditoria 
@@ -907,7 +907,7 @@ namespace asivamosffie.services
                         }
                     }
 
-                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
+                    foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
                         if (SesionComiteSolicitud.SesionComiteSolicitudId == 0)
                         {
@@ -1044,9 +1044,9 @@ namespace asivamosffie.services
                  .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
 
                   .Include(r => r.SesionInvitado)
-                  .Include(r => r.SesionComiteSolicitud)
+                  .Include(r => r.SesionComiteSolicitudComiteTecnico)
                      .ThenInclude(r => r.SesionSolicitudVoto)
-                  .Include(r => r.SesionComiteSolicitud)
+                  .Include(r => r.SesionComiteSolicitudComiteTecnico)
                      .ThenInclude(r => r.SesionSolicitudCompromiso)
                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.SesionTemaVoto)
@@ -1059,13 +1059,13 @@ namespace asivamosffie.services
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
 
 
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
             }
 
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
             }
@@ -1077,7 +1077,7 @@ namespace asivamosffie.services
 
             List<Contratacion> ListContratacion = _context.Contratacion.ToList();
 
-            foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitud)
+            foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
 
                 switch (sesionComiteSolicitud.TipoSolicitudCodigo)
@@ -1502,11 +1502,11 @@ namespace asivamosffie.services
             bool estaCompleto = true;
 
             ComiteTecnico comite = _context.ComiteTecnico.Where(ct => ct.ComiteTecnicoId == pComiteTecnicoId)
-                                                         .Include(r => r.SesionComiteSolicitud)
+                                                         .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                          .Include(r => r.SesionComiteTema)
                                                         .FirstOrDefault();
 
-            comite.SesionComiteSolicitud.ToList().ForEach(cs =>
+            comite.SesionComiteSolicitudComiteTecnico.ToList().ForEach(cs =>
             {
                 if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
                     estaCompleto = false;
@@ -2389,7 +2389,7 @@ namespace asivamosffie.services
                     }
                 }
 
-                foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitud)
+                foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                 {
 
                     foreach (var pSesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)

@@ -52,4 +52,19 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetReturnValidacionDDP`,DisponibilidadPresupuestalObservacion);
   }
+
+  //gestionar fuentes de financiacion
+  CreateFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/CreateFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
+  }
+  DeleteFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/DeleteFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
+  }
+  GetFinancialFundingGestionByDDPP(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.get<any[]>(`${environment.apiUrl}/BudgetAvailability/GetFinancialFundingGestionByDDPP?pIdDisponibilidadPresupuestalProyecto=${DisponibilidadPresupuestalObservacion}`);
+  }
+
 }

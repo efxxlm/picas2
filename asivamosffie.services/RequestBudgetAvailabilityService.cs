@@ -1358,6 +1358,8 @@ namespace asivamosffie.services
                             var confinanciacion = _context.CofinanciacionAportante.Where(x=>x.CofinanciacionAportanteId==aportante.AportanteId).Include(x=>x.CofinanciacionDocumento) ;
                             var localizacion = _context.Localizacion.Where(x => x.LocalizacionId==proyectospp.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                             var sede = _context.InstitucionEducativaSede.Find(proyectospp.Proyecto.SedeId);
+                            var intfuentes = _context.FuenteFinanciacion.Where(y => y.AportanteId == aportante.AportanteId).Select(t => t.FuenteFinanciacionId).ToList();
+                            
                             proyecto.Add(new ProyectoGrilla
                             {
                                 LlaveMen = proyectospp.Proyecto.LlaveMen,
@@ -1368,7 +1370,9 @@ namespace asivamosffie.services
                                 Sede = sede.Nombre,
                                 NombreAportante = _context.Dominio.Find(confinanciacion.FirstOrDefault().NombreAportanteId).Nombre,
                                 ValorAportante = confinanciacion.FirstOrDefault().CofinanciacionDocumento.FirstOrDefault().ValorTotalAportante,
-                                AportanteID = confinanciacion.FirstOrDefault().CofinanciacionAportanteId
+                                AportanteID = confinanciacion.FirstOrDefault().CofinanciacionAportanteId,
+                                DisponibilidadPresupuestalProyecto=proyectospp.DisponibilidadPresupuestalProyectoId,
+                                ValorGestionado=_context.GestionFuenteFinanciacion.Where(x=>x.DisponibilidadPresupuestalProyectoId== proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x=>x.ValorSolicitado)
                             });
                         }
                         

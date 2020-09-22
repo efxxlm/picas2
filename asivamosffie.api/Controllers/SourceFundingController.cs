@@ -159,6 +159,21 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid")]
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID)
+        {
+            try
+            {
+                var result = await _sourceFunding.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(disponibilidadPresupuestalProyectoid, aportanteID);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
         [Route("GetListFuentesFinanciacion")]
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
         {
