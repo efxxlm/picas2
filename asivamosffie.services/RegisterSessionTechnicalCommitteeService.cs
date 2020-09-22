@@ -1204,7 +1204,7 @@ namespace asivamosffie.services
                 sesionComiteTemaOld.Eliminado = true;
                 sesionComiteTemaOld.FechaModificacion = DateTime.Now;
                 sesionComiteTemaOld.UsuarioCreacion = pUsuarioModificacion;
-                _context.Update(sesionComiteTemaOld);
+           
                 _context.SaveChanges();
 
                 return
