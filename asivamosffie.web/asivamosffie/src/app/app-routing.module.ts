@@ -91,6 +91,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
       },
+      {
+        path: 'requisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
+          .then( module => module.RequisitosTecnicosConstruccionModule )
+      }
     ]
 
   },

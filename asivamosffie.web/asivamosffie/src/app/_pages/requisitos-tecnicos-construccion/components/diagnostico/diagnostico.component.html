@@ -1,0 +1,142 @@
+<form autocomplete="off" [formGroup]="formDiagnostico" (ngSubmit)="enviar()">
+  <mat-card>
+    <mat-card-content>
+      
+      <section class="example-section">
+        <label class="example-margin"> <b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b> </label>
+        <mat-radio-group formControlName="booleanCheckbox">
+          <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
+          <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
+        </mat-radio-group>
+      </section>
+  
+      <section *ngIf="formDiagnostico.get( 'booleanCheckbox' ).value">
+        <div class="d-flex mt-1em">
+          <label class="mr-label" class="label-left"><b>Url con soporte</b></label>
+        <div class="col d-flex w-80">
+          <mat-form-field>
+            <input matInput type="text" formControlName="urlSoporte">
+          </mat-form-field>
+        </div>
+      </div>
+      <span class="color-secundary">Indique la ruta del soporte de esta información</span>
+      </section>
+  
+    </mat-card-content>
+  </mat-card>
+
+  <section>
+    <div>
+      <mat-card>
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Valor total de la fase 2 construcción
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          
+          <section>
+            <div class="d-flex mt-1em">
+              <label class="mr-label" class="label-left"><b>a.</b> Costo directo</label>
+            <div class="col d-flex w-34">
+              <mat-form-field>
+                <input matInput maxlength="20" type="text" formControlName="costoDirecto">
+              </mat-form-field>
+              <span class="contador">{{20 - formDiagnostico.get( 'costoDirecto' ).value.length}}</span>
+            </div>
+          </div>
+          </section>
+  
+          <section>
+            <div class="d-flex mt-1em">
+              <label class="mr-label" class="label-left"><b>b.</b> A (administración)</label>
+            <div class="col d-flex w-30">
+              <mat-form-field>
+                <input matInput maxlength="20" type="text" formControlName="administracion">
+              </mat-form-field>
+              <span class="contador">{{20 - formDiagnostico.get( 'administracion' ).value.length}}</span>
+            </div>
+          </div>
+          </section>
+  
+          <section>
+            <div class="d-flex mt-1em">
+              <label class="mr-label" class="label-left"><b>c.</b> I (Imprevistos)</label>
+            <div class="col d-flex w-33">
+              <mat-form-field>
+                <input matInput maxlength="20" type="text" formControlName="imprevistos">
+              </mat-form-field>
+              <span class="contador">{{20 - formDiagnostico.get( 'imprevistos' ).value.length}}</span>
+            </div>
+          </div>
+          </section>
+  
+          <section>
+            <div class="d-flex mt-1em">
+              <label class="mr-label" class="label-left"><b>d.</b> U (Utilidad)</label>
+            <div class="col d-flex w-35">
+              <mat-form-field>
+                <input matInput maxlength="20" type="text" formControlName="utilidad">
+              </mat-form-field>
+              <span class="contador">{{20 - formDiagnostico.get( 'utilidad' ).value.length}}</span>
+            </div>
+          </div>
+          </section>
+  
+          <section>
+            <div class="d-flex mt-1em">
+              <label class="mr-label" class="label-left"><b>Valor total de la fase 2 - Construcción</b></label>
+            <div class="col d-flex w-17">
+              <mat-form-field>
+                <input matInput type="text" formControlName="valorTotalFase2Construccion" #valorTotalFaseConstruccion>
+              </mat-form-field>
+            </div>
+          </div>
+          </section>
+  
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <section *ngIf="valorTotalFaseConstruccion.value.length > 0">
+    <div *ngIf="( formDiagnostico.get( 'costoDirecto' ).value.length > 0 ) && ( formDiagnostico.get( 'administracion' ).value.length > 0 )">
+      <div *ngIf="( formDiagnostico.get( 'imprevistos' ).value.length > 0 ) && ( formDiagnostico.get( 'utilidad' ).value.length > 0 )">
+
+        <div class="example-section text-center">
+          <label class="example-margin"> <b>¿Se requirió modificación contractual?</b> </label>
+          <mat-radio-group formControlName="modificacionContractual">
+            <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
+            <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <mat-card *ngIf="formDiagnostico.get( 'modificacionContractual' ).value">
+          <mat-card-content>
+            <div class="example-section-left w-70 mt-min" align="left">
+              <p>Número de solicitud de la modificación</p>
+              <mat-form-field class="w-40 mr-min" appearance="fill">
+                <mat-select formControlName="numeroSolicitudModificacion" class="padding-left">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let solicitud of solicitudesModificacion" [value]="solicitud.value">
+                    {{solicitud.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="text-center">
+    <button mat-button 
+            color="warn" 
+            class="btn-guardar" 
+            type="submit">
+            <img  src="assets/img/icon/guardar.svg">
+    </button>
+  </div>
+</form>
