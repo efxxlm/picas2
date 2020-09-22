@@ -74,7 +74,7 @@ namespace asivamosffie.services
 
                             sesionComiteSolicitud.Contratacion = contratacion;
 
-                            sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
+                            sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaCreacion;
 
                             sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
 
