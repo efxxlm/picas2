@@ -4,15 +4,15 @@
 
 <div class="text-center">
   <h1 class="title-menu--h1">
-    Devolver por validación presupuestal
+    Gestionar fuentes solicitud {{solicitud}}
   </h1>
 
   <p class="info-sub-title">
     <span>Nombre del aportante: <b>
-        FFIE
+        {{nombreAportante}}
       </b></span>
     <span>Valor de aportante al proyecto: <b>
-        $ 200.000.000
+        {{valorAportante|currency:'':'symbol':'3.0'}}
       </b></span>
   </p>
 </div>
@@ -24,43 +24,43 @@
             <div class="col-md-6">
               <p>
                   <strong>Llave MEN:</strong>
-                  LL567444
+                  {{llaveMen}}
               </p>
             </div>
             <div class="col-md-6">
               <p>
                   <strong>Tipo de intervención:</strong>
-                  Remodelación
+                  {{tipoInterventor}}
               </p>
             </div>
             <div class="col-md-6">
               <p>
                   <strong>Departamento:</strong>
-                  Valle del Cauca
+                  {{departamento}}
               </p>
             </div>
             <div class="col-md-6">
               <p>
                   <strong>Municipio:</strong>
-                  Jamundí
+                  {{municipio}}
               </p>
             </div>
             <div class="col-md-6">
               <p>
                   <strong>Institución educativa:</strong>
-                  I.E Alfredo Bonilla Montaña
+                  {{institucion}}
               </p>
             </div>
             <div class="col-md-6">
               <p>
                   <strong>Sede:</strong>
-                  Única sede
+                  {{sede}}
               </p>
             </div>
             <div class="col-md-12">
               <p>
                   <strong>Valor total del proyecto:</strong>
-                  $ 400.000.000
+                  {{valorAportante|currency:'':'symbol':'3.0'}}
               </p>
             </div>
           </div>
@@ -87,9 +87,9 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="fuente" required>
-                      <mat-option *ngFor="let fuente of fuentesArray" [value]="fuente.value">
-                        {{ fuente.name }}
+                    <mat-select formControlName="fuentecampo" required  (selectionChange)="fuenteCambio(fuente)">
+                      <mat-option *ngFor="let fuentelistado of fuentesArray" [value]="fuentelistado.value">
+                        {{ fuentelistado.name }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -103,7 +103,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width sin-contador">
-                        <input matInput currencyMask
+                        <input matInput currencyMask readonly
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                           formControlName="saldoActual">
                       </mat-form-field>
@@ -119,7 +119,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #valorSolicitado currencyMask required maxLength="20"
+                        <input matInput #valorSolicitado currencyMask (keyup)="reste(fuente)" required maxLength="20"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                           formControlName="valorSolicitado">
@@ -137,9 +137,9 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width sin-contador">
-                        <input matInput currencyMask
+                        <input matInput currencyMask readonly
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
-                          formControlName="saldoActual">
+                          formControlName="nuevoSaldo">
                       </mat-form-field>
                     </div>
                   </div>
@@ -148,7 +148,7 @@
                   <div class="text-right" *ngIf="fuentes.controls.length > 1">
                     <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(fuentes, i)">
                       <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
-                      Eliminar tema
+                      Eliminar fuente
                     </button>
                   </div>
                 </div>

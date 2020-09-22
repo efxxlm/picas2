@@ -40,4 +40,16 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetCancelDDP`,DisponibilidadPresupuestalObservacion);
   }
+  SetValidarValidacionDDP(id)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}`,null);
+  }
+  SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetRechazarValidacionDDP`,DisponibilidadPresupuestalObservacion);
+  }
+  SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetReturnValidacionDDP`,DisponibilidadPresupuestalObservacion);
+  }
 }

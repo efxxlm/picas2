@@ -1317,17 +1317,17 @@ namespace asivamosffie.services
             foreach (var detailDP in ListDP)
             {
                 List<CofinanicacionAportanteGrilla> aportantes = new List<CofinanicacionAportanteGrilla>();
-                
+                List<ProyectoGrilla> proyecto = new List<ProyectoGrilla>();
                 foreach (var proyectospp in detailDP.DisponibilidadPresupuestalProyecto)
                 {
-                    if (proyectospp.ProyectoId == null)
+                    if (proyectospp.ProyectoId == null) //proyecto administrativo
                     {
                         var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
                             Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.Aportante).ThenInclude(x => x.FuenteFinanciacion);
-                        foreach(var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
+                        /*foreach(var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
                         {
                             List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
-                            /*foreach (var font in apo.Aportante.FuenteFinanciacion)
+                            foreach (var font in apo.Aportante.FuenteFinanciacion)
                             {
                                 fuentes.Add(new GrillaFuentesFinanciacion
                                 {
@@ -1339,7 +1339,7 @@ namespace asivamosffie.services
                                     Nuevo_saldo_de_la_fuente=0,
                                     Saldo_actual_de_la_fuente=0
                                 });
-                            }*/
+                            }
                             aportantes.Add(new CofinanicacionAportanteGrilla
                             {
                                 CofinanciacionAportanteId = apo.AportanteId,
@@ -1349,35 +1349,54 @@ namespace asivamosffie.services
                                 FuentesFinanciacion= fuentes
                             }); 
                             
-                        }
+                        }*/
                     }
                     else
                     {
-                        foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
+                        foreach(var aportante in proyectospp.Proyecto.ProyectoAportante)
                         {
-                            List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
-                            foreach (var font in ppapor.Aportante.FuenteFinanciacion)
+                            var confinanciacion = _context.CofinanciacionAportante.Where(x=>x.CofinanciacionAportanteId==aportante.AportanteId).Include(x=>x.CofinanciacionDocumento) ;
+                            var localizacion = _context.Localizacion.Where(x => x.LocalizacionId==proyectospp.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                            var sede = _context.InstitucionEducativaSede.Find(proyectospp.Proyecto.SedeId);
+                            proyecto.Add(new ProyectoGrilla
                             {
-                                fuentes.Add(new GrillaFuentesFinanciacion
-                                {
-                                    Fuente = "",
-                                    Estado_de_las_fuentes = "",
-                                    FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                    Valor_solicitado_de_la_fuente = font.ValorFuente,
-                                    Nuevo_saldo_de_la_fuente = 0,
-                                    Saldo_actual_de_la_fuente = 0
-                                });
-                            }
-                            aportantes.Add(new CofinanicacionAportanteGrilla
-                            {
-                                CofinanciacionAportanteId = ppapor.AportanteId,
-                                Nombre = "",
-                                TipoAportante = "",
-                                ValorAportanteAlProyecto = 0,
-                                FuentesFinanciacion = fuentes
+                                LlaveMen = proyectospp.Proyecto.LlaveMen,
+                                Departamento = _context.Localizacion.Find(localizacion.IdPadre).Descripcion,
+                                Municipio = localizacion.Descripcion,
+                                TipoIntervencion = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud) : "",
+                                InstitucionEducativa = _context.InstitucionEducativaSede.Find(sede.PadreId).Nombre,
+                                Sede = sede.Nombre,
+                                NombreAportante = _context.Dominio.Find(confinanciacion.FirstOrDefault().NombreAportanteId).Nombre,
+                                ValorAportante = confinanciacion.FirstOrDefault().CofinanciacionDocumento.FirstOrDefault().ValorTotalAportante,
+                                AportanteID = confinanciacion.FirstOrDefault().CofinanciacionAportanteId
                             });
                         }
-                    }
+                        
+                            /*foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
+                            {
+                                List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
+                                foreach (var font in ppapor.Aportante.FuenteFinanciacion)
+                                {
+                                    fuentes.Add(new GrillaFuentesFinanciacion
+                                    {
+                                        Fuente = "",
+                                        Estado_de_las_fuentes = "",
+                                        FuenteFinanciacionID = font.FuenteFinanciacionId,
+                                        Valor_solicitado_de_la_fuente = font.ValorFuente,
+                                        Nuevo_saldo_de_la_fuente = 0,
+                                        Saldo_actual_de_la_fuente = 0
+                                    });
+                                }
+                                aportantes.Add(new CofinanicacionAportanteGrilla
+                                {
+                                    CofinanciacionAportanteId = ppapor.AportanteId,
+                                    Nombre = "",
+                                    TipoAportante = "",
+                                    ValorAportanteAlProyecto = 0,
+                                    FuentesFinanciacion = fuentes
+                                });
+                            }*/
+                        }
                     
                 }
                 //busco comite técnico
@@ -1413,11 +1432,11 @@ namespace asivamosffie.services
                                 && r.Codigo == detailDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
                     Plazo = detailDP.PlazoMeses.ToString() + " meses / " + detailDP.PlazoDias.ToString(),
 
-                    /*//*y las modificacioens?????//*/
+                    /*//*las modificaciones aun no existen*/
 
+                    
+                    Proyectos = proyecto,
                     //Aportantes
-                    Proyectos = detailDP.DisponibilidadPresupuestalProyecto.ToList(),
-
                     Aportantes = aportantes,
                 };
 

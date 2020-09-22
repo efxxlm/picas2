@@ -27,16 +27,16 @@
             </p>
             <p>
                 <strong>Valor de la solicitud:</strong>
-                $ {{detailavailabilityBudget[0].valorSolicitud}}
+                {{detailavailabilityBudget[0].valorSolicitud | currency:'':'symbol':'3.0'}}
             </p>
             <p>
                 <strong>Plazo:</strong>
                 {{detailavailabilityBudget[0].plazo}}
             </p>
-            <p>
-                <strong>Objeto:</strong>
-                {{detailavailabilityBudget[0].objeto}}
-            </p>
+            <div>
+                <strong>Objeto:</strong>                                
+                <div [innerHtml]="detailavailabilityBudget[0].objeto"></div> 
+            </div>
             <p>
                 <strong>Número comité técnico:</strong>
                 {{detailavailabilityBudget[0].numeroComite}}
@@ -113,11 +113,11 @@
 
     <div class="botones">
         <button mat-raised-button color="accent" (click)="download()">Descargar DDP</button>
-        <button mat-raised-button color="accent">Validar solicitud</button>
-        <button mat-raised-button color="accent" (click)="openDialogDevolver()">Devolver por <br> validación presupuestal</button>
-        <button mat-raised-button color="accent">Rechazar por <br> validación presupuestal</button>
+        <button mat-raised-button color="accent" (click)="validar()">Validar solicitud</button>
+        <button mat-raised-button color="accent" (click)="openDialogDevolver(0)">Devolver por <br> validación presupuestal</button>
+        <button mat-raised-button color="accent" (click)="openDialogDevolver(1)">Rechazar por <br> validación presupuestal</button>
     </div>
 
-    <app-tabla-gestionar-validacion ></app-tabla-gestionar-validacion>
+    <app-tabla-gestionar-validacion [proyectos]="detailavailabilityBudget[0].proyectos"></app-tabla-gestionar-validacion>
 </section>
 

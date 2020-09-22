@@ -253,5 +253,23 @@ namespace asivamosffie.services
                        };
             }
         }
+
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByAportanteId(int aportanteId)
+        {
+            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>(); 
+            var financiaciones = _context.FuenteFinanciacion.Where(x=>x.AportanteId==aportanteId && x.Eliminado==false).ToList();
+            foreach(var financiacion in financiaciones)
+            {
+                ListaRetorno.Add(new GrillaFuentesFinanciacion
+                {
+                    FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
+                    Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
+                    Nuevo_saldo_de_la_fuente = 0,
+                    Saldo_actual_de_la_fuente= financiacion.ValorFuente,
+                    Valor_solicitado_de_la_fuente=0
+                }); 
+            }
+            return ListaRetorno;
+        }
     }
 }

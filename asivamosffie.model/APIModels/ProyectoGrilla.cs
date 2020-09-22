@@ -19,5 +19,8 @@ namespace asivamosffie.model.APIModels
         public string EstadoProyecto { get; set; }
         public bool TieneObra { get; set; }
         public bool TieneInterventoria { get; set; }
+        public string NombreAportante { get; set; }
+        public decimal? ValorAportante { get; set; }
+        public int AportanteID { get; set; }
     }
 }
