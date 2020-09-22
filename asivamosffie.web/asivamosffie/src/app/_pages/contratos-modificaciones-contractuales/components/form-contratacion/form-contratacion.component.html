@@ -16,14 +16,14 @@
   </div>
   <div align="left">
     <mat-card class="border">
-      <mat-card-content *ngFor="let sesion of contratacion?.sesionComiteSolicitud">
-        <div *ngIf="!sesion.comiteTecnico.esComiteFiduciario">
-          <p><b>Número de comité técnico</b>: {{ sesion.comiteTecnico.numeroComite }} </p>
-          <p><b>Fecha de comité técnico</b>: {{ sesion.comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
+      <mat-card-content>
+        <div>
+          <p><b>Número de comité técnico</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnico.numeroComite }} </p>
+          <p><b>Fecha de comité técnico</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
         </div>
-        <div *ngIf="sesion.comiteTecnico.esComiteFiduciario">
-          <p><b>Número de comité fiduciario</b>: {{ sesion.comiteTecnico.numeroComite }} </p>
-          <p><b>Fecha de comité fiduciario</b>: {{ sesion.comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
+        <div >
+          <p><b>Número de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.numeroComite }} </p>
+          <p><b>Fecha de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
         </div>
       </mat-card-content>
   </mat-card>
@@ -60,8 +60,8 @@
           <mat-card class="border">
             <mat-card-content>
               <p><b>Tipo de contrato</b>: {{ contratacion?.contrato[0].tipoContratoCodigo }} </p>
-              <p><b>Valor del contrato</b>: $30.000.000</p>
-              <p><b>Plazo</b>: 12 meses / 20 días</p>
+              <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -85,7 +85,7 @@
               <p><b>Fecha de envío para la firma de la fiduciaria</b>: {{ form.get( 'fechaEnvioParaFirmaFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Fecha de de firma por parte de la fiduciaria</b>: {{ form.get( 'fechaFirmaPorParteFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Observaciones</b>: {{ form.get( 'observaciones' ).value}} </p>
-              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'nombreDocumento' ).value }} </p>
+              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -98,7 +98,7 @@
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
-        <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em"> {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </span></p>
+        <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em"> {{ contratacion?.contrato[0].fechaTramite | date: 'dd/MM/yyyy' }} </span></p>
         <app-form-registro-tramite [dataFormulario]="form" [contratacionId]="contratacion?.contratacionId" [contratoId]="contratacion?.contrato[0].contratoId"></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>

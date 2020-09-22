@@ -26,6 +26,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
   estadoCodigo: string;
   estadoCodigos = {
     enFirmaFiduciaria: '5',
+    enFirmaContratista: '10',
     firmado: '8',
     registrado: '6'
   }
@@ -47,6 +48,8 @@ export class TablaProcesoFirmasComponent implements OnInit {
           if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
             this.dataTable.push( contrataciones );
           } else if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.firmado ) {
+            this.dataTable.push( contrataciones );
+          } else if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaContratista ) {
             this.dataTable.push( contrataciones );
           };
         };

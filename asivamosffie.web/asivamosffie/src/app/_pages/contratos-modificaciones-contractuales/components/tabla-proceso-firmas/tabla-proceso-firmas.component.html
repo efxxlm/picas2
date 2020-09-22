@@ -12,7 +12,7 @@
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="fechaSolicitud">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-      <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaSolicitud | date: 'dd/MM/yyyy' }} </b> </td>
+      <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.contratacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b> </td>
     </ng-container>
     <ng-container *ngFor="let columna of ELEMENT_DATA" [matColumnDef]="columna.name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.titulo }} </th>
@@ -22,7 +22,7 @@
     <ng-container matColumnDef="estadoRegistro">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
       <td mat-cell *matCellDef="let element" align="center">
-        <div class="flex-span" *ngIf="element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaFiduciaria">
+        <div class="flex-span" *ngIf="(element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaFiduciaria) || (element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaContratista)">
           <span class="info-text sin-diligenciar mr-auto"></span>
           <span>
             Incompleto
@@ -41,6 +41,9 @@
     <ng-container matColumnDef="estadoDocumento">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del documento </th>
       <td mat-cell *matCellDef="let element" align="center">
+        <div *ngIf="element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaContratista">
+          En firma del contratista
+        </div>
         <div *ngIf="element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaFiduciaria">
           En firma de la fiduciaria
         </div>
@@ -58,7 +61,7 @@
                 color="accent" 
                 class="btn-table"
                 (click)="gestionar( element.tipoSolicitud, element.solicitudId, element.contratacion.estadoSolicitudCodigo )"
-                *ngIf="element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaFiduciaria">
+                *ngIf="(element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaFiduciaria) || (element.contratacion.estadoSolicitudCodigo === estadoCodigos.enFirmaContratista) || (element.contratacion.estadoSolicitudCodigo === estadoCodigos.firmado)">
                 Ver detalle/Editar
         </button>
 

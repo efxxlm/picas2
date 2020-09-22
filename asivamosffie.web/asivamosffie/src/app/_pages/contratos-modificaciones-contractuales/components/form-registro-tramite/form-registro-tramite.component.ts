@@ -21,6 +21,7 @@ export class FormRegistroTramiteComponent implements OnInit {
   estadoCodigos = {
     enRevision: '2',
     enFirmaFiduciaria: '5',
+    enFirmaContratista: '10',
     firmado: '8'
   };
   editorStyle = {
@@ -102,7 +103,7 @@ export class FormRegistroTramiteComponent implements OnInit {
       //fechaEnvioFirma = `${ fechaEnvioFirma.getFullYear() }/${ fechaEnvioFirma.getMonth() + 1 }/${ fechaEnvioFirma.getDate() }`;
       let fechaEnvioFirmas = fechaEnvioFirma.toISOString();
       pContrato.append( 'fechaEnvioFirma', `${ fechaEnvioFirmas }` );
-      this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
+      this.estadoCodigo = this.estadoCodigos.enFirmaContratista;
     }
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null ) {
@@ -119,6 +120,7 @@ export class FormRegistroTramiteComponent implements OnInit {
       //fechaFirmaFiduciaria = `${ fechaFirmaFiduciaria.getFullYear() }/${ fechaFirmaFiduciaria.getMonth() + 1 }/${ fechaFirmaFiduciaria.getDate() }`; 
       let fechaFirmaFiduciarias = fechaFirmaFiduciaria.toISOString();
       pContrato.append( 'fechaFirmaFiduciaria', `${ fechaFirmaFiduciarias }` );
+      this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
     } else {
       pContrato.append( 'fechaFirmaFiduciaria', null );
     }
@@ -136,8 +138,8 @@ export class FormRegistroTramiteComponent implements OnInit {
       pContrato.append( 'observaciones', `${ this.dataFormulario.get( 'observaciones' ).value }` );
     }
 
-    if ( this.dataFormulario.get( 'documentoFile' ).value !== null ) {
-      pContrato.append( 'pFile', this.dataFormulario.get( 'documentoFile' ).value );
+    if ( this.dataFormulario.get( 'rutaDocumento' ).value !== null ) {
+      pContrato.append( 'rutaDocumento', this.dataFormulario.get( 'rutaDocumento' ).value );
       this.estadoCodigo = this.estadoCodigos.firmado;
     }
 

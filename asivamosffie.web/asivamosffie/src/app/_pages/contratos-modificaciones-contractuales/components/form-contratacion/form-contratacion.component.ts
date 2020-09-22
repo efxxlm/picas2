@@ -41,7 +41,7 @@ export class FormContratacionComponent implements OnInit {
       fechaFirmaPorParteFiduciaria  : [ null ],
       observaciones                 : [ null ],
       documento                     : [ null ],
-      nombreDocumento               : [ null ],
+      rutaDocumento               : [ null ],
       documentoFile                 : [ null ]
     });
   };
@@ -53,13 +53,7 @@ export class FormContratacionComponent implements OnInit {
           this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
         };
         this.contratacion = resp;
-        let  rutaDocumento;
-        let nombreDocumento = '';
-        console.log( this.contratacion );
-        if ( resp.contrato[0].rutaDocumento ) {
-          rutaDocumento = resp.contrato[0].rutaDocumento.split( /[\\\/]/ );
-         nombreDocumento = rutaDocumento[ rutaDocumento.length -1 ];
-        }
+        console.log( resp );
         this.form.reset({
           numeroContrato: resp.contrato[0].numeroContrato || '',
           fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
@@ -67,7 +61,7 @@ export class FormContratacionComponent implements OnInit {
           fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
           fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
           observaciones: this.textoLimpioMessage( resp.contrato[0].observaciones ) || null,
-          nombreDocumento: nombreDocumento || null
+          rutaDocumento: resp.contrato[0].rutaDocumento || null
         });
       } );
   };
