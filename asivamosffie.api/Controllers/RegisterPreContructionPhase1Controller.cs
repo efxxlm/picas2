@@ -41,8 +41,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerPreContructionPhase1Service.GetContratacionByContratoId(pContratoId);
         }
-
- 
+         
         [Route("CreateEditContratoPerfil")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratoPerfil(Contrato pContrato)

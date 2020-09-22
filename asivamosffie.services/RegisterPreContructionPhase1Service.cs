@@ -42,7 +42,7 @@ namespace asivamosffie.services
 
                 listContratos = listContratos.Where(r => r.ContratoPoliza.Count() > 0).ToList();
 
-
+                //TODO Ver boton 
                 foreach (var contrato in listContratos)
                 {
                     foreach (var DisponibilidadPresupuestal in contrato.Contratacion.DisponibilidadPresupuestal)
@@ -58,7 +58,18 @@ namespace asivamosffie.services
                 foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP)
                 {
                     int ProyectosNoCompletos = 0;
+                    bool VerBotonAprobarInicio = true; 
 
+                    if (ContratoConPolizasYDRP.ContratoPerfil.Count() == 0) {
+                        VerBotonAprobarInicio = false;
+                    }
+                    foreach (var ContratoPerfil in ContratoConPolizasYDRP.ContratoPerfil)
+                    {
+                        if (!string.IsNullOrEmpty(ContratoPerfil.FechaAprobacion.ToString())) {
+
+                            VerBotonAprobarInicio = false;
+                        }
+                    }
                     foreach (var ContratacionProyecto in ContratoConPolizasYDRP.Contratacion.ContratacionProyecto)
                     {
                         if (ContratacionProyecto.Proyecto.RegistroCompleto == null || (bool)ContratacionProyecto.Proyecto.RegistroCompleto)
@@ -81,7 +92,8 @@ namespace asivamosffie.services
                             ProyectosCompletos,
                             ProyectosNoCompletos,
                             EstadoVerificacionNombre = listEstadosVerificacionContrato.Where(r => r.Codigo.Equals(ContratoConPolizasYDRP.EstadoVerificacionCodigo)).FirstOrDefault().Nombre,
-                            idContrato = ContratoConPolizasYDRP.ContratoId
+                            idContrato = ContratoConPolizasYDRP.ContratoId,
+                            VerBotonAprobarInicio
                         });
                     }
                 }
