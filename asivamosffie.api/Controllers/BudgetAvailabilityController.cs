@@ -263,5 +263,72 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        /*autor: jflorez
+            descripción: guarda la definicion de fuentes de financiacion y gasto
+            impacto: CU 3.3.2*/
+        [Route("CreateFinancialFundingGestion")]
+        [HttpPost]
+        public async Task<IActionResult> CreateFinancialFundingGestion(GestionFuenteFinanciacion pDisponibilidadPresObservacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                Task<Respuesta> result = _budgetAvailabilityService.CreateFinancialFundingGestion(pDisponibilidadPresObservacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: elimina la definicion de fuentes de financiacion y gasto
+            impacto: CU 3.3.2*/
+        [Route("DeleteFinancialFundingGestion")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteFinancialFundingGestion(int pIdDisponibilidadPresObservacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                Task<Respuesta> result = _budgetAvailabilityService.DeleteFinancialFundingGestion(pIdDisponibilidadPresObservacion, UsuarioModificacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: trae la definicion de fuentes de financiacion y gasto
+            impacto: CU 3.3.2*/
+        [Route("GetFinancialFundingGestionByDDPP")]
+        [HttpGet]
+        public async Task<IActionResult> GetFinancialFundingGestionByDDPP(int pIdDisponibilidadPresupuestalProyecto)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.GetFinancialFundingGestionByDDPP(pIdDisponibilidadPresupuestalProyecto, UsuarioModificacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }
