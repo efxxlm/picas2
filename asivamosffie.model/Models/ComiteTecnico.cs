@@ -9,7 +9,8 @@ namespace asivamosffie.model.Models
         {
             ContratacionObservacion = new HashSet<ContratacionObservacion>();
             SesionComentario = new HashSet<SesionComentario>();
-            SesionComiteSolicitud = new HashSet<SesionComiteSolicitud>();
+            SesionComiteSolicitudComiteTecnico = new HashSet<SesionComiteSolicitud>();
+            SesionComiteSolicitudComiteTecnicoFiduciario = new HashSet<SesionComiteSolicitud>();
             SesionComiteTecnicoCompromiso = new HashSet<SesionComiteTecnicoCompromiso>();
             SesionComiteTema = new HashSet<SesionComiteTema>();
             SesionInvitado = new HashSet<SesionInvitado>();
@@ -42,7 +43,8 @@ namespace asivamosffie.model.Models
 
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
-        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
+        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitudComiteTecnico { get; set; }
+        public virtual ICollection<SesionComiteSolicitud> SesionComiteSolicitudComiteTecnicoFiduciario { get; set; }
         public virtual ICollection<SesionComiteTecnicoCompromiso> SesionComiteTecnicoCompromiso { get; set; }
         public virtual ICollection<SesionComiteTema> SesionComiteTema { get; set; }
         public virtual ICollection<SesionInvitado> SesionInvitado { get; set; }
