@@ -44,6 +44,7 @@ export class CrearActaComponent implements OnInit {
 
     this.listaMiembros = [];
     this.objetoComiteTecnico.fechaOrdenDia
+    this.nombresParticipantes = '';
 
     this.activatedRoute.params.subscribe(parametros => {
 
