@@ -189,7 +189,7 @@ namespace asivamosffie.services
 
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
                 //Contrato 
-                if (contratoOld.FechaTramite != null)
+                if (contratoOld.FechaTramite == null)
                 {
                     contratoOld.FechaTramite = DateTime.Now;
                 }
