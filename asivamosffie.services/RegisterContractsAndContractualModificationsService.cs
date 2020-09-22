@@ -182,6 +182,8 @@ namespace asivamosffie.services
                 { 
                     contratacionOld.FechaTramite = DateTime.Now;
                 }
+
+
               
                 contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
@@ -189,6 +191,11 @@ namespace asivamosffie.services
 
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
                 //Contrato 
+
+                if (!string.IsNullOrEmpty(pContrato.RutaDocumento)) { 
+                    contratoOld.RutaDocumento = pContrato.RutaDocumento;
+                }
+
                 if (contratoOld.FechaTramite == null)
                 {
                     contratoOld.FechaTramite = DateTime.Now;
