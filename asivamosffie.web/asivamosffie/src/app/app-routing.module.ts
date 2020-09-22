@@ -89,7 +89,7 @@ const routes: Routes = [
       },
       {
         path: 'generarActaInicioFaseIPreconstruccion',
-        loadChildren: () => import('./_pages/generar-acta-inicio-faseuno-preconstruccion/generar-acta-inicio-faseuno-preconstruccion.module')
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
         .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
       },
       {
