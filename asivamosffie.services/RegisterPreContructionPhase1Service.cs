@@ -317,6 +317,7 @@ namespace asivamosffie.services
             {
                 Contrato contratoAprobar = _context.Contrato.Find(pContratoId);
                 contratoAprobar.FechaModificacion = DateTime.Now;
+                contratoAprobar.FechaAprobacionInicio = DateTime.Now;
                 contratoAprobar.UsuarioModificacion = UsuarioModificacion;
                 contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados;
                 _context.SaveChanges();
