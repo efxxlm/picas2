@@ -17,7 +17,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<dynamic> GetListContratacion();
 
-        Task<Contrato> GetContratacionByContratoId(int pContratoId);
+        Task<Contrato> GetContratoByContratoId(int pContratoId);
 
         Task<Respuesta> CreateEditContratoPerfil(Contrato pContrato);
 

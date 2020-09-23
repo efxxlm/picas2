@@ -36,10 +36,10 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetContratacionByContratoId")]
-        public async Task<Contrato> GetContratacionByContratoId(int pContratoId)
+        [Route("GetContratoByContratoId")]
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
-            return await _registerPreContructionPhase1Service.GetContratacionByContratoId(pContratoId);
+            return await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
         }
          
         [Route("CreateEditContratoPerfil")]

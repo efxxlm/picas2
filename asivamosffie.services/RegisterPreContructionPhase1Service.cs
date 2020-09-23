@@ -108,7 +108,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Contrato> GetContratacionByContratoId(int pContratoId)
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             try
             {
