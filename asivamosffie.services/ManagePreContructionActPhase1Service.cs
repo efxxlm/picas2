@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 namespace asivamosffie.services
 {
@@ -18,42 +19,33 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
 
-        public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context , ICommonService commonService) {
+        public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService)
+        {
             _context = context;
-            _commonService = commonService; 
+            _commonService = commonService;
         }
-        public async Task<dynamic> GetListContrato() {
-             
+        public async Task<dynamic> GetListContrato()
+        { 
             try
-            { 
+            {
                 List<Contrato> listContratos = await _context.Contrato
                        .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados).ToListAsync();
 
                 List<Dominio> listEstadosActa = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato).ToList();
 
                 List<dynamic> ListContratacionDynamic = new List<dynamic>();
-
-
-                listContratos.ForEach(contrato => {
-                    string estadoActaContrato = "";
-                    if (string.IsNullOrEmpty(contrato.EstadoActa))
-                    {
-                        estadoActaContrato = listEstadosActa.Where(r => r.Codigo == ConstanCodigoEstadoActa.Sin_acta_generada).FirstOrDefault().Nombre;
-                    }
-                    else 
-                    { 
-                        estadoActaContrato = listEstadosActa.Where(r => r.Codigo == contrato.EstadoActa).FirstOrDefault().Nombre;
-                    }
+                 
+                listContratos.ForEach(contrato =>
+                { 
                     ListContratacionDynamic.Add(new
-                    {
-                        estadoActaContrato,
+                    { 
+                        fechaAprobacionRequisitosSupervisor = "",
                         contrato.NumeroContrato,
+                        estadoActaContrato = listEstadosActa.Where(r => r.Codigo == contrato.EstadoActa).FirstOrDefault().Nombre,
                         contrato.ContratoId
                     });
                 });
-            
-                  
-         
+     
                 return ListContratacionDynamic;
             }
             catch (Exception ex)
@@ -61,6 +53,26 @@ namespace asivamosffie.services
                 return new List<dynamic>();
             }
 
+        }
+
+
+
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId) {
+
+            try
+            {
+                Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                    .Include(r => r.Contratacion)
+                     .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync();
+
+
+
+                return contrato;
+            }
+            catch (Exception)
+            {
+                return new Contrato();
+            }    
         }
 
     }

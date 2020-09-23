@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
- 
+
 namespace asivamosffie.services.Interfaces
 {
-  public  interface IManagePreContructionActPhase1Service
-    {
+    public interface IManagePreContructionActPhase1Service
+    { 
+        Task<dynamic> GetListContrato();
 
-
+        Task<Contrato> GetContratoByContratoId(int pContratoId);
     }
 }
