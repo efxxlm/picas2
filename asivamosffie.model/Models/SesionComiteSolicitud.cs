@@ -31,8 +31,10 @@ namespace asivamosffie.model.Models
         public DateTime? FechaComiteFiduciario { get; set; }
         public string UsuarioComiteFiduciario { get; set; }
         public string EstadoActaCodigo { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
+        public virtual ComiteTecnico ComiteTecnicoFiduciario { get; set; }
         public virtual ICollection<SesionSolicitudCompromiso> SesionSolicitudCompromiso { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
         public virtual ICollection<SesionSolicitudVoto> SesionSolicitudVoto { get; set; }

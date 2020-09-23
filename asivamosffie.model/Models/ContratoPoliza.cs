@@ -34,6 +34,12 @@ namespace asivamosffie.model.Models
         public string ResponsableAprobacion { get; set; }
         public bool Estado { get; set; }
         public string EstadoPolizaCodigo { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public string UsuarioCreacion { get; set; }
+        public bool? RegistroCompleo { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
+        public bool? Eliminado { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual ICollection<PolizaGarantia> PolizaGarantia { get; set; }
