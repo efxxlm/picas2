@@ -30,7 +30,7 @@ export interface ContratacionProyecto{
     licenciaVigente?: boolean,
     numeroLicencia?: string,
     fechaVigencia?: Date,
-    contempladaServicioMonitoreo?: boolean,
+    tieneMonitoreWeb ?: boolean,
     contratacionProyectoAportante?: ContratacionProyectoAportante[],    
     proyecto?: any, 
     tipoIntervencionCodigo?: string,

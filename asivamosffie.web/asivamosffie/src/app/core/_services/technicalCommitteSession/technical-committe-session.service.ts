@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Respuesta } from '../common/common.service';
 import { environment } from 'src/environments/environment';
-import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto, SesionSolicitudCompromiso, SesionSolicitudObservacionProyecto } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto, SesionSolicitudCompromiso, SesionSolicitudObservacionProyecto, SesionParticipante } from 'src/app/_interfaces/technicalCommitteSession';
 import { Session } from 'protractor';
 import { ProyectoGrilla, ContratacionObservacion } from 'src/app/_interfaces/project-contracting';
 
@@ -86,8 +86,8 @@ export class TechnicalCommitteSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteSolicitud`, sesionComiteSolicitud);
    }
 
-   noRequiereVotacionSesionComiteTema( sesionComiteTema: SesionComiteTema ){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteTema?idSesionComiteTema=${ sesionComiteTema.sesionTemaId }`, sesionComiteTema );
+   noRequiereVotacionSesionComiteTema( sesionComiteTema: SesionComiteTema, pRequiereVotacion: boolean ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteTema?idSesionComiteTema=${ sesionComiteTema.sesionTemaId }&pRequiereVotacion=${ pRequiereVotacion }`, sesionComiteTema );
    }
 
    getCompromisosByComiteTecnicoId( id: number){
@@ -104,6 +104,18 @@ export class TechnicalCommitteSessionService {
 
    getSesionSolicitudObservacionProyecto( pSesionComiteSolicitudId: number, pContratacionProyectoId: number ){
     return this.http.get<SesionSolicitudObservacionProyecto[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getSesionSolicitudObservacionProyecto?pSesionComiteSolicitudId=${ pSesionComiteSolicitudId }&pContratacionProyectoId=${ pContratacionProyectoId }`);
+   }
+
+   getPlantillaByTablaIdRegistroId( pTablaId: string, pRegistroId: number ){
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getPlantillaByTablaIdRegistroId?pTablaId=${ pTablaId }&pRegistroId=${ pRegistroId }`, { responseType: "blob" } );
+   }
+
+   getSesionParticipantesByIdComite( id: number ){
+    return this.http.get<SesionParticipante[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getSesionParticipantesByIdComite?pComiteId=${ id }`);
+   }
+
+   getPlantillaActaBySesionComiteSolicitudId( id: number ){
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getPlantillaActaBySesionComiteSolicitudId?SesionComiteSolicitudId=${ id }`, { responseType: "blob" } );
    }
   
 }

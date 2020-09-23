@@ -121,8 +121,26 @@
         // public const string NOMBRE_APORTANTE = "98";
         public const string SALDO_ACTUAL_FUENTE = "99";
         public const string VALOR_SOLICITADO_FUENTE = "100";
-        public const string NUEVO_SALDO_FUENTE = "101"; 
+        public const string NUEVO_SALDO_FUENTE = "101";
         public const string FUNCIONALIDAD_ESPECIAL = "102";
+        public const string RUTA_ICONO = "103";
+
+        public const string PREGUNTA_1 = "104";
+        public const string PREGUNTA_2 = "105";
+        public const string PREGUNTA_3 = "106";
+        public const string PREGUNTA_4 = "107";
+        public const string PREGUNTA_5 = "108";
+        public const string PREGUNTA_6 = "109";
+        public const string NUMERO_DE_LICENCIA = "110";
+        public const string FECHA_DE_VIGENCIA = "111";
+        public const string CONSIDERACIONES_ESPECIALES = "112";
+        public const string FU_NOMBRE_APORTANTE = "113";
+        public const string FU_VALOR_APORTANTE_PROYECTO = "114";
+        public const string FU_COMPONENTE = "115";
+        public const string FU_FASE = "116";
+        public const string FU_USO = "117";
+        public const string VALOR_DE_USO = "118";
+        public const string REGISTROS_FUENTES_USO = "119"; 
 
         #endregion
     }

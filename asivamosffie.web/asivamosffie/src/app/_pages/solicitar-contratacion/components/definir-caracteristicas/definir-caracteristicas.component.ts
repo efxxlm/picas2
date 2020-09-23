@@ -57,7 +57,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
             this.addressForm.get('licenciaVigente').setValue( (this.contratacionProyecto.licenciaVigente ? this.contratacionProyecto.licenciaVigente : false) );    
             this.addressForm.get('numeroLicencia').setValue( this.contratacionProyecto.numeroLicencia );    
             this.addressForm.get('fechaVigencia').setValue( this.contratacionProyecto.fechaVigencia );
-            this.addressForm.get('completada').setValue( (this.contratacionProyecto.contempladaServicioMonitoreo ? this.contratacionProyecto.contempladaServicioMonitoreo : false) ) ;    
+            this.addressForm.get('completada').setValue( (this.contratacionProyecto.tieneMonitoreWeb ? this.contratacionProyecto.tieneMonitoreWeb : false) ) ;    
 
             this.idSolicitud = this.contratacionProyecto.contratacionId;
 
@@ -86,7 +86,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
     this.contratacionProyecto.licenciaVigente = this.addressForm.get('licenciaVigente').value;    
     this.contratacionProyecto.numeroLicencia = this.addressForm.get('numeroLicencia').value;    
     this.contratacionProyecto.fechaVigencia = this.addressForm.get('fechaVigencia').value;
-    this.contratacionProyecto.contempladaServicioMonitoreo = this.addressForm.get('completada').value;  
+    this.contratacionProyecto.tieneMonitoreWeb = this.addressForm.get('completada').value;  
 
     this.projectContractingService.createEditContratacionProyecto( this.contratacionProyecto )
       .subscribe( respuesta => {

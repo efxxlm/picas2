@@ -10,6 +10,7 @@ import { VotacionTemaComponent } from '../votacion-tema/votacion-tema.component'
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { TagContentType } from '@angular/compiler';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   @Output() validar: EventEmitter<any> = new EventEmitter();
 
 
-  listaMiembros:Usuario[];
+  listaMiembros: Usuario[];
 
   displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
   dataSource = new MatTableDataSource();
@@ -38,17 +39,16 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   constructor(
-              public dialog: MatDialog,
-              private technicalCommitteSessionService: TechnicalCommitteSessionService,
-              private commonService: CommonService,
+    public dialog: MatDialog,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
+    private commonService: CommonService,
 
-             ) 
-  {}
+  ) { }
 
   ngOnInit(): void {
 
-    console.log( this.esProposicionesVarios )
-    this.commonService.listaUsuarios().then(( respuesta )=>{
+    console.log(this.esProposicionesVarios)
+    this.commonService.listaUsuarios().then((respuesta) => {
       this.listaMiembros = respuesta;
     })
 
@@ -69,70 +69,97 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
     };
   }
 
-  openDialogValidacionSolicitudes( elemento: SesionComiteTema ) {
+  openDialogValidacionSolicitudes(elemento: SesionComiteTema) {
 
-    elemento.sesionTemaVoto = [];
+    let sesionComiteTema: SesionComiteTema = {
+      sesionTemaId: elemento.sesionTemaId,
+      tema: elemento.tema,
 
-    console.log( this.objetoComiteTecnico.sesionParticipante.length )
+      sesionTemaVoto: [],
+      
+    }
 
-    this.objetoComiteTecnico.sesionParticipante.forEach( p => {
-      let votacion: SesionTemaVoto = p.sesionTemaVoto.find( v => v.sesionTemaId == elemento.sesionTemaId );
-      let usuario: Usuario = this.listaMiembros.find( m => m.usuarioId == p.usuarioId ) 
+    console.log(this.objetoComiteTecnico.sesionParticipante.length)
 
-      let temaVoto: SesionTemaVoto = {
+    this.objetoComiteTecnico.sesionParticipante.forEach(p => {
+      let temaVoto: SesionTemaVoto = elemento.sesionTemaVoto.find(v => v.sesionTemaId == elemento.sesionTemaId && v.sesionParticipanteId == p.sesionParticipanteId);
+      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
 
-        sesionTemaVotoId: votacion ? votacion.sesionTemaVotoId : 0,
-        sesionTemaId: elemento.sesionTemaId,
-        sesionParticipanteId: p.sesionParticipanteId,
-        
-        nombreParticipante: `${ usuario.nombres } ${ usuario.apellidos }`,
-        esAprobado: votacion ? votacion.esAprobado : null,
-        observacion: votacion ? votacion.observacion : null,
+      if ( temaVoto ){
+        temaVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
+      }else{
+        temaVoto = {
 
+          sesionTemaVotoId: 0,
+          sesionTemaId: elemento.sesionTemaId,
+          sesionParticipanteId: p.sesionParticipanteId,
+          esAprobado: null,
+          observacion: null,
+          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+  
+        }  
       }
 
-      elemento.sesionTemaVoto.push( temaVoto )
+      
+
+      
+
+      sesionComiteTema.sesionTemaVoto.push(temaVoto)
     })
 
 
     const dialog = this.dialog.open(VotacionTemaComponent, {
-      width: '70em', data: { sesionComiteTema: elemento }
+      width: '70em', data: { sesionComiteTema: sesionComiteTema }
     });
 
-    dialog.afterClosed().subscribe( c => {
-      if (c && c.comiteTecnicoId){
-      this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId( c.comiteTecnicoId )
-          .subscribe( response => {
-            this.objetoComiteTecnico = response;
+    dialog.afterClosed().subscribe(c => {
+      // if (c && c.comiteTecnicoId) {
+      //   this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+      //     .subscribe(response => {
+      //       this.objetoComiteTecnico = response;
+      this.validar.emit(null);
+      //     })
+      // }
+    })
+
+  }
+
+  changeRequiere(check: boolean, solicitudTema: SesionComiteTema) {
+
+    this.objetoComiteTecnico.sesionComiteTema.forEach(tem => {
+      if (tem.sesionTemaId == solicitudTema.sesionTemaId) {
+        this.technicalCommitteSessionService.noRequiereVotacionSesionComiteTema(solicitudTema, check)
+          .subscribe(respuesta => {
+            tem.completo = !check
             this.validar.emit(null);
           })
-        }
-    })
+      }
+    });
 
   }
 
-  changeRequiere( check: boolean, solicitudTema: SesionComiteTema ){
-    
-    this.objetoComiteTecnico.sesionComiteTema.forEach( tem => {
-      if (tem.sesionTemaId == solicitudTema.sesionTemaId)
-        if ( check ){
-          tem.completo = false
-        }else{
-          tem.completo = true
-          this.technicalCommitteSessionService.noRequiereVotacionSesionComiteTema( solicitudTema )
-            .subscribe( respuesta => {
-              
-            })
+  validarResgistros( listaSesionComiteTema: SesionComiteTema[] ){
+    listaSesionComiteTema.forEach( ct => {
+      ct.completo = true;
+
+      if ( ct.requiereVotacion == true && ct.sesionTemaVoto.length == 0 ) { ct.completo = false }
+
+      ct.sesionTemaVoto.forEach( tv => {
+        if ( tv.esAprobado != true && tv.esAprobado != false ){
+          ct.completo = false;
         }
+      })
     })
   }
 
-  cargarRegistro(){
+  cargarRegistro() {
 
     let lista = this.objetoComiteTecnico.sesionComiteTema.
-                        filter( t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == this.esProposicionesVarios )
+      filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == this.esProposicionesVarios)
 
-    this.dataSource = new MatTableDataSource( lista );
+    this.validarResgistros( lista )
+
+    this.dataSource = new MatTableDataSource(lista);
 
   }
 

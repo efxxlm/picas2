@@ -37,14 +37,7 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
-        [Route("GetFuenteFinanciacionByIdAportanteId")]
-        [HttpGet]
-        public async Task<FuenteFinanciacion> GetFuenteFinanciacionByIdAportanteId(int pAportanteId)
-        {
-            // string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            var respuesta = await _budgetAvailabilityService.GetFuenteFinanciacionByIdAportanteId(pAportanteId);
-            return respuesta;
-        }
+        
 
         [Route("GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud")]
         [HttpGet]
@@ -200,6 +193,141 @@ namespace asivamosffie.api.Controllers
             {
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
+            }
+        }
+
+        /*autor: jflorez
+            descripción: devolver la solicitud por validacion presupuestal
+            impacto: CU 3.3.2*/
+        [Route("SetReturnValidacionDDP")]
+        [HttpPost]
+        public async Task<IActionResult> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                Task<Respuesta> result = _budgetAvailabilityService.SetReturnValidacionDDP(pDisponibilidadPresObservacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: rechazar la solicitud por validacion presupuestal
+            impacto: CU 3.3.2*/
+        [Route("SetRechazarValidacionDDP")]
+        [HttpPost]
+        public async Task<IActionResult> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                Task<Respuesta> result = _budgetAvailabilityService.SetRechazarValidacionDDP(pDisponibilidadPresObservacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: validar la solicitud por validacion presupuestal
+            impacto: CU 3.3.2*/
+        [Route("SetValidarValidacionDDP")]
+        [HttpPost]
+        public async Task<IActionResult> SetValidarValidacionDDP(int id)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.SetValidarValidacionDDP(id,UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: guarda la definicion de fuentes de financiacion y gasto
+            impacto: CU 3.3.2*/
+        [Route("CreateFinancialFundingGestion")]
+        [HttpPost]
+        public async Task<IActionResult> CreateFinancialFundingGestion(GestionFuenteFinanciacion pDisponibilidadPresObservacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                Task<Respuesta> result = _budgetAvailabilityService.CreateFinancialFundingGestion(pDisponibilidadPresObservacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: elimina la definicion de fuentes de financiacion y gasto
+            impacto: CU 3.3.2*/
+        [Route("DeleteFinancialFundingGestion")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteFinancialFundingGestion(int pIdDisponibilidadPresObservacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                Task<Respuesta> result = _budgetAvailabilityService.DeleteFinancialFundingGestion(pIdDisponibilidadPresObservacion, UsuarioModificacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: trae la definicion de fuentes de financiacion y gasto
+            impacto: CU 3.3.2*/
+        [Route("GetFinancialFundingGestionByDDPP")]
+        [HttpGet]
+        public async Task<IActionResult> GetFinancialFundingGestionByDDPP(int pIdDisponibilidadPresupuestalProyecto)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.GetFinancialFundingGestionByDDPP(pIdDisponibilidadPresupuestalProyecto, UsuarioModificacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
             }
         }
     }

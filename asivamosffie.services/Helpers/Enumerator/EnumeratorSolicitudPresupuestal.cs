@@ -16,4 +16,15 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Con_disponibilidad_cancelada = 7
 
 	}
+
+	/*autor: jflorez
+	 control sobre el cambio de estados de la gestion de fuentes de financacion presupuestal //tipodominio 57
+		 */
+
+	public enum EnumeratorEstadoGestionFuenteFinanciacion : int
+	{
+		Solicitado = 1,
+		Apartado_en_DDP = 2,
+		Gestionado_en_DRP = 3,	
+	}
 }

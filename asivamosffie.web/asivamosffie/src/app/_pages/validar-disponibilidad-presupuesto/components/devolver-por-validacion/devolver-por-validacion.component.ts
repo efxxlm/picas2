@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
   selector: 'app-devolver-por-validacion',
@@ -24,13 +26,18 @@ export class DevolverPorValidacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  solicitudID: any;
+  tipo: any;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog,  private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data,private disponibilidadServices: DisponibilidadPresupuestalService) {
     this.declararOnservaciones();
     this.minDate = new Date();
   }
 
   ngOnInit(): void {
+    this.solicitudID=this.data.solicitudID;
+    this.tipo=this.data.tipo;
   }
 
   maxLength(e: any, n: number) {
@@ -49,14 +56,36 @@ export class DevolverPorValidacionComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef= this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+      {
+        this.router.navigate(['/validarDisponibilidadPresupuesto']);
+      }
     });
   }
 
   devolverSolicitud() {
-    console.log(this.observaciones.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    //console.log(this.observaciones.value);
+    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.solicitudID,Observacion:this.observaciones.value};
+    if(this.tipo==0)
+    {
+      this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      
+      });
+    }
+    else
+    {
+      this.disponibilidadServices.SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
+      this.openDialog('', 'La información ha sido guardada exitosamente.');
+    
+      });
+    }
+    
+    
   }
 }

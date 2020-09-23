@@ -38,7 +38,6 @@ namespace asivamosffie.services
 
                 Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
                 Usuario usuario = await result;
-                List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
 
                
 
@@ -62,17 +61,19 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.ContrasenaIncorrecta };
                 }
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
-                {                                   
+                {
+                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = new { datausuario=usuario, dataperfiles=perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };                    
                 }
                 else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
+                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = new { datausuario = usuario, dataperfiles = perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };
                   
                 }
 
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesión");    
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesiï¿½n");    
 
                 return respuesta;
             }
@@ -90,7 +91,7 @@ namespace asivamosffie.services
             .AddSecurityKey(JwtSecurityKey.Create(prmSecret))
             .AddIssuer(prmIssuer)
             .AddAudience(prmAudience)
-            .AddExpiryinMinute(15)
+            .AddExpiryinMinute(300)
             //.AddClaim("Name", result.Primernombre+" "+result.Primerapellido)
             .AddClaim("User", prmUser.Email)
             .AddClaim("UserId", prmUser.UsuarioId.ToString())

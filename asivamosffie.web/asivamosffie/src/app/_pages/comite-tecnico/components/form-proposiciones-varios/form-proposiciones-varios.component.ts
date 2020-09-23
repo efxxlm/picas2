@@ -84,7 +84,7 @@ export class FormProposicionesVariosComponent implements OnInit {
         Validators.required, Validators.minLength(1), Validators.maxLength(3)])
       ],
       url: [null, [
-        Validators.required,
+        ,
       ]],
     });
   }

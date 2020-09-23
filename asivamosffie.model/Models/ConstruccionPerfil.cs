@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class ContratoPerfil
+    public partial class ConstruccionPerfil
     {
-        public ContratoPerfil()
+        public ConstruccionPerfil()
         {
-            ContratoPerfilObservacion = new HashSet<ContratoPerfilObservacion>();
+            ConstruccionPerfilObservacion = new HashSet<ConstruccionPerfilObservacion>();
         }
 
-        public int ContratoPerfilId { get; set; }
-        public int ContratoId { get; set; }
+        public int ConstruccionPerfilId { get; set; }
+        public int ContratoConstruccionId { get; set; }
         public string PerfilCodigo { get; set; }
         public int CantidadHvRequeridas { get; set; }
         public int CantidadHvRecibidas { get; set; }
@@ -27,13 +27,8 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
-<<<<<<< HEAD
-=======
-        public bool Eliminado { get; set; }
-        public bool RegistroCompleto { get; set; }
->>>>>>> paquete_4
 
-        public virtual Contrato Contrato { get; set; }
-        public virtual ICollection<ContratoPerfilObservacion> ContratoPerfilObservacion { get; set; }
+        public virtual ContratoConstruccion ContratoConstruccion { get; set; }
+        public virtual ICollection<ConstruccionPerfilObservacion> ConstruccionPerfilObservacion { get; set; }
     }
 }

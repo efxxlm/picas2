@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,34 +17,9 @@ export interface PeriodicElement {
   nombreAportante: string;
   valorAportante: number;
   estado: boolean;
+  disponibilidadPresupuestalProyectoid:number;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    id: 1,
-    llaveMen: 'LL567444',
-    tipoInterventor: 'Remodelación',
-    departamento: 'Valle de Cauca',
-    municipio: 'Jamundí',
-    institucion: 'I.E Alfredo Bonilla Montaña',
-    sede: 'Única sede',
-    nombreAportante: 'FFIE',
-    valorAportante: 200000000,
-    estado: false
-  },
-  {
-    id: 2,
-    llaveMen: 'LL567444',
-    tipoInterventor: 'Remodelación',
-    departamento: 'Valle de Cauca',
-    municipio: 'Jamundí',
-    institucion: 'I.E Alfredo Bonilla Montaña',
-    sede: 'Única sede',
-    nombreAportante: 'Gobernación del Valle del Cauca',
-    valorAportante: 200000000,
-    estado: false
-  },
-];
 
 @Component({
   selector: 'app-tabla-gestionar-validacion',
@@ -63,7 +38,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
     'estado',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -75,10 +50,33 @@ export class TablaGestionarValidacionComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
 
+  @Input()proyectos: any;
+  
   ngOnInit(): void {
+    console.log(this.proyectos);
+    let elements:PeriodicElement[]=[];
+    this.proyectos.forEach(element => {
+      elements.push({
+        llaveMen:element.llaveMen,
+        departamento:element.departamento,
+        estado:element.valorGestionado==element.valorAportante,//
+        id:element.aportanteID,//el aprotante id
+        institucion:element.institucionEducativa,
+        municipio:element.municipio,
+        sede:element.sede,
+        nombreAportante:element.nombreAportante,
+        tipoInterventor:element.tipoIntervencion,//revisar
+        valorAportante:element.valorAportante,
+        disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto
+      });
+  
+
+    });
+    this.dataSource = new MatTableDataSource(elements);
     this.inicializarTabla();
   }
   inicializarTabla() {
+   
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -104,12 +102,12 @@ export class TablaGestionarValidacionComponent implements OnInit {
     });
   }
 
-  gestionarFuentes(id: number) {
+  gestionarFuentes(id: any) {
     console.log(id);
     // this.openDialog('', `El saldo actual de la fuente <b>Recursos propios</b> es menor
     // al valor solicitado de la fuente, verifique por favor.`);
     this.dialog.open(FormGestionarFuentesComponent, {
-      width: '70em'
+      width: '70em', data: { elemento: id }
     });
   }
 

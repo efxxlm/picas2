@@ -45,15 +45,15 @@ namespace asivamosffie.services
         {
             int cantidadDeResgistros = _context.ComiteTecnico.Count();
             string Nomeclatura = "CT_"; 
-            string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo );
         }
         
         public async Task<string> EnumeradorContratacion()
         { 
             int cantidadDeResgistros =  _context.Contratacion.Count();
-            string Nomeclatura = "P.I-";
-            string consecutivo = (cantidadDeResgistros + 1).ToString("00000");
+            string Nomeclatura = "PI_";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo);
         }
 
@@ -112,7 +112,7 @@ namespace asivamosffie.services
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
-            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario, Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
+            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
             _context.SaveChanges();
             return retorno.Mensaje;
         }

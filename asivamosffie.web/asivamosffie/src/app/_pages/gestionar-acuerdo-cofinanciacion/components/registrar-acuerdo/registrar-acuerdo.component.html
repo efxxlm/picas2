@@ -56,9 +56,9 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
-                    (change)="CambioNumeroAportantes()" maxlength="4" min="1" max="999" required type="number"
-                    formControlName="numAportes" (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    maxlength="4" min="1" max="999" required type="number"
+                    formControlName="numAportes" 
+                    >
                 </mat-form-field>
                 <span class="contador">{{3 - numAportes.value.length}}</span>
               </div>

@@ -7,6 +7,7 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 import { Router } from '@angular/router';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   listaEstados: Dominio[] = [];
-  estadosValidos: string[] = ['1','3','5']
+  estadosValidos: string[] = ['1', '3', '5']
   estadosSolicitud = EstadosSolicitud;
 
   displayedColumns: string[] = [
@@ -41,22 +42,22 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
   }
 
   constructor(
-                private projectService: ProjectService,
-                private commonService: CommonService,
-                private router: Router,
+    private projectService: ProjectService,
+    private commonService: CommonService,
+    private router: Router,
+    private projectContractingService: ProjectContractingService,
 
-             ) 
-  {
+  ) {
 
   }
 
   ngOnInit(): void {
 
     this.commonService.listaEstadoSolicitud()
-    .subscribe( estados => {
-      this.listaEstados = estados;
-      this.listaEstados = this.listaEstados.filter( e => this.estadosValidos.includes( e.codigo ));
-    })
+      .subscribe(estados => {
+        this.listaEstados = estados;
+        this.listaEstados = this.listaEstados.filter(e => this.estadosValidos.includes(e.codigo));
+      })
 
 
     this.dataSource.sort = this.sort;
@@ -76,32 +77,33 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
     };
     this.cargarRegistro();
   }
-  Observaciones( contratacionProyectoid: number, contratacionid: number ){
+  Observaciones(contratacionProyectoid: number, contratacionid: number) {
     this.router.navigate(['/comiteTecnico/crearActa',
-                            this.sesionComiteSolicitud.comiteTecnicoId,
-                            'observacion',
-                            this.sesionComiteSolicitud.sesionComiteSolicitudId,
-                            this.sesionComiteSolicitud.comiteTecnicoId,
-                            contratacionProyectoid,
-                            contratacionid
-                           ])
+      this.sesionComiteSolicitud.comiteTecnicoId,
+      'observacion',
+      this.sesionComiteSolicitud.sesionComiteSolicitudId,
+      this.sesionComiteSolicitud.comiteTecnicoId,
+      contratacionProyectoid,
+      contratacionid
+    ])
   }
 
-  cargarRegistro(){
+  cargarRegistro() {
 
-    console.log(this.sesionComiteSolicitud)
-
-    if (this.sesionComiteSolicitud.contratacion){
-      this.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {
-        this.projectService.getProyectoGrillaByProyectoId( cp.proyectoId )
-          .subscribe( proy => {
-            cp.proyecto = proy; 
-            console.log( proy ); 
+    if (this.sesionComiteSolicitud.contratacion) {
+      this.projectContractingService.getContratacionByContratacionId(this.sesionComiteSolicitud.contratacion.contratacionId)
+        .subscribe(contra => {
+          contra.contratacionProyecto.forEach(cp => {
+            this.projectService.getProyectoGrillaByProyectoId(cp.proyectoId)
+              .subscribe(proy => {
+                cp.proyecto = proy;
+              })
+            this.dataSource = new MatTableDataSource( contra.contratacionProyecto );
           })
-      })
-      console.log( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
-      this.dataSource = new MatTableDataSource( this.sesionComiteSolicitud.contratacion.contratacionProyecto );
+
+        })
+
     }
   }
-  
+
 }
