@@ -241,7 +241,7 @@ namespace asivamosffie.services
                     Contratacion.EstadoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud);
                 }
             }
-            return ListContratacion;
+            return ListContratacion.OrderByDescending(r=> r.ContratacionId).ToList();
         }
 
         public async Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio)
