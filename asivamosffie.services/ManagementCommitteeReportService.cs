@@ -114,27 +114,12 @@ namespace asivamosffie.services
 
         //Gestion de actas
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport()
-        {
-
-            //return await (from a in _context.SesionComiteTecnicoCompromiso
-            //              join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
-            //              join sc in _context.SesionComiteSolicitud on a.ComiteTecnicoId equals sc.ComiteTecnicoId
-            //              where s.Eliminado != true
-            //              select new ComiteTecnico
-            //              {
-            //                  ComiteTecnicoId = s.ComiteTecnicoId,
-            //                  FechaCreacion = s.FechaCreacion,
-            //                  NumeroComite = s.NumeroComite,
-            //                  EstadoComiteCodigo = s.EstadoActaCodigo
-            //                  //sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
-
-            //              }).ToListAsync();
-             
-            return await _context.ComiteTecnico.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
-                  .Include(r => r.SesionComiteTecnicoCompromiso).ToListAsync();
- 
-          
-   
+        { 
+            return await _context.ComiteTecnico
+                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion && !(bool)r.Eliminado)
+                  .Include(r => r.SesionComiteTecnicoCompromiso)
+                  .Include(r=> r.SesionComiteSolicitudComiteTecnico) 
+                  .ToListAsync(); 
         }
 
 

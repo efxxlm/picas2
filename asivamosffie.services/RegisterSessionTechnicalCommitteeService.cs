@@ -2585,6 +2585,7 @@ namespace asivamosffie.services
 
         private string ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
+            List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
 
             List<Usuario> MiembrosParticipantes = _context.SesionParticipante
                 .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
@@ -2593,17 +2594,38 @@ namespace asivamosffie.services
                 .ToList();
 
             List<SesionInvitado> ListInvitados = _context.SesionInvitado
-                .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList(); 
+                .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
             //Tablas Dinamicas
+
+
+            //Logica Invitados
+            string PlantillaInvitados = _context.Plantilla
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registros_Tabla_Invitados)
+                   .ToString()).FirstOrDefault()
+                .Contenido;
+
+            string RegistrosInvitados = string.Empty;
+
+
             foreach (var item in ListInvitados)
             {
+                RegistrosInvitados += PlantillaInvitados;
+                foreach (Dominio placeholderDominio in placeholders)
+                {
+                    switch (placeholderDominio.Codigo)
+                    {
+                        case ConstanCodigoVariablesPlaceHolders.NUMERO_COMITE:
+                            strContenido = strContenido
+                                .Replace(placeholderDominio.Nombre, pComiteTecnico.NumeroComite);
+                            break;
 
+                    }
+                }
             }
 
 
 
-            List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
-
+          
             foreach (Dominio placeholderDominio in placeholders)
             {
                 switch (placeholderDominio.Codigo)
