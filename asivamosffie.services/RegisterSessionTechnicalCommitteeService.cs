@@ -695,7 +695,7 @@ namespace asivamosffie.services
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION INVITADO")
                      };
                 }
-                sesionInvitadoOld.UsuarioModificacion = pUsuarioModificacion;
+                sesionInvitadoOld.UsuarioModificacion = pUsuarioModificacion.ToUpper();
                 sesionInvitadoOld.FechaModificacion = DateTime.Now;
                 sesionInvitadoOld.Eliminado = true;
                 _context.SaveChanges();
@@ -1225,7 +1225,7 @@ namespace asivamosffie.services
                 
                 sesionComiteTemaOld.Eliminado = true;
                 sesionComiteTemaOld.FechaModificacion = DateTime.Now;
-                sesionComiteTemaOld.UsuarioCreacion = pUsuarioModificacion;
+                sesionComiteTemaOld.UsuarioCreacion = pUsuarioModificacion.ToUpper();
            
                 _context.SaveChanges();
 

@@ -207,7 +207,7 @@ namespace asivamosffie.services
                     strCrearEditar = "ELIMINAR PROCESO CELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
                     //Auditoria
-                    //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                    //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion.ToUpper();
                     ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     //Registros
@@ -251,7 +251,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CAMBIAR ESTADO PROCESO SELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
                     //Auditoria
-                    ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                    ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion.ToUpper();
                     ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     //Registros

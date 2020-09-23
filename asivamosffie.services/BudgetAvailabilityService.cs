@@ -111,6 +111,8 @@ namespace asivamosffie.services
                     strTipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
                 }
 
+                
+                var fechaContrato=_context.Contrato.Where(x=>x.ContratacionId==DisponibilidadPresupuestal.ContratacionId).FirstOrDefault().FechaFirmaContrato;
                 DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
                 {
 
@@ -118,7 +120,12 @@ namespace asivamosffie.services
                     EstadoRegistro = strEstadoRegistro,
                     TipoSolicitud = strTipoSolicitud,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
-                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud
+                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
+                    FechaFirmaContrato = fechaContrato==null?"":Convert.ToDateTime(fechaContrato).ToString("yy-MM-dd"),
+                    NumeroContrato=DisponibilidadPresupuestal.NumeroContrato==null ?
+                        _context.Contrato.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId).FirstOrDefault().NumeroContrato
+                        : DisponibilidadPresupuestal.NumeroContrato,
+
                 }; 
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
             } 
@@ -128,7 +135,7 @@ namespace asivamosffie.services
 
         
         /*autor: jflorez
-            descripci�n: objeto para entregar a front los datos ordenados de disponibilidades
+            descripción: objeto para entregar a front los datos ordenados de disponibilidades
         impacto: CU 3.3.3*/
         public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal()
         {
@@ -141,7 +148,7 @@ namespace asivamosffie.services
             return estadosdisponibles;
         }
 
-        public async Task<Respuesta> SetCancelDisponibilidadPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
+        public async Task<Respuesta> SetCancelRegistroPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
@@ -186,48 +193,31 @@ namespace asivamosffie.services
                 ThenInclude(x => x.ContratacionProyecto).ThenInclude(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).
                 ThenInclude(x => x.FuenteFinanciacion).FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
+            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count();
             /*busco usuario Juridico*/
             var usuarioJuridico = _context.UsuarioPerfil.Where(x=>x.PerfilId==(int)EnumeratorPerfil.Juridica).Include(y=>y.Usuario).FirstOrDefault();
             try
             {
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_validacion_presupuestal;
                 DisponibilidadCancelar.FechaModificacion = DateTime.Now;
-                DisponibilidadCancelar.UsuarioModificacion = pUsuarioModificacion;
+                DisponibilidadCancelar.UsuarioModificacion = pUsuarioModificacion.ToUpper();
                 DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                DisponibilidadCancelar.NumeroDdp = "DDP_PI_" + consecutivo.ToString();
                 //
                 //guardar el tema de platas
                 //
-                
+
                 Dictionary<int, List<decimal>> fuente =new Dictionary<int, List<decimal>>();
-                var contratacionproyecto = DisponibilidadCancelar.Contratacion.ContratacionProyecto;
-                foreach(var contratpro in contratacionproyecto)
+                //var contratacionproyecto = DisponibilidadCancelar.Contratacion.ContratacionProyecto;
+                var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId);
+                foreach (var gestion in gestionfuentes)
                 {
-                    var proyectoAportante=contratpro.ContratacionProyectoAportante;
-                    foreach(var proAport in proyectoAportante)
-                    {
-                        var fuentes=proAport.CofinanciacionAportante.FuenteFinanciacion;
-                        foreach(var fuent in fuentes)
-                        {
-                            List<decimal> valores = new List<decimal>();
-                            valores.Add(fuent.ValorFuente);
-                            valores.Add(proAport.ValorAporte);
-                            fuente.Add(fuent.FuenteFinanciacionId, valores);
-                        }                        
-                    }
+                    gestion.EstadoCodigo = EnumeratorEstadoGestionFuenteFinanciacion.Gestionado_en_DRP.ToString();
+                    gestion.FechaModificacion = DateTime.Now;
+                    gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
+                    _context.GestionFuenteFinanciacion.Update(gestion);
                 }
-                foreach(var f in fuente)
-                {
-                    GestionFuenteFinanciacion gf = new GestionFuenteFinanciacion();
-                    gf.UsuarioCreacion = pUsuarioModificacion;
-                    gf.FechaCreacion = DateTime.Now;
-                    gf.Eliminado = false;
-                    gf.FuenteFinanciacionId = f.Key;
-                    gf.SaldoActual = f.Value[0]- f.Value[1];
-                    gf.NuevoSaldo = f.Value[0] - f.Value[1];
-                    gf.ValorSolicitado = f.Value[1];
-                    _context.GestionFuenteFinanciacion.Add(gf);
-                }
-                
+
                 _context.SaveChanges();
                 //envio correo a juridica
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
@@ -677,7 +667,133 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 Data = _context.GestionFuenteFinanciacion.Where(x=>x.DisponibilidadPresupuestalProyectoId==pIdDisponibilidadPresupuestalProyecto).Include(x=>x.FuenteFinanciacion).Include(x=>x.DisponibilidadPresupuestalProyecto).ThenInclude(x=>x.Proyecto).ToList()
             };
         }
-        
 
+        /*autor: jflorez
+            descripción: listo los datos ordenados de disponibilidades
+        impacto: CU 3.3.4*/
+        public async Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal()
+        {
+           EstadosDisponibilidad estadosdisponibles =
+                new EstadosDisponibilidad { DominioId = Convert.ToInt32(ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal), NombreEstado = "", DisponibilidadPresupuestal = await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal) };
+            return estadosdisponibles;
+        }
+        /*autor: jflorez
+           descripción: cancelo la disponibilidades
+       impacto: CU 3.3.4*/
+        public async Task<Respuesta> SetCancelDisponibilidadPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
+        {
+            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
+            
+            try
+            {
+                int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Sin_registro_presupuestal;
+                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                              
+                pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesGenerateBudget.CanceladoCorrrectamente,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.CanceladoCorrrectamente, idAccion, pDisponibilidadPresObservacion.UsuarioCreacion, "CANCELAR DISPONIBILIDAD PRESUPUESTAL")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesGenerateBudget.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.Error, idAccion, pDisponibilidadPresObservacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
+        }
+
+        /*autor: jflorez
+           descripción: listo los datos ordenados de disponibilidades
+       impacto: CU 3.3.4*/
+        public async Task<Respuesta> CreateDRP(int pId, string pUsuarioModificacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        {
+            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Include(x => x.Contratacion).
+                ThenInclude(x => x.ContratacionProyecto).ThenInclude(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).
+                ThenInclude(x => x.FuenteFinanciacion).FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
+            /*busco usuario Juridico*/
+            var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).FirstOrDefault();
+            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count();
+            try
+            {
+                int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_registro_presupuestal;
+                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                DisponibilidadCancelar.UsuarioModificacion = pUsuarioModificacion.ToUpper();
+                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                DisponibilidadCancelar.NumeroDrp = "DRP_PI_" + consecutivo.ToString();
+                //
+                //guardar el tema de platas
+                //
+                var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId);
+                foreach(var gestion in gestionfuentes)
+                {
+                    gestion.EstadoCodigo = EnumeratorEstadoGestionFuenteFinanciacion.Gestionado_en_DRP.ToString();
+                    gestion.FechaModificacion = DateTime.Now;
+                    gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
+                    _context.GestionFuenteFinanciacion.Update(gestion);
+                }
+                _context.SaveChanges();
+                //envio correo a juridica
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
+                string template = TemplateRecoveryPassword.Contenido;
+
+                //template = template.Replace("_Link_", urlDestino);                
+
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "DRP Generada", template, pSentender, pPassword, pMailServer, pMailPort);
+                if (blEnvioCorreo)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = ConstantMessagesGenerateBudget.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DRP REGISTRO PRESUPUESTAL")
+                    };
+                }
+                else
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = ConstantMessagesGenerateBudget.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.Error, idAccion, pUsuarioModificacion, "ERROR ENVIO MAIL GENERAR DRP REGISTRO PRESUPUESTAL")
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesGenerateBudget.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
     }
 }

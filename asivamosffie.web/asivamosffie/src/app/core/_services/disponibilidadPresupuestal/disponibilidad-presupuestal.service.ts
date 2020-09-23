@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class DisponibilidadPresupuestalService {
+  
 
   constructor( private http: HttpClient ) {}
 
@@ -13,6 +14,10 @@ export class DisponibilidadPresupuestalService {
   GetListGenerarDisponibilidadPresupuestal()
   {
     return this.http.get<any[]>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarDisponibilidadPresupuestal`);
+  }
+
+  GetListGenerarRegistroPresupuestal() {
+    return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarRegistroPresupuestal`);
   }
 
   

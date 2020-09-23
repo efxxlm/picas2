@@ -11,6 +11,7 @@ import { ViewFlags } from '@angular/compiler/src/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 export interface Contrato {
   fechaFirma: string;
   numeroContrato: string;
@@ -37,15 +38,28 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  constructor( private router: Router, public dialog: MatDialog) { }
+  constructor( private router: Router, public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    let elementos:Contrato[]=[];
+    this.disponibilidadServices.GetListGenerarRegistroPresupuestal().subscribe(listas => {
+      
+      listas.disponibilidadPresupuestal.forEach(element => {
+        console.log(element);
+        elementos.push({estado:element.estadoRegistro,
+          fechaFirma:element.fechaFirmaContrato,
+          numeroContrato:element.numeroContrato,
+          tipoSolicitud:element.tipoSolicitud});
+      });
+      this.dataSource = new MatTableDataSource(listas);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    });
+    
+    
   }
   gestionarDRP(){
     this.router.navigate(['/generarRegistroPresupuestal/gestionarDrp']);

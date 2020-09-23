@@ -71,7 +71,7 @@ namespace asivamosffie.api.Controllers
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
-                Task<Respuesta> result = _budgetAvailabilityService.SetCancelDisponibilidadPresupuestal(pDisponibilidadPresObservacion);
+                Task<Respuesta> result = _budgetAvailabilityService.SetCancelRegistroPresupuestal(pDisponibilidadPresObservacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -330,5 +330,61 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        /*autor: jflorez
+            descripción: listado inicial 
+            impacto: CU 3.3.4*/
+        [Route("GetListGenerarRegistroPresupuestal")]
+        [HttpGet]
+        public async Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal()
+        {
+            var respuesta = await _budgetAvailabilityService.GetListGenerarRegistroPresupuestal();
+            return respuesta;
+        }
+        /*autor: jflorez
+            descripción: cancela la ddp
+            impacto: CU 3.3.4*/
+        [Route("SetCancelDDR")]
+        [HttpPost]
+        public async Task<IActionResult> SetCancelarDDR(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                Task<Respuesta> result = _budgetAvailabilityService.SetCancelRegistroPresupuestal(pDisponibilidadPresObservacion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /*autor: jflorez
+            descripción: genera DRP
+            impacto: CU 3.3.4*/
+        [Route("CreateDRP")]
+        [HttpPost]
+        public async Task<IActionResult> CreateDRP(int id)
+        {
+
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _budgetAvailabilityService.CreateDRP(id, UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
     }
 }
