@@ -234,7 +234,7 @@ namespace asivamosffie.services
             {
                 if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
                 {
-                    Contratacion.TipoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                    Contratacion.TipoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
                 }
                 if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                 {
