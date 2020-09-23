@@ -46,7 +46,9 @@ namespace asivamosffie.services
         {
             List<GrillaSesionComiteTecnicoCompromiso> grillaSesionComiteTecnicoCompromisos = new List<GrillaSesionComiteTecnicoCompromiso>();
 
-            List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
+            List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
+                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion 
+                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                   .Include(r => r.SesionComiteTecnicoCompromiso).ToListAsync();
         
             foreach (var ComiteTecnico in ListComiteTecnico)

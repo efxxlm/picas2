@@ -2566,14 +2566,12 @@ namespace asivamosffie.services
 
         public async Task<byte[]> GetPlantillaActaIdComite(int ComiteId)
         {
-
             if (ComiteId == 0)
             {
                 return Array.Empty<byte>();
-            }
+            } 
             ComiteTecnico comiteTecnico= await _context.ComiteTecnico
-                .Where(r=> r.ComiteTecnicoId == ComiteId)
-                .Include(r=> r.SesionComiteSolicitudComiteTecnico).FirstOrDefaultAsync();
+                .Where(r=> r.ComiteTecnicoId == ComiteId).FirstOrDefaultAsync();
 
             if (comiteTecnico == null)
             {
@@ -2588,21 +2586,47 @@ namespace asivamosffie.services
         private string ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
 
+            List<Usuario> MiembrosParticipantes = _context.SesionParticipante
+                .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                .Include(r => r.Usuario)
+                .Select(r => r.Usuario)
+                .ToList();
+
+            List<SesionInvitado> ListInvitados = _context.SesionInvitado
+                .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList(); 
+            //Tablas Dinamicas
+            foreach (var item in ListInvitados)
+            {
+
+            }
+
+
+
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
 
             foreach (Dominio placeholderDominio in placeholders)
             {
                 switch (placeholderDominio.Codigo)
                 {
-                    case ConstanCodigoVariablesPlaceHolders.COMITE_NUMERO:
+                    case ConstanCodigoVariablesPlaceHolders.NUMERO_COMITE:
                         strContenido = strContenido
                             .Replace(placeholderDominio.Nombre, pComiteTecnico.NumeroComite);
                         break;
 
-                    case ConstanCodigoVariablesPlaceHolders.FECHA_COMITE_TECNICO:
+                    case ConstanCodigoVariablesPlaceHolders.FECHA_COMITE:
                         strContenido = strContenido
-                            .Replace(placeholderDominio.Nombre, pComiteTecnico.NumeroComite);
+                            .Replace(placeholderDominio.Nombre, ((DateTime)pComiteTecnico.FechaOrdenDia).ToString("dd-MM-yyyy"));
                         break;
+
+                    case ConstanCodigoVariablesPlaceHolders.MIEMBROS_PARTICIPANTES: 
+                        string strUsuariosParticipantes = string.Empty; 
+                        MiembrosParticipantes.ForEach(user => {
+                            strUsuariosParticipantes += user.Nombres + " " + user.Apellidos + " "; 
+                        }); 
+                        strContenido = strContenido.Replace(placeholderDominio.Nombre, strUsuariosParticipantes);
+                        break;
+
+
                 }
             }
 
