@@ -1,0 +1,35 @@
+<div align="left" *ngIf="institucionesEducativa.length > 0">
+  <mat-card class="border" *ngFor="let institucion of institucionesEducativa">
+    <mat-card-title class="text-area-quill--label">{{ institucion.nombre }}</mat-card-title>
+    <mat-card-content>
+      <p><b>Tipo de intervención</b>: {{ institucion.proyectoInstitucionEducativa[0]?.tipoIntervencionCodigo }}</p>
+      <p><b>Departamento</b>: {{ institucion.departamento.descripcion }}</p>
+      <p><b>Municipio</b>: {{ institucion.municipio.descripcion }}</p>
+      <p><b>Valor total del proyecto</b>: {{ institucion.proyectoInstitucionEducativa[0]?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+      <h2 class="card-subTitle back-color">Aportantes</h2>
+      
+      <div *ngFor="let proyectoAportante of institucion.proyectoInstitucionEducativa[0]?.proyectoAportante; let i = index">
+
+        <mat-card class="border">
+          <mat-card-title class="text-area-quill--label"><b>Aportante {{ i+1 }}</b></mat-card-title>
+          <mat-card-content>
+            <div>
+              <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportante }}</p>
+              <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.nombreAportante }}</p>
+              <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante.valorTotalAportante | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            </div>
+            <div *ngFor="let fuente of proyectoAportante.aportante.fuenteFinanciacion; let j = index">
+              <h3><b>Fuente {{ j+1 }}</b></h3>
+              <div>
+                <p><b>Fuente</b>: {{ fuente.fuenteRecursosCodigo }}</p>
+                <p><b>Valor solicitado de la fuente</b>: {{ fuente.valorFuente | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

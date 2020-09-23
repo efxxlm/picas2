@@ -1,0 +1,197 @@
+<div class="container text-center mt-2em">
+  <div class="text-right">
+    <a routerLink="/procesosContractuales" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Gestionar solicitud CO_003
+    </h1>
+  </div>
+
+  <div class="text-center flex">
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>15/06/2020</b></p>
+    <p class="color-titulo"><b>Modificación contractual</b></p>
+  </div>
+
+  <div align="left">
+    <mat-card class="border">
+      <mat-card-content>
+        <p><b>Número DDP</b>: DDP_PI_008</p>
+        <p>
+          <b>Objeto</b>:  Ejecutar la preconstrucción, construcción y post construcción de la Institución Educativa Manuela Beltran Sede principal en el municipio
+                          de Buga del departamente del Valle del Cauca.
+        </p>
+        <p><b>Número de comité fiduciario</b>: CF_002</p>
+        <p><b>Fecha de comité fiduciario</b>: 14/06/2020</p>
+      </mat-card-content>
+  </mat-card>
+  </div>
+
+  <div class="text-center">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos del contrato
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Tipo de contrato</b>: Obra</p>
+              <p><b>Valor del contrato</b>: $30.000.000</p>
+              <p><b>Plazo</b>: 33 meses / 12 días</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style" *ngIf="suspensionBoolean || reinicioBoolean">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Detalle de la novedad contractual
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p *ngIf="suspensionBoolean"><b>Tipo de novedad</b>: Suspensión</p>
+              <p *ngIf="reinicioBoolean"><b>Tipo de novedad</b>: Reinicio</p>
+              <p><b>Motivo de la novedad</b>: Condiciones climaticas</p>
+              <p *ngIf="suspensionBoolean"><b>Fecha de inicio de la suspensión</b>: 27/07/2020</p>
+              <p *ngIf="suspensionBoolean"><b>Fecha final de la suspensión</b>: 30/08/2020</p>
+              <p *ngIf="reinicioBoolean"><b>Tipo de modificación</b>: Reinicio</p>
+              <p *ngIf="reinicioBoolean"><b>Fecha de inicio del reinicio</b>: 31/08/2020</p>
+              <p *ngIf="reinicioBoolean"><b>Fecha final del reinicio</b>: 31/08/2020</p>
+              <p><b>Detalle de la novedad</b>: Se realiza suspensión por lluvias</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style" *ngIf="!suspensionBoolean && !reinicioBoolean">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Detalle de la modificación contractual
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border" *ngFor="let element of data">
+            <mat-card-content>
+              <p><b>Número de la solicitud de modificación</b>: {{ element.numeroSolicitud }}</p>
+              <p><b>Tipo de modificación</b>: {{ element.tipoModificacion }}</p>
+              <p><b>Valor después de la modificación</b>: ${{ element.valorDespuesModificacion }}</p>
+              <p><b>Plazo después de la modificación</b>: {{ element.plazoDespuesModificacion }}</p>
+              <p><b>Detalle de la modificación</b>: {{ element.detalle }}</p>
+              <h2 class="card-subTitle back-color">Aportantes</h2>
+              
+              <div *ngFor="let aportante of element.aportantes; let i = index">
+        
+                <div>
+                  <h3><b>Aportante {{ i+1 }}</b></h3>
+                  <div>
+                    <p><b>Tipo de aportante</b>: {{ aportante.tipoAportante }}</p>
+                    <p><b>Nombre del aportante</b>: {{ aportante.nombreAportante }}</p>
+                    <p><b>Valor del aportante al proyecto</b>: ${{ aportante.valorAportanteProyecto }}</p>
+                  </div>
+                </div>
+                <div>
+                  <h3><b>Fuente</b></h3>
+                  <div>
+                    <p><b>Fuente</b>: {{ aportante.fuente }}</p>
+                    <p><b>Valor solicitado de la fuente</b>: ${{ aportante.valorSolicitado }}</p>
+                  </div>
+                </div>
+        
+              </div>
+        
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Proyectos Asociados
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="flex-table">
+          <app-tabla-proyectos-asociados></app-tabla-proyectos-asociados>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Disponibilidad presupuestal
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="expansion-style">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              DDP_PI_008
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="text-center">
+            <p><b>Valor del DDP</b> $300.000.000</p>
+          </div>
+
+          <app-form-aportantes [data]="dataForm"></app-form-aportantes>
+
+        </mat-expansion-panel>
+
+        <div class="text-center w-15">
+          <button mat-raised-button
+                  color="accent" 
+                  class="btn-table"
+                  (click)="getDdp( sesionComiteId )">
+                  Descargar DDP
+          </button>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === '9'">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Información del trámite
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Fecha del trámite</b>: 16/06/2020</p>
+              <p><b>Fecha de envío de documentación física para el trámite</b>: 16/06/2020</p>
+              <p><b>Observaciones</b>: Se enviara por medio de mensajeria 472 para que el documento pueda ser radicado este mismo día</p>
+              <p><b>Minuta adjunta</b>: Minuta.doc</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="mt-2em" align="left" *ngIf="estadoCodigo === '2'">
+    <mat-card class="border">
+      <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
+      <mat-card-content class="mt-2em">
+        <p>Fecha del trámite <b class="color-titulo">16/06/2020</b></p>
+        <app-form-registro-tramite [dataFormulario]="form"></app-form-registro-tramite>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

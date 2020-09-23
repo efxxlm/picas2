@@ -1,0 +1,519 @@
+body {
+    font-family: 'Times New Roman';
+    font-size: 1em;
+}
+
+ul,
+ol {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.Normal {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+h1 {
+    text-align: center;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 11pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Heading-1 {
+    text-align: center;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 11pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+h2 {
+    text-align: center;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: 12pt;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    color: #000000;
+    font-family: Arial;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Heading-2 {
+    text-align: center;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: 12pt;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    color: #3366FF;
+    font-family: Arial;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+h3 {
+    text-align: right;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: 12pt;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 8pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Heading-3 {
+    text-align: right;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: 12pt;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 8pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+h4 {
+    text-align: justify;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 14pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Heading-4 {
+    text-align: justify;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 14pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+h5 {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Century Gothic;
+    font-size: 8pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Heading-5 {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Century Gothic;
+    font-size: 8pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+h6 {
+    text-align: justify;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Tahoma;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Heading-6 {
+    text-align: justify;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Tahoma;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Heading-7 {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: avoid;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 11pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Default-Paragraph-Font {
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Tabla-normal {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.No-List {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Body-Text {
+    text-align: justify;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Header {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Footer {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Body-Text-2 {
+    text-align: justify;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Arial;
+    font-size: 14pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Hyperlink {
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    text-decoration: underline;
+}
+
+.Pie-de-página-Car {
+    font-family: Times New Roman;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Sin-espaciado {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Table-Grid {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Balloon-Text {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Segoe UI;
+    font-size: 9pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Texto-de-globo-Car {
+    font-family: Segoe UI;
+    font-size: 9pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Encabezado-Car {
+    font-family: Times New Roman;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Default {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    color: #000000;
+    font-family: Tahoma;
+    font-size: 12pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Table-Paragraph {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 1pt;
+    margin-bottom: 0pt;
+    margin-left: 0.95pt;
+    font-family: Arial;
+    font-size: 11pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Comment-Reference {
+    font-family: Times New Roman;
+    font-size: 8pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Comment-Text {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Texto-comentario-Car {
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Comment-Subject {
+    text-align: left;
+    page-break-inside: auto;
+    page-break-after: auto;
+    page-break-before: avoid;
+    line-height: normal;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
+
+.Asunto-del-comentario-Car {
+    font-family: Times New Roman;
+    font-size: 10pt;
+    text-transform: none;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}
