@@ -166,6 +166,21 @@ namespace asivamosffie.services
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
         }
 
+        public async Task<ContratoPoliza> GetContratoPolizaByContratoId(int pContratoId)
+        {
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).FirstOrDefaultAsync();
+        }
+        
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        {
+            return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
+        }
+      
+        public async Task<Contratista> GetContratistaByContratistaId(int pContratistaId)
+        {
+            return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
+        }
+
         public async Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio)
         {
             //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos

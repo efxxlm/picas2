@@ -13,9 +13,9 @@ namespace asivamosffie.model.Models
 
         public int ContratoPolizaId { get; set; }
         public int ContratoId { get; set; }
-        public string TipoSolicitudCodigo { get; set; }
-        public string TipoModificacionCodigo { get; set; }
-        public string DescripcionModificacion { get; set; }
+        public string? TipoSolicitudCodigo { get; set; }
+        public string? TipoModificacionCodigo { get; set; }
+        public string? DescripcionModificacion { get; set; }
         public string NombreAseguradora { get; set; }
         public string NumeroPoliza { get; set; }
         public string NumeroCertificado { get; set; }
@@ -23,13 +23,13 @@ namespace asivamosffie.model.Models
         public DateTime Vigencia { get; set; }
         public string VigenciaAmparo { get; set; }
         public decimal ValorAmparo { get; set; }
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
         public bool CumpleDatosAsegurado { get; set; }
         public bool CumpleDatosBeneficiario { get; set; }
         public bool CumpleDatosTomador { get; set; }
         public bool IncluyeReciboPago { get; set; }
         public bool IncluyeCondicionesGenerales { get; set; }
-        public string ObservacionesRevisionGeneral { get; set; }
+        public string? ObservacionesRevisionGeneral { get; set; }
         public DateTime FechaAprobacion { get; set; }
         public string ResponsableAprobacion { get; set; }
         public bool Estado { get; set; }

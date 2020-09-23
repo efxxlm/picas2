@@ -52,7 +52,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Tipo_Proponente = 28,
 		Estado_Proceso_Seleccion = 35,
 		Estado_Juridico_Predios = 25,
-		Estado_Cronograma_Seguimiento = 40
+		Estado_Cronograma_Seguimiento = 40,
+
+		Tipo_Solicitud_Contrato_Poliza = 51,
+		Tipo_Contrato = 52,
+		Tipo_Modificacion_Contrato_Poliza = 56,
+		Tipo_Garantia_Poliza = 58
 
 
 	}
