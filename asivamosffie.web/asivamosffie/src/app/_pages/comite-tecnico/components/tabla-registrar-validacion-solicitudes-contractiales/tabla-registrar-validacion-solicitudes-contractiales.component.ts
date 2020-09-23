@@ -56,7 +56,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       sesionSolicitudVoto: [],
     }
 
-    console.log(elemento )
+    console.log(elemento)
 
 
     this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
@@ -122,13 +122,13 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
     this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach(sc => {
 
-      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId){
+      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId) {
         solicitud.requiereVotacion = check;
         this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud(solicitud)
-        .subscribe(respuesta => {
-          sc.completo = !check;
-          this.validar.emit(null);
-        })
+          .subscribe(respuesta => {
+            sc.completo = !check;
+            this.validar.emit(null);
+          })
       }
     })
 
@@ -208,18 +208,20 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     };
   }
 
-  validarRegistros(){
-    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach( sc => {
-      sc.completo = true;
+  validarRegistros() {
+    if (this.ObjetoComiteTecnico.sesionComiteSolicitud) {
+      this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach(sc => {
+        sc.completo = true;
 
-      if ( sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0 ) { sc.completo = false }
+        if (sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0) { sc.completo = false }
 
-      sc.sesionSolicitudVoto.forEach( ss => {
-        if ( ss.esAprobado != true && ss.esAprobado != false ){
-          sc.completo = false;
-        }
+        sc.sesionSolicitudVoto.forEach(ss => {
+          if (ss.esAprobado != true && ss.esAprobado != false) {
+            sc.completo = false;
+          }
+        })
       })
-    })
+    }
   }
 
   cargarRegistro() {

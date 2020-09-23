@@ -144,12 +144,20 @@ export class RegistrarAcuerdoComponent implements OnInit {
     this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id]
       .get('departamento').value.localizacionId).subscribe(mun => {
         this.aportantes.controls[id].get('municipios').setValue(mun);
-      });
+      }); 
   }
 
-  
+
   changeTipoAportante(p) {
     console.log(p);
+  }
+
+  borrarArray(borrarForm: any, i: number) {
+    
+    borrarForm.removeAt(i);
+
+    //this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
+
   }
 
   CambioNumeroAportantes() {
@@ -160,8 +168,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
          }
        } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
          while (this.aportantes.length > FormNumAportantes.numAportes) {
-           //this.borrarAportante(this.aportantes, this.aportantes.length - 1);
-           // this.listaCofinancAportantes.pop();
+          this.borrarArray(this.aportantes, this.aportantes.length - 1);
          }
        }
     

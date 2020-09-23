@@ -59,8 +59,11 @@
                 <button mat-raised-button color="accent" class="btn-table" (click)="onDelete(element.contratacionId)"
                     *ngIf="!element.estadoSolicitudCodigo">Eliminar</button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    (click)="enviarSolicitud(element.contratacionId)" *ngIf="!element.estadoSolicitudCodigo">Enviar
+                    (click)="enviarSolicitud(element.contratacionId)" 
+                    *ngIf="element.estadoSolicitudCodigo == 'Sin registro' ">Enviar
                     Solicitud.</button>
+
+                    
             </td>
         </ng-container>
 

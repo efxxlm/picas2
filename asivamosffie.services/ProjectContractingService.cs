@@ -801,7 +801,7 @@ namespace asivamosffie.services
                     TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
                     FechaTramite = DateTime.Now,
                     NumeroSolicitud = await _commonService.EnumeradorContratacion(),
-                    EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.En_Revision,
+                    EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.Sin_Registro,
                     //Contratista = ContratistaId 
                     //EsObligacionEspecial = (bool),
                     //ConsideracionDescripcion = "" 
