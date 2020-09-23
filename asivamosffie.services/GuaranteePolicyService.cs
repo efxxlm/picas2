@@ -87,6 +87,7 @@ namespace asivamosffie.services
                 {
                     //contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                                        
 
                     //_context.Add(contratoPoliza);
 
