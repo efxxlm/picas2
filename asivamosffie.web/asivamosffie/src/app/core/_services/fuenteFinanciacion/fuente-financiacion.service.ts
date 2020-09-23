@@ -28,6 +28,11 @@ export class FuenteFinanciacionService {
     return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetFuentesFinanciacionByAportanteId?AportanteId=${id}`);
   }
 
+  
+  getListaFuenteFinanciacionByAportante( id: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByAportanteId?AportanteId=${id}`);
+  }
+
   registrarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){
     return this.http.post(`${environment.apiUrl}/CofinancingContributor/SaveBudgetRegister/`, registroPresupuestal);
   }

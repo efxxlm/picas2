@@ -4,7 +4,7 @@
 
 <div class="text-center">
     <h1 class="title-menu--h1">
-        Devolver por validación presupuestal
+        {{this.tipo==0?'Devolver':'Rechazar'}} por validación presupuestal
     </h1>
 
     <p class="info-sub-title">
@@ -33,5 +33,5 @@
 </p>
 
 <div class="row justify-content-center mt-1em mb-1em">
-    <button mat-raised-button color="accent" [disabled]="observaciones.invalid" (click)="devolverSolicitud()">Devolver solicitud</button>
+    <button mat-raised-button color="accent" [disabled]="observaciones.invalid" (click)="devolverSolicitud()">{{this.tipo==0?'Devolver':'Rechazar'}} solicitud</button>
 </div>

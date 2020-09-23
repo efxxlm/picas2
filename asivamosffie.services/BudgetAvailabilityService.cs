@@ -114,7 +114,7 @@ namespace asivamosffie.services
                 DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
                 {
 
-                    FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString(),
+                    FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString("yyyy/MM/dd"),
                     EstadoRegistro = strEstadoRegistro,
                     TipoSolicitud = strTipoSolicitud,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
@@ -444,9 +444,143 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
             return null;
         }
 
-        public Task<FuenteFinanciacion> GetFuenteFinanciacionByIdAportanteId(int pAportanteId)
+        /*autor: jflorez
+            descripción: return disponibilidad por validacion pres
+        impacto: CU 3.3.2*/
+
+        public async Task<Respuesta> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
-            throw new NotImplementedException();
+            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+            try
+            {
+                int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Devuelta_por_validacion_presupuestal;
+                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+
+                pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                _context.SaveChanges();
+                //envio correo a juridica
+                var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).FirstOrDefault();
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
+                string template = TemplateRecoveryPassword.Contenido;
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP Devuelto por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesGenerateBudget.DevueltoCorrrectamente,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.DevueltoCorrrectamente, pDisponibilidadPresObservacion.DisponibilidadPresupuestalId, pDisponibilidadPresObservacion.UsuarioCreacion, "RECHAZAR DISPONIBILIDAD PRESUPUESTAL")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesGenerateBudget.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.Error, pDisponibilidadPresObservacion.DisponibilidadPresupuestalId, pDisponibilidadPresObservacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
+        }
+
+        /*autor: jflorez
+            descripción: rechaza disponibilidad por validacion pres
+        impacto: CU 3.3.2*/
+        public async Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        {
+            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+            try
+            {
+                int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
+                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+
+                pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                _context.SaveChanges();
+                //envio correo a juridica
+                var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).FirstOrDefault();
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
+                string template = TemplateRecoveryPassword.Contenido;
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP rechazado por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesGenerateBudget.DevueltoCorrrectamente,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.DevueltoCorrrectamente, pDisponibilidadPresObservacion.DisponibilidadPresupuestalId, pDisponibilidadPresObservacion.UsuarioCreacion, "DEVOLVER DISPONIBILIDAD PRESUPUESTAL")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesGenerateBudget.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.Error, pDisponibilidadPresObservacion.DisponibilidadPresupuestalId, pDisponibilidadPresObservacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
+        }
+
+        /*autor: jflorez
+            descripción: valida disponibilidad por validacion pres
+        impacto: CU 3.3.2*/
+        public async Task<Respuesta> SetValidarValidacionDDP(int id,string usuariomod, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        {
+            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(id);
+            try
+            {
+                int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_validacion_presupuestal;
+                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                DisponibilidadCancelar.UsuarioModificacion = usuariomod;
+                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                /*
+                pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                _context.SaveChanges();*/
+                //envio correo a juridica
+                var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera).Include(y => y.Usuario).FirstOrDefault();
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
+                string template = TemplateRecoveryPassword.Contenido;
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP con validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesGenerateBudget.DevueltoCorrrectamente,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.DevueltoCorrrectamente, id, usuariomod, "CON DISPONIBILIDAD PRESUPUESTAL")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesGenerateBudget.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.Error, id, usuariomod, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
         }
 
         //    public async Task<Respuesta> CreateEditDisponibilidadPresupuestal(DisponibilidadPresupuestal pDisponibilidadPresupuestal) {

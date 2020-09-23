@@ -44,6 +44,10 @@ export class TablaEnValidacionComponent implements OnInit {
     console.log(this.disponibilidadPresupuestal);
     let elements:PeriodicElement[]=[];
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
+      console.log(element.fechaSolicitud);
+      var fecha= new Date(element.fechaSolicitud);
+      console.log(fecha);
+      //console.log(fecha.getDate()  + "/" + (fecha.getMonth()+1) + "/" + fecha.getFullYear() );
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,estadoRegistro:element.estadoRegistro,numero:element.numeroSolicitud,
         tipo:element.tipoSolicitud})
