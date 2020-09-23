@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto(int pSesionComiteSolicitudId, int pContratacionProyectoId);
 
 
-        Task<byte[]> GetPlantillaActaBySesionComiteSolicitudId( int pSesionComiteSolicitudId);
+        Task<byte[]> GetPlantillaActaIdComite( int pdComite);
 
         Task<Respuesta> CambiarEstadoActa(int pSesionComiteSolicitud, string pCodigoEstado, string pUsuarioModifica);
 

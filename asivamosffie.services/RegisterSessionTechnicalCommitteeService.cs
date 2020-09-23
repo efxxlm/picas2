@@ -2564,25 +2564,28 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<byte[]> GetPlantillaActaBySesionComiteSolicitudId(int pSesionComiteSolicitudId)
+        public async Task<byte[]> GetPlantillaActaIdComite(int ComiteId)
         {
 
-            if (pSesionComiteSolicitudId == 0)
+            if (ComiteId == 0)
             {
                 return Array.Empty<byte>();
             }
-            SesionComiteSolicitud sesionComiteSolicitud = await _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitudId).Include(r => r.ComiteTecnico).FirstOrDefaultAsync();
-            if (sesionComiteSolicitud == null)
+            ComiteTecnico comiteTecnico= await _context.ComiteTecnico
+                .Where(r=> r.ComiteTecnicoId == ComiteId)
+                .Include(r=> r.SesionComiteSolicitudComiteTecnico).FirstOrDefaultAsync();
+
+            if (comiteTecnico == null)
             {
                 return Array.Empty<byte>();
             }
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Descargar_Acta).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
-            plantilla.Contenido = ReemplazarDatosPlantillaActa(plantilla.Contenido, sesionComiteSolicitud);
+            plantilla.Contenido = ReemplazarDatosPlantillaActa(plantilla.Contenido, comiteTecnico);
             return ConvertirPDF(plantilla);
         }
 
-        private string ReemplazarDatosPlantillaActa(string strContenido, SesionComiteSolicitud sesionComiteSolicitud)
+        private string ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
 
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
@@ -2593,7 +2596,12 @@ namespace asivamosffie.services
                 {
                     case ConstanCodigoVariablesPlaceHolders.COMITE_NUMERO:
                         strContenido = strContenido
-                            .Replace(placeholderDominio.Nombre, sesionComiteSolicitud.ComiteTecnico.NumeroComite);
+                            .Replace(placeholderDominio.Nombre, pComiteTecnico.NumeroComite);
+                        break;
+
+                    case ConstanCodigoVariablesPlaceHolders.FECHA_COMITE_TECNICO:
+                        strContenido = strContenido
+                            .Replace(placeholderDominio.Nombre, pComiteTecnico.NumeroComite);
                         break;
                 }
             }
