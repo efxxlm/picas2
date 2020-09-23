@@ -435,11 +435,4 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
-
-  validateNumber(event: Event, max) {
-    console.log(event);
-    const alphanumeric = /[0-9]/;
-    // let inputChar = String.fromCharCode(event.charCode);
-    // return alphanumeric.test(inputChar) ? true : false;
-  }
 }

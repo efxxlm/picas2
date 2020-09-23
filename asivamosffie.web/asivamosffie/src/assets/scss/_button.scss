@@ -1,10 +1,10 @@
 .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary{
-    color: #174193;;
+    color: #174193;
     color: var(--mainColor);
 }
 
 .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
-    background-color: #174193;;
+    background-color: #174193;
     background-color: var(--mainColor);
 }
 
@@ -24,7 +24,7 @@
     &:not([disabled]):hover {
         background-color: #d1d1d1;
         background-color: var(--grayColor);
-        color: #174193;;
+        color: #174193;
         color: var(--mainColor);
     }
 }
@@ -123,7 +123,7 @@ button.btn-calendario {
 }
 
 .mat-dialog-actions button {
-    background-color: #174193;;
+    background-color: #174193;
     background-color: var(--mainColor);
     color: white;
 }
