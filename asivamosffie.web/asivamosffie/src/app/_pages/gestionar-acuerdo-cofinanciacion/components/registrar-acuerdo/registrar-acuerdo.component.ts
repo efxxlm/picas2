@@ -425,6 +425,9 @@ export class RegistrarAcuerdoComponent implements OnInit {
     if (index > -1) {
       aportante.cofinanciacionDocumento.splice(index, 1);
       aportante.cauntosDocumentos--;
+
+      
+
     }
 
   }

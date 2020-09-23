@@ -98,8 +98,8 @@ export class CrearActaComponent implements OnInit {
     this.temasCompletos = true;
     this.proposicionesCompletos = true;
 
-    if (this.objetoComiteTecnico.sesionComiteSolicitud) {
-      this.objetoComiteTecnico.sesionComiteSolicitud.forEach(cs => {
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
         if (!cs.registroCompleto)
           this.solicitudesCompletas = false;
       })

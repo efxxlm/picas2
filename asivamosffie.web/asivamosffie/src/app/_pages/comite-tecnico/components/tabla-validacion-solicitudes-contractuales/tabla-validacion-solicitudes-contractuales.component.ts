@@ -67,7 +67,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
   }
 
   cargarRegistro() {
-    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitud);
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
   }
 
 }

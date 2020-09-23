@@ -39,7 +39,7 @@ export interface ComiteTecnico{
     numeroCompromisosCumplidos?: number,
 
     sesionComiteTema?: SesionComiteTema[],
-    sesionComiteSolicitud?: SesionComiteSolicitud[],
+    sesionComiteSolicitudComiteTecnico?: SesionComiteSolicitud[],
     sesionParticipante?: SesionParticipante[],
     sesionInvitado?: SesionInvitado[],
 

@@ -120,7 +120,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   changeRequiere(check: boolean, solicitud: SesionComiteSolicitud) {
 
-    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach(sc => {
+    this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sc => {
 
       if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId) {
         solicitud.requiereVotacion = check;
@@ -209,8 +209,8 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   }
 
   validarRegistros() {
-    if (this.ObjetoComiteTecnico.sesionComiteSolicitud) {
-      this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach(sc => {
+    if (this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+      this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sc => {
         sc.completo = true;
 
         if (sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0) { sc.completo = false }
@@ -228,7 +228,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
     this.validarRegistros();
 
-    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitud);
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
   }
 
 }

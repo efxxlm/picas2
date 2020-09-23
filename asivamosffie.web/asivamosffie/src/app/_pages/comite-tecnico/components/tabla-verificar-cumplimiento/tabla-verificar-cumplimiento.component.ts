@@ -72,8 +72,8 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
           this.listaCompromisos = this.listaCompromisos.concat(tem.temaCompromiso);
         })
 
-        if (respuesta[0].sesionComiteSolicitud) {
-          respuesta[0].sesionComiteSolicitud.forEach(sol => {
+        if (respuesta[0].sesionComiteSolicitudComiteTecnico) {
+          respuesta[0].sesionComiteSolicitudComiteTecnico.forEach(sol => {
             sol.sesionSolicitudCompromiso.forEach(sc => {
               sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
               sc.nombreEstado = sc.estadoCodigo;
@@ -128,7 +128,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
     let comite: ComiteTecnico = {
       sesionComiteTema: [],
-      sesionComiteSolicitud: []
+      sesionComiteSolicitudComiteTecnico: []
     }
 
     let tema: SesionComiteTema = {
@@ -141,7 +141,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
       sesionSolicitudCompromiso: this.listaCompromisos.filter(c => c.sesionSolicitudCompromisoId > 0 && c.estadoCodigo)
     }
     if (solicitud.sesionSolicitudCompromiso.length > 0)
-      comite.sesionComiteSolicitud.push(solicitud);
+      comite.sesionComiteSolicitudComiteTecnico.push(solicitud);
 
     this.technicalCommitteeSessionService.verificarTemasCompromisos(comite)
       .subscribe(respuesta => {

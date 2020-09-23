@@ -169,8 +169,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
-    if (this.objetoComiteTecnico.sesionComiteSolicitud) {
-      this.objetoComiteTecnico.sesionComiteSolicitud.forEach(sol => {
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sol => {
         sol.completo = true;
         if (sol.requiereVotacion == true) {
           if (sol.sesionSolicitudVoto.length == 0)
@@ -193,7 +193,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         }
       })
 
-      if (this.objetoComiteTecnico.sesionComiteSolicitud.length > 0)
+      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0)
       {
         if (cantidadSolicitudes > 0)  {
           this.estadoSolicitudes = this.estadoFormulario.enProceso;
