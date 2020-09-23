@@ -54,19 +54,14 @@ namespace asivamosffie.services
             }
 
         }
-
-
-
+         
         public async Task<Contrato> GetContratoByContratoId(int pContratoId) {
 
             try
             {
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                     .Include(r => r.Contratacion)
-                     .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync();
-
-
-
+                     .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync(); 
                 return contrato;
             }
             catch (Exception)
