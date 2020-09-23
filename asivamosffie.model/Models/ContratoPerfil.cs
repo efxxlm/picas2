@@ -27,11 +27,9 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
-<<<<<<< HEAD
         public bool Eliminado { get; set; }
         public bool RegistroCompleto { get; set; }
-=======
->>>>>>> origin/3.4.4-Generar-polizas-y-garantias
+
 
         public virtual Contrato Contrato { get; set; }
         public virtual ICollection<ContratoPerfilObservacion> ContratoPerfilObservacion { get; set; }
