@@ -20,11 +20,8 @@ export class ComiteTecnicoComponent implements OnInit {
   minDate: Date;
 
   constructor(
-              private router: Router,
-
-             ) 
-  {
-    //this.minDate = new Date();
+              private router: Router ) {
+    this.minDate = new Date();
     this.fechaComite = new FormControl('', [Validators.required]);
     this.fechaComite.valueChanges
     .subscribe(value => {
@@ -33,6 +30,7 @@ export class ComiteTecnicoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   onClickCrearOrden(){
