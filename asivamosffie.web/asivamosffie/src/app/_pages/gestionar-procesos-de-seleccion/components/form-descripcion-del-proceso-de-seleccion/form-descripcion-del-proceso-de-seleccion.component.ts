@@ -118,7 +118,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
     if (FormGrupos.cuantosGrupos < this.grupos.length)
       if (this.validarGruposDiligenciados()){
-        this.openDialog('','Debe eliminar uno de los registros diligenciados para disminuir el total de los registros   requeridos');
+        this.openDialog('','Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
 
         this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
         

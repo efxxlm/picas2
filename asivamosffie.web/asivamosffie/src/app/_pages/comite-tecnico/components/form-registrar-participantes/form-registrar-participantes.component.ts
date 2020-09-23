@@ -169,34 +169,42 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
-    this.objetoComiteTecnico.sesionComiteSolicitud.forEach(sol => {
-      sol.completo = true;
-      if (sol.requiereVotacion == true) {
-        if (sol.sesionSolicitudVoto.length == 0)
-          cantidadSolicitudes++;
+    if (this.objetoComiteTecnico.sesionComiteSolicitud) {
+      this.objetoComiteTecnico.sesionComiteSolicitud.forEach(sol => {
+        sol.completo = true;
+        if (sol.requiereVotacion == true) {
+          if (sol.sesionSolicitudVoto.length == 0)
+            cantidadSolicitudes++;
 
-        sol.sesionSolicitudVoto.forEach(vot => {
+          sol.sesionSolicitudVoto.forEach(vot => {
+            cantidadSolicitudes++;
+            if (vot.esAprobado == false || vot.esAprobado == true) {
+              cantidadSolicitudesCompletas++;
+            } else {
+              sol.completo = false;
+            }
+          })
+        } else if (sol.requiereVotacion == false) {
           cantidadSolicitudes++;
-          if (vot.esAprobado == false || vot.esAprobado == true) {
-            cantidadSolicitudesCompletas++;
-          } else {
-            sol.completo = false;
-          }
-        })
-      } else if (sol.requiereVotacion == false) {
-        cantidadSolicitudes++;
-        cantidadSolicitudesCompletas++;
-      }
-      else {
-        cantidadSolicitudesCompletas--;
-      }
-    })
+          cantidadSolicitudesCompletas++;
+        }
+        else {
+          cantidadSolicitudesCompletas--;
+        }
+      })
 
-    if (cantidadSolicitudes > 0) {
-      this.estadoSolicitudes = this.estadoFormulario.enProceso;
-      if (cantidadSolicitudes == cantidadSolicitudesCompletas)
-        this.estadoSolicitudes = this.estadoFormulario.completo;
+      if (this.objetoComiteTecnico.sesionComiteSolicitud.length > 0)
+      {
+        if (cantidadSolicitudes > 0)  {
+          this.estadoSolicitudes = this.estadoFormulario.enProceso;
+          if (cantidadSolicitudes == cantidadSolicitudesCompletas)
+            this.estadoSolicitudes = this.estadoFormulario.completo;
+        }
+      }else{
+        this.estadoSolicitudes = '';
+      }
     }
+    
   }
 
   validarTemas(esProposicion: boolean) {
@@ -209,19 +217,19 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
         if (tem.requiereVotacion == true) {
           //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-            if (tem.sesionTemaVoto.length == 0)
-              cantidadTemas++;
+          if (tem.sesionTemaVoto.length == 0)
+            cantidadTemas++;
 
-            tem.sesionTemaVoto.forEach(vot => {
-              cantidadTemas++;
-              
-              if (vot.esAprobado == false || vot.esAprobado == true) {
-                cantidadTemasCompletas++;
-              } else {
-                tem.completo = false;
+          tem.sesionTemaVoto.forEach(vot => {
+            cantidadTemas++;
 
-              }
-            })
+            if (vot.esAprobado == false || vot.esAprobado == true) {
+              cantidadTemasCompletas++;
+            } else {
+              tem.completo = false;
+
+            }
+          })
           //})
         } else if (tem.requiereVotacion == false) {
           cantidadTemas++;
@@ -275,7 +283,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     let grupo = this.invitados.controls[i] as FormGroup;
     console.log(grupo, this.invitados, i)
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
-    this.technicalCommitteSessionService.deleteSesionInvitado( idInvitado )
+    this.technicalCommitteSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
         this.openDialog('', 'La información se ha eliminado correctamente.')
         this.borrarArray(this.invitados, i)

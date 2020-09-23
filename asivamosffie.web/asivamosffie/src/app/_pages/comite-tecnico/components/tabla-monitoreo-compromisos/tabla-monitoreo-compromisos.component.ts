@@ -35,7 +35,7 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
 
       this.technicalCommitteeSessionService.getListComiteGrilla()
         .subscribe( response => {
-          response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionEnviada )
+          response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
           this.dataSource = new MatTableDataSource( response );
       })
 
