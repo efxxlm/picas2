@@ -89,10 +89,7 @@
         public const string COMITE_FECHA = "74";
         public const string COMITE_FECHA_APLAZAMIENTO = "75";
         #endregion
-
-
-
-
+         
         #region DDP Contratacion
 
         public const string FECHA_EXPEDICION = "76";
@@ -140,8 +137,50 @@
         public const string FU_FASE = "116";
         public const string FU_USO = "117";
         public const string VALOR_DE_USO = "118";
-        public const string REGISTROS_FUENTES_USO = "119"; 
+        public const string REGISTROS_FUENTES_USO = "119";
 
+        #endregion
+
+
+        #region Acta
+        public const string    NUMERO_COMITE = "2";
+         public const string   FECHA_COMITE ="";
+         public const string   MIEMBROS_PARTICIPANTES ="";
+         public const string   REGISTROS_TABLA_INVITADOS ="";
+         public const string   REGISTROS_ORDEN_DEL_DIA ="";
+         public const string   SOLICITUDES_CONTRATO ="";
+         public const string   SOLICITUDES_PROCESO_SELECCION ="";
+         public const string   TAREA_COMPROMISO ="";
+         public const string   RESPONSABLE_COMPROMISO ="";
+         public const string   REGISTROS_TEMAS ="";
+         public const string   INVITADO_NOMBRE ="";
+         public const string   INVITADO_CARGO ="";
+         public const string   INVITADO_ENTIDAD ="";
+        // public const string   NUMERO_SOLICITUD ="";
+         public const string   NUMERO_SOLICITUD_CONTRATACION ="";
+         //public const string   NUMERO_SOLICITUD_CONTRATACION ="";
+         public const string   TIPO_SOLICITUD_CONTRATACION ="";
+         //public const string   TIPO_SOLICITUD_CONTRATACION ="";
+         public const string   REGISTROS_TABLA_PROYECTO ="";
+         //public const string   LLAVE_MEN ="";
+         public const string   TIPO_INTERVENCION ="";
+         //public const string   DEPARTAMENTO ="";
+         //public const string   MUNICIPIO ="";
+         //public const string   INSTITUCION_EDUCATIVA ="";
+         //public const string   SEDE ="";
+         //public const string   NUMERO_SOLICITUD ="";
+         public const string   TIPO_PROCESO ="";
+         public const string   OBJETO_PROCESO ="";
+         public const string   ALCANCE_PARTICULAR_PROCESO ="";
+         public const string   JUSTIFICACION_PROCESO ="";
+         public const string   TIPO_INTERVENCION_PROCESO ="";
+         public const string   TIPO_ALCANCE_PROCESO ="";
+         public const string   URL_SOPORTES_VOTO ="";
+         public const string   NUMERO_DE_TEMA ="";
+         public const string   NOMBRE_DE_TEMA ="";
+         public const string   RESPONSABLE_DE_TEMA ="";
+         public const string   DESARROLLO_DE_TEMA ="";
+         public const string   RESULTADO_DE_VOTACION ="";
         #endregion
     }
 }
