@@ -2605,20 +2605,32 @@ namespace asivamosffie.services
                 .Contenido;
 
             string RegistrosInvitados = string.Empty;
+             
+            //Logica Orden Del Dia
+            
 
 
-            foreach (var item in ListInvitados)
+            foreach (var invitado in ListInvitados)
             {
                 RegistrosInvitados += PlantillaInvitados;
                 foreach (Dominio placeholderDominio in placeholders)
                 {
                     switch (placeholderDominio.Codigo)
                     {
-                        case ConstanCodigoVariablesPlaceHolders.NUMERO_COMITE:
+                        case ConstanCodigoVariablesPlaceHolders.INVITADO_NOMBRE:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, pComiteTecnico.NumeroComite);
+                                .Replace(placeholderDominio.Nombre, invitado.Nombre);
+                            break; 
+
+                        case ConstanCodigoVariablesPlaceHolders.INVITADO_CARGO:
+                            strContenido = strContenido
+                                .Replace(placeholderDominio.Nombre, invitado.Cargo);
                             break;
 
+                        case ConstanCodigoVariablesPlaceHolders.INVITADO_ENTIDAD:
+                            strContenido = strContenido
+                                .Replace(placeholderDominio.Nombre, invitado.Entidad);
+                            break;
                     }
                 }
             }
@@ -2630,6 +2642,13 @@ namespace asivamosffie.services
             {
                 switch (placeholderDominio.Codigo)
                 {
+                    //Tablas dinamicas
+                     
+                    case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_INVITADOS:
+                        strContenido = strContenido
+                            .Replace(placeholderDominio.Nombre, RegistrosInvitados);
+                        break;
+
                     case ConstanCodigoVariablesPlaceHolders.NUMERO_COMITE:
                         strContenido = strContenido
                             .Replace(placeholderDominio.Nombre, pComiteTecnico.NumeroComite);

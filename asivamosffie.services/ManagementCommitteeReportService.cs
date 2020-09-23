@@ -131,26 +131,31 @@ namespace asivamosffie.services
             try
             {
 
-                return await (from a in _context.SesionComiteTecnicoCompromiso
-                              join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
-                              join sc in _context.SesionComiteSolicitud on a.ComiteTecnicoId equals sc.ComiteTecnicoId
-                              where s.Eliminado != true && sc.ComiteTecnicoId == comiteTecnicoId
-                              select new ComiteTecnico
-                              {
-                                  ComiteTecnicoId = s.ComiteTecnicoId,
-                                  FechaCreacion = s.FechaCreacion,
-                                  NumeroComite = s.NumeroComite,
-                                  EstadoComiteCodigo = sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
+                //return await (from a in _context.SesionComiteTecnicoCompromiso
+                //              join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
+                //              join sc in _context.SesionComiteSolicitud on a.ComiteTecnicoId equals sc.ComiteTecnicoId
+                //              where s.Eliminado != true && sc.ComiteTecnicoId == comiteTecnicoId
+                //              select new ComiteTecnico
+                //              {
+                //                  ComiteTecnicoId = s.ComiteTecnicoId,
+                //                  FechaCreacion = s.FechaCreacion,
+                //                  NumeroComite = s.NumeroComite,
+                //                  EstadoComiteCodigo = sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
 
-                              }).ToListAsync();
-
-
-
+                //              }).ToListAsync();
+                return await _context.ComiteTecnico
+                        .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
+                            .Include(r => r.SesionComiteTema)
+                            .Include(r => r.SesionComiteTecnicoCompromiso)
+                            .Include(r => r.SesionComiteTecnicoCompromiso)
+                            .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                            .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                        .ToListAsync(); 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                return new List<ComiteTecnico>();
             }
         }
 
