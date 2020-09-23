@@ -116,9 +116,10 @@ namespace asivamosffie.services
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport()
         { 
             return await _context.ComiteTecnico
-                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion && !(bool)r.Eliminado)
+                .Where(r => !(bool)r.Eliminado)
                   .Include(r => r.SesionComiteTecnicoCompromiso)
-                  .Include(r=> r.SesionComiteSolicitudComiteTecnico) 
+                  .Include(r=> r.SesionComiteSolicitudComiteTecnico)
+                  .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                   .ToListAsync(); 
         }
 
