@@ -404,6 +404,7 @@ namespace asivamosffie.services
             List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
             List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r => !(bool)r.Eliminado).Include(r => r.Usuario).ToList();
 
+            comiteTecnico.NumeroCompromisos = 0;
             foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
             {
                 foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso)
@@ -416,6 +417,9 @@ namespace asivamosffie.services
                     {
                         TemaCompromiso.ResponsableNavigation = ListSesionParticipantes.Where(r => r.SesionParticipanteId == TemaCompromiso.Responsable).FirstOrDefault();
                     }
+                    if (TemaCompromiso.EstadoCodigo == "3")
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
                 }
             }
 
@@ -432,8 +436,13 @@ namespace asivamosffie.services
                     {
                         SesionSolicitudCompromiso.ResponsableSesionParticipante = ListSesionParticipantes.Where(r => r.SesionParticipanteId == SesionSolicitudCompromiso.ResponsableSesionParticipanteId).FirstOrDefault();
                     }
+                    if ( SesionSolicitudCompromiso.EstadoCodigo == "3" )
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
                 }
             }
+
+
 
             return comiteTecnico;
         }
@@ -1280,6 +1289,43 @@ namespace asivamosffie.services
             return ListSesionComiteTemaDyn;
         }
 
+        private int numeroCompromisos( int idComiteTecnico, bool esCumplido ){
+            ComiteTecnico comiteTecnico = _context.ComiteTecnico.Where( ct => ct.ComiteTecnicoId == idComiteTecnico )
+                                                                .Include( r => r.SesionComiteSolicitudComiteTecnico )
+                                                                    .ThenInclude( r => r.SesionSolicitudCompromiso )
+                                                                .Include( r => r.SesionComiteTema )
+                                                                    .ThenInclude( r => r.TemaCompromiso )
+                                                                .FirstOrDefault();
+
+            comiteTecnico.NumeroCompromisos = 0;
+            comiteTecnico.NumeroCompromisosCumplidos = 0;
+            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
+            {
+                foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso)
+                {
+                    if (TemaCompromiso.EstadoCodigo == "3")
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
+                }
+            }
+
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+            {
+                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                {
+                    if ( SesionSolicitudCompromiso.EstadoCodigo == "3" )
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
+                }
+            }
+
+            if (esCumplido)
+                return comiteTecnico.NumeroCompromisosCumplidos;
+            else
+                return comiteTecnico.NumeroCompromisos;
+
+        }
+
         public async Task<List<ComiteGrilla>> GetListComiteGrilla()
         {
             List<Dominio> ListaEstadoComite = await _context.Dominio
@@ -1292,7 +1338,9 @@ namespace asivamosffie.services
           .ToListAsync();
             try
             {
-                var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario).Select(x => new
+                var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
+                                                                    .Include( r => r.SesionComiteTecnicoCompromiso )
+                                                                    .Select(x => new
                 {
                     Id = x.ComiteTecnicoId,
                     FechaComite = x.FechaOrdenDia,
@@ -1318,7 +1366,9 @@ namespace asivamosffie.services
                             EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
                             EstadoActaCodigo = comite.EstadoActaCodigo,
                             RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
-                            RegistroCompleto = comite.EsCompleto
+                            RegistroCompleto = comite.EsCompleto,
+                            NumeroCompromisos = numeroCompromisos( comite.Id, false ),
+                            NumeroCompromisosCumplidos = numeroCompromisos( comite.Id, true )
                         };
 
                         ListComiteGrilla.Add(comiteGrilla);

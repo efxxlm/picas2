@@ -43,52 +43,51 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
   }
 
   constructor(
-              public dialog: MatDialog,
-              private activatedRoute: ActivatedRoute,
-              private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-              private commonService: CommonService,
-              
-              ) 
-  { }
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute,
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+    private commonService: CommonService,
+
+  ) { }
 
   ngOnInit(): void {
 
-   
+
     this.estadosArray
 
-    this.activatedRoute.params.subscribe( parametros => {
+    this.activatedRoute.params.subscribe(parametros => {
 
-      forkJoin([ 
-        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId( parametros.id ),
+      forkJoin([
+        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id),
         this.commonService.listaEstadoCompromisos(),
-        
-       ]).subscribe( respuesta => {
 
-          respuesta[0].sesionComiteTema.forEach( tem => {
-            tem.temaCompromiso.forEach( tc => 
-              { 
-                tc.nombreResponsable = `${ tc.responsableNavigation.usuario.nombres } ${ tc.responsableNavigation.usuario.apellidos }`; 
-                tc.nombreEstado = tc.estadoCodigo;
-                tc.estadoCodigo = null;
-              });
-            this.listaCompromisos = this.listaCompromisos.concat( tem.temaCompromiso ); 
-          })
+      ]).subscribe(respuesta => {
 
-          respuesta[0].sesionComiteSolicitud.forEach( sol => {
-            sol.sesionSolicitudCompromiso.forEach( sc => 
-              { 
-                sc.nombreResponsable = `${ sc.responsableSesionParticipante.usuario.nombres } ${ sc.responsableSesionParticipante.usuario.apellidos }` 
-                sc.nombreEstado = sc.estadoCodigo;
-                sc.estadoCodigo = null;
-              });
-            this.listaCompromisos = this.listaCompromisos.concat( sol.sesionSolicitudCompromiso );
-          })
-
-          this.estadosArray = respuesta[1];
-
-          this.dataSource = new MatTableDataSource( this.listaCompromisos );
-
+        respuesta[0].sesionComiteTema.forEach(tem => {
+          tem.temaCompromiso.forEach(tc => {
+            tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
+            tc.nombreEstado = tc.estadoCodigo;
+            tc.estadoCodigo = null;
+          });
+          this.listaCompromisos = this.listaCompromisos.concat(tem.temaCompromiso);
         })
+
+        if (respuesta[0].sesionComiteSolicitud) {
+          respuesta[0].sesionComiteSolicitud.forEach(sol => {
+            sol.sesionSolicitudCompromiso.forEach(sc => {
+              sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
+              sc.nombreEstado = sc.estadoCodigo;
+              sc.estadoCodigo = null;
+            });
+            this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
+          })
+        }
+
+        this.estadosArray = respuesta[1];
+
+        this.dataSource = new MatTableDataSource(this.listaCompromisos);
+
+      })
     })
 
     this.dataSource.sort = this.sort;
@@ -108,7 +107,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     };
   }
 
-  onChange(id: number, valor: any ){
+  onChange(id: number, valor: any) {
 
   }
 
@@ -125,7 +124,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     });
   }
 
-  onSave(){
+  onSave() {
 
     let comite: ComiteTecnico = {
       sesionComiteTema: [],
@@ -133,26 +132,26 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     }
 
     let tema: SesionComiteTema = {
-      temaCompromiso: this.listaCompromisos.filter( c => c.temaCompromisoId > 0 && c.estadoCodigo )
+      temaCompromiso: this.listaCompromisos.filter(c => c.temaCompromisoId > 0 && c.estadoCodigo)
     }
-    if ( tema.temaCompromiso.length > 0 )
-    comite.sesionComiteTema.push( tema );
+    if (tema.temaCompromiso.length > 0)
+      comite.sesionComiteTema.push(tema);
 
     let solicitud: SesionComiteSolicitud = {
-      sesionSolicitudCompromiso: this.listaCompromisos.filter( c => c.sesionSolicitudCompromisoId > 0 && c.estadoCodigo )
+      sesionSolicitudCompromiso: this.listaCompromisos.filter(c => c.sesionSolicitudCompromisoId > 0 && c.estadoCodigo)
     }
-    if ( solicitud.sesionSolicitudCompromiso.length > 0 )
-      comite.sesionComiteSolicitud.push( solicitud );
+    if (solicitud.sesionSolicitudCompromiso.length > 0)
+      comite.sesionComiteSolicitud.push(solicitud);
 
-    this.technicalCommitteeSessionService.verificarTemasCompromisos( comite )
-      .subscribe( respuesta => {
+    this.technicalCommitteeSessionService.verificarTemasCompromisos(comite)
+      .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
-        if ( respuesta.code == "200" ){
+        if (respuesta.code == "200") {
           this.listaCompromisos = [];
           this.ngOnInit();
         }
 
-      } )
+      })
 
   }
 
