@@ -9,11 +9,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FormRequisitosTecnicosConstruccionComponent } from './components/form-requisitos-tecnicos-construccion/form-requisitos-tecnicos-construccion.component';
 import { QuillModule } from 'ngx-quill';
 import { DiagnosticoComponent } from './components/diagnostico/diagnostico.component';
+import { PlanesProgramasComponent } from './components/planes-programas/planes-programas.component';
+import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
 
 @NgModule({
   declarations: [
     RequisitosTecnicosConstruccionComponent, 
-    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent
+    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent, PlanesProgramasComponent, DialogObservacionesComponent
   ],
   imports: [
     CommonModule,

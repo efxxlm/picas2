@@ -1,0 +1,136 @@
+{{ require }}
+<div class="w-100">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="planesProgramas">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Planes y programas </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.nombrePlanesProgramas }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="recibioRequisito">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿Se recibio el requisito? </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <section class="mt-1em">
+          <mat-form-field class="w-50" appearance="fill">
+            <mat-select [(ngModel)]="element.recibioRequisito" class="padding-left">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let requisito of booleanosRequisitos" [value]="requisito.value">
+                {{requisito.viewValue}}
+              </mat-option>
+              <mat-option *ngIf="( element.id === 11 ) || ( element.id === 12 ) || ( element.id === 13 )" [value]="false">
+                No se requiere
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaRadicado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de radicado </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <section *ngIf="element.recibioRequisito" class="mt-1em w-60">
+          <button mat-button 
+                  color="primary" 
+                  type="button" 
+                  (click)="fechaRadicado.open()" 
+                  class="btn-calendario">
+          <img  class="mr-bottom-1" 
+                src="assets/img/icon/calendarioCirculo.svg" 
+                alt="Abrir Calendario">
+          </button>
+          <mat-form-field class="mt-min" 
+                          appearance="fill">
+          <input  matInput 
+                  [matDatepicker]="fechaRadicado" 
+                  [(ngModel)]="element.fechaRadicado"
+                  placeholder="DD/MM/AAAA">
+          <mat-datepicker #fechaRadicado></mat-datepicker>
+          </mat-form-field>
+        </section>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaAprobacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <section *ngIf="element.recibioRequisito" class="mt-1em w-60">
+          <button mat-button 
+                  color="primary" 
+                  type="button" 
+                  (click)="fechaAprobacion.open()" 
+                  class="btn-calendario">
+          <img  class="mr-bottom-1" 
+                src="assets/img/icon/calendarioCirculo.svg" 
+                alt="Abrir Calendario">
+          </button>
+          <mat-form-field class="mt-min" 
+                          appearance="fill">
+          <input  matInput 
+                  [matDatepicker]="fechaAprobacion" 
+                  [(ngModel)]="element.fechaAprobacion"
+                  placeholder="DD/MM/AAAA">
+          <mat-datepicker #fechaAprobacion></mat-datepicker>
+          </mat-form-field>
+        </section>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="requiereObservacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> ¿Se tienen observaciones frente al requisito? </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <section class="mt-1em">
+          <mat-form-field class="w-50" appearance="fill">
+            <mat-select [(ngModel)]="element.requiereObservacion" class="padding-left">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let requisito of booleanosObservacion" [value]="requisito.value">
+                {{requisito.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="observaciones">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <section *ngIf="element.requiereObservacion">
+          <button mat-raised-button
+                  color="accent" 
+                  class="btn-table expansion-style--title sin-diligenciar btn-color h-2em"
+                  (click)="openDialog( element.nombrePlanesProgramas, element.id )">
+                  <small class="mr-1em">Observaciones</small>
+          </button>
+        </section>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+<section class="text-center container w-100 mt-2em">
+  <div class="d-flex mt-1em">
+    <label class="ml-5em"><b>URL con soporte</b></label>
+    <div class="w-80">
+      <mat-form-field>
+        <input matInput type="text" [(ngModel)]="urlSoporte">
+      </mat-form-field>
+    </div>
+  </div>
+  
+  <div class="text-center">
+    <p><small>Indique la ruta del soporte de esta información</small></p>
+  </div>
+</section>
+
+<div class="text-center">
+  <button mat-button 
+          color="warn" 
+          class="btn-guardar" 
+          type="button"
+          (click)="guardar()">
+          <img  src="assets/img/icon/guardar.svg">
+  </button>
+</div>
