@@ -58,14 +58,16 @@ namespace asivamosffie.services
                 foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP)
                 {
                     int ProyectosNoCompletos = 0;
-                    bool VerBotonAprobarInicio = true; 
+                    bool VerBotonAprobarInicio = true;
 
-                    if (ContratoConPolizasYDRP.ContratoPerfil.Count() == 0) {
+                    if (ContratoConPolizasYDRP.ContratoPerfil.Count() == 0)
+                    {
                         VerBotonAprobarInicio = false;
                     }
                     foreach (var ContratoPerfil in ContratoConPolizasYDRP.ContratoPerfil)
                     {
-                        if (!string.IsNullOrEmpty(ContratoPerfil.FechaAprobacion.ToString())) {
+                        if (!string.IsNullOrEmpty(ContratoPerfil.FechaAprobacion.ToString()))
+                        {
 
                             VerBotonAprobarInicio = false;
                         }
@@ -113,13 +115,14 @@ namespace asivamosffie.services
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
                 List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
-                         .Include(r => r.ContratoPerfil)
-                            .Include(r => r.ContratoPoliza)
-                         .Include(r => r.Contratacion)
-                             .ThenInclude(r => r.ContratacionProyecto)
-                                .ThenInclude(r => r.Proyecto)
-                          .Include(r => r.Contratacion)
-                             .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
+                    .Include(r => r.ContratoObservacion)
+                    .Include(r => r.ContratoPerfil)
+                    .Include(r => r.ContratoPoliza)
+                    .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.ContratacionProyecto)
+                             .ThenInclude(r => r.Proyecto)
+                    .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
 
                 if (contrato.ContratoPerfil.Count() > 0)
                 {
@@ -149,6 +152,7 @@ namespace asivamosffie.services
 
             try
             {
+                //Create Edit
                 foreach (var ContratoPerfil in pContrato.ContratoPerfil)
                 {
                     if (ContratoPerfil.ContratoPerfilId > 0)
@@ -185,7 +189,7 @@ namespace asivamosffie.services
                             {
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                                ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
+                                // ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
 
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
@@ -208,12 +212,22 @@ namespace asivamosffie.services
                             ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                             ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
 
-                            _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion); 
+                            _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                         }
-                    }
-
-                    _context.SaveChanges();
-                }
+                    } 
+                }  
+                //Cambiar Estado Requisitos 
+                if (pContrato.ContratoPerfil
+                    .Where(r => (bool)r.RegistroCompleto).Count() 
+                    == pContrato.ContratoPerfil.Count() 
+                    && pContrato.ContratoPerfil.Count() > 1)
+                {
+                    Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
+                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.En_proceso_de_aprobación_de_requisitos_tecnicos;
+                    contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                    contratoOld.FechaModificacion = DateTime.Now;
+                } 
+                _context.SaveChanges();
                 return
                     new Respuesta
                     {
@@ -237,6 +251,7 @@ namespace asivamosffie.services
                     };
             }
         }
+ 
 
         public async Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion)
         {
