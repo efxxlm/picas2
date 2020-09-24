@@ -2581,6 +2581,7 @@ namespace asivamosffie.services
                 .Where(r => r.ComiteTecnicoId == ComiteId)
                     .Include(r => r.SesionComiteTema)
                     .Include(r=> r.SesionComiteSolicitudComiteTecnico) 
+                       .ThenInclude(r=> r.SesionSolicitudCompromiso)
                     .FirstOrDefaultAsync();
 
             if (comiteTecnico == null)
@@ -2744,22 +2745,28 @@ namespace asivamosffie.services
                                         .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitud);
                                     break;
 
-                                case ConstanCodigoVariablesPlaceHolders.RESULTADO_DE_VOTACION:
-                                    string strRequiereVotacion = "Si"; 
+                                case ConstanCodigoVariablesPlaceHolders.RESULTADO_DE_VOTACION: 
+
+                                    string strRequiereVotacion = "Sí fue requerida"; 
                                     if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
                                     {
-                                         strRequiereVotacion = "No";
+                                         strRequiereVotacion = "No fue requerida";
                                     }
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                     break;
-                            }
-                        }
 
+                                case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD: 
+                                    registrosContratacion = registrosContratacion
+                                    .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                    break;
+                            }
+                        } 
                         break;
 
 
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+
                         ProcesoSeleccion procesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
                         foreach (Dominio placeholderDominio in placeholders)
@@ -2806,6 +2813,27 @@ namespace asivamosffie.services
                                     .Replace(placeholderDominio.Nombre,
                                     ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_alcance
                                     && r.Codigo == procesoSeleccion.TipoAlcanceCodigo).FirstOrDefault().Nombre);
+                                    break;
+
+                                case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
+                                    registrosContratacion = registrosContratacion
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitud);
+                                    break;
+
+                                case ConstanCodigoVariablesPlaceHolders.RESULTADO_DE_VOTACION:
+
+                                    string strRequiereVotacion = "Sí fue requerida";
+                                    if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                    {
+                                        strRequiereVotacion = "No fue requerida";
+                                    }
+                                    registrosContratacion = registrosContratacion
+                                    .Replace(placeholderDominio.Nombre, strRequiereVotacion);
+                                    break;
+
+                                case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
+                                    registrosContratacion = registrosContratacion
+                                    .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
                                     break;
                             }
                         }

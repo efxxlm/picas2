@@ -229,16 +229,17 @@ namespace asivamosffie.services
         {
 
             List<Contratacion> ListContratacion = await _context.Contratacion.Where( r => !(bool)r.Eliminado ).ToListAsync();
-
+            List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
+           
             foreach (var Contratacion in ListContratacion)
             {
                 if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
                 {
-                    Contratacion.TipoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
+                    Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r=> r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
                 }
                 if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                 {
-                    Contratacion.EstadoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud);
+                    Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
                 }
             }
             return ListContratacion.OrderByDescending(r=> r.ContratacionId).ToList();
