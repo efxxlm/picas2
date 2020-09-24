@@ -167,7 +167,19 @@ namespace asivamosffie.services
                     {
                         if (!string.IsNullOrEmpty(SesionComiteTema.ResponsableCodigo))
                         {
-                            SesionComiteTema.ResponsableCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico && r.Codigo == SesionComiteTema.ResponsableCodigo).FirstOrDefault().Nombre;
+                            SesionComiteTema.ResponsableCodigo = ListParametricas
+                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico && r.Codigo == SesionComiteTema.ResponsableCodigo)
+                                .FirstOrDefault().Nombre;
+
+                        }
+                    }
+                    foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
+                    {
+                        if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
+                        {
+                            SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
+                                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                                    && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
                         }
                     }
                 }
