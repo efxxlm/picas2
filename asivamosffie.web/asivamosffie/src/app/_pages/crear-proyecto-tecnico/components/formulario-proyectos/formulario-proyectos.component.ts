@@ -415,12 +415,12 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   getCodigoDane() {
-    this.codigoDaneSede = this.proyecto.sede.codigoDane;
+    this.codigoDaneSede = this.proyecto.sede?this.proyecto.sede.codigoDane:"";
   }
 
   getSede(sedeid?:number) {
     // console.log(this.proyecto.institucionEducativaId);
-    this.CodigoDaneIE = this.proyecto.institucionEducativa.codigoDane;
+    this.CodigoDaneIE = this.proyecto.institucionEducativa?this.proyecto.institucionEducativa.codigoDane:"";
     console.log("loading sede");
     this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId)
       .subscribe(respuesta => {
