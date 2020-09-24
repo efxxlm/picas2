@@ -17,8 +17,8 @@ namespace asivamosffie.model.APIModels
         public string RegistroCompletoNombre { get; set; }
 
         public int NumeroCompromisos { get; set; }
-
         public int NumeroCompromisosCumplidos { get; set; }
+        public Boolean? EsComiteFiduciario { get; set; }
 
     }
 }

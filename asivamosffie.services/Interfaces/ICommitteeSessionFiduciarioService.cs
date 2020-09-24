@@ -12,10 +12,10 @@ namespace asivamosffie.services.Interfaces
     {
 
         #region "ORDEN DEL DIA";
-        Task<List<ComiteTecnico>> GetRequestCommitteeSessionById(int comiteTecnicoId);
+        Task<ComiteTecnico> GetRequestCommitteeSessionById(int comiteTecnicoId);
         Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite);
         Task<List<SesionComiteTema>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId);
-        Task<List<ComiteTecnico>> GetCommitteeSession();
+        Task<List<ComiteGrilla>> GetCommitteeSession();
 
         Task<Respuesta> CallCommitteeSession(int comiteTecnicoId, string user);
         Task<bool> DeleteTema(int sesionTemaId, string user);

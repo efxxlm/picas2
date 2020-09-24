@@ -1370,7 +1370,8 @@ namespace asivamosffie.services
                             RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
                             RegistroCompleto = comite.EsCompleto,
                             NumeroCompromisos = numeroCompromisos(comite.Id, false),
-                            NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true)
+                            NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true),
+                            EsComiteFiduciario = comite.EsComiteFiduciario,
                         };
 
                         ListComiteGrilla.Add(comiteGrilla);

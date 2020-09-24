@@ -32,6 +32,13 @@ namespace asivamosffie.model.Models
         public string UsuarioComiteFiduciario { get; set; }
         public string EstadoActaCodigo { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public string DesarrolloSolicitudFiduciario { get; set; }
+        public string EstadoActaCodigoFiduciario { get; set; }
+        public string ObservacionesFiduciario { get; set; }
+        public string RutaSoporteVotacionFiduciario { get; set; }
+        public Boolean? GeneraCompromisoFiduciario { get; set; }
+        public int? CantCompromisosFiduciario { get; set; }
+        public Boolean? RequiereVotacionFiduciario { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual ComiteTecnico ComiteTecnicoFiduciario { get; set; }

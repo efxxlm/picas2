@@ -8,6 +8,7 @@ export interface DataSesion {
   fechaSolicitud: string;
   numeroSolicitud: string;
   tipoSolicitud: string;
+  idSolicitud?: number;
 };
 
 export interface ComiteFiduciario {
@@ -29,6 +30,7 @@ export interface Temas {
 export interface DataTable {
   estado: boolean;
   solicitud: SolicitudContractual;
+  data?: any[]
 };
 
 export interface ColumnasTabla {

@@ -18,14 +18,14 @@
     <mat-form-field appearance="fill" class="width-20">
       <mat-select [formControl]="tipoDeTemas" multiple required (selectionChange)="getvalues( $event.value )">
         <mat-select-trigger>
-          <small>
-            {{tipoDeTemas.value ? tipoDeTemas.value[0] : ''}}
-            <span *ngIf="tipoDeTemas.value?.length > 1">
-              , {{ tipoDeTemas.value ? tipoDeTemas.value[1] : '' }}
+          <small >
+            {{ (tipoDeTemas.value && tipoDeTemas.value[0]) ? tipoDeTemas.value[0].nombre : ''}}
+            <span *ngIf="tipoDeTemas.value  ?.length > 1">
+              , {{ tipoDeTemas.value ? tipoDeTemas.value[1].nombre : '' }}
             </span>
           </small>
         </mat-select-trigger>
-        <mat-option *ngFor="let tema of temas" [value]="tema">{{tema}}</mat-option>
+        <mat-option *ngFor="let tema of listaTipoTemas" [value]="tema">{{tema.nombre}}</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -44,7 +44,7 @@
       <mat-expansion-panel class="expansion-style ml-5" *ngFor="let datasolicitud of dataSolicitudContractual">
         <mat-expansion-panel-header class="expansion-style--header width-40">
           <mat-panel-title class="expansion-style--title">
-            Sesión del {{ datasolicitud.fecha }} {{ datasolicitud.nombreSesion }}
+            Sesión del {{ datasolicitud.fecha | date: 'dd/MM/yyyy' }} {{ datasolicitud.nombreSesion }}
           </mat-panel-title>
         </mat-expansion-panel-header>
 
@@ -131,8 +131,8 @@
                   <span class="text-center d-block">Indique la ruta del soporte de esta información</span>
                 </div>
               </div>
-              <div class="text-right" *ngIf="tema.controls.length > 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(tema, i)">
+              <div class="text-right" *ngIf="tema.controls.length > 0">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarTema(i)">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                   Eliminar tema
                 </button>

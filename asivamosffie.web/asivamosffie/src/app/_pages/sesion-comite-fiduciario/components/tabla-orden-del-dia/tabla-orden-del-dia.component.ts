@@ -4,9 +4,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { Router } from '@angular/router';
-import { Sesion, EstadosComite, ComiteGrilla } from 'src/app/_interfaces/technicalCommitteSession';
+import { EstadosComite, ComiteGrilla } from 'src/app/_interfaces/technicalCommitteSession';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 
 @Component({
   selector: 'app-tabla-orden-del-dia',
@@ -29,19 +30,20 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   }
 
   constructor ( private router: Router,
-                public dialog: MatDialog ) 
+                public dialog: MatDialog,
+                private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,            
+                ) 
   {
 
   }
 
   ngOnInit(): void {
 
-    //Obtener data para la tabla de las ordenes creadas
-    /*getComiteGrilla()
+    this.fiduciaryCommitteeSessionService.getCommitteeSession()
       .subscribe( response => {
         
         this.dataSource = new MatTableDataSource( response );
-      })*/
+      })
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -68,12 +70,12 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   }
 
   onEdit(e: number) {
-    this.router.navigate(['/comiteFiduciario/crearOrdenDelDia',e ,'']);
+    this.router.navigate(['/comiteFiduciario/crearOrdenDelDia',e]);
   }
 
   onConvocar(e: number){
 
-    let sesion: Sesion = {
+    let sesion = {
       sesionId: e,
       estadoComiteCodigo: this.estadosComite.convocada
     }
