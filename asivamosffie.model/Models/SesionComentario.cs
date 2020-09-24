@@ -16,6 +16,6 @@ namespace asivamosffie.model.Models
         public int MiembroSesionParticipanteId { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
-        public virtual SesionParticipante MiembroSesionParticipante { get; set; }
+        public virtual Usuario MiembroSesionParticipante { get; set; }
     }
 }

@@ -80,11 +80,26 @@
                 <mat-card-content>
                   <h2 class="card-subTitle back-color">Desarrollo</h2>
                   <p><b>Tema</b>: {{ tema.tema }} </p>
-                  <p><b>Responsable</b>: </p>
+                  <p><b>Responsable</b>: {{ tema.responsableCodigo }} </p>
                   <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observaciones ) }} </p>
                   <h2 class="card-subTitle back-color">Decisiones</h2>
-                  <p><b>Estado de la solicitud</b>: </p>
+                  <p><b>Estado de la solicitud</b>: {{ tema.estadoTemaCodigo }} </p>
                   <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observacionesDecision ) }} </p>
+                  <h2 class="card-subTitle back-color">Compromisos</h2>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
+                        </div>
+                        <div class="col">
+                          <mat-radio-group class="radioInput">
+                            <mat-radio-button [value]="false" [checked]="true">No</mat-radio-button>
+                          </mat-radio-group>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </mat-card-content>
               </mat-card>
             </div>
@@ -114,11 +129,26 @@
                 <mat-card-content>
                   <h2 class="card-subTitle back-color">Desarrollo</h2>
                   <p><b>Tema</b>: {{ tema.tema }} </p>
-                  <p><b>Responsable</b>: </p>
+                  <p><b>Responsable</b>: {{ tema.responsableCodigo }} </p>
                   <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observaciones ) }} </p>
                   <h2 class="card-subTitle back-color">Decisiones</h2>
-                  <p><b>Estado de la solicitud</b>: </p>
+                  <p><b>Estado de la solicitud</b>: {{ tema.estadoTemaCodigo }} </p>
                   <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observacionesDecision ) }} </p>
+                  <h2 class="card-subTitle back-color">Compromisos</h2>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
+                        </div>
+                        <div class="col">
+                          <mat-radio-group class="radioInput">
+                            <mat-radio-button [value]="false" [checked]="true">No</mat-radio-button>
+                          </mat-radio-group>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </mat-card-content>
               </mat-card>
             </div>

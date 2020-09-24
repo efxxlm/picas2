@@ -119,8 +119,9 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-
+          
                 SesionComentario.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                SesionComentario.MiembroSesionParticipanteId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
                 respuesta = await _managementCommitteeReportService.CreateOrEditCommentReport(SesionComentario);
                 return Ok(respuesta);
 
