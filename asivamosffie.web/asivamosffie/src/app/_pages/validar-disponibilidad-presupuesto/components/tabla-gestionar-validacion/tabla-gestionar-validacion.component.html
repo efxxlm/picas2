@@ -44,7 +44,7 @@
         <td mat-cell *matCellDef="let element">
             <span class="info-text tabla"
                 [ngClass]="{'completo': element.estado === true, 'sin-diligenciar': element.estado === false}"></span>
-            {{element.estado?"Completo":"Incompleto"}}
+            {{element.estado?"Completo":"Incompleto"}} {{element.valorGestionado | currency:'':'symbol':'3.0'}}
         </td>
     </ng-container>
 

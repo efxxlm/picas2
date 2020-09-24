@@ -29,8 +29,8 @@ export class FuenteFinanciacionService {
   }
 
   
-  getListaFuenteFinanciacionByAportante( id: number ){
-    return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByAportanteId?AportanteId=${id}`);
+  GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid( id: number, idaportante:number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid?disponibilidadPresupuestalProyectoid=${id}&aportanteID=${idaportante}`);
   }
 
   registrarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){

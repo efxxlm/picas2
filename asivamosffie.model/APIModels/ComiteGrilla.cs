@@ -15,5 +15,10 @@ namespace asivamosffie.model.APIModels
         public string EstadoActaCodigo { get; set; }
         public bool? RegistroCompleto { get; set; }
         public string RegistroCompletoNombre { get; set; }
+
+        public int NumeroCompromisos { get; set; }
+
+        public int NumeroCompromisosCumplidos { get; set; }
+
     }
 }

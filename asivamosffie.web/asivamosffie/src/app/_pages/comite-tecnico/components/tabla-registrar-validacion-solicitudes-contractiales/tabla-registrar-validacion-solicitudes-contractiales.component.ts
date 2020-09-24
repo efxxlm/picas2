@@ -56,7 +56,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       sesionSolicitudVoto: [],
     }
 
-    console.log(elemento )
+    console.log(elemento)
 
 
     this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
@@ -120,15 +120,15 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   changeRequiere(check: boolean, solicitud: SesionComiteSolicitud) {
 
-    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach(sc => {
+    this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sc => {
 
-      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId){
+      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId) {
         solicitud.requiereVotacion = check;
         this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud(solicitud)
-        .subscribe(respuesta => {
-          sc.completo = !check;
-          this.validar.emit(null);
-        })
+          .subscribe(respuesta => {
+            sc.completo = !check;
+            this.validar.emit(null);
+          })
       }
     })
 
@@ -208,25 +208,27 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     };
   }
 
-  validarRegistros(){
-    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach( sc => {
-      sc.completo = true;
+  validarRegistros() {
+    if (this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+      this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sc => {
+        sc.completo = true;
 
-      if ( sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0 ) { sc.completo = false }
+        if (sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0) { sc.completo = false }
 
-      sc.sesionSolicitudVoto.forEach( ss => {
-        if ( ss.esAprobado != true && ss.esAprobado != false ){
-          sc.completo = false;
-        }
+        sc.sesionSolicitudVoto.forEach(ss => {
+          if (ss.esAprobado != true && ss.esAprobado != false) {
+            sc.completo = false;
+          }
+        })
       })
-    })
+    }
   }
 
   cargarRegistro() {
 
     this.validarRegistros();
 
-    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitud);
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
   }
 
 }

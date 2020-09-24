@@ -18,11 +18,11 @@ export class RegistrarAcuerdoComponent implements OnInit {
   loading = false;
 
   constructor(private fb: FormBuilder,
-              private cofinanciacionService: CofinanciacionService,
-              private commonService: CommonService,
-              public dialog: MatDialog,
-              private activatedRoute: ActivatedRoute,
-              private router: Router,
+    private cofinanciacionService: CofinanciacionService,
+    private commonService: CommonService,
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
   ) {
     this.maxDate = new Date();
   }
@@ -70,16 +70,16 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
           cof.cofinanciacionAportante.forEach(apor => {
             const grupo: FormGroup = this.createAportanteEditar(apor.tipoAportanteId,
-                                                                apor.nombreAportanteId,
-                                                                apor.cofinanciacionDocumento.length,
-                                                                apor.cofinanciacionId,
-                                                                apor.cofinanciacionAportanteId);
+              apor.nombreAportanteId,
+              apor.cofinanciacionDocumento.length,
+              apor.cofinanciacionId,
+              apor.cofinanciacionAportanteId);
 
             const valorTipo = this.selectTiposAportante.find(a => a.dominioId === apor.tipoAportanteId);
             const valorNombre = this.nombresAportante.find(a => a.dominioId === apor.nombreAportanteId);
             const idMunicipio = apor.municipioId ? apor.municipioId.toString() : "00000";
 
-            this.commonService.listaMunicipiosByIdDepartamento( idMunicipio.substring(0, 5) ).subscribe(mun => {
+            this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.substring(0, 5)).subscribe(mun => {
 
               const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio);
               const valorDepartamento = this.departamentos.find(a => a.localizacionId === idMunicipio.substring(0, 5));
@@ -144,25 +144,35 @@ export class RegistrarAcuerdoComponent implements OnInit {
     this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id]
       .get('departamento').value.localizacionId).subscribe(mun => {
         this.aportantes.controls[id].get('municipios').setValue(mun);
-      });
+      }); 
   }
+
 
   changeTipoAportante(p) {
     console.log(p);
   }
 
-  CambioNumeroAportantes() {    
+  borrarArray(borrarForm: any, i: number) {
+    
+    borrarForm.removeAt(i);
+
+    //this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
+
+  }
+
+  CambioNumeroAportantes() {
     const FormNumAportantes = this.datosAportantes.value;
-    if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
-      while (this.aportantes.length < FormNumAportantes.numAportes) {
-        this.aportantes.push(this.createAportante());  
-      }
-    } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
-      while (this.aportantes.length > FormNumAportantes.numAportes) {
-        //this.borrarAportante(this.aportantes, this.aportantes.length - 1);
-        // this.listaCofinancAportantes.pop();
-      }
-    }
+       if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
+         while (this.aportantes.length < FormNumAportantes.numAportes) {
+           this.aportantes.push(this.createAportante());
+         }
+       } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
+         while (this.aportantes.length > FormNumAportantes.numAportes) {
+          this.borrarArray(this.aportantes, this.aportantes.length - 1);
+         }
+       }
+    
+
   }
 
   createAportante(): FormGroup {
@@ -194,7 +204,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   createAportanteEditar(pTipo: number, pNombre: number, pCantidad: number, pCofinanciacionId: number, pCofinanciacionAportanteId: number)
-  : FormGroup {
+    : FormGroup {
     const grupo: FormGroup = this.fb.group({
       tipo: [pTipo, Validators.required],
       nombre: [pNombre],
@@ -276,7 +286,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     return;
   }
 
-  onSave( parcial: boolean ) {
+  onSave(parcial: boolean) {
     this.loading = true;
     this.listaAportantes();
 
@@ -316,8 +326,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
       if (!respuesta.isValidation) // have validations
       {
         console.log(respuesta);
-        if (parcial){
-          this.router.navigate([`/registrarAcuerdos/${ respuesta.data.cofinanciacionId }`]);
+        if (parcial) {
+          this.router.navigate([`/registrarAcuerdos/${respuesta.data.cofinanciacionId}`]);
         } else {
           this.router.navigate(['/gestionarAcuerdos']);
         }
@@ -415,6 +425,9 @@ export class RegistrarAcuerdoComponent implements OnInit {
     if (index > -1) {
       aportante.cofinanciacionDocumento.splice(index, 1);
       aportante.cauntosDocumentos--;
+
+      
+
     }
 
   }

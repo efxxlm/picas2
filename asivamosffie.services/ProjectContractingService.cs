@@ -234,14 +234,14 @@ namespace asivamosffie.services
             {
                 if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
                 {
-                    Contratacion.TipoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                    Contratacion.TipoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
                 }
                 if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                 {
                     Contratacion.EstadoSolicitudCodigo = await _commonService.GetNombreDominioByCodigoAndTipoDominio(Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud);
                 }
             }
-            return ListContratacion;
+            return ListContratacion.OrderByDescending(r=> r.ContratacionId).ToList();
         }
 
         public async Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio)
@@ -801,7 +801,7 @@ namespace asivamosffie.services
                     TipoSolicitudCodigo = pContratacion.TipoSolicitudCodigo,
                     FechaTramite = DateTime.Now,
                     NumeroSolicitud = await _commonService.EnumeradorContratacion(),
-                    EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.En_Revision,
+                    EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.Sin_Registro,
                     //Contratista = ContratistaId 
                     //EsObligacionEspecial = (bool),
                     //ConsideracionDescripcion = "" 

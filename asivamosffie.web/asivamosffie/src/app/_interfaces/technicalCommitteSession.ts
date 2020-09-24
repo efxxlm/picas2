@@ -35,6 +35,8 @@ export interface ComiteTecnico{
     fechaOrdenDia?: Date,
     numeroComite?: string,
     estadoComiteCodigo?: string,
+    numeroCompromisos?: number,
+    numeroCompromisosCumplidos?: number,
 
     sesionComiteTema?: SesionComiteTema[],
     sesionComiteSolicitudComiteTecnico?: SesionComiteSolicitud[],

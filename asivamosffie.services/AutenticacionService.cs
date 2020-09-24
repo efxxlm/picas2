@@ -36,9 +36,8 @@ namespace asivamosffie.services
             try
             {
 
-                //Task<Usuario> result = 
-                Usuario usuario = await this.GetUserByMail(pUsuario.Email);;
-                List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
+                Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
+                Usuario usuario = await result;
 
                
 
@@ -62,12 +61,14 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.ContrasenaIncorrecta };
                 }
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
-                {                                   
+                {
+                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = new { datausuario=usuario, dataperfiles=perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };                    
                 }
                 else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
+                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = new { datausuario = usuario, dataperfiles = perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };
                   
                 }

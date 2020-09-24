@@ -17,34 +17,9 @@ export interface PeriodicElement {
   nombreAportante: string;
   valorAportante: number;
   estado: boolean;
+  disponibilidadPresupuestalProyectoid:number;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    id: 1,
-    llaveMen: 'LL567444',
-    tipoInterventor: 'Remodelación',
-    departamento: 'Valle de Cauca',
-    municipio: 'Jamundí',
-    institucion: 'I.E Alfredo Bonilla Montaña',
-    sede: 'Única sede',
-    nombreAportante: 'FFIE',
-    valorAportante: 200000000,
-    estado: false
-  },
-  {
-    id: 2,
-    llaveMen: 'LL567444',
-    tipoInterventor: 'Remodelación',
-    departamento: 'Valle de Cauca',
-    municipio: 'Jamundí',
-    institucion: 'I.E Alfredo Bonilla Montaña',
-    sede: 'Única sede',
-    nombreAportante: 'Gobernación del Valle del Cauca',
-    valorAportante: 200000000,
-    estado: false
-  },
-];
 
 @Component({
   selector: 'app-tabla-gestionar-validacion',
@@ -63,7 +38,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
     'estado',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -84,14 +59,15 @@ export class TablaGestionarValidacionComponent implements OnInit {
       elements.push({
         llaveMen:element.llaveMen,
         departamento:element.departamento,
-        estado:false,//revisar
+        estado:element.valorGestionado==element.valorAportante,//
         id:element.aportanteID,//el aprotante id
         institucion:element.institucionEducativa,
         municipio:element.municipio,
         sede:element.sede,
         nombreAportante:element.nombreAportante,
         tipoInterventor:element.tipoIntervencion,//revisar
-        valorAportante:element.valorAportante
+        valorAportante:element.valorAportante,
+        disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto
       });
   
 

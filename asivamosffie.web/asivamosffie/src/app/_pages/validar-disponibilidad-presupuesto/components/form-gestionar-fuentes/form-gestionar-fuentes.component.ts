@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 
 @Component({
   selector: 'app-form-gestionar-fuentes',
@@ -34,9 +35,12 @@ export class FormGestionarFuentesComponent implements OnInit {
   institucion: any;
   sede: any;
   fuentesbase: any[];
+  disponibilidadPresupuestalProyectoid: any;
+  valorGestionado: any;
 
   constructor(
-    private fb: FormBuilder, private fuenteFinanciacionService: FuenteFinanciacionService,
+    private fb: FormBuilder, private fuenteFinanciacionService: FuenteFinanciacionService
+    , private disponibilidadPresupuestalService: DisponibilidadPresupuestalService,
     public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data
   ) { }
 
@@ -52,7 +56,9 @@ export class FormGestionarFuentesComponent implements OnInit {
     this.municipio=this.data.elemento.municipio;
     this.institucion=this.data.elemento.institucion;
     this.sede=this.data.elemento.sede;
-    this.fuenteFinanciacionService.getListaFuenteFinanciacionByAportante(this.data.elemento.id).subscribe(lista => {
+    this.disponibilidadPresupuestalProyectoid=this.data.elemento.disponibilidadPresupuestalProyectoid;
+    this.valorGestionado=this.data.elemento.valorGestionado;
+    this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(this.disponibilidadPresupuestalProyectoid,this.data.elemento.id).subscribe(lista => {
       console.log(lista);
       this.fuentesbase=lista;
       lista.forEach(element => {
@@ -63,13 +69,12 @@ export class FormGestionarFuentesComponent implements OnInit {
   }
   fuenteCambio(fuente:any)
   {
-    console.log(fuente);
-    let fuenteSeleccionada:any=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);
-    fuente.controls.saldoActual.value=fuenteSeleccionada.saldo_actual_de_la_fuente;
+    let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
+    fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
   }
   reste(fuente:any)
   {
-    fuente.controls.nuevoSaldo.value=fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value;
+    fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value);
     
   }
   openDialog(modalTitle: string, modalText: string) {
@@ -110,6 +115,17 @@ export class FormGestionarFuentesComponent implements OnInit {
   }
 
   onSubmit() {
-    this.openDialog('','Error al almacenar');
+    console.log(this.addressForm.controls.fuentes.value);
+    this.addressForm.controls.fuentes.value.forEach(fuente => {
+      let CreateFinancialFundingGestion={
+        FuenteFinanciacionId:fuente.fuentecampo,
+        ValorSolicitado:fuente.valorSolicitado,
+        DisponibilidadPresupuestalProyectoId:this.disponibilidadPresupuestalProyectoid};
+      this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result=>
+        {
+          console.log("Guardado");
+        });
+    });        
+    this.openDialog('','Guardado exitosamente');
   }
 }

@@ -73,6 +73,8 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
     let sesionComiteTema: SesionComiteTema = {
       sesionTemaId: elemento.sesionTemaId,
+      tema: elemento.tema,
+
       sesionTemaVoto: [],
       
     }
@@ -93,6 +95,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
           sesionParticipanteId: p.sesionParticipanteId,
           esAprobado: null,
           observacion: null,
+          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
   
         }  
       }

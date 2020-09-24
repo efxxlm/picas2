@@ -24,5 +24,6 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte);
         Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByAportanteId(int aportanteId);
+        Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int idaportante);
     }
 }

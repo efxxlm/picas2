@@ -26,10 +26,10 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetPlantillaActaBySesionComiteSolicitudId")]
-        public async Task<FileResult> GetPlantillaActaBySesionComiteSolicitudId(int SesionComiteSolicitudId)
+        [Route("GetPlantillaActaIdComite")]
+        public async Task<FileResult> GetPlantillaActaIdComite(int IdComite)
         {
-            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaBySesionComiteSolicitudId(SesionComiteSolicitudId), "application/pdf");
+            return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaIdComite(IdComite), "application/pdf");
         }
          
 
@@ -388,7 +388,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
+            { 
                 respuesta = await _registerSessionTechnicalCommitteeService.EliminarSesionComiteTema(pSesionComiteTemaId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }

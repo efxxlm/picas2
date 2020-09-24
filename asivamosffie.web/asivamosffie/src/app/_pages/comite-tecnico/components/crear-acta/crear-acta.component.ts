@@ -34,8 +34,8 @@ export class CrearActaComponent implements OnInit {
 
   }
 
-  callChildren( elements : NodeListOf<HTMLElement> ){
-    elements.forEach( control => {
+  callChildren(elements: NodeListOf<HTMLElement>) {
+    elements.forEach(control => {
       control.click();
     })
   }
@@ -44,6 +44,7 @@ export class CrearActaComponent implements OnInit {
 
     this.listaMiembros = [];
     this.objetoComiteTecnico.fechaOrdenDia
+    this.nombresParticipantes = '';
 
     this.activatedRoute.params.subscribe(parametros => {
 
@@ -51,74 +52,76 @@ export class CrearActaComponent implements OnInit {
         this.listaMiembros = respuesta;
 
         forkJoin([
-          this.technicalCommitteeSessionService.getComiteTecnicoByComiteTecnicoId( parametros.id ),
-          this.technicalCommitteeSessionService.getSesionParticipantesByIdComite( parametros.id ),
+          this.technicalCommitteeSessionService.getComiteTecnicoByComiteTecnicoId(parametros.id),
+          this.technicalCommitteeSessionService.getSesionParticipantesByIdComite(parametros.id),
 
         ]).subscribe(response => {
-            response[0].sesionParticipante = response[1];
-            this.objetoComiteTecnico = response[0];
+          response[0].sesionParticipante = response[1];
+          this.objetoComiteTecnico = response[0];
 
 
-            this.listaTemas = this.objetoComiteTecnico.sesionComiteTema.filter( t => t.esProposicionesVarios != true )
-            this.listaProposiciones = this.objetoComiteTecnico.sesionComiteTema.filter( t => t.esProposicionesVarios == true )
+          this.listaTemas = this.objetoComiteTecnico.sesionComiteTema.filter(t => t.esProposicionesVarios != true)
+          this.listaProposiciones = this.objetoComiteTecnico.sesionComiteTema.filter(t => t.esProposicionesVarios == true)
 
-            console.log(response)
+          console.log(response)
 
-            setTimeout(() => {
+          setTimeout(() => {
 
-              this.objetoComiteTecnico.sesionParticipante.forEach(p => {
-                let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
-                
-                this.nombresParticipantes = `${ this.nombresParticipantes } ${usuario.nombres} ${usuario.apellidos} , `
-          
-                });
+            this.objetoComiteTecnico.sesionParticipante.forEach(p => {
+              let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
 
-               let btnSolicitud = document.getElementsByName( 'btnSolicitud' )
-               let btnOtros = document.getElementsByName( 'btnOtros' )
-               let btnProposiciones = document.getElementsByName( 'btnProposiciones' )
+              this.nombresParticipantes = `${this.nombresParticipantes} ${usuario.nombres} ${usuario.apellidos} , `
 
-               this.callChildren( btnSolicitud );
-               this.callChildren( btnOtros );
-               this.callChildren( btnProposiciones );
+            });
 
-               this.validarCompletos();
+            let btnSolicitud = document.getElementsByName('btnSolicitud')
+            let btnOtros = document.getElementsByName('btnOtros')
+            let btnProposiciones = document.getElementsByName('btnProposiciones')
 
-            }, 1000);
+            this.callChildren(btnSolicitud);
+            this.callChildren(btnOtros);
+            this.callChildren(btnProposiciones);
 
-          })
+            this.validarCompletos();
+
+          }, 1000);
+
+        })
       })
     })
 
 
   }
 
-  validarCompletos(){
+  validarCompletos() {
     this.solicitudesCompletas = true;
     this.temasCompletos = true;
-    this.proposicionesCompletos = true;  
+    this.proposicionesCompletos = true;
 
-    this.objetoComiteTecnico.sesionComiteSolicitud.forEach( cs => {
-      if ( !cs.registroCompleto )
-        this.solicitudesCompletas = false;
-    })
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
+        if (!cs.registroCompleto)
+          this.solicitudesCompletas = false;
+      })
+    }
 
-    this.listaTemas.forEach( t => {
-      if ( !t.registroCompleto )
+    this.listaTemas.forEach(t => {
+      if (!t.registroCompleto)
         this.temasCompletos = false;
     })
 
-    this.listaProposiciones.forEach( p => {
-      if ( !p.registroCompleto )
+    this.listaProposiciones.forEach(p => {
+      if (!p.registroCompleto)
         this.proposicionesCompletos = false;
     })
 
   }
 
-  habilitar( e ){
-    
-    if (e){
+  habilitar(e) {
+
+    if (e) {
       this.router.navigate(['/comiteTecnico'])
-    }else{
+    } else {
       this.ngOnInit();
     }
   }

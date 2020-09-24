@@ -19,6 +19,8 @@
         Tabla_Orden_Del_Dia = 13,
         Aplazar_Comite_Tecnico = 14,
 
+        //Plantillas tablas
+        //Plantillas tablas
         Descargar_Acta = 15,
         Registros_Tabla_Invitados = 16,
         Tabla_Solicitud_Contratacion = 17,
