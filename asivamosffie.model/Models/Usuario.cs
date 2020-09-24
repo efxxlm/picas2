@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public Usuario()
         {
+            SesionComentario = new HashSet<SesionComentario>();
             SesionParticipante = new HashSet<SesionParticipante>();
         }
 
@@ -31,6 +32,7 @@ namespace asivamosffie.model.Models
         public string Apellidos { get; set; }
         public string NumeroIdentificacion { get; set; }
 
+        public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }
     }
 }

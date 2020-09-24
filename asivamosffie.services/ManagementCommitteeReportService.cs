@@ -145,9 +145,10 @@ namespace asivamosffie.services
 
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
-                            .Include(r => r.SesionComiteTema)
-                              .ThenInclude(r => r.TemaCompromiso)
-                            .Include(r => r.SesionParticipante)
+                              .Include(r => r.SesionComentario)
+                                .Include(r => r.SesionComiteTema)
+                               .ThenInclude(r => r.TemaCompromiso)
+                                .Include(r => r.SesionParticipante)
                                 .ThenInclude(r => r.Usuario)
                                   .Include(r => r.SesionComiteTecnicoCompromiso)
                                     .ThenInclude(r => r.CompromisoSeguimiento)
@@ -288,29 +289,31 @@ namespace asivamosffie.services
 
         //Comentar y devolver acta
         public async Task<Respuesta> CreateOrEditCommentReport(SesionComentario SesionComentario)
-        {
-
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comentario_Acta, (int)EnumeratorTipoDominio.Acciones);
-
-            string strCrearEditar = string.Empty;
-            SesionComentario SesionComentarioAntiguo = null;
             try
             {
+                ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(SesionComentario.ComiteTecnicoId);
+                comiteTecnicoOld.EstadoActaCodigo = ConstantCodigoActas.Devuelta;
+                comiteTecnicoOld.UsuarioModificacion = SesionComentario.UsuarioCreacion;
+                comiteTecnicoOld.FechaModificacion = DateTime.Now;
 
+
+                string strCrearEditar;
                 if (string.IsNullOrEmpty(SesionComentario.SesionComentarioId.ToString()) || SesionComentario.SesionComentarioId == 0)
-                {
+                { 
                     //Auditoria
                     strCrearEditar = "COMENTAR Y DEVOLVER ACTA";
+                    SesionComentario.Fecha = DateTime.Now;
                     SesionComentario.FechaCreacion = DateTime.Now;
                     SesionComentario.UsuarioCreacion = SesionComentario.UsuarioCreacion;
 
                     _context.SesionComentario.Add(SesionComentario);
-
                 }
                 else
                 {
-                    strCrearEditar = "EDIT COMENTAR ACTA";
-                    SesionComentarioAntiguo = _context.SesionComentario.Find(SesionComentario.SesionComentarioId);
+                    strCrearEditar = "EDITAR COMENTAR ACTA";
+                    SesionComentario SesionComentarioAntiguo = _context.SesionComentario.Find(SesionComentario.SesionComentarioId);
 
                     //Auditoria
                     SesionComentarioAntiguo.UsuarioModificacion = SesionComentario.UsuarioModificacion;
@@ -320,10 +323,9 @@ namespace asivamosffie.services
                     //Registros
                     SesionComentarioAntiguo.Fecha = SesionComentario.Fecha;
                     SesionComentarioAntiguo.Observacion = SesionComentario.Observacion;
-                   
-                    _context.SaveChanges(); 
                 }
 
+                _context.SaveChanges();
                 return new Respuesta
                 {
                     IsSuccessful = true,
