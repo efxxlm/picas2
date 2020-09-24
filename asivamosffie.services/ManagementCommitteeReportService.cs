@@ -147,7 +147,9 @@ namespace asivamosffie.services
                         .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                             .Include(r => r.SesionComiteTema)
                             .Include(r => r.SesionParticipante)
-                            .ThenInclude(r => r.Usuario)
+                                .ThenInclude(r => r.Usuario)
+                                  .Include(r => r.SesionComiteTecnicoCompromiso)
+                                    .ThenInclude(r => r.CompromisoSeguimiento)
                         //.Include(r => r.SesionComiteTecnicoCompromiso)
                         //.Include(r => r.SesionComiteTecnicoCompromiso)
                         //.Include(r => r.SesionComiteSolicitudComiteTecnico)
@@ -158,6 +160,11 @@ namespace asivamosffie.services
 
                 foreach (var item in ListComiteTecnico)
                 {
+                    if (item.SesionComiteTecnicoCompromiso.Count() > 0)
+                    {
+                        item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+               
                     foreach (var item2 in item.SesionParticipante)
                     {
                         item2.Usuario.Contrasena = string.Empty;
@@ -170,18 +177,25 @@ namespace asivamosffie.services
                             SesionComiteTema.ResponsableCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico && r.Codigo == SesionComiteTema.ResponsableCodigo)
                                 .FirstOrDefault().Nombre;
+                        }
 
-                        }
-                    }
-                    foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
-                    {
-                        if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
+                        if (!string.IsNullOrEmpty(SesionComiteTema.EstadoTemaCodigo))
                         {
-                            SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
-                                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
-                                    && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
+                            SesionComiteTema.EstadoTemaCodigo = ListParametricas
+                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
+                                .FirstOrDefault().Nombre;
                         }
+
                     }
+                    //foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
+                    //{
+                    //    if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
+                    //    {
+                    //        SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
+                    //                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                    //                && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
+                    //    }
+                    //}
                 }
 
                 return ListComiteTecnico;
