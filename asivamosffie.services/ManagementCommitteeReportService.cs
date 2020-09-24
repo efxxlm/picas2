@@ -49,7 +49,7 @@ namespace asivamosffie.services
             List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                 .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion
                        && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
-                  .Include(r => r.SesionComiteTecnicoCompromiso).ToListAsync();
+                  .Include(r => r.SesionComentario).ToListAsync();
 
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
@@ -219,48 +219,37 @@ namespace asivamosffie.services
 
         //Reportar Avance Compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso)
-        {
-            Respuesta respuesta = new Respuesta();
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
-
-            string strCrearEditar = string.Empty;
-            CompromisoSeguimiento compromisoSeguimientoAntiguo = null;
             try
-            {
-
+            { 
+                string strCrearEditar;
                 if (string.IsNullOrEmpty(compromisoSeguimiento.CompromisoSeguimientoId.ToString()) || compromisoSeguimiento.CompromisoSeguimientoId == 0)
                 {
                     //Auditoria
                     strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
                     compromisoSeguimiento.FechaCreacion = DateTime.Now;
                     compromisoSeguimiento.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
-                    compromisoSeguimiento.SesionParticipanteId = compromisoSeguimiento.SesionParticipanteId;
+                    //compromisoSeguimiento.SesionParticipanteId = compromisoSeguimiento.SesionParticipanteId;
                     compromisoSeguimiento.Eliminado = false;
                     _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
-                    var result = await _context.SaveChangesAsync();
-
-                    /*if (result > 0)
-                       await UpdateStatus(compromisoSeguimiento.SesionComiteTecnicoCompromisoId, estadoCompromiso);*/
+                     
                 }
                 else
                 {
                     strCrearEditar = "EDITAR AVANCE COMPROMISOS";
-                    compromisoSeguimientoAntiguo = _context.CompromisoSeguimiento.Find(compromisoSeguimiento.CompromisoSeguimientoId);
+                    CompromisoSeguimiento compromisoSeguimientoAntiguo = _context.CompromisoSeguimiento.Find(compromisoSeguimiento.CompromisoSeguimientoId);
 
                     //Auditoria
                     compromisoSeguimientoAntiguo.UsuarioModificacion = compromisoSeguimiento.UsuarioModificacion;
-                    compromisoSeguimientoAntiguo.Eliminado = false;
-
-
                     //Registros
+                    compromisoSeguimientoAntiguo.FechaCreacion = DateTime.Now;
                     compromisoSeguimientoAntiguo.DescripcionSeguimiento = compromisoSeguimiento.DescripcionSeguimiento;
-                    compromisoSeguimientoAntiguo.TemaCompromisoId = compromisoSeguimiento.TemaCompromisoId;
                     compromisoSeguimientoAntiguo.SesionParticipanteId = compromisoSeguimiento.SesionParticipanteId;
-                    _context.CompromisoSeguimiento.Update(compromisoSeguimiento);
 
                 }
-
-                return respuesta = new Respuesta
+                _context.SaveChanges();
+                return   new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
