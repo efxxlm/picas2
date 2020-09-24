@@ -33,6 +33,7 @@ namespace asivamosffie.model.Models
         public bool? EsMultiProyecto { get; set; }
         public string TipoContratacionCodigo { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public DateTime? FechaAprobacion { get; set; }
 
         public virtual Contratista Contratista { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }

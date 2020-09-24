@@ -104,14 +104,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -580,6 +572,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEnvioDocumentacion).HasColumnType("datetime");
@@ -758,7 +752,7 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.EstadoActa)
                     .HasMaxLength(10)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoDocumentoCodigo)
                     .HasMaxLength(100)
@@ -883,6 +877,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.CostoDirecto).HasColumnType("numeric(18, 2)");
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.Imprevistos).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.InventarioArboreoFechaAprobacion).HasColumnType("datetime");
@@ -931,6 +929,15 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.RutaInforme)
                     .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Utilidad).HasColumnType("numeric(18, 2)");
@@ -1058,8 +1065,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPoliza>(entity =>
             {
-                entity.Property(e => e.ContratoPolizaId).ValueGeneratedNever();
-
                 entity.Property(e => e.DescripcionModificacion)
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -1125,12 +1130,6 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsFixedLength();
-
-                entity.HasOne(d => d.Contrato)
-                    .WithMany(p => p.ContratoPoliza)
-                    .HasForeignKey(d => d.ContratoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ContratoPoliza_Contrato");
             });
 
             modelBuilder.Entity<ControlRecurso>(entity =>
@@ -1683,7 +1682,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
             });
@@ -2679,6 +2677,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionComiteSolicitud>(entity =>
             {
+                entity.Property(e => e.DesarrolloSolicitud)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoActaCodigo)
                     .HasMaxLength(200)
                     .IsUnicode(false);

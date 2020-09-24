@@ -129,8 +129,7 @@ namespace asivamosffie.services
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReportById(int comiteTecnicoId)
         {
             try
-            {
-
+            { 
                 //return await (from a in _context.SesionComiteTecnicoCompromiso
                 //              join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
                 //              join sc in _context.SesionComiteSolicitud on a.ComiteTecnicoId equals sc.ComiteTecnicoId
@@ -143,6 +142,7 @@ namespace asivamosffie.services
                 //                  EstadoComiteCodigo = sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
 
                 //              }).ToListAsync();
+
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                             .Include(r => r.SesionComiteTema)

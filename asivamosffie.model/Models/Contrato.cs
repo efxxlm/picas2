@@ -10,10 +10,8 @@ namespace asivamosffie.model.Models
             ContratoConstruccion = new HashSet<ContratoConstruccion>();
             ContratoObservacion = new HashSet<ContratoObservacion>();
             ContratoPerfil = new HashSet<ContratoPerfil>();
-            ContratoPoliza = new HashSet<ContratoPoliza>();
         }
 
-        public int ContratoId { get; set; }
         public int ContratacionId { get; set; }
         public DateTime? FechaTramite { get; set; }
         public string TipoContratoCodigo { get; set; }
@@ -59,11 +57,11 @@ namespace asivamosffie.model.Models
         public DateTime? FechaFirmaActaContratistaInterventoriaFase2 { get; set; }
         public string RutaActaFase2 { get; set; }
         public string RutaActaSuscrita { get; set; }
+        public int ContratoId { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
         public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
-        public virtual ICollection<ContratoPoliza> ContratoPoliza { get; set; }
     }
 }
