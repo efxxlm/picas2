@@ -91,6 +91,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
       },
+      {
+        path: 'generarPolizasYGarantias',
+        loadChildren: () => import('./_pages/generar-polizas-y-garantias/generar-polizas-y-garantias.module')
+          .then(m => m.GenerarPolizasYGarantiasModule)
+      },
     ]
 
   },
