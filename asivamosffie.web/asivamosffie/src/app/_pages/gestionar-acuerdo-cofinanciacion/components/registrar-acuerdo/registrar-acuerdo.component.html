@@ -33,8 +33,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select formControlName="vigenciaEstado" required>
-                    <mat-option></mat-option>
+                  <mat-select formControlName="vigenciaEstado" required>                    
                     <mat-option *ngFor="let vigenciaEstado of vigenciaEstados" [value]="vigenciaEstado">
                       {{ vigenciaEstado }}
                     </mat-option>
@@ -57,7 +56,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
                     maxlength="4" min="1" max="999" required type="number"
-                    formControlName="numAportes" [readonly]="numAportes.value!=''"
+                    formControlName="numAportes" 
                     >
                 </mat-form-field>
                 <span class="contador">{{3 - numAportes.value.length}}</span>
@@ -112,7 +111,6 @@
                   <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="nombre">
-                        <mat-option></mat-option>
                         <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante">
                           {{ nombreAportante.nombre }}
                         </mat-option>
@@ -178,11 +176,11 @@
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #cauntosDocumentos maxlength="4" (change)="cantidadDocumentos(aportante,i)"
+                          <input matInput #cauntosDocumentos maxlength="4"
                             (keyup)="cantidadDocumentos(aportante,i)" min="1" max="999" required type="number"
                             (keypress)="validateNumberKeypress($event)" formControlName="cauntosDocumentos"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                            [readonly]="cauntosDocumentos.value!=''">
+                            >
                           <input formControlName="cofinanciacionId" type="hidden">
                           <input formControlName="cofinanciacionAportanteId" type="hidden">
                         </mat-form-field>
@@ -255,7 +253,6 @@
                       <div class="col">
                         <mat-form-field class="select-width">
                           <mat-select [(ngModel)]="documento.vigenciaAporte" required>
-                            <mat-option></mat-option>
                             <mat-option *ngFor="let vigenciaAportante of vigenciasAportante"
                               [value]="vigenciaAportante">
                               {{ vigenciaAportante }}
@@ -299,7 +296,6 @@
                       <div class="col">
                         <mat-form-field class="select-width">
                           <mat-select [(ngModel)]="documento.tipoDocumentoId" required>
-                            <mat-option></mat-option>
                             <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.dominioId">
                               {{ tipoDocumento.nombre }}
                             </mat-option>
@@ -399,7 +395,7 @@
 
                   <div class="col text-right" *ngIf="aportante.cofinanciacionDocumento.length>1">
                     <button mat-button color="warn" type="button" class="btn-eliminar"
-                      (click)="eliminadoc(aportante,documento)">
+                      (click)="eliminadoc(aportante,documento,i)">
                       <img src="assets/img/icon/menos.svg" alt="Eliminar documento">
                       Eliminar documento
                     </button>

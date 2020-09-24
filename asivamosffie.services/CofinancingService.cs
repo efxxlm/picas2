@@ -177,14 +177,14 @@ namespace asivamosffie.services
                     cofinanciacion.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
 
                     //Validar Registro Completo
-                    if (string.IsNullOrEmpty(cofinanciacion.VigenciaCofinanciacionId.ToString()))
+                    /*if (string.IsNullOrEmpty(cofinanciacion.VigenciaCofinanciacionId.ToString()))
                     {
                         cofinanciacion.RegistroCompleto = false;
                     }
                     else
                     {
                         cofinanciacion.RegistroCompleto = true;
-                    }
+                    }*/
 
 
                     //Foreach para poner campos de auditoria en las tablas relacionadas !
@@ -305,7 +305,8 @@ namespace asivamosffie.services
                 cofinanciacionDocumentoEdit.TipoDocumentoId = pCofinanciacionDocumento.TipoDocumentoId;
                 cofinanciacionDocumentoEdit.ValorDocumento = pCofinanciacionDocumento.ValorDocumento;
                 cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante;
-
+                cofinanciacionDocumentoEdit.VigenciaAporte = pCofinanciacionDocumento.VigenciaAporte;
+                cofinanciacionDocumentoEdit.NumeroAcuerdo = pCofinanciacionDocumento.NumeroAcuerdo;
 
                 return pCofinanciacionDocumento.CofinanciacionDocumentoId;
             }

@@ -128,7 +128,7 @@ namespace asivamosffie.services
 
         
         /*autor: jflorez
-            descripci�n: objeto para entregar a front los datos ordenados de disponibilidades
+            descripción: objeto para entregar a front los datos ordenados de disponibilidades
         impacto: CU 3.3.3*/
         public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal()
         {

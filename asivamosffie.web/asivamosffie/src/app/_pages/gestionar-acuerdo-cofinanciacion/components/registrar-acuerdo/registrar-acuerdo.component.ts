@@ -162,17 +162,45 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   CambioNumeroAportantes() {
     const FormNumAportantes = this.datosAportantes.value;
-       if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
-         while (this.aportantes.length < FormNumAportantes.numAportes) {
-           this.aportantes.push(this.createAportante());
-         }
-       } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
-         while (this.aportantes.length > FormNumAportantes.numAportes) {
-          this.borrarArray(this.aportantes, this.aportantes.length - 1);
-         }
-       }
-    
-
+    if(FormNumAportantes.numAportes!=null)
+    {
+      if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
+        while (this.aportantes.length < FormNumAportantes.numAportes) {
+          this.aportantes.push(this.createAportante());
+        }
+      } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
+         
+        console.log(this.datosAportantes);
+        console.log(this.datosAportantes.value.numAportes);
+        let estaenblanco=true;
+        this.datosAportantes.value.aportantes.forEach(element => {
+          if(element.cauntosDocumentos!=""||
+          element.cofinanciacionAportanteId!=""||
+          element.cofinanciacionId!=""||
+          element.departamento!=""||
+          element.municipio!=""||
+          element.municipios!=""||
+          element.nombre!=""||
+          element.tipo!="")
+          {
+           estaenblanco=false;
+          }
+        });
+        if(estaenblanco)
+        {
+         
+          while (this.aportantes.length > FormNumAportantes.numAportes) {
+           this.borrarArray(this.aportantes, this.aportantes.length - 1);   
+           this.listaCofinancAportantes.pop();       
+          }
+        }
+        else
+         {
+           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>"); 
+           this.datosAportantes.controls.numAportes.setValue(this.aportantes.length);            
+         }        
+      }
+    }           
   }
 
   createAportante(): FormGroup {
@@ -252,6 +280,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     borrarForm.removeAt(i);
     const index = this.listaCofinancAportantes.indexOf(this.listaCofinancAportantes[i]);
     this.listaCofinancAportantes.splice(index, 1);
+    this.datosAportantes.controls.numAportes.setValue(this.aportantes.length);   
   }
 
   listaAportantes() {
@@ -345,38 +374,65 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   cantidadDocumentos(data: any, identificador: number) {
+
     this.mostrarDocumentosDeApropiacion = true;
     const cantidadDocumentos: number = data.get('cauntosDocumentos').value;
-    console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
-    if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
-      && cantidadDocumentos < 1000) {
-      while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
-
-        this.listaCofinancAportantes[identificador].cofinanciacionDocumento.push(
-          {
-            cofinanciacionAportanteId: identificador,
-            fechaAcuerdo: null,
-            numeroAcuerdo: null,
-            cofinanciacionDocumentoId: null,
-            numeroActa: null,
-            fechaActa: null,
-            tipoDocumentoId: null,
-            valorDocumento: null,
-            valorTotalAportante: null,
-            vigenciaAporte: null
-          });
-
-      }
-    } else if (cantidadDocumentos <= this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
-      && cantidadDocumentos >= 0) {
-      while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length > cantidadDocumentos) {
-        this.listaCofinancAportantes[identificador].cofinanciacionDocumento.pop();
-      }
+    if(cantidadDocumentos==0 || cantidadDocumentos==null)
+    {
+      if(cantidadDocumentos==0)
+      this.openDialog("","La cantidad de documentos de apropiación del aportante no puede ser igual a 0.");
     }
-
-
-
-
+    else{
+      console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
+      if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
+        && cantidadDocumentos < 1000) {
+        while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
+  
+          this.listaCofinancAportantes[identificador].cofinanciacionDocumento.push(
+            {
+              cofinanciacionAportanteId: identificador,
+              fechaAcuerdo: null,
+              numeroAcuerdo: null,
+              cofinanciacionDocumentoId: null,
+              numeroActa: null,
+              fechaActa: null,
+              tipoDocumentoId: null,
+              valorDocumento: null,
+              valorTotalAportante: null,
+              vigenciaAporte: null
+            });
+  
+        }
+      } else if (cantidadDocumentos <= this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
+        && cantidadDocumentos >= 0) {
+          //para saber si borro, debo ver si tiene algo 
+          let estaenblanco=true;
+          this.listaCofinancAportantes[identificador].cofinanciacionDocumento.forEach(element => {
+            if(element.fechaAcuerdo!=null ||
+              element.numeroAcuerdo!=null ||
+              element.cofinanciacionDocumentoId!=null ||
+              element.numeroActa!=null ||
+              element.fechaActa!=null ||
+              element.tipoDocumentoId!=null ||
+              element.valorDocumento!=null ||
+              element.valorTotalAportante!=null ||
+              element.vigenciaAporte!=null)
+              {
+                estaenblanco=false;
+              }
+          });
+          if(estaenblanco)
+          {
+            while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length > cantidadDocumentos) {
+              this.listaCofinancAportantes[identificador].cofinanciacionDocumento.pop();
+            }
+          }
+          else{
+            this.openDialog("","Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.");
+          }
+        
+      }
+    }    
   }
 
   validaCompletitud(aportante: any) {
@@ -418,15 +474,15 @@ export class RegistrarAcuerdoComponent implements OnInit {
     });
     return retorno;
   }
-  eliminadoc(aportante: any, documento: any) {
+  eliminadoc(aportante: any, documento: any,indexd:any) {
     console.log(aportante);
-    console.log(documento);
+    console.log(indexd);
     const index = aportante.cofinanciacionDocumento.indexOf(documento, 0);
     if (index > -1) {
-      aportante.cofinanciacionDocumento.splice(index, 1);
-      aportante.cauntosDocumentos--;//no funciona visualmente
+      aportante.cofinanciacionDocumento.splice(index, 1);      
     }
-
+    aportante.cauntosDocumentos=aportante.cofinanciacionDocumento.length;    
+    this.datosAportantes.get("aportantes")['controls'][indexd].controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);   
   }
 
   // evalua tecla a tecla
