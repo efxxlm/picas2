@@ -24,7 +24,7 @@
     <ng-container matColumnDef="estadoComiteCodigo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del acta </th>
       <td mat-cell *matCellDef="let element" align="center">
-        <span *ngIf="element.estadoActaCodigo === '1'">Revisar acta</span>
+        <span *ngIf="element.estadoActaCodigo === '2'">Revisar acta</span>
         <span *ngIf="element.estadoActaCodigo === '4'">Devuelta</span>
         <span *ngIf="element.estadoActaCodigo === '3'">Aprobada</span>
       </td>
@@ -37,7 +37,7 @@
         <button mat-raised-button 
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoActaCodigo === '1'"
+                *ngIf="element.estadoActaCodigo === '2'"
                 (click)="revisarActa( element )">
                 Revisar acta
         </button>
