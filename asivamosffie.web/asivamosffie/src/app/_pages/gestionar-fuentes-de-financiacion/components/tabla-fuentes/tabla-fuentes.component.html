@@ -49,7 +49,7 @@
 
             <ng-container matColumnDef="estado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-                <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.registroCompleto?'Completo':'Incompleto'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="id">
