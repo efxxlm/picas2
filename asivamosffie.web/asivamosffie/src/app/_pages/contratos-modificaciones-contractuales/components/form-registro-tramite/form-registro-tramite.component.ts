@@ -17,6 +17,7 @@ export class FormRegistroTramiteComponent implements OnInit {
   @Input() dataFormulario: FormGroup;
   @Input() contratoId    : number;
   @Input() contratacionId: number;
+  @Input() fechaTramite  : Date;
   estadoCodigo  : string;
   estadoCodigos = {
     enRevision: '2',

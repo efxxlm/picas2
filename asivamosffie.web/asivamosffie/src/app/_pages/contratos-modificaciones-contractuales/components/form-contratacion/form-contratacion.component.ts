@@ -18,6 +18,7 @@ export class FormContratacionComponent implements OnInit {
     firmado: '6'
   }
   contratacion: any;
+  fechaTramite: Date = new Date();
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -41,7 +42,7 @@ export class FormContratacionComponent implements OnInit {
       fechaFirmaPorParteFiduciaria  : [ null ],
       observaciones                 : [ null ],
       documento                     : [ null ],
-      rutaDocumento               : [ null ],
+      rutaDocumento                 : [ null ],
       documentoFile                 : [ null ]
     });
   };
