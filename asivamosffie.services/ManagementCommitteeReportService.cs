@@ -320,8 +320,8 @@ namespace asivamosffie.services
                     //Registros
                     SesionComentarioAntiguo.Fecha = SesionComentario.Fecha;
                     SesionComentarioAntiguo.Observacion = SesionComentario.Observacion;
-                    _context.SesionComentario.Update(SesionComentarioAntiguo);
-
+                   
+                    _context.SaveChanges(); 
                 }
 
                 return new Respuesta
