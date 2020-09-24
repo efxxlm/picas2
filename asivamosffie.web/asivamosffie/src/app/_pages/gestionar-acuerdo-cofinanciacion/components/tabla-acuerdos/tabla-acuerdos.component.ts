@@ -4,21 +4,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CofinanciacionService, Cofinanciacion } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { Router } from '@angular/router';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
-// export interface PeriodicElement {
-//   id: number;
-//   fechaCreacion: string;
-//   numeroAcuerdo: string;
-//   vigenciaAcuerdo: number;
-//   valorTotal: number;
-//   estadoRegistro: string;
-// }
-
-// const ELEMENT_DATA: PeriodicElement[] = [
-//   {id: 1, fechaCreacion: '26/05/2020', numeroAcuerdo: '000001', vigenciaAcuerdo: 2020, valorTotal: 85000000, estadoRegistro: 'Completo'},
-//   {id: 2, fechaCreacion: '26/05/2020', numeroAcuerdo: '000001', vigenciaAcuerdo: 2020, valorTotal: 85000000, estadoRegistro: 'Completo'},
-//   {id: 3, fechaCreacion: '26/05/2020', numeroAcuerdo: '000001', vigenciaAcuerdo: 2020, valorTotal: 85000000, estadoRegistro: 'Completo'},
-// ];
 
 @Component({
   selector: 'app-tabla-acuerdos',
@@ -40,7 +28,7 @@ export class TablaAcuerdosComponent implements OnInit {
   }
 
   constructor( private cofinanciacionService: CofinanciacionService,
-               private router: Router ) { }
+               private router: Router,public dialog: MatDialog, ) { }
 
   ngOnInit(): void {
 
@@ -61,6 +49,40 @@ export class TablaAcuerdosComponent implements OnInit {
     this.router.navigate(['/registrarAcuerdos', e ]);
   }
   eliminarAcuerdo(e: number) {
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",e);
+  }
+  eliminarAcuerdoConfirmado(e: number) {
+    this.cofinanciacionService.EliminarCofinanciacionByCofinanciacionId(e).subscribe(result=>{
+      if(result.code==="200")
+      {
+        this.openDialog("",result.message);
+        this.dataSource.data=[];
+        this.listaCofinanciacion=[];
+        this.cofinanciacionService.listaAcuerdosCofinanciacion().subscribe( cof => 
+          {
+             this.listaCofinanciacion = cof; 
+             this.dataSource.data = this.listaCofinanciacion;
+          } );
+      }
+    });
+  }
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result) {
+        this.eliminarAcuerdoConfirmado(e);
+      }
+    });
   }
 
 }

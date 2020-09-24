@@ -41,7 +41,7 @@ namespace asivamosffie.services
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                 {
                     if (string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString()) 
-                        || string.IsNullOrEmpty(cofinanciacionAportante.MunicipioId.ToString())
+                        //|| string.IsNullOrEmpty(cofinanciacionAportante.MunicipioId.ToString()) los aportantes 3eros no tienen municipio
                         )
 
                     {
@@ -97,7 +97,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesCofinanciacion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.OperacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
                 };
             }
             catch (Exception ex)
@@ -369,11 +369,11 @@ namespace asivamosffie.services
         {
             //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
             //jflorez: modifico para setear el nombre del aportante
-            var retorno= await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).ToListAsync();
+            var retorno= await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).Include(x=>x.NombreAportante).Include(x => x.TipoAportante).ToListAsync();
             foreach(var ret in retorno)
             {
-                ret.NombreAportante = ret.NombreAportanteId==null?"Error en nombre de aportante":_context.Dominio.Find(ret.NombreAportanteId).Nombre;
-                ret.TipoAportante= ret.TipoAportanteId==null?"Error en tipo de aportante":_context.Dominio.Find(ret.TipoAportanteId).Nombre;
+                ret.NombreAportanteString = ret.NombreAportante.Nombre;
+                ret.TipoAportanteString = ret.TipoAportante.Nombre;
             }
             return retorno;
         }
