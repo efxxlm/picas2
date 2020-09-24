@@ -158,9 +158,9 @@
         public const string INVITADO_ENTIDAD = "132";
         // public const string   NUMERO_SOLICITUD ="133";
         public const string NUMERO_SOLICITUD_CONTRATACION = "134";
-        //public const string   NUMERO_SOLICITUD_CONTRATACION ="135";
+        public const string FECHA_SOLICITUD_CONTRATACION = "135";
         public const string TIPO_SOLICITUD_CONTRATACION = "136";
-        //public const string   TIPO_SOLICITUD_CONTRATACION ="137";
+        public const string TIPO_CONTRATO_CONTRATACION = "137";
         public const string REGISTROS_TABLA_PROYECTO = "138";
         //public const string   LLAVE_MEN ="139";
         public const string TIPO_INTERVENCION = "140";

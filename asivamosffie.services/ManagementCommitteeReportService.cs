@@ -146,10 +146,12 @@ namespace asivamosffie.services
                 return await _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                             .Include(r => r.SesionComiteTema)
-                            .Include(r => r.SesionComiteTecnicoCompromiso)
-                            .Include(r => r.SesionComiteTecnicoCompromiso)
-                            .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                            .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                            .Include(r=> r.SesionParticipante)
+                            .ThenInclude(r=> r.Usuario)
+                            //.Include(r => r.SesionComiteTecnicoCompromiso)
+                            //.Include(r => r.SesionComiteTecnicoCompromiso)
+                            //.Include(r => r.SesionComiteSolicitudComiteTecnico)
+                            //.Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                         .ToListAsync(); 
             }
             catch (Exception ex)
