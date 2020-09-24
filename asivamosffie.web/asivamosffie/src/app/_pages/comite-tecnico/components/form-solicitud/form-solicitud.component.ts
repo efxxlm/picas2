@@ -35,6 +35,7 @@ export class FormSolicitudComponent implements OnInit {
 
 
   addressForm = this.fb.group({
+    desarrolloSolicitud: [],
     estadoSolicitud: [null, Validators.required],
     observaciones: [null, Validators.required],
     url: null,
@@ -155,6 +156,7 @@ export class FormSolicitudComponent implements OnInit {
       rutaSoporteVotacion: this.addressForm.get('url').value,
       generaCompromiso: this.addressForm.get('tieneCompromisos').value,
       cantCompromisos: this.addressForm.get('cuantosCompromisos').value,
+      desarrolloSolicitud: this.addressForm.get('desarrolloSolicitud').value,
       sesionSolicitudCompromiso: []
 
     }
@@ -202,6 +204,8 @@ export class FormSolicitudComponent implements OnInit {
     this.addressForm.get('url').setValue(this.sesionComiteSolicitud.rutaSoporteVotacion)
     this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromiso)
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisos)
+    this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitud)
+    
 
     this.commonService.listaUsuarios().then((respuesta) => {
 
