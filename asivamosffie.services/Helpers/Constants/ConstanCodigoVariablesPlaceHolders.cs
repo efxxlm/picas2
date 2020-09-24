@@ -180,7 +180,10 @@
         public const string NOMBRE_DE_TEMA = "154";
         public const string RESPONSABLE_DE_TEMA = "155";
         public const string DESARROLLO_DE_TEMA = "156";
-        public const string RESULTADO_DE_VOTACION = "157";
+        public const string RESULTADO_DE_VOTACION = "157"; 
+        public const string DESARROLLO_SOLICITUD = "158";
+        public const string DECISIONES_SOLICITUD = "159";
+        public const string OBSERVACIONES_SOLICITUD = "160";
         #endregion
     }
 }
