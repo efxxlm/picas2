@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.services
 {
@@ -25,8 +26,9 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-        public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
-        
+        //public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
+       public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
+
         {            
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
@@ -37,6 +39,7 @@ namespace asivamosffie.services
 
             //includefilter
             ContratoPoliza contratoPoliza = new ContratoPoliza();
+            
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
             contratoPoliza = _context.ContratoPoliza.Where(r =>  r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
 
@@ -64,7 +67,8 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<ActionResult<List<PolizaObservacion>>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)        
+        //public async Task<ActionResult<List<PolizaObservacion>>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
+            public async Task<List<PolizaObservacion>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
         {            
 
             return await _context.PolizaObservacion.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
@@ -84,10 +88,10 @@ namespace asivamosffie.services
             try
             {
                 if (polizaGarantia != null)
-                {
+                {                    
                     //contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                                        
+
 
                     //_context.Add(contratoPoliza);
 
@@ -213,11 +217,13 @@ namespace asivamosffie.services
             {
                 if (contratoPoliza != null)
                 {
-                    //contratoPoliza.FechaCreacion = DateTime.Now;
+                    contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                    //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
 
                     //_context.Add(contratoPoliza);
 
+                    contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                     _context.ContratoPoliza.Add(contratoPoliza);
@@ -303,11 +309,11 @@ namespace asivamosffie.services
             //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
 
 
-            //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo          
-                            
+            //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo        
+                           
 
-            List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-
+            //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct().ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
@@ -317,14 +323,18 @@ namespace asivamosffie.services
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     
-
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud_Contrato_Poliza);
-                    GrillaContratoGarantiaPoliza proyectoGrilla = new GrillaContratoGarantiaPoliza
+                    Dominio TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+
+                    Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    GrillaContratoGarantiaPoliza contratoGrilla = new GrillaContratoGarantiaPoliza
                     {
                         ContratoId= contrato.ContratoId,
-                        FechaFirma = contrato.FechaFirmaContrato.ToString("dd/mm/yyyy"),
-                    NumeroContrato = contrato.NumeroContrato,
+                        //FechaFirma = contrato.FechaFirmaContrato.ToString("dd/mm/yyyy")?"":"",
+                        FechaFirma = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/mm/yyyy") : contrato.FechaFirmaContrato.ToString(),
+                        //FechaFirma = contrato.FechaFirmaContrato.ToString(),
+                        NumeroContrato = contrato.NumeroContrato,
         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
         //EstadoRegistro { get; set; }
                 
@@ -333,6 +343,9 @@ namespace asivamosffie.services
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
                         TipoSolicitud = TipoSolicitudCodigoContratoPoliza.Nombre,
+
+                        EstadoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre
+                        
                         //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
                         //EstadoRegistro = "COMPLETO"
                     };
@@ -341,7 +354,7 @@ namespace asivamosffie.services
                     //{
                     //    proyectoGrilla.EstadoRegistro = "INCOMPLETO";
                     //}
-                    ListContratoGrilla.Add(proyectoGrilla);
+                    ListContratoGrilla.Add(contratoGrilla);
                 }
                 catch (Exception e)
                 {
@@ -377,9 +390,26 @@ namespace asivamosffie.services
 
             //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo          
 
+            List<Contrato> ListContratos = new List<Contrato>();
+            //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
 
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
+            //return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).ToListAsync();
 
+            //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).ToListAsync();
+
+            //item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+
+            ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado ).Distinct()
+       
+            .ToListAsync();
+
+            //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado)               
+
+            // .Select( new
+            //  {
+            //      FechaFirmaContrato =r.FechaFirmaContrato.ToString()
+            //  })
+            // .ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
@@ -398,17 +428,17 @@ namespace asivamosffie.services
 
                     if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionDias.ToString()))
 
-                        plazoDias =(Int32) contrato.PlazoFase1PreDias;
+                        plazoDias = Convert.ToInt32( contrato.PlazoFase1PreDias);
 
                     else
-                        plazoDias = (Int32)contrato.PlazoFase2ConstruccionDias;
+                        plazoDias = Convert.ToInt32( contrato.PlazoFase2ConstruccionDias);
 
                     if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionMeses.ToString()))
 
-                        plazoMeses = (Int32)contrato.PlazoFase1PreMeses;
+                        plazoMeses = Convert.ToInt32(contrato.PlazoFase1PreMeses);
 
                     else
-                        plazoMeses = (Int32)contrato.PlazoFase2ConstruccionMeses;
+                        plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
 
                     string PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
 
@@ -416,7 +446,7 @@ namespace asivamosffie.services
                     Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
 
 
-                    Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+                    //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
                     {
                         TipoContrato = TipoContratoCodigoContrato.Nombre,
@@ -441,16 +471,15 @@ namespace asivamosffie.services
 
          DescripcionModificacion ="resumen", // resumen   TEMPORAL REV
 
-         TipoModificacion = TipoModificacionCodigoContratoPoliza.Nombre
+                        //TipoModificacion = TipoModificacionCodigoContratoPoliza.Nombre
+                        TipoModificacion = "Tipo modificacion"
 
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
                         //EstadoRegistro { get; set; }
 
-                        //Departamento = departamento.Descripcion,
-                        //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-                        
+
                         //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
                         //EstadoRegistro = "COMPLETO"
                     };

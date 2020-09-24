@@ -26,6 +26,45 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        
+
+        [HttpPost]
+        [Route("CreatePolizaObservacion")]
+        public async Task<IActionResult> InsertPolizaObservacion(PolizaObservacion polizaObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _guaranteePolicy.InsertPolizaObservacion(polizaObservacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+                
+
+         [HttpPost]
+        [Route("CreatePolizaGarantia")]
+        public async Task<IActionResult> InsertPolizaGarantia(PolizaGarantia polizaGarantia)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _guaranteePolicy.InsertPolizaGarantia(polizaGarantia);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpPost]
         [Route("CreateContratoPoliza")]
         public async Task<IActionResult> InsertContratoPoliza(ContratoPoliza contratoPoliza)
@@ -43,6 +82,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
                
 
         [Route("GetListPolizaObservacionByContratoPolizaId")]
@@ -73,6 +113,15 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
+        }
+
+        [Route("GetContratoPolizaByIdContratoPolizaId")]
+        [HttpGet]
+        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
+        public async Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
+        {
+            var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId);
+            return respuesta;
         }
 
         [HttpGet]
