@@ -11,8 +11,6 @@ export class CompromisosActasComiteService {
   private url: string = `${ environment.apiUrl }/ManagementCommitteeReport`;
   devolverActa: DevolverActa = {
     comiteTecnicoId: 0,
-    fecha: null,
-    sesionComentarioId: null,
     observacion: ''
   }
 
@@ -46,26 +44,18 @@ export class CompromisosActasComiteService {
 
     const compromisoSeguimiento = {
       descripcionSeguimiento: `${ descripcion }`,
-      sesionComiteTecnicoCompromisoId: `${ sesionComiteTecnicoCompromisoId }`
-    }
+      sesionComiteTecnicoCompromisoId: `${ seguimiento.sesionComiteTecnicoCompromisoId }`
+    };
 
-    const headers = new HttpHeaders({
-      'Content-Type':'application/json'
-    })
+    console.log( compromisoSeguimiento );
 
-    return this.http.post( `${ this.url }/CreateOrEditReportProgress?estadoCompromiso=${ estadoId }`, compromisoSeguimiento, { headers } )
+    return this.http.post( `${ this.url }/CreateOrEditReportProgress?estadoCompromiso=${ estadoId }`, compromisoSeguimiento )
   };
-
-  getActaPdf ( comiteTecnicoId: number ) {
-    return this.http.get( `${ this.url }/StartDownloadPDF?comiteTecnicoId=${ comiteTecnicoId }`, { responseType: "blob" } )
-  }
 
   postComentariosActa ( acta: any ) {
 
     this.devolverActa.comiteTecnicoId = acta.comiteTecnicoId;
-    this.devolverActa.fecha = acta.fecha;
     this.devolverActa.observacion = acta.observaciones;
-    this.devolverActa.sesionComentarioId = acta.sesionComentarioId;
 
     console.log( this.devolverActa );
 

@@ -45,7 +45,8 @@
         <button mat-raised-button 
                 color="accent"
                 *ngIf="element.estadoActaCodigo === '4'"
-                class="btn-table">
+                class="btn-table"
+                (click)="revisarActa( element )">
                 Ver detalle
         </button>
   

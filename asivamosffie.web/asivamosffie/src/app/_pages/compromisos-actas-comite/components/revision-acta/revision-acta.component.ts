@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
+import { TechnicalCommitteSessionService } from '../../../../core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-revision-acta',
@@ -15,6 +16,7 @@ export class RevisionActaComponent implements OnInit {
   acta: any;
   form:FormGroup;
   comentarActa: boolean = false;
+  comentarios: boolean = false;
   editorStyle = {
     height: '45px'
   };
@@ -29,13 +31,13 @@ export class RevisionActaComponent implements OnInit {
   miembrosParticipantes: any[] = [];
   temas: any[] = [];
   proposicionesVarios: any[] = [];
-  sesionComentarioId: number;
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
                 private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
-                private compromisoSvc: CompromisosActasComiteService ) {
+                private compromisoSvc: CompromisosActasComiteService,
+                private comiteTecnicoSvc: TechnicalCommitteSessionService ) {
     this.getActa( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
   };
@@ -47,10 +49,6 @@ export class RevisionActaComponent implements OnInit {
       .subscribe( ( resp: any ) => {
         this.acta = resp[0];
         console.log( resp[0] );
-
-        if ( resp[0].sesionComentario.length === 0 ) {
-          this.sesionComentarioId = null;
-        };
 
         for ( let temas of resp[0].sesionComiteTema ) {
           if ( !temas.esProposicionesVarios ) {
@@ -111,11 +109,10 @@ export class RevisionActaComponent implements OnInit {
       return;
     };
 
-    const value = String( this.form.get( 'comentarioActa' ).value );
+    const value = this.form.get( 'comentarioActa' ).value;
     const observaciones = {
       comiteTecnicoId: this.acta.comiteTecnicoId,
-      observaciones: value,
-      sesionComentarioId: this.sesionComentarioId
+      observaciones: value
     };
 
     this.compromisoSvc.postComentariosActa( observaciones )
@@ -136,7 +133,7 @@ export class RevisionActaComponent implements OnInit {
   };
   //Descargar acta en formato pdf
   getActaPdf( comiteTecnicoId, numeroComite ) {
-    this.compromisoSvc.getActaPdf( comiteTecnicoId )
+    this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId( comiteTecnicoId )
     .subscribe( ( resp: any ) => {
 
       const documento = `Acta Preliminar ${ numeroComite }.pdf`;
