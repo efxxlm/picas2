@@ -12,7 +12,7 @@ export class CompromisosActasComiteService {
   devolverActa: DevolverActa = {
     comiteTecnicoId: 0,
     fecha: null,
-    sesionComentarioId: 0,
+    sesionComentarioId: null,
     observacion: ''
   }
 
@@ -67,11 +67,9 @@ export class CompromisosActasComiteService {
     this.devolverActa.observacion = acta.observaciones;
     this.devolverActa.sesionComentarioId = acta.sesionComentarioId;
 
-    const headers = new HttpHeaders({
-      'Content-Type':'application/json'
-    })
+    console.log( this.devolverActa );
 
-    return this.http.post( `${ this.url }/CreateOrEditCommentReport`, this.devolverActa, { headers } )
+    return this.http.post( `${ this.url }/CreateOrEditCommentReport`, this.devolverActa )
 
   };
 

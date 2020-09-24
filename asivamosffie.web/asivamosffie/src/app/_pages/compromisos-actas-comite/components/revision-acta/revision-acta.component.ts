@@ -29,6 +29,7 @@ export class RevisionActaComponent implements OnInit {
   miembrosParticipantes: any[] = [];
   temas: any[] = [];
   proposicionesVarios: any[] = [];
+  sesionComentarioId: number;
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
@@ -46,6 +47,10 @@ export class RevisionActaComponent implements OnInit {
       .subscribe( ( resp: any ) => {
         this.acta = resp[0];
         console.log( resp[0] );
+
+        if ( resp[0].sesionComentario.length === 0 ) {
+          this.sesionComentarioId = null;
+        };
 
         for ( let temas of resp[0].sesionComiteTema ) {
           if ( !temas.esProposicionesVarios ) {
@@ -69,9 +74,6 @@ export class RevisionActaComponent implements OnInit {
     this.form = this.fb.group({
       comentarioActa: [ null, Validators.required ]
     });
-    this.form.reset({
-      comentarioActa: 'El servicio para comentar y devolver acta se esta enviando la informacion pero el servicio no esta completo en el servidor'
-    })
   };
 
   //Limite maximo Quill Editor
@@ -113,8 +115,7 @@ export class RevisionActaComponent implements OnInit {
     const observaciones = {
       comiteTecnicoId: this.acta.comiteTecnicoId,
       observaciones: value,
-      fecha: new Date(),
-      sesionComentarioId: 0 // no esta llegando este id del servidor
+      sesionComentarioId: this.sesionComentarioId
     };
 
     this.compromisoSvc.postComentariosActa( observaciones )
