@@ -1609,9 +1609,10 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.Observaciones = pSesionComiteSolicitud.Observaciones;
                 sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
+                sesionComiteSolicitudOld.DesarrolloSolicitud = pSesionComiteSolicitud.DesarrolloSolicitud;
+
                 sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld);
-
-
+              
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
                     if (SesionSolicitudCompromiso.SesionSolicitudCompromisoId == 0)
@@ -2743,12 +2744,15 @@ namespace asivamosffie.services
                                         .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitud);
                                     break;
 
-                                //case ConstanCodigoVariablesPlaceHolders.RESULTADO_DE_VOTACION:
-                                //    string strRequiereVotacion 
-
-                                //    registrosContratacion = registrosContratacion
-                                //        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.RequiereVotacion);
-                                //    break;
+                                case ConstanCodigoVariablesPlaceHolders.RESULTADO_DE_VOTACION:
+                                    string strRequiereVotacion = "Si"; 
+                                    if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                    {
+                                         strRequiereVotacion = "No";
+                                    }
+                                        registrosContratacion = registrosContratacion
+                                        .Replace(placeholderDominio.Nombre, strRequiereVotacion);
+                                    break;
                             }
                         }
 
