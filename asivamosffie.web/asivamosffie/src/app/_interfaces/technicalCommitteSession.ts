@@ -91,6 +91,7 @@ export interface SesionComiteSolicitud {
     eliminado?: boolean,
     requiereVotacion?: boolean,
     registroCompleto?: boolean,
+    desarrolloSolicitud?: string,
 
     tipoSolicitud?: string,
     numeroSolicitud?: string,

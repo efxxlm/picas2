@@ -424,10 +424,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const index = aportante.cofinanciacionDocumento.indexOf(documento, 0);
     if (index > -1) {
       aportante.cofinanciacionDocumento.splice(index, 1);
-      aportante.cauntosDocumentos--;
-
-      
-
+      aportante.cauntosDocumentos--;//no funciona visualmente
     }
 
   }

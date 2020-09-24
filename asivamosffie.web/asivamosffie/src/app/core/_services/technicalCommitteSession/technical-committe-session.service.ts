@@ -115,7 +115,7 @@ export class TechnicalCommitteSessionService {
    }
 
    getPlantillaActaBySesionComiteSolicitudId( id: number ){
-    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getPlantillaActaBySesionComiteSolicitudId?SesionComiteSolicitudId=${ id }`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetPlantillaActaIdComite?IdComite=${ id }`, { responseType: "blob" } );
    }
   
 }

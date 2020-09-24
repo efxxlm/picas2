@@ -18,7 +18,6 @@ export class RevisionActaComponent implements OnInit {
   editorStyle = {
     height: '45px'
   };
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -27,6 +26,9 @@ export class RevisionActaComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  miembrosParticipantes: any[] = [];
+  temas: any[] = [];
+  proposicionesVarios: any[] = [];
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
@@ -41,11 +43,26 @@ export class RevisionActaComponent implements OnInit {
 
   getActa ( comiteTecnicoId: number ) {
     this.compromisoSvc.getActa( comiteTecnicoId )
-      .subscribe( resp => {
+      .subscribe( ( resp: any ) => {
         this.acta = resp[0];
-        console.log( resp );
-      } )
-  }
+        console.log( resp[0] );
+
+        for ( let temas of resp[0].sesionComiteTema ) {
+          if ( !temas.esProposicionesVarios ) {
+            this.temas.push( temas );
+          } else {
+            this.proposicionesVarios.push( temas );
+          }
+        };
+
+        for ( let participantes of resp[0].sesionParticipante ) {
+          this.miembrosParticipantes.push( `${ participantes.usuario.nombres } ${ participantes.usuario.apellidos }` )
+        };
+
+        console.log( this.temas );
+
+      } );
+  };
 
   //Formulario comentario de actas
   crearFormulario(){
