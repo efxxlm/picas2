@@ -37,7 +37,7 @@ export interface ComiteTecnico{
     estadoComiteCodigo?: string,
 
     sesionComiteTema?: SesionComiteTema[],
-    sesionComiteSolicitud?: SesionComiteSolicitud[],
+    sesionComiteSolicitudComiteTecnico?: SesionComiteSolicitud[],
     sesionParticipante?: SesionParticipante[],
     sesionInvitado?: SesionInvitado[],
 

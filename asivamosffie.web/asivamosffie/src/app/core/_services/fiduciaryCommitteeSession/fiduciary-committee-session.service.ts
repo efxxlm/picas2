@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
 import { environment } from 'src/environments/environment';
+import { Respuesta } from '../common/common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,10 @@ export class FiduciaryCommitteeSessionService {
 
   getCommitteeSessionFiduciario(){
     return this.http.get<SolicitudesContractuales[]>(`${environment.apiUrl}/CommitteeSessionFiduciario/getCommitteeSessionFiduciario`);
+  }
+
+  createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud`, comite);
   }
 
 }

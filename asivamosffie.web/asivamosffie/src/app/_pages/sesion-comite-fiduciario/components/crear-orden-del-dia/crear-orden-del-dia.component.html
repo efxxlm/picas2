@@ -48,7 +48,11 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-tabla-sesiones (sesionesSeleccionadas)="getSesionesSeleccionada( $event )" [dataSolicitud]="datasolicitud"></app-tabla-sesiones>
+        <app-tabla-sesiones 
+            (sesionesSeleccionadas)="getSesionesSeleccionada( $event )" 
+            [dataSolicitud]="datasolicitud">
+        </app-tabla-sesiones>
+
       </mat-expansion-panel>
 
     </mat-accordion>
@@ -90,8 +94,8 @@
                     <div class="col">
                       <mat-form-field class="select-width">
                         <mat-select formControlName="responsable" required>
-                          <mat-option *ngFor="let responsable of responsablesArray" [value]="responsable.value">
-                            {{ responsable.name }}
+                          <mat-option *ngFor="let responsable of responsablesArray" [value]="responsable">
+                            {{ responsable.nombre }}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
@@ -122,7 +126,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="full-width">
-                    <input matInput type="text" formControlName="tema" maxlength="100" required>
+                    <input matInput type="text" formControlName="url" maxlength="100">
                   </mat-form-field>
                   <span class="text-center d-block">Indique la ruta del soporte de esta información</span>
                 </div>
@@ -162,7 +166,8 @@
       color="warn" 
       class="btn-guardar" 
       *ngIf="estadosComite.sinConvocatoria == objetoSesion.estadoComiteCodigo"
-      type="submit">
+      type="button"
+      (click)="onSubmit()">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>

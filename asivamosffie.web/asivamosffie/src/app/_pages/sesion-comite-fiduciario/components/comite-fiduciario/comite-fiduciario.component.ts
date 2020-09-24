@@ -36,7 +36,7 @@ export class ComiteFiduciarioComponent implements OnInit {
   }
 
   onClickCrearOrden(){
-    this.router.navigate( ['/comiteFiduciario/crearOrdenDelDia', 1 ], { state: { fecha: this.fechaComite.value } } );
+    this.router.navigate( ['/comiteFiduciario/crearOrdenDelDia', 0 ], { state: { fecha: this.fechaComite.value } } );
   };
 
 }

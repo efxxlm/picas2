@@ -13,10 +13,9 @@ export interface DataSesion {
 export interface ComiteFiduciario {
   solicitudesSeleccionadas?: SolicitudContractual[];
   proposiciones?: string;
-  estadoComite: boolean;
-  numeroComite: string;
   temas?: Temas[];
-  fechaComite: string; //Cambiar tipo Date de fecha cuando termine pruebas
+  fechaComite?: string; //Cambiar tipo Date de fecha cuando termine pruebas
+  estadoComiteCodigo?: string;
 };
 
 export interface Temas {

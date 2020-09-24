@@ -43,8 +43,16 @@ namespace asivamosffie.services
 
         public async Task<string> EnumeradorComiteTecnico()
         {
-            int cantidadDeResgistros = _context.ComiteTecnico.Count();
+            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == false || ct.EsComiteFiduciario == false ).Count();
             string Nomeclatura = "CT_"; 
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo );
+        }
+
+        public async Task<string> EnumeradorComiteFiduciario()
+        {
+            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == true ).Count();
+            string Nomeclatura = "CF_"; 
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo );
         }

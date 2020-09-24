@@ -271,31 +271,31 @@ namespace asivamosffie.api.Controllers
         //     }
         // }
 
-        // [Route("GetCommitteeSessionFiduciario")]
-        // public async Task<IActionResult> GetCommitteeSessionFiduciario()
-        // {
-        //     try
-        //     {
-        //         var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
-        //         return Ok(result);
-        //     }
-        //     catch (Exception ex)
-        //     {
+         [Route("GetCommitteeSessionFiduciario")]
+         public async Task<IActionResult> GetCommitteeSessionFiduciario()
+         {
+             try
+             {
+                 var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
 
-        //         throw ex;
-        //     }
-        // }
+                throw ex;
+            }
+        }
 
-        [Route("CreateOrEditCommitteeSession")]
+        [Route("CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud")]
         [HttpPost]
-        public async Task<IActionResult> CreateOrEditCommitteeSession([FromBody]  SesionComiteTema sesionComiteTema)
+        public async Task<IActionResult> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud([FromBody]  ComiteTecnico pComiteTecnico)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
-                sesionComiteTema.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionFiduciarioService.CreateOrEditCommitteeSession(sesionComiteTema);
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( pComiteTecnico );
                 return Ok(respuesta);
                 
             }

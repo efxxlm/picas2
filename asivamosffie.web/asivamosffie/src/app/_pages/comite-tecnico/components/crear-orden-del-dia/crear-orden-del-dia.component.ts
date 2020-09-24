@@ -107,7 +107,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       this.objetoComiteTecnico = response[0];
       this.listaMiembros = response[1];
       console.log( response[0] )
-      this.solicitudesContractuales = response[0].sesionComiteSolicitud;
+      this.solicitudesContractuales = response[0].sesionComiteSolicitudComiteTecnico;
 
       this.solicitudesContractuales.forEach( sc => {
         sc.id = sc.solicitudId;
@@ -239,7 +239,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         comiteTecnicoId: this.idComite,
         fechaOrdenDia: this.fechaSesion,
         sesionComiteTema: [],
-        sesionComiteSolicitud: [],
+        sesionComiteSolicitudComiteTecnico: [],
 
       }
   
@@ -265,7 +265,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           tipoSolicitudCodigo: sol.tipoSolicitudCodigo,
         }
 
-        comite.sesionComiteSolicitud.push( sesionComiteSolicitud );
+        comite.sesionComiteSolicitudComiteTecnico.push( sesionComiteSolicitud );
       })
   
       console.log( comite )

@@ -3,11 +3,12 @@ import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SolicitudesContractuales, Sesion, SesionComiteTema, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, SesionComiteTema, EstadosComite, ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 import { forkJoin } from 'rxjs';
-import { ColumnasTabla, DataTable, SolicitudContractual } from 'src/app/_interfaces/comiteFiduciario.interfaces';
+import { ColumnasTabla, ComiteFiduciario, DataTable, SolicitudContractual } from 'src/app/_interfaces/comiteFiduciario.interfaces';
 import { DatePipe } from '@angular/common';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-crear-orden-del-dia',
@@ -19,7 +20,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   solicitudesContractuales: SolicitudesContractuales[] = [];
   //Data que sera recibida del servicio
-  dataSolicitudContractual: SolicitudContractual[] = [];
+  dataSolicitudContractual: SolicitudesContractuales[] = [];
   fechaSesion: Date;
   idSesion: number;
   detalle: string = 'Crear orden del día de comité fiduciario';
@@ -29,9 +30,9 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   tipoDeTemas: FormControl = new FormControl();
   solicitudesSeleccionadas = [];
   estadosComite = EstadosComite;
-  objetoSesion: Sesion = {
-    estadoComiteCodigo: this.estadosComite.sinConvocatoria
-  };
+  objetoSesion: ComiteFiduciario = {
+     estadoComiteCodigo: this.estadosComite.sinConvocatoria 
+   };
 
   addressForm = this.fb.group({
     tema: this.fb.array([]),
@@ -39,11 +40,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   
 
 
-  responsablesArray = [
-    {name: 'reponsable 1', value: '1'},
-    {name: 'reponsable 2', value: '2'},
-    {name: 'reponsable 3', value: '3'}
-  ];
+  responsablesArray: Dominio[] = [];
 
   constructor ( private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -51,6 +48,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
                 private router: Router,
                 private datepipe: DatePipe,
                 private fiduciaryCommitteeSession : FiduciaryCommitteeSessionService, 
+                private commonService: CommonService,
                 
                 ) 
   {
@@ -93,40 +91,14 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   //Obtener data de sesiones de solicitudes contractuales
   getSolicitudesContractuales () {
 
-    this.fiduciaryCommitteeSession.getCommitteeSessionFiduciario()
-    .subscribe( response => {
-      this.dataSolicitudContractual = response;  
+    forkJoin([
+      this.commonService.listaMiembrosComiteTecnico(),      
+      this.fiduciaryCommitteeSession.getCommitteeSessionFiduciario(),
+    ]).subscribe( response => {
+      this.responsablesArray = response[0];
+      this.dataSolicitudContractual = response[1];  
     })
 
-    // this.dataSolicitudContractual = [
-    //   {
-    //     nombreSesion: 'CT_00001',
-    //     fecha: '24/06/2020',
-    //     data: [
-    //       {
-    //         fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
-    //         numeroSolicitud: 'SC0005',
-    //         tipoSolicitud: 'Evaluación de proceso de selección'
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     nombreSesion: 'CT_00002',
-    //     fecha: '30/06/2020',
-    //     data: [
-    //       {
-    //         fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
-    //         numeroSolicitud: 'PI0004',
-    //         tipoSolicitud: 'Contratación'
-    //       },
-    //       {
-    //         fechaSolicitud: this.datepipe.transform( new Date(), 'dd-MM-yyyy'),
-    //         numeroSolicitud: '000003',
-    //         tipoSolicitud: 'Modificación contractual'
-    //       },
-    //     ]
-    //   }
-    // ];
   };
 
   //Contador solicitudes seleccionadas
@@ -231,30 +203,39 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   onSubmit() {
 
     console.log(this.addressForm);
-    if (this.addressForm.invalid || this.solicitudesSeleccionadas.length === 0 ) {
+    if (this.addressForm.invalid) {
       this.openDialog('Falta registrar información', '');
 
     }else{
-      let sesion = {
-        sesionId: this.idSesion,
+      let sesion: ComiteTecnico = {
+        comiteTecnicoId: this.idSesion,
         fechaOrdenDia: this.fechaSesion,
         sesionComiteTema: [],
-        solicitudesContractuales: this.solicitudesSeleccionadas
+        sesionComiteSolicitudComiteTecnico: this.solicitudesSeleccionadas
       }
   
       this.tema.controls.forEach( control => {
         let sesionComiteTema: SesionComiteTema = {
+          sesionTemaId: control.get('sesionTemaId').value,
+          comiteTecnicoId: this.idSesion, 
           tema: control.get('tema').value,
-          responsableCodigo: control.get('responsable').value,
+          responsableCodigo: control.get('responsable').value.codigo,
           tiempoIntervencion: control.get('tiempoIntervencion').value,
           rutaSoporte: control.get('url').value,
-          sesionTemaId: control.get('sesionTemaId').value,
-          sesionId: this.idSesion,
-
+          
         }
   
         sesion.sesionComiteTema.push( sesionComiteTema );
-      }) 
+      })
+
+      console.log( sesion );
+      
+      this.fiduciaryCommitteeSession.createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( sesion )
+        .subscribe( respuesta => {
+          this.openDialog( '', respuesta.message);
+          if ( respuesta.code == "200" )
+            this.router.navigate(['/comiteFiduciario'])          
+        })
 
     }
   }

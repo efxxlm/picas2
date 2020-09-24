@@ -30,7 +30,7 @@ namespace asivamosffie.services.Interfaces
 
 
 
-        Task<Respuesta> CreateOrEditCommitteeSession(SesionComiteTema sesionComiteTema);
+        Task<Respuesta> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(ComiteTecnico pComiteTecnico);
         Task<Respuesta> CreateOrEditGuest(SesionInvitado sesionInvitado);
         Task<Respuesta> CreateOrEditSesioncomment(SesionComentario sesionComentario);
         Task<Respuesta> CreateOrEditSubjects(TemaCompromiso temaCompromiso);
