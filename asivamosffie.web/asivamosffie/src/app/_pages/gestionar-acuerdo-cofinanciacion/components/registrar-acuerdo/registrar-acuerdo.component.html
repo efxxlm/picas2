@@ -57,7 +57,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
                     maxlength="4" min="1" max="999" required type="number"
-                    formControlName="numAportes" 
+                    formControlName="numAportes" [readonly]="numAportes.value!=''"
                     >
                 </mat-form-field>
                 <span class="contador">{{3 - numAportes.value.length}}</span>
@@ -181,7 +181,8 @@
                           <input matInput #cauntosDocumentos maxlength="4" (change)="cantidadDocumentos(aportante,i)"
                             (keyup)="cantidadDocumentos(aportante,i)" min="1" max="999" required type="number"
                             (keypress)="validateNumberKeypress($event)" formControlName="cauntosDocumentos"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            [readonly]="cauntosDocumentos.value!=''">
                           <input formControlName="cofinanciacionId" type="hidden">
                           <input formControlName="cofinanciacionAportanteId" type="hidden">
                         </mat-form-field>
@@ -248,7 +249,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.vigenciaAporte}"
+                        [ngClass]="{'color-secondaryColor' : !documento.vigenciaAporte && documento.cofinanciacionAportanteId>0}"
                         >Vigencia del aporte</label>
                       </div>
                       <div class="col">
@@ -270,7 +271,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.valorDocumento<1 ||documento.valorDocumento=='')}"
+                        [ngClass]="{'color-secondaryColor' : (documento.valorDocumento<1 ||documento.valorDocumento=='') && documento.cofinanciacionAportanteId>0}"
                         >Valor indicado en el documento</label>
                       </div>
                       <div class="col d-flex align-items-center">
@@ -292,7 +293,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.tipoDocumentoId}"
+                        [ngClass]="{'color-secondaryColor' : !documento.tipoDocumentoId && documento.cofinanciacionAportanteId>0}"
                         >Tipo de documento</label>
                       </div>
                       <div class="col">
@@ -314,7 +315,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.numeroActa<1 ||documento.numeroActa=='')}"
+                        [ngClass]="{'color-secondaryColor' : (documento.numeroActa<1 ||documento.numeroActa=='') && documento.cofinanciacionAportanteId>0}"
                         >Número de acta</label>
                       </div>
                       <div class="col d-flex align-items-center">
@@ -334,7 +335,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.fechaActa}"
+                        [ngClass]="{'color-secondaryColor' : !documento.fechaActa && documento.cofinanciacionAportanteId>0}"
                         >Fecha del acta</label>
                       </div>
                       <div class="col d-flex align-items-center">
@@ -356,7 +357,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.numeroAcuerdo<1||documento.numeroAcuerdo=='')}"
+                        [ngClass]="{'color-secondaryColor' : (documento.numeroAcuerdo<1||documento.numeroAcuerdo=='') && documento.cofinanciacionAportanteId>0}"
                         >Número de documento
                           {{documento.tipoDocumentoId==25?'de acuerdo':''}}</label>
                       </div>
@@ -378,7 +379,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.fechaAcuerdo}"
+                        [ngClass]="{'color-secondaryColor' : !documento.fechaAcuerdo && documento.cofinanciacionAportanteId>0}"
                         >Fecha del documento
                           {{documento.tipoDocumentoId==25?'de acuerdo':''}}</label>
                       </div>
@@ -396,7 +397,7 @@
                     </div>
                   </div>
 
-                  <div class="col text-right">
+                  <div class="col text-right" *ngIf="aportante.cofinanciacionDocumento.length>1">
                     <button mat-button color="warn" type="button" class="btn-eliminar"
                       (click)="eliminadoc(aportante,documento)">
                       <img src="assets/img/icon/menos.svg" alt="Eliminar documento">

@@ -323,6 +323,7 @@ namespace asivamosffie.services
             foreach (var item in Listcofinanciacion)
             {
                 item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+                item.ValorTotal = _context.CofinanciacionDocumento.Where(x=> item.CofinanciacionAportante.Select(x=>x.CofinanciacionAportanteId).ToList().Contains((int)x.CofinanciacionAportanteId)).Sum(x=>x.ValorDocumento);
             }
             return Listcofinanciacion.OrderByDescending(r => r.CofinanciacionId).ToList();
         }
@@ -366,7 +367,14 @@ namespace asivamosffie.services
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)
         {
             //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
-            return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).ToListAsync();
+            //jflorez: modifico para setear el nombre del aportante
+            var retorno= await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).ToListAsync();
+            foreach(var ret in retorno)
+            {
+                ret.NombreAportante = ret.NombreAportanteId==null?"Error en nombre de aportante":_context.Dominio.Find(ret.NombreAportanteId).Nombre;
+                ret.TipoAportante= ret.TipoAportanteId==null?"Error en tipo de aportante":_context.Dominio.Find(ret.TipoAportanteId).Nombre;
+            }
+            return retorno;
         }
     }
 }
