@@ -66,11 +66,15 @@ namespace asivamosffie.services
                 foreach (VigenciaAporte vi in fuentefinanciacion.VigenciaAporte)
                 {
                     vi.FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId;
+                    vi.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion;
+                    vi.FechaCreacion = DateTime.Now;
                     await this.CreateEditarVigenciaAporte(vi);
                 };
 
                 foreach (CuentaBancaria cb in fuentefinanciacion.CuentaBancaria)
                 {
+                    cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion;
+                    cb.FechaCreacion = DateTime.Now;
                     await bankAccountService.CreateEditarCuentasBancarias(cb);
                 };
 
