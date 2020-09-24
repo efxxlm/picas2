@@ -24,9 +24,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content class="colorMainColor">
-          Juan Lizcano Garcia, Fernando José Aldemar Rojas, Gonzalo Díaz Mesa.
-          <br>
-          El servicio del lado del servidor para obtener los detalles del acta no esta completo por que depende del CU 4.1.6.2
+          <div class="d-flex">
+            <p *ngFor="let participante of miembrosParticipantes; let i = index" class="ml-min"> {{ participante }}<span *ngIf="i < miembrosParticipantes.length-1">,</span><span *ngIf="i === miembrosParticipantes.length-1">.</span></p>
+          </div>
         </mat-card-content>
     </mat-card>
     <div class="text-center">
@@ -66,6 +66,32 @@
             Otros temas
           </mat-panel-title>
         </mat-expansion-panel-header>
+
+        <mat-accordion *ngFor="let tema of temas; let i = index">
+          <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Tema {{ i+1 }} </b>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div align="left">
+              <mat-card class="border">
+                <mat-card-content>
+                  <h2 class="card-subTitle back-color">Desarrollo</h2>
+                  <p><b>Tema</b>: {{ tema.tema }} </p>
+                  <p><b>Responsable</b>: </p>
+                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observaciones ) }} </p>
+                  <h2 class="card-subTitle back-color">Decisiones</h2>
+                  <p><b>Estado de la solicitud</b>: </p>
+                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observacionesDecision ) }} </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
@@ -74,6 +100,32 @@
             Proposiciones y varios
           </mat-panel-title>
         </mat-expansion-panel-header>
+
+        <mat-accordion *ngFor="let tema of proposicionesVarios; let i = index">
+          <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Tema {{ i+1 }} </b>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div align="left">
+              <mat-card class="border">
+                <mat-card-content>
+                  <h2 class="card-subTitle back-color">Desarrollo</h2>
+                  <p><b>Tema</b>: {{ tema.tema }} </p>
+                  <p><b>Responsable</b>: </p>
+                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observaciones ) }} </p>
+                  <h2 class="card-subTitle back-color">Decisiones</h2>
+                  <p><b>Estado de la solicitud</b>: </p>
+                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observacionesDecision ) }} </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </mat-expansion-panel>
     </mat-accordion>
 </section>
@@ -106,7 +158,7 @@
       <div class="text-area-quill">
         <label for="justificacion" class="text-area-quill--label">Comentarios al acta</label>
         <p class="padding-p">Fecha: <b class="text-color">26/06/2020</b></p>
-        <quill-editor class="quill-editor-style" format="text" [styles]="editorStyle" [modules]="config"
+        <quill-editor class="quill-editor-style card" format="text" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 1000)" formControlName="comentarioActa" required></quill-editor>
       </div>
       <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
