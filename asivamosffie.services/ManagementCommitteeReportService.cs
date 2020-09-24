@@ -175,7 +175,7 @@ namespace asivamosffie.services
                     {
                         if (SesionComiteTema.TemaCompromiso.Count() > 0)
                         {
-                            SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+                            SesionComiteTema.TemaCompromiso =  SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
                         }
 
                         if (!string.IsNullOrEmpty(SesionComiteTema.ResponsableCodigo))
