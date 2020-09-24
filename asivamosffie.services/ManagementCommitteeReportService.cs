@@ -146,6 +146,7 @@ namespace asivamosffie.services
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                             .Include(r => r.SesionComiteTema)
+                              .ThenInclude(r => r.TemaCompromiso)
                             .Include(r => r.SesionParticipante)
                                 .ThenInclude(r => r.Usuario)
                                   .Include(r => r.SesionComiteTecnicoCompromiso)
@@ -164,7 +165,7 @@ namespace asivamosffie.services
                     {
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
                     }
-               
+
                     foreach (var item2 in item.SesionParticipante)
                     {
                         item2.Usuario.Contrasena = string.Empty;
@@ -172,6 +173,11 @@ namespace asivamosffie.services
 
                     foreach (var SesionComiteTema in item.SesionComiteTema)
                     {
+                        if (SesionComiteTema.TemaCompromiso.Count() > 0)
+                        {
+                            SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+                        }
+
                         if (!string.IsNullOrEmpty(SesionComiteTema.ResponsableCodigo))
                         {
                             SesionComiteTema.ResponsableCodigo = ListParametricas
@@ -182,7 +188,7 @@ namespace asivamosffie.services
                         if (!string.IsNullOrEmpty(SesionComiteTema.EstadoTemaCodigo))
                         {
                             SesionComiteTema.EstadoTemaCodigo = ListParametricas
-                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
+                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
                                 .FirstOrDefault().Nombre;
                         }
 
