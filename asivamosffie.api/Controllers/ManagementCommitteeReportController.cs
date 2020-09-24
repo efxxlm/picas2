@@ -100,6 +100,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 compromisoSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                compromisoSeguimiento.SesionParticipanteId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
                 respuesta = await _managementCommitteeReportService.CreateOrEditReportProgress(compromisoSeguimiento, estadoCompromiso);
                 return Ok(respuesta);
 
