@@ -78,11 +78,12 @@ export class RegistrarAcuerdoComponent implements OnInit {
             const valorTipo = this.selectTiposAportante.find(a => a.dominioId === apor.tipoAportanteId);
             const valorNombre = this.nombresAportante.find(a => a.dominioId === apor.nombreAportanteId);
             const idMunicipio = apor.municipioId ? apor.municipioId.toString() : "00000";
+            const idDepartamento= apor.departamentoId?apor.departamentoId.toString():"000";
 
             this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.substring(0, 5)).subscribe(mun => {
 
               const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio);
-              const valorDepartamento = this.departamentos.find(a => a.localizacionId === idMunicipio.substring(0, 5));
+              const valorDepartamento = this.departamentos.find(a => a.localizacionId === idDepartamento);
 
               grupo.get('departamento').setValue(valorDepartamento);
               grupo.get('municipios').setValue(mun);

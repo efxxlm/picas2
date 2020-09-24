@@ -372,7 +372,27 @@ namespace asivamosffie.services
             var retorno= await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).Include(x=>x.NombreAportante).Include(x => x.TipoAportante).ToListAsync();
             foreach(var ret in retorno)
             {
-                ret.NombreAportanteString = ret.NombreAportante.Nombre;
+                if(ret.TipoAportanteId==ConstanTipoAportante.Ffie)
+                {
+                    ret.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                }
+                else if (ret.TipoAportanteId == ConstanTipoAportante.ET)
+                {
+                    //verifico si tiene municipio
+                    if(ret.MunicipioId==null)
+                    {
+                        ret.NombreAportanteString = _context.Localizacion.Find(ret.MunicipioId).Descripcion;
+                    }
+                    else//solo departamento
+                    {
+                        ret.NombreAportanteString = _context.Localizacion.Find(ret.DepartamentoId).Descripcion;
+                    }
+                    
+                }
+                else
+                {
+                    ret.NombreAportanteString = ret.NombreAportante.Nombre;
+                }                
                 ret.TipoAportanteString = ret.TipoAportante.Nombre;
             }
             return retorno;
