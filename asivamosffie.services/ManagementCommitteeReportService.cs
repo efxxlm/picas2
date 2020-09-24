@@ -354,28 +354,26 @@ namespace asivamosffie.services
 
         //Aprobar Acta
         public async Task<Respuesta> AcceptReport(int comiteTecnicoId, string user)
-        {
-            Respuesta respuesta = new Respuesta();
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Acta, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
-            ComiteTecnico comiteTecnico = null;
             try
             {
-                comiteTecnico = await _context.ComiteTecnico.Where(c => c.ComiteTecnicoId == comiteTecnicoId).FirstOrDefaultAsync();
+                ComiteTecnico comiteTecnico = await _context.ComiteTecnico.FindAsync(comiteTecnicoId);
 
                 if (comiteTecnico != null)
                 {
                     //Auditoria
-                    strCrearEditar = "APROBAR ACTA";
-
+                    strCrearEditar = "APROBAR ACTA"; 
                     comiteTecnico.UsuarioModificacion = user;
-                    comiteTecnico.EstadoActaCodigo = "3";
-                    _context.ComiteTecnico.Update(comiteTecnico);
+                    //  comiteTecnico.EstadoActaCodigo = "3";
+                    comiteTecnico.EstadoActaCodigo = ConstantCodigoActas.Aprobada;
 
+                    _context.SaveChanges();
                 }
 
-                return respuesta = new Respuesta
+                return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
@@ -389,7 +387,7 @@ namespace asivamosffie.services
 
             catch (Exception ex)
             {
-                return respuesta = new Respuesta
+                return  new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
