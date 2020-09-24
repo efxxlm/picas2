@@ -2675,8 +2675,23 @@ namespace asivamosffie.services
 
                                     foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                                     {
+                                        RegistrosProyectos += PlantillaRegistrosProyectos;
 
-                                    }
+                                        foreach (Dominio placeholderDominio2 in placeholders)
+                                        {
+                                            switch (placeholderDominio2.Codigo)
+                                            { 
+                                            
+                                            
+                                            
+                                            
+                                            } 
+                                        }
+
+
+
+
+                                            }
                                     strContenido = strContenido
                                         .Replace(placeholderDominio.Nombre,
                                         ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar

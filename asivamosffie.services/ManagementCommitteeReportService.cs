@@ -47,10 +47,10 @@ namespace asivamosffie.services
             List<GrillaSesionComiteTecnicoCompromiso> grillaSesionComiteTecnicoCompromisos = new List<GrillaSesionComiteTecnicoCompromiso>();
 
             List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
-                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion 
+                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion
                        && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                   .Include(r => r.SesionComiteTecnicoCompromiso).ToListAsync();
-        
+
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
                 try
@@ -67,7 +67,7 @@ namespace asivamosffie.services
                         grillaSesionComiteTecnicoCompromiso.Compromiso = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().Tarea;
                         grillaSesionComiteTecnicoCompromiso.FechaCumplimiento = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().FechaCumplimiento;
                         grillaSesionComiteTecnicoCompromiso.EstadoCodigo = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().EstadoCodigo;
-                       
+
                     }
                     grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
                 }
@@ -114,13 +114,13 @@ namespace asivamosffie.services
 
         //Gestion de actas
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport()
-        { 
+        {
             return await _context.ComiteTecnico
                 .Where(r => !(bool)r.Eliminado)
                   .Include(r => r.SesionComiteTecnicoCompromiso)
-                  .Include(r=> r.SesionComiteSolicitudComiteTecnico)
+                  .Include(r => r.SesionComiteSolicitudComiteTecnico)
                   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                  .ToListAsync(); 
+                  .ToListAsync();
         }
 
 
@@ -143,253 +143,263 @@ namespace asivamosffie.services
                 //                  EstadoComiteCodigo = sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
 
                 //              }).ToListAsync();
-                return await _context.ComiteTecnico
+                List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                             .Include(r => r.SesionComiteTema)
-                            .Include(r=> r.SesionParticipante)
-                            .ThenInclude(r=> r.Usuario)
-                            //.Include(r => r.SesionComiteTecnicoCompromiso)
-                            //.Include(r => r.SesionComiteTecnicoCompromiso)
-                            //.Include(r => r.SesionComiteSolicitudComiteTecnico)
-                            //.Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                        .ToListAsync(); 
+                            .Include(r => r.SesionParticipante)
+                            .ThenInclude(r => r.Usuario)
+                        //.Include(r => r.SesionComiteTecnicoCompromiso)
+                        //.Include(r => r.SesionComiteTecnicoCompromiso)
+                        //.Include(r => r.SesionComiteSolicitudComiteTecnico)
+                        //.Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                        .ToListAsync();
+
+                foreach (var item in ListComiteTecnico)
+                {
+                    foreach (var item2 in item.SesionParticipante)
+                    {
+                        item2.Usuario.Contrasena = string.Empty; 
+                    }
+                }
+
+                return ListComiteTecnico;
             }
             catch (Exception ex)
             {
 
                 return new List<ComiteTecnico>();
             }
-        }
+}
 
 
 
 
-        //Reportar Avance Compromisos
-        public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso)
+//Reportar Avance Compromisos
+public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso)
+{
+    Respuesta respuesta = new Respuesta();
+    int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+
+    string strCrearEditar = string.Empty;
+    CompromisoSeguimiento compromisoSeguimientoAntiguo = null;
+    try
+    {
+
+        if (string.IsNullOrEmpty(compromisoSeguimiento.CompromisoSeguimientoId.ToString()) || compromisoSeguimiento.CompromisoSeguimientoId == 0)
         {
-            Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+            //Auditoria
+            strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
+            compromisoSeguimiento.FechaCreacion = DateTime.Now;
+            compromisoSeguimiento.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
+            compromisoSeguimiento.SesionParticipanteId = compromisoSeguimiento.SesionParticipanteId;
+            compromisoSeguimiento.Eliminado = false;
+            _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
+            var result = await _context.SaveChangesAsync();
 
-            string strCrearEditar = string.Empty;
-            CompromisoSeguimiento compromisoSeguimientoAntiguo = null;
-            try
-            {
+            /*if (result > 0)
+               await UpdateStatus(compromisoSeguimiento.SesionComiteTecnicoCompromisoId, estadoCompromiso);*/
+        }
+        else
+        {
+            strCrearEditar = "EDITAR AVANCE COMPROMISOS";
+            compromisoSeguimientoAntiguo = _context.CompromisoSeguimiento.Find(compromisoSeguimiento.CompromisoSeguimientoId);
 
-                if (string.IsNullOrEmpty(compromisoSeguimiento.CompromisoSeguimientoId.ToString()) || compromisoSeguimiento.CompromisoSeguimientoId == 0)
-                {
-                    //Auditoria
-                    strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
-                    compromisoSeguimiento.FechaCreacion = DateTime.Now;
-                    compromisoSeguimiento.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
-                    compromisoSeguimiento.SesionParticipanteId = compromisoSeguimiento.SesionParticipanteId;
-                    compromisoSeguimiento.Eliminado = false;
-                    _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
-                    var result = await _context.SaveChangesAsync();
-
-                    /*if (result > 0)
-                       await UpdateStatus(compromisoSeguimiento.SesionComiteTecnicoCompromisoId, estadoCompromiso);*/
-                }
-                else
-                {
-                    strCrearEditar = "EDITAR AVANCE COMPROMISOS";
-                    compromisoSeguimientoAntiguo = _context.CompromisoSeguimiento.Find(compromisoSeguimiento.CompromisoSeguimientoId);
-
-                    //Auditoria
-                    compromisoSeguimientoAntiguo.UsuarioModificacion = compromisoSeguimiento.UsuarioModificacion;
-                    compromisoSeguimientoAntiguo.Eliminado = false;
+            //Auditoria
+            compromisoSeguimientoAntiguo.UsuarioModificacion = compromisoSeguimiento.UsuarioModificacion;
+            compromisoSeguimientoAntiguo.Eliminado = false;
 
 
-                    //Registros
-                    compromisoSeguimientoAntiguo.DescripcionSeguimiento = compromisoSeguimiento.DescripcionSeguimiento;
-                    compromisoSeguimientoAntiguo.TemaCompromisoId = compromisoSeguimiento.TemaCompromisoId;
-                    compromisoSeguimientoAntiguo.SesionParticipanteId = compromisoSeguimiento.SesionParticipanteId;
-                    _context.CompromisoSeguimiento.Update(compromisoSeguimiento);
-
-                }
-
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = compromisoSeguimiento,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, compromisoSeguimiento.UsuarioCreacion, strCrearEditar)
-
-                };
-            }
-
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Data = compromisoSeguimiento,
-                    Code = ConstantMessagesSesionComiteTema.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, compromisoSeguimiento.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
-                };
-            }
+            //Registros
+            compromisoSeguimientoAntiguo.DescripcionSeguimiento = compromisoSeguimiento.DescripcionSeguimiento;
+            compromisoSeguimientoAntiguo.TemaCompromisoId = compromisoSeguimiento.TemaCompromisoId;
+            compromisoSeguimientoAntiguo.SesionParticipanteId = compromisoSeguimiento.SesionParticipanteId;
+            _context.CompromisoSeguimiento.Update(compromisoSeguimiento);
 
         }
 
-        //Comentar y devolver acta
-        public async Task<Respuesta> CreateOrEditCommentReport(SesionComentario SesionComentario)
+        return respuesta = new Respuesta
         {
+            IsSuccessful = true,
+            IsException = false,
+            IsValidation = false,
+            Data = compromisoSeguimiento,
+            Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, compromisoSeguimiento.UsuarioCreacion, strCrearEditar)
 
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comentario_Acta, (int)EnumeratorTipoDominio.Acciones);
+        };
+    }
 
-            string strCrearEditar = string.Empty;
-            SesionComentario SesionComentarioAntiguo = null;
-            try
-            {
+    catch (Exception ex)
+    {
+        return new Respuesta
+        {
+            IsSuccessful = false,
+            IsException = true,
+            IsValidation = false,
+            Data = compromisoSeguimiento,
+            Code = ConstantMessagesSesionComiteTema.Error,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, compromisoSeguimiento.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+        };
+    }
 
-                if (string.IsNullOrEmpty(SesionComentario.SesionComentarioId.ToString()) || SesionComentario.SesionComentarioId == 0)
-                {
-                    //Auditoria
-                    strCrearEditar = "COMENTAR Y DEVOLVER ACTA";
-                    SesionComentario.FechaCreacion = DateTime.Now;
-                    SesionComentario.UsuarioCreacion = SesionComentario.UsuarioCreacion;
+}
 
-                    _context.SesionComentario.Add(SesionComentario);
+//Comentar y devolver acta
+public async Task<Respuesta> CreateOrEditCommentReport(SesionComentario SesionComentario)
+{
 
-                }
-                else
-                {
-                    strCrearEditar = "EDIT COMENTAR ACTA";
-                    SesionComentarioAntiguo = _context.SesionComentario.Find(SesionComentario.SesionComentarioId);
+    int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comentario_Acta, (int)EnumeratorTipoDominio.Acciones);
 
-                    //Auditoria
-                    SesionComentarioAntiguo.UsuarioModificacion = SesionComentario.UsuarioModificacion;
-                    SesionComentarioAntiguo.FechaModificacion = DateTime.Now;
+    string strCrearEditar = string.Empty;
+    SesionComentario SesionComentarioAntiguo = null;
+    try
+    {
+
+        if (string.IsNullOrEmpty(SesionComentario.SesionComentarioId.ToString()) || SesionComentario.SesionComentarioId == 0)
+        {
+            //Auditoria
+            strCrearEditar = "COMENTAR Y DEVOLVER ACTA";
+            SesionComentario.FechaCreacion = DateTime.Now;
+            SesionComentario.UsuarioCreacion = SesionComentario.UsuarioCreacion;
+
+            _context.SesionComentario.Add(SesionComentario);
+
+        }
+        else
+        {
+            strCrearEditar = "EDIT COMENTAR ACTA";
+            SesionComentarioAntiguo = _context.SesionComentario.Find(SesionComentario.SesionComentarioId);
+
+            //Auditoria
+            SesionComentarioAntiguo.UsuarioModificacion = SesionComentario.UsuarioModificacion;
+            SesionComentarioAntiguo.FechaModificacion = DateTime.Now;
 
 
-                    //Registros
-                    SesionComentarioAntiguo.Fecha = SesionComentario.Fecha;
-                    SesionComentarioAntiguo.Observacion = SesionComentario.Observacion;
-                    _context.SesionComentario.Update(SesionComentarioAntiguo);
-
-                }
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = SesionComentario,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, SesionComentario.UsuarioCreacion, strCrearEditar)
-
-                };
-            }
-
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesSesionComiteTema.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, SesionComentario.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
-                };
-            }
+            //Registros
+            SesionComentarioAntiguo.Fecha = SesionComentario.Fecha;
+            SesionComentarioAntiguo.Observacion = SesionComentario.Observacion;
+            _context.SesionComentario.Update(SesionComentarioAntiguo);
 
         }
 
-
-        //Aprobar Acta
-        public async Task<Respuesta> AcceptReport(int comiteTecnicoId, string user)
+        return new Respuesta
         {
-            Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Acta, (int)EnumeratorTipoDominio.Acciones);
+            IsSuccessful = true,
+            IsException = false,
+            IsValidation = false,
+            Data = SesionComentario,
+            Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, SesionComentario.UsuarioCreacion, strCrearEditar)
 
-            string strCrearEditar = string.Empty;
-            ComiteTecnico comiteTecnico = null;
-            try
-            {
-                comiteTecnico = await _context.ComiteTecnico.Where(c => c.ComiteTecnicoId == comiteTecnicoId).FirstOrDefaultAsync();
+        };
+    }
 
-                if (comiteTecnico != null)
-                {
-                    //Auditoria
-                    strCrearEditar = "APROBAR ACTA";
+    catch (Exception ex)
+    {
+        return new Respuesta
+        {
+            IsSuccessful = false,
+            IsException = true,
+            IsValidation = false,
+            Data = null,
+            Code = ConstantMessagesSesionComiteTema.Error,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, SesionComentario.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+        };
+    }
 
-                    comiteTecnico.UsuarioModificacion = user;
-                    comiteTecnico.EstadoActaCodigo = "3";
-                    _context.ComiteTecnico.Update(comiteTecnico);
+}
 
-                }
 
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = comiteTecnico,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, user, strCrearEditar)
+//Aprobar Acta
+public async Task<Respuesta> AcceptReport(int comiteTecnicoId, string user)
+{
+    Respuesta respuesta = new Respuesta();
+    int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Acta, (int)EnumeratorTipoDominio.Acciones);
 
-                };
-            }
+    string strCrearEditar = string.Empty;
+    ComiteTecnico comiteTecnico = null;
+    try
+    {
+        comiteTecnico = await _context.ComiteTecnico.Where(c => c.ComiteTecnicoId == comiteTecnicoId).FirstOrDefaultAsync();
 
-            catch (Exception ex)
-            {
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesSesionComiteTema.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, user, ex.InnerException.ToString().Substring(0, 500))
-                };
-            }
+        if (comiteTecnico != null)
+        {
+            //Auditoria
+            strCrearEditar = "APROBAR ACTA";
+
+            comiteTecnico.UsuarioModificacion = user;
+            comiteTecnico.EstadoActaCodigo = "3";
+            _context.ComiteTecnico.Update(comiteTecnico);
 
         }
 
-
-        //Actualizar estado codigo de un compromiso
-        public async Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status)
+        return respuesta = new Respuesta
         {
-            try
+            IsSuccessful = true,
+            IsException = false,
+            IsValidation = false,
+            Data = comiteTecnico,
+            Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, user, strCrearEditar)
+
+        };
+    }
+
+    catch (Exception ex)
+    {
+        return respuesta = new Respuesta
+        {
+            IsSuccessful = false,
+            IsException = true,
+            IsValidation = false,
+            Data = null,
+            Code = ConstantMessagesSesionComiteTema.Error,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, user, ex.InnerException.ToString().Substring(0, 500))
+        };
+    }
+
+}
+
+
+//Actualizar estado codigo de un compromiso
+public async Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status)
+{
+    try
+    {
+        if (!string.IsNullOrEmpty(Convert.ToString(sesionComiteTecnicoCompromisoId)) || !string.IsNullOrEmpty(status))
+        {
+            SesionComiteTecnicoCompromiso sesionComiteTecnicoCompromiso = await _context.SesionComiteTecnicoCompromiso.Where(up => up.SesionComiteTecnicoCompromisoId == sesionComiteTecnicoCompromisoId && (bool)!up.Eliminado).FirstOrDefaultAsync();
+            if (sesionComiteTecnicoCompromiso != null)
             {
-                if (!string.IsNullOrEmpty(Convert.ToString(sesionComiteTecnicoCompromisoId)) || !string.IsNullOrEmpty(status))
-                {
-                    SesionComiteTecnicoCompromiso sesionComiteTecnicoCompromiso = await _context.SesionComiteTecnicoCompromiso.Where(up => up.SesionComiteTecnicoCompromisoId == sesionComiteTecnicoCompromisoId && (bool)!up.Eliminado).FirstOrDefaultAsync();
-                    if (sesionComiteTecnicoCompromiso != null)
-                    {
-                        sesionComiteTecnicoCompromiso.EstadoCodigo = status;
-                        _context.SesionComiteTecnicoCompromiso.Update(sesionComiteTecnicoCompromiso);
-                        var result = await _context.SaveChangesAsync();
+                sesionComiteTecnicoCompromiso.EstadoCodigo = status;
+                _context.SesionComiteTecnicoCompromiso.Update(sesionComiteTecnicoCompromiso);
+                var result = await _context.SaveChangesAsync();
 
-                        if (result > 0)
-                            return true;
+                if (result > 0)
+                    return true;
 
-                    }
-
-                    return false;
-                }
-
-                return false;
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
+            return false;
         }
 
+        return false;
+    }
+    catch (Exception)
+    {
 
-        //plantilla - Acta de comité técnico
-        public async Task<HTMLContent> GetHTMLString(ActaComite obj)
-        {
-            try
-            {
-                var sb = new StringBuilder();
-                sb.Append(@"
+        throw;
+    }
+}
+
+
+//plantilla - Acta de comité técnico
+public async Task<HTMLContent> GetHTMLString(ActaComite obj)
+{
+    try
+    {
+        var sb = new StringBuilder();
+        sb.Append(@"
                         <!DOCTYPE html>
                             <html lang='en'>
 
@@ -520,15 +530,15 @@ namespace asivamosffie.services
 
                             </html>");
 
-                obj.htmlContent = sb;
-                return new HTMLContent(sb.ToString());
-            }
-            catch (Exception e)
-            {
-                return new HTMLContent("");
-            }
+        obj.htmlContent = sb;
+        return new HTMLContent(sb.ToString());
+    }
+    catch (Exception e)
+    {
+        return new HTMLContent("");
+    }
 
-        }
+}
 
 
     }
