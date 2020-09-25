@@ -115,6 +115,26 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        //[Route("GetContratoPolizaByIdContratoPolizaId")]
+        //[HttpGet]
+        ////public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
+        //public async Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
+        //{
+        //    var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId);
+        //    return respuesta;
+        //}
+
+        
+        [Route("AprobarContratoByIdContrato")]
+        [HttpPost]
+        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
+        public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato)
+        {
+            var respuesta = await _guaranteePolicy.AprobarContrato(pIdContrato);
+            return respuesta;
+        }
+
         [Route("GetContratoPolizaByIdContratoPolizaId")]
         [HttpGet]
         //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)

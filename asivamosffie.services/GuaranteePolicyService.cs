@@ -339,19 +339,23 @@ namespace asivamosffie.services
             string strCrearEditar = "";
             strCrearEditar = "EDITAR CONTRATO PÓLIZA";
 
-            //string correo = "cdaza@ivolucion.com";
+            string correo = "cdaza@ivolucion.com";
 
-            //VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
+            VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
+            objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
 
-            //List<VistaContratoGarantiaPoliza> ListVistaContratoGarantiaPoliza= new List<VistaContratoGarantiaPoliza>();
-            //ListVistaContratoGarantiaPoliza = ListVistaContratoGarantiaPoliza();
+            List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
+            ListVista = await ListVistaContratoGarantiaPoliza();
 
+            objVistaContratoGarantiaPoliza = ListVista.Where(x => x.IdContrato == pIdContrato).FirstOrDefault();
+                            
             //get
             //string fechaFirmaContrato;
-            //int pIdTemplate= (int)enumeratorTemplate.MsjSupervisorGestionPoliza;
+            int pIdTemplate= (int)enumeratorTemplate.MsjSupervisorJuridicaGestionPoliza;
             //NotificacionMensajeGestionPoliza objNotificacionAseguradora = null;
+            //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, _settings.Value.Dominio, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender, pIdTemplate);
 
-            //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, _settings.Value.Dominio,  _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            string fechaFirmaContrato;
 
             ContratoPoliza contratoPoliza = new ContratoPoliza();
             Contrato contrato = new Contrato();
@@ -368,6 +372,13 @@ namespace asivamosffie.services
                     //cambiar a estado Con aprobación de pólizas
                     contratoPoliza.TipoSolicitudCodigo = "4";
                     _context.ContratoPoliza.Update(contratoPoliza);
+
+                     
+                    fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/mm/yyyy") : contrato.FechaFirmaContrato.ToString();
+
+                    Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, _settings.Value.MailServer,
+               _settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
+               objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate);
 
                     return respuesta = new Respuesta
                     {
@@ -558,9 +569,11 @@ namespace asivamosffie.services
                         TipoSolicitud = strTipoSolicitudCodigoContratoPoliza,
 
                         EstadoPoliza = strEstadoSolicitudCodigoContratoPoliza
+                        ,RegistroCompleto= contrato.RegistroCompleto
+                        
                         
                         //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
-                        //EstadoRegistro = "COMPLETO"
+                        //,EstadoRegistro = "COMPLETO"
                     };
 
                     //if (!(bool)proyecto.RegistroCompleto)
@@ -584,8 +597,10 @@ namespace asivamosffie.services
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-                        TipoSolicitud = "ERROR"                        
-                      
+                        TipoSolicitud = "ERROR"
+                        ,
+                        RegistroCompleto = false
+
                     };
                     ListContratoGrilla.Add(proyectoGrilla);
                 }
@@ -662,6 +677,7 @@ namespace asivamosffie.services
                     //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
                     {
+                        IdContrato= contrato.ContratoId,
                         TipoContrato = TipoContratoCodigoContrato.Nombre,
                         NumeroContrato = contrato.NumeroContrato,
                         ObjetoContrato = contrato.Objeto,
@@ -707,7 +723,7 @@ namespace asivamosffie.services
                 {
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
                     {
-
+                        IdContrato=0,
                         TipoContrato = e.ToString(),
                         NumeroContrato = e.InnerException.ToString(),
                         ObjetoContrato = "ERROR",

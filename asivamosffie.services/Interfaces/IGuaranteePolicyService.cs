@@ -25,6 +25,9 @@ namespace asivamosffie.services.Interfaces
 
         Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId);
 
+        Task<Respuesta> AprobarContrato(int pIdContrato);
+
+
         //getListPolizaGarantiaByContratoPolizaId    yaaaa y observ yaaaa
 
         //getListChequeo

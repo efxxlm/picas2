@@ -17,6 +17,8 @@ namespace asivamosffie.model.APIModels
         public string EstadoPoliza { get; set; }
         public string EstadoRegistro { get; set; }
 
+        public bool? RegistroCompleto { get; set; }
+
 
     }
 }
