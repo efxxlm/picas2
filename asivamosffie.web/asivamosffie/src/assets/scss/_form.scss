@@ -206,3 +206,7 @@ div.mat-select-arrow {
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
     content: '';
 }
+
+.radio-color-detalle {
+    --mainColor: var( --fontColor ) !important;
+}

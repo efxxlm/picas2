@@ -204,8 +204,8 @@ namespace asivamosffie.services
             var retorno= await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Distinct().Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
             foreach(var ret in retorno)
             {
-                ret.Aportante.NombreAportante = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
-                ret.Aportante.TipoAportante = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
+                ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
+                ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
             }
             return retorno;
         }

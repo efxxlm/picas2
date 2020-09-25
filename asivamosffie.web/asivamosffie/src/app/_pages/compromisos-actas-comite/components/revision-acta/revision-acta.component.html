@@ -29,18 +29,11 @@
           </div>
         </mat-card-content>
     </mat-card>
-    <div class="text-center">
-        <p class="info-container">
-          <span class="info-text sin-diligenciar">Sin diligenciar</span>
-          <span class="info-text en-proceso">En proceso</span>
-          <span class="info-text completo">Completo</span>
-        </p>
-    </div>
 
     <mat-accordion>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title completo">
+          <mat-panel-title class="expansion-style--title">
             Validación de solicitudes contractuales
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -48,7 +41,7 @@
         <mat-accordion>
           <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo sub-expansion">
+                <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud PI0004</b>
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -62,7 +55,7 @@
 
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title en-proceso">
+          <mat-panel-title class="expansion-style--title">
             Otros temas
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -90,14 +83,23 @@
                     <div class="col-md-8">
                       <div class="row">
                         <div class="pr-1">
-                          <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
+                          <label class="font-w">¿Este tema del orden del día generó compromisos?</label>
                         </div>
                         <div class="col">
-                          <mat-radio-group class="radioInput">
-                            <mat-radio-button [value]="false" [checked]="true">No</mat-radio-button>
+                          <mat-radio-group class="radio-color-detalle">
+                            <mat-radio-button [value]="true" [checked]="true" *ngIf="tema.temaCompromiso.length > 0">Si</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="true" class="ml-min" *ngIf="tema.temaCompromiso.length === 0">No</mat-radio-button>
                           </mat-radio-group>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div *ngIf="tema.temaCompromiso.length > 0" class="margin-compromisos">
+                    <div *ngFor="let compromiso of tema.temaCompromiso; let j = index">
+                      <h3><b>Compromiso {{ j+1 }} </b></h3>
+                      <p><b>Tarea</b>: {{ compromiso.tarea }} </p>
+                      <p><b>Responsable</b>: {{ compromiso.responsableNavigation.usuario.nombres }} {{ compromiso.responsableNavigation.usuario.apellidos }} </p>
+                      <p><b>Fecha de cumplimiento</b>: {{ compromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
                     </div>
                   </div>
                 </mat-card-content>
@@ -111,7 +113,7 @@
 
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title sin-diligenciar">
+          <mat-panel-title class="expansion-style--title">
             Proposiciones y varios
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -139,14 +141,23 @@
                     <div class="col-md-8">
                       <div class="row">
                         <div class="pr-1">
-                          <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
+                          <label class="font-w">¿Este tema del orden del día generó compromisos?</label>
                         </div>
                         <div class="col">
-                          <mat-radio-group class="radioInput">
-                            <mat-radio-button [value]="false" [checked]="true">No</mat-radio-button>
+                          <mat-radio-group class="radio-color-detalle">
+                            <mat-radio-button [value]="true" [checked]="true" *ngIf="tema.temaCompromiso.length > 0">Si</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="true" class="ml-min" *ngIf="tema.temaCompromiso.length === 0">No</mat-radio-button>
                           </mat-radio-group>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div *ngIf="tema.temaCompromiso.length > 0" class="margin-compromisos">
+                    <div *ngFor="let compromiso of tema.temaCompromiso; let j = index">
+                      <h3><b>Compromiso {{ j+1 }} </b></h3>
+                      <p><b>Tarea</b>: {{ compromiso.tarea }} </p>
+                      <p><b>Responsable</b>: {{ compromiso.responsableNavigation.usuario.nombres }} {{ compromiso.responsableNavigation.usuario.apellidos }} </p>
+                      <p><b>Fecha de cumplimiento</b>: {{ compromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
                     </div>
                   </div>
                 </mat-card-content>
@@ -169,10 +180,18 @@
   </button>
   <button mat-raised-button 
           color="accent" 
-          class="tabs--btn" 
-          (click)="comentarActa = !comentarActa">
+          class="tabs--btn"
+          (click)="comentarActa = !comentarActa"
+          *ngIf="acta.estadoActaCodigo ==='2'">
           Comentar y devolver acta
   </button>
+  <button mat-raised-button 
+  color="accent" 
+  class="tabs--btn"
+  (click)="comentarios = !comentarios"
+  *ngIf="acta.estadoActaCodigo ==='4'">
+  Comentarios del acta
+</button>
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
@@ -186,16 +205,16 @@
 
     <div class="d-flex align-items-center">
       <div class="text-area-quill">
-        <label for="justificacion" class="text-area-quill--label">Comentarios al acta</label>
-        <p class="padding-p">Fecha: <b class="text-color">26/06/2020</b></p>
-        <quill-editor class="quill-editor-style card" format="text" [styles]="editorStyle" [modules]="config"
+        <label class="text-area-quill--label">Comentarios al acta</label>
+        <p class="padding-p">Fecha: <b class="text-color"></b></p>
+        <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 1000)" formControlName="comentarioActa" required></quill-editor>
       </div>
       <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
-        {{500 - textoLimpio(form.get('comentarioActa').value)}}
+        {{1000 - textoLimpio(form.get('comentarioActa').value)}}
       </span>
       <span class="contador" *ngIf="form.get('comentarioActa').value === null">
-        500
+        1000
       </span>
     </div>
 
@@ -212,5 +231,9 @@
 
   </form>
 </div>
+
+  <div class="container text-center">
+    <app-tabla-detalle-acta *ngIf="comentarios" [data]="acta.sesionComentario"></app-tabla-detalle-acta>
+  </div>
 
 </div>

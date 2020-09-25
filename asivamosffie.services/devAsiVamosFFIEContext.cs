@@ -104,8 +104,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -226,9 +224,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CofinanciacionAportante>(entity =>
             {
+                entity.HasIndex(e => new { e.CofinanciacionId, e.Eliminado })
+                    .HasName("idxconfid_eliminado");
+
+                entity.Property(e => e.DepartamentoId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.MunicipioId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
@@ -238,6 +247,26 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CofinanciacionAportante)
                     .HasForeignKey(d => d.CofinanciacionId)
                     .HasConstraintName("fk_CofinanciacionAportante_Cofinanciacion_1");
+
+                entity.HasOne(d => d.Departamento)
+                    .WithMany(p => p.CofinanciacionAportanteDepartamento)
+                    .HasForeignKey(d => d.DepartamentoId)
+                    .HasConstraintName("fk_cofinanciacionDepartamento");
+
+                entity.HasOne(d => d.Municipio)
+                    .WithMany(p => p.CofinanciacionAportanteMunicipio)
+                    .HasForeignKey(d => d.MunicipioId)
+                    .HasConstraintName("fk_cofinanciacionMunicipio");
+
+                entity.HasOne(d => d.NombreAportante)
+                    .WithMany(p => p.CofinanciacionAportanteNombreAportante)
+                    .HasForeignKey(d => d.NombreAportanteId)
+                    .HasConstraintName("fk_cofinanciacionNombre");
+
+                entity.HasOne(d => d.TipoAportante)
+                    .WithMany(p => p.CofinanciacionAportanteTipoAportante)
+                    .HasForeignKey(d => d.TipoAportanteId)
+                    .HasConstraintName("fk_cofinanciacion_tipo");
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
@@ -2643,6 +2672,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionComentario>(entity =>
             {
+                entity.Property(e => e.EstadoActaVoto)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Fecha).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -2682,7 +2715,15 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.DesarrolloSolicitudFiduciario)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoActaCodigo)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoActaCodigoFiduciario)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2700,7 +2741,15 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ObservacionesFiduciario)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.RutaSoporteVotacion)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RutaSoporteVotacionFiduciario)
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 

@@ -13,6 +13,8 @@ import { TablaDetalleCompromisoComponent } from './components/tabla-detalle-comp
 import { RevisionActaComponent } from './components/revision-acta/revision-acta.component';
 import { FormSolicitudComponent } from './components/form-solicitud/form-solicitud.component';
 import { TablaDecisionesActaComponent } from './components/tabla-decisiones-acta/tabla-decisiones-acta.component';
+import { MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
+import { TablaDetalleActaComponent } from './components/tabla-detalle-acta/tabla-detalle-acta.component';
 
 
 @NgModule({
@@ -24,7 +26,8 @@ import { TablaDecisionesActaComponent } from './components/tabla-decisiones-acta
     TablaDetalleCompromisoComponent,
     RevisionActaComponent,
     FormSolicitudComponent,
-    TablaDecisionesActaComponent
+    TablaDecisionesActaComponent,
+    TablaDetalleActaComponent
   ],
   imports: [
     CommonModule,

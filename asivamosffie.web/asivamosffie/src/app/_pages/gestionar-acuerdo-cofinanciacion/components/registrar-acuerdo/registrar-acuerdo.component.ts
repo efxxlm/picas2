@@ -46,7 +46,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   valorTotalAcuerdo = 0;
   listaCofinancAportantes: CofinanciacionAportante[] = [];
   id = 0;
-  tiposPersonaHabilitaNombre: string[] = ['3'];
+  tiposPersonaHabilitaNombre: string[] = ['2'];
 
   datosAportantes = this.fb.group({
     vigenciaEstado: ['', Validators.required],
@@ -78,11 +78,12 @@ export class RegistrarAcuerdoComponent implements OnInit {
             const valorTipo = this.selectTiposAportante.find(a => a.dominioId === apor.tipoAportanteId);
             const valorNombre = this.nombresAportante.find(a => a.dominioId === apor.nombreAportanteId);
             const idMunicipio = apor.municipioId ? apor.municipioId.toString() : "00000";
+            const idDepartamento= apor.departamentoId?apor.departamentoId.toString():"000";
 
             this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.substring(0, 5)).subscribe(mun => {
 
               const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio);
-              const valorDepartamento = this.departamentos.find(a => a.localizacionId === idMunicipio.substring(0, 5));
+              const valorDepartamento = this.departamentos.find(a => a.localizacionId === idDepartamento);
 
               grupo.get('departamento').setValue(valorDepartamento);
               grupo.get('municipios').setValue(mun);
@@ -221,6 +222,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       tipoAportanteId: '',
       nombreAportanteId: '',
       municipioId: 0,
+      departamentoId: 0,
       cofinanciacionId: 0,
       cofinanciacionAportanteId: 0,
       cofinanciacionDocumento: []
@@ -249,6 +251,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         tipoAportanteId: '',
         nombreAportanteId: '',
         municipioId: 0,
+        departamentoId:0,
         cofinanciacionId: 0,
         cofinanciacionAportanteId: 0,
         cofinanciacionDocumento: []
@@ -298,13 +301,14 @@ export class RegistrarAcuerdoComponent implements OnInit {
         tipoAportanteId: control.get('tipo').value ? control.get('tipo').value.dominioId : null,
         nombreAportanteId: control.get('nombre').value ? control.get('nombre').value.dominioId : null,
         municipioId: control.get('municipio').value ? control.get('municipio').value.localizacionId : null,
+        departamentoId: control.get('departamento').value ? control.get('departamento').value.localizacionId : null,
         cofinanciacionId: control.get('cofinanciacionId').value,
         cofinanciacionAportanteId: control.get('cofinanciacionAportanteId').value,
         cofinanciacionDocumento
       };
-
-      listaAportantesTemp.push(cofiApo);
-      // this.listaCofinancAportantes.push(cofiApo);
+console.log("recorro para generar el objeto");
+console.log(cofiApo);
+      listaAportantesTemp.push(cofiApo);      
       i++;
     });
     this.listaCofinancAportantes = listaAportantesTemp;

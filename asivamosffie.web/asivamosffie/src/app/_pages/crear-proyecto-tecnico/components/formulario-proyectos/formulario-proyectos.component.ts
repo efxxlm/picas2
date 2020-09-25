@@ -532,6 +532,7 @@ export class FormularioProyectosComponent implements OnInit {
             cofinanciacionDocumento: null,
             cofinanciacionId: 0,
             municipioId: 0,
+            departamentoId:0,
             tipoAportanteId: 0
           }
         });
