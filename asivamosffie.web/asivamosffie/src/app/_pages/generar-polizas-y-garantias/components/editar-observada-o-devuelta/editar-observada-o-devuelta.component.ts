@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-editar-observada-o-devuelta',
   templateUrl: './editar-observada-o-devuelta.component.html',
@@ -76,32 +77,45 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   constructor(
     private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.minDate = new Date();
   }
 
   ngOnInit(): void { 
-    this.loadContrato();
+    this.activatedRoute.params.subscribe( param => {
+      this.loadContrato(param.id);
+      this.loadData(param.id);
+    });
   }
 
-  loadContrato(){
+  loadContrato(id){
     this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
-      //la posicion 0 es una posicion quemada 
-      this.tipoContrato=data[0].tipoContrato;
-      this.objeto=data[0].descripcionModificacion;
-      this.nombreContratista = data[0].nombreContratista;
+      this.tipoContrato=data[id-1].tipoContrato;
+      this.objeto=data[id-1].descripcionModificacion;
+      this.nombreContratista = data[id-1].nombreContratista;
       this.tipoIdentificacion = "NIT"  // quemado 
-      this.numeroIdentificacion = data[0].numeroIdentificacion;
-      this.valorContrato = data[0].valorContrato;
-      this.plazoContrato = data[0].plazoContrato;
-      this.numContrato = data[0].numeroContrato;
+      this.numeroIdentificacion = data[id-1].numeroIdentificacion;
+      this.valorContrato = data[id-1].valorContrato;
+      this.plazoContrato = data[id-1].plazoContrato;
+      this.numContrato = data[id-1].numeroContrato;
     });
-    this.loadData();
   }
-  loadData(){
-    this.polizaService.GetContratoPolizaByIdContratoPolizaId(1).subscribe(data=>{
-      this.addressForm.value.nombre="hola";
+  loadData(id){
+    this.polizaService.GetContratoPolizaByIdContratoPolizaId(id).subscribe(data=>{
+      this.addressForm.get('nombre').setValue(data.nombreAseguradora);
+      this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
+      this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
+      this.addressForm.get('fecha').setValue(data.fechaExpedicion);
+      this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
+      this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
+      this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
+      this.addressForm.get('cumpleAsegurado').setValue(data.cumpleDatosAsegurado);
+      this.addressForm.get('cumpleBeneficiario').setValue(data.cumpleDatosBeneficiario);
+      this.addressForm.get('cumpleAfianzado').setValue(data.cumpleDatosTomador);
+      this.addressForm.get('reciboDePago').setValue(data.incluyeReciboPago);
+      this.addressForm.get('condicionesGenerales').setValue(data.incluyeCondicionesGenerales);
     });
   }
   // evalua tecla a tecla

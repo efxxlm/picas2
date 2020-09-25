@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-editar-en-revision',
   templateUrl: './editar-en-revision.component.html',
@@ -78,30 +79,33 @@ export class EditarEnRevisionComponent implements OnInit {
   constructor(
     private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute
   ) {
     this.minDate = new Date();
   }
   ngOnInit(): void { 
-    this.loadContrato();
+    this.activatedRoute.params.subscribe( param => {
+      this.loadContrato(param.id);
+      this.loadData(param.id);
+      this.loadObservations(param.id);
+    });
   }
 
-  loadContrato(){
+  loadContrato(id){
     this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
-      //la posicion 0 es una posicion quemada 
-      this.tipoContrato=data[0].tipoContrato;
-      this.objeto=data[0].descripcionModificacion;
-      this.nombreContratista = data[0].nombreContratista;
+      this.tipoContrato=data[id-1].tipoContrato;
+      this.objeto=data[id-1].descripcionModificacion;
+      this.nombreContratista = data[id-1].nombreContratista;
       this.tipoIdentificacion = "NIT"  // quemado 
-      this.numeroIdentificacion = data[0].numeroIdentificacion;
-      this.valorContrato = data[0].valorContrato;
-      this.plazoContrato = data[0].plazoContrato;
-      this.numContrato = data[0].numeroContrato;
+      this.numeroIdentificacion = data[id-1].numeroIdentificacion;
+      this.valorContrato = data[id-1].valorContrato;
+      this.plazoContrato = data[id-1].plazoContrato;
+      this.numContrato = data[id-1].numeroContrato;
     });
-    this.loadData();
   }
-  loadData(){
-    this.polizaService.GetContratoPolizaByIdContratoPolizaId(1).subscribe(data=>{
+  loadData(id){
+    this.polizaService.GetContratoPolizaByIdContratoPolizaId(id).subscribe(data=>{
       this.addressForm.get('nombre').setValue(data.nombreAseguradora);
       this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
       this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
@@ -115,11 +119,10 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('reciboDePago').setValue(data.incluyeReciboPago);
       this.addressForm.get('condicionesGenerales').setValue(data.incluyeCondicionesGenerales);
     });
-    this.loadObservations();
   }
 
-  loadObservations(){
-    this.polizaService.GetListPolizaObservacionByContratoPolizaId(1).subscribe(data=>{
+  loadObservations(id){
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
 
     });
   }
