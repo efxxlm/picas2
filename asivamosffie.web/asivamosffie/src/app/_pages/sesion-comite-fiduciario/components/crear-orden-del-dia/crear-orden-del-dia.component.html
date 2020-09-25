@@ -16,7 +16,7 @@
     <span class="mr-1em">Tipo de tema</span>
 
     <mat-form-field appearance="fill" class="w-30">
-      <mat-select [formControl]="tipoDeTemas" multiple required (selectionChange)="getvalues( $event.value )">
+      <mat-select [formControl]="tipoDeTemas" required (selectionChange)="getvalues( $event.value )">
         <mat-select-trigger>
           <small >
             {{ (tipoDeTemas.value && tipoDeTemas.value[0]) ? tipoDeTemas.value[0].nombre : ''}}
