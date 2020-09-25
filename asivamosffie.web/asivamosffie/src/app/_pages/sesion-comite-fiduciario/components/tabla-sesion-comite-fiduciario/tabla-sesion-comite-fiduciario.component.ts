@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ComiteGrilla, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
@@ -12,21 +12,8 @@ import { ComiteGrilla, EstadosComite } from 'src/app/_interfaces/technicalCommit
 })
 export class TablaSesionComiteFiduciarioComponent implements OnInit {
 
-  estadosComite: any;
-  data: any[] = [
-    {
-      fecha: '09/07/2020',
-      numero: 'CF_00001',
-      estado: 'Desarrollada sin acta',
-      id: 0
-    },
-    {
-      fecha: '10/07/2020',
-      numero: 'CF_00002',
-      estado: 'Desarrollada sin acta',
-      id: 0
-    }
-  ]
+  estadosComite = EstadosComite
+
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource();
 
@@ -38,21 +25,21 @@ export class TablaSesionComiteFiduciarioComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( ) {
+  constructor(
+                private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+
+             ) 
+  {
   
   }
 
   ngOnInit(): void {
 
-    this.dataSource = new MatTableDataSource( this.data );
-    //getData Tabla sesiones de comite convocadas
-    /*
-    getComiteGrilla()
+    this.fiduciaryCommitteeSessionService.getCommitteeSession()
       .subscribe( response => {
-        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo != this.estadosComite.sinConvocatoria )
+        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.convocada )
         this.dataSource = new MatTableDataSource( lista );
       })
-    */
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;

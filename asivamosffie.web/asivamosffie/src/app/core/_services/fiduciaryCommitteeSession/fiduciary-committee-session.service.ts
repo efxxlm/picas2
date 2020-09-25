@@ -31,4 +31,8 @@ export class FiduciaryCommitteeSessionService {
     return this.http.get<ComiteTecnico>(`${environment.apiUrl}/CommitteeSessionFiduciario/getRequestCommitteeSessionById?comiteTecnicoId=${ id }`);
   }
 
+  convocarComiteTecnico( comite ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/convocarComiteTecnico`, comite);    
+  }
+
 }

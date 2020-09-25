@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { Router } from '@angular/router';
-import { EstadosComite, ComiteGrilla } from 'src/app/_interfaces/technicalCommitteSession';
+import { EstadosComite, ComiteGrilla, ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
@@ -75,15 +75,12 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
   onConvocar(e: number){
 
-    let sesion = {
-      sesionId: e,
+    let comite: ComiteTecnico = {
+      comiteTecnicoId: e,
       estadoComiteCodigo: this.estadosComite.convocada
     }
 
-    //Servicio para convocar la sesion
-    /*
-    
-    cambiarEstadoComite( sesion )
+    this.fiduciaryCommitteeSessionService.convocarComiteTecnico( comite )
       .subscribe( respuesta => {
 
         this.openDialog( ' sesión comité ', respuesta.message )
@@ -91,8 +88,6 @@ export class TablaOrdenDelDiaComponent implements OnInit {
         this.ngOnInit();
 
       })
-
-    */
   }
 
   OnDelete(e: number){
