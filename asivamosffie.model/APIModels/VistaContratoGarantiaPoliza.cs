@@ -7,6 +7,7 @@ namespace asivamosffie.model.APIModels
    public class VistaContratoGarantiaPoliza
     {
 
+        public int? IdContrato { get; set; }
         //tipo identificacion
         public string TipoContrato { get; set; }
         public string NumeroContrato { get; set; }   
