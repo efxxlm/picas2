@@ -141,9 +141,13 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-
-                string user = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId,user);
+                Usuario pUsuario = new Usuario
+                {
+                    Email = HttpContext.User.FindFirst("User").Value,
+                    UsuarioId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value)
+                };
+ 
+                respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId, pUsuario);
                 return Ok(respuesta);
 
             }
