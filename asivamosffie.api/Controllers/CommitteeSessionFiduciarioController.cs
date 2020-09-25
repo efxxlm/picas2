@@ -119,6 +119,62 @@ namespace asivamosffie.api.Controllers
         }
         
 
+        [Route("GetComiteTecnicoByComiteTecnicoId")]
+        public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        {
+            return await _committeeSessionFiduciarioService.GetComiteTecnicoByComiteTecnicoId(pComiteTecnicoId);
+        }
+
+        [HttpGet]
+        [Route("GetPlantillaByTablaIdRegistroId")]
+        public async Task<FileResult> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId)
+        {
+            return File(await _committeeSessionFiduciarioService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
+        }
+
+        [HttpPost]
+        [Route("CreateEditSesionComiteTema")]
+        public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateEditSesionComiteTema(ListSesionComiteTemas);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("AplazarSesionComite")]
+        public async Task<IActionResult> AplazarSesionComite([FromBody] ComiteTecnico pComiteTecnico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.AplazarSesionComite(pComiteTecnico, _settings.Value.Dominio, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetSesionParticipantesByIdComite")]
+        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId )
+        {
+            return await _committeeSessionFiduciarioService.GetSesionParticipantesByIdComite( pComiteId );
+        }
+
         // [Route("GetCommitteeSessionByComiteTecnicoId")]
         // public async Task<IActionResult> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
         // {

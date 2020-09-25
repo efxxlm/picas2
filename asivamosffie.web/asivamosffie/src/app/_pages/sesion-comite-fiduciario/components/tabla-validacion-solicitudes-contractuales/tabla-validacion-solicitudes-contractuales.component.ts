@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 
 export interface OrdenDelDia {
   id: number;
@@ -20,9 +22,10 @@ const ELEMENT_DATA: OrdenDelDia[] = [
   styleUrls: ['./tabla-validacion-solicitudes-contractuales.component.scss']
 })
 export class TablaValidacionSolicitudesContractualesComponent implements OnInit {
+  @Input() ObjetoComiteTecnico: ComiteTecnico;
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -32,7 +35,9 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+    private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService
+  ) { }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -50,6 +55,28 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+  }
+
+  verSoporte(pTablaId: string, pRegistroId: number) {
+
+    //console.log(pTablaId, pRegistroId)
+    this.fiduciaryCommitteeSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
+      .subscribe(resp => {
+        console.log(resp);
+        const documento = `DDP ${pRegistroId}.pdf`;
+        const text = documento,
+          blob = new Blob([resp], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+
+  }
+
+  cargarRegistro() {
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario);
   }
 
 }

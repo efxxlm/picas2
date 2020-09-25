@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 //import { Sesion } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
@@ -11,9 +12,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaOtrosTemasComponent implements OnInit {
 
-  @Input() objetoSesion: any; 
+  @Input() objetoComiteTecnico: ComiteTecnico 
 
-  displayedColumns: string[] = ['responsable', 'tiempo', 'temaSolicitud', 'id'];
+  displayedColumns: string[] = ['responsable', 'tiempo', 'temaDolicitud', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -27,7 +28,6 @@ export class TablaOtrosTemasComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource( [this.objetoSesion] );
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -45,9 +45,17 @@ export class TablaOtrosTemasComponent implements OnInit {
     };
   }
 
-  cargarRegistros(){
-    //this.dataSource = new MatTableDataSource( this.objetoSesion.sesionComiteTema );
-    console.log('s', this.objetoSesion)
+  goToLink(url: string){
+    window.open('//' + url, "_blank");
   }
+
+  cargarRegistros(){
+    let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
+
+    this.dataSource = new MatTableDataSource( lista );
+    
+  }
+
+
 
 }

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AplazarSesionComponent } from '../aplazar-sesion/aplazar-sesion.component';
-import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ActivatedRoute } from '@angular/router';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { ComiteTecnico, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
   selector: 'app-registrar-sesion-comite-fiduciario',
   templateUrl: './registrar-sesion-comite-fiduciario.component.html',
@@ -10,44 +12,72 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
-  idSesion: number;
-  objetoSesion = {
-    numeroComite: 'CF _00001',
-    responsable: 'Dirección administrativa',
-    tiempo: '20 minutos',
-    temaSolicitud: 'Elección de presidente',
-    id: null
-  };
+  objetoComiteTecnico: ComiteTecnico = {};
 
-  constructor ( public dialog: MatDialog,
-                private activatedRoute: ActivatedRoute ) { 
+  estadosComite = EstadosComite
+
+  constructor(
+                public dialog: MatDialog,
+                private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+                private activatedRoute: ActivatedRoute,
+
+             ) 
+  { 
+
   }
 
   openDialogAplazarSesion() {
     this.dialog.open(AplazarSesionComponent, {
-      width: '42em'
+      width: '42em', data: { comite: this.objetoComiteTecnico }
     });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  fallida(){
+    let comite: ComiteTecnico = {
+      comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+      estadoComiteCodigo: EstadosComite.fallida,
+    }
+
+    this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
+      .subscribe( respuesta => {
+        this.openDialog('', '“No se cuenta con el Quorum necesario para realizar la sesión”.');
+        this.ngOnInit();
+      })
   }
 
   ngOnInit(): void {
 
-    //getData de la sesion a registrar
-    this.idSesion = Number( this.activatedRoute.snapshot.params.id );
-    this.objetoSesion.id = this.idSesion;
-    /*
-    getSesionBySesionId( this.idSesion )
+    this.activatedRoute.params.subscribe( parametros => {
+      this.fiduciaryCommitteeSessionService.getComiteTecnicoByComiteTecnicoId( parametros.id )
         .subscribe( response => {
-          this.objetoSesion = response;
+
+          console.log( response )
+
+          this.objetoComiteTecnico = response;
+
 
           setTimeout(() => {
 
             let btnOtros = document.getElementById( 'btnOtros' )
+            let btnTablaValidaciones = document.getElementById( 'btnTablaValidaciones' )
+            let btnProposiciones = document.getElementById( 'btnProposiciones' )
+            
+
             btnOtros.click();
+            btnTablaValidaciones.click();
+            btnProposiciones.click();
 
           }, 1000);
 
         })
-    */
+    })
     
 
   }

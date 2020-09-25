@@ -44,6 +44,7 @@
         public const string Crear_Editar_SesionComiteTema = "38";
         public const string Eliminar_Sesion_Comite_Tema = "39";
         public const string Cambiar_Estado_Comite_Sesion = "40";
+        public const string Cambiar_Estado_Comite_Fiduciario = "92";
         public const string Eliminar_Contratacion = "41";
         public const string Cambiar_Estado_Contratacion = "42";
         public const string Crear_Editar_Seguimiento_Compromiso = "60";
@@ -64,6 +65,7 @@
         public const string Crear_Editar_Comite_Tema_Voto = "56";
         public const string No_Requiere_Votacion_Sesion_Comite_Tema = "57";
         public const string Aplazar_Sesion_De_Comite = "58";
+        public const string Aplazar_Sesion_De_Comite_Fiduciario = "93";
         public const string Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS = "59";
 
         public const string Crear_Editar_Temas_Compromiso = "61";

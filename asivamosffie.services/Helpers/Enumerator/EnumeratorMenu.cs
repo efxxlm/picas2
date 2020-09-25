@@ -22,6 +22,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         DisponibilidadPresupuestal = 30,
         SesionComiteTema = 26,
         RegistrarComiteTecnico = 24,
+        RegistrarSesionComiteFiduciario = 29,
 
         GenerarDisponibilidadPresupuestal = 28,
         

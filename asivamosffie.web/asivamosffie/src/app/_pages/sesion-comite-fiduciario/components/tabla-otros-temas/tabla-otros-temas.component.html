@@ -12,23 +12,23 @@
 
     <ng-container matColumnDef="responsable">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
-        <td mat-cell *matCellDef="let element"> <b>{{ element.responsable }}</b> </td>
+        <td mat-cell *matCellDef="let element"> <b>{{ element.responsableCodigo }}</b> </td>
     </ng-container>
 
     <ng-container matColumnDef="tiempo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tiempo </th>
-        <td mat-cell *matCellDef="let element"> {{ element.tiempo }} </td>
+        <td mat-cell *matCellDef="let element"> {{element.tiempoIntervencion}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="temaSolicitud">
+    <ng-container matColumnDef="temaDolicitud">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tema solicitud </th>
-        <td mat-cell *matCellDef="let element"> {{ element.temaSolicitud }} </td>
+        <td mat-cell *matCellDef="let element"> {{element.tema}} </td>
     </ng-container>
 
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <button mat-raised-button color="accent" class="btn-table">Ver soporte</button>
+            <a (click)="goToLink(element.rutaSoporte)" mat-raised-button color="accent" class="btn-table">Ver soporte</a>
         </td>
     </ng-container>
 
