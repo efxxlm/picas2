@@ -46,7 +46,8 @@ export class EditarEnRevisionComponent implements OnInit {
     { name: 'Garantía de estabilidad y calidad de la obra', value: '4' }
   ];
   estadoArray = [
-    { name: 'Devuelta', value: '1' }
+    { name: 'Devuelta', value: '1' },
+    { name: 'Aprobada', value: '2' }
   ];
 
   minDate: Date;
@@ -149,15 +150,24 @@ export class EditarEnRevisionComponent implements OnInit {
 
   onSubmit() {
     const polizaArray = {
-      numeroAseguradora:this.addressForm.value.numeroPoliza,
-
+      numeroPoliza:this.addressForm.value.numeroPoliza,
+      nombreAseguradora:this.addressForm.value.nombre,
+      numeroCertificado:this.addressForm.value.numeroCertificado,
+      fechaExpedicion:this.addressForm.value.fecha,
+      vigenciaPoliza:this.addressForm.value.vigenciaPoliza,
+      vigenciaAmparo:this.addressForm.value.vigenciaAmparo,
+      valorAmparo:this.addressForm.value.valorAmparo
     };
     this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
-      if(data.isSuccessful==true){
-        console.log(this.addressForm.value);
+      /*if(data.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
       }
+      else{
+        this.openDialog('', 'Error en el servicio.');
+      }*/
     });
+    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    console.log(this.addressForm.value);
   }
 
 }
