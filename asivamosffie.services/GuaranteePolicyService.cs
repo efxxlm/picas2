@@ -19,6 +19,8 @@ using Microsoft.Extensions.Options;
 
 using asivamosffie.api;
 
+using asivamosffie.services.Helpers;
+
 
 namespace asivamosffie.services
 {
@@ -164,7 +166,8 @@ namespace asivamosffie.services
                     //_context.Add(contratoPoliza);
 
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-
+                    polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
+                    
                     _context.PolizaObservacion.Add(polizaObservacion);
                     await _context.SaveChangesAsync();
 
@@ -207,7 +210,7 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta();
 
-            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Cuenta_Bancaria, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.CreadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
 
             //try
             //{
@@ -236,6 +239,8 @@ namespace asivamosffie.services
                     contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
+                    LimpiarEntradasContratoPoliza(ref contratoPoliza);
+
                     _context.ContratoPoliza.Add(contratoPoliza);
                     await _context.SaveChangesAsync();
 
@@ -251,9 +256,10 @@ namespace asivamosffie.services
                             await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
                             ConstantMessagesContratoPoliza.CreadoCorrrectamente,
                             //contratoPoliza
-                            1
-                            ,
-                            "UsuarioCreacion", "REGISTRAR CONTRATO POLIZA"
+                            idAccionCrearContratoPoliza
+                            , contratoPoliza.UsuarioCreacion
+                            //"UsuarioCreacion"
+                            , "REGISTRAR CONTRATO POLIZA"
                             //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
                             )
                         };
@@ -264,17 +270,28 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.RecursoNoEncontrado };
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno };
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.ErrorInterno };
             }
 
         }
 
+        private static void LimpiarEntradasContratoPoliza(ref ContratoPoliza contratoPoliza)
+        {
+            contratoPoliza.DescripcionModificacion = Helpers.Helpers.CleanStringInput(contratoPoliza.DescripcionModificacion);
+            contratoPoliza.NumeroPoliza = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroPoliza);
+            contratoPoliza.Observaciones = Helpers.Helpers.CleanStringInput(contratoPoliza.Observaciones);
+            contratoPoliza.ObservacionesRevisionGeneral = Helpers.Helpers.CleanStringInput(contratoPoliza.ObservacionesRevisionGeneral);
+            contratoPoliza.ResponsableAprobacion = Helpers.Helpers.CleanStringInput(contratoPoliza.ResponsableAprobacion);
+            contratoPoliza.NumeroCertificado = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroCertificado);
+            contratoPoliza.NombreAseguradora = Helpers.Helpers.CleanStringInput(contratoPoliza.NombreAseguradora);
+
+        }
         public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza)
         {
 
@@ -312,7 +329,15 @@ namespace asivamosffie.services
             }
 
         }
-        public void AprobarContrato(int pIdContratp){
+
+        public async Task<Respuesta> AprobarContrato(int pIdContrato)
+        {
+            //public void AprobarContrato(int pIdContrato)
+        
+            Respuesta respuesta = new Respuesta();
+            int idAccionEditarContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+            strCrearEditar = "EDITAR CONTRATO PÓLIZA";
 
             //string correo = "cdaza@ivolucion.com";
 
@@ -327,6 +352,59 @@ namespace asivamosffie.services
             //NotificacionMensajeGestionPoliza objNotificacionAseguradora = null;
 
             //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, _settings.Value.Dominio,  _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
+            ContratoPoliza contratoPoliza = new ContratoPoliza();
+            Contrato contrato = new Contrato();
+
+            try
+            {                
+                contrato = _context.Contrato.Where(r => r.ContratoId == pIdContrato).FirstOrDefault();
+                           
+                //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+                contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+
+                if (contratoPoliza != null)
+                {
+                    //cambiar a estado Con aprobación de pólizas
+                    contratoPoliza.TipoSolicitudCodigo = "4";
+                    _context.ContratoPoliza.Update(contratoPoliza);
+
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = contratoPoliza,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccionEditarContratoPoliza, contratoPoliza.UsuarioCreacion, strCrearEditar)
+
+                    };
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesContratoPoliza.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.ErrorInterno, idAccionEditarContratoPoliza, contratoPoliza.UsuarioCreacion, "Error desconocido")
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesContratoPoliza.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.ErrorInterno, idAccionEditarContratoPoliza, contratoPoliza.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
         }
 
         
@@ -438,14 +516,30 @@ namespace asivamosffie.services
             {
                 try
                 {
-                    ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                    ContratoPoliza contratoPoliza;
+
+                    contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    
-                    //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
+                    string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
 
-                    Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                    Dominio TipoSolicitudCodigoContratoPoliza;
+                    Dominio EstadoSolicitudCodigoContratoPoliza;
+
+                    if (contratoPoliza != null) { 
+                        TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+                        if (TipoSolicitudCodigoContratoPoliza != null)
+                            strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+
+                        EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                        if (EstadoSolicitudCodigoContratoPoliza != null)
+                            strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+
+                    }                 
+                   
+
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaContratoGarantiaPoliza contratoGrilla = new GrillaContratoGarantiaPoliza
                     {
@@ -461,9 +555,9 @@ namespace asivamosffie.services
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-                        TipoSolicitud = TipoSolicitudCodigoContratoPoliza.Nombre,
+                        TipoSolicitud = strTipoSolicitudCodigoContratoPoliza,
 
-                        EstadoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre
+                        EstadoPoliza = strEstadoSolicitudCodigoContratoPoliza
                         
                         //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
                         //EstadoRegistro = "COMPLETO"

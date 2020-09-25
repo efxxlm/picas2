@@ -494,6 +494,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CorreoEnviado = "101";
         public const string OperacionExitosa = "200";
         public const string CreadoCorrrectamente = "103";
+        public const string EditarContratoPolizaCorrrectamente = "102";
 
         #endregion Mensajes Exitoso
 
