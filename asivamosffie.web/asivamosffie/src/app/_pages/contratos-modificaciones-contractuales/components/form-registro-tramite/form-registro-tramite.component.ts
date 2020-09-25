@@ -101,7 +101,6 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null ) {
       let fechaEnvioFirma = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value );
-      //fechaEnvioFirma = `${ fechaEnvioFirma.getFullYear() }/${ fechaEnvioFirma.getMonth() + 1 }/${ fechaEnvioFirma.getDate() }`;
       let fechaEnvioFirmas = fechaEnvioFirma.toISOString();
       pContrato.append( 'fechaEnvioFirma', `${ fechaEnvioFirmas }` );
       this.estadoCodigo = this.estadoCodigos.enFirmaContratista;
@@ -109,7 +108,6 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null ) {
       let fechaFirmaContratista = new Date( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value );
-      //fechaFirmaContratista = `${ fechaFirmaContratista.getFullYear() }/${ fechaFirmaContratista.getMonth() + 1 }/${ fechaFirmaContratista.getDate() }`;
       let fechaFirmaContratistas = fechaFirmaContratista.toISOString();
       pContrato.append( 'fechaFirmaContratista', `${ fechaFirmaContratistas }` );
     } else {
@@ -118,7 +116,6 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null ) {
       let fechaFirmaFiduciaria = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value );
-      //fechaFirmaFiduciaria = `${ fechaFirmaFiduciaria.getFullYear() }/${ fechaFirmaFiduciaria.getMonth() + 1 }/${ fechaFirmaFiduciaria.getDate() }`; 
       let fechaFirmaFiduciarias = fechaFirmaFiduciaria.toISOString();
       pContrato.append( 'fechaFirmaFiduciaria', `${ fechaFirmaFiduciarias }` );
       this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
@@ -128,7 +125,6 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null ) {
       let fechaFirmaContrato = new Date( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value );
-      //fechaFirmaContrato = `${ fechaFirmaContrato.getFullYear() }/${ fechaFirmaContrato.getMonth() + 1 }/${ fechaFirmaContrato.getDate() }`;
       let fechaFirmaContratos = fechaFirmaContrato.toISOString();
       pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContratos }` );
     } else {
