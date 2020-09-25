@@ -12,41 +12,51 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+
+//using asivamosffie.model.APIModels;
+//using asivamosffie.model.Models;
+
+using asivamosffie.api;
+
 
 namespace asivamosffie.services
 {
-    public class GuaranteePolicyService: IGuaranteePolicyService 
+    public class GuaranteePolicyService : IGuaranteePolicyService
     {
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
-        public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService)
+        private readonly IOptions<AppSettings> _settings;
+
+        public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettings> settings)
         {
 
             _commonService = commonService;
             _context = context;
+            _settings = settings;
         }
         //public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
-       public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
+        public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
 
-        {            
+        {
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
 
-     
+
         public async Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
         {
 
             //includefilter
             ContratoPoliza contratoPoliza = new ContratoPoliza();
-            
+
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-            contratoPoliza = _context.ContratoPoliza.Where(r =>  r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+            contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
 
             if (contratoPoliza != null)
             {
                 //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
-                List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId ).ToListAsync();
+                List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
 
                 contratoPoliza.PolizaGarantia = contratoPolizaGarantia;
             }
@@ -54,7 +64,7 @@ namespace asivamosffie.services
             PolizaObservacion polizaObservacion = new PolizaObservacion();
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
             polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-                 
+
             if (contratoPoliza != null)
             {
                 //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
@@ -68,14 +78,14 @@ namespace asivamosffie.services
 
 
         //public async Task<ActionResult<List<PolizaObservacion>>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
-            public async Task<List<PolizaObservacion>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
-        {            
+        public async Task<List<PolizaObservacion>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
+        {
 
             return await _context.PolizaObservacion.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
 
 
-        public async Task<Respuesta> InsertPolizaGarantia(PolizaGarantia polizaGarantia)
+        public async Task<Respuesta> InsertPolizaGarantia([FromBody] PolizaGarantia polizaGarantia)
         {
             Respuesta _response = new Respuesta();
 
@@ -88,7 +98,7 @@ namespace asivamosffie.services
             try
             {
                 if (polizaGarantia != null)
-                {                    
+                {
                     //contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
 
@@ -134,7 +144,7 @@ namespace asivamosffie.services
             }
 
         }
-        public async Task<Respuesta> InsertPolizaObservacion(PolizaObservacion polizaObservacion)
+        public async Task<Respuesta> InsertPolizaObservacion([FromBody] PolizaObservacion polizaObservacion)
         {
             Respuesta _response = new Respuesta();
 
@@ -193,7 +203,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza)        
+        public async Task<Respuesta> InsertContratoPoliza([FromBody] ContratoPoliza contratoPoliza)
         {
             Respuesta _response = new Respuesta();
 
@@ -237,9 +247,9 @@ namespace asivamosffie.services
                             IsException = false,
                             IsValidation = false,
                             Code = ConstantMessagesContratoPoliza.CreadoCorrrectamente,
-                            Message = 
+                            Message =
                             await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
-                            ConstantMessagesContratoPoliza.CreadoCorrrectamente, 
+                            ConstantMessagesContratoPoliza.CreadoCorrrectamente,
                             //contratoPoliza
                             1
                             ,
@@ -295,13 +305,122 @@ namespace asivamosffie.services
             else if (string.IsNullOrEmpty(contratoPoliza.ValorAmparo.ToString()))
             {
                 return false;
-            }     
+            }
             else
             {
                 return true;
             }
 
         }
+        public void AprobarContrato(int pIdContratp){
+
+            //string correo = "cdaza@ivolucion.com";
+
+            //VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
+
+            //List<VistaContratoGarantiaPoliza> ListVistaContratoGarantiaPoliza= new List<VistaContratoGarantiaPoliza>();
+            //ListVistaContratoGarantiaPoliza = ListVistaContratoGarantiaPoliza();
+
+            //get
+            //string fechaFirmaContrato;
+            //int pIdTemplate= (int)enumeratorTemplate.MsjSupervisorGestionPoliza;
+            //NotificacionMensajeGestionPoliza objNotificacionAseguradora = null;
+
+            //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, _settings.Value.Dominio,  _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+        }
+
+        
+            //public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> EnviarCorreoGestionPoliza(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate, NotificacionMensajeGestionPoliza objNotificacionAseguradora=null)
+        {
+            bool blEnvioCorreo = false;
+            Respuesta respuesta = new Respuesta();
+
+            //Si no llega Email
+            //if (string.IsNullOrEmpty(pUsuario.Email))
+            //{
+            //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.EmailObligatorio };
+            //}
+            try
+            {
+                //Usuario usuarioSolicito = _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
+
+                //if (usuarioSolicito != null)
+                //{
+                    //if (usuarioSolicito.Activo == false)
+                    //{
+                    //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.UsuarioInactivo };
+                    //}
+                    //else
+                    //{
+                        //string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
+                        //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                        //usuarioSolicito.CambiarContrasena = true;
+                        //usuarioSolicito.Bloqueado = false;
+                        //usuarioSolicito.IntentosFallidos = 0;
+                        //usuarioSolicito.Ip = pUsuario.Ip;
+
+                        //Guardar Usuario
+                        //await UpdateUser(usuarioSolicito);
+
+                        //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
+                                       
+                        string template = TemplateRecoveryPassword.Contenido;
+
+                        //string urlDestino = pDominio;
+                        //asent/img/logo                     
+              
+                        //datos basicos generales, aplican para los 4 mensajes
+                        template = template.Replace("_Tipo_Contrato_", objVistaContratoGarantiaPoliza.TipoContrato);
+                        template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
+                        template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/mm/aaaa)
+                        template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
+                        template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
+                        template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
+
+                    if(objNotificacionAseguradora!= null)
+                    {
+                        template = template.Replace("_Nombre_Aseguradora_", objNotificacionAseguradora.NombreAseguradora);
+                        template = template.Replace("_Numero_Poliza_", objNotificacionAseguradora.NumeroPoliza);
+                        template = template.Replace("_Fecha_Revision_", objNotificacionAseguradora.FechaRevision);
+                        template = template.Replace("_Estado_Revision_", objNotificacionAseguradora.EstadoRevision);
+                        template = template.Replace("_Observaciones_", objNotificacionAseguradora.Observaciones);  
+                        
+                        if( !string.IsNullOrEmpty( objNotificacionAseguradora.NumeroDRP))
+                            template = template.Replace("_NumeroDRP_", objNotificacionAseguradora.NumeroDRP);
+
+                    }                        
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
+
+                        if (blEnvioCorreo)
+                            respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+                        
+                        else
+                            respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+
+                    //}
+                //}
+                //else
+                //{
+                //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+                //}
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas");
+                return respuesta;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
+                return respuesta;
+            }
+
+        }
+
 
         public async Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza()
         {

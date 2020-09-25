@@ -15,6 +15,18 @@ namespace asivamosffie.services.Helpers.Constant
         public const string ErrorEnviarCorreo = "107";
         public const string EmailObligatorio = "108";
         public const string ErrorGuardarCambios = "109";
+
+//        101	<b>Hemos enviado un mensaje</b><br> a su correo electrónico registrado para que recupere su contraseña.
+//102	<b>El usuario no existe en el sistema.</b> Contacte al administrador.
+//103	<b>El usuario se encuentra inactivo.</b> Contacte al administrador.
+//104	<b>El usuario se encuentra bloqueado,</b> debe remitirse a la opción “Recordar Contraseña”.
+//105	<b>La contraseña es incorrecta.</b>
+//301	Será direccionado para cambiar su contraseña.
+//200	<b>La información se ha guardado exitosamente.</b>
+//106	<b>El usuario no existe en el sistema.</b> Contacte al administrador.
+//107	Ocurrio un error al enviar el correo.
+//108	El email es obligatorio.
+//109	Error al guardar cambios
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -479,6 +491,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region Mensajes Exitoso
 
+        public const string CorreoEnviado = "101";
         public const string OperacionExitosa = "200";
         public const string CreadoCorrrectamente = "103";
 
@@ -491,6 +504,8 @@ namespace asivamosffie.services.Helpers.Constant
         #region 
         public const string Error = "500";
         public const string ErrorInterno = "501";
+        public const string ErrorEnviarCorreo = "107";
+        public const string CorreoNoExiste = "106";
         #endregion
     }
 }
