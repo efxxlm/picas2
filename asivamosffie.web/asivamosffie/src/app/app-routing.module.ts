@@ -113,7 +113,12 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
         .then(m => m.SolicitarContratacionModule)
       },
-    ] 
+      {
+        path: 'preconstruccion',
+        loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
+        .then(m => m.FasePreconstruccionModule)
+      },
+    ]
   },
   {
     path: '**',
