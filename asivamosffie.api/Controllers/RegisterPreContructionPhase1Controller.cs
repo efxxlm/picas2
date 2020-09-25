@@ -28,7 +28,55 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [HttpGet]
+        [Route("GetListContratacion")]
+        public async Task<List<dynamic>> GetListContratacion()
+        {
+            return await _registerPreContructionPhase1Service.GetListContratacion();
+        }
 
+        [HttpGet]
+        [Route("GetContratoByContratoId")]
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        {
+            return await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
+        }
+         
+        [Route("CreateEditContratoPerfil")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditContratoPerfil(Contrato pContrato)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerPreContructionPhase1Service.CreateEditContratoPerfil(pContrato);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("DeleteContratoPerfil")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteContratoPerfil(int ContratoPerfilId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerPreContructionPhase1Service.DeleteContratoPerfil(ContratoPerfilId,HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+         
 
     }
 }

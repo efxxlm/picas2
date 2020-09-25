@@ -56,6 +56,8 @@ export class AutenticacionService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('actualUser');
+    localStorage.removeItem('actaSuscrita');
+    localStorage.removeItem('conObservaciones');
     this.actualUserSubject.next(null);
     this.actualUser = null;
   //   this.saveCloseSesionAudit().subscribe();

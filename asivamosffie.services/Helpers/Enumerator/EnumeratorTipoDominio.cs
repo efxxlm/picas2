@@ -80,8 +80,12 @@ namespace asivamosffie.services.Helpers.Enumerator
         PlaceHolder = 44,
 
         //RESPONSABLES DE TEMAS
-        Miembros_Comite_Tecnico = 46
+        Miembros_Comite_Tecnico = 46,
+         
+        Estado_Verificacion_Contrato = 53,
 
-
+        Tipo_Observacion_Contrato_Perfil_Observacion = 54,
+         
+        Estado_Del_Acta_Contrato = 60
     }
 }

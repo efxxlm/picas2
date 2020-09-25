@@ -83,6 +83,16 @@ const routes: Routes = [
         .then(m => m.GestionarFuentesDeFinanciacionModule)
       },
       {
+        path: 'generarRegistroPresupuestal',
+        loadChildren: () => import('./_pages/generar-registro-presupuestal/generar-registro-presupuestal.module')
+        .then(m => m.GenerarRegistroPresupuestalModule)
+      },
+      {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
+      },
+      {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },

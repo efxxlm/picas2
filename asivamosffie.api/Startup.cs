@@ -134,6 +134,7 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>();
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();  
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();  
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
