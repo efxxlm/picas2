@@ -131,14 +131,20 @@ export class EditarObservadaODevueltaComponent implements OnInit {
 
   onSubmit() {
     const polizaArray = {
-
+      numeroPoliza:this.addressForm.value.numeroPoliza,
+      nombreAseguradora:this.addressForm.value.nombre,
+      numeroCertificado:this.addressForm.value.numeroCertificado,
+      fechaExpedicion:this.addressForm.value.fecha,
+      vigenciaPoliza:this.addressForm.value.vigenciaPoliza,
+      vigenciaAmparo:this.addressForm.value.vigenciaAmparo,
+      valorAmparo:this.addressForm.value.valorAmparo
     };
     this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
       if(data.isSuccessful==true){
-        console.log(this.addressForm.value);
         this.openDialog('', 'La información ha sido guardada exitosamente.');
       }
     });
+    console.log(this.addressForm.value);
   }
 
 }

@@ -10,7 +10,7 @@ import { OnInit } from '@angular/core';
   templateUrl: './gestionar-polizas.component.html',
   styleUrls: ['./gestionar-polizas.component.scss']
 })
-export class GestionarPolizasComponent implements OnInit{
+export class GestionarPolizasComponent implements OnInit {
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([
       Validators.required, Validators.minLength(5), Validators.maxLength(50)])
@@ -84,11 +84,11 @@ export class GestionarPolizasComponent implements OnInit{
   ngOnInit(): void {
     this.cargarDatos();
   }
-  cargarDatos(){
-    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
+  cargarDatos() {
+    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data => {
       //la posicion 0 es una posicion quemada 
-      this.tipoContrato=data[0].tipoContrato;
-      this.objeto=data[0].descripcionModificacion;
+      this.tipoContrato = data[0].tipoContrato;
+      this.objeto = data[0].descripcionModificacion;
       this.nombreContratista = data[0].nombreContratista;
       this.tipoIdentificacion = "NIT"  // quemado 
       this.numeroIdentificacion = data[0].numeroIdentificacion;
@@ -124,13 +124,93 @@ export class GestionarPolizasComponent implements OnInit{
 
   onSubmit() {
     const polizaArray = {
+      /*numeroPoliza:this.addressForm.value.numeroPoliza,
+      nombreAseguradora:this.addressForm.value.nombre,
+      numeroCertificado:this.addressForm.value.numeroCertificado,
+      fechaExpedicion:this.addressForm.value.fecha,
+      vigenciaPoliza:this.addressForm.value.vigenciaPoliza,
+      vigenciaAmparo:this.addressForm.value.vigenciaAmparo,
+      valorAmparo:this.addressForm.value.valorAmparo*/
+      "numeroPoliza": "123456789",
+      "nombreAseguradora": "Prueba",
+      "numeroCertificado": "2312132",
+      "fechaExpedicion": "2020-09-25T05:00:00",
+      "vigenciaPoliza": "2020-10-15T05:00:00",
+      "vigenciaAmparo": "2020-10-22T05:00:00",
+      "valorAmparo": 200,
+      "contratoPolizaId": 2,
+      "contratoId": 1,
+      "contrato": {
+        contratoId: 1,
+        contratacionId: 1,
+        fechaTramite: "2020-09-25T05:00:00",
+        tipoContratoCodigo: "123456",
+        numeroContrato: "12345687",
+        estadoDocumentoCodigo: "prueba",
+        estado: true,
+        fechaEnvioFirma: "2020-10-22T05:00:00",
+        fechaFirmaContratista: "2020-10-22T05:00:00",
+        fechaFirmaFiduciaria: "2020-10-22T05:00:00",
+        fechaFirmaContrato: "2020-10-22T05:00:00",
+        observaciones: "Hola",
+        rutaDocumento: "Hola",
+        objeto: "Hola",
+        valor: 123,
+        plazo:"2020-10-22T05:00:00",
+        usuarioCreacion:"david",
+        fechaCreacion: "2020-10-22T05:00:00",
+        usuarioModificacion: "david",
+        fechaModificacion: "2020-10-22T05:00:00",
+        eliminado: false,
+        cantidadPerfiles: 2,
+        estadoVerificacionCodigo: "Listo",
+        estadoFase1: "Listo",
+        estadoActa: "Listo",
+        fechaActaInicioFase1: "2020-10-22T05:00:00",
+        fechaTerminacion: "2020-10-22T05:00:00",
+        plazoFase1PreMeses: 23,
+        plazoFase1PreDias: 21,
+        plazoFase2ConstruccionMeses: 21,
+        plazoFase2ConstruccionDias: 15,
+        conObervacionesActa: true,
+        fechaFirmaActaContratista: "2020-10-22T05:00:00",
+        fechaFirmaActaContratistaInterventoria: "2020-10-22T05:00:00",
+        rutaActa: "preuba",
+        registroCompleto: true,
 
+      },
+      "eliminado": false,
+      "cumpleDatosAsegurado": false,
+      "cumpleDatosBeneficiario": false,
+      "cumpleDatosTomador": false,
+      "descripcionModificacion": "",
+      "estado": false,
+      "estadoPolizaCodigo": "",
+      "fechaAprobacion": "2020-09-25T05:00:00",
+      "fechaCreacion": "2020-09-25T05:00:00",
+      "fechaModificacion": "2020-09-25T05:00:00",
+      "incluyeCondicionesGenerales": false,
+      "incluyeReciboPago": false,
+      "observaciones": "",
+      "observacionesRevisionGeneral": "0",
+      "polizaGarantia": [],
+      "polizaObservacion": [],
+      "responsableAprobacion": "1",
+      "tipoModificacionCodigo": "DataSimulada",
+      "tipoSolicitudCodigo": "DataSimulada",
+      "usuarioCreacion": "David",
+      "usuarioModificacion": "Camilo",
+      "registroCompleo": false
     };
-    this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
-      if(data.isSuccessful==true){
-        console.log(this.addressForm.value);
+    this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data => {
+      /*if(data.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
       }
+      else{
+        this.openDialog('', 'Error en el servicio.');
+      }*/
     });
+    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    console.log(this.addressForm.value);
   }
 }
