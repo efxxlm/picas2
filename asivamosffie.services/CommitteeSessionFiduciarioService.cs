@@ -567,6 +567,7 @@ namespace asivamosffie.services
             //    comiteTecnico.SesionParticipante = sesionParticipantes;
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
+            comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => !(bool)r.Eliminado).ToList();
 
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -1562,6 +1563,146 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> DeleteSesionInvitado(int pSesionInvitadoId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Sesion_Invitado, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+
+                if (pSesionInvitadoId == 0)
+                {
+                    return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = false,
+                         IsValidation = true,
+                         Code = ConstantSesionComiteTecnico.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION INVITADO")
+                     };
+
+                }
+                SesionInvitado sesionInvitadoOld = await _context.SesionInvitado.FindAsync(pSesionInvitadoId);
+
+                if (sesionInvitadoOld == null)
+                {
+                    return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = false,
+                         IsValidation = true,
+                         Code = ConstantSesionComiteTecnico.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION INVITADO")
+                     };
+                }
+                sesionInvitadoOld.UsuarioModificacion = pUsuarioModificacion;
+                sesionInvitadoOld.FechaModificacion = DateTime.Now;
+                sesionInvitadoOld.Eliminado = true;
+                _context.SaveChanges();
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SESIÓN INVITADO")
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                  };
+            }
+
+        }
+
+        public async Task<Respuesta> CreateEditSesionInvitadoAndParticipante(ComiteTecnico pComiteTecnico)
+        {
+            int idAccionCrearSesionParticipante = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Participantes_Sesion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
+                {
+                    if (SesionParticipante.SesionParticipanteId == 0)
+                    {
+                        _context.SesionParticipante.Add(new SesionParticipante
+                        {
+                            FechaCreacion = DateTime.Now,
+                            Eliminado = false,
+                            UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                            UsuarioId = SesionParticipante.UsuarioId,
+                            ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId,
+                        });
+                    }
+                    else
+                    {
+                        SesionParticipante sesionParticipanteOld = _context.SesionParticipante.Find(SesionParticipante.SesionParticipanteId);
+                        sesionParticipanteOld.UsuarioId = SesionParticipante.UsuarioId;
+                        sesionParticipanteOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        sesionParticipanteOld.FechaModificacion = DateTime.Now;
+                    }
+                }
+                foreach (var SesionInvitado in pComiteTecnico.SesionInvitado)
+                {
+
+                    if (SesionInvitado.SesionInvitadoId == 0)
+                    {
+                        _context.SesionInvitado.Add(new SesionInvitado
+                        {
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                            Eliminado = false,
+                            Cargo = SesionInvitado.Cargo,
+                            ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId,
+                            Entidad = SesionInvitado.Entidad,
+                            Nombre = SesionInvitado.Nombre,
+                        });
+                    }
+                    else
+                    {
+                        SesionInvitado SesionInvitadoOld = _context.SesionInvitado.Find(SesionInvitado.SesionInvitadoId);
+                        SesionInvitadoOld.FechaModificacion = DateTime.Now;
+                        SesionInvitadoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        SesionInvitadoOld.Nombre = SesionInvitado.Nombre;
+                        SesionInvitadoOld.Cargo = SesionInvitado.Cargo;
+                        SesionInvitadoOld.Entidad = SesionInvitado.Entidad;
+                    }
+                }
+                _context.SaveChanges();
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.OperacionExitosa, idAccionCrearSesionParticipante, pComiteTecnico.UsuarioCreacion, "REGISTRAR PARTICIPANTES SESIÓN")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.Error, idAccionCrearSesionParticipante, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
+                };
+            }
+
+        }
 
         // //Crear un nuevo tema
         // public async Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite)

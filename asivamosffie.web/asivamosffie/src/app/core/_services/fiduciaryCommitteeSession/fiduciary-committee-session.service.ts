@@ -60,4 +60,12 @@ export class FiduciaryCommitteeSessionService {
     return this.http.get<SesionParticipante[]>(`${environment.apiUrl}/CommitteeSessionFiduciario/getSesionParticipantesByIdComite?pComiteId=${ id }`);
    }
 
+   deleteSesionInvitado( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/deleteSesionInvitado?pSesionInvitadoId=${ id }`);
+   }
+
+   createEditSesionInvitadoAndParticipante( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditSesionInvitadoAndParticipante`, comite );
+   }
+
 }

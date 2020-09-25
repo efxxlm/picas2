@@ -175,6 +175,41 @@ namespace asivamosffie.api.Controllers
             return await _committeeSessionFiduciarioService.GetSesionParticipantesByIdComite( pComiteId );
         }
 
+        [HttpDelete]
+        [Route("DeleteSesionInvitado")]
+        public async Task<IActionResult> DeleteSesionInvitado([FromQuery] int pSesionInvitadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _committeeSessionFiduciarioService.DeleteSesionInvitado(pSesionInvitadoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditSesionInvitadoAndParticipante")]
+        public async Task<IActionResult> CreateEditSesionInvitadoAndParticipante([FromBody] ComiteTecnico pComiteTecnico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateEditSesionInvitadoAndParticipante(pComiteTecnico);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         // [Route("GetCommitteeSessionByComiteTecnicoId")]
         // public async Task<IActionResult> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
         // {
