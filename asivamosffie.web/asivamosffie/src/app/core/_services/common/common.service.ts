@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 import { Usuario } from '../autenticacion/autenticacion.service';

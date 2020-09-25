@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container text-center">
   <div class="text-right">
     <a routerLink="/comiteFiduciario" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -11,11 +11,11 @@
   </div>
 
   <!-- Seleccionar temas a tratar en el comite Fiduciario -->
-  <div class="flex">
+  <div class="flex w-tema">
 
-    <h3 class="padding-1">Tipo de tema</h3>
+    <span class="mr-1em">Tipo de tema</span>
 
-    <mat-form-field appearance="fill" class="width-20">
+    <mat-form-field appearance="fill" class="w-30">
       <mat-select [formControl]="tipoDeTemas" multiple required (selectionChange)="getvalues( $event.value )">
         <mat-select-trigger>
           <small >
