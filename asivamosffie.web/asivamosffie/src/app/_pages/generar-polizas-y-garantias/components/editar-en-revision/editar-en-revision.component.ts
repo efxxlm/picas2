@@ -153,10 +153,11 @@ export class EditarEnRevisionComponent implements OnInit {
 
     };
     this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
-
+      if(data.isSuccessful==true){
+        console.log(this.addressForm.value);
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      }
     });
-    console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
   }
 
 }
