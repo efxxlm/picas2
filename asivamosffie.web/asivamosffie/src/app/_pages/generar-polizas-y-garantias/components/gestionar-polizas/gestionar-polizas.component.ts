@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-gestionar-polizas',
   templateUrl: './gestionar-polizas.component.html',
   styleUrls: ['./gestionar-polizas.component.scss']
 })
-export class GestionarPolizasComponent {
+export class GestionarPolizasComponent implements OnInit{
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([
       Validators.required, Validators.minLength(5), Validators.maxLength(50)])
@@ -63,13 +65,38 @@ export class GestionarPolizasComponent {
     ]
   };
 
+  public tipoContrato;
+  public objeto;
+  public nombreContratista;
+  public tipoIdentificacion;
+  public numeroIdentificacion;
+  public valorContrato;
+  public plazoContrato;
+  public numContrato;
+
   constructor(
+    private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {
     this.minDate = new Date();
   }
-
+  ngOnInit(): void {
+    this.cargarDatos();
+  }
+  cargarDatos(){
+    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
+      //la posicion 0 es una posicion quemada 
+      this.tipoContrato=data[0].tipoContrato;
+      this.objeto=data[0].descripcionModificacion;
+      this.nombreContratista = data[0].nombreContratista;
+      this.tipoIdentificacion = "NIT"  // quemado 
+      this.numeroIdentificacion = data[0].numeroIdentificacion;
+      this.valorContrato = data[0].valorContrato;
+      this.plazoContrato = data[0].plazoContrato;
+      this.numContrato = data[0].numeroContrato;
+    });
+  }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -96,6 +123,12 @@ export class GestionarPolizasComponent {
   }
 
   onSubmit() {
+    const polizaArray = {
+
+    };
+    this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
+
+    });
     console.log(this.addressForm.value);
     this.openDialog('', 'La información ha sido guardada exitosamente.');
   }

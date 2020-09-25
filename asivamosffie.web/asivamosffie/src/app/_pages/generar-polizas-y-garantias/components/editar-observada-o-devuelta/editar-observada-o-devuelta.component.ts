@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-
+import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 @Component({
   selector: 'app-editar-observada-o-devuelta',
   templateUrl: './editar-observada-o-devuelta.component.html',
@@ -64,15 +64,46 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     ]
   };
 
+  public tipoContrato;
+  public objeto;
+  public nombreContratista;
+  public tipoIdentificacion;
+  public numeroIdentificacion;
+  public valorContrato;
+  public plazoContrato;
+  public numContrato;
+
   constructor(
+    private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
     public dialog: MatDialog
   ) {
     this.minDate = new Date();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.loadContrato();
+  }
 
+  loadContrato(){
+    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
+      //la posicion 0 es una posicion quemada 
+      this.tipoContrato=data[0].tipoContrato;
+      this.objeto=data[0].descripcionModificacion;
+      this.nombreContratista = data[0].nombreContratista;
+      this.tipoIdentificacion = "NIT"  // quemado 
+      this.numeroIdentificacion = data[0].numeroIdentificacion;
+      this.valorContrato = data[0].valorContrato;
+      this.plazoContrato = data[0].plazoContrato;
+      this.numContrato = data[0].numeroContrato;
+    });
+    this.loadData();
+  }
+  loadData(){
+    this.polizaService.GetContratoPolizaByIdContratoPolizaId(1).subscribe(data=>{
+      this.addressForm.value.nombre="hola";
+    });
+  }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -99,6 +130,12 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   }
 
   onSubmit() {
+    const polizaArray = {
+
+    };
+    this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
+
+    });
     console.log(this.addressForm.value);
     this.openDialog('', 'La información ha sido guardada exitosamente.');
   }

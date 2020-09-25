@@ -5,7 +5,7 @@
     </a>
   </div>
   <h1 class="title-menu--h1">
-    Ver detalle/Editar contrato C223456789
+    Ver detalle/Editar contrato {{this.numContrato}}
   </h1>
   <p class="info-sub-title">
     <span>Fecha de firma del contrato <b>29/06/2020</b></span>
@@ -19,39 +19,37 @@
     <mat-card-content>
       <p>
         <strong>Tipo de contrato:</strong>
-        Obra
+        {{this.tipoContrato}}
       </p>
       <p>
         <strong>Objeto:</strong>
       </p>
       <p>
-        Contrato de modificación de obra que compromete el diagnóstico y/o actualización y/o complementación y/o
-        elaboración de estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento
-        de las instituciones rurales.
+       {{this.objeto}}
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
-        Constructora Colpatria
+        {{this.nombreContratista}}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
-        NIT
+       {{this.tipoIdentificacion}}
       </p>
       <p>
         <strong>Número de identificación:</strong>
-        900.675.987-4
+        {{this.numeroIdentificacion}}
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        $ 180.000.000
+        ${{this.valorContrato}}
       </p>
       <p>
         <strong>Plazo:</strong>
-        21meses / 10 días
+        {{this.plazoContrato}}
       </p>
     </mat-card-content>
   </mat-card>
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <form [formGroup]="addressForm"  (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-content>
         <div class="row">
@@ -232,12 +230,12 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="buenManejoCorrectaInversionAnticipo">
+                <label class="label-left" for="cumpleAsegurado">
                   ¿Cumple con los datos del Asegurado/ Beneficiario?
                 </label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
+                <mat-radio-group class="radioInput" formControlName="cumpleAsegurado" required>
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
@@ -250,12 +248,12 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="buenManejoCorrectaInversionAnticipo">
+                <label class="label-left" for="cumpleBeneficiario">
                   ¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?
                 </label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
+                <mat-radio-group class="radioInput" formControlName="cumpleBeneficiario" required>
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
@@ -268,12 +266,12 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="buenManejoCorrectaInversionAnticipo">
+                <label class="label-left" for="cumpleAfianzado">
                   ¿Cumple con los datos del Tomador / Afianzado?
                 </label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
+                <mat-radio-group class="radioInput" formControlName="cumpleAfianzado" required>
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
@@ -286,12 +284,12 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="buenManejoCorrectaInversionAnticipo">
+                <label class="label-left" for="reciboDePago">
                   ¿Se incluye el recibo de pago con los datos requeridos?
                 </label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
+                <mat-radio-group class="radioInput" formControlName="reciboDePago" required>
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
@@ -304,12 +302,12 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="buenManejoCorrectaInversionAnticipo">
+                <label class="label-left" for="condicionesGenerales">
                   ¿Se incluyen las condiciones generales de la póliza/ o su clausulado?
                 </label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
+                <mat-radio-group class="radioInput" formControlName="condicionesGenerales" required>
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>

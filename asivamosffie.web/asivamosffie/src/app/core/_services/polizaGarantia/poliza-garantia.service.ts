@@ -39,6 +39,7 @@ export class PolizaGarantiaService implements OnInit {
   }
 }
 export interface GetListVistaContratoGarantiaPoliza {
+  
 
 }
 export interface CreatePolizaObservacion {
@@ -57,36 +58,36 @@ export interface CreatePolizaGarantia {
   ContratoPoliza: ContratoPoliza;
 }
 export interface ContratoPoliza {
-  ContratoPolizaId: number;
-  ContratoId: number;
-  TipoSolicitudCodigo: string;
-  TipoModificacionCodigo: string;
-  DescripcionModificacion: string;
-  NombreAseguradora: string;
-  NumeroPoliza: string;
-  NumeroCertificado: string;
-  FechaExpedicion: Date;
-  Vigencia: Date;
-  VigenciaAmparo: string;
-  ValorAmparo: number
-  Observaciones: string;
-  CumpleDatosAsegurado: boolean;
-  CumpleDatosBeneficiario: boolean;
-  CumpleDatosTomador: boolean;
-  IncluyeReciboPago: boolean;
-  IncluyeCondicionesGenerales: boolean;
-  ObservacionesRevisionGeneral: string;
-  FechaAprobacion: Date;
-  ResponsableAprobacion: string;
-  Estado: boolean;
-  EstadoPolizaCodigo: string;
-  FechaCreacion: Date;
-  UsuarioCreacion: string;
-  RegistroCompleo: boolean;
-  FechaModificacion: Date;
-  UsuarioModificacion: string;
-  Eliminado: boolean;
-  Contrato: Contrato;
+  contratoPolizaId: number;
+  contratoId: number;
+  tipoSolicitudCodigo: string;
+  tipoModificacionCodigo: string;
+  descripcionModificacion: string;
+  nombreAseguradora: string;
+  numeroPoliza: string;
+  numeroCertificado: string;
+  fechaExpedicion: Date;
+  vigencia: Date;
+  vigenciaAmparo: string;
+  valorAmparo: number
+  observaciones: string;
+  cumpleDatosAsegurado: boolean;
+  cumpleDatosBeneficiario: boolean;
+  cumpleDatosTomador: boolean;
+  incluyeReciboPago: boolean;
+  incluyeCondicionesGenerales: boolean;
+  observacionesRevisionGeneral: string;
+  fechaAprobacion: Date;
+  responsableAprobacion: string;
+  estado: boolean;
+  estadoPolizaCodigo: string;
+  fechaCreacion: Date;
+  usuarioCreacion: string;
+  registroCompleo: boolean;
+  fechaModificacion: Date;
+  usuarioModificacion: string;
+  eliminado: boolean;
+  contrato: Contrato;
 }
 export interface Contrato {
   ContratoId: number;

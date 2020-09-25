@@ -19,35 +19,33 @@
     <mat-card-content>
       <p>
         <strong>Tipo de contrato:</strong>
-        Obra
+        {{this.tipoContrato}}
       </p>
       <p>
         <strong>Objeto:</strong>
       </p>
       <p>
-        Contrato de modificación de obra que compromete el diagnóstico y/o actualización y/o complementación y/o
-        elaboración de estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
-        instituciones rurales.
+       {{this.objeto}}
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
-        Constructora Colpatria
+        {{this.nombreContratista}}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
-        NIT
+       {{this.tipoIdentificacion}}
       </p>
       <p>
         <strong>Número de identificación:</strong>
-        900.675.987-4
+        {{this.numeroIdentificacion}}
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        $ 180.000.000
+        ${{this.valorContrato}}
       </p>
       <p>
         <strong>Plazo:</strong>
-        21meses / 10 días
+        {{this.plazoContrato}}
       </p>
     </mat-card-content>
   </mat-card>
