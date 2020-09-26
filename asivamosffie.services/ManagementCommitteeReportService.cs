@@ -42,19 +42,23 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
+        public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport(int pUserId)
         {
             List<GrillaSesionComiteTecnicoCompromiso> grillaSesionComiteTecnicoCompromisos = new List<GrillaSesionComiteTecnicoCompromiso>();
 
-            List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
+            string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId+" AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
+            List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
                 .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion
-                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
-                  .Include(r => r.SesionComentario).ToListAsync();
+                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada) 
+                 .Include(r => r.SesionParticipante)
+                         .Include(r => r.SesionComentario)
+                  .ToListAsync();
 
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
                 try
                 {
+                     
                     GrillaSesionComiteTecnicoCompromiso grillaSesionComiteTecnicoCompromiso = new GrillaSesionComiteTecnicoCompromiso
                     {
                         ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId,
@@ -117,9 +121,9 @@ namespace asivamosffie.services
         {
             return await _context.ComiteTecnico
                 .Where(r => !(bool)r.Eliminado)
-                  .Include(r => r.SesionComiteTecnicoCompromiso)
-                  .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                  .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                      .Include(r => r.SesionComiteTecnicoCompromiso)
+                      .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                      .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                   .ToListAsync();
         }
 
@@ -350,8 +354,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         //Aprobar Acta
         public async Task<Respuesta> AcceptReport(int comiteTecnicoId, Usuario pUser)
         {
@@ -434,13 +437,15 @@ namespace asivamosffie.services
         }
 
         private bool ValidarTodosVotacion(ComiteTecnico pComiteTecnico)
-        { 
+        {  
             return (
-                pComiteTecnico.SesionParticipante.Count() ==
-                pComiteTecnico.SesionComentario.Where(r => r.EstadoActaVoto != null && !(bool)r.ValidacionVoto).Count()); 
-        }
-
-
+                pComiteTecnico.SesionParticipante
+                    .Count() == pComiteTecnico.SesionComentario
+                    .Where(r => r.EstadoActaVoto != null && !(bool)r.ValidacionVoto)
+                    .Select(r => r.MiembroSesionParticipanteId)
+                    .Distinct().Count()
+                ); 
+        } 
         //Actualizar estado codigo de un compromiso
         public async Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status)
         {
