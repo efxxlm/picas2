@@ -117,14 +117,16 @@ namespace asivamosffie.services
 
 
         //Gestion de actas
-        public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport()
+        public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport(int pUserId)
         {
-            return await _context.ComiteTecnico
-                .Where(r => !(bool)r.Eliminado)
+            List<GrillaSesionComiteTecnicoCompromiso> grillaSesionComiteTecnicoCompromisos = new List<GrillaSesionComiteTecnicoCompromiso>();
+            string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
+ 
+            return await _context.ComiteTecnico.FromSqlRaw(StrSql)
                       .Include(r => r.SesionComiteTecnicoCompromiso)
                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
                       .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                  .ToListAsync();
+                  .ToListAsync(); ;
         }
 
 

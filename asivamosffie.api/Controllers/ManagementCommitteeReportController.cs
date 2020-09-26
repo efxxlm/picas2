@@ -51,7 +51,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _managementCommitteeReportService.GetManagementReport();
+                return await _managementCommitteeReportService.GetManagementReport(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             }
             catch (Exception ex)
             {
