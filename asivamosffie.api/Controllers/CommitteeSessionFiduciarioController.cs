@@ -263,6 +263,67 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("CambiarEstadoComiteTecnico")]
+        public async Task<IActionResult> CambiarEstadoComiteTecnico([FromBody] ComiteTecnico pComiteTecnico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CambiarEstadoComiteTecnico(pComiteTecnico);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetPlantillaActaIdComite")]
+        public async Task<FileResult> GetPlantillaActaIdComite(int IdComite)
+        {
+            return File(await _committeeSessionFiduciarioService.GetPlantillaActaIdComite(IdComite), "application/pdf");
+        }
+
+        [HttpPost]
+        [Route("CreateEditActasSesionSolicitudCompromiso")]
+        public async Task<IActionResult> CreateEditActasSesionSolicitudCompromiso([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteSolicitud.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateEditActasSesionSolicitudCompromiso(pSesionComiteSolicitud);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditTemasCompromiso")]
+        public async Task<IActionResult> CreateEditTemasCompromiso([FromBody] SesionComiteTema pSesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteTema.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateEditTemasCompromiso(pSesionComiteTema);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         // [Route("GetCommitteeSessionByComiteTecnicoId")]
         // public async Task<IActionResult> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
         // {

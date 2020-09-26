@@ -27,6 +27,10 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> GetNoRequiereVotacionSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud);
         Task<Respuesta> NoRequiereVotacionSesionComiteTema(int idSesionComiteTema, bool pRequiereVotacion, string pUsuarioCreacion);
         Task<Respuesta> CreateEditSesionSolicitudVoto(SesionComiteSolicitud pSesionComiteSolicitud);
+        Task<Respuesta> CambiarEstadoComiteTecnico(ComiteTecnico pComiteTecnico);
+        Task<byte[]> GetPlantillaActaIdComite(int ComiteId);
+        Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud);
+        Task<Respuesta> CreateEditTemasCompromiso(SesionComiteTema pSesionComiteTema);
 
         // Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite);
         // Task<List<SesionComiteTema>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId);

@@ -93,6 +93,7 @@ export interface SesionComiteSolicitud {
     eliminado?: boolean,
     requiereVotacion?: boolean,
     registroCompleto?: boolean,
+    desarrolloSolicitud?: string,
 
     comiteTecnicoFiduciarioId?: number,
     registroCompletoFiduciaria?: boolean,

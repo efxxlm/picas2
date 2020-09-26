@@ -115,6 +115,8 @@ export class VotacionSolicitudComponent implements OnInit {
 
   onSubmit() {
 
+    console.log(this.data.sesionComiteSolicitud);
+
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,

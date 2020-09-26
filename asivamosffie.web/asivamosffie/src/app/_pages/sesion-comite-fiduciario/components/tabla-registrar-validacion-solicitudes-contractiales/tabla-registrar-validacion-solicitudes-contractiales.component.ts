@@ -62,6 +62,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+      comiteTecnicoFiduciarioId: this.ObjetoComiteTecnico.comiteTecnicoId,
 
 
       sesionSolicitudObservacionProyecto: [],
@@ -85,7 +86,6 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
           sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
           sesionParticipanteId: p.sesionParticipanteId,
           sesionSolicitudVotoId: 0,
-          comiteTecnicoFiduciarioId: this.ObjetoComiteTecnico.comiteTecnicoId,
           nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
           esAprobado: null,
           observacion: null,

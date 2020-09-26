@@ -169,10 +169,10 @@ export class FormRegistrarParticipantesComponent {
       this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.forEach(sol => {
         sol.completo = true;
         if (sol.requiereVotacionFiduciario == true) {
-          if (sol.sesionSolicitudVoto.filter( ss => ss.ComiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).length == 0)
+          if (sol.sesionSolicitudVoto.filter( ss => ss.comiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).length == 0)
             cantidadSolicitudes++;
 
-          sol.sesionSolicitudVoto.filter( ss => ss.ComiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).forEach(vot => {
+          sol.sesionSolicitudVoto.filter( ss => ss.comiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).forEach(vot => {
             cantidadSolicitudes++;
             if (vot.esAprobado == false || vot.esAprobado == true) {
               cantidadSolicitudesCompletas++;
@@ -309,7 +309,7 @@ export class FormRegistrarParticipantesComponent {
       .subscribe(respuesta => {
         this.openDialog('', 'La sesión ha sido registrada exitosamente.');
         if (respuesta.code == "200")
-          this.router.navigate(['/comiteTecnico']);
+          this.router.navigate(['/comiteFiduciario']);
       })
   }
 

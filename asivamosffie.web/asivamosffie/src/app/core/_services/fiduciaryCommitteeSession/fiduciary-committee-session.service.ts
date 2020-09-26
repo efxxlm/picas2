@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionComiteTema, SesionParticipante, SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionComiteTema, SesionParticipante, SesionSolicitudCompromiso, SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
 
@@ -36,7 +36,7 @@ export class FiduciaryCommitteeSessionService {
   }
 
   cambiarEstadoComiteTecnico( comite: ComiteTecnico ){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/cambiarEstadoComiteTecnico`, comite);    
+    return this.http.put<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/cambiarEstadoComiteTecnico`, comite);    
   }
 
   getComiteTecnicoByComiteTecnicoId( id: number){
@@ -78,6 +78,18 @@ export class FiduciaryCommitteeSessionService {
 
    createEditSesionSolicitudVoto( sesionComiteSolicitud: SesionComiteSolicitud ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditSesionSolicitudVoto`, sesionComiteSolicitud );
+   }
+
+   getPlantillaActaBySesionComiteSolicitudId( id: number ){
+    return this.http.get(`${environment.apiUrl}/CommitteeSessionFiduciario/GetPlantillaActaIdComite?IdComite=${ id }`, { responseType: "blob" } );
+   }
+
+   createEditActasSesionSolicitudCompromiso( sesionSolicitud: SesionSolicitudCompromiso ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditActasSesionSolicitudCompromiso`, sesionSolicitud );
+   }
+
+   createEditTemasCompromiso( tema: SesionComiteTema ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditTemasCompromiso`, tema );
    }
 
 }
