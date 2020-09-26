@@ -1,10 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ProjectService } from 'src/app/core/_services/project/project.service';
-import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto } from 'src/app/_interfaces/technicalCommitteSession';
 
 
 @Component({
@@ -12,25 +13,22 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './votacion-solicitud.component.html',
   styleUrls: ['./votacion-solicitud.component.scss']
 })
-export class VotacionSolicitudComponent {
+export class VotacionSolicitudComponent implements OnInit {
   
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
-  addressForm = this.fb.group({
-    aprobaciones: this.fb.array([]),
-    proyectos: this.fb.array([]),
-  });  
+  addressForm = this.fb.array([]);
 
-  get aprobaciones() {
-    return this.addressForm.get('aprobaciones') as FormArray;
+  get listaVotacion() {
+    return this.addressForm as FormArray;
   }
 
-  get proyectos() {
-    return this.addressForm.get('proyectos') as FormArray;
+  get aprobacion() {
+    return this.addressForm.get('aprobacion') as FormArray;
   }
 
-  observacionesControl( i: number ) {
-    return this.proyectos.controls[i].get('observaciones') as FormArray; 
+  get observaciones() {
+    return this.addressForm.get('observaciones') as FormArray;
   }
 
   editorStyle = {
@@ -57,110 +55,55 @@ export class VotacionSolicitudComponent {
     }
   }
 
-  crearAprobaciones() {
+  crearParticipante() {
     return this.fb.group({
       nombreParticipante: [],
       sesionSolicitudVotoId: [],
       sesionParticipanteId: [],
       sesionComiteSolicitudId: [],
-      aprobacion: [null, Validators.required]
-
-    });
-  }
-
-  crearProyectos() {
-    return this.fb.group({
-      llaveMen: [],
-      nombreInstitucion: [],
-      nombreSede: [],
-      observaciones: this.fb.array([]),
-
-    });
-  }
-
-  crearObservaciones() {
-    return this.fb.group({
-      nombreParticipante: [],
-      sesionSolicitudObservacionProyectoId: [],
-      sesionComiteSolicitudId: [],
-      sesionParticipanteId: [],
-      contratacionProyectoId: [],
-      observacion: [null, Validators.required]
-
+      aprobacion: [null, Validators.required],
+      observaciones: [null, Validators.required]
     });
   }
 
   constructor(
               private fb: FormBuilder,
-              public dialogRef: MatDialogRef<any>, 
+              public dialogRef: MatDialogRef<VotacionSolicitudComponent>,
               @Inject(MAT_DIALOG_DATA) public data: { 
-                                                      sesionComiteSolicitud: any, 
-                                                      objetoComiteTecnico: any 
+                                                      sesionComiteSolicitud: SesionComiteSolicitud, 
+                                                      objetoComiteTecnico: ComiteTecnico 
                                                     },
-              private technicalCommitteSessionService: TechnicalCommitteSessionService,
+              private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
               public dialog: MatDialog,
               private router: Router,
-              private projectService: ProjectService,
 
-             )
+             ) 
   {
 
   }
 
   ngOnInit(): void {
-    /*
-    
-        this.aprobaciones.clear();
 
     this.data.sesionComiteSolicitud.sesionSolicitudVoto.forEach( v => {
-      let grupoVotacion = this.crearAprobaciones();
+      let grupoVotacion = this.crearParticipante();
       
       grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
       grupoVotacion.get('aprobacion').setValue( v.esAprobado );
+      grupoVotacion.get('observaciones').setValue( v.observacion );
 
       grupoVotacion.get('sesionSolicitudVotoId').setValue( v.sesionSolicitudVotoId );
       grupoVotacion.get('sesionParticipanteId').setValue( v.sesionParticipanteId );
       grupoVotacion.get('sesionComiteSolicitudId').setValue( v.sesionComiteSolicitudId );
 
-      this.aprobaciones.push( grupoVotacion )
+      this.listaVotacion.push( grupoVotacion )
     })
 
-    this.proyectos.clear();
+    console.log( this.addressForm.value )
 
-    this.data.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {
-      
-      this.projectService.getProjectById( cp.proyecto.proyectoId )
-        .subscribe( response => {
+  }
 
-          let grupoProyecto = this.crearProyectos();
-          let listaObservaciones = grupoProyecto.get('observaciones') as FormArray;
-
-          grupoProyecto.get('llaveMen').setValue( response.llaveMen );
-          grupoProyecto.get('nombreInstitucion').setValue( response.institucionEducativa.nombre );
-          grupoProyecto.get('nombreSede').setValue(''//response.sede.nombre);
-
-          /*this.data.sesionComiteSolicitud.sesionSolicitudObservacionProyecto
-            .filter( o => o.contratacionProyectoId == cp.contratacionProyectoId )
-              .forEach( op => {
-                
-                    let grupoObservacion = this.crearObservaciones();
-
-                    grupoObservacion.get('nombreParticipante').setValue( op.nombreParticipante );
-                    grupoObservacion.get('sesionSolicitudObservacionProyectoId').setValue( op.sesionSolicitudObservacionProyectoId );
-                    grupoObservacion.get('sesionComiteSolicitudId').setValue( op.sesionComiteSolicitudId );
-                    grupoObservacion.get('sesionParticipanteId').setValue( op.sesionParticipanteId );
-                    grupoObservacion.get('contratacionProyectoId').setValue( op.contratacionProyectoId );
-                    grupoObservacion.get('observacion').setValue( op.observacion );
-
-                    listaObservaciones.push( grupoObservacion );
-                  })
-                
-          
-          this.proyectos.push( grupoProyecto )
-        })
-    })
-
-    */
+  agregarAprovacion() {
+    this.aprobacion.push(this.fb.control(null, Validators.required));
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -171,57 +114,45 @@ export class VotacionSolicitudComponent {
   }
 
   onSubmit() {
-    let sesionComiteSolicitud = {
+
+    let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,
-      sesionSolicitudVoto: [],
-      sesionSolicitudObservacionProyecto: []
+      sesionSolicitudVoto: []
     }
 
-    this.aprobaciones.controls.forEach( control => {
-      let sesionSolicitudVoto = {
+    this.listaVotacion.controls.forEach( control => {
+      let sesionSolicitudVoto: SesionSolicitudVoto = {
         sesionSolicitudVotoId: control.get('sesionSolicitudVotoId').value,
         sesionComiteSolicitudId: control.get('sesionComiteSolicitudId').value,
         sesionParticipanteId: control.get('sesionParticipanteId').value,
+        comiteTecnicoFiduciarioId: this.data.sesionComiteSolicitud.comiteTecnicoFiduciarioId,
+
         esAprobado: control.get('aprobacion').value,
-        //observacion: control.get('observaciones').value,
+        observacion: control.get('observaciones').value,
 
       }
 
       sesionComiteSolicitud.sesionSolicitudVoto.push( sesionSolicitudVoto );
     })
-
-    this.proyectos.controls.forEach( controlProyecto => {
-      let listaObservaciones = controlProyecto.get('observaciones') as FormArray;
-
-      listaObservaciones.controls.forEach( control => {
-        let sesionSolicitudObservacionProyecto = {
-          sesionSolicitudObservacionProyectoId: control.get('sesionSolicitudObservacionProyectoId').value,
-          sesionComiteSolicitudId: control.get('sesionComiteSolicitudId').value,
-          sesionParticipanteId: control.get('sesionParticipanteId').value,
-          contratacionProyectoId: control.get('contratacionProyectoId').value,
-          observacion: control.get('observacion').value,
-        }
-
-        sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push( sesionSolicitudObservacionProyecto );
-      })
-
+    
+    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
+    sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
+      if ( sv.esAprobado != true )
+      sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
     })
 
     console.log( sesionComiteSolicitud );
 
-    /*this.technicalCommitteSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
+    this.fiduciaryCommitteeSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
     .subscribe( respuesta => {
-      this.openDialog('Comité técnico', respuesta.message)
+      this.openDialog('', respuesta.message)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.objetoComiteTecnico);
-        //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])
-        
-        
       }
 
-    })*/
-   
+    })
+    
   }
-
+ 
 }

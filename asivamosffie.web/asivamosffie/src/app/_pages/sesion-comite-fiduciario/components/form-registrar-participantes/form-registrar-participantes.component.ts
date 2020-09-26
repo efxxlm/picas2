@@ -165,14 +165,14 @@ export class FormRegistrarParticipantesComponent {
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
-    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
-      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sol => {
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario) {
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.forEach(sol => {
         sol.completo = true;
-        if (sol.requiereVotacion == true) {
-          if (sol.sesionSolicitudVoto.length == 0)
+        if (sol.requiereVotacionFiduciario == true) {
+          if (sol.sesionSolicitudVoto.filter( ss => ss.ComiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).length == 0)
             cantidadSolicitudes++;
 
-          sol.sesionSolicitudVoto.forEach(vot => {
+          sol.sesionSolicitudVoto.filter( ss => ss.ComiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).forEach(vot => {
             cantidadSolicitudes++;
             if (vot.esAprobado == false || vot.esAprobado == true) {
               cantidadSolicitudesCompletas++;
@@ -189,7 +189,7 @@ export class FormRegistrarParticipantesComponent {
         }
       })
 
-      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0)
+      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0)
       {
         if (cantidadSolicitudes > 0)  {
           this.estadoSolicitudes = this.estadoFormulario.enProceso;
@@ -365,3 +365,4 @@ export class FormRegistrarParticipantesComponent {
     }
   }
 }
+

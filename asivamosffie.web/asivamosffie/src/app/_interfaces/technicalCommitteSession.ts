@@ -94,6 +94,8 @@ export interface SesionComiteSolicitud {
     requiereVotacion?: boolean,
     registroCompleto?: boolean,
 
+    comiteTecnicoFiduciarioId?: number,
+    registroCompletoFiduciaria?: boolean,
     desarrolloSolicitudFiduciario?: string,
     estadoActaCodigoFiduciario?: string,
     observacionesFiduciario?: string,
@@ -158,6 +160,7 @@ export interface SesionSolicitudVoto{
     eliminado?: boolean,
     usuarioModificacion?: string,
     fechaModificacion?: Date,
+    comiteTecnicoFiduciarioId?: number,
 
     nombreParticipante?: string,
 

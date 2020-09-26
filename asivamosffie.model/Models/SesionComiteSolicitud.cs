@@ -39,6 +39,7 @@ namespace asivamosffie.model.Models
         public Boolean? GeneraCompromisoFiduciario { get; set; }
         public int? CantCompromisosFiduciario { get; set; }
         public Boolean? RequiereVotacionFiduciario { get; set; }
+        public Boolean? RegistroCompletoFiduciaria { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual ComiteTecnico ComiteTecnicoFiduciario { get; set; }

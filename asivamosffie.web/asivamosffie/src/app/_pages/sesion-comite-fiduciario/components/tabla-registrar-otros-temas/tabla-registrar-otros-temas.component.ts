@@ -1,8 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { ComiteTecnico, SesionComiteTema, SesionTemaVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
+import { VotacionTemaComponent } from 'src/app/_pages/comite-tecnico/components/votacion-tema/votacion-tema.component';
 
 export interface OrdenDelDia {
   id: number;
@@ -23,8 +28,15 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
+  @Input() objetoComiteTecnico: ComiteTecnico;
+  @Input() esProposicionesVarios: boolean;
+  @Output() validar: EventEmitter<any> = new EventEmitter();
+
+
+  listaMiembros: Usuario[];
+
   displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -35,10 +47,19 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+    private commonService: CommonService,
+
   ) { }
 
   ngOnInit(): void {
+
+    console.log(this.esProposicionesVarios)
+    this.commonService.listaUsuarios().then((respuesta) => {
+      this.listaMiembros = respuesta;
+    })
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -54,6 +75,100 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
-  };
+  }
 
-};
+  openDialogValidacionSolicitudes(elemento: SesionComiteTema) {
+
+    let sesionComiteTema: SesionComiteTema = {
+      sesionTemaId: elemento.sesionTemaId,
+      tema: elemento.tema,
+
+      sesionTemaVoto: [],
+      
+    }
+
+    console.log(this.objetoComiteTecnico.sesionParticipante.length)
+
+    this.objetoComiteTecnico.sesionParticipante.forEach(p => {
+      let temaVoto: SesionTemaVoto = elemento.sesionTemaVoto.find(v => v.sesionTemaId == elemento.sesionTemaId && v.sesionParticipanteId == p.sesionParticipanteId);
+      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
+
+      if ( temaVoto ){
+        temaVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
+      }else{
+        temaVoto = {
+
+          sesionTemaVotoId: 0,
+          sesionTemaId: elemento.sesionTemaId,
+          sesionParticipanteId: p.sesionParticipanteId,
+          esAprobado: null,
+          observacion: null,
+          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+  
+        }  
+      }
+
+      
+
+      
+
+      sesionComiteTema.sesionTemaVoto.push(temaVoto)
+    })
+
+
+    const dialog = this.dialog.open(VotacionTemaComponent, {
+      width: '70em', data: { sesionComiteTema: sesionComiteTema }
+    });
+
+    dialog.afterClosed().subscribe(c => {
+      // if (c && c.comiteTecnicoId) {
+      //   this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+      //     .subscribe(response => {
+      //       this.objetoComiteTecnico = response;
+      this.validar.emit(null);
+      //     })
+      // }
+    })
+
+  }
+
+  changeRequiere(check: boolean, solicitudTema: SesionComiteTema) {
+
+    this.objetoComiteTecnico.sesionComiteTema.forEach(tem => {
+      if (tem.sesionTemaId == solicitudTema.sesionTemaId) {
+        this.fiduciaryCommitteeSessionService.noRequiereVotacionSesionComiteTema(solicitudTema, check)
+          .subscribe(respuesta => {
+            tem.completo = !check
+            this.validar.emit(null);
+          })
+      }
+    });
+
+  }
+
+  validarResgistros( listaSesionComiteTema: SesionComiteTema[] ){
+    listaSesionComiteTema.forEach( ct => {
+      ct.completo = true;
+
+      if ( ct.requiereVotacion == true && ct.sesionTemaVoto.length == 0 ) { ct.completo = false }
+
+      ct.sesionTemaVoto.forEach( tv => {
+        if ( tv.esAprobado != true && tv.esAprobado != false ){
+          ct.completo = false;
+        }
+      })
+    })
+  }
+
+  cargarRegistro() {
+
+    let lista = this.objetoComiteTecnico.sesionComiteTema.
+      filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == this.esProposicionesVarios)
+
+    this.validarResgistros( lista )
+
+    this.dataSource = new MatTableDataSource(lista);
+
+  }
+
+}
