@@ -31,6 +31,7 @@ namespace asivamosffie.services.Interfaces
         Task<byte[]> GetPlantillaActaIdComite(int ComiteId);
         Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud);
         Task<Respuesta> CreateEditTemasCompromiso(SesionComiteTema pSesionComiteTema);
+        Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema);
 
         // Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite);
         // Task<List<SesionComiteTema>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId);

@@ -2245,6 +2245,66 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comite_Tema_Voto, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
+                string CrearEditar = "";
+                sesionComiteTemaOld.RequiereVotacion = true;
+                sesionComiteTemaOld.EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo;
+                sesionComiteTemaOld.EsAprobado = (pSesionComiteTema.EstadoTemaCodigo == "1") ? true : false;
+                sesionComiteTemaOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
+                sesionComiteTemaOld.FechaModificacion = DateTime.Now;
+                sesionComiteTemaOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(sesionComiteTemaOld);
+                foreach (var SesionTemaVoto in pSesionComiteTema.SesionTemaVoto)
+                {
+                    if (SesionTemaVoto.SesionTemaVotoId == 0)
+                    {
+                        CrearEditar = "CREAR SESIÓN TEMA VOTO";
+                        SesionTemaVoto.UsuarioCreacion = pSesionComiteTema.UsuarioCreacion;
+                        SesionTemaVoto.FechaCreacion = DateTime.Now;
+                        //SesionTemaVoto.Eliminado = false;
+                        _context.SesionTemaVoto.Add(SesionTemaVoto);
+                    }
+                    else
+                    {
+                        CrearEditar = "EDITAR SESIÓN TEMA VOTO";
+                        SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaVotoId);
+                        //SesionTemaVotoOld.FechaModificacion = DateTime.Now;
+                        //SesionTemaVotoOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
+
+                        SesionTemaVotoOld.EsAprobado = SesionTemaVoto.EsAprobado;
+                        SesionTemaVotoOld.Observacion = SesionTemaVoto.Observacion;
+                    }
+                }
+                _context.SaveChanges();
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.OperacionExitosa, idAccion, pSesionComiteTema.UsuarioCreacion, CrearEditar)
+                  };
+            }
+            catch (Exception ex)
+            {
+                return
+               new Respuesta
+               {
+                   IsSuccessful = false,
+                   IsException = true,
+                   IsValidation = false,
+                   Code = ConstantSesionComiteTecnico.Error,
+                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.Error, idAccion, pSesionComiteTema.UsuarioCreacion, ex.InnerException.ToString())
+               };
+            }
+
+        }
+
         // //Crear un nuevo tema
         // public async Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite)
         // {

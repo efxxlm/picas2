@@ -324,6 +324,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("CreateEditSesionTemaVoto")]
+        public async Task<IActionResult> CreateEditSesionTemaVoto([FromBody] SesionComiteTema pSesionComiteTema)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSesionComiteTema.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _committeeSessionFiduciarioService.CreateEditSesionTemaVoto(pSesionComiteTema);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         // [Route("GetCommitteeSessionByComiteTecnicoId")]
         // public async Task<IActionResult> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId)
         // {

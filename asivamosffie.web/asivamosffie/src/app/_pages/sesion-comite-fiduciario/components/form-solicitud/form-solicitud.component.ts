@@ -82,7 +82,7 @@ export class FormSolicitudComponent implements OnInit {
   }
   ngOnInit(): void {
 
-    let estados: string[] = ['1', '3', '5']
+    let estados: string[] = ['2', '4', '6']
 
     this.commonService.listaEstadoSolicitud()
       .subscribe(response => {
@@ -190,10 +190,10 @@ export class FormSolicitudComponent implements OnInit {
 
     console.log( this.sesionComiteSolicitud )
 
-    if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-    }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+    if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteFiduciario ){
+      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
+    }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteFiduciario ){
+      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes( e.codigo ))
     }
 
     let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)

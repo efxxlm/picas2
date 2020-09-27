@@ -1,26 +1,26 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { SesionComiteSolicitud, SesionSolicitudVoto, ComiteTecnico, SesionComiteTema, SesionTemaVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Router } from '@angular/router';
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
-import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto } from 'src/app/_interfaces/technicalCommitteSession';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 
 
 @Component({
-  selector: 'app-votacion-solicitud',
-  templateUrl: './votacion-solicitud.component.html',
-  styleUrls: ['./votacion-solicitud.component.scss']
+  selector: 'app-votacion-tema',
+  templateUrl: './votacion-tema.component.html',
+  styleUrls: ['./votacion-tema.component.scss']
 })
-export class VotacionSolicitudComponent implements OnInit {
-  
+export class VotacionTemaComponent implements OnInit{
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
   addressForm = this.fb.array([]);
 
   get listaVotacion() {
-    return this.addressForm as FormArray;
+    return this.addressForm as FormArray;  
   }
 
   get aprobacion() {
@@ -58,9 +58,9 @@ export class VotacionSolicitudComponent implements OnInit {
   crearParticipante() {
     return this.fb.group({
       nombreParticipante: [],
-      sesionSolicitudVotoId: [],
+      sesionTemaVotoId: [],
+      sesionTemaId: [],
       sesionParticipanteId: [],
-      sesionComiteSolicitudId: [],
       aprobacion: [null, Validators.required],
       observaciones: [null, Validators.required]
     });
@@ -68,10 +68,10 @@ export class VotacionSolicitudComponent implements OnInit {
 
   constructor(
               private fb: FormBuilder,
-              public dialogRef: MatDialogRef<VotacionSolicitudComponent>,
+              public dialogRef: MatDialogRef<VotacionTemaComponent>, 
               @Inject(MAT_DIALOG_DATA) public data: { 
-                                                      sesionComiteSolicitud: SesionComiteSolicitud, 
-                                                      objetoComiteTecnico: ComiteTecnico 
+                                                      sesionComiteTema: SesionComiteTema, 
+                                                      //objetoComiteTecnico: ComiteTecnico 
                                                     },
               private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
               public dialog: MatDialog,
@@ -84,16 +84,18 @@ export class VotacionSolicitudComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.data.sesionComiteSolicitud.sesionSolicitudVoto.forEach( v => {
+    
+
+    this.data.sesionComiteTema.sesionTemaVoto.forEach( v => {
       let grupoVotacion = this.crearParticipante();
       
       grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
       grupoVotacion.get('aprobacion').setValue( v.esAprobado );
       grupoVotacion.get('observaciones').setValue( v.observacion );
 
-      grupoVotacion.get('sesionSolicitudVotoId').setValue( v.sesionSolicitudVotoId );
+      grupoVotacion.get('sesionTemaVotoId').setValue( v.sesionTemaVotoId );
+      grupoVotacion.get('sesionTemaId').setValue( v.sesionTemaId );
       grupoVotacion.get('sesionParticipanteId').setValue( v.sesionParticipanteId );
-      grupoVotacion.get('sesionComiteSolicitudId').setValue( v.sesionComiteSolicitudId );
 
       this.listaVotacion.push( grupoVotacion )
     })
@@ -115,42 +117,42 @@ export class VotacionSolicitudComponent implements OnInit {
 
   onSubmit() {
 
-    console.log(this.data.sesionComiteSolicitud);
+    let sesionComiteTema: SesionComiteTema = {
 
-    let sesionComiteSolicitud: SesionComiteSolicitud = {
-      sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
-      comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,
-      sesionSolicitudVoto: []
+      sesionTemaId: this.data.sesionComiteTema.sesionTemaId,
+      comiteTecnicoId: this.data.sesionComiteTema.comiteTecnicoId,
+      sesionTemaVoto: []
     }
 
     this.listaVotacion.controls.forEach( control => {
-      let sesionSolicitudVoto: SesionSolicitudVoto = {
-        sesionSolicitudVotoId: control.get('sesionSolicitudVotoId').value,
-        sesionComiteSolicitudId: control.get('sesionComiteSolicitudId').value,
+      let sesionTemaVoto: SesionTemaVoto = {
+        sesionTemaVotoId: control.get('sesionTemaVotoId').value,
+        sesionTemaId: control.get('sesionTemaId').value,
         sesionParticipanteId: control.get('sesionParticipanteId').value,
-        comiteTecnicoFiduciarioId: this.data.sesionComiteSolicitud.comiteTecnicoFiduciarioId,
-
         esAprobado: control.get('aprobacion').value,
         observacion: control.get('observaciones').value,
 
       }
 
-      sesionComiteSolicitud.sesionSolicitudVoto.push( sesionSolicitudVoto );
-    })
-    
-    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteFiduciario;
-    sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
-      if ( sv.esAprobado != true )
-      sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteFiduciario;
+      sesionComiteTema.sesionTemaVoto.push( sesionTemaVoto );
     })
 
-    console.log( sesionComiteSolicitud );
+    sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.AprobadaPorComiteFiduciario;
+    sesionComiteTema.sesionTemaVoto.forEach( tv => {
+      if (tv.esAprobado != true )
+      sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.RechazadaPorComiteFiduciario; 
+    })
 
-    this.fiduciaryCommitteeSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
+    console.log( sesionComiteTema )
+
+    this.fiduciaryCommitteeSessionService.createEditSesionTemaVoto( sesionComiteTema )
     .subscribe( respuesta => {
-      this.openDialog('', respuesta.message)
+      this.openDialog('Comité técnico', respuesta.message)
       if ( respuesta.code == "200" ){
-        this.dialogRef.close(this.data.objetoComiteTecnico);
+        this.dialogRef.close(this.data.sesionComiteTema);
+        //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])
+        
+        
       }
 
     })
