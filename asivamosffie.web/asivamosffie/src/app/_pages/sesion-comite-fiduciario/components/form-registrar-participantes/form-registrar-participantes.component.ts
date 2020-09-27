@@ -129,8 +129,6 @@ export class FormRegistrarParticipantesComponent {
     return this.addressForm.get('invitados') as FormArray;
   }
 
-
-
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
   }
