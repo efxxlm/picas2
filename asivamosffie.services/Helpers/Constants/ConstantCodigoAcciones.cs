@@ -72,5 +72,7 @@
         public const string Eliminar_Contrato_Perfil = "83";
 
         public const string  Aprobar_Inicio_Contrato = "84";
+         
+        public const string  Editar_Acta_De_Inicio_De_Contrato = "94";
     } 
 }

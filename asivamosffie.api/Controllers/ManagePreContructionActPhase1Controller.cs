@@ -28,11 +28,30 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratoByContratoId")]
         [HttpGet]
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        public async Task<Contrato> GetContratoByContratoId([FromQuery] int pContratoId)
         {
             return await _managePreContruction.GetContratoByContratoId(pContratoId);
         }
 
-        
+
+        [Route("EditContrato")]
+        [HttpPut]
+        public async Task<Respuesta> EditContrato([FromBody] Contrato pContrato)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managePreContruction.EditContrato(pContrato);
+                return respuesta;
+ 
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+       
     }
 }
