@@ -20,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 export const customCurrencyMaskConfig = {
   align: 'right',
@@ -54,7 +55,11 @@ export const customCurrencyMaskConfig = {
     FormsModule,
     NgxCurrencyModule.forRoot(customCurrencyMaskConfig)
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true }, DatePipe],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

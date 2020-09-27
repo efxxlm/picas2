@@ -11,11 +11,13 @@ import { QuillModule } from 'ngx-quill';
 import { DiagnosticoComponent } from './components/diagnostico/diagnostico.component';
 import { PlanesProgramasComponent } from './components/planes-programas/planes-programas.component';
 import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
+import { ManejoAnticipoComponent } from './components/manejo-anticipo/manejo-anticipo.component';
+import { HojaVidaContratistaComponent } from './components/hoja-vida-contratista/hoja-vida-contratista.component';
 
 @NgModule({
   declarations: [
     RequisitosTecnicosConstruccionComponent, 
-    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent, PlanesProgramasComponent, DialogObservacionesComponent
+    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent, PlanesProgramasComponent, DialogObservacionesComponent, ManejoAnticipoComponent, HojaVidaContratistaComponent
   ],
   imports: [
     CommonModule,

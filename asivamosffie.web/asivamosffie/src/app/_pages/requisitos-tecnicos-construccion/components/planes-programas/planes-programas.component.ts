@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-planes-programas',
@@ -11,6 +13,8 @@ import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-obs
 })
 export class PlanesProgramasComponent implements OnInit {
 
+  @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
+  @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   dataPlanesProgramas: any[] = [];
   dataSource                 = new MatTableDataSource();
   displayedColumns: string[] = [ 
@@ -38,6 +42,9 @@ export class PlanesProgramasComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource( this.dataPlanesProgramas );
+    this.dataSource.paginator              = this.paginator;
+    this.dataSource.sort                   = this.sort;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
 
   openDialog ( planPrograma: string, id: number ) {

@@ -107,6 +107,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 15]"></mat-paginator>
 </div>
 
 <section class="text-center container w-100 mt-2em">
