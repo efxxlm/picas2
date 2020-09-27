@@ -180,10 +180,20 @@
         public const string NOMBRE_DE_TEMA = "154";
         public const string RESPONSABLE_DE_TEMA = "155";
         public const string DESARROLLO_DE_TEMA = "156";
-        public const string RESULTADO_DE_VOTACION = "157"; 
+        public const string RESULTADO_DE_VOTACION = "157";
         public const string DESARROLLO_SOLICITUD = "158";
         public const string DECISIONES_SOLICITUD = "159";
         public const string OBSERVACIONES_SOLICITUD = "160";
+        public const string RESULTADO_VOTACION = "161";
+        public const string REGISTROS_COMPROMISOS_SOLICITUD = "162";
+        public const string FECHA_CUMPLIMIENTO_COMPROMISO = "163";
+        public const string REGISTROS_PROPOSICIONES_VARIOS = "164";
+        public const string REGISTROS_FIRMAS = "165";
+        public const string REGISTROS_ANEXOS = "166";
+        public const string ENUM_PARTICIPANTE = "167";
+        public const string NOMBRE_PARTICIPANTE = "168";
+        public const string CARGO_PARTICIPANTE = "169";
+        public const string FIRMA_PARTICIPANTE = "170";
         #endregion
     }
 }
