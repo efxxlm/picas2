@@ -100,7 +100,7 @@ export class CrearActaComponent implements OnInit {
 
     if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario) {
       this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.forEach(cs => {
-        if (!cs.registroCompleto)
+        if (!cs.registroCompletoFiduciaria)
           this.solicitudesCompletas = false;
       })
     }
@@ -120,7 +120,7 @@ export class CrearActaComponent implements OnInit {
   habilitar(e) {
 
     if (e) {
-      this.router.navigate(['/comiteTecnico'])
+      this.router.navigate(['/comiteFiduciario'])
     } else {
       this.ngOnInit();
     }

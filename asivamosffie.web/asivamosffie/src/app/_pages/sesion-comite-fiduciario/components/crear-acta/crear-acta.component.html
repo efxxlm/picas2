@@ -43,8 +43,8 @@
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title "
                         [class.sin-diligenciar]="sesionComiteSolicitud.sesionComiteSolicitudId == 0"
-                        [class.en-proceso]="!sesionComiteSolicitud.registroCompleto"
-                        [class.completo]="sesionComiteSolicitud.registroCompleto"
+                        [class.en-proceso]="!sesionComiteSolicitud.registroCompletoFiduciaria"
+                        [class.completo]="sesionComiteSolicitud.registroCompletoFiduciaria"
                         >
                             Solicitud {{ sesionComiteSolicitud.numeroSolicitud }}
                         </mat-panel-title>

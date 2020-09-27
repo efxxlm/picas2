@@ -150,7 +150,9 @@ export class FormSolicitudComponent implements OnInit {
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.sesionComiteSolicitud.comiteTecnicoId,
+      comiteTecnicoFiduciarioId: this.sesionComiteSolicitud.comiteTecnicoFiduciarioId,
       estadoCodigo: this.addressForm.get('estadoSolicitud').value ? this.addressForm.get('estadoSolicitud').value.codigo : null,
+      
       observacionesFiduciario: this.addressForm.get('observaciones').value,
       rutaSoporteVotacionFiduciario: this.addressForm.get('url').value,
       generaCompromisoFiduciario: this.addressForm.get('tieneCompromisos').value,
@@ -178,10 +180,10 @@ export class FormSolicitudComponent implements OnInit {
     this.fiduciaryCommitteeSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
-        console.log( respuesta.data )
+        console.log( respuesta.data ) 
         this.validar.emit( respuesta.data );
         if (respuesta.code == "200" && !respuesta.data)
-          this.router.navigate(['/comiteFiduciario/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
+          this.router.navigate(['/comiteFiduciario/crearActa', this.sesionComiteSolicitud.comiteTecnicoFiduciarioId])
       })
 
   }

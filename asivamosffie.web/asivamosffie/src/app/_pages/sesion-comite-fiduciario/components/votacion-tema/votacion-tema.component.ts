@@ -147,7 +147,7 @@ export class VotacionTemaComponent implements OnInit{
 
     this.fiduciaryCommitteeSessionService.createEditSesionTemaVoto( sesionComiteTema )
     .subscribe( respuesta => {
-      this.openDialog('Comité técnico', respuesta.message)
+      this.openDialog('', respuesta.message)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.sesionComiteTema);
         //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])
