@@ -25,6 +25,8 @@ import { TableFuentesYUsosComponent } from './components/table-fuentes-y-usos/ta
 import { DefinirFuentesYUsosComponent } from './components/definir-fuentes-y-usos/definir-fuentes-y-usos.component';
 import { AsociadaComponent } from './components/asociada/asociada.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { VerDetalleContratacionComponent } from './components/ver-detalle-contratacion/ver-detalle-contratacion.component';
+import { GestionarProcesosContractualesModule } from '../gestionar-procesos-contractuales/gestionar-procesos-contractuales.module';
 
 
 @NgModule({
@@ -42,7 +44,8 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     ConsideracionesEspecialesComponent,
     TableFuentesYUsosComponent,
     DefinirFuentesYUsosComponent,
-    AsociadaComponent
+    AsociadaComponent,
+    VerDetalleContratacionComponent
   ],
   imports: [
     CommonModule,
@@ -53,6 +56,7 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     MatSelectModule,
     MatRadioModule,
     MatCardModule,
+    GestionarProcesosContractualesModule,
     ReactiveFormsModule,
     CurrencyMaskModule
   ]

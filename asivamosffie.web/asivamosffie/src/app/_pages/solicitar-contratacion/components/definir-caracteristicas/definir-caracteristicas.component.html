@@ -25,8 +25,8 @@
             <label class="label-left" for="reasignacion">¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web? </label>
           </div>
           <div class="col">
-            <mat-radio-group class="radioInput" formControlName="completada">
-              <mat-radio-button [value]="true">Sí</mat-radio-button>
+            <mat-radio-group class="radioInput d-flex" formControlName="completada">
+              <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
               <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
           </div>
@@ -38,8 +38,8 @@
                 <label class="label-left" for="reasignacion">¿El proyecto es una reasignación?</label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="reasignacion">
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-group class="radioInput d-flex" formControlName="reasignacion">
+                  <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
@@ -53,8 +53,8 @@
                 <label class="label-left" for="avanceObra">¿El proyecto tiene avance de obra?</label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="avanceObra">
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-group class="radioInput d-flex" formControlName="avanceObra">
+                  <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
@@ -86,8 +86,8 @@
                 <label class="label-left" for="requiereLicencias">¿El proyecto requiere licencias?</label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="requiereLicencias">
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-group class="radioInput d-flex" formControlName="requiereLicencias">
+                  <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
@@ -101,8 +101,8 @@
                 <label class="label-left" for="licenciaVigente">¿El proyecto tiene licencia vigente?</label>
               </div>
               <div class="col">
-                <mat-radio-group class="radioInput" formControlName="licenciaVigente">
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-group class="radioInput d-flex" formControlName="licenciaVigente">
+                  <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
               </div>
@@ -117,7 +117,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numeroLicencia type="number" maxlength="12" formControlName="numeroLicencia">
+                  <input matInput #numeroLicencia type="text" maxlength="12" formControlName="numeroLicencia">
                 </mat-form-field>
                 <span class="contador">{{12 - numeroLicencia.value.length}}</span>
               </div>

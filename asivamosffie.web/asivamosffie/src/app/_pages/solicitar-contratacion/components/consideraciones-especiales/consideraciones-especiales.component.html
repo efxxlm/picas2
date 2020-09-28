@@ -14,8 +14,7 @@
         </mat-form-field>
     </div>
     <div class="text-center animatedDown" *ngIf="addressForm.controls.reasignacion.value !== ''">
-        <button mat-button color="warn" class="btn-guardar" type="submit"
-            [disabled]="addressForm.controls.reasignacion.value === 'true' && addressForm.controls.descripcion.value === '' || !addressForm.controls.descripcion.dirty">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
             <img src="assets/img/icon/guardar.svg" alt="guardar">
         </button>
     </div>

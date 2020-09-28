@@ -146,14 +146,8 @@ namespace asivamosffie.services
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
             List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == 1).ToList();
             List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == 3).ToList();
-           
-            List<Dominio> ListTipoTipoDocumento = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && (bool)r.Activo).ToList();
 
 
-            if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo)) 
-            { 
-                contratacion.Contratista.TipoIdentificacionCodigo = ListTipoTipoDocumento.Where(r => r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
-            }
             foreach (var item in contratacion.ContratacionProyecto)
             {
 
@@ -665,6 +659,7 @@ namespace asivamosffie.services
                     contratacionProyectoAntiguo.PorcentajeAvanceObra = pContratacionProyecto.PorcentajeAvanceObra;
 
                     contratacionProyectoAntiguo.RequiereLicencia = pContratacionProyecto.RequiereLicencia;
+                    contratacionProyectoAntiguo.TieneMonitoreoWeb = pContratacionProyecto.TieneMonitoreoWeb;
                     contratacionProyectoAntiguo.LicenciaVigente = pContratacionProyecto.LicenciaVigente;
                     contratacionProyectoAntiguo.NumeroLicencia = pContratacionProyecto.NumeroLicencia;
                     contratacionProyectoAntiguo.FechaVigencia = pContratacionProyecto.FechaVigencia;
