@@ -1,41 +1,31 @@
 <div class="tabla-expansion-panel">
-    <!-- <div class="busqueda">
-        <mat-form-field appearance="outline" class="busqueda--input">
-            <mat-label>Buscador / Filtro</mat-label>
-            <input matInput #filtro (keyup)="applyFilter($event)">
-        </mat-form-field>
-        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
-            <img src="assets/img/icon/lupa.svg" alt="Buscar">
-        </button>
-    </div> -->
-
     <table mat-table [dataSource]="dataSource" matSort class="tabla mat-elevation-z8 text-center">
 
-        <ng-container matColumnDef="fecha">
+        <ng-container matColumnDef="fechaFirma">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fecha}}</b> </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma}}</b> </td>
         </ng-container>
 
-        <ng-container matColumnDef="numero">
+        <ng-container matColumnDef="numeroContrato">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.numeroContrato}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="tipo">
+        <ng-container matColumnDef="tipoSolicitud">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.tipoSolicitud}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="estado">
+        <ng-container matColumnDef="estadoPoliza">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
             <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table sin-diligenciar"></span>
-                {{element.estado}} </td>
+                {{element.estadoPoliza}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="id">
+        <ng-container matColumnDef="contratoId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a [routerLink]="['gestionar-polizas', element.id]" mat-raised-button color="accent"
+                <a [routerLink]="['gestionar-polizas', element.contratoId]" mat-raised-button color="accent"
                     class="btn-table">Gestionar pólizas </a>
             </td>
         </ng-container>
