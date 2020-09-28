@@ -34,7 +34,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style" *ngFor="let data of dataContratacion.contratacionProyecto">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let data of dataContratacion.contratacionProyecto">
             <mat-expansion-panel-header class="expansion-style--header w-45" *ngIf="data.proyecto.institucionEducativa.proyectoInstitucionEducativa.length > 0">
               <mat-panel-title class="expansion-style--title">
                 {{ data.proyecto.institucionEducativa.nombre }}
@@ -167,7 +167,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
               DDP {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp }}
