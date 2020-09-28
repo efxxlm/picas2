@@ -122,7 +122,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR CUENTA BANCARIA";
                     cuentaBancaria.FechaCreacion = DateTime.Now;
                     cuentaBancaria.Eliminado = false;
-
+                    cuentaBancaria.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco.ToUpper();
                     _context.CuentaBancaria.Add(cuentaBancaria);
                 }
                 else

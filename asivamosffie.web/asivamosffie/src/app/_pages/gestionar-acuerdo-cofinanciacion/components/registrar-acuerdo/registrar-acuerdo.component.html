@@ -102,7 +102,7 @@
                   </div>
                 </div>
                 <div class="row"
-                  *ngIf="aportantes.controls[i].get('tipo').value && aportantes.controls[i].get('tipo').value.codigo.toString()=='3'">
+                  *ngIf="aportantes.controls[i].get('tipo').value && aportantes.controls[i].get('tipo').value.codigo && aportantes.controls[i].get('tipo').value.codigo.toString()=='3'">
                   <div class="pr-1">
                     <label class="label-left" 
                     [ngClass]="{'color-secondaryColor' : aportante.controls.nombre.invalid && aportante.controls.nombre.dirty}"
@@ -120,7 +120,7 @@
                 </div>
 
                 <div class="row"
-                  *ngIf="aportantes.controls[i].get('tipo').value && this.tiposPersonaHabilitaNombre.includes(aportantes.controls[i].get('tipo').value.codigo.toString())">
+                  *ngIf="aportantes.controls[i].get('tipo').value && aportantes.controls[i].get('tipo').value.codigo &&  this.tiposPersonaHabilitaNombre.includes(aportantes.controls[i].get('tipo').value.codigo.toString())">
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
@@ -227,14 +227,14 @@
     <div>
       <mat-accordion>
         <mat-expansion-panel class="expansion-style" *ngFor="let aportante of listaCofinancAportantes; let i = index">
-          <mat-expansion-panel-header class="expansion-style--header">
+          <mat-expansion-panel-header class="expansion-style--header" *ngIf="aportante.cofinanciacionDocumento.length>0">
             <mat-panel-title class="expansion-style--title"
               [ngClass]="{'sin-diligenciar': validaCompletitud(aportante)==1, 'en-proceso':  validaCompletitud(aportante)==2, 'completo':  validaCompletitud(aportante)==3}">
               Documentos de apropiación aportante {{ i + 1}}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <mat-card class="shipping-card">
+          <mat-card class="shipping-card"  *ngIf="aportante.cofinanciacionDocumento.length>0">
             <div *ngFor="let documento of aportante.cofinanciacionDocumento;index as a">
               <mat-card-header>
                 <mat-card-title class="header-card--text alineacion-titulos">
@@ -336,8 +336,8 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="example-full-width">
-                          <input matInput [matDatepicker]="picker" [(ngModel)]="documento.fechaActa" [max]="maxDate"
-                            readonly (click)="picker.open()">
+                          <input matInput [matDatepicker]="picker"  placeholder="DD/MM/AAAA" [(ngModel)]="documento.fechaActa" [max]="maxDate"
+                            readonly (click)="picker.open()"> 
                           <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">

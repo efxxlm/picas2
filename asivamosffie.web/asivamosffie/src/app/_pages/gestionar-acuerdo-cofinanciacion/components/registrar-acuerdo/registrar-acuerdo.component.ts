@@ -109,6 +109,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     this.listaCofinancAportantes.forEach(apo => {
       let valorAportante = 0;
       apo.cofinanciacionDocumento.forEach(doc => {
+        console.log(doc.valorDocumento)
         valorTotal += doc.valorDocumento ? doc.valorDocumento : 0;
         valorAportante += doc.valorDocumento ? doc.valorDocumento : 0;
       });

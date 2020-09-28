@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, Fo
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
 import { CofinanciacionService, CofinanciacionAportante, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { forkJoin, from } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FuenteFinanciacionService, FuenteFinanciacion, CuentaBancaria, RegistroPresupuestal, VigenciaAporte } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -35,24 +35,57 @@ export class RegistrarComponent implements OnInit {
   listaFuentes: FuenteFinanciacion[] = [];
   listaDocumentos: CofinanciacionDocumento[] = [];
   valorTotal = 0;
-
+  
   data;
+  
+  mostrarNombreaportante: boolean;
+  listaDocumentosApropiacion: CofinanciacionDocumento[];
+  tipoDocumentoap: Dominio[]=[];
 
   constructor(private fb: FormBuilder,
               private commonService: CommonService,
               private cofinanciacionService: CofinanciacionService,
               private activatedRoute: ActivatedRoute,
               public dialog: MatDialog,
-              private fuenteFinanciacionService: FuenteFinanciacionService
+              private fuenteFinanciacionService: FuenteFinanciacionService,
+              private router: Router,
   ) {
     this.maxDate = new Date();
   }
 
 
-  openDialog(modalTitle: string, modalText: string) {
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });   
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+        if(result)
+        {
+          this.router.navigate(["/gestionarFuentes"], {});
+        }
+      });
+    }
+  }
+  openDialogSiNo(modalTitle: string, modalText: string,borrarForm: any, i: number,j:number,event:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        if(event==1)
+        {
+          this.removeItemVigencia(borrarForm,i,j);
+        }
+        else{
+          this.borrarVigencia(borrarForm,i);
+        }
+      }           
     });
   }
 
@@ -145,19 +178,19 @@ export class RegistrarComponent implements OnInit {
 
     this.VigenciasAporte = this.commonService.vigenciasDesde2015();
     this.activatedRoute.params.subscribe(param => {
-      this.tipoAportanteId = param.idTipoAportante;
+      this.tipoAportanteId = param.idTipoAportante;      
       this.idAportante = param.idAportante;
-
       forkJoin([
         this.commonService.listaNombreAportante(),
-        this.commonService.listaFuenteRecursos(),
+        this.commonService.listaFuenteTipoFinanciacion(),
         this.commonService.listaBancos(),
         this.commonService.listaDepartamentos(),
         this.cofinanciacionService.listaAportantesByTipoAportante(this.tipoAportanteId),
-        this.fuenteFinanciacionService.listaFuenteFinanciacion()
+        this.fuenteFinanciacionService.listaFuenteFinanciacion(),
+        
       ]).subscribe(res => {
 
-        this.nombresAportantes = res[4];
+        this.nombresAportantes = res[4].filter(x=>x.cofinanciacion.registroCompleto==true);//solo muestro los completos
 
         const nombresAportantesTemp: Dominio[] = res[0];
 
@@ -185,7 +218,9 @@ export class RegistrarComponent implements OnInit {
 
     this.addressForm = this.fb.group({
       nombreAportante: [null],
+      nombreAportanteFFIE:[null],
       documentoApropiacion: [null],
+      tipoDocumento:[null],
       numerodocumento: [null, Validators.compose([
         Validators.minLength(10), Validators.maxLength(10)])
       ],
@@ -219,7 +254,7 @@ export class RegistrarComponent implements OnInit {
       }
     } else if (FormNumRP <= this.registrosPresupuestales.length && FormNumRP >= 0) {
       while (this.registrosPresupuestales.length > FormNumRP) {
-        this.borrarArray(this.registrosPresupuestales, this.registrosPresupuestales.length - 1);
+        this.borrarArray(this.registrosPresupuestales, this.registrosPresupuestales.length - 1,4);
       }
     }
   }
@@ -270,7 +305,9 @@ export class RegistrarComponent implements OnInit {
   changeNombreAportante() {
     if (this.addressForm.get('nombreAportante').value) {
 
-      this.idAportante = this.addressForm.get('nombreAportante').value.cofinanciacionAportanteId;
+      this.idAportante = this.addressForm.get('nombreAportante').value.cofinanciacionAportanteId?
+        this.addressForm.get('nombreAportante').value.cofinanciacionAportanteId:
+        this.addressForm.get('nombreAportanteFFIE').value.cofinanciacionAportanteId;
 
 
       // tercero
@@ -317,6 +354,45 @@ export class RegistrarComponent implements OnInit {
     }
   }
 
+
+  changeNombreAportanteFFIE()
+  {
+    if (this.addressForm.get('nombreAportanteFFIE').value) {
+
+      this.idAportante = 
+        this.addressForm.get('nombreAportanteFFIE').value.cofinanciacionAportanteId;
+
+      // FFIE
+      if (this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())) {
+        this.cofinanciacionService.getDocumentoApropiacionByAportante(this.idAportante).subscribe(listDoc => {
+          if (listDoc.length > 0) {
+            //this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
+            //this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
+            this.listaDocumentosApropiacion=listDoc;
+            listDoc.forEach(element => {
+              let m = this.tipoDocumentoap.some(function(item) {
+                return item.dominioId === element.tipoDocumentoId
+              });
+              if(m)
+              {
+                console.log("ya lo tiene");
+              }
+              else
+              {
+                this.tipoDocumentoap.push({dominioId:element.tipoDocumentoId,nombre:element.tipoDocumento.nombre});
+              }              
+            });
+          }
+          else {
+            this.openDialog('Validacion', 'No tiene documentos de apropiacion');
+          }
+        });
+      }
+
+    }
+  }
+
+
   get fuenteRecursosArray() {
     return this.addressForm.get('fuenteRecursosArray') as FormArray;
   }
@@ -336,14 +412,49 @@ export class RegistrarComponent implements OnInit {
 
   CambioNumerovigencia(j: number) {
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
-    if (FormNumvigencias.cuantasVigencias > this.vigencias1.length && FormNumvigencias.cuantasVigencias < 100) {
-      while (this.vigencias1.length < FormNumvigencias.cuantasVigencias) {
-        this.vigencias1.push(this.createVigencia());
-      }
-    } else if (FormNumvigencias.cuantasVigencias <= this.vigencias1.length && FormNumvigencias.cuantasVigencias >= 0) {
-      while (this.vigencias1.length > FormNumvigencias.cuantasVigencias) {
-        this.borrarArray(this.vigencias1, this.vigencias1.length - 1);
-      }
+    console.log(j);
+    console.log(this.addressForm.get("fuenteRecursosArray")['controls'][j])
+    if(FormNumvigencias.cuantasVigencias!=null && FormNumvigencias.cuantasVigencias!="")
+    {
+      if (FormNumvigencias.cuantasVigencias > this.vigencias1.length && FormNumvigencias.cuantasVigencias < 100) {
+        if(FormNumvigencias.cuantasVigencias==1)
+        {
+          this.vigencias1.push(this.fb.group({
+            vigenciaAporteId: [],
+            vigenciaAportante: [null],
+            valorVigencia: [this.addressForm.get("fuenteRecursosArray")['controls'][j].value.valorFuenteRecursos, Validators.compose([
+              Validators.minLength(10), Validators.maxLength(10)])
+            ]
+          }));
+        }
+        else
+        {
+          while (this.vigencias1.length < FormNumvigencias.cuantasVigencias) {
+            this.vigencias1.push(this.createVigencia());
+          }  
+        }
+        
+      } else if (FormNumvigencias.cuantasVigencias <= this.vigencias1.length && FormNumvigencias.cuantasVigencias >= 0) {
+        //valido si tiene data
+        let bitestavacio=true;
+        FormNumvigencias.vigencias.forEach(element => {
+          if(element.valorVigencia!=null || element.vigenciaAportante!=null ||element.vigenciaAporteId!=null)
+          {
+            bitestavacio=false
+          }
+        });
+        if(bitestavacio)
+        {
+          while (this.vigencias1.length > FormNumvigencias.cuantasVigencias) {
+            this.borrarArrayVigencias(this.vigencias1, this.vigencias1.length - 1,j);
+          }
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1.length);
+        }
+        else{
+          this.openDialog("","Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.");
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1.length);
+        }
+      }          
     }
   }
 
@@ -420,15 +531,37 @@ export class RegistrarComponent implements OnInit {
     });
   }
 
-  borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+  borrarArray(borrarForm: any, i: number,tipo:number) {
+    
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,0,tipo);
+      
   }
-
+  borrarVigencia(borrarForm: any, i: number)
+  {
+    console.log(borrarForm);console.log(i);
+    borrarForm.removeAt(i);  
+    this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+  }
+  borrarArrayVigencias(borrarForm: any, i: number,j:number) {    
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,j,1);
+  }
+  removeItemVigencia(borrarForm: any, i: number,j:number)
+  {
+    borrarForm.removeAt(i);
+    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1.length);    
+    this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+  }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
+  }
+
+  filterDocumento(variable)
+  {
+    console.log(variable);
+    this.listaDocumentosApropiacion=this.listaDocumentosApropiacion.filter(x=>x.tipoDocumentoId==variable);
   }
 
   onSubmit() {
@@ -437,6 +570,9 @@ export class RegistrarComponent implements OnInit {
       const lista: FuenteFinanciacion[] = [];
       const listaRP: RegistroPresupuestal[] = [];
 
+
+      
+
       let usuario = '';
       if (localStorage.getItem('actualUser')) {
         usuario = localStorage.getItem('actualUser');
@@ -444,6 +580,7 @@ export class RegistrarComponent implements OnInit {
       }
 
       this.fuenteRecursosArray.controls.forEach(controlFR => {
+        let valortotla=controlFR.get('valorFuenteRecursos').value;
         const fuente: FuenteFinanciacion = {
           fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
           aportanteId: this.idAportante,
@@ -458,6 +595,7 @@ export class RegistrarComponent implements OnInit {
         const vigencias = controlFR.get('vigencias') as FormArray;
 
         if (vigencias) {
+          let totalaportes=0;
           vigencias.controls.forEach(controlVi => {
             const vigenciaAporte: VigenciaAporte = {
               vigenciaAporteId: controlVi.get('vigenciaAporteId').value,
@@ -466,10 +604,16 @@ export class RegistrarComponent implements OnInit {
               valorAporte: controlVi.get('valorVigencia').value,
 
             };
-
+            totalaportes+=controlVi.get('valorVigencia').value;
             fuente.vigenciaAporte.push(vigenciaAporte);
 
           });
+          if(totalaportes!=valortotla)
+          {
+            this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+            return false;
+          }
+
         }
 
         const cuentas = controlFR.get('cuentasBancaria') as FormArray;
@@ -524,7 +668,7 @@ export class RegistrarComponent implements OnInit {
         .subscribe(respuesta => {
           const res = respuesta[0][0] as Respuesta;
           if (res.code === '200') {
-            this.openDialog('Fuente Financiación', res.message);
+            this.openDialog('', res.message,true);
           }
           console.log(respuesta);
         });

@@ -59,6 +59,7 @@ export interface Cofinanciacion{
   fechaCreacion?: Date,
   valorTotal?: number,
   estadoRegistro?: string,
+  registroCompleto?:boolean,//segun bd este es el nombre del campo
   eliminado?:boolean
 }
 

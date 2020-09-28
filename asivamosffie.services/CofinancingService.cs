@@ -84,7 +84,7 @@ namespace asivamosffie.services
             {
                 Cofinanciacion cofinanciacion = _context.Cofinanciacion.Find(pCofinancicacionId);
                 cofinanciacion.Eliminado = true;
-                cofinanciacion.UsuarioModificacion = pUsuarioModifico;
+                cofinanciacion.UsuarioModificacion = pUsuarioModifico.ToUpper();
                 cofinanciacion.FechaModificacion = DateTime.Now;
                 //Si falla descomentar el de abajo
                 // _context.Update(cofinanciacion);
@@ -191,14 +191,14 @@ namespace asivamosffie.services
 
                     foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                     {
-                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion.ToUpper();
                         cofinanciacionAportante.FechaCreacion = DateTime.Now;
                         cofinanciacionAportante.Eliminado = false;
 
                         foreach (var documentoAportante in cofinanciacionAportante.CofinanciacionDocumento)
                         {
                             documentoAportante.Eliminado = false;
-                            documentoAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                            documentoAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion.ToUpper();
                             documentoAportante.FechaCreacion = DateTime.Now;
                         }
                     }
@@ -211,7 +211,7 @@ namespace asivamosffie.services
                     cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
                     cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
                     cofinanciacionEdit.FechaModificacion = DateTime.Now;
-                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion;
+                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion.ToUpper();
                 }
 
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
@@ -220,7 +220,7 @@ namespace asivamosffie.services
                     if (cofinanciacionAportante.CofinanciacionAportanteId > 0)
                     {
                         cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
-                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion;
+                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion.ToUpper();
                         int idCofinancicacionAportante = EditCofinancingContributor(cofinanciacionAportante);
 
 
@@ -232,7 +232,7 @@ namespace asivamosffie.services
                                 if (cofinancicacionDocumento.CofinanciacionDocumentoId > 0)
                                 {
                                     cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
-                                    cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion;
+                                    cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
                                     CreateCofinancingDocuments(cofinancicacionDocumento);
 
                                 }
@@ -251,7 +251,7 @@ namespace asivamosffie.services
                            IsValidation = false,
                            Data = cofinanciacion,
                            Code = ConstantMessagesProyecto.OperacionExitosa,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.OperacionExitosa, IdAccion, cofinanciacion.UsuarioCreacion, CreadoEditado)
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.OperacionExitosa, IdAccion, cofinanciacion.UsuarioCreacion.ToUpper(), CreadoEditado)
                        };
 
             }
@@ -264,7 +264,7 @@ namespace asivamosffie.services
                          IsException = false,
                          IsValidation = false,
                          Code = ConstantMessagesProyecto.Error,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccion, cofinanciacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccion, cofinanciacion.UsuarioCreacion.ToUpper(), ex.InnerException.ToString().Substring(0, 500))
                      };
             }
 
@@ -275,7 +275,7 @@ namespace asivamosffie.services
             try
             {
                 CofinanciacionAportante cofinanciacionAportanteEdit = _context.CofinanciacionAportante.Find(pcofinanciacionAportante.CofinanciacionAportanteId);
-                cofinanciacionAportanteEdit.UsuarioModificacion = pcofinanciacionAportante.UsuarioCreacion;
+                cofinanciacionAportanteEdit.UsuarioModificacion = pcofinanciacionAportante.UsuarioCreacion.ToUpper();
                 cofinanciacionAportanteEdit.FechaModificacion = DateTime.Now;
                 cofinanciacionAportanteEdit.MunicipioId = pcofinanciacionAportante.MunicipioId;
                 cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
@@ -297,7 +297,7 @@ namespace asivamosffie.services
             {
                 CofinanciacionDocumento cofinanciacionDocumentoEdit = _context.CofinanciacionDocumento.Find(pCofinanciacionDocumento.CofinanciacionDocumentoId);
 
-                cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion;
+                cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion.ToUpper();
                 cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
                 cofinanciacionDocumentoEdit.FechaActa = pCofinanciacionDocumento.FechaActa;
                 cofinanciacionDocumentoEdit.FechaAcuerdo = pCofinanciacionDocumento.FechaAcuerdo;
@@ -331,7 +331,7 @@ namespace asivamosffie.services
 
         public async Task<List<CofinanciacionDocumento>> GetDocument(int ContributorId)
         {
-            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).ToListAsync();
+            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).Include(x=>x.TipoDocumento).ToListAsync();
         }
 
         public async Task<List<CofinanciacionAportante>> GetListAportante()
@@ -379,13 +379,13 @@ namespace asivamosffie.services
                 else if (ret.TipoAportanteId == ConstanTipoAportante.ET)
                 {
                     //verifico si tiene municipio
-                    if(ret.MunicipioId==null)
+                    if(ret.MunicipioId!=null)
                     {
                         ret.NombreAportanteString = _context.Localizacion.Find(ret.MunicipioId).Descripcion;
                     }
                     else//solo departamento
                     {
-                        ret.NombreAportanteString = _context.Localizacion.Find(ret.DepartamentoId).Descripcion;
+                        ret.NombreAportanteString = ret.DepartamentoId==null?"Error":_context.Localizacion.Find(ret.DepartamentoId).Descripcion;
                     }
                     
                 }
@@ -395,7 +395,7 @@ namespace asivamosffie.services
                 }                
                 ret.TipoAportanteString = ret.TipoAportante.Nombre;
             }
-            return retorno;
+            return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
         }
     }
 }

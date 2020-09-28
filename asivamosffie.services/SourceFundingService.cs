@@ -54,26 +54,27 @@ namespace asivamosffie.services
                 {
                     fuentefinanciacion.FechaCreacion = DateTime.Now;
                     fuentefinanciacion.Eliminado = false;
-                    _context.Add(fuentefinanciacion);
+                    _context.FuenteFinanciacion.Add(fuentefinanciacion);
+                    _context.SaveChanges();
                 }
                 else
                 {
                     FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(fuentefinanciacion.FuenteFinanciacionId);
-                    fuente.FechaModificacion = DateTime.Now;
+                    fuente.FechaModificacion = DateTime.Now;                    
                     fuente.ValorFuente = fuentefinanciacion.ValorFuente;
                 }
 
                 foreach (VigenciaAporte vi in fuentefinanciacion.VigenciaAporte)
                 {
                     vi.FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId;
-                    vi.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion;
+                    vi.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion.ToUpper();
                     vi.FechaCreacion = DateTime.Now;
                     await this.CreateEditarVigenciaAporte(vi);
                 };
 
                 foreach (CuentaBancaria cb in fuentefinanciacion.CuentaBancaria)
                 {
-                    cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion;
+                    cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion.ToUpper();
                     cb.FechaCreacion = DateTime.Now;
                     await bankAccountService.CreateEditarCuentasBancarias(cb);
                 };
@@ -204,7 +205,29 @@ namespace asivamosffie.services
             var retorno= await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Distinct().Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
             foreach(var ret in retorno)
             {
-                ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
+
+                if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                {
+                    ret.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                }
+                else if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.ET)
+                {
+                    //verifico si tiene municipio
+                    if (ret.Aportante.MunicipioId == null)
+                    {
+                        ret.Aportante.NombreAportanteString = _context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
+                    }
+                    else//solo departamento
+                    {
+                        ret.Aportante.NombreAportanteString = _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
+                    }
+
+                }
+                else
+                {
+
+                    ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
+                }
                 ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
             }
             return retorno;
