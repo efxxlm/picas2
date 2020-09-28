@@ -2321,8 +2321,8 @@ namespace asivamosffie.services
             {
 
                 //Pregunta 1 
-                if (pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreWeb == null ||
-                    !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreWeb)
+                if (pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreoWeb == null ||
+                    !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreoWeb)
                 {
                     //Si la respuesta a la pregunta 1, fue “No”, el sistema mostrará la pregunta 4
                     strPregunta_1 = " no";

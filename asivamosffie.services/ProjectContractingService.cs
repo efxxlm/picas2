@@ -827,7 +827,7 @@ namespace asivamosffie.services
             {
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                 {
-                    if (ContratacionProyecto.TieneMonitoreWeb.HasValue)
+                    if (ContratacionProyecto.TieneMonitoreoWeb.HasValue)
                     {
                         return false;
                     }
