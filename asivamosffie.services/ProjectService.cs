@@ -303,6 +303,13 @@ namespace asivamosffie.services
                 
                         Localizacion municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                         Localizacion departamento = ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
+                        var estado = proyecto.EstadoProyectoCodigo;
+                        var estaso = "";
+                        if (estado!=null)
+                        {
+                            estaso = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == proyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre;
+                        }
+                        
                         ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                         {
 
@@ -313,7 +320,7 @@ namespace asivamosffie.services
                             Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
                             EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == proyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
                             TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
-                            EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == proyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                            EstadoProyecto = estaso==null?"": estaso,
                             Fecha = proyecto.FechaCreacion != null ? Convert.ToDateTime(proyecto.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
                             EstadoRegistro = "COMPLETO"
                         }; 
