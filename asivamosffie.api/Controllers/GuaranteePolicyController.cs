@@ -66,6 +66,24 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
+        [Route("EditarContratoPoliza")]
+        public async Task<IActionResult> EditarContratoPoliza(ContratoPoliza contratoPoliza)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _guaranteePolicy.EditarContratoPoliza(contratoPoliza);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
         [Route("CreateContratoPoliza")]
         public async Task<IActionResult> InsertContratoPoliza(ContratoPoliza contratoPoliza)
         {
@@ -115,7 +133,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         //[Route("GetContratoPolizaByIdContratoPolizaId")]
         //[HttpGet]
         ////public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
@@ -125,14 +143,36 @@ namespace asivamosffie.api.Controllers
         //    return respuesta;
         //}
 
-        
-        [Route("AprobarContratoByIdContrato")]
+
+        //[HttpPost]
+
+        //[HttpGet("{pIdContrato}")]
+
+        //public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato)
+        //public async Task<ActionResult<Respuesta>> AprobarContratoByIdContrato(int pIdContrato)
+
         [HttpPost]
-        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
-        public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato)
+        [Route("AprobarContratoByIdContrato")]
+        public async Task<IActionResult> AprobarContratoByIdContrato(int pIdContrato)
         {
-            var respuesta = await _guaranteePolicy.AprobarContrato(pIdContrato);
-            return respuesta;
+            Respuesta rta= new Respuesta();
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                
+                 rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato);
+        
+                return Ok(rta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+            // id - idContrato
+            //var respuesta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato);
+
+            //return respuesta;
         }
 
         [Route("GetContratoPolizaByIdContratoPolizaId")]

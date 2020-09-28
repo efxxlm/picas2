@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza);
 
-        //Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza);                
+        Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza);                
 
         Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza();
 
@@ -25,7 +25,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId);
 
-        Task<Respuesta> AprobarContrato(int pIdContrato);
+        Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato);
 
 
         //getListPolizaGarantiaByContratoPolizaId    yaaaa y observ yaaaa

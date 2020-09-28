@@ -33,7 +33,14 @@
         public const string Crear_Editar_Cofinanciacion = "31";
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
 
-        public const string Crear_Contrato_Poliza = "40";
-        public const string Editar_Contrato_Poliza  = "41";
+        //gestion polizas y garantias
+        public const string Crear_Contrato_Poliza = "85";
+        public const string Editar_Contrato_Poliza  = "86";
+        public const string Crear_Poliza_Garantia = "87";
+        public const string Crear_Poliza_Observacion = "89";
+        public const string Notificacion_Gestion_Poliza = "90";
+        
+
+     
     }
 }
