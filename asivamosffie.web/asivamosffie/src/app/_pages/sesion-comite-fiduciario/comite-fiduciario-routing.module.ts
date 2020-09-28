@@ -5,8 +5,8 @@ import { ComiteFiduciarioComponent } from './components/comite-fiduciario/comite
 import { CrearOrdenDelDiaComponent } from './components/crear-orden-del-dia/crear-orden-del-dia.component';
 import { FormRegistrarParticipantesComponent } from './components/form-registrar-participantes/form-registrar-participantes.component';
 import { CrearActaComponent } from './components/crear-acta/crear-acta.component';
-import { VerificarCumplimientoComponent } from './components/verificar-cumplimiento/verificar-cumplimiento.component';
 import { RegistrarSesionComiteFiduciarioComponent } from './components/registrar-sesion-comite-fiduciario/registrar-sesion-comite-fiduciario.component';
+import { TablaVerificarCumplimientosComponent } from './components/tabla-verificar-cumplimientos/tabla-verificar-cumplimientos.component';
 
 const routes: Routes = [
   {
@@ -31,7 +31,7 @@ const routes: Routes = [
   },
   {
     path: 'verificarCumplimiento/:id',
-    component: VerificarCumplimientoComponent
+    component: TablaVerificarCumplimientosComponent
   }
 ];
 

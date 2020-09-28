@@ -1,36 +1,78 @@
-<div class="margin-90">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<section class="container">
+  <div class="text-right">
+    <a routerLink="/comiteFiduciario" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Verificar cumplimiento de compromisos CT_0001
+    </h1>
+  </div>
+  <div class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+      <mat-label>Buscador / Filtro</mat-label>
+      <input matInput #filtro (keyup)="applyFilter($event)">
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+      <img src="assets/img/icon/lupa.svg" alt="Buscar">
+    </button>
+  </div>
+  <div class="text-center table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="tabla mat-elevation-z8">
 
-    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.titulo }} </th>
-      <td mat-cell *matCellDef="let element" class="padding-1"> <b>{{element[columna.name]}}</b> </td>
-    </ng-container>
+      <ng-container matColumnDef="tarea">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tarea </th>
+        <td mat-cell *matCellDef="let element"> <b>{{element.tarea}}</b> </td>
+      </ng-container>
 
-    <ng-container matColumnDef="gestionRealizada">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión realizada </th>
-      <td mat-cell *matCellDef="let element" class="padding-1">
-        <button mat-raised-button color="accent" class="tabs--btn" (click)="VerDetalle()">
-          Ver detalle
+      <ng-container matColumnDef="responsable">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
+        <td mat-cell *matCellDef="let element"> {{ element.nombreResponsable }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaCumplimiento">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de cumplimiento </th>
+        <td mat-cell *matCellDef="let element"> {{element.fechaCumplimiento | date: 'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaReporte">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del reporte </th>
+        <td mat-cell *matCellDef="let element"> {{ element.fechaModificacion ? (element.fechaModificacion | date: 'dd/MM/yyyy') : element.fechaCreacion | date: 'dd/MM/yyyy' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="estadoReportado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado reportado </th>
+        <td mat-cell *matCellDef="let element"> {{element.nombreEstado}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="gestionRealizada">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión realizada </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-raised-button color="accent" class="btn-table" (click)="openVerDetalle(element.gestionRealizada)">
+            Ver detalle
         </button>
-      </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="gestion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-      <td mat-cell *matCellDef="let element" class="padding-1">
-        <mat-form-field appearance="fill" class="w-select">
-          <mat-select>
-            <mat-option *ngFor="let gestion of estado" [value]="gestion.value">
-              {{gestion.viewValue}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+        <td mat-cell *matCellDef="let element"> 
+          <mat-select required [(ngModel)]="element.estadoCodigo" (selectionChange)="onChange(element.sesionSolicitudCompromisoId, element.estado)">
+            <mat-option *ngFor="let estado of estadosArray" [value]="estado.codigo">
+              {{ estado.nombre }}
             </mat-option>
-          </mat-select>
-        </mat-form-field>
+          </mat-select> 
       </td>
-    </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-  
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-</div>
+  <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSave()">
+    <img src="assets/img/icon/guardar.svg" alt="guardar">
+  </button>
+</section>
+

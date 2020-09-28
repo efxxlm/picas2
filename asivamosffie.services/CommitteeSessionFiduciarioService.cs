@@ -69,46 +69,46 @@ namespace asivamosffie.services
                     dynamic comite = new { nombreSesion = c.NumeroComite, fecha = c.FechaOrdenDia, data = new List<dynamic>() };
                     foreach (var ss in c.SesionComiteSolicitudComiteTecnico)
                     {
-                        if ( ss.EstadoCodigo == "1" )
-                        switch (ss.TipoSolicitudCodigo)
-                        {
-                            case ConstanCodigoTipoSolicitud.Contratacion:
-                                {
-                                    Contratacion contratacion = _context.Contratacion.Find(ss.SolicitudId);
+                        if (ss.EstadoCodigo == "1")
+                            switch (ss.TipoSolicitudCodigo)
+                            {
+                                case ConstanCodigoTipoSolicitud.Contratacion:
+                                    {
+                                        Contratacion contratacion = _context.Contratacion.Find(ss.SolicitudId);
 
-                                    if (contratacion != null)
-                                        comite.data.Add(new
-                                        {
-                                            Id = contratacion.ContratacionId,
-                                            IdSolicitud  = ss.SesionComiteSolicitudId,
-                                            FechaSolicitud = contratacion.FechaTramite.HasValue ? (DateTime?)contratacion.FechaTramite.Value : null,
-                                            NumeroSolicitud = contratacion.NumeroSolicitud,
-                                            TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
-                                            tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Contratacion
-                                        });
-                                    break;
-                                }
+                                        if (contratacion != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = contratacion.ContratacionId,
+                                                IdSolicitud = ss.SesionComiteSolicitudId,
+                                                FechaSolicitud = contratacion.FechaTramite.HasValue ? (DateTime?)contratacion.FechaTramite.Value : null,
+                                                NumeroSolicitud = contratacion.NumeroSolicitud,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Contratacion
+                                            });
+                                        break;
+                                    }
 
-                            case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                                {
-                                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
+                                case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                                    {
+                                        ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
 
-                                    if (procesoSeleccion != null)
-                                        comite.data.Add(new
-                                        {
-                                            Id = procesoSeleccion.ProcesoSeleccionId,
-                                            FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion),
-                                            NumeroSolicitud = procesoSeleccion.NumeroProceso,
-                                            TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
-                                            tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
-                                        });
+                                        if (procesoSeleccion != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = procesoSeleccion.ProcesoSeleccionId,
+                                                FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion),
+                                                NumeroSolicitud = procesoSeleccion.NumeroProceso,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
+                                            });
 
-                                    break;
-                                }
-                        }
+                                        break;
+                                    }
+                            }
                     }
-                    if ( comite.data.Count > 0 )
-                        listaComitesGrilla.Add( comite );
+                    if (comite.data.Count > 0)
+                        listaComitesGrilla.Add(comite);
 
                 });
 
@@ -151,7 +151,7 @@ namespace asivamosffie.services
                     //Registros
                     pComiteTecnico.EsCompleto = ValidarCamposComiteTecnico(pComiteTecnico);
                     pComiteTecnico.EsComiteFiduciario = true;
-                    
+
                     pComiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
                     pComiteTecnico.NumeroComite = await _commonService.EnumeradorComiteFiduciario();
 
@@ -167,7 +167,7 @@ namespace asivamosffie.services
 
                     List<int> listaSolicitudes = new List<int>();
 
-                    pComiteTecnico.SesionComiteSolicitudComiteTecnico.ToList().ForEach( ct => { listaSolicitudes.Add( ct.SesionComiteSolicitudId ); });
+                    pComiteTecnico.SesionComiteSolicitudComiteTecnico.ToList().ForEach(ct => { listaSolicitudes.Add(ct.SesionComiteSolicitudId); });
                     pComiteTecnico.SesionComiteSolicitudComiteTecnico = new List<SesionComiteSolicitud>();
 
                     _context.ComiteTecnico.Add(pComiteTecnico);
@@ -175,18 +175,18 @@ namespace asivamosffie.services
 
                     foreach (var id in listaSolicitudes)
                     {
-                        SesionComiteSolicitud SesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find( id );
-                            //Auditoria 
-                            SesionComiteSolicitudOld.UsuarioComiteFiduciario = pComiteTecnico.UsuarioCreacion;
-                            SesionComiteSolicitudOld.FechaComiteFiduciario = DateTime.Now;
+                        SesionComiteSolicitud SesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(id);
+                        //Auditoria 
+                        SesionComiteSolicitudOld.UsuarioComiteFiduciario = pComiteTecnico.UsuarioCreacion;
+                        SesionComiteSolicitudOld.FechaComiteFiduciario = DateTime.Now;
 
-                            //Registros
-                            SesionComiteSolicitudOld.ComiteTecnicoFiduciarioId = pComiteTecnico.ComiteTecnicoId;
-                            SesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitudOld);
+                        //Registros
+                        SesionComiteSolicitudOld.ComiteTecnicoFiduciarioId = pComiteTecnico.ComiteTecnicoId;
+                        SesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitudOld);
 
-                            //_context.SesionComiteSolicitud.Update( SesionComiteSolicitudOld );
+                        //_context.SesionComiteSolicitud.Update( SesionComiteSolicitudOld );
                     }
-                    
+
                 }
                 else
                 {
@@ -326,24 +326,24 @@ namespace asivamosffie.services
 
                 foreach (var comite in ListComiteTecnico)
                 {
-                        ComiteGrilla comiteGrilla = new ComiteGrilla
-                        {
-                            Id = comite.Id,
-                            FechaComite = comite.FechaComite.Value,
-                            EstadoComiteCodigo = comite.EstadoComite,
-                            EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "",
-                            NumeroComite = comite.NumeroComite,
-                            EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
-                            EstadoActaCodigo = comite.EstadoActaCodigo,
-                            RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
-                            RegistroCompleto = comite.EsCompleto,
-                            //NumeroCompromisos = numeroCompromisos(comite.Id, false),
-                            //NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true),
-                            EsComiteFiduciario = comite.EsComiteFiduciario,
-                        };
+                    ComiteGrilla comiteGrilla = new ComiteGrilla
+                    {
+                        Id = comite.Id,
+                        FechaComite = comite.FechaComite.Value,
+                        EstadoComiteCodigo = comite.EstadoComite,
+                        EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "",
+                        NumeroComite = comite.NumeroComite,
+                        EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
+                        EstadoActaCodigo = comite.EstadoActaCodigo,
+                        RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
+                        RegistroCompleto = comite.EsCompleto,
+                        //NumeroCompromisos = numeroCompromisos(comite.Id, false),
+                        //NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true),
+                        EsComiteFiduciario = comite.EsComiteFiduciario,
+                    };
 
-                        ListComiteGrilla.Add(comiteGrilla);
-                    }
+                    ListComiteGrilla.Add(comiteGrilla);
+                }
             }
             catch (Exception ex)
             {
@@ -359,10 +359,10 @@ namespace asivamosffie.services
                 ComiteTecnico comite = await _context.ComiteTecnico
                                 .Where(sc => sc.ComiteTecnicoId == comiteTecnicoId && !(bool)sc.Eliminado)
                                 .Include(cm => cm.SesionComiteTema)
-                                .Include( r => r.SesionComiteSolicitudComiteTecnicoFiduciario )
+                                .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                 .FirstOrDefaultAsync();
 
-                comite.SesionComiteTema = comite.SesionComiteTema.Where( te => !(bool)te.Eliminado ).ToList();
+                comite.SesionComiteTema = comite.SesionComiteTema.Where(te => !(bool)te.Eliminado).ToList();
 
                 return comite;
 
@@ -540,7 +540,7 @@ namespace asivamosffie.services
             }
 
         }
-        
+
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
             if (pComiteTecnicoId == 0)
@@ -573,6 +573,7 @@ namespace asivamosffie.services
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+                SesionComiteSolicitud.SesionSolicitudCompromiso = SesionComiteSolicitud.SesionSolicitudCompromiso.Where( r => r.EsFiduciario == true && !(bool)r.Eliminado ).ToList();
             }
 
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
@@ -1779,7 +1780,7 @@ namespace asivamosffie.services
             }
 
         }
-        
+
         public async Task<Respuesta> CreateEditSesionSolicitudVoto(SesionComiteSolicitud pSesionComiteSolicitud)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Solicitud_Voto, (int)EnumeratorTipoDominio.Acciones);
@@ -1880,7 +1881,7 @@ namespace asivamosffie.services
 
             plantilla.Contenido = ReemplazarDatosPlantillaActa(plantilla.Contenido, comiteTecnico);
             return ConvertirPDF(plantilla);
-        }    
+        }
 
         private string ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
@@ -1972,18 +1973,18 @@ namespace asivamosffie.services
                                         foreach (Dominio placeholderDominio2 in placeholders)
                                         {
                                             switch (placeholderDominio2.Codigo)
-                                            { 
-                                            
-                                            
-                                            
-                                            
-                                            } 
-                                        }
+                                            {
 
 
 
 
                                             }
+                                        }
+
+
+
+
+                                    }
                                     strContenido = strContenido
                                         .Replace(placeholderDominio.Nombre,
                                         ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
@@ -2130,7 +2131,7 @@ namespace asivamosffie.services
                         CreateEdit = "CREAR SOLICITUD COMPROMISO";
                         SesionSolicitudCompromiso.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                         SesionSolicitudCompromiso.FechaCreacion = DateTime.Now;
-                        SesionSolicitudCompromiso.Eliminado = true;
+                        SesionSolicitudCompromiso.Eliminado = false;
                         SesionSolicitudCompromiso.EsFiduciario = true;
 
                         _context.SesionSolicitudCompromiso.Add(SesionSolicitudCompromiso);
@@ -2305,6 +2306,124 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId)
+        {
+            //Dominio estado reportado 48 
+            ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
+                .Include(r => r.SesionComiteTema)
+                   .ThenInclude(r => r.TemaCompromiso)
+               .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                   .ThenInclude(r => r.SesionSolicitudCompromiso)
+                      .FirstOrDefaultAsync();
+            
+
+
+            List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
+            List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r => !(bool)r.Eliminado).Include(r => r.Usuario).ToList();
+            comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.ToList().ForEach( s => {
+                s.SesionSolicitudCompromiso = s.SesionSolicitudCompromiso.Where( c => c.EsFiduciario == true ).ToList();
+            } );
+                
+            comiteTecnico.NumeroCompromisos = 0;
+            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
+            {
+                foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso)
+                {
+                    if (!string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo))
+                    {
+                        TemaCompromiso.EstadoCodigo = ListEstadoReportado.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                    }
+                    if (TemaCompromiso.Responsable != null)
+                    {
+                        TemaCompromiso.ResponsableNavigation = ListSesionParticipantes.Where(r => r.SesionParticipanteId == TemaCompromiso.Responsable).FirstOrDefault();
+                    }
+                    if (TemaCompromiso.EstadoCodigo == "3")
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
+                }
+            }
+
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+            {
+                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso.Where( c => c.EsFiduciario == true ))
+                {
+                    if (!string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo))
+                    {
+                        SesionSolicitudCompromiso.EstadoCodigo = ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                    }
+
+                    if (SesionSolicitudCompromiso.ResponsableSesionParticipanteId != null)
+                    {
+                        SesionSolicitudCompromiso.ResponsableSesionParticipante = ListSesionParticipantes.Where(r => r.SesionParticipanteId == SesionSolicitudCompromiso.ResponsableSesionParticipanteId).FirstOrDefault();
+                    }
+                    if (SesionSolicitudCompromiso.EstadoCodigo == "3")
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
+                }
+            }
+
+
+
+            return comiteTecnico;
+        }
+
+        public async Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Vertificar_Tema_Compromisos, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+                foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
+                {
+
+                    foreach (var temaCompromiso in SesionComiteTema.TemaCompromiso)
+                    {
+                        TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(temaCompromiso.TemaCompromisoId);
+                        temaCompromisoOld.FechaModificacion = DateTime.Now;
+                        temaCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        temaCompromisoOld.EstadoCodigo = temaCompromiso.EstadoCodigo;
+                    }
+                }
+
+                foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+                {
+
+                    foreach (var pSesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                    {
+                        SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
+                        SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
+                        SesionSolicitudCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        SesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
+                    }
+                }
+
+
+                _context.SaveChanges();
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.OperacionExitosa, idAccion, pComiteTecnico.UsuarioCreacion, "VERIFICAR TEMA COMPROMISO")
+                   };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.Error, idAccion, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
         // //Crear un nuevo tema
         // public async Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite)
         // {
@@ -2411,7 +2530,7 @@ namespace asivamosffie.services
         // }
 
 
-        
+
 
 
         // //Grilla vefificar complimiento de compromisos
@@ -2870,7 +2989,7 @@ namespace asivamosffie.services
 
 
 
-        
+
 
 
 
@@ -3225,7 +3344,7 @@ namespace asivamosffie.services
         }
 
         // //Crear orden del dia de comité fiduciario
-        
+
 
 
         // //Registrar participantes

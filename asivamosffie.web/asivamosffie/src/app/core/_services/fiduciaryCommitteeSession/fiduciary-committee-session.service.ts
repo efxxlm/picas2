@@ -96,4 +96,12 @@ export class FiduciaryCommitteeSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditSesionTemaVoto`, tema );
    }
 
+   getCompromisosByComiteTecnicoId( id: number){
+    return this.http.get<ComiteTecnico>(`${environment.apiUrl}/CommitteeSessionFiduciario/getCompromisosByComiteTecnicoId?ComiteTecnicoId=${ id }`); 
+   }
+
+   verificarTemasCompromisos( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/verificarTemasCompromisos`, comite );
+   }
+
 }

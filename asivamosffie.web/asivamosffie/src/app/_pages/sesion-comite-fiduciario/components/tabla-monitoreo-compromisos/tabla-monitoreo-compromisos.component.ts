@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 
 export interface OrdenDelDia {
   id: number;
@@ -22,8 +24,8 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id' ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  displayedColumns: string[] = ['fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id'];
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -33,9 +35,22 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+                private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+
+             ) 
+  {
+
+  }
 
   ngOnInit(): void {
+
+      this.fiduciaryCommitteeSessionService.getCommitteeSession()
+        .subscribe( response => {
+          response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
+          this.dataSource = new MatTableDataSource( response );
+      })
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
