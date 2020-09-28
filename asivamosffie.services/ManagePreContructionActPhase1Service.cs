@@ -20,7 +20,7 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
-        
+
 
         public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService)
         {
@@ -28,7 +28,7 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
         public async Task<dynamic> GetListContrato()
-        { 
+        {
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
@@ -37,18 +37,18 @@ namespace asivamosffie.services
                 List<Dominio> listEstadosActa = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato).ToList();
 
                 List<dynamic> ListContratacionDynamic = new List<dynamic>();
-                 
+
                 listContratos.ForEach(contrato =>
-                { 
+                {
                     ListContratacionDynamic.Add(new
-                    { 
+                    {
                         fechaAprobacionRequisitosSupervisor = "Fecha-3.1.8",
                         contrato.NumeroContrato,
                         estadoActaContrato = listEstadosActa.Where(r => r.Codigo == contrato.EstadoActa).FirstOrDefault().Nombre,
                         contrato.ContratoId
                     });
                 });
-     
+
                 return ListContratacionDynamic;
             }
             catch (Exception ex)
@@ -57,40 +57,42 @@ namespace asivamosffie.services
             }
 
         }
-         
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId) {
+
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        {
 
             try
             {
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                     .Include(r => r.Contratacion)
-                     .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync(); 
+                     .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync();
                 return contrato;
             }
             catch (Exception)
             {
                 return new Contrato();
-            }    
+            }
         }
-         
-        public async Task<Respuesta> EditContrato (Contrato pContrato)
+
+        public async Task<Respuesta> EditContrato(Contrato pContrato)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Acta_De_Inicio_De_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
-                Contrato ContratoOld =await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
+            {
+                Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
                 ContratoOld.FechaActaInicioFase1 = pContrato.FechaActaInicioFase1;
                 ContratoOld.FechaTerminacion = pContrato.FechaTerminacion;
                 ContratoOld.PlazoFase1PreMeses = pContrato.PlazoFase1PreMeses;
-                ContratoOld.PlazoFase1PreDias = pContrato.PlazoFase1PreDias; 
+                ContratoOld.PlazoFase1PreDias = pContrato.PlazoFase1PreDias;
                 ContratoOld.PlazoFase2ConstruccionDias = pContrato.PlazoFase2ConstruccionDias;
                 ContratoOld.PlazoFase2ConstruccionMeses = pContrato.PlazoFase2ConstruccionMeses;
                 ContratoOld.ConObervacionesActa = pContrato.ConObervacionesActa;
                 ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_preliminar_generada;
-                 
-                if ((bool)ContratoOld.ConObervacionesActa) {
+
+                if ((bool)ContratoOld.ConObervacionesActa)
+                {
                     foreach (var ContratoObservacion in pContrato.ContratoObservacion)
                     {
                         if (ContratoObservacion.ContratoObservacionId == 0)
@@ -101,15 +103,16 @@ namespace asivamosffie.services
                             ContratoObservacion.EsActaFase1 = true;
                             ContratoObservacion.EsActaFase2 = false;
                         }
-                        else {
-                            ContratoObservacion contratoObservacionOld = _context.ContratoObservacion.Where(r=> r.ContratoObservacionId ==  ContratoObservacion.ContratoObservacionId).FirstOrDefault();
-                            
+                        else
+                        {
+                            ContratoObservacion contratoObservacionOld = _context.ContratoObservacion.Where(r => r.ContratoObservacionId == ContratoObservacion.ContratoObservacionId).FirstOrDefault();
+
                             contratoObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                             contratoObservacionOld.FechaModificacion = DateTime.Now;
 
                             contratoObservacionOld.Observaciones = ContratoObservacion.Observaciones;
                         }
-                    }  
+                    }
                 }
                 _context.SaveChanges();
                 return
@@ -138,24 +141,27 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> LoadActa(Contrato pContrato , IFormFile pFile,string pDirectorioBase, string pDirectorioMinuta) {
-
+        public async Task<Respuesta> LoadActa(Contrato pContrato, IFormFile pFile, string pDirectorioBase, string pDirectorioActaContrato)
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cargar_Acta_Subscrita, (int)EnumeratorTipoDominio.Acciones);
+           
             string strFilePatch = string.Empty;
             try
             {
-                strFilePatch = Path.Combine(pDirectorioBase, pDirectorioMinuta, pContrato.ContratacionId.ToString());
-                await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
-
-
-
+                if (pFile.Length > 0)
+                {
+                    strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
+                    await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
+                } 
                 Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
                 ContratoOld.FechaFirmaActaContratista = pContrato.FechaActaInicioFase1;
-                ContratoOld.FechaTerminacion = pContrato.FechaTerminacion; 
+                ContratoOld.FechaTerminacion = pContrato.FechaTerminacion;
+                ContratoOld.RutaActaSuscrita = strFilePatch;
+
                 ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada;
 
-               
+
                 _context.SaveChanges();
                 return
                      new Respuesta

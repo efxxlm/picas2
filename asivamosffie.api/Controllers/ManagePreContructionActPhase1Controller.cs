@@ -15,8 +15,11 @@ namespace asivamosffie.api.Controllers
     public class ManagePreContructionActPhase1Controller : Controller
     {
         private readonly IManagePreContructionActPhase1Service _managePreContruction;
-        public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service) {
+        private readonly IOptions<AppSettings> _settings;
+
+        public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings) {
             _managePreContruction = managePreContructionActPhase1Service;
+            _settings = settings;
         }
          
         [Route("GetListContrato")]
@@ -52,6 +55,27 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
-       
+         
+        [Route("LoadActa")]
+        [HttpPut]
+        public async Task<Respuesta> LoadActa([FromBody] Contrato pContrato, IFormFile pFile)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managePreContruction.LoadActa( pContrato, pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato);
+                return respuesta;
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+
+ 
+
     }
 }
