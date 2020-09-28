@@ -2726,6 +2726,12 @@ namespace asivamosffie.services
                             {
                                 switch (placeholderDominio.Codigo)
                                 {
+                                    case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
+                                        registrosContratacion = registrosContratacion
+                                            .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.NumeroSolicitud);
+                                        break;
+
+
                                     case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD_CONTRATACION:
                                         registrosContratacion = registrosContratacion
                                             .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.NumeroSolicitud);
@@ -2748,10 +2754,15 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_CONTRATO_CONTRATACION:
+                                        string StrTipoContrato = string.Empty;
+
+                                        if (contratacion.Contrato.Count() > 0) {
+                                            StrTipoContrato = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
+                                           && r.Codigo == contratacion.Contrato.FirstOrDefault().TipoContratoCodigo).FirstOrDefault().Nombre;
+                                        }
                                         registrosContratacion = registrosContratacion
-                                            .Replace(placeholderDominio.Nombre,
-                                            ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
-                                            && r.Codigo == contratacion.Contrato.FirstOrDefault().TipoContratoCodigo).FirstOrDefault().Nombre);
+                                            .Replace(placeholderDominio.Nombre, StrTipoContrato
+                                           );
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_PROYECTO:

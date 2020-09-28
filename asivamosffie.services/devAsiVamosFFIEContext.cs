@@ -105,6 +105,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -681,7 +682,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PorcentajeAvanceObra).HasColumnType("numeric(3, 2)");
+                entity.Property(e => e.PorcentajeAvanceObra)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -1197,12 +1200,6 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.RegistroPresupuestalId)
                     .HasConstraintName("FK_ControlRecurso_RegistroPresupuestal");
-
-                entity.HasOne(d => d.VigenciaAporte)
-                    .WithMany(p => p.ControlRecurso)
-                    .HasForeignKey(d => d.VigenciaAporteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ControlRecurso_VigenciaAporte");
             });
 
             modelBuilder.Entity<ControversiaContractual>(entity =>

@@ -18,7 +18,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public bool Eliminado { get; set; }
         public bool? EsReasignacion { get; set; }
-        public decimal? PorcentajeAvanceObra { get; set; }
+        public string PorcentajeAvanceObra { get; set; }
         public bool? RequiereLicencia { get; set; }
         public bool? LicenciaVigente { get; set; }
         public string NumeroLicencia { get; set; }
