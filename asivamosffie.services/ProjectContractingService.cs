@@ -659,6 +659,7 @@ namespace asivamosffie.services
                     contratacionProyectoAntiguo.PorcentajeAvanceObra = pContratacionProyecto.PorcentajeAvanceObra;
 
                     contratacionProyectoAntiguo.RequiereLicencia = pContratacionProyecto.RequiereLicencia;
+                    contratacionProyectoAntiguo.TieneMonitoreoWeb = pContratacionProyecto.TieneMonitoreoWeb;
                     contratacionProyectoAntiguo.LicenciaVigente = pContratacionProyecto.LicenciaVigente;
                     contratacionProyectoAntiguo.NumeroLicencia = pContratacionProyecto.NumeroLicencia;
                     contratacionProyectoAntiguo.FechaVigencia = pContratacionProyecto.FechaVigencia;

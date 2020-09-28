@@ -28,6 +28,7 @@ export class ConsideracionesEspecialesComponent implements OnInit {
     this.contratacion.consideracionDescripcion = this.addressForm.get('descripcion').value;
 
     this.guardar.emit(null);
+    console.log( this.contratacion );
     
   }
 

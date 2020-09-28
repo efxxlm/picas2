@@ -36,7 +36,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-proceso">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAcordeon( 'datosContratista' )">
                     Datos del contratista
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -56,7 +56,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-proceso">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAcordeon( 'caracteristicasTecnicas' )">
                     Características técnicas y jurídicas especiales
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -74,7 +74,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-proceso">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAcordeon( 'consideracionEspecial' )">
                     Consideraciones especiales
                 </mat-panel-title>
             </mat-expansion-panel-header>

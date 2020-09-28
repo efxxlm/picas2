@@ -50,7 +50,6 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="tipoInterventor">
-                      <mat-option ></mat-option>
                       <mat-option *ngFor="let tipoInterventor of selectTipoInterventor" [value]="tipoInterventor">
                         {{ tipoInterventor.nombre }}
                       </mat-option>
@@ -86,7 +85,6 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="region" (selectionChange)="changeRegion()">
-                      <mat-option ></mat-option>
                       <mat-option *ngFor="let region of selectRegion" [value]="region" >
                         {{ region.descripcion }}
                       </mat-option>
@@ -105,7 +103,6 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()">
-                      <mat-option ></mat-option>
                       <mat-option *ngFor="let departamento of selectDepartamento" [value]="departamento">
                         {{ departamento.descripcion }}
                       </mat-option>
@@ -124,7 +121,6 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()">
-                      <mat-option ></mat-option>
                       <mat-option *ngFor="let municipio of selectMunicipio" [value]="municipio">
                         {{ municipio.descripcion }}
                       </mat-option>
@@ -143,7 +139,6 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="institucionEducativa" (selectionChange)="changeInstitucionE()">
-                      <mat-option ></mat-option>
                       <mat-option *ngFor="let institucionEducativa of selectinstitucionEducativa"
                         [value]="institucionEducativa">
                         {{ institucionEducativa.nombre }}
@@ -163,7 +158,6 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="sede" >
-                      <mat-option ></mat-option>
                       <mat-option *ngFor="let sede of selectSede" [value]="sede">
                         {{ sede.nombre }}
                       </mat-option>
