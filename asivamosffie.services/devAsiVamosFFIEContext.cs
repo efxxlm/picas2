@@ -1598,6 +1598,11 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.AportanteId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FuenteFinanciacion_Aportante");
+
+                entity.HasOne(d => d.CofinanciacionDocumento)
+                    .WithMany(p => p.FuenteFinanciacion)
+                    .HasForeignKey(d => d.CofinanciacionDocumentoId)
+                    .HasConstraintName("FK_FuenteDicumentoFinanciacion");
             });
 
             modelBuilder.Entity<GestionFuenteFinanciacion>(entity =>

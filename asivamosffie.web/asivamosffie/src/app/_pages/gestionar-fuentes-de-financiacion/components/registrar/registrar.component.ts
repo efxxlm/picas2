@@ -41,6 +41,7 @@ export class RegistrarComponent implements OnInit {
   mostrarNombreaportante: boolean;
   listaDocumentosApropiacion: CofinanciacionDocumento[];
   tipoDocumentoap: Dominio[]=[];
+  nombresAportantes2: CofinanciacionAportante[];
 
   constructor(private fb: FormBuilder,
               private commonService: CommonService,
@@ -92,15 +93,27 @@ export class RegistrarComponent implements OnInit {
   EditMode() {
 
     this.fuenteRecursosArray.clear();
-
-    const aportante = this.nombresAportantes.find(nom => nom.cofinanciacionAportanteId === this.idAportante);
-    this.addressForm.get('nombreAportante').setValue(aportante);
-    this.changeNombreAportante();
+    const aportante = this.nombresAportantes.find(nom => nom.cofinanciacionAportanteId == this.idAportante);
+    console.log(aportante);
+    if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
+    {
+      this.addressForm.get('nombreAportanteFFIE').setValue(aportante);  
+      this.changeNombreAportanteFFIE();            
+    }
+    else{
+      this.addressForm.get('nombreAportante').setValue(aportante);
+      this.changeNombreAportante();
+    }
+    
+    
     const listaRegistrosP = this.addressForm.get('registrosPresupuestales') as FormArray;
 
     this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
-      lista.forEach(ff => {
-
+      lista.forEach(ff => {          
+        const tipo = this.tipoDocumentoap.filter(x=>x.dominioId==ff.cofinanciacionDocumento.tipoDocumentoId);
+        this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);        
+        const numerodoc = this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);        
+        this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
         const grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
         const fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find(f => f.codigo === ff.fuenteRecursosCodigo);
         const listaVigencias = grupo.get('vigencias') as FormArray;
@@ -113,7 +126,7 @@ export class RegistrarComponent implements OnInit {
         // Vigencias
         ff.vigenciaAporte.forEach(v => {
           const grupoVigencia = this.createVigencia();
-          const vigenciaSeleccionada = this.VigenciasAporte.find(vtemp => vtemp === v.tipoVigenciaCodigo);
+          const vigenciaSeleccionada = this.VigenciasAporte.find(vtemp => vtemp == v.tipoVigenciaCodigo);
 
           grupoVigencia.get('vigenciaAporteId').setValue(v.vigenciaAporteId);
           grupoVigencia.get('vigenciaAportante').setValue(vigenciaSeleccionada);
@@ -174,6 +187,20 @@ export class RegistrarComponent implements OnInit {
     });
   }
 
+  changeMunicipio(){    
+    const idMunicipio = this.addressForm.get('municipio').value.localizacionId;
+    console.log(idMunicipio);
+    this.nombresAportantes2=this.nombresAportantes.filter(z=>z.municipioId==idMunicipio);
+  }
+
+  changeVigencia()
+  {
+    const vigencia = this.addressForm.get('vigenciaAcuerdo').value;
+    console.log(vigencia);
+    this.idAportante=vigencia.cofinanciacionAportanteId;
+    this.cargarDocumentos();
+  }
+
   ngOnInit(): void {
 
     this.VigenciasAporte = this.commonService.vigenciasDesde2015();
@@ -194,16 +221,17 @@ export class RegistrarComponent implements OnInit {
 
         const nombresAportantesTemp: Dominio[] = res[0];
 
-        this.nombresAportantes.forEach(nom => {
+        /*this.nombresAportantes.forEach(nom => {
           const s = nombresAportantesTemp.find(nomTemp => nomTemp.dominioId === nom.nombreAportanteId);
           if (s) {
             nom.nombreAportante = s.nombre;
           }
 
         });
-
+*/
         this.fuentesDeRecursosLista = res[1];
         this.bancos = res[2];
+        console.log(res[3]);
         this.departamentos = res[3];
         this.listaFuentes = res[5];
 
@@ -260,9 +288,12 @@ export class RegistrarComponent implements OnInit {
   }
 
   changeDepartamento() {
+    console.log("change departamento");
     const idDepartamento = this.addressForm.get('departamento').value.localizacionId;
+    this.nombresAportantes2=this.nombresAportantes.filter(z=>z.municipioId==idDepartamento);
     this.commonService.listaMunicipiosByIdDepartamento(idDepartamento).subscribe(mun => {
       this.municipios = mun;
+      console.log(mun);
     });
   }
 
@@ -589,6 +620,7 @@ export class RegistrarComponent implements OnInit {
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
           vigenciaAporte: [],
+          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
 
         };
 
@@ -608,8 +640,11 @@ export class RegistrarComponent implements OnInit {
             fuente.vigenciaAporte.push(vigenciaAporte);
 
           });
+          //si el total de aportes es 0 es porque es un ET
+          totalaportes=totalaportes==0?this.valorTotal:totalaportes;
           if(totalaportes!=valortotla)
           {
+            console.log();
             this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
             return false;
           }

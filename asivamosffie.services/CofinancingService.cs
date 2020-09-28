@@ -369,7 +369,7 @@ namespace asivamosffie.services
         {
             //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
             //jflorez: modifico para setear el nombre del aportante
-            var retorno= await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).Include(x=>x.NombreAportante).Include(x => x.TipoAportante).ToListAsync();
+            var retorno= await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).Include(x => x.TipoAportante).ToListAsync();
             foreach(var ret in retorno)
             {
                 if(ret.TipoAportanteId==ConstanTipoAportante.Ffie)
@@ -391,9 +391,13 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    ret.NombreAportanteString = ret.NombreAportante.Nombre;
+                    ret.NombreAportanteString = _context.Dominio.Find(ret.NombreAportanteId).Nombre;
                 }                
                 ret.TipoAportanteString = ret.TipoAportante.Nombre;
+                ret.Departamento = null;
+                ret.Municipio = null;
+                ret.RegistroPresupuestal = null;
+                ret.ProyectoAportante = null;
             }
             return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
         }

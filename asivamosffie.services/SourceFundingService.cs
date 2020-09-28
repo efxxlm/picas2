@@ -67,14 +67,14 @@ namespace asivamosffie.services
                 foreach (VigenciaAporte vi in fuentefinanciacion.VigenciaAporte)
                 {
                     vi.FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId;
-                    vi.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion.ToUpper();
+                    vi.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion==null? fuentefinanciacion.UsuarioModificacion.ToUpper():fuentefinanciacion.UsuarioCreacion.ToUpper();
                     vi.FechaCreacion = DateTime.Now;
                     await this.CreateEditarVigenciaAporte(vi);
                 };
 
                 foreach (CuentaBancaria cb in fuentefinanciacion.CuentaBancaria)
                 {
-                    cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion.ToUpper();
+                    cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper();
                     cb.FechaCreacion = DateTime.Now;
                     await bankAccountService.CreateEditarCuentasBancarias(cb);
                 };
@@ -90,7 +90,7 @@ namespace asivamosffie.services
                    IsException = false,
                    IsValidation = false,
                    Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
-                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionCrearFuentesFinanciacion, fuentefinanciacion.UsuarioCreacion, "CREAR FUENTES DE FINANCIACIÓN")
+                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionCrearFuentesFinanciacion, fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper(), "CREAR FUENTES DE FINANCIACIÓN")
                };
             }
             catch (Exception ex)
@@ -193,7 +193,8 @@ namespace asivamosffie.services
                         .Include(r => r.ControlRecurso)
                         .Include(r => r.CuentaBancaria)
                         .Include(r => r.VigenciaAporte)
-                        .Include(r => r.Aportante)
+                        .Include(r => r.CofinanciacionDocumento)
+                        .Include(r => r.Aportante)                        
                         .ThenInclude(r => r.RegistroPresupuestal)
                         .ToListAsync();
         }

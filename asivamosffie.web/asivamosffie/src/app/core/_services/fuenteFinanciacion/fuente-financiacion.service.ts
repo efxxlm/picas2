@@ -80,6 +80,7 @@ export class FuenteFinanciacionService {
 }
 
 export interface FuenteFinanciacion{
+   cofinanciacionDocumento?: any;
    fuenteFinanciacionId?: number, 
    aportanteId: number,
    fuenteRecursosCodigo: string,
@@ -89,6 +90,7 @@ export interface FuenteFinanciacion{
    cuentaBancaria?: CuentaBancaria[],
    vigenciaAporte?: VigenciaAporte[],
    controlRecurso?: ControlRecurso[],
+   cofinanciacionDocumentoId?:number
    //DateTime FechaCreacion: Date 
    //string UsuarioCreacion: string
 }

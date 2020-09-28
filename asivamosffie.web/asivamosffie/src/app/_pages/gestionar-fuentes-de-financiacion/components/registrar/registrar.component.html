@@ -99,7 +99,7 @@
         <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
             <label class="label-left">Número de documento de apropiación</label>
-          </div>
+          </div> 
           <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="numerodocumento" required>
@@ -115,10 +115,10 @@
             <label class="label-left">Departamento</label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width" style="pointer-events: none;">
+            <mat-form-field class="select-width" >              
               <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" required>
-                <mat-option *ngFor="let nombreAportantes of departamentos" [value]="nombreAportantes">
-                  {{ nombreAportantes.descripcion }}
+                <mat-option *ngFor="let depto of departamentos" [value]="depto">
+                  {{ depto.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -129,11 +129,11 @@
             <label class="label-left">Municipio</label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width" style="pointer-events: none;">
-              <mat-select formControlName="municipio" required>
+            <mat-form-field class="select-width">
+              <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()" >
                 <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let municipio of municipios" [value]="municipio">
-                  {{ municipio.descripcion }}
+                <mat-option *ngFor="let mun of municipios" [value]="mun">
+                  {{ mun.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -144,11 +144,10 @@
             <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width" style="pointer-events: none;">
-              <mat-select formControlName="vigenciaAcuerdo" required>
-                <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let vigencia of VigenciasAporte" [value]="vigencia">
-                  {{ vigencia }}
+            <mat-form-field class="select-width">
+              <mat-select formControlName="vigenciaAcuerdo"  (selectionChange)="changeVigencia()" required>
+                <mat-option *ngFor="let nombreAportantes of nombresAportantes2" [value]="nombreAportantes">
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} Creado el: {{ nombreAportantes.fechaCreacion | date:'dd/MM/yyyy' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
