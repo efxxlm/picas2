@@ -193,18 +193,17 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         }
       })
 
-      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0)
-      {
-        if (cantidadSolicitudes > 0)  {
+      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0) {
+        if (cantidadSolicitudes > 0) {
           this.estadoSolicitudes = this.estadoFormulario.enProceso;
           if (cantidadSolicitudes == cantidadSolicitudesCompletas)
             this.estadoSolicitudes = this.estadoFormulario.completo;
         }
-      }else{
+      } else {
         this.estadoSolicitudes = '';
       }
     }
-    
+
   }
 
   validarTemas(esProposicion: boolean) {
@@ -271,9 +270,11 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     let btnProposiciones = document.getElementById('btnProposiciones');
 
 
-    btnRegistrarSolicitudes.click();
-    btnOtrosTemas.click();
-    btnProposiciones.click();
+    if (this.objetoComiteTecnico.sesionParticipante && this.objetoComiteTecnico.sesionParticipante.length > 0) {
+      btnRegistrarSolicitudes.click();
+      btnOtrosTemas.click();
+      btnProposiciones.click();
+    }
 
     if (this.estadoSolicitudes == this.estadoFormulario.completo)
       this.estaTodo = true;
