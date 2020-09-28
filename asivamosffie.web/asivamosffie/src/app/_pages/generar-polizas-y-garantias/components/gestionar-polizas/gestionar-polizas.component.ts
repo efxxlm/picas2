@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { PolizaGarantiaService, ContratoPoliza } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -129,23 +129,14 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
-    const polizaArray = {
-      numeroPoliza:this.addressForm.value.numeroPoliza,
-      nombreAseguradora:this.addressForm.value.nombre,
-      numeroCertificado:this.addressForm.value.numeroCertificado,
-      fechaExpedicion:this.addressForm.value.fecha,
-      vigenciaPoliza:this.addressForm.value.vigenciaPoliza,
-      vigenciaAmparo:this.addressForm.value.vigenciaAmparo,
-      valorAmparo:this.addressForm.value.valorAmparo
-    };
-    this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data => {
-      /*if(data.isSuccessful==true){
+   /* this.polizaService.CreateContratoPoliza("").subscribe(data => {
+      if(data.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
       }
       else{
         this.openDialog('', 'Error en el servicio.');
-      }*/
-    });
+      }
+    });*/
     this.openDialog('', 'La información ha sido guardada exitosamente.');
     console.log(this.addressForm.value);
   }

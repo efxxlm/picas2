@@ -161,14 +161,14 @@ export class EditarEnRevisionComponent implements OnInit {
       vigenciaAmparo:this.addressForm.value.vigenciaAmparo,
       valorAmparo:this.addressForm.value.valorAmparo
     };
-    this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
-      /*if(data.isSuccessful==true){
+    /*this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
+      if(data.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
       }
       else{
         this.openDialog('', 'Error en el servicio.');
-      }*/
-    });
+      }
+    });*/
     this.openDialog('', 'La información ha sido guardada exitosamente.');
     console.log(this.addressForm.value);
   }

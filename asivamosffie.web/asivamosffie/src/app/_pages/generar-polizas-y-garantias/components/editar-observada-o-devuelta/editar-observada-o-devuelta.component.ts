@@ -153,11 +153,11 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       vigenciaAmparo:this.addressForm.value.vigenciaAmparo,
       valorAmparo:this.addressForm.value.valorAmparo
     };
-    this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
+    /*this.polizaService.CreateContratoPoliza(polizaArray).subscribe(data=>{
       if(data.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
       }
-    });
+    });*/
     console.log(this.addressForm.value);
   }
 

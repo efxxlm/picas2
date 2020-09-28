@@ -19,7 +19,7 @@ export class PolizaGarantiaService implements OnInit {
   CreatePolizaGarantia(polizaGarantia: CreatePolizaGarantia) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreatePolizaGarantia`, polizaGarantia);
   }
-  CreateContratoPoliza(contratoPoliza) {
+  CreateContratoPoliza(contratoPoliza: ContratoPoliza) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateContratoPoliza`, contratoPoliza);
   }
   GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId:number){
@@ -37,11 +37,11 @@ export class PolizaGarantiaService implements OnInit {
   GetListGrillaContratoGarantiaPoliza(){
     return this.http.get<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/GetListGrillaContratoGarantiaPoliza`);
   }
+  AprobarContratoByIdContrato(pContratoPolizaId:number){
+    return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pContratoPolizaId=${pContratoPolizaId}`,pContratoPolizaId);
+  }
 }
-export interface GetListVistaContratoGarantiaPoliza {
-  
 
-}
 export interface CreatePolizaObservacion {
   PolizaObservacionId: number;
   ContratoPolizaId: number;
