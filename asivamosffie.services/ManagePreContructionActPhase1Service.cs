@@ -19,6 +19,8 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly IDocumentService _documentService;
+        
 
         public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService)
         {
@@ -136,12 +138,17 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> LoadActa(Contrato pContrato , IFormFile pFile) {
+        public async Task<Respuesta> LoadActa(Contrato pContrato , IFormFile pFile,string pDirectorioBase, string pDirectorioMinuta) {
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cargar_Acta_Subscrita, (int)EnumeratorTipoDominio.Acciones);
-
+            string strFilePatch = string.Empty;
             try
             {
+                strFilePatch = Path.Combine(pDirectorioBase, pDirectorioMinuta, pContrato.ContratacionId.ToString());
+                await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
+
+
+
                 Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
                 ContratoOld.FechaFirmaActaContratista = pContrato.FechaActaInicioFase1;
