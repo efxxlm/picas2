@@ -101,7 +101,7 @@
     </div>
   </form>
 
-  <div class="text-center">
+  <div class="text-center" *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0">
     <p class="info-container">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
@@ -109,7 +109,7 @@
     </p>
   </div>
 
-  <mat-accordion>
+  <mat-accordion *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0">
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
         <!-- class="expansion-style--title completo" -->
@@ -196,7 +196,7 @@
             color="warn" 
             class="btn-guardar" 
             type="button" 
-            
+            *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"  
             (click)="CambiarEstado()"
             >
             <!-- [disabled]="!estaTodo" -->

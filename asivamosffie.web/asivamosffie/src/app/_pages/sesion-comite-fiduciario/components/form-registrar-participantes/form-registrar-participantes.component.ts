@@ -167,10 +167,10 @@ export class FormRegistrarParticipantesComponent {
       this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.forEach(sol => {
         sol.completo = true;
         if (sol.requiereVotacionFiduciario == true) {
-          if (sol.sesionSolicitudVoto.filter( ss => ss.comiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).length == 0)
+          if (sol.sesionSolicitudVoto.filter(ss => ss.comiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId).length == 0)
             cantidadSolicitudes++;
 
-          sol.sesionSolicitudVoto.filter( ss => ss.comiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId ).forEach(vot => {
+          sol.sesionSolicitudVoto.filter(ss => ss.comiteTecnicoFiduciarioId == sol.comiteTecnicoFiduciarioId).forEach(vot => {
             cantidadSolicitudes++;
             if (vot.esAprobado == false || vot.esAprobado == true) {
               cantidadSolicitudesCompletas++;
@@ -187,18 +187,17 @@ export class FormRegistrarParticipantesComponent {
         }
       })
 
-      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0)
-      {
-        if (cantidadSolicitudes > 0)  {
+      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
+        if (cantidadSolicitudes > 0) {
           this.estadoSolicitudes = this.estadoFormulario.enProceso;
           if (cantidadSolicitudes == cantidadSolicitudesCompletas)
             this.estadoSolicitudes = this.estadoFormulario.completo;
         }
-      }else{
+      } else {
         this.estadoSolicitudes = '';
       }
     }
-    
+
   }
 
   validarTemas(esProposicion: boolean) {
@@ -264,10 +263,11 @@ export class FormRegistrarParticipantesComponent {
     let btnOtrosTemas = document.getElementById('btnOtrosTemas');
     let btnProposiciones = document.getElementById('btnProposiciones');
 
-
-    btnRegistrarSolicitudes.click();
-    btnOtrosTemas.click();
-    btnProposiciones.click();
+    if (this.objetoComiteTecnico.sesionParticipante && this.objetoComiteTecnico.sesionParticipante.length > 0) {
+      btnRegistrarSolicitudes.click();
+      btnOtrosTemas.click();
+      btnProposiciones.click();
+    }
 
     if (this.estadoSolicitudes == this.estadoFormulario.completo)
       this.estaTodo = true;
