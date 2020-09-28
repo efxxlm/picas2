@@ -4,6 +4,7 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -69,9 +70,7 @@ namespace asivamosffie.services
                 return new Contrato();
             }    
         }
-
-
-
+         
         public async Task<Respuesta> EditContrato (Contrato pContrato)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Acta_De_Inicio_De_Contrato, (int)EnumeratorTipoDominio.Acciones);
@@ -110,6 +109,46 @@ namespace asivamosffie.services
                         }
                     }  
                 }
+                _context.SaveChanges();
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = true,
+                         IsValidation = false,
+                         Code = RegisterPreContructionPhase1.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, "EDITAR ACTA DE INICIO DE CONTRATO FASE 1 PRECONSTRUCCION")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                       new Respuesta
+                       {
+                           IsSuccessful = false,
+                           IsException = true,
+                           IsValidation = false,
+                           Code = RegisterPreContructionPhase1.Error,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, pContrato.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                       };
+
+            }
+        }
+
+
+        public async Task<Respuesta> LoadActa(Contrato pContrato , IFormFile pFile) {
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cargar_Acta_Subscrita, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
+
+                ContratoOld.FechaFirmaActaContratista = pContrato.FechaActaInicioFase1;
+                ContratoOld.FechaTerminacion = pContrato.FechaTerminacion; 
+                ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada;
+
+               
                 _context.SaveChanges();
                 return
                      new Respuesta
