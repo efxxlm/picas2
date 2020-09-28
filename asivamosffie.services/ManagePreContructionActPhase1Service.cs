@@ -39,7 +39,7 @@ namespace asivamosffie.services
                 { 
                     ListContratacionDynamic.Add(new
                     { 
-                        fechaAprobacionRequisitosSupervisor = "",
+                        fechaAprobacionRequisitosSupervisor = "Fecha-3.1.8",
                         contrato.NumeroContrato,
                         estadoActaContrato = listEstadosActa.Where(r => r.Codigo == contrato.EstadoActa).FirstOrDefault().Nombre,
                         contrato.ContratoId
@@ -87,7 +87,8 @@ namespace asivamosffie.services
                 ContratoOld.PlazoFase2ConstruccionDias = pContrato.PlazoFase2ConstruccionDias;
                 ContratoOld.PlazoFase2ConstruccionMeses = pContrato.PlazoFase2ConstruccionMeses;
                 ContratoOld.ConObervacionesActa = pContrato.ConObervacionesActa;
-             //   ContratoOld.EstadoActa = c.Con_acta_generada;
+                ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_preliminar_generada;
+                 
                 if ((bool)ContratoOld.ConObervacionesActa) {
                     foreach (var ContratoObservacion in pContrato.ContratoObservacion)
                     {
