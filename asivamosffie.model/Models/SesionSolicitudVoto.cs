@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class SesionSolicitudVoto
     {
         public int SesionSolicitudVotoId { get; set; }
-        public int SesionComiteSolicitudId { get; set; }
+        public int? SesionComiteSolicitudId { get; set; }
         public int SesionParticipanteId { get; set; }
         public bool? EsAprobado { get; set; }
         public string Observacion { get; set; }

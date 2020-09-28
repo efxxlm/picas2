@@ -104,6 +104,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -3062,7 +3063,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.SesionComiteSolicitud)
                     .WithMany(p => p.SesionSolicitudVoto)
                     .HasForeignKey(d => d.SesionComiteSolicitudId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SesionSolicitudVoto_SesionComiteSolicitud");
 
                 entity.HasOne(d => d.SesionParticipante)

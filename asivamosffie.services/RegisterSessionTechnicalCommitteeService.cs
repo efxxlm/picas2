@@ -482,8 +482,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         public async Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
 
@@ -2322,8 +2321,8 @@ namespace asivamosffie.services
             {
 
                 //Pregunta 1 
-                if (pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreWeb == null ||
-                    !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreWeb)
+                if (pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreoWeb == null ||
+                    !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreoWeb)
                 {
                     //Si la respuesta a la pregunta 1, fue “No”, el sistema mostrará la pregunta 4
                     strPregunta_1 = " no";
