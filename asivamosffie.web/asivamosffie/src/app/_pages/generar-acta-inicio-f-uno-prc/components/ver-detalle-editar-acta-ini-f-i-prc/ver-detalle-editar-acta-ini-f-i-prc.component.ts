@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Contrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
+import { Contrato, EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
@@ -24,6 +24,20 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
 
   public rolAsignado;
   public opcion;
+
+  public contratacionId;
+  public fechaTramite;
+  public tipoContratoCodigo;
+  public estadoDocumentoCodigo;
+  public fechaEnvioFirma;
+  public fechaFirmaContratista;
+  public fechaFirmaFiduciaria;
+
+  fechaSesionString: string;
+  fechaSesion: Date;
+
+  fechaSesionString2: string;
+  fechaSesion2: Date;
 
   addressForm = this.fb.group({});
   addressForm2 = this.fb.group({});
@@ -98,12 +112,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   }
   crearFormulario() {
     return this.fb.group({
-      fechaActaInicioFUnoPreconstruccion: [null, Validators.required],
-      fechaPrevistaTerminacion: [null, Validators.required],
-      mesPlazoEjFase1: [2, Validators.required],
-      diasPlazoEjFase1: [15, Validators.required],
-      mesPlazoEjFase2: [null, Validators.required],
-      diasPlazoEjFase2: [null, Validators.required],
+      fechaActaInicioFUnoPreconstruccion: [Date(), Validators.required],
+      fechaPrevistaTerminacion: [Date(), Validators.required],
+      mesPlazoEjFase1: ["", Validators.required],
+      diasPlazoEjFase1: ["", Validators.required],
+      mesPlazoEjFase2: ["", Validators.required],
+      diasPlazoEjFase2: ["", Validators.required],
       observacionesEspeciales: [""]
     })
   }
@@ -136,6 +150,15 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     return patron.test(te);
   }
   onSubmit() {
+    let fecha = Date.parse(this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value);
+    this.fechaSesion = new Date(fecha);
+    this.fechaSesionString = `${ this.fechaSesion.getFullYear() }-${ this.fechaSesion.getMonth() + 1 }-${ this.fechaSesion.getDate() }` 
+
+    let fecha2 = Date.parse(this.addressForm.get( 'fechaPrevistaTerminacion' ).value);
+    this.fechaSesion2 = new Date(fecha2);
+    this.fechaSesionString2 = `${ this.fechaSesion2.getFullYear() }-${ this.fechaSesion2.getMonth() + 1 }-${ this.fechaSesion2.getDate() }` 
+
+    alert(this.fechaSesionString);
     if(this.addressForm.value.observacionesEspeciales!=""){
         this.conObservaciones=true;
     }
@@ -151,16 +174,41 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.openDialog('Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato', "");
     }
     else {
-     /* const arregloContrato: Contrato={
-
+      
+      const arrayContrato: EditContrato = {
+        contratoId: this.numContrato,
+        contratacionId: this.contratacionId,
+        fechaTramite: this.fechaTramite,
+        tipoContratoCodigo: this.tipoContratoCodigo,
+        numeroContrato: this.numContrato,
+        estadoDocumentoCodigo: this.estadoDocumentoCodigo,
+        estado: false,
+        fechaEnvioFirma: this.fechaEnvioFirma,
+        fechaFirmaContratista: this.fechaFirmaContratista,
+        fechaFirmaFiduciaria: this.fechaFirmaFiduciaria,
+        fechaFirmaContrato: this.fechaFirmaContrato,
+        fechaActaInicioFase1: this.fechaSesionString,
+        fechaTerminacion: this.fechaSesionString2,
+        plazoFase1PreMeses: this.addressForm.value.mesPlazoEjFase1,
+        plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
+        plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
+        plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
+        observaciones: "",
+        conObervacionesActa: false,
+        registroCompleto: false,
+        contratoConstruccion: [],
+        contratoObservacion: [],
+        contratoPerfil: [],
+        contratoPoliza: []
       };
-      this.service.EditContrato(arregloContrato).subscribe(data=>{
-
-      });*/
-      //this.openDialog2('La información ha sido guardada exitosamente.', "");
+      this.service.EditContrato(arrayContrato).subscribe(data => {
+        this.openDialog('', data.message);
+        if (data.code == "200") {
+          this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+        }
+      })
     }
     console.log(this.addressForm.value);
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
   }
 
 }

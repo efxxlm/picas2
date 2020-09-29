@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, ActivatedRoute} from '@angular/router';
-import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -15,6 +15,13 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   public numContrato;
   public fechaContrato = "20/06/2020";//valor quemado
   public fechaFirmaContrato;
+  public contratacionId;
+  public fechaTramite;
+  public tipoContratoCodigo;
+  public fechaEnvioFirma;
+  public estadoDocumentoCodigo;
+  public fechaFirmaContratista;
+  public fechaFirmaFiduciaria;
   public mesPlazoIni: number = 10;
   public diasPlazoIni: number = 25;
 
@@ -33,10 +40,17 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       this.loadData(param.id);
     });
   }
-  loadData(id){
-    this.service.GetContratoByContratoId(id).subscribe(data=>{
+  loadData(id) {
+    this.service.GetContratoByContratoId(id).subscribe(data => {
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
+      this.contratacionId = data.contratacionId;
+      this.fechaTramite = data.fechaTramite;
+      this.tipoContratoCodigo = data.tipoContratoCodigo;
+      this.estadoDocumentoCodigo = data.estadoDocumentoCodigo;
+      this.fechaEnvioFirma = data.fechaEnvioFirma;
+      this.fechaFirmaContratista = data.fechaFirmaContratista;
+      this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
     });
   }
   openDialog(modalTitle: string, modalText: string) {
@@ -67,10 +81,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     return this.fb.group({
       fechaActaInicioFUnoPreconstruccion: [null, Validators.required],
       fechaPrevistaTerminacion: [null, Validators.required],
-      mesPlazoEjFase1: [null, Validators.required],
-      diasPlazoEjFase1: [null, Validators.required],
-      mesPlazoEjFase2: [null, Validators.required],
-      diasPlazoEjFase2: [null, Validators.required],
+      mesPlazoEjFase1: ["", Validators.required],
+      diasPlazoEjFase1: ["", Validators.required],
+      mesPlazoEjFase2: ["", Validators.required],
+      diasPlazoEjFase2: ["", Validators.required],
       observacionesEspeciales: [null]
     })
   }
@@ -97,8 +111,40 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     return patron.test(te);
   }
   onSubmit() {
+    const arrayContrato: EditContrato = {
+      contratoId: this.numContrato,
+      contratacionId: this.contratacionId,
+      fechaTramite: this.fechaTramite,
+      tipoContratoCodigo: this.tipoContratoCodigo,
+      numeroContrato: this.numContrato,
+      estadoDocumentoCodigo: this.estadoDocumentoCodigo,
+      estado: false,
+      fechaEnvioFirma: this.fechaEnvioFirma,
+      fechaFirmaContratista: this.fechaFirmaContratista,
+      fechaFirmaFiduciaria: this.fechaFirmaFiduciaria,
+      fechaFirmaContrato: this.fechaFirmaContrato,
+      fechaActaInicioFase1: this.addressForm.value.fechaActaInicioFUnoPreconstruccion,
+      fechaTerminacion: this.addressForm.value.fechaPrevistaTerminacion,
+      plazoFase1PreMeses: this.addressForm.value.mesPlazoEjFase1,
+      plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
+      plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
+      plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
+      observaciones: "",
+      conObervacionesActa: false,
+      registroCompleto: true,
+      contratoConstruccion: [],
+      contratoObservacion: [],
+      contratoPerfil: [],
+      contratoPoliza: []
+    };
+    this.service.EditContrato(arrayContrato).subscribe(data => {
+      this.openDialog('', data.message);
+      if (data.code == "200") {
+        this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+      }
+    })
     console.log(this.addressForm.value);
     this.openDialog2('La información ha sido guardada exitosamente.', "");
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+
   }
 }

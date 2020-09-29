@@ -31,6 +31,7 @@ export class GestionarActPreConstrFUnoService {
 export interface Contrato {
   contratoId: number;
   contratacionId: number;
+  fechaTramite: Date;
   tipoContratoCodigo: string;
   numeroContrato: string;
   estado: boolean;
@@ -38,6 +39,12 @@ export interface Contrato {
   fechaFirmaContratista: Date;
   fechaFirmaFiduciaria: Date;
   fechaFirmaContrato: Date;
+  fechaActaInicioFase1: Date;
+  fechaTerminacion: Date;
+  plazoFase1PreMeses:number;
+  plazoFase1PreDias:number;
+  plazoFase2ConstruccionMeses:number;
+  plazoFase2ConstruccionDias:number;
   observaciones: string;
   conObervacionesActa: boolean;
   rutaDocumento: any;
@@ -46,6 +53,7 @@ export interface Contrato {
   plazo: Date;
   eliminado: boolean;
   estadoVerificacionCodigo: string;
+  estadoDocumentoCodigo: string;
   estadoActa: string;
   contratacion: any[];
   contratoConstruccion: any[];
@@ -61,15 +69,22 @@ export interface EditContrato {
   tipoContratoCodigo: number;
   numeroContrato: string;
   estadoDocumentoCodigo: string;
-  estado: boolean;
-  "fechaEnvioFirma": "2020-09-25T05:00:00",
-  "fechaFirmaContratista": "2020-09-25T05:00:00",
-  "fechaFirmaFiduciaria": "2020-09-25T05:00:00",
-  "fechaFirmaContrato": "2020-09-25T05:00:00",
-  "observaciones": "preuba",
-  "conObervacionesActa": false,
-  "contratoConstruccion": [],
-  "contratoObservacion": [],
-  "contratoPerfil": [],
-  "contratoPoliza": []
+  estado : boolean;
+  fechaEnvioFirma: Date;
+  fechaFirmaContratista: Date;
+  fechaFirmaFiduciaria: Date;
+  fechaFirmaContrato: Date;
+  fechaActaInicioFase1?: string;
+  fechaTerminacion?: string;
+  plazoFase1PreMeses:number;
+  plazoFase1PreDias:number;
+  plazoFase2ConstruccionMeses:number;
+  plazoFase2ConstruccionDias:number;
+  observaciones: string;
+  conObervacionesActa: boolean;
+  registroCompleto: boolean;
+  contratoConstruccion: any[];
+  contratoObservacion: any[];
+  contratoPerfil: any[];
+  contratoPoliza: any[];
 }

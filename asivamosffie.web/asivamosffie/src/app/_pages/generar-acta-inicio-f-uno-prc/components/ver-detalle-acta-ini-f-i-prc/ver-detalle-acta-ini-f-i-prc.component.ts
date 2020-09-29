@@ -16,12 +16,18 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   public numContrato;
   public fechaFirmaContrato;
 
+  public fechaActaFase1Prc;
+  public fechaTermPrevista;
+  public diasFase1;
+  public mesesFase1;
+  public diasFase2;
+  public mesesFase2;
+  public observaciones;
 
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.cargarRol();
-    this.verObservaciones();
     this.actasuscritaHabilitada();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
@@ -31,6 +37,19 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.service.GetContratoByContratoId(id).subscribe(data=>{
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
+      this.fechaActaFase1Prc = data.fechaActaInicioFase1;
+      this.fechaTermPrevista = data.fechaTerminacion;
+      this.diasFase1 = data.plazoFase1PreDias;
+      this.mesesFase1 = data.plazoFase1PreMeses;
+      this.diasFase2 = data.plazoFase2ConstruccionDias;
+      this.mesesFase2 = data.plazoFase2ConstruccionMeses;
+      if(data.observaciones==undefined || data.observaciones==null || data.observaciones=="") {
+        this.observaciones = "-----";
+      }
+      else{
+        this.observaciones = data.observaciones;
+      }
+      this.verObservaciones(data.conObervacionesActa);
     });
   }
   cargarRol() {
@@ -43,8 +62,8 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     }
   }
 
-  verObservaciones(){
-    if(localStorage.getItem("conObservaciones")=="true"){
+  verObservaciones(observaciones){
+    if(observaciones==true){
       this.conObservaciones=true;
     }
     else{
