@@ -158,8 +158,7 @@ namespace asivamosffie.services
                                 .ThenInclude(r => r.Usuario)
                                   .Include(r => r.SesionComiteTecnicoCompromiso)
                                     .ThenInclude(r => r.CompromisoSeguimiento)
-                        .Include(r => r.SesionComiteTecnicoCompromiso)
-                        .Include(r => r.SesionComiteTecnicoCompromiso)
+                        .Include(r => r.SesionComiteTecnicoCompromiso) 
                         .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                         .ToListAsync();
@@ -200,15 +199,15 @@ namespace asivamosffie.services
                         }
 
                     }
-                    //foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
-                    //{
-                    //    if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
-                    //    {
-                    //        SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
-                    //                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
-                    //                && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
-                    //    }
-                    //}
+                    foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
+                    {
+                        if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
+                        {
+                            SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
+                                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                                    && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
+                        }
+                    }
                 }
 
                 return ListComiteTecnico;
