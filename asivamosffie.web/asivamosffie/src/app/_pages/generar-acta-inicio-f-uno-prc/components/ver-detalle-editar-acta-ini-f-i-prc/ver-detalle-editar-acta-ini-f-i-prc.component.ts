@@ -61,10 +61,10 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   }
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe(data=>{
-      this.numContrato = data.numeroContrato;
-      this.fechaFirmaContrato = data.fechaFirmaContrato;
+      this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
     });
+    this.idContrato = id;
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
@@ -74,6 +74,17 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     else {
       this.opcion = 2;
     }
+  }
+  cargarDataParaInsercion(data){
+    this.numContrato = data.numeroContrato;
+    this.fechaFirmaContrato = data.fechaFirmaContrato;
+    this.contratacionId = data.contratacionId;
+    this.fechaTramite = data.fechaTramite;
+    this.tipoContratoCodigo = data.tipoContratoCodigo;
+    this.estadoDocumentoCodigo = data.estadoDocumentoCodigo;
+    this.fechaEnvioFirma = data.fechaEnvioFirma;
+    this.fechaFirmaContratista = data.fechaFirmaContratista;
+    this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
   }
   generarActaSuscrita(){
     alert("genera PDf");
@@ -158,7 +169,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     this.fechaSesion2 = new Date(fecha2);
     this.fechaSesionString2 = `${ this.fechaSesion2.getFullYear() }-${ this.fechaSesion2.getMonth() + 1 }-${ this.fechaSesion2.getDate() }` 
 
-    alert(this.fechaSesionString);
     if(this.addressForm.value.observacionesEspeciales!=""){
         this.conObservaciones=true;
     }
@@ -176,7 +186,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     else {
       
       const arrayContrato: EditContrato = {
-        contratoId: this.numContrato,
+        contratoId: this.idContrato,
         contratacionId: this.contratacionId,
         fechaTramite: this.fechaTramite,
         tipoContratoCodigo: this.tipoContratoCodigo,

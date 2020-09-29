@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   maxDate: Date;
+  public idContrato;
   public numContrato;
   public fechaContrato = "20/06/2020";//valor quemado
   public fechaFirmaContrato;
@@ -42,16 +43,20 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   }
   loadData(id) {
     this.service.GetContratoByContratoId(id).subscribe(data => {
-      this.numContrato = data.numeroContrato;
-      this.fechaFirmaContrato = data.fechaFirmaContrato;
-      this.contratacionId = data.contratacionId;
-      this.fechaTramite = data.fechaTramite;
-      this.tipoContratoCodigo = data.tipoContratoCodigo;
-      this.estadoDocumentoCodigo = data.estadoDocumentoCodigo;
-      this.fechaEnvioFirma = data.fechaEnvioFirma;
-      this.fechaFirmaContratista = data.fechaFirmaContratista;
-      this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
+      this.cargarDataParaInsercion(data);
     });
+    this.idContrato = id;
+  }
+  cargarDataParaInsercion(data){
+    this.numContrato = data.numeroContrato;
+    this.fechaFirmaContrato = data.fechaFirmaContrato;
+    this.contratacionId = data.contratacionId;
+    this.fechaTramite = data.fechaTramite;
+    this.tipoContratoCodigo = data.tipoContratoCodigo;
+    this.estadoDocumentoCodigo = data.estadoDocumentoCodigo;
+    this.fechaEnvioFirma = data.fechaEnvioFirma;
+    this.fechaFirmaContratista = data.fechaFirmaContratista;
+    this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -112,7 +117,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   }
   onSubmit() {
     const arrayContrato: EditContrato = {
-      contratoId: this.numContrato,
+      contratoId: this.idContrato,
       contratacionId: this.contratacionId,
       fechaTramite: this.fechaTramite,
       tipoContratoCodigo: this.tipoContratoCodigo,
