@@ -114,7 +114,7 @@
           <div class="pr-1">
             <label class="label-left">Departamento</label>
           </div>
-          <div class="col">
+          <div class="col capitalize">
             <mat-form-field class="select-width" >              
               <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" required>
                 <mat-option *ngFor="let depto of departamentos" [value]="depto" class="capitalize">
@@ -128,7 +128,7 @@
           <div class="pr-1">
             <label class="label-left">Municipio</label>
           </div>
-          <div class="col">
+          <div class="col capitalize">
             <mat-form-field class="select-width">
               <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()" >
                 <mat-option value="0">Seleccione</mat-option>
@@ -191,7 +191,7 @@
           </div>
           <div class="col">
             <mat-radio-group class="radioInput" formControlName="tieneRP">
-              <mat-radio-button value="1" [checked]="registrosPresupuestales.controls.length>0">Sí</mat-radio-button>
+              <mat-radio-button value="1" >Sí</mat-radio-button>
               <mat-radio-button value="0">No</mat-radio-button>
             </mat-radio-group>
           </div>
@@ -204,7 +204,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #cuantosRP type="number" min="1" max="99" required formControlName="cuantosRP"
+                  <input matInput #cuantosRP type="number" min="1" max="99" formControlName="cuantosRP"
                     maxlength="20" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
@@ -224,7 +224,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50" required
+                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50" 
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         <input type="hidden" formControlName="registroPresupuestalId">
@@ -239,7 +239,7 @@
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
                         <input matInput [matDatepicker]="picker" formControlName="fecha" 
-                        placeholder="DD/MM/AAAA" [max]="maxDate" (click)="picker.open()" readonly required>
+                        placeholder="DD/MM/AAAA" [max]="maxDate" (click)="picker.open()" readonly >
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                       <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
@@ -254,7 +254,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <mat-select formControlName="numerodocumentoRP" required>
+                        <mat-select formControlName="numerodocumentoRP" >
                           <mat-option *ngFor="let nombreAportantes of listaDocumentos" [value]="nombreAportantes">
                             {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
                           </mat-option>
@@ -288,8 +288,8 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="fuenteRecursos" required>
-                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista" [value]="fuenteDeRecursos1">
+                    <mat-select formControlName="fuenteRecursos" required >
+                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosListaArr[j]" [value]="fuenteDeRecursos1">
                         {{ fuenteDeRecursos1.nombre }}
                         <input formControlName="fuenteFinanciacionId" type="hidden">
                       </mat-option>

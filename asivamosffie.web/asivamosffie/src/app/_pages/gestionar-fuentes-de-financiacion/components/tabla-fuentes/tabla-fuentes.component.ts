@@ -57,14 +57,19 @@ export class TablaFuentesComponent implements OnInit {
       this.listaFuenteRecursos = respuesta[3];
 
       this.listaFF.forEach( ff => {
+        ff.valorAporteEnCuenta=0;
+        ff.controlRecurso.forEach(element => {          
+          
+          ff.valorAporteEnCuenta+=element.valorConsignacion;
+        });
         let fuenteRecursos = this.listaFuenteRecursos.find( fr => fr.codigo == ff.fuenteRecursosCodigo );
         let valorTotalCuenta: number = 0;
 
         ff.vigencia = ff.vigenciaAporte ? ff.vigenciaAporte.length > 0 ? ff.vigenciaAporte[0].tipoVigenciaCodigo : '': '' ;
         ff.fuenteDeRecursos = fuenteRecursos ? fuenteRecursos.nombre : ''; 
-
+        
       })
-  
+  console.log(this.listaFF);
       this.dataSource = new MatTableDataSource(this.listaFF);
   
       this.dataSource.sort = this.sort;

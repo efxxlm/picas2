@@ -76,8 +76,18 @@ namespace asivamosffie.services
             BankAccountService bankAccountService = new BankAccountService(_context, _commonService);
             fuentefinanciacion.CofinanciacionDocumentoId = fuentefinanciacion.CofinanciacionDocumentoId == 0 ? null : fuentefinanciacion.CofinanciacionDocumentoId;
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
+
             try
             {
+                //antes de guardar extraigo el aportante porque solo voy a actualizar el rp
+                if(fuentefinanciacion.Aportante!=null)
+                {
+                    var aportante = _context.CofinanciacionAportante.Find(fuentefinanciacion.AportanteId);
+                    aportante.CuentaConRp = fuentefinanciacion.Aportante.CuentaConRp;
+                    _context.CofinanciacionAportante.Update(aportante);
+                    _context.SaveChanges();
+                    fuentefinanciacion.Aportante = null;//si no depronto me actualiza el aportante dejando todo en nulo
+                }
                 fuentefinanciacion.RegistroCompleto = validarRegistroCompleto(fuentefinanciacion);
                 if (fuentefinanciacion.FuenteFinanciacionId == null || fuentefinanciacion.FuenteFinanciacionId == 0)
                 {
@@ -90,8 +100,11 @@ namespace asivamosffie.services
                 else
                 {
                     FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(fuentefinanciacion.FuenteFinanciacionId);
-                    fuente.FechaModificacion = DateTime.Now;                    
+                    fuente.FechaModificacion = DateTime.Now;
                     fuente.ValorFuente = fuentefinanciacion.ValorFuente;
+                    fuente.RegistroCompleto = fuentefinanciacion.RegistroCompleto;
+                    _context.FuenteFinanciacion.Update(fuente);
+                    _context.SaveChanges();
                 }
 
                 foreach (VigenciaAporte vi in fuentefinanciacion.VigenciaAporte)
@@ -171,9 +184,12 @@ namespace asivamosffie.services
                             retorno = false;
                         }
                     }   
-                    else//osea que no le definieron rp, por ende esta incompleto
+                    else//osea que reviso rp, si no tiene esta incompleto
                     {
-                        retorno = false;
+                        if(_context.RegistroPresupuestal.Where(x=>x.AportanteId==fuentefinanciacion.AportanteId).Count()==0)
+                        {
+                            retorno = false;
+                        }                        
                     }
                 }
             }   

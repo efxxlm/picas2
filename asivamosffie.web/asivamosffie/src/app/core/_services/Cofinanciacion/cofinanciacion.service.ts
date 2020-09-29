@@ -76,7 +76,9 @@ export interface CofinanciacionAportante{
   nombreAportante?: string,
   registroPresupuestal?: RegistroPresupuestal[],
   cofinanciacion?: Cofinanciacion,
-  nombreAportanteString?:string
+  nombreAportanteString?:string,
+  fuenteFinanciacion?:any[],
+  cuentaConRp?:boolean
 }
 
 export interface CofinanciacionDocumento{
