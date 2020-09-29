@@ -398,6 +398,8 @@ namespace asivamosffie.services
                 ret.Municipio = null;
                 ret.RegistroPresupuestal = null;
                 ret.ProyectoAportante = null;
+                ret.NombreAportante = null;
+                ret.TipoAportante.CofinanciacionAportanteTipoAportante = null;
             }
             return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
         }

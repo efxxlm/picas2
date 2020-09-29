@@ -42,6 +42,7 @@ export class RegistrarComponent implements OnInit {
   listaDocumentosApropiacion: CofinanciacionDocumento[];
   tipoDocumentoap: Dominio[]=[];
   nombresAportantes2: CofinanciacionAportante[];
+  solonombres: any[]=[];
 
   constructor(private fb: FormBuilder,
               private commonService: CommonService,
@@ -100,20 +101,46 @@ export class RegistrarComponent implements OnInit {
       this.addressForm.get('nombreAportanteFFIE').setValue(aportante);  
       this.changeNombreAportanteFFIE();            
     }
+    else if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString())){
+      console.log(aportante);
+      if(aportante.municipioId!=null){
+        this.commonService.listaMunicipiosByIdDepartamento(aportante.departamentoId.toString()).subscribe(mun => {
+          const valorMunicipio = mun.find(a => a.localizacionId === aportante.municipioId.toString());
+          const valorDepartamento = this.departamentos.find(a => a.localizacionId == aportante.departamentoId.toString());
+  
+          this.municipios = mun;
+          this.addressForm.get('municipio').setValue(valorMunicipio);
+          this.addressForm.get('departamento').setValue(valorDepartamento);
+          this.changeMunicipio();
+        });
+      }
+      else{
+        const valorDepartamento = this.departamentos.find(a => a.localizacionId == aportante.departamentoId.toString());
+        this.addressForm.get('departamento').setValue(valorDepartamento);
+        this.changeDepartamento();
+      }
+      
+      this.addressForm.get('vigenciaAcuerdo').setValue(aportante);
+      this.changeVigencia();
+    }
     else{
       this.addressForm.get('nombreAportante').setValue(aportante);
       this.changeNombreAportante();
     }
-    
+
     
     const listaRegistrosP = this.addressForm.get('registrosPresupuestales') as FormArray;
 
+    
     this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
       lista.forEach(ff => {          
-        const tipo = this.tipoDocumentoap.filter(x=>x.dominioId==ff.cofinanciacionDocumento.tipoDocumentoId);
-        this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);        
-        const numerodoc = this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);        
-        this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
+        if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
+        {
+          const tipo = this.tipoDocumentoap.filter(x=>x.dominioId==ff.cofinanciacionDocumento.tipoDocumentoId);          
+          this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);        
+          const numerodoc = this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);        
+          this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
+        }
         const grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
         const fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find(f => f.codigo === ff.fuenteRecursosCodigo);
         const listaVigencias = grupo.get('vigencias') as FormArray;
@@ -221,14 +248,14 @@ export class RegistrarComponent implements OnInit {
 
         const nombresAportantesTemp: Dominio[] = res[0];
 
-        /*this.nombresAportantes.forEach(nom => {
-          const s = nombresAportantesTemp.find(nomTemp => nomTemp.dominioId === nom.nombreAportanteId);
-          if (s) {
-            nom.nombreAportante = s.nombre;
+        this.nombresAportantes.forEach(nom => {
+          if(!this.solonombres.includes(nom.nombreAportanteString))
+          {
+            this.solonombres.push(nom.nombreAportanteString);
           }
-
+          
         });
-*/
+
         this.fuentesDeRecursosLista = res[1];
         this.bancos = res[2];
         console.log(res[3]);
@@ -290,7 +317,7 @@ export class RegistrarComponent implements OnInit {
   changeDepartamento() {
     console.log("change departamento");
     const idDepartamento = this.addressForm.get('departamento').value.localizacionId;
-    this.nombresAportantes2=this.nombresAportantes.filter(z=>z.municipioId==idDepartamento);
+    this.nombresAportantes2=this.nombresAportantes.filter(z=>z.departamentoId==idDepartamento);
     this.commonService.listaMunicipiosByIdDepartamento(idDepartamento).subscribe(mun => {
       this.municipios = mun;
       console.log(mun);
@@ -312,6 +339,7 @@ export class RegistrarComponent implements OnInit {
           cofinanciacionDocumentoId: doc.cofinanciacionDocumentoId,
           fechaAcuerdo: doc.fechaAcuerdo,
           numeroActa: doc.numeroActa,
+          numeroAcuerdo:doc.numeroAcuerdo,
           tipoDocumentoId: doc.tipoDocumentoId,
           valorDocumento: doc.valorDocumento,
           valorTotalAportante: doc.valorTotalAportante,
@@ -331,6 +359,13 @@ export class RegistrarComponent implements OnInit {
 
       });
     });
+  }
+
+  changeNombreAportanteTercero()
+  {
+    if (this.addressForm.get('nombreAportante').value) {
+      this.nombresAportantes2=this.nombresAportantes.filter(z=>z.nombreAportanteString==this.addressForm.get('nombreAportante').value);
+    }
   }
 
   changeNombreAportante() {
@@ -365,21 +400,10 @@ export class RegistrarComponent implements OnInit {
 
       // ET
       if (this.tipoAportante.ET.includes(this.tipoAportanteId.toString())) {
-        const vigenciaSeleccionada = this.addressForm.get('nombreAportante').value.cofinanciacion.vigenciaCofinanciacionId;
-        const idMunicipio = this.addressForm.get('nombreAportante').value.municipioId;
-        const vigenciaRegistro = this.VigenciasAporte.find(vtemp => vtemp === vigenciaSeleccionada);
-
-        this.addressForm.get('vigenciaAcuerdo').setValue(vigenciaRegistro);
-
-        this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.toString().substring(0, 5)).subscribe(mun => {
-          const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio.toString());
-          const valorDepartamento = this.departamentos.find(a => a.localizacionId == idMunicipio.toString().substring(0, 5));
-
-          this.municipios = mun;
-          this.addressForm.get('municipio').setValue(valorMunicipio);
-          this.addressForm.get('departamento').setValue(valorDepartamento);
-        });
-
+        //const vigenciaSeleccionada = this.addressForm.get('nombreAportante').value.cofinanciacion.vigenciaCofinanciacionId;
+        //const idMunicipio = this.addressForm.get('nombreAportante').value.municipioId;
+        //const vigenciaRegistro = this.VigenciasAporte.find(vtemp => vtemp === vigenciaSeleccionada);
+        //this.addressForm.get('vigenciaAcuerdo').setValue(vigenciaRegistro);
         this.cargarDocumentos();
       }
     }
@@ -504,13 +528,13 @@ export class RegistrarComponent implements OnInit {
     return this.fb.group({
       cuentaBancariaId: [],
       numeroCuenta: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(50)])
       ],
       nombreCuenta: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       codigoSIFI: [null, Validators.compose([
-        Validators.required, Validators.minLength(6), Validators.maxLength(6)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(6)])
       ],
       tipoCuenta: ['free', Validators.required],
       banco: [null, Validators.required],
@@ -536,13 +560,13 @@ export class RegistrarComponent implements OnInit {
         this.fb.group({
           cuentaBancariaId: [],
           numeroCuenta: [null, Validators.compose([
-            Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+            Validators.required, Validators.minLength(1), Validators.maxLength(50)])
           ],
           nombreCuenta: [null, Validators.compose([
-            Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+            Validators.required, Validators.minLength(1), Validators.maxLength(100)])
           ],
           codigoSIFI: [null, Validators.compose([
-            Validators.required, Validators.minLength(6), Validators.maxLength(6)])
+            Validators.required, Validators.minLength(1), Validators.maxLength(6)])
           ],
           tipoCuenta: ['free', Validators.required],
           banco: [null, Validators.required],
@@ -600,16 +624,13 @@ export class RegistrarComponent implements OnInit {
 
       const lista: FuenteFinanciacion[] = [];
       const listaRP: RegistroPresupuestal[] = [];
-
-
-      
-
+  
       let usuario = '';
       if (localStorage.getItem('actualUser')) {
         usuario = localStorage.getItem('actualUser');
         usuario = JSON.parse(usuario).email;
       }
-
+console.log(this.addressForm.get('numerodocumento'));
       this.fuenteRecursosArray.controls.forEach(controlFR => {
         let valortotla=controlFR.get('valorFuenteRecursos').value;
         const fuente: FuenteFinanciacion = {
@@ -620,7 +641,7 @@ export class RegistrarComponent implements OnInit {
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
           vigenciaAporte: [],
-          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
+          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento')?0:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
 
         };
 

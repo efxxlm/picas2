@@ -31,7 +31,7 @@ namespace asivamosffie.services
 
         public async Task<FuenteFinanciacion> GetISourceFundingById(int id)
         {
-            return await _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == id)
+            var retorno= await _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == id)
                         .Include(r => r.ControlRecurso)
                         .Include(r => r.CuentaBancaria)
                         .Include(r => r.VigenciaAporte)
@@ -42,11 +42,39 @@ namespace asivamosffie.services
                         .Include(r => r.Aportante)
                         .ThenInclude(apo => apo.CofinanciacionDocumento)
                         .FirstOrDefaultAsync();
+            if(retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+            {
+                retorno.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+            }
+            else if (retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+            {
+                retorno.Aportante.NombreAportanteString = retorno.Aportante.NombreAportanteId == null
+                    ? "Error" :
+                    _context.Dominio.Find(retorno.Aportante.NombreAportanteId).Nombre;                    
+            }
+            else
+            {
+                if(retorno.Aportante.MunicipioId==null)
+                {
+                    retorno.Aportante.NombreAportanteString = retorno.Aportante.DepartamentoId == null
+                    ? "Error" :
+                    "Gobernación " + _context.Localizacion.Find(retorno.Aportante.DepartamentoId).Descripcion;
+                }
+                else
+                {
+                    retorno.Aportante.NombreAportanteString = retorno.Aportante.MunicipioId == null
+                    ? "Error" :
+                    "Alcaldía " + _context.Localizacion.Find(retorno.Aportante.MunicipioId).Descripcion;
+                }
+            }
+
+            return retorno;
         }
 
         public async Task<Respuesta> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
             BankAccountService bankAccountService = new BankAccountService(_context, _commonService);
+            fuentefinanciacion.CofinanciacionDocumentoId = fuentefinanciacion.CofinanciacionDocumentoId == 0 ? null : fuentefinanciacion.CofinanciacionDocumentoId;
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
             try
             {
@@ -129,7 +157,7 @@ namespace asivamosffie.services
                           IsException = false,
                           IsValidation = false,
                           Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
-                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN")
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionExitosa, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN")
                       };
             }
             catch (Exception ex)
@@ -206,7 +234,7 @@ namespace asivamosffie.services
             var retorno= await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Distinct().Include(r => r.ControlRecurso).Include(r => r.CuentaBancaria).Include(r => r.VigenciaAporte).Include(r => r.Aportante).ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
             foreach(var ret in retorno)
             {
-
+                ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
                 if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                 {
                     ret.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
@@ -214,24 +242,25 @@ namespace asivamosffie.services
                 else if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.ET)
                 {
                     //verifico si tiene municipio
-                    if (ret.Aportante.MunicipioId == null)
+                    if (ret.Aportante.MunicipioId != null)
                     {
-                        ret.Aportante.NombreAportanteString = _context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
+                        ret.Aportante.NombreAportanteString = ret.Aportante.MunicipioId==null?
+                            "Error":"Alcaldía de "+_context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
                     }
                     else//solo departamento
                     {
-                        ret.Aportante.NombreAportanteString = _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
+                        ret.Aportante.NombreAportanteString = ret.Aportante.DepartamentoId == null ?
+                            "Error" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
                     }
-
                 }
                 else
                 {
-
                     ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
                 }
                 ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
+                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "Error" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
             }
-            return retorno;
+            return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
         }
 
         public async Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)

@@ -57,13 +57,9 @@ export class TablaFuentesComponent implements OnInit {
       this.listaFuenteRecursos = respuesta[3];
 
       this.listaFF.forEach( ff => {
-        let nombre = this.listaNombreAportante.find( nom => nom.dominioId == ff.aportante.nombreAportanteId );
-        let tipoAportante = this.listaTipoAportante.find( tip => tip.dominioId ==  ff.aportante.tipoAportanteId );
         let fuenteRecursos = this.listaFuenteRecursos.find( fr => fr.codigo == ff.fuenteRecursosCodigo );
         let valorTotalCuenta: number = 0;
 
-        ff.nombreAportante = nombre ? nombre.nombre : '';
-        ff.tipoAportante = tipoAportante ? tipoAportante.nombre : ''
         ff.vigencia = ff.vigenciaAporte ? ff.vigenciaAporte.length > 0 ? ff.vigenciaAporte[0].tipoVigenciaCodigo : '': '' ;
         ff.fuenteDeRecursos = fuenteRecursos ? fuenteRecursos.nombre : ''; 
 
@@ -118,7 +114,7 @@ export class TablaFuentesComponent implements OnInit {
   eliminarRegistro(e: number){
     this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe( resultado => {
       let res = resultado as Respuesta;
-      this.openDialog('Fuente Financiacion', res.message);
+      this.openDialog('', res.message);
       this.ngOnInit();
     })
   }

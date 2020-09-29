@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, ɵConsole } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 export interface ControlRecursos {
   id: number;
@@ -62,7 +64,8 @@ export class TableControlRecursosComponent implements OnInit {
   constructor(
                 private activatedRoute: ActivatedRoute,
                 private fuenteFinanciacionServices: FuenteFinanciacionService,
-                private router: Router
+                private router: Router,
+                private dialog: MatDialog,
              ) 
   { }
 
@@ -83,6 +86,22 @@ export class TableControlRecursosComponent implements OnInit {
 
     
   }
+  openDialogSiNo(modalTitle: string, modalText: string,borrarForm: any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        this.fuenteFinanciacionServices.DeleteResourceFundingBySourceFunding(borrarForm).subscribe(res=>{
+          console.log(res);
+        });
+      }           
+    });
+  }
+
 
   editar(e: number) {
     this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, e])
@@ -91,6 +110,7 @@ export class TableControlRecursosComponent implements OnInit {
 
   eliminar(e: number) {
     console.log(e);
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",e);
   }
 
 }

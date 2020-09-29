@@ -27,9 +27,9 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportante()" required>
-                <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
-                  {{ nombreAportantes.nombreAportanteString }} {{ nombreAportantes.fechaCreacion | date:'dd/MM/yyyy' }}
+              <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportanteTercero()" required>
+                <mat-option *ngFor="let nombreAportantes of solonombres" [value]="nombreAportantes">
+                  {{ nombreAportantes }} 
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -163,11 +163,11 @@
           <div class="col-md-6">
             <p><b>Documento de apropiación: </b> Documento {{ i + 1}} </p>
             <p><b>Tipo de documento: </b>{{ documento.tipoDocumento.nombre }} </p>
-            <p><b>Fecha: </b> {{ documento.fechaAcuerdo | date }} </p>
+            <p><b>Fecha: </b> {{ documento.fechaAcuerdo | date:'dd/MM/yyyy' }} </p>
           </div>
           <div class="col-md-6">
             <p><b>Vigencia del aporte: </b> {{ documento.vigenciaAporte }} </p>
-            <p><b>Número de documento: </b> {{ documento.numeroActa }} </p>
+            <p><b>Número de documento: </b> {{ documento.numeroAcuerdo }} {{ documento.numeroActa }} </p>
             <p><b>Valor: </b> {{ documento.valorDocumento | currency }} </p>
           </div>
         </div>
@@ -191,12 +191,12 @@
           </div>
           <div class="col">
             <mat-radio-group class="radioInput" formControlName="tieneRP">
-              <mat-radio-button value="1">Sí</mat-radio-button>
+              <mat-radio-button value="1" [checked]="registrosPresupuestales.controls.length>0">Sí</mat-radio-button>
               <mat-radio-button value="0">No</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('tieneRP').value==1 || registrosPresupuestales.controls.length>0"> 
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -290,9 +290,10 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #valorAporte type="number"  formControlName="valorFuenteRecursos" maxlength="20"
+                        <input matInput #valorAporte currencyMask  formControlName="valorFuenteRecursos" maxlength="20"
                           required (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                           >                          
                       </mat-form-field>
                       <span class="contador">{{20 - valorAporte.value.length}}</span>
@@ -352,10 +353,11 @@
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width">
-                              <input matInput #valorVigencia  type="number" formControlName="valorVigencia"
+                              <input matInput #valorVigencia currencyMask formControlName="valorVigencia"
                                 maxlength="20" required (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                 [readonly]="vigencias1.controls.length==1"
+                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                 >
                             </mat-form-field>
                             <span class="contador">{{20 - valorVigencia.value.length}}</span>
