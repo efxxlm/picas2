@@ -238,7 +238,8 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="picker" formControlName="fecha" [max]="maxDate" (click)="picker.open()" readonly required>
+                        <input matInput [matDatepicker]="picker" formControlName="fecha" 
+                        placeholder="DD/MM/AAAA" [max]="maxDate" (click)="picker.open()" readonly required>
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                       <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
@@ -291,7 +292,7 @@
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
                         <input matInput #valorAporte currencyMask  formControlName="valorFuenteRecursos" maxlength="20"
-                          required (keypress)="validateNumberKeypress($event)"
+                          required (keypress)="validateNumberKeypress($event);validateonevige(j)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                           >                          
@@ -476,7 +477,7 @@
                       <div class="col-md-4 text-right">
                         <button mat-button color="warn" type="button" class="btn-eliminar"
                           *ngIf="addressForm.value.fuenteRecursosArray[j].cuentasBancaria.length > 1"
-                          (click)="borrarArray(cuentasBancaria(j).controls, i,3)">
+                          (click)="borrarArray(cuentasBancaria(j).controls, j,3,i)">
                           <img src="assets/img/icon/menos.svg" alt="Eliminar cuenta bancaria">
                           Eliminar cuenta bancaria
                         </button>
@@ -493,7 +494,7 @@
               Agregar otra cuenta bancaria
             </button>
             <button mat-button color="warn" type="button" class="btn-eliminar"
-              (click)="borrarArray(fuenteRecursosArray, j,2)" *ngIf="addressForm.value.fuenteRecursosArray.length > 1">
+              (click)="borrarArray(fuenteRecursosArray, j,2,0)" *ngIf="addressForm.value.fuenteRecursosArray.length > 1">
               <img src="assets/img/icon/menos.svg" alt="Eliminar fuente de recursos">
               Eliminar fuente de recursos
             </button>

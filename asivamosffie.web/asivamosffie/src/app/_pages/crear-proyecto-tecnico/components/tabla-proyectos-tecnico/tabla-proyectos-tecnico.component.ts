@@ -18,7 +18,8 @@ export interface RegistrosCargados {
     institucion:string,
     sede:string,
     estado:string,
-    estadoj:string    ,
+    estadoj:string,
+    estadop:string,
     gestion:string
 }
 
@@ -28,7 +29,7 @@ export interface RegistrosCargados {
   styleUrls: ['./tabla-proyectos-tecnico.component.scss']
 })
 export class TablaProyectosTecnicoComponent {
-  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','gestion'];
+  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
   
 
   columnas = [
@@ -39,6 +40,7 @@ export class TablaProyectosTecnicoComponent {
     { titulo: 'Sede',name: 'sede' },
     { titulo: 'Estado del registro',name: 'estado' },
     { titulo: 'Estado jurídico de los predios',name: 'estadoj' },
+    { titulo: 'Estado del proyecto',name: 'estadop' },
   ];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -109,7 +111,7 @@ export class TablaProyectosTecnicoComponent {
       respuesta.forEach(element => {
         datos.push({fecha:element.fecha
           ,id:element.proyectoId,departamento:element.departamento,municipio:element.municipio,
-          estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,
+          estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,estadop:element.estadoProyecto,
           institucion:element.institucionEducativa,sede:element.sede,gestion:element.proyectoId});
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);

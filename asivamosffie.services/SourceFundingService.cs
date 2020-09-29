@@ -78,10 +78,12 @@ namespace asivamosffie.services
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
             try
             {
+                fuentefinanciacion.RegistroCompleto = validarRegistroCompleto(fuentefinanciacion);
                 if (fuentefinanciacion.FuenteFinanciacionId == null || fuentefinanciacion.FuenteFinanciacionId == 0)
                 {
                     fuentefinanciacion.FechaCreacion = DateTime.Now;
                     fuentefinanciacion.Eliminado = false;
+                    
                     _context.FuenteFinanciacion.Add(fuentefinanciacion);
                     _context.SaveChanges();
                 }
@@ -133,6 +135,57 @@ namespace asivamosffie.services
                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.Error, idAccionCrearFuentesFinanciacion, fuentefinanciacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                        };
             }
+        }
+
+        private bool? validarRegistroCompleto(FuenteFinanciacion fuentefinanciacion)
+        {
+            bool retorno = true;
+            if(fuentefinanciacion.ValorFuente==null)
+            {
+                retorno = false;
+            }
+            if(fuentefinanciacion.FuenteRecursosCodigo.Equals(""))
+            {
+                retorno = false;
+            }
+            if(fuentefinanciacion.CuentaBancaria.Count()==0)
+            {
+                retorno = false;
+            }
+            if(fuentefinanciacion.AportanteId!=null)
+            {
+                var aportante = _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == fuentefinanciacion.AportanteId).FirstOrDefault();
+                if (aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                {
+                    if (fuentefinanciacion.VigenciaAporte.Count() == 0)
+                    {
+                        retorno = false;
+                    }
+                }
+                else
+                {
+                    if(fuentefinanciacion.Aportante!=null)
+                    {
+                        if (fuentefinanciacion.Aportante.RegistroPresupuestal.Count() == 0)
+                        {
+                            retorno = false;
+                        }
+                    }   
+                    else//osea que no le definieron rp, por ende esta incompleto
+                    {
+                        retorno = false;
+                    }
+                }
+            }   
+            else
+            {
+                if (fuentefinanciacion.VigenciaAporte.Count() == 0)
+                {
+                    retorno = false;
+                }
+            }
+            
+            return retorno;
         }
 
         public async Task<Respuesta> EliminarFuentesFinanciacion(int id, string UsuarioModifico)

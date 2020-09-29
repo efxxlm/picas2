@@ -8,6 +8,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Enumerator;
 using Z.EntityFramework.Plus;
+using System.Globalization;
 
 namespace asivamosffie.services
 {
@@ -124,22 +125,24 @@ namespace asivamosffie.services
 
         public async Task<List<Localicacion>> GetListDepartamento()
         {
+            TextInfo txtInfo = new CultureInfo("en-ES", false).TextInfo;
             return await _context.Localizacion.Where(r => r.Nivel == 1)
             .Select(x => new Localicacion
             {
                 LocalizacionId = x.LocalizacionId,
-                Descripcion = x.Descripcion
+                Descripcion = txtInfo.ToTitleCase(x.Descripcion)
             }).ToListAsync();
         }
 
         public async Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento)
         {
+            TextInfo txtInfo = new CultureInfo("en-ES", false).TextInfo;
             if (!string.IsNullOrEmpty(pIdDepartamento))
             {
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdDepartamento)).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion
+                    Descripcion = txtInfo.ToTitleCase(x.Descripcion)
                 }).ToListAsync();
             }
             else
@@ -147,7 +150,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.Nivel == 2).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion
+                    Descripcion = txtInfo.ToTitleCase(x.Descripcion)
                 }).ToListAsync();
             }
 

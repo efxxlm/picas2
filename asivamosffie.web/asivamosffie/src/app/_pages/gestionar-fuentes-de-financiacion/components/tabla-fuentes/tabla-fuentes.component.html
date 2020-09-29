@@ -60,7 +60,7 @@
                         detalle/<br>Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="eliminarFuente(element.fuenteFinanciacionId )">Eliminar</button>
-                    <button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table" [disabled]="!element.registroCompleto"
                         (click)="controlRecursosFuente(element.fuenteFinanciacionId )">Control de recursos</button>
                 </td>
             </ng-container>

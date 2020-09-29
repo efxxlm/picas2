@@ -85,7 +85,15 @@ export class RegistrarComponent implements OnInit {
           this.removeItemVigencia(borrarForm,i,j);
         }
         else{
-          this.borrarVigencia(borrarForm,i);
+          if(event==3)
+          {
+            this.cuentasBancaria(i).removeAt(j);  
+            this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+          }
+          else{
+            this.borrarVigencia(borrarForm,i);
+          }
+          
         }
       }           
     });
@@ -309,7 +317,7 @@ export class RegistrarComponent implements OnInit {
       }
     } else if (FormNumRP <= this.registrosPresupuestales.length && FormNumRP >= 0) {
       while (this.registrosPresupuestales.length > FormNumRP) {
-        this.borrarArray(this.registrosPresupuestales, this.registrosPresupuestales.length - 1,4);
+        this.borrarArray(this.registrosPresupuestales, this.registrosPresupuestales.length - 1,0,4);
       }
     }
   }
@@ -467,8 +475,6 @@ export class RegistrarComponent implements OnInit {
 
   CambioNumerovigencia(j: number) {
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
-    console.log(j);
-    console.log(this.addressForm.get("fuenteRecursosArray")['controls'][j])
     if(FormNumvigencias.cuantasVigencias!=null && FormNumvigencias.cuantasVigencias!="")
     {
       if (FormNumvigencias.cuantasVigencias > this.vigencias1.length && FormNumvigencias.cuantasVigencias < 100) {
@@ -501,12 +507,12 @@ export class RegistrarComponent implements OnInit {
         if(bitestavacio)
         {
           while (this.vigencias1.length > FormNumvigencias.cuantasVigencias) {
-            this.borrarArrayVigencias(this.vigencias1, this.vigencias1.length - 1,j);
+            this.removeItemVigencia(this.vigencias1, this.vigencias1.length - 1,j,false);
           }
           this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1.length);
         }
         else{
-          this.openDialog("","Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.");
+          this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
           this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1.length);
         }
       }          
@@ -586,9 +592,9 @@ export class RegistrarComponent implements OnInit {
     });
   }
 
-  borrarArray(borrarForm: any, i: number,tipo:number) {
+  borrarArray(borrarForm: any, i: number,tipo:number,posicion:number) {
     
-    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,0,tipo);
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,posicion,tipo);
       
   }
   borrarVigencia(borrarForm: any, i: number)
@@ -600,11 +606,15 @@ export class RegistrarComponent implements OnInit {
   borrarArrayVigencias(borrarForm: any, i: number,j:number) {    
     this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,j,1);
   }
-  removeItemVigencia(borrarForm: any, i: number,j:number)
+  removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
   {
     borrarForm.removeAt(i);
     this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1.length);    
-    this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+    if(mensaje)
+    {
+      this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+    }
+    
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -621,7 +631,7 @@ export class RegistrarComponent implements OnInit {
 
   onSubmit() {
     if (this.addressForm.valid) {
-
+      let bitValorok=true;
       const lista: FuenteFinanciacion[] = [];
       const listaRP: RegistroPresupuestal[] = [];
   
@@ -646,8 +656,8 @@ console.log(this.addressForm.get('numerodocumento'));
         };
 
         const vigencias = controlFR.get('vigencias') as FormArray;
-
-        if (vigencias) {
+        
+        if (vigencias.controls.length>0) {
           let totalaportes=0;
           vigencias.controls.forEach(controlVi => {
             const vigenciaAporte: VigenciaAporte = {
@@ -664,14 +674,23 @@ console.log(this.addressForm.get('numerodocumento'));
           //si el total de aportes es 0 es porque es un ET
           totalaportes=totalaportes==0?this.valorTotal:totalaportes;
           if(totalaportes!=valortotla)
-          {
-            console.log();
+          {            
             this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+            bitValorok=false;
             return false;
           }
 
         }
-
+        else
+        {          
+          if(this.valorTotal!=valortotla)
+          {            
+            this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+            bitValorok=false;
+            return false;
+          }
+        }
+        
         const cuentas = controlFR.get('cuentasBancaria') as FormArray;
         cuentas.controls.forEach(controlBa => {
           const cuentaBancaria: CuentaBancaria = {
@@ -704,35 +723,45 @@ console.log(this.addressForm.get('numerodocumento'));
 
         lista.push(fuente);
       });
-
-      forkJoin([
-        from(lista)
-          .pipe(mergeMap(ff => this.fuenteFinanciacionService.createEditFuentesFinanciacion(ff)
-            .pipe(
-              tap()
-            )
-          ),
-            toArray()),
-        from(listaRP)
-          .pipe(mergeMap(cb => this.fuenteFinanciacionService.createEditBudgetRecords(cb)
-            .pipe(
-              tap()
-            )
-          ),
-            toArray()),
-      ])
-        .subscribe(respuesta => {
-          const res = respuesta[0][0] as Respuesta;
-          if (res.code === '200') {
-            this.openDialog('', res.message,true);
-          }
-          console.log(respuesta);
-        });
-
-
-
-      this.data = lista;
-
+      if(bitValorok)
+      {
+        forkJoin([
+          from(lista)
+            .pipe(mergeMap(ff => this.fuenteFinanciacionService.createEditFuentesFinanciacion(ff)
+              .pipe(
+                tap()
+              )
+            ),
+              toArray()),
+          from(listaRP)
+            .pipe(mergeMap(cb => this.fuenteFinanciacionService.createEditBudgetRecords(cb)
+              .pipe(
+                tap()
+              )
+            ),
+              toArray()),
+        ])
+          .subscribe(respuesta => {
+            const res = respuesta[0][0] as Respuesta;
+            if (res.code === '200') {
+              this.openDialog('', res.message,true);
+            }
+            console.log(respuesta);
+          });      
+        this.data = lista;    
+      }
+      
+    }
+  }
+  
+  validateonevige(j){
+    console.log(this.addressForm.get("valorFuenteRecursos"));
+    console.log(this.vigencias1.controls.length);
+    const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
+    if(FormNumvigencias.cuantasVigencias==1)
+    {
+      console.log("lo seteo");
+      this.vigencias1.controls[0].get("valorVigencia").setValue(FormNumvigencias.valorFuenteRecursos);
     }
   }
 }
