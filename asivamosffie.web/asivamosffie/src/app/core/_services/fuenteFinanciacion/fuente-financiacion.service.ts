@@ -139,6 +139,7 @@ export interface RegistroPresupuestal{
   aportanteId: number,
   numeroRp: string,
   fechaRp: Date,
+  cofinanciacionDocumentoId:number,
   fechaCreacion?: Date,
   usuarioCreacion?: string,
 }

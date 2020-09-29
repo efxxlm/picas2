@@ -305,7 +305,8 @@ export class RegistrarComponent implements OnInit {
     return this.fb.group({
       registroPresupuestalId: [],
       numeroRP: [null],
-      fecha: [null]
+      fecha: [null],
+      numerodocumentoRP:[null]
     });
   }
 
@@ -716,6 +717,7 @@ console.log(this.addressForm.get('numerodocumento'));
               fechaRp: controlRP.get('fecha').value,
               numeroRp: controlRP.get('numeroRP').value,
               registroPresupuestalId: controlRP.get('registroPresupuestalId').value,
+              cofinanciacionDocumentoId:controlRP.get('numerodocumentoRP').value,
             };
             listaRP.push(registroPresupuestal);
           });

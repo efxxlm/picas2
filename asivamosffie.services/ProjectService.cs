@@ -486,7 +486,7 @@ namespace asivamosffie.services
                     {
                         proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                     }
-
+                    proyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Completo;
                     proyecto.RegistroCompleto = ValidarRegistroCREAR(pProyecto, predioPrincipal);
                     _context.Proyecto.Add(proyecto);
                     _context.SaveChanges();

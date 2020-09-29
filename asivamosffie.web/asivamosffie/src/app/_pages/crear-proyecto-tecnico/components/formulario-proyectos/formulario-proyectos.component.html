@@ -98,7 +98,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid">
-                  <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -116,7 +116,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid">
-                  <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -135,7 +135,7 @@
               <mat-form-field class="select-width">
                 <mat-select required [(ngModel)]="proyecto.localizacionIdMunicipio"
                   (selectionChange)="getInstitucion()">
-                  <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>

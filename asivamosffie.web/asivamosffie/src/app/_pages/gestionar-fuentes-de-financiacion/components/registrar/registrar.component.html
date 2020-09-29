@@ -104,7 +104,7 @@
             <mat-form-field class="select-width">
               <mat-select formControlName="numerodocumento" required>
                 <mat-option *ngFor="let nombreAportantes of listaDocumentosApropiacion" [value]="nombreAportantes">
-                  {{ nombreAportantes.numeroAcuerdo}}
+                  {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -117,7 +117,7 @@
           <div class="col">
             <mat-form-field class="select-width" >              
               <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" required>
-                <mat-option *ngFor="let depto of departamentos" [value]="depto">
+                <mat-option *ngFor="let depto of departamentos" [value]="depto" class="capitalize">
                   {{ depto.descripcion }}
                 </mat-option>
               </mat-select>
@@ -132,7 +132,7 @@
             <mat-form-field class="select-width">
               <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()" >
                 <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let mun of municipios" [value]="mun">
+                <mat-option *ngFor="let mun of municipios" [value]="mun"  class="capitalize">
                   {{ mun.descripcion }}
                 </mat-option>
               </mat-select>
@@ -246,6 +246,20 @@
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
 
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Documento de apropiación</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <mat-select formControlName="numerodocumentoRP" required>
+                          <mat-option *ngFor="let nombreAportantes of listaDocumentos" [value]="nombreAportantes">
+                            {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>                      
                     </div>
                   </div>
                 </div>
