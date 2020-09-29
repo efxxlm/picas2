@@ -4,8 +4,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { CargarActaSuscritaActaIniFIPreconstruccionComponent } from '../cargar-acta-suscrita-acta-ini-f-i-prc/cargar-acta-suscrita-acta-ini-f-i-prc.component';
-
+/*
 export interface Contrato {
   fechaAprobacionSupervisor: string;
   numeroContrato: string;
@@ -26,13 +27,14 @@ const ELEMENT_DATA: Contrato[] = [
   {fechaAprobacionSupervisor: "26/06/2020", numeroContrato: 'C848784555',estado:'Enviada por el supervisor',actaGenerada:null,revisionOAprobacion:null,observaciones:true,actaSuscrita:false},
   {fechaAprobacionSupervisor: "26/06/2020", numeroContrato: 'C848784555',estado:'Con acta suscrita y cargada',actaGenerada:null,revisionOAprobacion:null,observaciones:true,actaSuscrita:true},
 ];
+*/
 @Component({
   selector: 'app-tabla-generar-f-i-prc',
   templateUrl: './tabla-generar-f-i-prc.component.html',
   styleUrls: ['./tabla-generar-f-i-prc.component.scss']
 })
 export class TablaGenerarFIPreconstruccionComponent implements OnInit {
-  displayedColumns: string[] = [ 'fechaAprobacionSupervisor', 'numeroContrato', 'estado', 'id'];
+  displayedColumns: string[] = [ 'fechaAprobacionRequisitosSupervisor', 'numeroContrato', 'estadoActaContrato', 'contratoId'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -40,32 +42,41 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  constructor(private router: Router, public dialog: MatDialog) { }
+
+  public dataTable;
+  constructor(private router: Router, public dialog: MatDialog, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    this.cargarTablaDeDatos();
   }
-  generarActaFUno(){
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa']);
+  cargarTablaDeDatos(){
+    this.service.GetListContrato().subscribe(data=>{
+      this.dataTable = data;
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    })
+
   }
-  verDetalleEditarActaFUno(observaciones){
+  generarActaFUno(id){
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa',id]);
+  }
+  verDetalleEditarActaFUno(observaciones,id){
     if(observaciones == true){
       localStorage.setItem("conObservaciones","true");
     }
     else{
       localStorage.setItem("conObservaciones","false");
     }
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa']);
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa',id]);
   }
   enviarParaRevision(){
     alert("llama al servicio");
   }
-  verDetalleActaFUno(observaciones,actaSuscrita){
+  verDetalleActaFUno(observaciones,actaSuscrita,id){
     if(observaciones == true){
       localStorage.setItem("conObservaciones","true");
     }
@@ -78,7 +89,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     else{
       localStorage.setItem("actaSuscrita","false");
     }
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa']);
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa',id]);
   }
   enviarActaParaFirma(){
     alert("llama al servicio donde cambia estado a true");

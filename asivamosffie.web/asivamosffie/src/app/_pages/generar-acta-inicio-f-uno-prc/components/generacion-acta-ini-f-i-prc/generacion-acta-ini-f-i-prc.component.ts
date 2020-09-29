@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute} from '@angular/router';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -11,8 +12,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   maxDate: Date;
-  public numContrato = "A886675445";//valor quemado
+  public numContrato;
   public fechaContrato = "20/06/2020";//valor quemado
+  public fechaFirmaContrato;
   public mesPlazoIni: number = 10;
   public diasPlazoIni: number = 25;
 
@@ -22,11 +24,20 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     modalText: string
   };
 
-  constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
   }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
+    this.activatedRoute.params.subscribe(param => {
+      this.loadData(param.id);
+    });
+  }
+  loadData(id){
+    this.service.GetContratoByContratoId(id).subscribe(data=>{
+      this.numContrato = data.numeroContrato;
+      this.fechaFirmaContrato = data.fechaFirmaContrato;
+    });
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-ver-detalle-acta-ini-f-i-prc',
@@ -11,16 +13,26 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
 
   public rolAsignado;
   public opcion;
+  public numContrato;
+  public fechaFirmaContrato;
 
 
-  constructor() { }
+  constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.cargarRol();
     this.verObservaciones();
     this.actasuscritaHabilitada();
+    this.activatedRoute.params.subscribe(param => {
+      this.loadData(param.id);
+    });
   }
-
+  loadData(id){
+    this.service.GetContratoByContratoId(id).subscribe(data=>{
+      this.numContrato = data.numeroContrato;
+      this.fechaFirmaContrato = data.fechaFirmaContrato;
+    });
+  }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     if (this.rolAsignado == 2) {

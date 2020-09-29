@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Contrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+
 
 @Component({
   selector: 'app-ver-detalle-editar-acta-ini-f-i-prc',
@@ -11,7 +13,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit {
   maxDate: Date;
-  public numContrato = "A886675445";//valor quemado
+  maxDate2: Date;
+  public idContrato;
+  public numContrato;
+  public fechaFirmaContrato;
   public fechaContrato = "20/06/2020";//valor quemado
   public mesPlazoIni: number = 10;
   public diasPlazoIni: number = 25;
@@ -27,14 +32,25 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     modalText: string
   };
 
-  constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder) {
+  constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
+    this.maxDate2 = new Date();
   }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
     this.addressForm2 = this.crearFormulario2();
     this.cargarRol();
-    this.verObservaciones();
+    this.activatedRoute.params.subscribe(param => {
+      this.loadData(param.id);
+      this.idContrato = param.id;
+    });
+  }
+  loadData(id){
+    this.service.GetContratoByContratoId(id).subscribe(data=>{
+      this.numContrato = data.numeroContrato;
+      this.fechaFirmaContrato = data.fechaFirmaContrato;
+      this.verObservaciones(data.conObervacionesActa);
+    });
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
@@ -72,8 +88,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       [{ align: [] }],
     ]
   };
-  verObservaciones(){
-    if(localStorage.getItem("conObservaciones")=="true"){
+  verObservaciones(observaciones){
+    if(observaciones==true){
       this.conObservaciones=true;
     }
     else{
@@ -88,7 +104,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       diasPlazoEjFase1: [15, Validators.required],
       mesPlazoEjFase2: [null, Validators.required],
       diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: [null]
+      observacionesEspeciales: [""]
     })
   }
   crearFormulario2() {
@@ -120,6 +136,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     return patron.test(te);
   }
   onSubmit() {
+    if(this.addressForm.value.observacionesEspeciales!=""){
+        this.conObservaciones=true;
+    }
+    else{
+      this.conObservaciones=false;
+    }
     //compara los meses
     var sumaMeses;
     var sumaDias;
@@ -129,7 +151,13 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.openDialog('Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato', "");
     }
     else {
-      this.openDialog2('La información ha sido guardada exitosamente.', "");
+     /* const arregloContrato: Contrato={
+
+      };
+      this.service.EditContrato(arregloContrato).subscribe(data=>{
+
+      });*/
+      //this.openDialog2('La información ha sido guardada exitosamente.', "");
     }
     console.log(this.addressForm.value);
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);

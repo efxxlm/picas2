@@ -12,19 +12,19 @@ const routes: Routes = [
     component: GenerarActaInicioFaseunoPreconstruccionComponent
   },
   {
-    path: 'generarActa',
+    path: 'generarActa/:id',
     component: GeneracionActaIniFIPreconstruccionComponent
   },
   {
-    path: 'verDetalleEditarActa',
+    path: 'verDetalleEditarActa/:id',
     component: VerDetalleEditarActaIniFIPreconstruccioComponent
   },
   {
-    path: 'verDetalleActa',
+    path: 'verDetalleActa/:id',
     component: VerDetalleActaIniFIPreconstruccioComponent
   },
   {
-    path: 'validarActaDeInicio',
+    path: 'validarActaDeInicio/:id',
     component: ValidarActaDeInicioFIPreconstruccionComponent
   },
 ];
