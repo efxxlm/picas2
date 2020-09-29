@@ -47,7 +47,7 @@ namespace asivamosffie.services
                     .ThenInclude(APO => APO.Cofinanciacion)
                     .Include(RC => RC.CuentaBancaria)
                     .Include(RC => RC.RegistroPresupuestal)
-                    .Include(RC => RC.VigenciaAporte)
+                    //.Include(RC => RC.VigenciaAporte)
                     .Include(RC => RC.FuenteFinanciacion)
                     .Include(RC => RC.FuenteFinanciacion)
                     .ThenInclude(FF => FF.Aportante)

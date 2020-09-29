@@ -19,8 +19,10 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public int? CofinanciacionDocumentoId { get; set; }
 
         public virtual CofinanciacionAportante Aportante { get; set; }
+        public virtual CofinanciacionDocumento CofinanciacionDocumento { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
     }
 }

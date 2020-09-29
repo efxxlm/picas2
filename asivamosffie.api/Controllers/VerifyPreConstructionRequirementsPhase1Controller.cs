@@ -17,12 +17,12 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VerifyPreConstructionRequirementsPhase1 : Controller
+    public class VerifyPreConstructionRequirementsPhase1Controller : Controller
     {
         public readonly IVerifyPreConstructionRequirementsPhase1Service _verifyPreConstruction;
 
 
-        public VerifyPreConstructionRequirementsPhase1(IVerifyPreConstructionRequirementsPhase1Service verifyPreConstructionRequirementsPhase1Service)
+        public VerifyPreConstructionRequirementsPhase1Controller(IVerifyPreConstructionRequirementsPhase1Service verifyPreConstructionRequirementsPhase1Service)
         {
             _verifyPreConstruction = verifyPreConstructionRequirementsPhase1Service;
         }
