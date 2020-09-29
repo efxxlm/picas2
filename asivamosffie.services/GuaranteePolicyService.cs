@@ -29,14 +29,14 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
-        private readonly IOptions<AppSettings> _settings;
+        //private readonly IOptions<AppSettings> _settings;
 
-        public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettings> settings)
+        public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
 
             _commonService = commonService;
             _context = context;
-            _settings = settings;
+            //_settings = settings;
         }
         //public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
         public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
@@ -283,7 +283,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> InsertContratoPoliza([FromBody] ContratoPoliza contratoPoliza)
+        public async Task<Respuesta> InsertContratoPoliza([FromBody] ContratoPoliza contratoPoliza, AppSettingsService appSettingsService)
         {
             Respuesta _response = new Respuesta();
 
@@ -317,6 +317,10 @@ namespace asivamosffie.services
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                     LimpiarEntradasContratoPoliza(ref contratoPoliza);
+
+                    //TipoSolicitudCodigo ="3" //si estado devuelta, correo supervisor
+                    if (contratoPoliza.TipoSolicitudCodigo == "3")
+                        await EnviarCorreoSupervisor(contratoPoliza,  appSettingsService);
 
                     _context.ContratoPoliza.Add(contratoPoliza);
                     await _context.SaveChangesAsync();
@@ -358,7 +362,102 @@ namespace asivamosffie.services
 
         }
 
-        private static void LimpiarEntradasContratoPoliza(ref ContratoPoliza contratoPoliza)
+        //enviar correo estado devuelto
+        public async Task<Respuesta> EnviarCorreoSupervisor(ContratoPoliza contratoPoliza, AppSettingsService settings)
+        {
+            Respuesta respuesta = new Respuesta();
+            string fechaFirmaContrato="";
+            string correo = "cdaza@ivolucion.com";
+            VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
+
+            try
+            {
+                int idAccionEditarContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente, (int)EnumeratorTipoDominio.Acciones);                        
+            
+                objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
+
+                List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
+                ListVista = await ListVistaContratoGarantiaPoliza();                       
+
+                int pIdTemplate = (int)enumeratorTemplate.MsjSupervisorJuridicaGestionPoliza;                    
+
+                NotificacionMensajeGestionPoliza msjNotificacion;
+                msjNotificacion = new NotificacionMensajeGestionPoliza();
+
+                msjNotificacion.NombreAseguradora = contratoPoliza.NombreAseguradora;
+                msjNotificacion.NumeroPoliza = contratoPoliza.NumeroPoliza;
+                msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy");
+                msjNotificacion.Observaciones = contratoPoliza.Observaciones;
+                //msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
+
+                PolizaObservacion polizaObservacion;
+
+                polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
+
+                if(polizaObservacion!=null)
+                {
+                    msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
+                    msjNotificacion.FechaRevision=polizaObservacion.FechaRevision.ToString("dd/MM/yyyy");
+                }
+                
+
+                Contrato contrato;
+                contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId ).FirstOrDefault();
+
+                Contratacion contratacion=null;
+                if(contrato!=null)
+                {
+                    contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+                    objVistaContratoGarantiaPoliza = ListVista.Where(x => x.IdContrato == contrato.ContratoId).FirstOrDefault();
+                    fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
+                }
+
+                DisponibilidadPresupuestal disponibilidadPresupuestal=null;
+
+                if (contratacion != null)
+                {
+                    disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+                 }
+
+                if (disponibilidadPresupuestal != null)
+                    msjNotificacion.NumeroDRP = disponibilidadPresupuestal.NumeroDrp;
+
+                Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
+                settings.MailPort, settings.Password, settings.Sender,
+                objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate);
+
+                //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
+
+                //if (blEnvioCorreo)
+                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+
+                //else
+                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+
+                //}
+                //}
+                //else
+                //{
+                //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+                //}
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, correo, "Gestión Pólizas");
+                return respuesta;
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, correo, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
+                return respuesta;
+            }
+
+        }
+        
+
+    private static void LimpiarEntradasContratoPoliza(ref ContratoPoliza contratoPoliza)
         {
             contratoPoliza.DescripcionModificacion = Helpers.Helpers.CleanStringInput(contratoPoliza.DescripcionModificacion);
             contratoPoliza.NumeroPoliza = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroPoliza);
@@ -367,6 +466,11 @@ namespace asivamosffie.services
             contratoPoliza.ResponsableAprobacion = Helpers.Helpers.CleanStringInput(contratoPoliza.ResponsableAprobacion);
             contratoPoliza.NumeroCertificado = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroCertificado);
             contratoPoliza.NombreAseguradora = Helpers.Helpers.CleanStringInput(contratoPoliza.NombreAseguradora);
+
+            contratoPoliza.UsuarioModificacion = "";
+            contratoPoliza.UsuarioCreacion = "";
+            contratoPoliza.EstadoPolizaCodigo = "";
+            //contratoPoliza.contratopoliza = "";
 
         }
         public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza)
@@ -408,7 +512,7 @@ namespace asivamosffie.services
         }
 
         
-            public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato)
+            public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings)
         {
             //public void AprobarContrato(int pIdContrato)
         
@@ -452,10 +556,10 @@ namespace asivamosffie.services
                     _context.ContratoPoliza.Update(contratoPoliza);
 
                      
-                    fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/mm/yyyy") : contrato.FechaFirmaContrato.ToString();
+                    fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
 
-                    Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, _settings.Value.MailServer,
-               _settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
+                    Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
+               settings.MailPort, settings.Password, settings.Sender,
                objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate);
 
                     return respuesta = new Respuesta
@@ -540,12 +644,12 @@ namespace asivamosffie.services
                 Contrato contrato;
                 contrato = _context.Contrato.Where(r => r.ContratoId == objVistaContratoGarantiaPoliza.IdContrato).FirstOrDefault();
                 
-                fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/mm/yyyy") : contrato.FechaFirmaContrato.ToString();
+                fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
 
                 //datos basicos generales, aplican para los 4 mensajes
                 template = template.Replace("_Tipo_Contrato_", objVistaContratoGarantiaPoliza.TipoContrato);
                         template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
-                        template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/mm/aaaa)
+                        template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/MM/aaaa)
                         template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
                         template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
                         template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
@@ -580,7 +684,6 @@ namespace asivamosffie.services
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas");
                 return respuesta;
 
-
             }
             catch (Exception ex)
             {
@@ -595,7 +698,7 @@ namespace asivamosffie.services
 
         public async Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza()
         {
-            await AprobarContratoByIdContrato(1);
+            //await AprobarContratoByIdContrato(1);
 
             List<GrillaContratoGarantiaPoliza> ListContratoGrilla = new List<GrillaContratoGarantiaPoliza>();
             //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
@@ -640,7 +743,7 @@ namespace asivamosffie.services
                     {
                         ContratoId= contrato.ContratoId,
                         //FechaFirma = contrato.FechaFirmaContrato.ToString("dd/mm/yyyy")?"":"",
-                        FechaFirma = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/mm/yyyy") : contrato.FechaFirmaContrato.ToString(),
+                        FechaFirma = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
                         //FechaFirma = contrato.FechaFirmaContrato.ToString(),
                         NumeroContrato = contrato.NumeroContrato,
         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo

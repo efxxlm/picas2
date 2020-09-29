@@ -35,4 +35,5 @@
         public bool YearSiguienteEsVigente { get; set; }
         public string DirectoryBaseOrdeELegibilidad { get; set; }
     }
+  
 }
