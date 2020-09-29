@@ -52,7 +52,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
             this.addressForm.get('reasignacion').setValue( ( ( this.contratacionProyecto.esReasignacion !== null ) ? this.contratacionProyecto.esReasignacion : null ) );
             this.addressForm.get('avanceObra').setValue( ( ( this.contratacionProyecto.esAvanceobra !== null ) ? this.contratacionProyecto.esAvanceobra : null ) );    
-            this.addressForm.get('porcentajeAvanceObra').setValue( this.contratacionProyecto.porcentajeAvanceObraString );
+            this.addressForm.get('porcentajeAvanceObra').setValue( Number( this.contratacionProyecto.porcentajeAvanceObra ) );
             this.addressForm.get('requiereLicencias').setValue( ( ( this.contratacionProyecto.requiereLicencia !== null ) ? this.contratacionProyecto.requiereLicencia : null ) );
             this.addressForm.get('licenciaVigente').setValue( ( ( this.contratacionProyecto.licenciaVigente !== null ) ? this.contratacionProyecto.licenciaVigente : null ) );
             this.addressForm.get('numeroLicencia').setValue( this.contratacionProyecto.numeroLicencia );
@@ -81,7 +81,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
     this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;
     this.contratacionProyecto.esAvanceobra = this.addressForm.get('avanceObra').value;
-    this.contratacionProyecto.porcentajeAvanceObraString = this.addressForm.get('porcentajeAvanceObra').value;
+    this.contratacionProyecto.porcentajeAvanceObra = String( this.addressForm.get('porcentajeAvanceObra').value );
     this.contratacionProyecto.requiereLicencia = this.addressForm.get('requiereLicencias').value;
     this.contratacionProyecto.licenciaVigente = this.addressForm.get('licenciaVigente').value;
     this.contratacionProyecto.numeroLicencia = this.addressForm.get('numeroLicencia').value;
@@ -99,7 +99,5 @@ export class DefinirCaracteristicasComponent implements OnInit {
       })
 
   }
-
-  
 
 }
