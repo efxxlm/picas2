@@ -139,6 +139,7 @@ namespace asivamosffie.api
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();  
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
             services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
+            services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
