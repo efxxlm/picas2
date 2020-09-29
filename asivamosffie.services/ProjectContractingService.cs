@@ -591,7 +591,7 @@ namespace asivamosffie.services
                     componenteAportanteOld.FechaModificacion = DateTime.Now;
                     //Esto es lo unico que puede cambiar en esta tabla
                     componenteAportanteOld.TipoComponenteCodigo = pComponenteAportante.TipoComponenteCodigo;
-                    // componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
+                    componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
                 }
                 if (esTransaccion)
                 {
