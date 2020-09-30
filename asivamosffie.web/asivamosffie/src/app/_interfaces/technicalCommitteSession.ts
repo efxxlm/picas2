@@ -37,9 +37,11 @@ export interface ComiteTecnico{
     estadoComiteCodigo?: string,
     numeroCompromisos?: number,
     numeroCompromisosCumplidos?: number,
+    tipoTemaFiduciarioCodigo?: string,
 
     sesionComiteTema?: SesionComiteTema[],
     sesionComiteSolicitudComiteTecnico?: SesionComiteSolicitud[],
+    sesionComiteSolicitudComiteTecnicoFiduciario?: SesionComiteSolicitud[],
     sesionParticipante?: SesionParticipante[],
     sesionInvitado?: SesionInvitado[],
 
@@ -92,6 +94,16 @@ export interface SesionComiteSolicitud {
     requiereVotacion?: boolean,
     registroCompleto?: boolean,
     desarrolloSolicitud?: string,
+
+    comiteTecnicoFiduciarioId?: number,
+    registroCompletoFiduciaria?: boolean,
+    desarrolloSolicitudFiduciario?: string,
+    estadoActaCodigoFiduciario?: string,
+    observacionesFiduciario?: string,
+    rutaSoporteVotacionFiduciario?: string,
+    generaCompromisoFiduciario?: boolean,
+    cantCompromisosFiduciario?: number,
+    requiereVotacionFiduciario?: boolean,
 
     tipoSolicitud?: string,
     numeroSolicitud?: string,
@@ -149,6 +161,7 @@ export interface SesionSolicitudVoto{
     eliminado?: boolean,
     usuarioModificacion?: string,
     fechaModificacion?: Date,
+    comiteTecnicoFiduciarioId?: number,
 
     nombreParticipante?: string,
 
@@ -178,7 +191,13 @@ export interface ComiteGrilla{
     numeroComite?: string,
     estadoComite?: string, 
     estadoComiteCodigo?: string,
-    
+    estadoActa?: string,
+    estadoActaCodigo?: string,
+    registroCompleto?: boolean,
+    registroCompletoNombre?: string,
+    numeroCompromisos?: number,
+    numeroCompromisosCumplidos?: number,
+    esComiteFiduciario?: boolean,
 }
 
 export interface SesionSolicitudObservacionProyecto{
@@ -211,6 +230,8 @@ export interface SesionSolicitudCompromiso{
     usuarioModificacion?: string,
     eliminado?: boolean,
     estadoCodigo?: string,
+    esFiduciario?: boolean,
+
 
     nombreResponsable?: string,
     responsableSesionParticipante?: SesionParticipante,

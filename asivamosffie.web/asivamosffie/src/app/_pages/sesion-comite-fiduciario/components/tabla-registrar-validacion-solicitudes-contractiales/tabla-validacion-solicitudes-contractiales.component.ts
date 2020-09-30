@@ -26,8 +26,8 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
-  templateUrl: './tabla-registrar-validacion-solicitudes-contractiales.component.html',
-  styleUrls: ['./tabla-registrar-validacion-solicitudes-contractiales.component.scss']
+  templateUrl: './tabla-validacion-solicitudes-contractiales.component.html',
+  styleUrls: ['./tabla-validacion-solicitudes-contractiales.component.scss']
 })
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
 
@@ -69,7 +69,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       sesionSolicitudVoto: [],
     }
 
-    console.log(elemento)
+    console.log(elemento) 
 
 
     this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
