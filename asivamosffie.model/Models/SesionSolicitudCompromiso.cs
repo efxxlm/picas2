@@ -23,8 +23,6 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
         public bool? EsFiduciario { get; set; }
 
-        public bool EsFiduciario { get; set; }
-
         public virtual SesionParticipante ResponsableSesionParticipante { get; set; }
         public virtual SesionComiteSolicitud SesionComiteSolicitud { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
