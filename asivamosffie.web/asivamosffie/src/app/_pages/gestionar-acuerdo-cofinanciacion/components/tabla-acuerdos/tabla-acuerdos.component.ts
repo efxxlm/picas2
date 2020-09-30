@@ -64,6 +64,9 @@ export class TablaAcuerdosComponent implements OnInit {
              this.dataSource.data = this.listaCofinanciacion;
           } );
       }
+      else{
+        this.openDialog("",result.message);      
+      }
     });
   }
   openDialog(modalTitle: string, modalText: string) {

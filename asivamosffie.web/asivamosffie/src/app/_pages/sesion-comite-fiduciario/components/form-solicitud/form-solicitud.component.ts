@@ -158,7 +158,8 @@ export class FormSolicitudComponent implements OnInit {
       generaCompromisoFiduciario: this.addressForm.get('tieneCompromisos').value,
       cantCompromisosFiduciario: this.addressForm.get('cuantosCompromisos').value,
       desarrolloSolicitudFiduciario: this.addressForm.get('desarrolloSolicitud').value,
-      sesionSolicitudCompromiso: []
+      sesionSolicitudCompromiso: [],
+      requiereVotacionFiduciario:null
 
     }
 

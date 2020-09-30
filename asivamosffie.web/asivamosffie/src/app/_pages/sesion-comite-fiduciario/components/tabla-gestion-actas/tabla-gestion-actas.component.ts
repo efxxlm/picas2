@@ -85,8 +85,8 @@ export class TablaGestionActasComponent implements OnInit {
   enviarSolicitud( id: number ){
     let comite: ComiteTecnico = {
       comiteTecnicoId: id,
-      estadoComiteCodigo: EstadosComite.conActaDeSesionEnviada,
-
+      estadoComiteCodigo: EstadosComite.conActaDeSesionEnviada,sesionComiteSolicitudComiteTecnicoFiduciario:null
+ 
     }
     this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
     .subscribe( respuesta => {

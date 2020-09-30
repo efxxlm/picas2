@@ -120,7 +120,12 @@ export class VotacionSolicitudComponent implements OnInit {
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,
-      sesionSolicitudVoto: []
+      sesionSolicitudVoto: [],
+      cantCompromisosFiduciario:null,
+      requiereVotacionFiduciario:null,
+      desarrolloSolicitudFiduciario:null,
+      comiteTecnicoFiduciarioId:null,generaCompromisoFiduciario:null,observacionesFiduciario:null,rutaSoporteVotacionFiduciario:null
+
     }
 
     this.listaVotacion.controls.forEach( control => {
