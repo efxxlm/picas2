@@ -149,8 +149,9 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
               })
         
             this.proyectos = contra.contratacionProyecto;  
+            this.ActualizarProyectos.emit( this.proyectos );
             this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
-            console.log( this.proyectos );
+           
           })
 
         })

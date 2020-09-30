@@ -1618,6 +1618,9 @@ namespace asivamosffie.services
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
                             if (ct.Proyecto.EstadoProyectoCodigo != null)
                                 proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;        
+                            else{
+                                sesionComiteSolicitudOld.RegistroCompleto = false;
+                            }
                         });
 
                     }
