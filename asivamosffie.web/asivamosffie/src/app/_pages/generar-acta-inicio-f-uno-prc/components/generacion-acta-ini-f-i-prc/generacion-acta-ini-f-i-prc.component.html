@@ -73,8 +73,14 @@
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="fechaPrevistaTerminacion">
+                                    <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
+                                        (click)="picker2.open()" formControlName="fechaPrevistaTerminacion">
+                                    <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="picker2.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                </button>
                             </div>
                         </div>
                     </div>

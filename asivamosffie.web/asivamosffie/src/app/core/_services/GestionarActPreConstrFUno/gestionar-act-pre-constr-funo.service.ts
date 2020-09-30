@@ -30,6 +30,12 @@ export class GestionarActPreConstrFUnoService {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${
       pDirectorioBase }&pDirectorioActaContrato=${ pDirectorioActaContrato }`, formData);
   }
+  CambiarEstadoActa(pContratoId:number,pEstadoContrato:string){
+    return this.http.get<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CambiarEstadoActa?pContratoId=${pContratoId}&pEstadoContrato=${pEstadoContrato}`);
+  }
+  GetActaByIdPerfil(pPerfilId:number, pContratoId:number){
+    return this.http.get<Contrato>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetActaByIdPerfil?pPerfilId=${pPerfilId}&pContratoId=${pContratoId}`);
+  }
 }
 
 export interface Contrato {

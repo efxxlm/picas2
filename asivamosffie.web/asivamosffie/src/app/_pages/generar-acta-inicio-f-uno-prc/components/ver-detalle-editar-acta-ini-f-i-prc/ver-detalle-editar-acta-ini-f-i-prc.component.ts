@@ -45,6 +45,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     modalTitle: string,
     modalText: string
   };
+  public observacionesOn: boolean;
 
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -177,11 +178,11 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     this.fechaSesion2 = new Date(fecha2);
     this.fechaSesionString2 = `${ this.fechaSesion2.getFullYear() }-${ this.fechaSesion2.getMonth() + 1 }-${ this.fechaSesion2.getDate() }` 
 
-    if(this.addressForm.value.observacionesEspeciales!=""){
-        this.conObservaciones=true;
+    if(this.addressForm.value.observacionesEspeciales!=""||this.addressForm.value.observacionesEspeciales!=null||this.addressForm.value.observacionesEspeciales!=undefined){
+      this.observacionesOn=true;
     }
     else{
-      this.conObservaciones=false;
+      this.observacionesOn=false;
     }
     //compara los meses
     var sumaMeses;
@@ -212,7 +213,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
         plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
         plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
         observaciones: this.addressForm.value.observacionesEspeciales,
-        conObervacionesActa: false,
+        conObervacionesActa: this.observacionesOn,
         registroCompleto: false,
         contratoConstruccion: [],
         contratoObservacion: [],

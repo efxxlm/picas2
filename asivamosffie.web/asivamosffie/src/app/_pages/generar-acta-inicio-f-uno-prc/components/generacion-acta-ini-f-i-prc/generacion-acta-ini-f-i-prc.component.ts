@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   maxDate: Date;
+  maxDate2: Date;
   public idContrato;
   public numContrato;
   public fechaContrato = "20/06/2020";//valor quemado
@@ -25,7 +26,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   public fechaFirmaFiduciaria;
   public mesPlazoIni: number = 10;
   public diasPlazoIni: number = 25;
-
+  public observacionesOn : boolean;
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
@@ -34,6 +35,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
+    this.maxDate2 = new Date();
   }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -116,6 +118,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     return patron.test(te);
   }
   onSubmit() {
+    if(this.addressForm.value.observacionesEspeciales!=""||this.addressForm.value.observacionesEspeciales!=null||this.addressForm.value.observacionesEspeciales!=undefined){
+      this.observacionesOn=true;
+    }
+    else{
+      this.observacionesOn=false;
+    }
     const arrayContrato: EditContrato = {
       contratoId: this.idContrato,
       contratacionId: this.contratacionId,
@@ -135,7 +143,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
       plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
       observaciones: "",
-      conObervacionesActa: false,
+      conObervacionesActa: this.observacionesOn,
       registroCompleto: true,
       contratoConstruccion: [],
       contratoObservacion: [],

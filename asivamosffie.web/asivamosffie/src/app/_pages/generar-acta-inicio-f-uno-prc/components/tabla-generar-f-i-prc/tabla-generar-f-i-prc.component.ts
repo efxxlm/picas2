@@ -22,6 +22,9 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
   }
 
   public dataTable;
+
+  public showSendForRevisionBtn:boolean=true;
+
   constructor(private router: Router, public dialog: MatDialog, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
@@ -51,8 +54,13 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     }
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa',id]);
   }
-  enviarParaRevision(){
-    alert("llama al servicio");
+  enviarParaRevision(idContrato, estadoActaContrato){
+    estadoActaContrato="366";
+    this.service.CambiarEstadoActa(idContrato,estadoActaContrato).subscribe(data=>{
+      if(data.isSuccessful==true){
+        this.showSendForRevisionBtn=false;
+      }
+    });
   }
   verDetalleActaFUno(observaciones,actaSuscrita,id){
     if(observaciones == true){

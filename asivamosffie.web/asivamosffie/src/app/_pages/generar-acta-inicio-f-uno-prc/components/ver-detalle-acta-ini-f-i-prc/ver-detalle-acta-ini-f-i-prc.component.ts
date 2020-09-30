@@ -11,6 +11,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   public conObservaciones:boolean;
   public botonDescargarActaSuscrita: boolean;
 
+  public contratoId;
   public rolAsignado;
   public opcion;
   public numContrato;
@@ -31,6 +32,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.actasuscritaHabilitada();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
+      this.contratoId = param.id;
     });
   }
   loadData(id){
@@ -80,6 +82,8 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     }
   }
   generarActaSuscrita(){
-    alert("genera PDF");
+    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe(data=>{
+
+    })
   }
 }
