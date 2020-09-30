@@ -67,7 +67,7 @@ namespace asivamosffie.services
                         Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
                         EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
                         TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
-                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
                         EstadoRegistro = "COMPLETO"
                     };
@@ -307,7 +307,7 @@ namespace asivamosffie.services
                         var estaso = "";
                         if (estado!=null)
                         {
-                            estaso = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == proyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre;
+                            estaso = _context.Dominio.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == proyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre;
                         }
                         
                         ProyectoGrilla proyectoGrilla = new ProyectoGrilla
@@ -365,7 +365,7 @@ namespace asivamosffie.services
                         Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
                         EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
                         TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
-                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Solicitud) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
                         EstadoRegistro = "COMPLETO"
                     };
