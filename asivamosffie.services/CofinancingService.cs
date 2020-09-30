@@ -95,8 +95,8 @@ namespace asivamosffie.services
                       IsSuccessful = true,
                       IsException = false,
                       IsValidation = false,
-                      Code = ConstantMessagesCofinanciacion.OperacionExitosa,
-                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                      Code = ConstantMessagesCofinanciacion.EliminacionCancelada,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionCancelada, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
                   };
                 }
 
