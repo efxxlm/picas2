@@ -82,7 +82,25 @@ namespace asivamosffie.services
             int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
             try
             {
+                //valido que no tenga ninguna relación para poder eliminarlo
                 Cofinanciacion cofinanciacion = _context.Cofinanciacion.Find(pCofinancicacionId);
+                var aportantes = _context.CofinanciacionAportante.Where(x => x.CofinanciacionId == pCofinancicacionId && x.FuenteFinanciacion.Count()>0).ToList();
+                
+                if(aportantes.Count()>0)
+                {
+                    //tiene relaciones entonces no lo puedo eliminar
+                    return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantMessagesCofinanciacion.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                  };
+                }
+
+
                 cofinanciacion.Eliminado = true;
                 cofinanciacion.UsuarioModificacion = pUsuarioModifico.ToUpper();
                 cofinanciacion.FechaModificacion = DateTime.Now;
