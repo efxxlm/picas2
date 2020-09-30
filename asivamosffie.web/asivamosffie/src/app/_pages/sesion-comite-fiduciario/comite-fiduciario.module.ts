@@ -22,7 +22,7 @@ import { TablaValidacionSolicitudesContractualesComponent } from './components/t
 import { TablaOtrosTemasComponent } from './components/tabla-otros-temas/tabla-otros-temas.component';
 import { FormProposicionesVariosComponent } from './components/form-proposiciones-varios/form-proposiciones-varios.component';
 import { FormRegistrarParticipantesComponent } from './components/form-registrar-participantes/form-registrar-participantes.component';
-import { TablaRegistrarValidacionSolicitudesContractialesComponent } from './components/tabla-registrar-validacion-solicitudes-contractiales/tabla-registrar-validacion-solicitudes-contractiales.component';
+import { TablaRegistrarValidacionSolicitudesContractialesComponent } from './components/tabla-registrar-validacion-solicitudes-contractiales/tabla-validacion-solicitudes-contractiales.component';
 import { TablaRegistrarOtrosTemasComponent } from './components/tabla-registrar-otros-temas/tabla-registrar-otros-temas.component';
 import { VotacionSolicitudComponent } from './components/votacion-solicitud/votacion-solicitud.component';
 import { AplazarSesionComponent } from './components/aplazar-sesion/aplazar-sesion.component';
