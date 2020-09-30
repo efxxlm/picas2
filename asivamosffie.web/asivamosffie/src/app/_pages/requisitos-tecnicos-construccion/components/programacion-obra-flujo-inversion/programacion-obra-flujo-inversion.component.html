@@ -1,0 +1,25 @@
+<section *ngIf="!esFlujoInversion">
+  <button mat-raised-button 
+          color="accent" 
+          type="submit"
+          (click)="cargarProgramacion()">
+          Cargar programación
+  </button>
+</section>
+<section *ngIf="esFlujoInversion" class="mt-2em">
+  <button mat-raised-button 
+          color="accent" 
+          type="submit"
+          class="mr-2em">
+          Ver documento de registro presupuestal
+  </button>
+
+  <button mat-raised-button
+          color="accent" 
+          type="submit"
+          (click)="cargarProgramacion()">
+          Cargar flujo de inversión de recursos
+  </button>
+</section>
+
+<app-tabla-programacion-obra></app-tabla-programacion-obra>

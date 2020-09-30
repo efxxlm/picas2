@@ -13,11 +13,14 @@ import { PlanesProgramasComponent } from './components/planes-programas/planes-p
 import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
 import { ManejoAnticipoComponent } from './components/manejo-anticipo/manejo-anticipo.component';
 import { HojaVidaContratistaComponent } from './components/hoja-vida-contratista/hoja-vida-contratista.component';
+import { DialogCargarProgramacionComponent } from './components/dialog-cargar-programacion/dialog-cargar-programacion.component';
+import { TablaProgramacionObraComponent } from './components/tabla-programacion-obra/tabla-programacion-obra.component';
+import { ProgramacionObraFlujoInversionComponent } from './components/programacion-obra-flujo-inversion/programacion-obra-flujo-inversion.component';
 
 @NgModule({
   declarations: [
     RequisitosTecnicosConstruccionComponent, 
-    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent, PlanesProgramasComponent, DialogObservacionesComponent, ManejoAnticipoComponent, HojaVidaContratistaComponent
+    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent, PlanesProgramasComponent, DialogObservacionesComponent, ManejoAnticipoComponent, HojaVidaContratistaComponent, DialogCargarProgramacionComponent, TablaProgramacionObraComponent, ProgramacionObraFlujoInversionComponent
   ],
   imports: [
     CommonModule,

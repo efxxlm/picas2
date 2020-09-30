@@ -95,6 +95,9 @@
               Programación de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
+
+          <app-programacion-obra-flujo-inversion [esFlujoInversion]="false"></app-programacion-obra-flujo-inversion>
+
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -103,6 +106,14 @@
               Flujo de inversión de recursos
             </mat-panel-title>
           </mat-expansion-panel-header>
+
+          <div class="d-flex mt-2em text-center" style="justify-content: center;">
+            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>5</b></p>
+            <p>Valor total del contrato: <b>$150.000.000</b></p>
+          </div>
+
+          <app-programacion-obra-flujo-inversion [esFlujoInversion]="true"></app-programacion-obra-flujo-inversion>
+
         </mat-expansion-panel>
 
       </mat-expansion-panel>
