@@ -69,7 +69,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       sesionSolicitudVoto: [],
     }
 
-    console.log(elemento)
+    console.log(elemento) 
 
 
     this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
