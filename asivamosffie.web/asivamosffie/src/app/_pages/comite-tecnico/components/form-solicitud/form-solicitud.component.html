@@ -78,6 +78,8 @@
         #solicitudMultiple
         [sesionComiteSolicitud]="sesionComiteSolicitud"
         [style.display]="getMostrarProyectos()"
+        [Estadosolicitud]="getObservableEstadoSolicitud()"
+        (ActualizarProyectos)="ActualizarProyectos($event)"
       >
       </app-tabla-form-solicitud-multiple>
 

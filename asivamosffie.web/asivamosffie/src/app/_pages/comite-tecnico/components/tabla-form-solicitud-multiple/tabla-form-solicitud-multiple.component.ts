@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
-import { ProjectService } from 'src/app/core/_services/project/project.service';
+import { ProjectService, Proyecto, ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
-import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 import { Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -18,9 +19,15 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
 export class TablaFormSolicitudMultipleComponent implements OnInit {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
+  @Input() Estadosolicitud: Observable<Dominio>;
+  @Output() ActualizarProyectos: EventEmitter<ContratacionProyecto[]> = new EventEmitter();
+  
+  cantidadProyecto: Number = 0;
   listaEstados: Dominio[] = [];
-  estadosValidos: string[] = ['1', '3', '5']
+  listaEstadosCompleta: Dominio[] = [];
+  estadosValidos: string[] = ['3', '5', '7']
   estadosSolicitud = EstadosSolicitud;
+  proyectos: ContratacionProyecto[] = []
 
   displayedColumns: string[] = [
     'idMen',
@@ -53,11 +60,44 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.commonService.listaEstadoSolicitud()
+    this.commonService.listaEstadoProyecto()
       .subscribe(estados => {
-        this.listaEstados = estados;
-        this.listaEstados = this.listaEstados.filter(e => this.estadosValidos.includes(e.codigo));
+        this.listaEstadosCompleta = estados;
+        this.listaEstados = this.listaEstadosCompleta.filter(e => this.estadosValidos.includes(e.codigo));
+
+        this.Estadosolicitud.subscribe(estado => {
+          this.proyectos.forEach( p => { p.proyecto.estadoProyecto = {}; } )
+          this.onChangeEstado();
+          if (estado)
+          if (this.cantidadProyecto > 0)
+          {
+            switch (estado.codigo) {
+              case EstadosSolicitud.AprobadaPorComiteTecnico:
+                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
+                break;
+              case this.estadosSolicitud.RechazadaPorComiteTecnico:
+                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico);
+                break;
+              case this.estadosSolicitud.DevueltaPorComiteTecnico:
+                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico);
+                break;
+            }
+          }else{
+            switch (estado.codigo) {
+              case EstadosSolicitud.AprobadaPorComiteTecnico:
+                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
+                break;
+              default:
+                this.listaEstados = this.listaEstadosCompleta.filter(e => ["3","5"].includes(e.codigo));
+            }
+
+          }
+                      
+        })
+        
       })
+
+      
 
 
     this.dataSource.sort = this.sort;
@@ -88,17 +128,29 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
     ])
   }
 
+  onChangeEstado(){
+    this.ActualizarProyectos.emit( this.proyectos );
+  }
+
   cargarRegistro() {
+
+    //this.proyectos = [];
 
     if (this.sesionComiteSolicitud.contratacion) {
       this.projectContractingService.getContratacionByContratacionId(this.sesionComiteSolicitud.contratacion.contratacionId)
         .subscribe(contra => {
+          this.cantidadProyecto = contra.contratacionProyecto.length;
+
           contra.contratacionProyecto.forEach(cp => {
             this.projectService.getProyectoGrillaByProyectoId(cp.proyectoId)
               .subscribe(proy => {
                 cp.proyecto = proy;
+                
               })
-            this.dataSource = new MatTableDataSource( contra.contratacionProyecto );
+        
+            this.proyectos = contra.contratacionProyecto;  
+            this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
+            console.log( this.proyectos );
           })
 
         })
