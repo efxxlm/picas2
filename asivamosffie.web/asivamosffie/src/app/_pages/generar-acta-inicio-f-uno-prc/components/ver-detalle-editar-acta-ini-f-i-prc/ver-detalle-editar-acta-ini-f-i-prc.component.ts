@@ -63,6 +63,14 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     this.service.GetContratoByContratoId(id).subscribe(data=>{
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
+      //Datos correspondientes al formulario
+      this.addressForm.get('fechaActaInicioFUnoPreconstruccion').setValue(data.fechaActaInicioFase1);
+      this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaTerminacion);
+      this.addressForm.get('mesPlazoEjFase1').setValue(data.plazoFase1PreMeses);
+      this.addressForm.get('diasPlazoEjFase1').setValue(data.plazoFase1PreDias);
+      this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
+      this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
+      this.addressForm.get('observacionesEspeciales').setValue(data.observaciones);
     });
     this.idContrato = id;
   }
@@ -203,7 +211,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
         plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
         plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
         plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
-        observaciones: "",
+        observaciones: this.addressForm.value.observacionesEspeciales,
         conObervacionesActa: false,
         registroCompleto: false,
         contratoConstruccion: [],

@@ -33,7 +33,7 @@
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarActaParaFirma()"
                         *ngIf="element.estadoActaContrato=='Con validación del supervisor'">Enviar acta para firma</button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita()"
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita(element.contratoId)"
                         *ngIf="element.estadoActaContrato=='Con acta en proceso de firma'"> Cargar Acta Suscrita</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="descargarActaDesdeTabla()"
                         *ngIf="element.estadoActaContrato=='Con acta en proceso de firma'"> Descargar Acta</button>

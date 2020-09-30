@@ -21,10 +21,14 @@ export class GestionarActPreConstrFUnoService {
   EditContrato(pcontrato: EditContrato) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/EditContrato`, pcontrato);
   }
-  LoadActa(pcontrato: Contrato, archivoParaSubir: File) {
+  LoadActa(pcontrato:ContratoParaActa, archivoParaSubir: File,pDirectorioBase:string,pDirectorioActaContrato:string) {
     const formData = new FormData();
+    formData.append('idContrato', `${pcontrato.contratoId}`);
+    formData.append('fechaFirmaActaContratista', `${pcontrato.fechaFirmaActaContratista}`);
+    formData.append('fechaFirmaActaContratistaInterventoria', `${pcontrato.fechaFirmaActaContratistaInterventoria}`);
     formData.append('file', archivoParaSubir, archivoParaSubir.name);
-    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/EditContrato`, formData);
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${
+      pDirectorioBase }&pDirectorioActaContrato=${ pDirectorioActaContrato }`, formData);
   }
 }
 
@@ -76,6 +80,34 @@ export interface EditContrato {
   fechaFirmaContrato: Date;
   fechaActaInicioFase1?: string;
   fechaTerminacion?: string;
+  plazoFase1PreMeses:number;
+  plazoFase1PreDias:number;
+  plazoFase2ConstruccionMeses:number;
+  plazoFase2ConstruccionDias:number;
+  observaciones: string;
+  conObervacionesActa: boolean;
+  registroCompleto: boolean;
+  contratoConstruccion: any[];
+  contratoObservacion: any[];
+  contratoPerfil: any[];
+  contratoPoliza: any[];
+}
+export interface ContratoParaActa {
+  contratoId: number;
+  contratacionId: number;
+  fechaTramite: Date;
+  tipoContratoCodigo: number;
+  numeroContrato: string;
+  estadoDocumentoCodigo: string;
+  estado : boolean;
+  fechaEnvioFirma: Date;
+  fechaFirmaContratista: Date;
+  fechaFirmaFiduciaria: Date;
+  fechaFirmaContrato: Date;
+  fechaActaInicioFase1?: string;
+  fechaTerminacion?: string;
+  fechaFirmaActaContratista?: Date;
+  fechaFirmaActaContratistaInterventoria?: Date;
   plazoFase1PreMeses:number;
   plazoFase1PreDias:number;
   plazoFase2ConstruccionMeses:number;
