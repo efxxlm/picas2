@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
-import { FuenteFinanciacion, Aportante, ProyectoAdministrativo, Listados, ProjectService } from 'src/app/core/_services/project/project.service';
+import { FuenteFinanciacion, Aportante, ProyectoAdministrativo, Listados, ProjectService, AportanteFuenteFinanciacion } from 'src/app/core/_services/project/project.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,21 +19,21 @@ export class FormularioProyectosComponent implements OnInit {
   listadoFuentes: Dominio[];
 
   addFont(aportante: Aportante) {
-    aportante.fuenteFinanciacion.push({ valorFuente: 0, fuenteRecursosCodigo: '' });
+    aportante.fuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '' });
   }
 
-  deleteFont(key: FuenteFinanciacion, aportante: Aportante) {
-    const index = this.proyectoAdmin.Aportante.indexOf(aportante, 0);
-    const index2 = this.proyectoAdmin.Aportante[index].fuenteFinanciacion.indexOf(key, 0);
+  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
+    const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
+    const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
     if (index2 > -1) {
-      this.proyectoAdmin.Aportante[index].fuenteFinanciacion.splice(index2, 1);
+      this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.splice(index2, 1);
     }
   }
 
   onchangeFont(i: number) {
     console.log(this.proyectoAdmin);
     console.log(i);
-    this.projectServices.listaFuentes(this.proyectoAdmin.Aportante[i].aportanteId).subscribe(respuesta => {
+    this.projectServices.listaFuentes(this.proyectoAdmin.proyectoAdministrativoAportante[i].aportanteId).subscribe(respuesta => {
       this.listadoFuentes = respuesta;
     },
       err => {
@@ -53,16 +53,17 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log(id);
     this.projectServices.ListAdministrativeProject().subscribe(respuesta => {
       let id = 0;
-      respuesta.forEach(element => {
-        id = element.proyectoAdminitracionId;
-      });
-      this.proyectoAdmin = { identificador: (id + 1).toString(), Aportante: [{
+      id = respuesta[0].proyectoAdminitracionId;
+      
+      this.proyectoAdmin = { identificador: (id + 1).toString(), proyectoAdministrativoAportante: [{
         aportanteId: 0,
-        nombreAportanteId: 0,
-        tipoAportanteId: 0,
-        fuenteFinanciacion: [{ valorFuente: 0, fuenteRecursosCodigo: '' }]
+        proyectoAdminstrativoId: 0,
+        
+        aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
       }] };
     },
       err => {
@@ -81,8 +82,9 @@ export class FormularioProyectosComponent implements OnInit {
       });
 
     // this.listadoAportantes=[{id:"001",valor:"valor1"},{id:"002",valor:"valor2"}];
-    this.commonServices.listaNombreAportante().subscribe(respuesta => {
-      this.listadoAportantes = respuesta;
+    this.commonServices.listaNombreTipoAportante().subscribe(respuesta => {
+
+      this.listadoAportantes = respuesta.filter(x=>x.nombre=="FFIE");
     },
       err => {
         let mensaje: string;
@@ -123,17 +125,16 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   addAportant() {
-    this.proyectoAdmin.Aportante.push({
+    this.proyectoAdmin.proyectoAdministrativoAportante.push({
       aportanteId: 0,
-      nombreAportanteId: 0,
-      tipoAportanteId: 0,
-      fuenteFinanciacion: [{ valorFuente: 0, fuenteRecursosCodigo: '' }]
+      proyectoAdminstrativoId: 0,      
+      aportanteFuenteFinanciacion: [{ valorFuente: 0, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
     });
   }
   deleteAportant(key: Aportante) {
-    const index = this.proyectoAdmin.Aportante.indexOf(key, 0);
+    const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(key, 0);
     if (index > -1) {
-      this.proyectoAdmin.Aportante.splice(index, 1);
+      this.proyectoAdmin.proyectoAdministrativoAportante.splice(index, 1);
     }
   }
 
@@ -147,7 +148,9 @@ export class FormularioProyectosComponent implements OnInit {
 
   onSubmit() {
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
-      this.openDialog('', respuesta.message);
+      this.openDialog('', respuesta.message,true);
+
+
     },
       err => {
         let mensaje: string;
@@ -175,10 +178,19 @@ export class FormularioProyectosComponent implements OnInit {
 
   }
 
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+        if(result)
+        {
+          this.router.navigate(["/crearProyectoAdministrativo"], {});
+        }
+      });
+    }
   }
 }
