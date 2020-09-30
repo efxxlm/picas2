@@ -241,7 +241,10 @@ export interface InfraestructuraIntervenirProyecto{
   plazoDiasInterventoria:number ,
   coordinacionResponsableCodigo:string ,
 }
-export interface ProyectoAportante{  
+export interface ProyectoAportante{
+  mun?: string;
+  depto?: string;
+  nombreAportante?: any;  
   proyectoAportanteId :number,
   proyectoId :number,
   aportanteId :number,

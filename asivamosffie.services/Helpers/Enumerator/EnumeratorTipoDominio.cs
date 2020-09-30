@@ -92,6 +92,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estados_Acta = 47,
 
-        Estado_Sesion_Comite_Solicitud = 50
+        Estado_Sesion_Comite_Solicitud = 50,
+
+        Estado_Proyecto = 63
     }
 }

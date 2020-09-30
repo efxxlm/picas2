@@ -416,7 +416,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="predios.Predio.DocumentoAcreditacionCodigo">
+                    <mat-select required [(ngModel)]="predios.Predio.documentoAcreditacionCodigo">
                       <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
@@ -434,34 +434,34 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.Predio.NumeroDocumento" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.Predio.numeroDocumento" maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.Predio.NumeroDocumento?predios.Predio.NumeroDocumento.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.Predio.numeroDocumento?predios.Predio.numeroDocumento.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div class="row" [ngClass]="{'opaco': predios.Predio.DocumentoAcreditacionCodigo!='1'}">
-            <div class="col-md-8">
+          <div class="row" >
+            <div class="col-md-8" [ngClass]="{'opaco': predios.Predio.documentoAcreditacionCodigo!='1'}">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left">Cédula catastral del predio</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.Predio.CedulaCatastral" [disabled]="predios.Predio.DocumentoAcreditacionCodigo!='1'"
+                    <input matInput [(ngModel)]="predios.Predio.cedulaCatastral" [disabled]="predios.Predio.documentoAcreditacionCodigo!='1'"
                      maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.Predio.CedulaCatastral?predios.Predio.CedulaCatastral.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.Predio.cedulaCatastral?predios.Predio.cedulaCatastral.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
             <div class="col-md-4 text-right">
               <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteAportante(i)">
                 <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
-                Eliminar aportante
+                Eliminar predio
               </button>
             </div>
           </div>
@@ -512,7 +512,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="this.tipoAportante.Tercero.includes(aportantes.aportante.tipoAportanteId.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -520,9 +520,45 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="getVigencia($event,ii)">
-                    <mat-option *ngFor="let listado of listaAportante[ii]" [value]="listado.cofinanciacionAportanteId">
-                      {{ listado.nombre }}
+                  <mat-select required [(ngModel)]="aportantes.nombreAportante" (selectionChange)="getVigencia($event,ii)">
+                    <mat-option *ngFor="let listado of listaNombreAportantes[ii]" [value]="listado">
+                      {{ listado }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Departamento</label>
+              </div>
+              <div class="col capitalize">
+                <mat-form-field class="select-width">
+                  <mat-select required [(ngModel)]="aportantes.depto" (selectionChange)="getMunAportante($event,ii)">
+                    <mat-option *ngFor="let listado of listadoDepto[ii]" [value]="listado.localizacionId" class="capitalize">
+                      {{ listado.descripcion }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Municipio</label>
+              </div>
+              <div class="col capitalize ">
+                <mat-form-field class="select-width">
+                  <mat-select required [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event,ii)">
+                    <mat-option *ngFor="let listado of listadoMun[ii]" [value]="listado.localizacionId" class="capitalize">
+                      {{ listado.descripcion }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -538,9 +574,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.cofinanciacionDocumentoId">
-                    <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionDocumentoId">
-                      {{ listado.vigenciaAporte }}
+                  <mat-select required [(ngModel)]="aportantes.cofinanciacionAportanteId">
+                    <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionAportanteId">
+                      Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date:'dd/MM/yyyy' }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -601,6 +637,12 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="text-right" *ngIf="proyecto.proyectoAportante.length>1">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteAportanteAportante(ii)">
+            <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
+            Eliminar aportante
+          </button>
         </div>
       </div>
 
@@ -721,7 +763,14 @@
             </div>
           </div>
         </div>
+        <div class="text-right">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteInfraestructura(i)">
+            <img src="assets/img/icon/menos.svg" alt="Eliminar infraestructura">
+            Eliminar infraestructura a intervenir
+          </button>
+        </div>
       </div>
+      
       <div class="text-right">
         <button mat-button color="warn" type="button" class="btn-eliminar" (click)="addInfraestructura()">
           <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura">
