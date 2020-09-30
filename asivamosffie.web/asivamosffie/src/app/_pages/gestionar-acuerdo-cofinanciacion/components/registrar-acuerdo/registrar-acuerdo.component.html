@@ -18,7 +18,7 @@
     <mat-card class="shipping-card">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text">
-          Datos del aportante
+         Datos del aportante
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -53,7 +53,7 @@
                 </label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
+                <mat-form-field class="full-width maincolor">
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
                     maxlength="4" min="1" max="999" required type="number"
                     formControlName="numAportes" 
@@ -174,9 +174,9 @@
                         [ngClass]="{'color-secondaryColor' : aportante.controls.cauntosDocumentos.invalid && aportante.controls.cauntosDocumentos.dirty}"
                         >¿Cuántos documentos de apropiación tiene este aportante?</label>
                       </div>
-                      <div class="col d-flex">
-                        <mat-form-field class="full-width">
-                          <input matInput #cauntosDocumentos maxlength="4"
+                      <div class="col d-flex ">
+                        <mat-form-field class="full-width maincolor">
+                          <input matInput #cauntosDocumentos maxlength="4" class="maincolor"
                             (keyup)="cantidadDocumentos(aportante,i)" min="1" max="999" required type="number"
                             (keypress)="validateNumberKeypress($event)" formControlName="cauntosDocumentos"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
@@ -272,11 +272,11 @@
                         >Valor indicado en el documento</label>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <mat-form-field class="full-width">
+                        <mat-form-field class="full-width maincolor">
                           <input matInput #valorIndicadoEnElDocumento currencyMask (keyup)="actualizarValores()"
                             required [(ngModel)]="documento.valorDocumento" maxLength="28"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
+                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                         </mat-form-field>
                         <span
                           class="contador">{{20 - (documento.valorDocumento?documento.valorDocumento.toString().length:0)}}</span>
@@ -316,7 +316,7 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
-                          <input matInput #numeroDocumento maxlength="20" min="1" required type="number"
+                          <input matInput #numeroDocumento maxlength="20" min="1" class="maincolor" required type="number"
                             (keypress)="validateNumberKeypress($event)" [(ngModel)]="documento.numeroActa"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
@@ -336,7 +336,7 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="example-full-width">
-                          <input matInput [matDatepicker]="picker"  placeholder="DD/MM/AAAA" [(ngModel)]="documento.fechaActa" [max]="maxDate"
+                          <input matInput [matDatepicker]="picker" class="maincolor" placeholder="DD/MM/AAAA" [(ngModel)]="documento.fechaActa" [max]="maxDate"
                             readonly (click)="picker.open()"> 
                           <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
@@ -359,7 +359,7 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
-                          <input matInput #numeroDocumentoa maxlength="20" min="1" required type="number"
+                          <input matInput #numeroDocumentoa maxlength="20" min="1" class="maincolor" required type="number"
                             (keypress)="validateNumberKeypress($event)" [(ngModel)]="documento.numeroAcuerdo"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
@@ -381,7 +381,7 @@
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="example-full-width">
-                          <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA"
+                          <input matInput [matDatepicker]="picker" class = "maincolor" placeholder="DD/MM/AAAA"
                             [(ngModel)]="documento.fechaAcuerdo" [max]="maxDate" required readonly
                             (click)="picker.open()">
                           <mat-datepicker #picker></mat-datepicker>
@@ -413,9 +413,9 @@
                   </div>
                   <div class="col d-flex align-items-center">
                     <mat-form-field class="full-width">
-                      <input matInput readonly maxlength="20" min="1" currencyMask required
+                      <input matInput readonly maxlength="20" min="1" class="maincolor" currencyMask required
                         [(ngModel)]="aportante.valortotal"
-                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
+                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                     </mat-form-field>
                     <span
                       class="contador">{{20 - (aportante.valortotal?aportante.valortotal.toString().length:0)}}</span>
