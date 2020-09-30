@@ -104,6 +104,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -120,17 +121,17 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Aportante)
-                    .WithMany(p => p.AportanteFuenteFinanciacion)
-                    .HasForeignKey(d => d.AportanteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Aportante_AportanteId_2");
-
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.AportanteFuenteFinanciacion)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FuenteFinanciacion_FuenteFinanciacionId");
+
+                entity.HasOne(d => d.ProyectoAdministrativoAportante)
+                    .WithMany(p => p.AportanteFuenteFinanciacion)
+                    .HasForeignKey(d => d.ProyectoAdministrativoAportanteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProyectoAdministrativoAportante");
             });
 
             modelBuilder.Entity<ArchivoCargue>(entity =>
@@ -1168,6 +1169,12 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsFixedLength();
+
+                entity.HasOne(d => d.Contrato)
+                    .WithMany(p => p.ContratoPoliza)
+                    .HasForeignKey(d => d.ContratoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContratoPoliza_Contrato");
             });
 
             modelBuilder.Entity<ControlRecurso>(entity =>
@@ -2503,12 +2510,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioEdicion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Aportante)
-                    .WithMany(p => p.ProyectoAdministrativoAportante)
-                    .HasForeignKey(d => d.AportanteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Aportante_AportanteId");
 
                 entity.HasOne(d => d.ProyectoAdminstrativo)
                     .WithMany(p => p.ProyectoAdministrativoAportante)

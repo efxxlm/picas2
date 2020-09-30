@@ -768,6 +768,45 @@ export class FormularioProyectosComponent implements OnInit {
     borrarForm.removeAt(i);
   }
 
+  numberDay(e: { keyCode: any; },valor:number,i:number)
+  {
+    
+    const tecla = e.keyCode;
+    let ok=false;
+    if (tecla === 8 ) { ok= true; } // Tecla de retroceso (para poder borrar)
+    if (tecla === 48) { ok= true; } // 0
+    if (tecla === 49) { ok= true; } // 1
+    if (tecla === 50) { ok= true; } // 2
+    if (tecla === 51) { ok= true; } // 3
+    if (tecla === 52) { ok= true; } // 4
+    if (tecla === 53) { ok= true; } // 5
+    if (tecla === 54) { ok= true; } // 6
+    if (tecla === 55) { ok= true; } // 7
+    if (tecla === 56) { ok= true; } // 8
+    if (tecla === 57) { ok= true; } // 9
+    const patron = /1/; // ver nota
+    const te = String.fromCharCode(tecla);
+    
+    console.log("patron: valor"+valor);
+
+    if(ok)
+    {
+      console.log(valor>30);
+      if(valor>30)
+      {
+        return false;
+      }      
+      else{
+        return true;
+      }
+    }
+    else
+    {
+      return false;
+    }
+    
+  }
+
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
     if (tecla === 8 ) { return true; } // Tecla de retroceso (para poder borrar)
@@ -792,8 +831,9 @@ export class FormularioProyectosComponent implements OnInit {
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
-  deleteInfraestructura(indice)
+  deleteInfraestructura(indice:number)
   {
-    this.proyecto.proyectoAportante.splice(indice,1); 
+    console.log(indice)
+    this.proyecto.infraestructuraIntervenirProyecto.splice(indice,1); 
   }
 }

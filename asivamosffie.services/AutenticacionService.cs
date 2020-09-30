@@ -105,7 +105,7 @@ namespace asivamosffie.services
             try
             {
                 Usuario usuario = await _context.Usuario.Where(u => u.Email == pMail
-                                                 && u.Eliminado.Value == false).SingleOrDefaultAsync();              
+                                                 && u.Eliminado.Value == false).FirstOrDefaultAsync();              
                 return usuario;
 
             }

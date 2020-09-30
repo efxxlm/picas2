@@ -1369,7 +1369,8 @@ namespace asivamosffie.services
                             RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
                             RegistroCompleto = comite.EsCompleto,
                             NumeroCompromisos = numeroCompromisos(comite.Id, false),
-                            NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true)
+                            NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true),
+                            EsComiteFiduciario = comite.EsComiteFiduciario,
                         };
 
                         ListComiteGrilla.Add(comiteGrilla);
@@ -1611,6 +1612,22 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.DesarrolloSolicitud = pSesionComiteSolicitud.DesarrolloSolicitud;
 
                 sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld);
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion){
+                    if (pSesionComiteSolicitud.Contratacion.ContratacionProyecto != null){
+                        pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach( ct => {
+                            Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
+                            if (ct.Proyecto.EstadoProyectoCodigo != null)
+                                proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;        
+                            else{
+                                sesionComiteSolicitudOld.RegistroCompleto = false;
+                            }
+                        });
+
+                    }
+
+                }
+
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {

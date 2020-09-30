@@ -70,6 +70,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string OperacionExitosa = "200";
         public const string EliminacionExitosa = "201";
+        public const string EliminacionCancelada = "202";
 
         #endregion Mensajes Exitoso
 
@@ -366,6 +367,30 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
+
+    public class ConstantSesionComiteFiduciario
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
     public class ConstantMessagesContratacionProyecto
     {
 
@@ -545,10 +570,6 @@ namespace asivamosffie.services.Helpers.Constant
 
     }
 
-    
-
-   
-
     public class ConstantMessagesSesionComiteTema
     {
 
@@ -571,7 +592,9 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-
+    
+    
+    
     public class ConstantMessagesSelectionProcessGroup
     {
         #region Mensajes Error

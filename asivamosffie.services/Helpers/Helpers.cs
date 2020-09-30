@@ -105,6 +105,11 @@ namespace asivamosffie.services.Helpers
                 return $"{"DE_"}{(++number).ToString("D4")}";
             }
 
+            //Comite Fiduciario
+            if (input == "CF")
+            {
+                return $"{"CF_"}{(++number).ToString("D5")}";
+            }
             if (input == "PA")
             {
                 return $"{"PA_"}{(++number).ToString("D4")}";

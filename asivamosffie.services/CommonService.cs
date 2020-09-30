@@ -44,8 +44,16 @@ namespace asivamosffie.services
 
         public async Task<string> EnumeradorComiteTecnico()
         {
-            int cantidadDeResgistros = _context.ComiteTecnico.Count();
+            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == false || ct.EsComiteFiduciario == false ).Count();
             string Nomeclatura = "CT_"; 
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo );
+        }
+
+        public async Task<string> EnumeradorComiteFiduciario()
+        {
+            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == true ).Count();
+            string Nomeclatura = "CF_"; 
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo );
         }
@@ -122,6 +130,8 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
         }
+
+
 
         public async Task<List<Localicacion>> GetListDepartamento()
         {
@@ -264,6 +274,8 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
         }
+
+
 
         public async Task<List<InstitucionEducativaSede>> ListIntitucionEducativaByMunicipioId(string pIdMunicipio)
         {

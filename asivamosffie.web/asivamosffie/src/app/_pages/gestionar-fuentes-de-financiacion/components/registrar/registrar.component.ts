@@ -668,6 +668,7 @@ export class RegistrarComponent implements OnInit {
 
   onSubmit() {
     if (this.addressForm.valid) {
+      
       let bitValorok=true;
       const lista: FuenteFinanciacion[] = [];
       const listaRP: RegistroPresupuestal[] = [];
@@ -677,7 +678,7 @@ export class RegistrarComponent implements OnInit {
         usuario = localStorage.getItem('actualUser');
         usuario = JSON.parse(usuario).email;
       }
-      console.log("Tiene RP"+ this.addressForm.get('tieneRP'));
+      console.log(this.addressForm.get('numerodocumento'));
       let valortotla=0;
       let valorBase=this.valorTotal;
       this.fuenteRecursosArray.controls.forEach(controlFR => {      
@@ -693,7 +694,7 @@ export class RegistrarComponent implements OnInit {
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
           vigenciaAporte: [],
-          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento')?0:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
+          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento').value==null?0:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
           aportante:{
             cofinanciacionAportanteId:this.idAportante,
             cuentaConRp:this.addressForm.get('tieneRP').value=="1"?true:false,
