@@ -384,48 +384,13 @@ namespace asivamosffie.services
                 NotificacionMensajeGestionPoliza msjNotificacion;
                 msjNotificacion = new NotificacionMensajeGestionPoliza();
 
-                msjNotificacion.NombreAseguradora = contratoPoliza.NombreAseguradora;
-                msjNotificacion.NumeroPoliza = contratoPoliza.NumeroPoliza;
-                msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy");
-                msjNotificacion.Observaciones = contratoPoliza.Observaciones;
-                //msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
-
-                PolizaObservacion polizaObservacion;
-
-                polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
-
-                if(polizaObservacion!=null)
-                {
-                    msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
-                    msjNotificacion.FechaRevision=polizaObservacion.FechaRevision.ToString("dd/MM/yyyy");
-                }
-                
-
-                Contrato contrato;
-                contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId ).FirstOrDefault();
-
-                Contratacion contratacion=null;
-                if(contrato!=null)
-                {
-                    contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
-
-                    objVistaContratoGarantiaPoliza = ListVista.Where(x => x.IdContrato == contrato.ContratoId).FirstOrDefault();
-                    fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
-                }
-
-                DisponibilidadPresupuestal disponibilidadPresupuestal=null;
-
-                if (contratacion != null)
-                {
-                    disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
-                 }
-
-                if (disponibilidadPresupuestal != null)
-                    msjNotificacion.NumeroDRP = disponibilidadPresupuestal.NumeroDrp;
-
+                getDataNotifMsjAseguradora(ref msjNotificacion, contratoPoliza, ref fechaFirmaContrato,ref objVistaContratoGarantiaPoliza, ListVista);
+                            
+                //PolizaObservacion polizaObservacion;           
+           
                 Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
                 settings.MailPort, settings.Password, settings.Sender,
-                objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate);
+                objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate,msjNotificacion);
 
                 //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
 
@@ -455,9 +420,49 @@ namespace asivamosffie.services
             }
 
         }
-        
 
-    private static void LimpiarEntradasContratoPoliza(ref ContratoPoliza contratoPoliza)
+        private void getDataNotifMsjAseguradora(ref NotificacionMensajeGestionPoliza msjNotificacion, ContratoPoliza contratoPoliza, ref string fechaFirmaContrato, ref VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza , List<VistaContratoGarantiaPoliza> ListVista)
+        {
+            msjNotificacion.NombreAseguradora = contratoPoliza.NombreAseguradora;
+            msjNotificacion.NumeroPoliza = contratoPoliza.NumeroPoliza;
+            msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy");
+            msjNotificacion.Observaciones = contratoPoliza.Observaciones;
+            //msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
+
+            PolizaObservacion polizaObservacion;
+
+            polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
+
+            if (polizaObservacion != null)
+            {
+                msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
+                msjNotificacion.FechaRevision = polizaObservacion.FechaRevision.ToString("dd/MM/yyyy");
+            }
+
+            Contrato contrato;
+            contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
+
+            Contratacion contratacion = null;
+            if (contrato != null)
+            {
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+                objVistaContratoGarantiaPoliza = ListVista.Where(x => x.IdContrato == contrato.ContratoId).FirstOrDefault();
+                fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
+            }
+
+            DisponibilidadPresupuestal disponibilidadPresupuestal = null;
+
+            if (contratacion != null)
+            {
+                disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+            }
+
+            if (disponibilidadPresupuestal != null)
+                msjNotificacion.NumeroDRP = disponibilidadPresupuestal.NumeroDrp;
+        }
+
+        private static void LimpiarEntradasContratoPoliza(ref ContratoPoliza contratoPoliza)
         {
             contratoPoliza.DescripcionModificacion = Helpers.Helpers.CleanStringInput(contratoPoliza.DescripcionModificacion);
             contratoPoliza.NumeroPoliza = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroPoliza);
@@ -530,10 +535,14 @@ namespace asivamosffie.services
             ListVista = await ListVistaContratoGarantiaPoliza();
 
             objVistaContratoGarantiaPoliza = ListVista.Where(x => x.IdContrato == pIdContrato).FirstOrDefault();
-                            
+
+            NotificacionMensajeGestionPoliza msjNotificacion;
+            msjNotificacion = new NotificacionMensajeGestionPoliza();
+            
+
             //get
             //string fechaFirmaContrato;
-            int pIdTemplate= (int)enumeratorTemplate.MsjSupervisorJuridicaGestionPoliza;
+            int pIdTemplate = (int)enumeratorTemplate.MsjSupervisorJuridicaGestionPoliza;
             //NotificacionMensajeGestionPoliza objNotificacionAseguradora = null;
             //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, _settings.Value.Dominio, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender, pIdTemplate);
 
@@ -554,13 +563,14 @@ namespace asivamosffie.services
                     //cambiar a estado Con aprobación de pólizas
                     contratoPoliza.TipoSolicitudCodigo = "4";
                     _context.ContratoPoliza.Update(contratoPoliza);
-
                      
                     fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
 
+                    getDataNotifMsjAseguradora(ref msjNotificacion, contratoPoliza, ref fechaFirmaContrato, ref objVistaContratoGarantiaPoliza, ListVista);
+
                     Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
                settings.MailPort, settings.Password, settings.Sender,
-               objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate);
+               objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate, msjNotificacion);
 
                     return respuesta = new Respuesta
                     {
@@ -660,9 +670,11 @@ namespace asivamosffie.services
                         template = template.Replace("_Numero_Poliza_", objNotificacionAseguradora.NumeroPoliza);
                         template = template.Replace("_Fecha_Revision_", objNotificacionAseguradora.FechaRevision);
                         template = template.Replace("_Estado_Revision_", objNotificacionAseguradora.EstadoRevision);
-                        template = template.Replace("_Observaciones_", objNotificacionAseguradora.Observaciones);  
-                        
-                        if( !string.IsNullOrEmpty( objNotificacionAseguradora.NumeroDRP))
+                        template = template.Replace("_Observaciones_", objNotificacionAseguradora.Observaciones);
+
+                        template = template.Replace("_Fecha_Aprobacion_Poliza", objNotificacionAseguradora.FechaAprobacion);
+                                    
+                        if ( !string.IsNullOrEmpty( objNotificacionAseguradora.NumeroDRP))
                             template = template.Replace("_NumeroDRP_", objNotificacionAseguradora.NumeroDRP);
 
                     }                        
