@@ -1,9 +1,11 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+//using asivamosffie.api.Controllers.
 
 namespace asivamosffie.services.Interfaces
 {
@@ -11,7 +13,7 @@ namespace asivamosffie.services.Interfaces
     {
         //IBankAccountService from        
 
-        Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza);
+        Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService);
 
         Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza);                
 
@@ -25,7 +27,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId);
 
-        Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato);
+        Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings);
+        
 
 
         //getListPolizaGarantiaByContratoPolizaId    yaaaa y observ yaaaa

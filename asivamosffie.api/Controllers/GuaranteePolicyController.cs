@@ -11,6 +11,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
 {
@@ -19,10 +20,13 @@ namespace asivamosffie.api.Controllers
     public class GuaranteePolicyController : ControllerBase
     {
         public readonly IGuaranteePolicyService _guaranteePolicy;
+        private readonly IOptions<AppSettings> _settings;
 
-        public GuaranteePolicyController(IGuaranteePolicyService guaranteePolicy)
+        public GuaranteePolicyController(IGuaranteePolicyService guaranteePolicy, IOptions<AppSettings> settings)
         {
             _guaranteePolicy = guaranteePolicy;
+            _settings = settings;
+
         }
 
 
@@ -90,8 +94,11 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
+                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+
+                _appSettingsService = toAppSettingsService(_settings);
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _guaranteePolicy.InsertContratoPoliza(contratoPoliza);
+                respuesta = await _guaranteePolicy.InsertContratoPoliza(contratoPoliza, _appSettingsService);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -159,9 +166,12 @@ namespace asivamosffie.api.Controllers
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                
-                 rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato);
+                //string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                //AppSettings _appSettingsService;
+                 asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+
+                _appSettingsService = toAppSettingsService(_settings);
+                rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato, _appSettingsService);
         
                 return Ok(rta);
             }
@@ -173,6 +183,18 @@ namespace asivamosffie.api.Controllers
             //var respuesta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato);
 
             //return respuesta;
+        }
+
+        public AppSettingsService toAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService();
+            appSettingsService.MailPort = appSettings.Value.MailPort;
+            appSettingsService.MailServer = appSettings.Value.MailServer;
+            appSettingsService.Password = appSettings.Value.Password;
+            appSettingsService.Sender = appSettings.Value.Sender;
+
+            return appSettingsService;
+
         }
 
         [Route("GetContratoPolizaByIdContratoPolizaId")]

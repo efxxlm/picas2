@@ -1,10 +1,13 @@
-﻿namespace asivamosffie.services
+﻿namespace asivamosffie.model.APIModels
 {
+
+//    namespace asivamosffie.services
+//{
     //internal class AppSettings
     //{
     //}
 
-    public class AppSettings
+    public class AppSettingsService
     {
         public string Dominio { get; set; }
 
