@@ -18,5 +18,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EditContrato(Contrato pContrato);
 
         Task<Respuesta> LoadActa(Contrato pContrato, IFormFile pFile, string pDirectorioBase, string pDirectorioActaContrato);
+         
+        Task<Respuesta> CambiarEstadoActa(int pContratoId, string pEstadoContrato, string pUsuarioModificacion);
     }
 }

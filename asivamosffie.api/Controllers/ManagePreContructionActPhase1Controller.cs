@@ -46,8 +46,7 @@ namespace asivamosffie.api.Controllers
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managePreContruction.EditContrato(pContrato);
-                return respuesta;
- 
+                return respuesta; 
             }
             catch (Exception ex)
             {
@@ -75,7 +74,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
- 
+        [Route("CambiarEstadoActa")]
+        [HttpPut]
+        public async Task<Respuesta> CambiarEstadoActa([FromQuery] int pContratoId, string pEstadoContrato)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {  
+                respuesta = await _managePreContruction.CambiarEstadoActa(pContratoId, pEstadoContrato,
+               HttpContext.User.FindFirst("User").Value);
+                return respuesta;
 
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+
+        
     }
 }

@@ -76,5 +76,8 @@
         public const string Editar_Acta_De_Inicio_De_Contrato = "94";
 
         public const string Cargar_Acta_Subscrita = "95";
+
+        public const string Cambiar_Estado_Acta_Contrato = "96";
+        
     }
 }
