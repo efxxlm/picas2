@@ -34,7 +34,7 @@ export class GestionarActPreConstrFUnoService {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CambiarEstadoActa?pContratoId=${pContratoId}&pEstadoContrato=${pEstadoContrato}`,pContratoId);
   }
   GetActaByIdPerfil(pPerfilId:number, pContratoId:number){
-    return this.http.get<Contrato>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetActaByIdPerfil?pPerfilId=${pPerfilId}&pContratoId=${pContratoId}`);
+    return this.http.get(`${environment.apiUrl}/ManagePreContructionActPhase1/GetActaByIdPerfil?pPerfilId=${pPerfilId}&pContratoId=${pContratoId}`, { responseType: "blob" } );
   }
 }
 

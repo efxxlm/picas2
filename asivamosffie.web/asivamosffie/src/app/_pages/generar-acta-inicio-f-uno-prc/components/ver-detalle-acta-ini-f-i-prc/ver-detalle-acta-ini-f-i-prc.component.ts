@@ -82,8 +82,15 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     }
   }
   generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe(data=>{
-
+    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe(resp=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
     })
   }
 }
