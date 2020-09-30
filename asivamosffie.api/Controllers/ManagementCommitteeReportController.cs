@@ -37,7 +37,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _managementCommitteeReportService.GetManagementCommitteeReport();
+                return await _managementCommitteeReportService.GetManagementCommitteeReport(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _managementCommitteeReportService.GetManagementReport();
+                return await _managementCommitteeReportService.GetManagementReport(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             }
             catch (Exception ex)
             {
@@ -100,6 +100,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 compromisoSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                compromisoSeguimiento.SesionParticipanteId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
                 respuesta = await _managementCommitteeReportService.CreateOrEditReportProgress(compromisoSeguimiento, estadoCompromiso);
                 return Ok(respuesta);
 
@@ -119,8 +120,9 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-
+          
                 SesionComentario.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                SesionComentario.MiembroSesionParticipanteId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
                 respuesta = await _managementCommitteeReportService.CreateOrEditCommentReport(SesionComentario);
                 return Ok(respuesta);
 
@@ -139,9 +141,13 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-
-                string user = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId,user);
+                Usuario pUsuario = new Usuario
+                {
+                    Email = HttpContext.User.FindFirst("User").Value,
+                    UsuarioId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value)
+                };
+ 
+                respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId, pUsuario);
                 return Ok(respuesta);
 
             }

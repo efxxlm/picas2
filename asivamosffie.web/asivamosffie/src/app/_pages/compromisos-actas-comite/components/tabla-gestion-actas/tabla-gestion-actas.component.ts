@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
+import { TechnicalCommitteSessionService } from '../../../../core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-tabla-gestion-actas',
@@ -19,7 +20,8 @@ export class TablaGestionActasComponent implements OnInit {
   estadoCodigo: string;
 
   constructor ( private routes: Router,
-                private compromisoSvc: CompromisosActasComiteService ) { }
+                private compromisoSvc: CompromisosActasComiteService,
+                private comiteTecnicoSvc: TechnicalCommitteSessionService ) { }
 
   ngOnInit(): void {
     this.getData();
@@ -50,7 +52,7 @@ export class TablaGestionActasComponent implements OnInit {
   }
 
   getActaPdf ( comiteTecnicoId: number , numeroComite: string ) {
-    this.compromisoSvc.getActaPdf( comiteTecnicoId )
+    this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId( comiteTecnicoId )
       .subscribe( ( resp: any ) => {
 
         const documento = `Acta ${ numeroComite }.pdf`;

@@ -47,7 +47,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
     this.projectContractingService.getListContratacion().subscribe( response => {
 
       this.dataSource = new MatTableDataSource( response );
-
+      console.log( response );
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -99,7 +99,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   enviarSolicitud( id: number){
-    this.projectContractingService.changeStateContratacionByIdContratacion( id, this.estadosSolicitud.EnTramite )
+    this.projectContractingService.changeStateContratacionByIdContratacion( id, this.estadosSolicitud.RechazadaPorComiteTecnico )
       .subscribe( respuesta => {
         this.openDialog('Solicitud Contratacion', respuesta.message )
         this.ngOnInit();          

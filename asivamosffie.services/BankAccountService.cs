@@ -122,7 +122,8 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR CUENTA BANCARIA";
                     cuentaBancaria.FechaCreacion = DateTime.Now;
                     cuentaBancaria.Eliminado = false;
-
+                    cuentaBancaria.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco.ToUpper();
+                    cuentaBancaria.CodigoSifi = cuentaBancaria.CodigoSifi.ToUpper();
                     _context.CuentaBancaria.Add(cuentaBancaria);
                 }
                 else
@@ -134,8 +135,8 @@ namespace asivamosffie.services
                     cuentaBancariaAntigua.FechaModificacion = DateTime.Now;
                     //Registros
                     cuentaBancariaAntigua.NumeroCuentaBanco = cuentaBancaria.NumeroCuentaBanco;
-                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco;
-                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi;
+                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco.ToUpper();
+                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi.ToUpper();
                     cuentaBancariaAntigua.TipoCuentaCodigo = cuentaBancaria.TipoCuentaCodigo;
                     cuentaBancariaAntigua.BancoCodigo = cuentaBancaria.BancoCodigo;
                     cuentaBancariaAntigua.Exenta = cuentaBancaria.Exenta;

@@ -112,3 +112,7 @@
 .mat-option:hover:not(.mat-option-disabled), .mat-option:focus:not(.mat-option-disabled) {
     background-color: transparent;
 }
+
+.mat-pseudo-checkbox { 
+    display: none !important; 
+}

@@ -33,6 +33,9 @@ export class CommonService {
   listaNombreAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=4`);
   }
+  listaNombreTipoAportante(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
+  }
 
   listaDepartamentos(){
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamento`);
@@ -90,6 +93,7 @@ export class CommonService {
   }
   
   listaAportanteByTipoAportanteId(pTipoAportanteID:number){
+    console.log(environment.apiUrl);
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
   }
 
@@ -168,6 +172,10 @@ export class CommonService {
   listaTipoTema(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=42`);
   }
+  
+  listaEstadoProyecto(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
+  }
 
   public listaUsuarios(){
 
@@ -216,6 +224,10 @@ export class CommonService {
     
   listaFuenteRecursos(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
+  }
+
+  listaFuenteTipoFinanciacion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=8`);
   }
 
   listaBancos(){

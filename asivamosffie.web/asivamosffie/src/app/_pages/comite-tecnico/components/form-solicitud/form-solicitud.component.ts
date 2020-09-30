@@ -8,7 +8,7 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
-import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -32,9 +32,10 @@ export class FormSolicitudComponent implements OnInit {
   cantidadNoAprobado: number = 0;
   resultadoVotacion: string = '';
 
-
+  proyectos: ContratacionProyecto[];
 
   addressForm = this.fb.group({
+    desarrolloSolicitud: [],
     estadoSolicitud: [null, Validators.required],
     observaciones: [null, Validators.required],
     url: null,
@@ -72,6 +73,10 @@ export class FormSolicitudComponent implements OnInit {
   ) 
   {
 
+  }
+
+  ActualizarProyectos( lista ){
+    this.proyectos = lista;
   }
 
   getMostrarProyectos(){
@@ -145,7 +150,24 @@ export class FormSolicitudComponent implements OnInit {
     });
   }
 
+  getObservableEstadoSolicitud(){
+    return this.addressForm.get('estadoSolicitud').valueChanges;
+  }
+
   onSubmit() {
+
+    if (this.proyectos)
+      this.proyectos.forEach( p => 
+        {
+            let proyecto = p.proyecto
+            p.proyecto = {
+              EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
+              proyectoId: proyecto.proyectoId,
+              
+
+            }
+            p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
+        })
 
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
@@ -155,7 +177,12 @@ export class FormSolicitudComponent implements OnInit {
       rutaSoporteVotacion: this.addressForm.get('url').value,
       generaCompromiso: this.addressForm.get('tieneCompromisos').value,
       cantCompromisos: this.addressForm.get('cuantosCompromisos').value,
-      sesionSolicitudCompromiso: []
+      desarrolloSolicitud: this.addressForm.get('desarrolloSolicitud').value,
+      tipoSolicitud: this.sesionComiteSolicitud.tipoSolicitudCodigo,
+      sesionSolicitudCompromiso: [],
+      contratacion: {
+        contratacionProyecto: this.proyectos ? this.proyectos : null
+      }
 
     }
 
@@ -202,6 +229,8 @@ export class FormSolicitudComponent implements OnInit {
     this.addressForm.get('url').setValue(this.sesionComiteSolicitud.rutaSoporteVotacion)
     this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromiso)
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisos)
+    this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitud)
+    
 
     this.commonService.listaUsuarios().then((respuesta) => {
 

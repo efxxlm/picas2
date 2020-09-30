@@ -88,7 +88,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 	    Estado_Compromiso = 45,
 		EstadoAcataComiteTecnico = 47,
 
-        Estados_Acta = 47
+        Estados_Acta = 47,
 
+        Estado_Sesion_Comite_Solicitud = 50,
+
+        Estado_Proyecto = 63
     }
 }

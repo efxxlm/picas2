@@ -84,7 +84,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var userId = HttpContext.User.FindFirst("UserId").Value;
+                var userId = HttpContext.User.FindFirst("UserId")==null?"SESIÓN CERRADA":HttpContext.User.FindFirst("UserId").Value;
                 var result = await _user.CloseSesion(Convert.ToInt32(userId));
                 return Ok(result);
             }

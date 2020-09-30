@@ -42,6 +42,14 @@
           </p>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col">
+          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+            (onContentChanged)="maxLength($event, 3000)" formControlName="desarrolloSolicitud" required></quill-editor>
+        </div>
+      </div>
+      
       <h2 class="card-subTitle">Decisiones</h2>
       <div class="reparacion-card row" *ngIf="tieneVotacion">
         <div class="col-md-4">
@@ -70,6 +78,8 @@
         #solicitudMultiple
         [sesionComiteSolicitud]="sesionComiteSolicitud"
         [style.display]="getMostrarProyectos()"
+        [Estadosolicitud]="getObservableEstadoSolicitud()"
+        (ActualizarProyectos)="ActualizarProyectos($event)"
       >
       </app-tabla-form-solicitud-multiple>
 

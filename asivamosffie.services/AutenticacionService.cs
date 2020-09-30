@@ -73,7 +73,7 @@ namespace asivamosffie.services
                   
                 }
 
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesi�n");    
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesión");    
 
                 return respuesta;
             }

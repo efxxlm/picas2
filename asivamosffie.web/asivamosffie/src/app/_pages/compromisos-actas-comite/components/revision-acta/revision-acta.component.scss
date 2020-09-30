@@ -22,9 +22,18 @@ span {
   margin-top: 2em;
 }
 
+.ml-min {
+  margin-left: .3em;
+}
+
+.margin-compromisos {
+  margin-top: .8em;
+  margin-left: .8em;
+}
+
 .back-color {
-  background-color: #aeb0b5;
-  color: #174193;
+  background-color: #484848;
+  color: #ffffff;
 }
 
 .tabs {
@@ -45,4 +54,12 @@ span {
           color: #fff;
       }
   }
+}
+
+.border {
+  border: solid 1px rgba(0,0,0,.54) !important;
+}
+
+.font-w {
+  font-weight: 500;
 }

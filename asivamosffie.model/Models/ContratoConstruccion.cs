@@ -79,6 +79,10 @@ namespace asivamosffie.model.Models
         public bool? ManejoAnticipoConObservaciones { get; set; }
         public int? CantidadHojasVidaContratistaObra { get; set; }
         public int? CantidadPerfilesInterventoria { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public string UsuarioCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual ICollection<ConstruccionCargue> ConstruccionCargue { get; set; }

@@ -148,10 +148,9 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
-                pContratacionProyecto.UsuarioCreacion = pUsuarioModifico;
+            { 
+              //  pContratacionProyecto.PorcentajeAvanceObra = decimal.Parse(pContratacionProyecto.PorcentajeAvanceObraString);
+                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto , false);
                 return Ok(respuesta);
             }

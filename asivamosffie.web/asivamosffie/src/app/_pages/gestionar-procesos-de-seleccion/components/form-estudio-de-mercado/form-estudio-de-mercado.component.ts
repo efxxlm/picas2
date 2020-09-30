@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ProcesoSeleccion, ProcesoSeleccionCotizacion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 @Component({
@@ -41,7 +43,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     });
   }
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,public dialog: MatDialog,) { }
   ngOnInit(): void {
     this.addressForm = this.createFormulario();
   }
@@ -54,14 +56,62 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   CambioNumeroCotizantes() {
     const Formcotizaciones = this.addressForm.value;
-    if (Formcotizaciones.cuantasCotizaciones > this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones < 100) {
-      while (this.cotizaciones.length < Formcotizaciones.cuantasCotizaciones) {
-        this.cotizaciones.push(this.createCotizacion());
+    if(Formcotizaciones.cuantasCotizaciones>0)
+    {
+
+      if (Formcotizaciones.cuantasCotizaciones > this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones < 100) {
+        while (this.cotizaciones.length < Formcotizaciones.cuantasCotizaciones) {
+          this.cotizaciones.push(this.createCotizacion());
+        }
+      } else if (Formcotizaciones.cuantasCotizaciones <= this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones >= 0) {
+        //valido si tiene algo
+        let bitVacio=false;
+        this.cotizaciones.value.forEach(element => {
+          console.log(element);
+          if(element.nombreOrganizacion!=null)
+          {
+            bitVacio=true;
+          }
+          if(element.valor!=null)
+          {
+            bitVacio=true;
+          }
+          if(element.descripcion!=null)
+          {
+            bitVacio=true;
+          }
+          if(element.url!=null)
+          {
+            bitVacio=true;
+          }
+        });
+        if(bitVacio)
+        {
+
+          this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
+          this.addressForm.get("cuantasCotizaciones").setValue(this.cotizaciones.length);
+        }
+        else{
+          while (this.cotizaciones.length > Formcotizaciones.cuantasCotizaciones) {
+            this.borrarArray(this.cotizaciones, this.cotizaciones.length - 1);
+          }
+        }        
       }
-    } else if (Formcotizaciones.cuantasCotizaciones <= this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones >= 0) {
-      while (this.cotizaciones.length > Formcotizaciones.cuantasCotizaciones) {
-        this.borrarArray(this.cotizaciones, this.cotizaciones.length - 1);
-      }
+    }    
+  }
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+        if(result)
+        {
+          //this.router.navigate(["/gestionarFuentes"], {});
+        }
+      });
     }
   }
 

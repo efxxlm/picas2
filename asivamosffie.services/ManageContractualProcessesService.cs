@@ -307,7 +307,7 @@ namespace asivamosffie.services
 
                             try
                             {
-                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante;
+                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
                             }
                             catch (Exception)
                             {
@@ -679,14 +679,14 @@ namespace asivamosffie.services
                 {
                     if (ProyectoAportante.Aportante.TipoAportanteId > 0)
                     {
-                        ProyectoAportante.Aportante.TipoAportante = LisParametricas
+                        ProyectoAportante.Aportante.TipoAportanteString = LisParametricas
                             .Where(r => r.DominioId == ProyectoAportante.Aportante.TipoAportanteId)
                             .FirstOrDefault().Nombre;
                     }
                     if (ProyectoAportante.Aportante.NombreAportanteId > 0)
                     {
 
-                        ProyectoAportante.Aportante.NombreAportante = LisParametricas
+                        ProyectoAportante.Aportante.NombreAportanteString = LisParametricas
                             .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
                             .FirstOrDefault().Nombre;
                     }

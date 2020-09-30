@@ -59,9 +59,12 @@
                 <button mat-raised-button color="accent" class="btn-table" (click)="onDelete(element.contratacionId)"
                     *ngIf="!element.estadoSolicitudCodigo">Eliminar</button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    (click)="enviarSolicitud(element.contratacionId)" 
-                    *ngIf="element.estadoSolicitudCodigo == 'Sin registro' ">Enviar
-                    Solicitud.</button>
+                        (click)="enviarSolicitud(element.contratacionId)" 
+                        *ngIf="element.estadoSolicitudCodigo == 'Sin registro' ">Enviar
+                        Solicitud.</button>
+                <button mat-raised-button color="accent" class="btn-table"
+                        [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]">
+                        Ver detalle</button>
 
                     
             </td>

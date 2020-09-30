@@ -8,6 +8,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Enumerator;
 using Z.EntityFramework.Plus;
+using System.Globalization;
 
 namespace asivamosffie.services
 {
@@ -134,22 +135,23 @@ namespace asivamosffie.services
 
         public async Task<List<Localicacion>> GetListDepartamento()
         {
+            
             return await _context.Localizacion.Where(r => r.Nivel == 1)
             .Select(x => new Localicacion
             {
                 LocalizacionId = x.LocalizacionId,
-                Descripcion = x.Descripcion
+                Descripcion = x.Descripcion.ToLower()
             }).ToListAsync();
         }
 
         public async Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento)
-        {
+        {            
             if (!string.IsNullOrEmpty(pIdDepartamento))
             {
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdDepartamento)).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion
+                    Descripcion = x.Descripcion.ToLower()
                 }).ToListAsync();
             }
             else
@@ -157,7 +159,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.Nivel == 2).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion
+                    Descripcion = x.Descripcion.ToLower()
                 }).ToListAsync();
             }
 
@@ -246,7 +248,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdRegion)).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion
+                    Descripcion = x.Descripcion.ToLower()
                 }).ToListAsync();
             }
             else
@@ -254,7 +256,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.Nivel == 1).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion
+                    Descripcion = x.Descripcion.ToLower()
                 }).ToListAsync();
             }
         }
@@ -264,7 +266,7 @@ namespace asivamosffie.services
             return await _context.Localizacion.Where(r => r.Nivel == 3).Select(x => new Localicacion
             {
                 LocalizacionId = x.LocalizacionId,
-                Descripcion = x.Descripcion
+                Descripcion = x.Descripcion.ToLower()
             }).ToListAsync();
         }
 

@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
+import { TechnicalCommitteSessionService } from '../../../../core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-revision-acta',
@@ -15,10 +16,10 @@ export class RevisionActaComponent implements OnInit {
   acta: any;
   form:FormGroup;
   comentarActa: boolean = false;
+  comentarios: boolean = false;
   editorStyle = {
     height: '45px'
   };
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -27,12 +28,16 @@ export class RevisionActaComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  miembrosParticipantes: any[] = [];
+  temas: any[] = [];
+  proposicionesVarios: any[] = [];
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
                 private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
-                private compromisoSvc: CompromisosActasComiteService ) {
+                private compromisoSvc: CompromisosActasComiteService,
+                private comiteTecnicoSvc: TechnicalCommitteSessionService ) {
     this.getActa( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
   };
@@ -41,20 +46,32 @@ export class RevisionActaComponent implements OnInit {
 
   getActa ( comiteTecnicoId: number ) {
     this.compromisoSvc.getActa( comiteTecnicoId )
-      .subscribe( resp => {
+      .subscribe( ( resp: any ) => {
         this.acta = resp[0];
-        console.log( resp );
-      } )
-  }
+        console.log( resp[0] );
+
+        for ( let temas of resp[0].sesionComiteTema ) {
+          if ( !temas.esProposicionesVarios ) {
+            this.temas.push( temas );
+          } else {
+            this.proposicionesVarios.push( temas );
+          }
+        };
+
+        for ( let participantes of resp[0].sesionParticipante ) {
+          this.miembrosParticipantes.push( `${ participantes.usuario.nombres } ${ participantes.usuario.apellidos }` )
+        };
+
+        console.log( this.temas );
+
+      } );
+  };
 
   //Formulario comentario de actas
   crearFormulario(){
     this.form = this.fb.group({
       comentarioActa: [ null, Validators.required ]
     });
-    this.form.reset({
-      comentarioActa: 'El servicio para comentar y devolver acta se esta enviando la informacion pero el servicio no esta completo en el servidor'
-    })
   };
 
   //Limite maximo Quill Editor
@@ -92,12 +109,10 @@ export class RevisionActaComponent implements OnInit {
       return;
     };
 
-    const value = String( this.form.get( 'comentarioActa' ).value );
+    const value = this.form.get( 'comentarioActa' ).value;
     const observaciones = {
       comiteTecnicoId: this.acta.comiteTecnicoId,
-      observaciones: value,
-      fecha: new Date(),
-      sesionComentarioId: 0 // no esta llegando este id del servidor
+      observaciones: value
     };
 
     this.compromisoSvc.postComentariosActa( observaciones )
@@ -118,7 +133,7 @@ export class RevisionActaComponent implements OnInit {
   };
   //Descargar acta en formato pdf
   getActaPdf( comiteTecnicoId, numeroComite ) {
-    this.compromisoSvc.getActaPdf( comiteTecnicoId )
+    this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId( comiteTecnicoId )
     .subscribe( ( resp: any ) => {
 
       const documento = `Acta Preliminar ${ numeroComite }.pdf`;

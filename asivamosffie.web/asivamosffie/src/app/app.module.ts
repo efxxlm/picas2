@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+//import { LoaderInterceptor } from './_helpers/loader.interceptor';
 
 export const customCurrencyMaskConfig = {
   align: 'right',
@@ -57,6 +58,7 @@ export const customCurrencyMaskConfig = {
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true }, 
+    /*{ provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }, no alcance a implementarlo, att juan*/
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     DatePipe
   ],

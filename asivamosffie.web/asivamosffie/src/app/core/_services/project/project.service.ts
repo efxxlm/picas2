@@ -115,6 +115,15 @@ export interface ProyectoAdministrativoAportante {
   fechaEdicion?: Date,
 
   cofinanciacionAportante?: Aportante
+  aportanteFuenteFinanciacion?:AportanteFuenteFinanciacion[]
+}
+export interface AportanteFuenteFinanciacion{
+    aportanteFuenteFinanciacionId?:number,
+    proyectoAdministrativoAportanteId:number,
+    fuenteFinanciacionId:number,
+    valorFuente:number,
+    fuenteRecursosCodigo?:string
+        
 }
 
 export interface ProyectoAdministrativo
@@ -126,10 +135,9 @@ export interface ProyectoAdministrativo
   fechaModificacion?: Date,
   usuarioModificacion?: string,
   eliminado?: boolean,
-  registroCompleto?: boolean,
-
-  Aportante?:Aportante[],  
+  registroCompleto?: boolean,   
   identificador?:string
+  proyectoAdministrativoAportante?:ProyectoAdministrativoAportante[],
 }
 export interface Aportante
 {
@@ -241,7 +249,10 @@ export interface InfraestructuraIntervenirProyecto{
   plazoDiasInterventoria:number ,
   coordinacionResponsableCodigo:string ,
 }
-export interface ProyectoAportante{  
+export interface ProyectoAportante{
+  mun?: string;
+  depto?: string;
+  nombreAportante?: any;  
   proyectoAportanteId :number,
   proyectoId :number,
   aportanteId :number,

@@ -80,7 +80,15 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                fuentefinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if(fuentefinanciacion.FuenteFinanciacionId>0)
+                {
+                    fuentefinanciacion.UsuarioModificacion= HttpContext.User.FindFirst("User").Value.ToUpper();
+                }
+                else
+                {
+                    fuentefinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                }
+                
                 respuesta = await _sourceFunding.CreateEditFuentesFinanciacion(fuentefinanciacion);
                 return Ok(respuesta);
             }

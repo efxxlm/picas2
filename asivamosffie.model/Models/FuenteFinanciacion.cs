@@ -25,8 +25,10 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public int? CofinanciacionDocumentoId { get; set; }
 
         public virtual CofinanciacionAportante Aportante { get; set; }
+        public virtual CofinanciacionDocumento CofinanciacionDocumento { get; set; }
         public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
         public virtual ICollection<CuentaBancaria> CuentaBancaria { get; set; }

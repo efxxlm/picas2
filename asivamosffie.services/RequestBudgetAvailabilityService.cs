@@ -1323,7 +1323,7 @@ namespace asivamosffie.services
                     if (proyectospp.ProyectoId == null) //proyecto administrativo
                     {
                         var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
-                            Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.Aportante).ThenInclude(x => x.FuenteFinanciacion);
+                            Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.AportanteFuenteFinanciacion).ThenInclude(x => x.FuenteFinanciacion);
                         /*foreach(var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
                         {
                             List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
