@@ -33,6 +33,9 @@ export class CommonService {
   listaNombreAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=4`);
   }
+  listaNombreTipoAportante(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
+  }
 
   listaDepartamentos(){
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamento`);

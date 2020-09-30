@@ -41,6 +41,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public int ContratoPolizaId { get; set; }
 
+        public virtual Contrato Contrato { get; set; }
         public virtual ICollection<PolizaGarantia> PolizaGarantia { get; set; }
         public virtual ICollection<PolizaObservacion> PolizaObservacion { get; set; }
     }
