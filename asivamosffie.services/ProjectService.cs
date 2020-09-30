@@ -49,7 +49,7 @@ namespace asivamosffie.services
                 List<Dominio> ListParametricas = _context.Dominio
                     .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Juridico_Predios
                     || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion
-                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proyecto
                     ).ToList();
                 try
                 {
@@ -69,7 +69,9 @@ namespace asivamosffie.services
                         TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
                         EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
-                        EstadoRegistro = "COMPLETO"
+                        EstadoRegistro = "COMPLETO",
+                        EstadoProyectoCodigo = pProyecto.EstadoProyectoCodigo,
+                        
                     };
 
                     if (!(bool)pProyecto.RegistroCompleto)
@@ -78,7 +80,7 @@ namespace asivamosffie.services
                     }
                     return proyectoGrilla;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return new ProyectoGrilla();
                 }

@@ -1612,6 +1612,22 @@ namespace asivamosffie.services
 
                 sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld);
 
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion){
+                    if (pSesionComiteSolicitud.Contratacion.ContratacionProyecto != null){
+                        pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach( ct => {
+                            Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
+                            if (ct.Proyecto.EstadoProyectoCodigo != null)
+                                proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;        
+                            else{
+                                sesionComiteSolicitudOld.RegistroCompleto = false;
+                            }
+                        });
+
+                    }
+
+                }
+
+
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
                     if (SesionSolicitudCompromiso.SesionSolicitudCompromisoId == 0)

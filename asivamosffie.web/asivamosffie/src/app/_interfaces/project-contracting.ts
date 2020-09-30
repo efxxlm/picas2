@@ -59,6 +59,7 @@ export interface ProyectoGrilla{
     tipoIntervencion?: string,
     llaveMen?: string,
     region?: string,
+    estadoProyectoCodigo?: string,
 }
 
 export interface ContratacionProyectoAportante{
@@ -130,10 +131,24 @@ interface EstadoSolicitud{
     comiteTecnicoId?: number,
   }
   
-
-
-
-
-
-
-
+  interface EstadoProyecto{
+    Disponible?: string,
+    AsignadoSolicitudContratacion?: string,
+    AprobadoComiteTecnico?: string,
+    AprobadoComiteFiduciario?: string,
+    RechazadoComiteTecnico?: string,
+    RechazadoComiteFiduciario?: string,
+    DevueltoComiteTecnico?: string,
+    DevueltoComiteFiduciario?: string,
+  }
+  
+  export const EstadosProyecto: EstadoProyecto = {
+    Disponible : "1",
+    AsignadoSolicitudContratacion : "2",
+    AprobadoComiteTecnico : "3",
+    AprobadoComiteFiduciario : "4",
+    RechazadoComiteTecnico : "5",
+    RechazadoComiteFiduciario : "6",
+    DevueltoComiteTecnico : "7",
+    DevueltoComiteFiduciario : "8",
+  }
