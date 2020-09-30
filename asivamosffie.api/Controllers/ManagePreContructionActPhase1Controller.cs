@@ -93,6 +93,13 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+        [HttpGet]
+        [Route("GetActaByIdPerfil")]
+        public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pPerfilId, int pContratoId)
+        {
+            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId), "application/pdf");
+        }
+
+ 
     }
 }

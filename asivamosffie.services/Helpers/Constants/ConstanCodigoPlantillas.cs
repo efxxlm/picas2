@@ -20,5 +20,8 @@
         DDP_Registros_Tabla_Aportante = 24,
         Registros_Proyectos_Contratacion_DDP = 25,
         DDP_Contratacion_Rubro_Por_Financiar = 26,
+
+        Contrato_Acta_Interventoria	= 36,
+        Contrato_Acta_Constuccion	= 37
     }
 }

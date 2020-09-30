@@ -20,10 +20,11 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
+        private readonly IRegisterSessionTechnicalCommitteeService  _registerSessionTechnicalCommitteeService;
 
-
-        public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService)
+        public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService , IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
+            _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
             _context = context;
             _commonService = commonService;
         }
@@ -139,11 +140,11 @@ namespace asivamosffie.services
 
             }
         }
-         
+
         public async Task<Respuesta> LoadActa(Contrato pContrato, IFormFile pFile, string pDirectorioBase, string pDirectorioActaContrato)
-        { 
+        {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cargar_Acta_Subscrita, (int)EnumeratorTipoDominio.Acciones);
-           
+
             string strFilePatch = string.Empty;
             try
             {
@@ -151,7 +152,7 @@ namespace asivamosffie.services
                 {
                     strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
                     await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
-                } 
+                }
                 Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
                 ContratoOld.FechaFirmaActaContratista = pContrato.FechaActaInicioFase1;
@@ -187,17 +188,16 @@ namespace asivamosffie.services
             }
         }
 
-
-        public async Task<Respuesta> CambiarEstadoActa(int pContratoId, string pEstadoContrato ,string pUsuarioModificacion)
+        public async Task<Respuesta> CambiarEstadoActa(int pContratoId, string pCodigoEstadoActa, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Acta_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                Contrato contratoAprobar = _context.Contrato.Find(pContratoId);
-                contratoAprobar.FechaModificacion = DateTime.Now;
-                contratoAprobar.UsuarioModificacion = pUsuarioModificacion;
-                contratoAprobar.EstadoActa = pEstadoContrato;
+                Contrato contratoOld = _context.Contrato.Find(pContratoId);
+                contratoOld.FechaModificacion = DateTime.Now;
+                contratoOld.UsuarioModificacion = pUsuarioModificacion;
+                contratoOld.EstadoActa = pCodigoEstadoActa;
                 _context.SaveChanges();
 
                 return
@@ -223,5 +223,44 @@ namespace asivamosffie.services
                     };
             }
         }
+
+        public async Task<byte[]> GetActaByIdPerfil(int PIdPerfil, int pContratoId)
+        {
+            return PIdPerfil switch
+            {
+                //2 tecnica
+                //8 supervisor
+                (int)EnumeratorPerfil.Tecnica => await ReplacePlantillaTecnica(pContratoId),
+                (int)EnumeratorPerfil.Supervisor => await ReplacePlantillaSupervisor(pContratoId),
+                _ => Array.Empty<byte>(),
+            };
+        }
+
+        public async Task<byte[]> ReplacePlantillaSupervisor(int pContratoId)
+        {
+            Contrato contrato = _context.Contrato.Find(pContratoId);
+
+
+            Plantilla plantilla = await _context.Plantilla
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
+                .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
+
+            return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
+        }
+
+        public async Task<byte[]> ReplacePlantillaTecnica(int pContratoId)
+        {
+            Contrato contrato = _context.Contrato.Find(pContratoId);
+
+            Plantilla plantilla = await _context.Plantilla
+         .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
+         .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
+
+            return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
+        }
+
+         
     }
+
 }
+
