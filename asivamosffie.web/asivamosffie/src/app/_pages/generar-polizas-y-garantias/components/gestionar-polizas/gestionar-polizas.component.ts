@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { PolizaGarantiaService, ContratoPoliza } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { PolizaGarantiaService, ContratoPoliza, InsertPoliza } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -74,6 +74,7 @@ export class GestionarPolizasComponent implements OnInit {
   public valorContrato;
   public plazoContrato;
   public numContrato;
+  public idContrato;
 
   constructor(
     private polizaService: PolizaGarantiaService,
@@ -102,6 +103,7 @@ export class GestionarPolizasComponent implements OnInit {
       this.plazoContrato = data[id-1].plazoContrato;
       this.numContrato = data[id-1].numeroContrato;
     });
+    this.idContrato = id;
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -129,15 +131,26 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
-   /* this.polizaService.CreateContratoPoliza("").subscribe(data => {
-      if(data.isSuccessful==true){
+    const contratoArray :InsertPoliza ={
+      contratoPolizaId: this.idContrato,
+      contratoId: this.idContrato,
+      nombreAseguradora: this.addressForm.value.nombre,
+      numeroPoliza:this.addressForm.value.numeroPoliza,
+      numeroCertificado: this.addressForm.value.numeroCertificado,
+      fechaExpedicion:this.addressForm.value.fecha,
+      vigencia: this.addressForm.value.vigenciaPoliza,
+      vigenciaAmparo: this.addressForm.value.vigenciaAmparo,
+      valorAmparo: this.addressForm.value.polizasYSeguros
+    };
+    this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
+      /*if(data.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
       }
       else{
         this.openDialog('', 'Error en el servicio.');
-      }
-    });*/
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+      }*/
+      this.openDialog('', 'La información ha sido guardada exitosamente.');
+    });
     console.log(this.addressForm.value);
   }
 }

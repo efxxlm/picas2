@@ -19,7 +19,7 @@ export class PolizaGarantiaService implements OnInit {
   CreatePolizaGarantia(polizaGarantia: CreatePolizaGarantia) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreatePolizaGarantia`, polizaGarantia);
   }
-  CreateContratoPoliza(contratoPoliza: ContratoPoliza) {
+  CreateContratoPoliza(contratoPoliza: InsertPoliza) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateContratoPoliza`, contratoPoliza);
   }
   GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId:number){
@@ -163,4 +163,16 @@ export interface Contratista {
   UsuarioCreacion:string;
   FechaModificacion:Date;
   UsuarioModificacion:string;
+}
+
+export interface InsertPoliza{
+  contratoPolizaId: number;
+  contratoId: number;
+  nombreAseguradora: string;
+  numeroPoliza: string;
+  numeroCertificado: string;
+  fechaExpedicion: Date;
+  vigencia: Date;
+  vigenciaAmparo: Date;
+  valorAmparo: number;
 }
