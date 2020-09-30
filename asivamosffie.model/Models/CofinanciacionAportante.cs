@@ -28,6 +28,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public string DepartamentoId { get; set; }
+        public bool? CuentaConRp { get; set; }
 
         public virtual Cofinanciacion Cofinanciacion { get; set; }
         public virtual Localizacion Departamento { get; set; }

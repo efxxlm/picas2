@@ -415,12 +415,23 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   getCodigoDane() {
-    this.codigoDaneSede = this.proyecto.sede?this.proyecto.sede.codigoDane:"";
+    if(this.proyecto.tipoIntervencionCodigo!=1)
+    {
+      let institucion=this.listadoSede.filter(x=>x.institucionEducativaSedeId==this.proyecto.sedeId);
+      console.log(institucion);
+      this.codigoDaneSede = institucion?institucion[0].codigoDane:"";
+    }
   }
 
   getSede(sedeid?:number) {
-    // console.log(this.proyecto.institucionEducativaId);
-    this.CodigoDaneIE = this.proyecto.institucionEducativa?this.proyecto.institucionEducativa.codigoDane:"";
+     console.log(this.proyecto.tipoIntervencionCodigo);
+    if(this.proyecto.tipoIntervencionCodigo>1)
+    {
+      let institucion=this.listadoInstitucion.filter(x=>x.institucionEducativaSedeId==this.proyecto.institucionEducativaId);
+      console.log(institucion);
+      this.CodigoDaneIE = institucion?institucion[0].codigoDane:"";  
+    }
+    
     console.log("loading sede");
     this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId)
       .subscribe(respuesta => {

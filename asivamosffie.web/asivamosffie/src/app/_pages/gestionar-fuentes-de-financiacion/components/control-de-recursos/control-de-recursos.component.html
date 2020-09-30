@@ -19,7 +19,7 @@
         <mat-card-content>
           <input type="hidden" formControlName="controlRecursoId">
           <p><strong>Nombre del aportante:</strong>
-            {{ nombreAportante }}</p>
+            {{ fuente?fuente.aportante.nombreAportanteString:"" }}</p>
             <div *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
               <p ><strong>Departamento:</strong>
                 {{ departamento }}</p>
@@ -72,9 +72,9 @@
           </div>
         </mat-card-content>
       </mat-card>
-      <mat-card class="shipping-card">
+      <mat-card class="shipping-card" *ngIf="addressForm.get('nombreCuenta').value!=null">
         <mat-card-content>
-          <div class="row" >
+          <div class="row"  *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
             <div class="pr-1">
               <label class="label-left" for="rp">RP</label>
             </div>
@@ -88,7 +88,7 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="row">
+          <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
@@ -132,7 +132,9 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorConsignacion type="number" maxlength="50" formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false">
+                    <input matInput #valorConsignacion currencyMask maxlength="50" 
+                    formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false"
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
                   </mat-form-field>
                   <span class="contador">{{50 - valorConsignacion.value.length}}</span>
                 </div>

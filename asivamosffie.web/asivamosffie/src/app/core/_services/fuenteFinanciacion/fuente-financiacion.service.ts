@@ -77,6 +77,11 @@ export class FuenteFinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/ResourceControl/updateControlRecurso`, controlRecurso);
   }
 
+  DeleteResourceFundingBySourceFunding(id:number)
+  {
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ResourceControl/DeleteResourceFundingBySourceFunding?id=${id}`,null);
+  }
+
 }
 
 export interface FuenteFinanciacion{
@@ -134,6 +139,7 @@ export interface RegistroPresupuestal{
   aportanteId: number,
   numeroRp: string,
   fechaRp: Date,
+  cofinanciacionDocumentoId:number,
   fechaCreacion?: Date,
   usuarioCreacion?: string,
 }

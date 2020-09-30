@@ -21,6 +21,5 @@ namespace asivamosffie.model.Models
         public virtual CuentaBancaria CuentaBancaria { get; set; }
         public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
         public virtual RegistroPresupuestal RegistroPresupuestal { get; set; }
-        public virtual VigenciaAporte VigenciaAporte { get; set; }
     }
 }

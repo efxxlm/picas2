@@ -56,91 +56,91 @@
         <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
         <mat-card-content class="mt-1em">
 
-          <p> 
+          <p *ngIf="!contratacion.contratacionProyecto[0].tieneMonitoreoWeb"> 
             <b>
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
             </b>: No
           </p>
-          <p>
+          <p *ngIf="contratacion.contratacionProyecto[0].tieneMonitoreoWeb">
             <b>
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
             </b>: Sí
           </p>
-          <p>
+          <p *ngIf="contratacion.contratacionProyecto[0].esReasignacion">
             <b>¿El proyecto es una reasignación?</b>: Sí
           </p>
-          <p>
+          <p *ngIf="!contratacion.contratacionProyecto[0].esReasignacion">
             <b>¿El proyecto es una reasignación?</b>: No
           </p>
-          <p>
+          <p *ngIf="contratacion.contratacionProyecto[0].esAvanceobra">
             <b>¿El proyecto tiene avance de obra?</b>: Sí
           </p>
-          <p>
+          <p *ngIf="!contratacion.contratacionProyecto[0].esAvanceobra">
             <b>¿El proyecto tiene avance de obra?</b>: No
           </p>
-          <p>
-            <b>¿Cuál es el porcentaje de avance de obra?</b>: 20%
+          <p *ngIf="contratacion.contratacionProyecto[0].porcentajeAvanceObra.length > 0">
+            <b>¿Cuál es el porcentaje de avance de obra?</b>: {{ contratacion.contratacionProyecto[0].porcentajeAvanceObra }}%
           </p>
-          <p>
+          <p *ngIf="contratacion.contratacionProyecto[0].requiereLicencia">
             <b>¿El proyecto requiere licencias?</b>: Sí
           </p>
-          <p>
+          <p *ngIf="!contratacion.contratacionProyecto[0].requiereLicencia">
             <b>¿El proyecto requiere licencias?</b>: No
           </p>
-          <p>
+          <p *ngIf="contratacion.contratacionProyecto[0].licenciaVigente">
             <b>¿El proyecto tiene licencia vigente?</b>: Sí
           </p>
-          <p>
+          <p *ngIf="!contratacion.contratacionProyecto[0].licenciaVigente">
             <b>¿El proyecto tiene licencia vigente?</b>: No
           </p>
-          <p>
-            <b>Número de licencia</b>: 123
+          <p *ngIf="contratacion.contratacionProyecto[0].numeroLicencia.length > 0">
+            <b>Número de licencia</b>: {{ contratacion.contratacionProyecto[0].numeroLicencia }}
           </p>
-          <p>
-            <b>Fecha de vigencia</b>: <!-- {{  | date: 'dd/MM/yyyy' }} -->
+          <p *ngIf="contratacion.contratacionProyecto[0].fechaVigencia">
+            <b>Fecha de vigencia</b>: {{ contratacion.contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
           </p>
 
         </mat-card-content>
       </mat-card>
 
-  </mat-expansion-panel>
+    </mat-expansion-panel>
 
-  <mat-expansion-panel class="expansion-style">
-    <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title">
-        Consideraciones especiales
-      </mat-panel-title>
-    </mat-expansion-panel-header>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Consideraciones especiales
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-    <div align="left">
-      <mat-card class="border">
-        <mat-card-content class="mt-1em">
-          <p><b>¿Este contrato tiene alguna obligación especial?</b>: Si</p>
-          <p><b>¿Este contrato tiene alguna obligación especial?</b>: No</p>
-          <p><b>Observaciones</b>: {{ 'hola c:' }}</p>
-        </mat-card-content>
-      </mat-card>
-    </div>
+      <div align="left">
+        <mat-card class="border">
+          <mat-card-content class="mt-1em">
+            <p *ngIf="contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: Si</p>
+            <p *ngIf="!contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: No</p>
+            <p *ngIf="contratacion.esObligacionEspecial"><b>Observaciones</b>: {{ contratacion.consideracionDescripcion }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
 
-  </mat-expansion-panel>
+    </mat-expansion-panel>
 
-  <mat-expansion-panel class="expansion-style">
-    <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title">
-        Fuentes y usos
-      </mat-panel-title>
-    </mat-expansion-panel-header>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Fuentes y usos
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-    <div align="left">
-      <mat-card class="border">
-        <mat-card-content class="mt-1em">
-          <p><b>¿Este contrato tiene alguna obligación especial?</b>: Si</p>
-          <p><b>¿Este contrato tiene alguna obligación especial?</b>: No</p>
-          <p><b>Observaciones</b>: {{ 'hola c:' }}</p>
-        </mat-card-content>
-      </mat-card>
-    </div>
+      <div align="left">
+        <mat-card class="border">
+          <mat-card-content class="mt-1em">
+            <p *ngIf="contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: Si</p>
+            <p *ngIf="!contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: No</p>
+            <p *ngIf="contratacion.esObligacionEspecial"><b>Observaciones</b>: {{ contratacion.consideracionDescripcion }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
 
-  </mat-expansion-panel>
+    </mat-expansion-panel>
   </mat-accordion>
 </div>

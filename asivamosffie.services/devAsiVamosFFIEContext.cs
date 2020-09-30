@@ -104,7 +104,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -227,6 +226,8 @@ namespace asivamosffie.model.Models
             {
                 entity.HasIndex(e => new { e.CofinanciacionId, e.Eliminado })
                     .HasName("idxconfid_eliminado");
+
+                entity.Property(e => e.CuentaConRp).HasColumnName("CuentaConRP");
 
                 entity.Property(e => e.DepartamentoId)
                     .HasMaxLength(10)
@@ -354,6 +355,10 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<ComponenteAportante>(entity =>
             {
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FaseCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -681,7 +686,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PorcentajeAvanceObra).HasColumnType("numeric(3, 2)");
+                entity.Property(e => e.PorcentajeAvanceObra)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -1197,12 +1204,6 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.ControlRecurso)
                     .HasForeignKey(d => d.RegistroPresupuestalId)
                     .HasConstraintName("FK_ControlRecurso_RegistroPresupuestal");
-
-                entity.HasOne(d => d.VigenciaAporte)
-                    .WithMany(p => p.ControlRecurso)
-                    .HasForeignKey(d => d.VigenciaAporteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ControlRecurso_VigenciaAporte");
             });
 
             modelBuilder.Entity<ControversiaContractual>(entity =>
@@ -2648,6 +2649,11 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.RegistroPresupuestal)
                     .HasForeignKey(d => d.AportanteId)
                     .HasConstraintName("FK_RegistroPresupuestal_Aportante");
+
+                entity.HasOne(d => d.CofinanciacionDocumento)
+                    .WithMany(p => p.RegistroPresupuestal)
+                    .HasForeignKey(d => d.CofinanciacionDocumentoId)
+                    .HasConstraintName("FK_RegistroPresupuestalDocumento");
             });
 
             modelBuilder.Entity<RequisitoTecnicoRadicado>(entity =>

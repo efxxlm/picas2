@@ -25,7 +25,8 @@
             </div>
             <div class="col d-flex align-items-center">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="picker" [(ngModel)]="proyecto.fechaSesionJunta" required
+                <input matInput [matDatepicker]="picker"  placeholder="DD/MM/AAAA"
+                 [(ngModel)]="proyecto.fechaSesionJunta" required
                   [max]="maxDate" readonly (click)="picker.open()">
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -97,7 +98,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid">
-                  <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -115,7 +116,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid">
-                  <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -134,7 +135,7 @@
               <mat-form-field class="select-width">
                 <mat-select required [(ngModel)]="proyecto.localizacionIdMunicipio"
                   (selectionChange)="getInstitucion()">
-                  <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -380,7 +381,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" [ngClass]="{'opaco': proyecto.predioPrincipal.documentoAcreditacionCodigo!='1'}">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -388,7 +389,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral" maxlength="20" required
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral" 
+                  [disabled]="proyecto.predioPrincipal.documentoAcreditacionCodigo!='1'"
+                maxlength="20" required
                   type="text">
               </mat-form-field>
               <span
@@ -414,7 +417,7 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select required [(ngModel)]="predios.Predio.DocumentoAcreditacionCodigo">
-                      <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
+                      <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
@@ -439,7 +442,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row" [ngClass]="{'opaco': predios.Predio.DocumentoAcreditacionCodigo!='1'}">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
@@ -447,7 +450,8 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.Predio.CedulaCatastral" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.Predio.CedulaCatastral" [disabled]="predios.Predio.DocumentoAcreditacionCodigo!='1'"
+                     maxlength="20" required type="text">
                   </mat-form-field>
                   <span
                     class="contador">{{20 - (predios.Predio.CedulaCatastral?predios.Predio.CedulaCatastral.toString().length:0)}}</span>

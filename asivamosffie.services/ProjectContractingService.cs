@@ -146,7 +146,23 @@ namespace asivamosffie.services
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
             List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == 1).ToList();
             List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == 3).ToList();
+           
+            List<Dominio> ListFases = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fases && (bool)r.Activo).ToList();
 
+            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+            {
+                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
+                {
+                   
+                    foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                    {  
+                        foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
+                        {
+                             
+                        }
+                    }
+                }
+            }
 
             foreach (var item in contratacion.ContratacionProyecto)
             {
@@ -575,7 +591,7 @@ namespace asivamosffie.services
                     componenteAportanteOld.FechaModificacion = DateTime.Now;
                     //Esto es lo unico que puede cambiar en esta tabla
                     componenteAportanteOld.TipoComponenteCodigo = pComponenteAportante.TipoComponenteCodigo;
-                    // componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
+                    componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
                 }
                 if (esTransaccion)
                 {

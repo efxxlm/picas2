@@ -27,8 +27,11 @@
 
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-        <td mat-cell *matCellDef="let element">
-            <a (click)="goToLink(element.rutaSoporte)" mat-raised-button color="accent" class="btn-table">Ver soporte</a>
+        <td mat-cell *matCellDef="let element" >
+            <a (click)="goToLink(element.rutaSoporte)" mat-raised-button 
+                color="accent" 
+                *ngIf="element.rutaSoporte"
+                class="btn-table">Ver soporte</a>
         </td>
     </ng-container>
 

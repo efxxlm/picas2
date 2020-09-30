@@ -18,22 +18,22 @@
 
             <ng-container matColumnDef="tipoAportante">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de aportante </th>
-                <td mat-cell *matCellDef="let element"> {{element.tipoAportante}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.aportante.tipoAportanteString}} </td>
             </ng-container>
 
             <ng-container matColumnDef="aportante">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Aportante </th>
-                <td mat-cell *matCellDef="let element"> {{element.nombreAportanteString}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.aportante.nombreAportanteString}} </td>
             </ng-container>
 
             <ng-container matColumnDef="vigencia">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Vigencia del acuerdo de cofinanciación </th>
-                <td mat-cell *matCellDef="let element"> {{element.vigencia}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.aportante.cofinanciacion.vigenciaCofinanciacionId}} </td>
             </ng-container>
 
             <ng-container matColumnDef="fuenteDeRecursos">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuente de recursos </th>
-                <td mat-cell *matCellDef="let element"> {{element.fuenteDeRecursos}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.fuenteRecursosString}} </td>
             </ng-container>
 
             <ng-container matColumnDef="valorAporteFuenteDeRecursos">
@@ -60,7 +60,7 @@
                         detalle/<br>Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="eliminarFuente(element.fuenteFinanciacionId )">Eliminar</button>
-                    <button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table" [disabled]="!element.registroCompleto"
                         (click)="controlRecursosFuente(element.fuenteFinanciacionId )">Control de recursos</button>
                 </td>
             </ng-container>
