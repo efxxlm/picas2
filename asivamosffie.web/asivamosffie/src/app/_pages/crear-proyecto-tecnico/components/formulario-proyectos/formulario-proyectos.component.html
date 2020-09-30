@@ -574,7 +574,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.cofinanciacionAportanteId">
+                  <mat-select required [(ngModel)]="aportantes.aportanteId">
                     <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionAportanteId">
                       Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date:'dd/MM/yyyy' }}
                     </mat-option>

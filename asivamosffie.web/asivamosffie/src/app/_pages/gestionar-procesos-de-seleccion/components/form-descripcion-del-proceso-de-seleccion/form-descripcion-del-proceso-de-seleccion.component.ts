@@ -50,7 +50,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   ngOnInit() {
 
     this.addressForm = this.crearFormulario();
-
+    console.log(this.addressForm.get("grupos"));
     return new Promise(resolve => {
       forkJoin([
 
