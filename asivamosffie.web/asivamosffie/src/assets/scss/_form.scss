@@ -202,8 +202,11 @@ div.mat-select-arrow {
 .sin-contador{
     padding-right: 2.9em;
 }
-
+/* lo vole jflorez
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
+    content: '';
+}*/
+.mat-form-field.nocontent input:required ~ .mat-form-field-label-wrapper::after {
     content: '';
 }
 
