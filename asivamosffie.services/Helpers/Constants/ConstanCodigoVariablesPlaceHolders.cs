@@ -128,7 +128,7 @@
         public const string NUEVO_SALDO_FUENTE = "101";
         public const string FUNCIONALIDAD_ESPECIAL = "102";
         public const string RUTA_ICONO = "103";
-
+        public const string REGISTRO_FUENTE_USO = "177";
         public const string PREGUNTA_1 = "104";
         public const string PREGUNTA_2 = "105";
         public const string PREGUNTA_3 = "106";

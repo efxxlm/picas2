@@ -2207,14 +2207,16 @@ namespace asivamosffie.services
                 }
             }
 
+            string TipoPlantillaFuentesFinanciacion = ((int)ConstanCodigoPlantillas.Registros_Fuente_De_Uso).ToString();
 
             // FUENTES DE FINANCIACION 
-            string TipoPlantillaRegistrosFuentes = ((int)ConstanCodigoPlantillas.Registros_Fuente_De_Uso).ToString();
+            string TipoPlantillaRegistrosFuentes = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaFuentesFinanciacion).Select(r => r.Contenido).FirstOrDefault();
             string RegistrosFuentesUso = string.Empty;
 
 
             foreach (var ContratacionProyecto in pContratacion.ContratacionProyecto)
             {
+                RegistrosFuentesUso += TipoPlantillaRegistrosFuentes;
                 foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
                 {
                     foreach (Dominio placeholderDominio in placeholders)
@@ -2242,10 +2244,10 @@ namespace asivamosffie.services
                                     case ConstanTipoAportante.Tercero:
                                         strNombreAportante = ProyectoAportante.Aportante.NombreAportante.Nombre;
                                         break;
-                                } 
-                           
+                                }
 
-                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, strNombreAportante);
+
+                                RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, strNombreAportante);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.VALOR_APORTANTE_PROYECTO_FUENTES_USO: 
@@ -2254,24 +2256,24 @@ namespace asivamosffie.services
                                 if (pContratacion.TipoContratacionCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString()) {
 
                                      ValorAportante = "$" + String.Format("{0:n0}", ProyectoAportante.ValorObra);
-                                } 
-                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ValorAportante);
+                                }
+                                RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, ValorAportante);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.COMPONENTE_FUENTES_USO:
-                                 pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "COMPONENTE_FUENTES_USO");
+                                RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, "COMPONENTE FUENTES USO");
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.FASE_FUENTES_USO:
-                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "FASE_FUENTES_USO");
+                                RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, "FASE FUENTES USO");
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.USO_FUENTES_USO:
-                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "USO_FUENTES_USO");
+                                RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, "USO FUENTES USO");
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.VALOR_USO_FUENTE_USO:
-                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "VALOR_USO_FUENTE_USO");
+                                RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, "VALOR USO FUENTE USO");
                                 break;
 
                         }
@@ -2285,7 +2287,7 @@ namespace asivamosffie.services
 
                 switch (placeholderDominio.Codigo)
                 {
-                    case ConstanCodigoVariablesPlaceHolders.REGISTROS_FUENTES_USO:
+                    case ConstanCodigoVariablesPlaceHolders.REGISTRO_FUENTE_USO:
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, RegistrosFuentesUso);
                         break;
 
@@ -2444,8 +2446,12 @@ namespace asivamosffie.services
                         }
                         else
                         {
+                            string strPregunta6 = "no";
+                            if (pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente != null && pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente == true) {
+                                strPregunta6 =  "si";
+                            }
                             strPregunta_5 = ContenidoPregunta5 + " si";
-                            strPregunta_6 = ContenidoPregunta6 + " " + pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente;
+                            strPregunta_6 = ContenidoPregunta6 + " " + strPregunta6;
                         }
                     }
                     else
