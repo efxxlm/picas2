@@ -32,6 +32,8 @@ namespace asivamosffie.services
                     .Where(r => !(bool)r.Eliminado && r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados)
                           .Include(r => r.Contratacion)
                              .ThenInclude(r => r.DisponibilidadPresupuestal)
+                                          .Include(r => r.ContratoPerfil)
+                        
                     .Include(r => r.Contratacion)
                          .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)

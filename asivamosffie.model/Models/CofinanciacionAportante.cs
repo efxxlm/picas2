@@ -21,14 +21,19 @@ namespace asivamosffie.model.Models
         public int? CofinanciacionId { get; set; }
         public int? TipoAportanteId { get; set; }
         public int? NombreAportanteId { get; set; }
-        public int? MunicipioId { get; set; }
+        public string MunicipioId { get; set; }
         public bool? Eliminado { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string DepartamentoId { get; set; }
+        public bool? CuentaConRp { get; set; }
 
         public virtual Cofinanciacion Cofinanciacion { get; set; }
+        public virtual Localizacion Departamento { get; set; }
+        public virtual Localizacion Municipio { get; set; }
+ 
         public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual ICollection<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
