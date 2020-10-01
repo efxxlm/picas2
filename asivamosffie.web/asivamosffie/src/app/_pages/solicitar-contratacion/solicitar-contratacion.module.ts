@@ -27,6 +27,7 @@ import { AsociadaComponent } from './components/asociada/asociada.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { VerDetalleContratacionComponent } from './components/ver-detalle-contratacion/ver-detalle-contratacion.component';
 import { GestionarProcesosContractualesModule } from '../gestionar-procesos-contractuales/gestionar-procesos-contractuales.module';
+import { QuillModule } from 'ngx-quill';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { GestionarProcesosContractualesModule } from '../gestionar-procesos-cont
     MatSelectModule,
     MatRadioModule,
     MatCardModule,
+    QuillModule.forRoot(),
     GestionarProcesosContractualesModule,
     ReactiveFormsModule,
     CurrencyMaskModule
