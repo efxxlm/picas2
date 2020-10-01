@@ -148,6 +148,12 @@ export class CommonService {
   listaFases(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=16`);
   }
+  listaSalarios(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=64`);
+  }
+  listaLimiteSalarios(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=65`);
+  }
 
   listaComponentes(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=12`);
@@ -250,6 +256,7 @@ export class CommonService {
 }
 
 export interface Dominio{
+  descripcion?: string;
   dominioId?: number,
   tipoDominioId?: number,
   nombre?: string,

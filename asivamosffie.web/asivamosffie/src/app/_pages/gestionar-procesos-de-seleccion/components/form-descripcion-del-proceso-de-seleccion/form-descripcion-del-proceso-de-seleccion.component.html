@@ -37,7 +37,7 @@
     <span class="contador miles" *ngIf="addressForm.get('justificacion').value">
       {{3000 - (textoLimpio(addressForm.get('justificacion').value)>3000?3000:textoLimpio(addressForm.get('justificacion').value))}}
     </span>
-    <span class="contador miles" *ngIf="addressForm.get('justificacion').value === null">
+    <span class="contador miles" *ngIf="addressForm.get('justificacion').value == null">
       3000
     </span>
   </div>
@@ -155,7 +155,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valor currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20" formControlName="valor" required>
+                  <input matInput #valor currencyMask 
+                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                   maxlength="20" formControlName="valor" (change)="nosuperarlimite(i,1)" required>
                 </mat-form-field>
                 <span class="contador">{{20 - valor.value.length}}</span>
               </div>
@@ -168,7 +170,7 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #valorMinimoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"  required
-                    formControlName="valorMinimoCategoria">
+                    formControlName="valorMinimoCategoria" (change)="nosuperarlimite(i,3)">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMinimoCategoria.value.length}}</span>
               </div>
@@ -181,7 +183,7 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #valorMaximoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"  required
-                    formControlName="valorMaximoCategoria">
+                    formControlName="valorMaximoCategoria" (change)="nosuperarlimite(i,2)">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMaximoCategoria.value.length}}</span>
               </div>
