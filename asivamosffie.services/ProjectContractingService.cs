@@ -114,8 +114,14 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetAllContratacionByContratacionId(int pContratacionId)
         {
-            return await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
+            return await _context.Contratacion
+                .Where(r => r.ContratacionId == pContratacionId)
               .Include(r => r.Contratista)
+                 .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+                   .ThenInclude(r => r.ProyectoAportante)
+                     .ThenInclude(r => r.Aportante)
+                       .ThenInclude(r => r.NombreAportante)
               .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                            .ThenInclude(r => r.ProyectoPredio)
@@ -225,6 +231,7 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
+                           .ThenInclude(r => r.NombreAportante)
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.ContratacionProyectoAportante)
@@ -247,7 +254,8 @@ namespace asivamosffie.services
 
             try
             {
-                ListContratacion = await _context.Contratacion.Where(r => !(bool)r.Eliminado).ToListAsync();
+                ListContratacion = await _context.Contratacion.Where(r => !(bool)r.Eliminado).Include(r=> r.Contratista).ToListAsync();
+
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
 
                 foreach (var Contratacion in ListContratacion)

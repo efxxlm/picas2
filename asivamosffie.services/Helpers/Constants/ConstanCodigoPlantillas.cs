@@ -43,6 +43,8 @@
         seis_pregunta_tecnica_o_juridica = 31,
         Registros_Fuentes_Uso = 32,
         Registros_Compromiso_Solicitud = 33,
-        Registros_Firmas = 34
+        Registros_Firmas = 34,
+      
+        Registros_Fuente_De_Uso = 	38
     }
 }
