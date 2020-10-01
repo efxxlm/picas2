@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
 import { ProjectService, InstitucionEducativa, ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 import { forkJoin } from 'rxjs';
@@ -15,7 +15,7 @@ export class FormSolicitarContratacionComponent implements OnInit {
 
   verBusqueda = false;
 
-  addressForm = this.fb.group({
+  addressForm: FormGroup = this.fb.group({
     tipoInterventor: [null],
     llaveMEN: [null],
     region: [null],
@@ -61,6 +61,18 @@ export class FormSolicitarContratacionComponent implements OnInit {
       this.selectRegion = response[1]
     })
   }
+
+  reiniciarFiltro () {
+    this.addressForm.setValue({
+      tipoInterventor: null,
+      llaveMEN: null,
+      region: null,
+      departamento: null,
+      municipio: null,
+      institucionEducativa: null,
+      sede: null
+    });
+  };
 
   private declararEsMultiple() {
     this.esMultiple = new FormControl('free', Validators.required);
