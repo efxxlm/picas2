@@ -24,3 +24,7 @@
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
   content: '*';
 }
+
+.mainColor{
+  color: var(--mainColor);
+}

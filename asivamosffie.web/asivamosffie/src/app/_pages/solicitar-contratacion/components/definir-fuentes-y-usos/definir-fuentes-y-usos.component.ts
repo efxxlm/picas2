@@ -18,6 +18,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
   idSolicitud: number;
   contratacionProyecto: ContratacionProyecto;
+  municipio: string;
   tipoIntervencion: string;
 
   addressForm = this.fb.group([]);
@@ -59,7 +60,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
              ) 
   { 
-
+    this.getMunicipio();
   }
 
   createAportante(){
@@ -173,6 +174,16 @@ export class DefinirFuentesYUsosComponent implements OnInit {
       
     });
 
+  };
+
+  getMunicipio () {
+    if ( this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false ) {
+      this.router.navigate( [ '/solicitarContratacion' ] );
+      return;
+    }
+    
+    this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
+    
   }
 
 

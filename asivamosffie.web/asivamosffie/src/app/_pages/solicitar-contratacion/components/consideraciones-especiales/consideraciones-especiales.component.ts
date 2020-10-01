@@ -14,13 +14,37 @@ export class ConsideracionesEspecialesComponent implements OnInit {
 
   addressForm = this.fb.group({
     reasignacion: ['', Validators.required],
-    descripcion: null
+    descripcion: [ null ]
   });
+  editorStyle = {
+    height: '45px'
+  };
+  config = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+    ]
+  };
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
   }
+
+  textoLimpio (texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    };
+  };
+
+  maxLength (e: any, n: number) {
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n, e.editor.getLength());
+    };
+  };
 
   onSubmit() {
 

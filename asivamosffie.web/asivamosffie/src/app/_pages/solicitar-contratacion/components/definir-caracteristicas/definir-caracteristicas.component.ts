@@ -16,6 +16,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
   contratacionProyecto: ContratacionProyecto;
   tipoIntervencion: string;
+  municipio: string;
 
   addressForm: FormGroup = this.fb.group({
     completada: null,
@@ -42,6 +43,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
               
              ) 
   {
+    this.getMunicipio();
   }
 
     ngOnInit(): void {
@@ -82,6 +84,16 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
         
       });
+    }
+
+    getMunicipio () {
+      if ( this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false ) {
+        this.router.navigate( [ '/solicitarContratacion' ] );
+        return;
+      }
+      
+      this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
+      
     }
 
     openDialog(modalTitle: string, modalText: string) {

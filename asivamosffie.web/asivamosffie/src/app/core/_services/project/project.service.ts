@@ -95,7 +95,8 @@ export class ProjectService {
   getProyectoGrillaByProyectoId( id: number ){
     return this.http.get<ProyectoGrilla>(`${environment.apiUrl}/Project/getProyectoGrillaByProyectoId?idProyecto=${ id }`);
    }
-  
+
+   
 
 }
 export interface RespuestaProyecto{
