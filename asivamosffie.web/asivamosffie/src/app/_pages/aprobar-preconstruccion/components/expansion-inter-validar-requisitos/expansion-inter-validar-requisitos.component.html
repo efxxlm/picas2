@@ -1,0 +1,116 @@
+<section class="container">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="/verificarPreconstruccion" mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Gestionar requisitos de inicio contrato A886675445 fase 1 - Preconstrucción
+    </h1>
+    <p class="text-primary">
+      <span class="mx-2em">
+        Fecha de aprobacion de póliza:
+        <b>
+          21/06/2020
+        </b>
+      </span>
+      <span class="mx-2em">
+        Proyectos asociados:
+        <b>
+          1
+        </b>
+      </span>
+    </p>
+    <p class="info-container">
+      <span class="info-text sin-diligenciar">Sin diligenciar</span>
+      <span class="info-text en-proceso">En proceso</span>
+      <span class="info-text completo">Completo</span>
+    </p>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title completo">
+          LM443211 - I.E. Nueva Generación - Única sede
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card">
+        <mat-card-content>
+          <p>
+            <b>Nombre del contratista:</b>
+            Constructora
+          </p>
+          <p>
+            <b>Número de identificación (NIT/RUT):</b>
+            900.675.987-4
+          </p>
+          <p>
+            <b>Tipo de intervención:</b>
+            Remodelación
+          </p>
+          <p>
+            <b>Departamento:</b>
+            Atlántico
+          </p>
+          <p>
+            <b>Municipio:</b>
+            Galapa
+          </p>
+          <p>
+            <b>Valor total del proyecto:</b>
+            $ 80.000.000
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">¿En qué estado de la fase 1 - Preconstrucción se encuentra el proyecto?</label>
+        </div>
+        <div class="col">
+          <mat-form-field class="select-width">
+            <mat-select required>
+              <mat-option *ngFor="let estadoProyecto of estadoProyectoArray" [value]="estadoProyecto.value">
+                {{ estadoProyecto.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left" for="cuantosCompromisos">
+            ¿Cuántos perfiles diferentes se requieren del contratista de interventoría para ejecutar esta fase?
+          </label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field class="full-width">
+            <input matInput #canPerfiles type="number" min="1" max="999" maxLength="3"
+              (keypress)="validateNumberKeypress($event)"
+              onKeyPress="if(this.value.length>=this.maxLength) return false;">
+          </mat-form-field>
+          <span class="contador">{{3 - canPerfiles.value.length}}</span>
+        </div>
+      </div>
+
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title completo">
+              Tema 1
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <app-form-perfil></app-form-perfil>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</section>
