@@ -91,6 +91,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
       },
+      {
+        path: 'generarActaInicioFaseIIConstruccion',
+        loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
+        .then(m => m.GestionarActaInicioFdosConstrModule)
+      },
     ]
 
   },
