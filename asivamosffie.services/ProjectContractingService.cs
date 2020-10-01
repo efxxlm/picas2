@@ -132,7 +132,12 @@ namespace asivamosffie.services
                .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                       .ThenInclude(r => r.InfraestructuraIntervenirProyecto)
-              .Include(r => r.ContratacionProyecto).FirstOrDefaultAsync();
+              .Include(r => r.ContratacionProyecto)
+                 .Include(r => r.ContratacionProyecto)
+                 .ThenInclude(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante)
+                        .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
+              .FirstOrDefaultAsync();
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
@@ -231,7 +236,11 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
-                           .ThenInclude(r => r.NombreAportante)
+                           .ThenInclude(r => r.Departamento)
+                             .Include(r => r.Proyecto)
+                     .ThenInclude(r => r.ProyectoAportante)
+                         .ThenInclude(r => r.Aportante)
+                    .ThenInclude(r => r.NombreAportante)
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.ContratacionProyectoAportante)
