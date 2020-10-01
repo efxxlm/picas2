@@ -1,0 +1,55 @@
+<div align="left">
+  <form autocomplete="off" [formGroup]="formAnticipo" (ngSubmit)="guardar()">
+    <mat-card>
+      <mat-card-content>
+        <section class="example-section">
+          <label class="example-margin"> <b>¿El contrato requiere anticipo?</b> </label>
+          <mat-radio-group formControlName="requiereAnticipo">
+            <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
+            <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
+          </mat-radio-group>
+        </section>
+
+        <section class="example-section" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+          <label class="example-margin"> <b>¿Cuenta con plan de inversión aprobado para el anticipo?</b> </label>
+          <mat-radio-group formControlName="planInversionAnticipo">
+            <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
+            <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
+          </mat-radio-group>
+        </section>
+
+        <section class="example-section" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+          <label class="example-margin"> <b>¿Cuenta con cronograma de amortización aprobado?</b> </label>
+          <mat-radio-group formControlName="cronogramaAmortizacionAprobado">
+            <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
+            <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
+          </mat-radio-group>
+        </section>
+      </mat-card-content>
+    </mat-card>
+
+    <section class="text-center container w-100 mt-2em" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+      <div class="d-flex mt-1em">
+        <label class="ml-5em"><b>URL con soporte</b></label>
+        <div class="w-80">
+          <mat-form-field>
+            <input matInput type="text" formControlName="urlSoporte">
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="text-center">
+        <p><small>Indique la ruta del soporte de esta información</small></p>
+      </div>
+    </section>
+    
+    <div class="text-center" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+      <button mat-button 
+              color="warn" 
+              class="btn-guardar" 
+              type="submit">
+              <img  src="assets/img/icon/guardar.svg">
+      </button>
+    </div>
+  </form>
+</div>
