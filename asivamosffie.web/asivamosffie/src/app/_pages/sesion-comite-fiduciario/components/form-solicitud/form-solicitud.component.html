@@ -92,7 +92,7 @@
             <div class="col">
               <mat-form-field class="select-width" >
                 <mat-select required formControlName="estadoSolicitud">
-                  <mat-option *ngFor="let estado of estadosArray" [value]="estado">
+                  <mat-option *ngFor="let estado of estadosArray" [value]="estado.codigo">
                     {{ estado.nombre }}
                   </mat-option>
                 </mat-select>
