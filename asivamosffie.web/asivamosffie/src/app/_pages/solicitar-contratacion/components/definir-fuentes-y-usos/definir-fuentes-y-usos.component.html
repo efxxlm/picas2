@@ -13,7 +13,7 @@
   <p class="text-detalle d-flex" *ngIf="contratacionProyecto" style="justify-content: center;">
     <span style="margin-right: 2em;"><b> {{ tipoIntervencion }} </b></span>
     <span style="margin-right: 2em;"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
-    <span style="margin-right: 2em;">{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+    <span style="margin-right: 2em;"> {{ municipio }} </span>
   </p>
 
   <div class="container-valor" *ngIf="contratacionProyecto">
