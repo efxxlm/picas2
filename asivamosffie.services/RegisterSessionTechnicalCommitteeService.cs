@@ -763,8 +763,7 @@ namespace asivamosffie.services
             //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
 
             //a1.RemoveAll(a => !b1.Exists(b => a.number == b.number));
-
-            //TODO Diego dijo que fresco
+             
             ListContratacion.RemoveAll(item => LisIdContratacion.Contains(item.ContratacionId));
             ListProcesoSeleccion.RemoveAll(item => ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
 

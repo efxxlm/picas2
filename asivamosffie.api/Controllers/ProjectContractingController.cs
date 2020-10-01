@@ -72,9 +72,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListProyectsByFilters")]
         [HttpGet]
-        public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pMunicipio, int pIdInstitucionEducativa, int pIdSede)
+        public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen,string pRegion ,string pDepartamento, string pMunicipio, int pIdInstitucionEducativa, int pIdSede)
         {
-            var respuesta = await _projectContractingService.GetListProyectsByFilters(pTipoIntervencion, pLlaveMen, pMunicipio, pIdInstitucionEducativa, pIdSede);
+            var respuesta = await _projectContractingService.GetListProyectsByFilters(pTipoIntervencion, pLlaveMen, pRegion, pDepartamento, pMunicipio, pIdInstitucionEducativa, pIdSede);
             return respuesta;
         }
 
