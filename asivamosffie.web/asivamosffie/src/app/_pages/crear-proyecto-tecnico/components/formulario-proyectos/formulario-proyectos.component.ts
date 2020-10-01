@@ -138,8 +138,12 @@ export class FormularioProyectosComponent implements OnInit {
         this.listaCordinaciones = listas[6];
         this.listadoConvocatoria = listas[7];
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
-          // console.log(respuesta.numeroActaJunta);
+          console.log("este es el proyecto ");
+          console.log(respuesta);
           this.proyecto = respuesta;
+          console.log(this.proyecto);
+          console.log(this.proyecto.predioPrincipal.tipoPredioCodigo);
+          //this.proyecto.predioPrincipal.tipoPredioCodigo;
           // ajusto lartitud y longitud
           if (respuesta.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
             const lat = respuesta.predioPrincipal.ubicacionLatitud.split('°');
@@ -686,8 +690,48 @@ export class FormularioProyectosComponent implements OnInit {
 
   getAportanteById(id: number, i: number) {
     this.commonServices.listaAportanteByTipoAportanteId(id).subscribe(respuesta => {
-      console.log(respuesta);
-      this.listaAportante[i] = respuesta;
+      this.listaVigencias[i]=[];
+      this.listaAportante[i]=[];
+      if(this.tipoAportante.FFIE.includes(id.toString()))
+      {
+        this.listaVigencias[i]=respuesta;
+      }
+      else
+      {
+        if(this.tipoAportante.ET.includes(id.toString()))
+        {
+          this.listaAportante[i]=respuesta;
+          console.log(this.listaAportante[i]);
+          this.commonServices.listaDepartamentos().subscribe(res=>{
+            this.listadoDepto[i]=res;
+            this.proyecto.proyectoAportante[i].depto=this.proyecto.proyectoAportante[i].aportante.departamentoId.toString();
+            this.commonServices.listaMunicipiosByIdDepartamento(this.proyecto.proyectoAportante[i].depto).
+            subscribe(res=>{
+              this.listadoMun[i]=res;
+              this.proyecto.proyectoAportante[i].mun=this.proyecto.proyectoAportante[i].aportante.municipioId.toString();
+              this.getVigenciaByMun(null,i);
+            })
+
+          });
+          //this.listadoMun[i]=[]
+        }
+        else
+        {
+
+          this.listaAportante[i]=respuesta;
+          respuesta.forEach(element => {
+            
+            console.log("evaluo");
+            console.log(element.nombre);
+            this.listaNombreAportantes[i]=[];
+            if(!this.listaNombreAportantes[i].includes(element.nombre))
+            {
+              console.log(this.listaAportante[i].nombre);
+              this.listaNombreAportantes[i].push(element.nombre); 
+            }
+          });
+        }  
+      }             
     },
       err => {
         let mensaje: string;
