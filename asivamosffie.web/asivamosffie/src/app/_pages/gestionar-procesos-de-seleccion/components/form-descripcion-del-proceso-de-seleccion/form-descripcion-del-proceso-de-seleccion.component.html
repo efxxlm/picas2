@@ -179,7 +179,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valor currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20" formControlName="valor">
+                  <input matInput #valor currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20" formControlName="valor" required>
                 </mat-form-field>
                 <span class="contador">{{20 - valor.value.length}}</span>
               </div>
@@ -191,7 +191,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMinimoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
+                  <input matInput #valorMinimoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"  required
                     formControlName="valorMinimoCategoria">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMinimoCategoria.value.length}}</span>
@@ -204,7 +204,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMaximoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
+                  <input matInput #valorMaximoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"  required
                     formControlName="valorMaximoCategoria">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMaximoCategoria.value.length}}</span>
@@ -221,7 +221,7 @@
                       <input matInput #plazoMeses type="number" min="1" max="99" maxlength="2" 
                       (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  (keyup)="CambioNumeroAportantes()" formControlName="plazoMeses" required>
+                  (keyup)="CambioNumeroMeses(i)" formControlName="plazoMeses" required>
                     </mat-form-field>
                     <span class="contador">{{2 - plazoMeses.value.length}}</span>
                   </div>

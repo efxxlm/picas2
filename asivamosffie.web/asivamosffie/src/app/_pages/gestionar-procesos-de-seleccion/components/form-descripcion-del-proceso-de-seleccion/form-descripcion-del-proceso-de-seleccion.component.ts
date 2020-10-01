@@ -121,9 +121,24 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     return diligenciado;
   }
 
+  CambioNumeroMeses(i:number)
+  {
+    console.log(this.addressForm);
+    if(this.addressForm.controls.grupos[i].get('plazoMeses').value<=0)
+    {
+      this.openDialog("","<b>La cantidad de meses no pueden ser 0.</b>");
+      return;
+    }
+  }
+
   CambioNumeroAportantes() {
 
     const FormGrupos = this.addressForm.value;
+    if(FormGrupos.cuantosGrupos<=1)
+    {
+      this.openDialog("","<b>La cantidad de grupos no puede ser menor que 2</b>");
+      return;
+    }
     if(FormGrupos.cuantosGrupos>=1)
     {
       if (FormGrupos.cuantosGrupos < this.grupos.length)
@@ -153,7 +168,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionGrupoId: [],
       nombreGrupo: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       tipoPresupuesto: [null, Validators.required],
       valor: [],
@@ -238,8 +253,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    console.log("textolimpio "+textolimpio.length);
+    const textolimpio = texto.replace(/<[^>]*>/g, '');    
     return textolimpio.length;
   }
 

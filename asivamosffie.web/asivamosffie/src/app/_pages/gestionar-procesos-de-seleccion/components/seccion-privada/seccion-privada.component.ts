@@ -119,5 +119,7 @@ export class SeccionPrivadaComponent implements OnInit {
      () => {})
   }
 
-  
+  estaIncompleto(objeto){
+    return true;
+  }
 }
