@@ -29,19 +29,8 @@ export interface RegistrosCargados {
   styleUrls: ['./tabla-proyectos-tecnico.component.scss']
 })
 export class TablaProyectosTecnicoComponent {
-  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
   
-
-  columnas = [
-    { titulo: 'Fecha',name: 'fecha' },
-    { titulo: 'Departamento',name: 'departamento' },
-    { titulo: 'Municipio',name: 'municipio' },
-    { titulo: 'Institución Educativa',name: 'institucion' },
-    { titulo: 'Sede',name: 'sede' },
-    { titulo: 'Estado del registro',name: 'estado' },
-    { titulo: 'Estado jurídico de los predios',name: 'estadoj' },
-    { titulo: 'Estado del proyecto',name: 'estadop' },
-  ];
+  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
