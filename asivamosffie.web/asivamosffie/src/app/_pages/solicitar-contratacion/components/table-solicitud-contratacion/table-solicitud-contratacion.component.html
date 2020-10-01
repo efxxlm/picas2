@@ -53,17 +53,34 @@
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a mat-raised-button color="accent" class="btn-table"
-                    [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]">Detallar la <br>
-                    solicitud</a>
-                <button mat-raised-button color="accent" class="btn-table" (click)="onDelete(element.contratacionId)"
-                    *ngIf="!element.estadoSolicitudCodigo">Eliminar</button>
+                <a  mat-raised-button
+                    color="accent"
+                    class="btn-table"
+                    [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
+                    *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && !element.registroCompleto && element.contratistaId === null">
+                    Detallar la <br>solicitud
+                </a>
+                <button mat-raised-button 
+                        color="accent"
+                        class="btn-table"
+                        (click)="onDelete(element.contratacionId)"
+                        *ngIf="element.estadoSolicitudCodigo == 'Sin registro'">
+                        Eliminar
+                </button>
+                <a  mat-raised-button
+                    color="accent"
+                    class="btn-table"
+                    [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
+                    *ngIf="element.contratistaId && element.estadoSolicitudCodigo == 'Sin registro'">
+                    Ver detalle / Editar
+                </a>
                 <button mat-raised-button color="accent" class="btn-table"
                         (click)="enviarSolicitud(element.contratacionId)" 
-                        *ngIf="element.estadoSolicitudCodigo == 'Sin registro' ">Enviar
+                        *ngIf="element.estadoSolicitudCodigo === 'Sin registro' && element.registroCompleto">Enviar
                         Solicitud.</button>
                 <button mat-raised-button color="accent" class="btn-table"
-                        [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]">
+                        [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
+                        *ngIf="element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto">
                         Ver detalle</button>
 
                     
