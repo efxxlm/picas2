@@ -130,8 +130,10 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     });
   }
 
-  borrarArray(borrarForm: any, i: number) {
+  borrarArray(borrarForm: any, i: number) {    
     borrarForm.removeAt(i);
+    //ajusto el contador
+    this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
   }
 
   textoLimpio(texto: string) {

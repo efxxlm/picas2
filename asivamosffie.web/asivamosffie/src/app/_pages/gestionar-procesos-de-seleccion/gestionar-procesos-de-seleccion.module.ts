@@ -33,7 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
-
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -69,7 +69,8 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     MatSelectModule,
     MatRadioModule,
     MatCardModule,
-    CurrencyMaskModule
-  ]
+    CurrencyMaskModule,
+    MatAutocompleteModule
+  ],  
 })
 export class GestionarProcesosDeSeleccionModule { }
