@@ -92,7 +92,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
                   this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
                   break;
                 default:
-                  this.listaEstados = this.listaEstadosCompleta.filter(e => ["3", "5"].includes(e.codigo));
+                  this.listaEstados = this.listaEstadosCompleta.filter(e => ["5", "7"].includes(e.codigo));
               }
 
             }

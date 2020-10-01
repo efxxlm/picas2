@@ -36,6 +36,7 @@ import { TablaVerificarCumplimientosComponent } from './components/tabla-verific
 import { VerDetallesComponent } from './components/ver-detalles/ver-detalles.component';
 import { FormOtrosTemasComponent } from './components/form-otros-temas/form-otros-temas.component';
 import { TablaFormSolicitudMultipleComponent } from './components/tabla-form-solicitud-multiple/tabla-form-solicitud-multiple.component';
+import { VotacionSolicitudMultipleComponent } from './components/votacion-solicitud-multiple/votacion-solicitud-multiple.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { TablaFormSolicitudMultipleComponent } from './components/tabla-form-sol
     TablaVerificarCumplimientosComponent,
     VerDetallesComponent,
     FormOtrosTemasComponent,
-    TablaFormSolicitudMultipleComponent
+    TablaFormSolicitudMultipleComponent,
+    VotacionSolicitudMultipleComponent
   ],
   imports: [
     CommonModule,
