@@ -6,20 +6,20 @@
   </div>
   <div class="text-center mb-2em">
     <h1 class="title-menu--h1 ">
-      Defenir fuentes y usos
+      Definir fuentes y usos
     </h1>
   </div>
 
-  <p class="text-detalle" *ngIf="contratacionProyecto">
+  <p class="text-detalle d-flex" *ngIf="contratacionProyecto" style="justify-content: center;">
     <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
     <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
     <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
   </p>
 
   <div class="container-valor" *ngIf="contratacionProyecto">
-    <p>Valor total del proyecto <b>${{ contratacionProyecto.proyecto.valorTotal }}</b></p>
-    <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra }}</b></p>
-    <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria }}</b></p>
+    <p>Valor total del proyecto <b> ${{ contratacionProyecto.proyecto.valorTotal | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
   </div>
 
   <div class="text-center mb-2em">
