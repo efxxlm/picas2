@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
@@ -14,7 +14,7 @@ import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/proj
   templateUrl: './form-solicitud.component.html',
   styleUrls: ['./form-solicitud.component.scss']
 })
-export class FormSolicitudComponent implements OnInit {
+export class FormSolicitudComponent implements OnInit, OnChanges {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
@@ -71,7 +71,11 @@ export class FormSolicitudComponent implements OnInit {
 
   ) 
   {
-
+    
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.sesionComiteSolicitud.currentValue)
+      this.cargarRegistro();
   }
 
   ActualizarProyectos( lista ){
@@ -171,15 +175,18 @@ export class FormSolicitudComponent implements OnInit {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.sesionComiteSolicitud.comiteTecnicoId,
       comiteTecnicoFiduciarioId: this.sesionComiteSolicitud.comiteTecnicoFiduciarioId,
-      estadoCodigo: this.addressForm.get('estadoSolicitud').value ? this.addressForm.get('estadoSolicitud').value.codigo : null,
+      estadoCodigo: this.addressForm.get('estadoSolicitud').value,
       
       observacionesFiduciario: this.addressForm.get('observaciones').value,
       rutaSoporteVotacionFiduciario: this.addressForm.get('url').value,
       generaCompromisoFiduciario: this.addressForm.get('tieneCompromisos').value,
       cantCompromisosFiduciario: this.addressForm.get('cuantosCompromisos').value,
       desarrolloSolicitudFiduciario: this.addressForm.get('desarrolloSolicitud').value,
+      tipoSolicitud: this.sesionComiteSolicitud.tipoSolicitudCodigo,
       sesionSolicitudCompromiso: [],
-      requiereVotacionFiduciario:null
+      contratacion: {
+        contratacionProyecto: this.proyectos ? this.proyectos : null
+      }
 
     }
 
@@ -213,15 +220,22 @@ export class FormSolicitudComponent implements OnInit {
 
     console.log( this.sesionComiteSolicitud )
 
+    let estados: string[] = ['2', '4', '6']
+
+    this.commonService.listaEstadoSolicitud()
+      .subscribe(response => {
+
+        this.estadosArray = response.filter(s => estados.includes(s.codigo));
     if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteFiduciario ){
       this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
     }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteFiduciario ){
       this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes( e.codigo ))
     }
+    console.log(this.estadosArray)
 
-    let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
+      })
 
-    this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado)
+    this.addressForm.get('estadoSolicitud').setValue(this.sesionComiteSolicitud.estadoCodigo)
     this.addressForm.get('observaciones').setValue(this.sesionComiteSolicitud.observacionesFiduciario)
     this.addressForm.get('url').setValue(this.sesionComiteSolicitud.rutaSoporteVotacionFiduciario)
     this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromisoFiduciario)
@@ -264,11 +278,11 @@ export class FormSolicitudComponent implements OnInit {
     else
       this.resultadoVotacion = 'Aprobó'
 
-    let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
+    // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
     
-    btnSolicitudMultiple.forEach( element =>{
-      element.click();
-    })
+    // btnSolicitudMultiple.forEach( element =>{
+    //   element.click();
+    // })
     
 
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion){
