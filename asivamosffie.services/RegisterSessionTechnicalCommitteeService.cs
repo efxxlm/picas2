@@ -2219,12 +2219,33 @@ namespace asivamosffie.services
                 {
                     foreach (Dominio placeholderDominio in placeholders)
                     {
-                        //ConstanCodigoVariablesPlaceHolders placeholder = (ConstanCodigoVariablesPlaceHolders)placeholderDominio.Codigo.ToString();
-
                         switch (placeholderDominio.Codigo)
                         {
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_APORTANTE_FUENTES_USO:
-                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ProyectoAportante.Aportante.NombreAportante.ToString());
+                                string strNombreAportante = string.Empty; 
+
+                                switch (ProyectoAportante.Aportante.TipoAportanteId)
+                                {
+                                    case ConstanTipoAportante.Ffie:
+                                        strNombreAportante = ConstanStringTipoAportante.Ffie;
+                                        break;
+
+                                    case ConstanTipoAportante.ET:
+
+                                        if (ProyectoAportante.Aportante.Departamento != null) {
+                                            strNombreAportante = ProyectoAportante.Aportante.Departamento.Descripcion;
+                                        }
+                                        else {
+                                            strNombreAportante = ProyectoAportante.Aportante.Municipio.Descripcion;
+                                        } 
+                                        break; 
+                                    case ConstanTipoAportante.Tercero:
+                                        strNombreAportante = ProyectoAportante.Aportante.NombreAportante.Nombre;
+                                        break;
+                                } 
+                           
+
+                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, strNombreAportante);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.VALOR_APORTANTE_PROYECTO_FUENTES_USO: 
@@ -2238,7 +2259,7 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.COMPONENTE_FUENTES_USO:
-                                pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "COMPONENTE_FUENTES_USO");
+                                 pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "COMPONENTE_FUENTES_USO");
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.FASE_FUENTES_USO:
