@@ -86,9 +86,10 @@ export class ProjectService {
     return this.http.get<any>(`${environment.apiUrl}/Project/GetFontsByAportantID?pAportanteId=${pAportanteId}`);
   }
 
-  public listaProyectoConFiltros(pTipoIntervencion: string, pLlaveMen: string, pMunicipio: string, pIdInstitucionEducativa: number, pIdSede: number){
+  public listaProyectoConFiltros(pTipoIntervencion: string, pLlaveMen: string, pRegion: string, pDepartamento: string, pMunicipio: string, pIdInstitucionEducativa: number, pIdSede: number){
     return this.http.get<ProyectoGrilla[]>(`${environment.apiUrl}/ProjectContracting/getListProyectsByFilters?pTipoIntervencion=${
-      pTipoIntervencion }&pLlaveMen=${ pLlaveMen }&pMunicipio=${ pMunicipio }&pIdInstitucionEducativa=${ pIdInstitucionEducativa }&pIdSede=${ pIdSede }`);
+      pTipoIntervencion }&pLlaveMen=${ pLlaveMen }&pRegion=${ pRegion }&pDepartamento=${ pDepartamento 
+      }&pMunicipio=${ pMunicipio }&pIdInstitucionEducativa=${ pIdInstitucionEducativa }&pIdSede=${ pIdSede }`);
   }
 
   getProyectoGrillaByProyectoId( id: number ){

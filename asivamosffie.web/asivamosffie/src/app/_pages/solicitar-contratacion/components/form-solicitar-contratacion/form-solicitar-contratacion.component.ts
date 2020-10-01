@@ -109,6 +109,8 @@ export class FormSolicitarContratacionComponent implements OnInit {
     
     let pTipoIntervencion: Dominio = this.addressForm.get('tipoInterventor').value;
     let pLlaveMen: string = this.addressForm.get('llaveMEN').value;
+    let pRegion: Localizacion = this.addressForm.get('region').value;
+    let pDepartamento: Localizacion = this.addressForm.get('departamento').value;
     let pMunicipio: Localizacion = this.addressForm.get('municipio').value;
     let pIdInstitucionEducativa: InstitucionEducativa = this.addressForm.get('institucionEducativa').value;
     let pIdSede: InstitucionEducativa = this.addressForm.get('sede').value;
@@ -116,6 +118,8 @@ export class FormSolicitarContratacionComponent implements OnInit {
     this.projectService.listaProyectoConFiltros( 
                                                   pTipoIntervencion ? pTipoIntervencion.codigo : "", 
                                                   pLlaveMen ? pLlaveMen : "", 
+                                                  pRegion ? pRegion.localizacionId == "7" ? "" : pRegion.localizacionId : "",
+                                                  pDepartamento ? pDepartamento.localizacionId : "",
                                                   pMunicipio ? pMunicipio.localizacionId : "", 
                                                   pIdInstitucionEducativa ? pIdInstitucionEducativa.institucionEducativaSedeId : 0, 
                                                   pIdSede ? pIdSede.institucionEducativaSedeId : 0 
