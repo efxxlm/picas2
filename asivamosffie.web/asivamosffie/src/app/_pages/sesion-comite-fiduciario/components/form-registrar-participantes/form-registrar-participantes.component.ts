@@ -264,7 +264,7 @@ export class FormRegistrarParticipantesComponent {
     let btnProposiciones = document.getElementById('btnProposiciones');
 
     if (this.objetoComiteTecnico.sesionParticipante && this.objetoComiteTecnico.sesionParticipante.length > 0) {
-      //btnRegistrarSolicitudes.click();
+      btnRegistrarSolicitudes.click();
       btnOtrosTemas.click();
       btnProposiciones.click();
     }
