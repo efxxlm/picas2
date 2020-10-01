@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,8 +9,6 @@ import { ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app
 import { Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { Observable } from 'rxjs';
-import { promise } from 'protractor';
-import { resolve } from 'dns';
 
 
 @Component({
@@ -18,10 +16,10 @@ import { resolve } from 'dns';
   templateUrl: './tabla-form-solicitud-multiple.component.html',
   styleUrls: ['./tabla-form-solicitud-multiple.component.scss']
 })
-export class TablaFormSolicitudMultipleComponent implements OnInit {
+export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
-  @Input() Estadosolicitud: Observable<Dominio>;
+  @Input() Estadosolicitud: Observable<string>;
   @Output() ActualizarProyectos: EventEmitter<ContratacionProyecto[]> = new EventEmitter();
 
   cantidadProyecto: Number = 0;
@@ -59,6 +57,52 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
   ) {
 
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.sesionComiteSolicitud) {
+      this.cargarRegistro();
+      console.log('input', this.Estadosolicitud, changes)
+    }
+
+
+  }
+
+  cambiarEstados(estado: string) {
+    
+    //this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = {}; })
+    this.onChangeEstado();
+    if (estado) {
+      if (this.cantidadProyecto == 1) {
+        switch (estado) {
+          case EstadosSolicitud.AprobadaPorComiteTecnico:
+            this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
+            this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.AprobadoComiteTecnico; })
+            break;
+          case this.estadosSolicitud.RechazadaPorComiteTecnico:
+            this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico);
+            this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.RechazadoComiteTecnico; })
+            break;
+          case this.estadosSolicitud.DevueltaPorComiteTecnico:
+            this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico);
+            this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.DevueltoComiteTecnico; })
+            break;
+        }
+      } else if (this.cantidadProyecto > 1) {
+        switch (estado) {
+          case EstadosSolicitud.AprobadaPorComiteTecnico:
+            this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
+            break;
+          default:
+            this.listaEstados = this.listaEstadosCompleta.filter(e => ["3", "5", "7"].includes(e.codigo));
+        }
+
+      }
+      this.proyectos.forEach(p => {
+        let estado = this.listaEstados.find(e => e.codigo == p.proyecto.estadoProyectoCodigo);
+        p.proyecto.estadoProyectoCodigo = estado ? estado.codigo : null;
+        console.log( this.listaEstados,  p.proyecto.estadoProyectoCodigo)
+      });
+    }
+  }
 
   ngOnInit(): void {
 
@@ -68,40 +112,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
         this.listaEstados = this.listaEstadosCompleta.filter(e => this.estadosValidos.includes(e.codigo));
 
         this.Estadosolicitud.subscribe(estado => {
-          this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = {}; })
-          this.onChangeEstado();
-          if (estado) {
-            if (this.cantidadProyecto > 0) {
-              switch (estado.codigo) {
-                case EstadosSolicitud.AprobadaPorComiteTecnico:
-                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
-                  this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.AprobadoComiteTecnico; })
-                  break;
-                case this.estadosSolicitud.RechazadaPorComiteTecnico:
-                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico);
-                  this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.RechazadoComiteTecnico; })
-                  break;
-                case this.estadosSolicitud.DevueltaPorComiteTecnico:
-                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico);
-                  this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.DevueltoComiteTecnico; })
-                  break;
-              }
-            } else {
-              switch (estado.codigo) {
-                case EstadosSolicitud.AprobadaPorComiteTecnico:
-                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
-                  break;
-                default:
-                  this.listaEstados = this.listaEstadosCompleta.filter(e => ["5", "7"].includes(e.codigo));
-              }
-
-            }
-            this.proyectos.forEach(p => 
-              { 
-                let estado = this.listaEstados.find( e => e.codigo == p.proyecto.estadoProyectoCodigo ); 
-                p.proyecto.estadoProyectoCodigo = estado ? estado.codigo : null;
-              });
-          }
+          console.log('estado', estado)
+          this.cambiarEstados( estado );  
 
         })
 
@@ -144,41 +156,34 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
 
   cargarRegistro() {
 
-    //this.proyectos = [];
-
     if (this.sesionComiteSolicitud.contratacion) {
-      let promesa = new Promise( resolve => {
-        this.projectContractingService.getContratacionByContratacionId(this.sesionComiteSolicitud.contratacion.contratacionId)
-        .subscribe(contra => {
-          this.cantidadProyecto = contra.contratacionProyecto.length;
-
-          contra.contratacionProyecto.forEach(cp => {
-            this.projectService.getProyectoGrillaByProyectoId(cp.proyectoId)
-              .subscribe(proy => {
-                cp.proyecto = proy;
-                resolve();
-              })
+      let promesa = new Promise(resolve => {
+        this.projectContractingService.getContratacionByContratacionIdWithGrillaProyecto(this.sesionComiteSolicitud.contratacion.contratacionId)
+          .subscribe(contra => {
+            this.cantidadProyecto = contra.contratacionProyecto.length;
 
             this.proyectos = contra.contratacionProyecto;
             this.ActualizarProyectos.emit(this.proyectos);
             this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
-
+            this.cambiarEstados( this.sesionComiteSolicitud.estadoCodigo );
+            resolve();
           })
 
-        })
-
       })
 
-      promesa.then( () => {
-        this.proyectos.forEach(p => 
-          { 
-            let estado = this.listaEstados.find( e => e.codigo == p.proyecto.estadoProyectoCodigo ); 
-            p.proyecto.estadoProyectoCodigo = estado ? estado.codigo : null;
-          });
-      })
+      // promesa.then(() => {
+      //   this.proyectos.forEach(p => {
+      //     let estado = this.listaEstados.find(e => e.codigo == p.proyecto.estadoProyectoCodigo);
+      //     p.proyecto.estadoProyectoCodigo = estado ? estado.codigo : null;
 
-      
-      
+      //     console.log(p.proyecto.proyectoId, this.sesionComiteSolicitud.estadoCodigo)
+
+
+      //   });
+      // })
+
+
+
     }
   }
 
