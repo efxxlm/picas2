@@ -5,6 +5,7 @@ import { Contratacion, ContratacionProyecto } from 'src/app/_interfaces/project-
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-definir-caracteristicas',
@@ -14,6 +15,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class DefinirCaracteristicasComponent implements OnInit {
 
   contratacionProyecto: ContratacionProyecto;
+  tipoIntervencion: string;
 
   addressForm: FormGroup = this.fb.group({
     completada: null,
@@ -33,12 +35,14 @@ export class DefinirCaracteristicasComponent implements OnInit {
   constructor(
               private fb: FormBuilder,
               private route: ActivatedRoute,
+              private commonService: CommonService,
               private projectContractingService: ProjectContractingService,
               public dialog: MatDialog,    
               private router: Router,
               
              ) 
-  {}
+  {
+  }
 
     ngOnInit(): void {
       this.route.params.subscribe((params: Params) => {
@@ -49,6 +53,16 @@ export class DefinirCaracteristicasComponent implements OnInit {
           this.contratacionProyecto = response;
 
           setTimeout(() => {
+            this.commonService.listaTipoIntervencion()
+              .subscribe( ( intervenciones: any ) => {
+                console.log( intervenciones );
+                for ( let intervencion of intervenciones ) {
+                  if ( intervencion.codigo === this.contratacionProyecto.proyecto.tipoIntervencionCodigo ) {
+                    this.tipoIntervencion = intervencion.nombre;
+                    break;
+                  };
+                }
+              } );
 
             this.addressForm.get('reasignacion').setValue( ( ( this.contratacionProyecto.esReasignacion !== null ) ? this.contratacionProyecto.esReasignacion : null ) );
             this.addressForm.get('avanceObra').setValue( ( ( this.contratacionProyecto.esAvanceobra !== null ) ? this.contratacionProyecto.esAvanceobra : null ) );    

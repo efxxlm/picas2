@@ -11,9 +11,9 @@
   </div>
 
   <p class="text-detalle d-flex" *ngIf="contratacionProyecto" style="justify-content: center;">
-    <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
-    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
-    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+    <span style="margin-right: 2em;"><b> {{ tipoIntervencion }} </b></span>
+    <span style="margin-right: 2em;"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span style="margin-right: 2em;">{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
   </p>
 
   <div class="container-valor" *ngIf="contratacionProyecto">
@@ -53,7 +53,7 @@
                     <label class="label-left">Nombre del aportante:</label>
                   </div>
                   <div class="col d-flex">
-                    <b class="valor-input">FFIE</b>
+                    <b class="valor-input"> {{ aportante.get( 'nombreAportante' ).value }} </b>
                   </div>
                 </div>
               </div>
@@ -62,8 +62,7 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="valorAportanteProyecto">Valor del aportante al
-                      proyecto</label>
+                    <label class="label-left" for="valorAportanteProyecto">Valor del aportante al proyecto</label>
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">

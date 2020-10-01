@@ -63,7 +63,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   onDelete( id: number ){
-    this.openDialogSiNo('','“¿Está seguro de eliminar este registro?', id)  
+    this.openDialogSiNo('','¿Está seguro de eliminar este registro?', id)  
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e:number) {
@@ -92,7 +92,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
     this.projectContractingService.eliminarContratacion( id )
       .subscribe( respuesta => {
           
-        this.openDialog('Solicitud Contratacion', 'La información se ha eliminado correctamente')
+        this.openDialog('Solicitud Contratación', 'La información se ha eliminado correctamente')
         this.ngOnInit();          
 
       });
