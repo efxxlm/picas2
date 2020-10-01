@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 
 import { SolicitarContratacionRoutingModule } from './solicitar-contratacion-routing.module';
 import { SolicitarContratacionComponent } from './components/solicitar-contratacion/solicitar-contratacion.component';
@@ -29,6 +29,8 @@ import { VerDetalleContratacionComponent } from './components/ver-detalle-contra
 import { GestionarProcesosContractualesModule } from '../gestionar-procesos-contractuales/gestionar-procesos-contractuales.module';
 import { QuillModule } from 'ngx-quill';
 
+import es from '@angular/common/locales/es';
+registerLocaleData( es );
 
 @NgModule({
   declarations: [
@@ -61,6 +63,9 @@ import { QuillModule } from 'ngx-quill';
     GestionarProcesosContractualesModule,
     ReactiveFormsModule,
     CurrencyMaskModule
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: "es-ES" }
   ]
 })
 export class SolicitarContratacionModule { }
