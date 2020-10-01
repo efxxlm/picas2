@@ -22,7 +22,8 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   }
 
   editorStyle = {
-    height: '50px'
+    height: '50px',
+    color: 'var(--mainColor)'
   };
 
   config = {

@@ -58,8 +58,6 @@
 
   <mat-card class="shipping-card">
     <mat-card-content>
-      <div class="row">
-        <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
               <label for="tipoIntervencion" class="label-left">Tipo de Intervención</label>
@@ -72,13 +70,9 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
-          </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-8">
-          <div class="row">
             <div class="pr-1">
               <label for="tipoAlcance" class="label-left">Tipo de alcance</label>
             </div>
@@ -90,12 +84,8 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
-          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
               <label class="label-left">¿En este proceso de selección se realiza distribución del territorio en
@@ -107,13 +97,9 @@
                 <mat-radio-button value="false">No</mat-radio-button>
               </mat-radio-group>
               <span class="required-form-group">*</span>
-            </div>
-          </div>
         </div>
       </div>
       <div class="row" *ngIf="addressForm.get('distribucionEnGrupos').value === 'true'">
-        <div class="col-md-8">
-          <div class="row">
             <div class="pr-1">
               <label for="cuantosGrupos" class="label-left">¿Cuántos grupos?</label>
             </div>
@@ -125,8 +111,6 @@
                   (keyup)="CambioNumeroAportantes()" required>
               </mat-form-field>
               <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -138,25 +122,19 @@
             <mat-card-title class="header-card--text sub-text">
               Grupo {{ i + 1 }}
             </mat-card-title>
-            <div class="row">
-              <div class="col-md-12">
                 <div class="row">
                   <div class="pr-1">
                     <label for="nombreGrupo" class="label-left">Nombre del grupo</label>
                   </div>
-                  <div class="col d-flex">
+                  <div class="col d-flex mainColor">
                     <mat-form-field class="full-width">
-                      <input matInput #nombreGrupo type="text" maxlength="500" formControlName="nombreGrupo" required>
+                      <input matInput #nombreGrupo type="text"  maxlength="500" formControlName="nombreGrupo" required>
                       <input type="hidden" formControlName="procesoSeleccionGrupoId">
                     </mat-form-field>
                     <span class="contador">{{500 - nombreGrupo.value.length}}</span>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-8">
-                <div class="row">
                   <div class="pr-1">
                     <label for="tipoPresupuesto" class="label-left">Tipo de presupuesto</label>
                   </div>
@@ -168,8 +146,6 @@
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="row"
@@ -211,21 +187,17 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-8">
-                <div class="row">
                   <div class="pr-1">
                     <label for="plazoMeses" class="label-left">Plazo en meses</label>
                   </div>
                   <div class="col d-flex">
-                    <mat-form-field class="full-width">
+                    <mat-form-field class="full-width mainColor">
                       <input matInput #plazoMeses type="number" min="1" max="99" maxlength="2" 
                       (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   (keyup)="CambioNumeroAportantes()" formControlName="plazoMeses" required>
                     </mat-form-field>
                     <span class="contador">{{2 - plazoMeses.value.length}}</span>
-                  </div>
-                </div>
               </div>
               <div class="col-md-4 text-right" *ngIf="addressForm.value.grupos.length > 1">
                 <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(grupos, i)">
@@ -287,7 +259,7 @@
                       <span class="required-form-group required-calendar" style="margin-top: 1.5em;">*</span>
                     </div>
                     <mat-form-field class="example-full-width">
-                      <input matInput [matDatepicker]="picker" formControlName="fechaMaxima" (click)="picker.open()" readonly>
+                      <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA" class="mainColor" formControlName="fechaMaxima" (click)="picker.open()" readonly>
                       <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                   </td>

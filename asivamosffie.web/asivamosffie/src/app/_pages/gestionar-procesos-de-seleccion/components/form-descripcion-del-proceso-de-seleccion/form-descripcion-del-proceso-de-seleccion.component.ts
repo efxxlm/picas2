@@ -29,7 +29,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   addressForm = this.fb.group({});
 
   editorStyle = {
-    height: '100px'
+    height: '100px',
+    color: 'var(--mainColor)'
   };
 
   config = {
