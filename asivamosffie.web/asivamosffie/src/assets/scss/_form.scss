@@ -153,6 +153,7 @@ div.mat-select-arrow {
     right: 0;
     top: 45%;
     font-weight: 600;
+    color: var(--mainColor);
 }
 
 .mat-select[required]::after {
@@ -161,6 +162,7 @@ div.mat-select-arrow {
     right: 0;
     font-weight: 600;
     top: 25%;
+    color: var(--mainColor);
 }
 
 .mat-placeholder-required {
@@ -202,8 +204,11 @@ div.mat-select-arrow {
 .sin-contador{
     padding-right: 2.9em;
 }
-
+/* lo vole jflorez
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
+    content: '';
+}*/
+.mat-form-field.nocontent input:required ~ .mat-form-field-label-wrapper::after {
     content: '';
 }
 

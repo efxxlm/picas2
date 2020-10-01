@@ -24,8 +24,8 @@ export class DisponibilidadPresupuestalService {
   StartDownloadPDF(pdf)
   {
     console.log(pdf[0]);
-    var json = JSON.stringify(pdf[0]);
-    return this.http.get<any>(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`);    
+    var json = JSON.stringify(pdf[0]);    
+    return this.http.get(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`, { responseType: "blob" } );
   }
 
   CreateDDP(id)

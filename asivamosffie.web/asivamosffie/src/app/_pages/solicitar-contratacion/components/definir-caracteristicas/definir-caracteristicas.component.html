@@ -15,7 +15,7 @@
     <span style="margin-right: 2em"><b>{{ tipoIntervencion }}</b></span>
     <span style="margin-right: 2em">{{ contratacionProyecto.tipoIntervencionCodigo }}</span>
     <span style="margin-right: 2em"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
-    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+    <span> {{ municipio }} </span>
   </p>
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">

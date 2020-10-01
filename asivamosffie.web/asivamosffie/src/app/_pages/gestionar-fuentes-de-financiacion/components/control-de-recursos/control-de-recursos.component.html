@@ -88,29 +88,23 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="vigencia">Vigencia</label>
-                </div>
-                <div class="col">
-                  <mat-form-field class="select-width">
-                    <mat-select formControlName="vigencia">
-                      <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
-                        {{ vigencia.tipoVigenciaCodigo }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
+          <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">            
+              <div class="pr-1">
+                <label class="label-left" for="vigencia">Vigencia</label>
               </div>
-            </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="vigencia">
+                    <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                      {{ vigencia.tipoVigenciaCodigo }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
-              <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" class="fechaConsignacion">Fecha de consignación</label>
+                  <label class="label-left" for="fechaConsignacion">Fecha de consignación</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
@@ -120,13 +114,9 @@
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                   </button>
-                </div>
-              </div>
-            </div>
+                </div>            
           </div>
           <div class="row">
-            <div class="col-md-8">
-              <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="numeroCuenta">Valor de consignación</label>
                 </div>
@@ -137,9 +127,7 @@
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                   </mat-form-field>
                   <span class="contador">{{50 - valorConsignacion.value.length}}</span>
-                </div>
-              </div>
-            </div>
+                </div>            
           </div>
   
         </mat-card-content>

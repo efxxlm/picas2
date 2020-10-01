@@ -29,9 +29,10 @@ export interface RegistrosCargados {
   styleUrls: ['./tabla-proyectos-tecnico.component.scss']
 })
 export class TablaProyectosTecnicoComponent {
-  
-  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
+  //no se va a usar estado juridico
+  //displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
 
+  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadop','gestion'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataSource= new MatTableDataSource();

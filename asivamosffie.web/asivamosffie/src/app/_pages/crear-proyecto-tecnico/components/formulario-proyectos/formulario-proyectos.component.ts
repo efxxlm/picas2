@@ -680,7 +680,8 @@ export class FormularioProyectosComponent implements OnInit {
 
   getMunAportante(id: number, i: number)
   {
-    console.log(this.proyecto.proyectoAportante[i].depto);
+    
+    this.listaVigencias[i]=this.listaAportante[i].filter(x=>x.departamentoId==this.proyecto.proyectoAportante[i].depto && x.municipioId==null);
     this.commonServices.listaMunicipiosByIdDepartamento(this.proyecto.proyectoAportante[i].depto).
     subscribe(res=>{
       this.listadoMun[i]=res;

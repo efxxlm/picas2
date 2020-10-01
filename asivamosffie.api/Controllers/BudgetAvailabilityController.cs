@@ -136,7 +136,8 @@ namespace asivamosffie.api.Controllers
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 var respuesta = await _budgetAvailabilityService.GetPDFDDP(id,UsuarioModificacion);
-                return File(respuesta, "application/octet-stream");
+                //return File(respuesta, "application/octet-stream");
+                return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion), "application/pdf");
             }
             catch (Exception ex)
             {
