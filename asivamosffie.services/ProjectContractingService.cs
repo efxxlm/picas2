@@ -349,7 +349,7 @@ namespace asivamosffie.services
 
                 List<Localicacion> Municipios = new List<Localicacion>();
 
-                if (!string.IsNullOrEmpty(pDepartamento) && !string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pMunicipio))
+                if (!string.IsNullOrEmpty(pDepartamento) && string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pMunicipio))
                 {
                     Municipios = await _commonService.GetListMunicipioByIdDepartamento(pDepartamento);
                 }
