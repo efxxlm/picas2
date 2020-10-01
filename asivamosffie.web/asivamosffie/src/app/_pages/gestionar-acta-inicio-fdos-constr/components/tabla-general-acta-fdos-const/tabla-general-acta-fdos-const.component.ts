@@ -46,7 +46,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
   generarActaFDos(id){
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa',id]);
+    this.router.navigate(['/generarActaInicioFaseIIConstruccion/generarActaFDos',id]);
   }
   verDetalleEditarActaFDos(observaciones,id){
     if(observaciones == true){
