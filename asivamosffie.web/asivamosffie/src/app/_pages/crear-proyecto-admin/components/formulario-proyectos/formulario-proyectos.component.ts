@@ -56,15 +56,32 @@ export class FormularioProyectosComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
     this.projectServices.ListAdministrativeProject().subscribe(respuesta => {
-      let id = 0;
-      id = respuesta[0].proyectoAdminitracionId;
-      
-      this.proyectoAdmin = { identificador: (id + 1).toString(), proyectoAdministrativoAportante: [{
-        aportanteId: 0,
-        proyectoAdminstrativoId: 0,
+      if(id!=null && id!="")
+      {
+        let proyectoadmin1=respuesta.filter(x=>x.proyectoAdminitracionId==id);
         
-        aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
-      }] };
+        this.proyectoAdmin = proyectoadmin1[0].proyecto;
+        this.proyectoAdmin.identificador=proyectoadmin1[0].proyectoAdminitracionId;
+        //this.proyectoAdmin.proyectoAdministrativoAportante=proyectoadmin1[0].proyecto.proyectoAdministrativoAportante;
+        let i=0;
+        proyectoadmin1[0].proyecto.proyectoAdministrativoAportante.forEach(element => {
+          this.onchangeFont(i);
+          i++
+        });
+        
+        console.log(this.proyectoAdmin);
+      }
+      else{
+        let idcontador = 0;
+        idcontador = respuesta[0].proyectoAdminitracionId;
+        this.proyectoAdmin = { identificador: (idcontador + 1).toString(), proyectoAdministrativoAportante: [{
+          aportanteId: 0,
+          proyectoAdminstrativoId: 0,
+          
+          aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
+        }] };
+      }
+      
     },
       err => {
         let mensaje: string;
@@ -149,8 +166,6 @@ export class FormularioProyectosComponent implements OnInit {
   onSubmit() {
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
       this.openDialog('', respuesta.message,true);
-
-
     },
       err => {
         let mensaje: string;

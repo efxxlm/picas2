@@ -32,7 +32,6 @@ namespace asivamosffie.api.Controllers
             return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaIdComite(IdComite), "application/pdf");
         }
          
-
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
         public async Task<IActionResult> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
@@ -49,7 +48,6 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
 
         [HttpPost]
         [Route("CreateEditSesionSolicitudObservacionProyecto")]
@@ -356,8 +354,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerSessionTechnicalCommitteeService.GetCompromisosByComiteTecnicoId(ComiteTecnicoId);
         }
-
-
+         
         [Route("GetComiteTecnicoByComiteTecnicoId")]
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {

@@ -31,7 +31,7 @@
 
   <div class="animatedDown" *ngIf="verBusqueda">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-      <mat-card class="shipping-card">
+      <mat-card class="shipping-card" style="width: 60%;">
         <button type="button" mat-icon-button (click)="verBusqueda = false" class="text-info--close">
           <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar">
         </button>
@@ -42,7 +42,7 @@
         </mat-card-header>
         <mat-card-content>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="tipoInterventor">Tipo de intervención</label>
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="llaveMEN">Llave MEN</label>
@@ -77,7 +77,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="region">Región</label>
@@ -95,7 +95,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="departamento">Departamento</label>
@@ -113,7 +113,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="municipio">Municipio</label>
@@ -131,7 +131,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="institucionEducativa">Institución Educativa</label>
@@ -150,7 +150,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="sede">Sede</label>
@@ -171,6 +171,16 @@
         <mat-card-actions class="text-center">
           <button mat-button color="primary" class="btn-buscar" type="submit" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
             <img src="assets/img/icon/lupa.svg" alt="buscar"> Buscar
+          </button>
+
+          <button mat-button 
+                  color="primary" 
+                  class="btn-buscar" 
+                  type="button" 
+                  style="font-size: 70%;"
+                  (click)="reiniciarFiltro()"
+                  [disabled]="!addressForm.dirty">
+            <img src="assets/img/icon/borrar.svg" alt="buscar">
           </button>
         </mat-card-actions>
       </mat-card>

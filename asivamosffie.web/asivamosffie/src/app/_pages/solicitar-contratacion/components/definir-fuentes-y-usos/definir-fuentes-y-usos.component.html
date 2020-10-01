@@ -6,20 +6,20 @@
   </div>
   <div class="text-center mb-2em">
     <h1 class="title-menu--h1 ">
-      Defenir fuentes y usos
+      Definir fuentes y usos
     </h1>
   </div>
 
-  <p class="text-detalle" *ngIf="contratacionProyecto">
-    <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
-    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
-    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+  <p class="text-detalle d-flex" *ngIf="contratacionProyecto" style="justify-content: center;">
+    <span style="margin-right: 2em;"><b> {{ tipoIntervencion }} </b></span>
+    <span style="margin-right: 2em;"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span style="margin-right: 2em;">{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
   </p>
 
   <div class="container-valor" *ngIf="contratacionProyecto">
-    <p>Valor total del proyecto <b>${{ contratacionProyecto.proyecto.valorTotal }}</b></p>
-    <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra }}</b></p>
-    <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria }}</b></p>
+    <p>Valor total del proyecto <b> ${{ contratacionProyecto.proyecto.valorTotal | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
   </div>
 
   <div class="text-center mb-2em">
@@ -53,7 +53,7 @@
                     <label class="label-left">Nombre del aportante:</label>
                   </div>
                   <div class="col d-flex">
-                    <b class="valor-input">FFIE</b>
+                    <b class="valor-input"> {{ aportante.get( 'nombreAportante' ).value }} </b>
                   </div>
                 </div>
               </div>
@@ -62,8 +62,7 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="valorAportanteProyecto">Valor del aportante al
-                      proyecto</label>
+                    <label class="label-left" for="valorAportanteProyecto">Valor del aportante al proyecto</label>
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">

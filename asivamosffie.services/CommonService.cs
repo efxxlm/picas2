@@ -65,19 +65,20 @@ namespace asivamosffie.services
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo);
         }
-
-
+         
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
         {
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
             return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
         }
+
         public string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio)
         {
             //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
             string idPadre = _context.Localizacion.Where(r => r.LocalizacionId.Equals(pIdMunicipio)).Select(r => r.IdPadre).FirstOrDefault();
             return _context.Localizacion.Where(r => r.LocalizacionId.Equals(idPadre)).FirstOrDefault().Descripcion;
         }
+
         public string GetNombreRegionByIdMunicipio(string pIdMunicipio)
         {
             //no se puede hacer retornando el include ya que id elPadre no esta FK con el padre en base de datos
@@ -140,7 +141,7 @@ namespace asivamosffie.services
             .Select(x => new Localicacion
             {
                 LocalizacionId = x.LocalizacionId,
-                Descripcion = x.Descripcion.ToLower()
+                Descripcion = x.Descripcion.ToUpper()
             }).ToListAsync();
         }
 
@@ -151,7 +152,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdDepartamento)).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion.ToLower()
+                    Descripcion = x.Descripcion.ToUpper()
                 }).ToListAsync();
             }
             else
@@ -159,7 +160,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.Nivel == 2).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion.ToLower()
+                    Descripcion = x.Descripcion.ToUpper()
                 }).ToListAsync();
             }
 

@@ -76,7 +76,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       let contProyectos = 0;
       if ( this.contratacion.contratacionProyecto ) {
         for ( let contratacionProyecto of this.contratacion.contratacionProyecto ) {
-          if ( contratacionProyecto.tieneMonitoreoWeb === true ) {
+          if ( contratacionProyecto.tieneMonitoreoWeb !== null ) {
             contProyectos += 1;
           };
         };

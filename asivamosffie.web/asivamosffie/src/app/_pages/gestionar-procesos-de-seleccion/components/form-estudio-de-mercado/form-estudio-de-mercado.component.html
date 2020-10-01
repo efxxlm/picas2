@@ -9,7 +9,8 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantasCotizaciones type="number" min="1" max="99"
+                <input matInput #cuantasCotizaciones type="number" min="1" max="99" maxlength="2"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required
                   formControlName="cuantasCotizaciones" (keyup)="CambioNumeroCotizantes()">
               </mat-form-field>
               <span class="contador">{{2 - cuantasCotizaciones.value.length}}</span>
@@ -19,7 +20,7 @@
       </div>
 
       <div formGroupName="cotizaciones">
-        <h2 class="card-subTitle">Cotizaciones</h2>
+        <h2 class="card-subTitle" *ngIf="cotizaciones.controls.length>0">Cotizaciones</h2>
         <div *ngFor="let cotizacion of cotizaciones.controls; let i = index">
           <div [formGroupName]="i">
             
@@ -34,11 +35,11 @@
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #nombreOrganizacion type="text" maxlength="500"
+                      <input matInput #nombreOrganizacion type="text" maxlength="20"
                         formControlName="nombreOrganizacion" required>
                       <input type="hidden" formControlName="procesoSeleccionCotizacionId">
                     </mat-form-field>
-                    <span class="contador">{{500 - nombreOrganizacion.value.length}}</span>
+                    <span class="contador">{{20 - nombreOrganizacion.value.length}}</span>
                   </div>
                 </div>
               </div>
@@ -51,7 +52,7 @@
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #valor type="number" maxlength="20" formControlName="valor" required>
+                      <input matInput #valor currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20" formControlName="valor" required>
                     </mat-form-field>
                     <span class="contador">{{20 - valor.value.length}}</span>
                   </div>
@@ -69,7 +70,7 @@
                       (onContentChanged)="maxLength($event, 3000)" formControlName="descripcion" required></quill-editor>
                       <div class="d-flex align-items-center">
                         <span class="contador miles" *ngIf="cotizacion.get('descripcion').value !== null">
-                          {{3000 - textoLimpio(cotizacion.get('descripcion').value)}}
+                          {{3000 - (textoLimpio(cotizacion.get('descripcion').value)>3000?3000:textoLimpio(cotizacion.get('descripcion').value))}}
                         </span>
                         <span class="contador miles" *ngIf="cotizacion.get('descripcion').value === null">
                           3000

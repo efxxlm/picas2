@@ -7,7 +7,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { Router } from '@angular/router';
 import { SesionComiteSolicitud, SesionParticipante, SesionSolicitudCompromiso, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
-import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -31,7 +31,7 @@ export class FormSolicitudComponent implements OnInit {
   cantidadNoAprobado: number = 0;
   resultadoVotacion: string = '';
 
-
+  proyectos: ContratacionProyecto[];
 
   addressForm = this.fb.group({
     desarrolloSolicitud: [],
@@ -74,6 +74,10 @@ export class FormSolicitudComponent implements OnInit {
 
   }
 
+  ActualizarProyectos( lista ){
+    this.proyectos = lista;
+  }
+
   getMostrarProyectos(){
     if ( this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion )
       return 'block';
@@ -82,9 +86,9 @@ export class FormSolicitudComponent implements OnInit {
   }
   ngOnInit(): void {
 
-    let estados: string[] = ['2', '4', '6']
+    let estados: string[] = ['4', '6', '8']
 
-    this.commonService.listaEstadoSolicitud()
+    this.commonService.listaEstadoProyecto() 
       .subscribe(response => {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
@@ -145,7 +149,23 @@ export class FormSolicitudComponent implements OnInit {
     });
   }
 
+  getObservableEstadoSolicitud(){
+    return this.addressForm.get('estadoSolicitud').valueChanges;
+  }
+
   onSubmit() {
+
+    if (this.proyectos)
+      this.proyectos.forEach( p => 
+        {
+            let proyecto = p.proyecto
+            p.proyecto = {
+              EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
+              proyectoId: proyecto.proyectoId,
+
+            }
+            p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
+        })
 
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,

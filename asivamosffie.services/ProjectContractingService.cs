@@ -114,8 +114,19 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetAllContratacionByContratacionId(int pContratacionId)
         {
-            return await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
+            return await _context.Contratacion
+                .Where(r => r.ContratacionId == pContratacionId)
               .Include(r => r.Contratista)
+                 .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+                   .ThenInclude(r => r.ProyectoAportante)
+                     .ThenInclude(r => r.Aportante)
+                       .ThenInclude(r => r.NombreAportante)
+                           .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+                   .ThenInclude(r => r.ProyectoAportante)
+                     .ThenInclude(r => r.Aportante)
+                       .ThenInclude(r => r.Departamento)
               .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                            .ThenInclude(r => r.ProyectoPredio)
@@ -126,7 +137,12 @@ namespace asivamosffie.services
                .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                       .ThenInclude(r => r.InfraestructuraIntervenirProyecto)
-              .Include(r => r.ContratacionProyecto).FirstOrDefaultAsync();
+              .Include(r => r.ContratacionProyecto)
+                 .Include(r => r.ContratacionProyecto)
+                 .ThenInclude(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante)
+                        .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
+              .FirstOrDefaultAsync();
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
@@ -146,19 +162,19 @@ namespace asivamosffie.services
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
             List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == 1).ToList();
             List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == 3).ToList();
-           
+
             List<Dominio> ListFases = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fases && (bool)r.Activo).ToList();
 
             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
             {
                 foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                 {
-                   
+
                     foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
-                    {  
+                    {
                         foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                         {
-                             
+
                         }
                     }
                 }
@@ -225,6 +241,11 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
+                           .ThenInclude(r => r.Departamento)
+                             .Include(r => r.Proyecto)
+                     .ThenInclude(r => r.ProyectoAportante)
+                         .ThenInclude(r => r.Aportante)
+                    .ThenInclude(r => r.NombreAportante)
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.ContratacionProyectoAportante)
@@ -247,7 +268,8 @@ namespace asivamosffie.services
 
             try
             {
-                ListContratacion = await _context.Contratacion.Where(r => !(bool)r.Eliminado).ToListAsync();
+                ListContratacion = await _context.Contratacion.Where(r => !(bool)r.Eliminado).Include(r=> r.Contratista).ToListAsync();
+
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
 
                 foreach (var Contratacion in ListContratacion)
@@ -315,6 +337,8 @@ namespace asivamosffie.services
         public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(
             string pTipoIntervencion,
             string pLlaveMen,
+            string pRegion,
+            string pDepartamento,
             string pMunicipio,
             int pIdInstitucionEducativa,
             int pIdSede)
@@ -344,6 +368,27 @@ namespace asivamosffie.services
                                  .Include(r => r.Sede)
                                  .Include(r => r.InstitucionEducativa)
                                  .Include(r => r.LocalizacionIdMunicipioNavigation).Distinct().ToList();
+
+                List<Localicacion> Municipios = new List<Localicacion>();
+
+                if (!string.IsNullOrEmpty(pDepartamento) && string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pMunicipio))
+                {
+                    Municipios = await _commonService.GetListMunicipioByIdDepartamento(pDepartamento);
+                }
+
+                if ( !string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pDepartamento) && string.IsNullOrEmpty(pMunicipio))
+                { 
+                    List<Localizacion> Departamentos = _context.Localizacion.Where(r => r.IdPadre == pRegion).ToList();
+                    foreach (var dep in Departamentos)
+                    {
+                        Municipios.AddRange(await _commonService.GetListMunicipioByIdDepartamento(dep.LocalizacionId));
+                    }
+                }
+                if (Municipios.Count() > 0)
+                {
+                    //ListContratacion.RemoveAll(item => LisIdContratacion.Contains(item.ContratacionId));
+                    ListProyectos.RemoveAll(item => !Municipios.Select(r=> r.LocalizacionId).Contains(item.LocalizacionIdMunicipio));
+                }
 
 
                 List<Proyecto> ListaProyectosRemover = new List<Proyecto>();

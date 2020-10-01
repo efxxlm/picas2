@@ -9,6 +9,8 @@ import { ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app
 import { Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { Observable } from 'rxjs';
+import { promise } from 'protractor';
+import { resolve } from 'dns';
 
 
 @Component({
@@ -21,7 +23,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() Estadosolicitud: Observable<Dominio>;
   @Output() ActualizarProyectos: EventEmitter<ContratacionProyecto[]> = new EventEmitter();
-  
+
   cantidadProyecto: Number = 0;
   listaEstados: Dominio[] = [];
   listaEstadosCompleta: Dominio[] = [];
@@ -66,38 +68,46 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
         this.listaEstados = this.listaEstadosCompleta.filter(e => this.estadosValidos.includes(e.codigo));
 
         this.Estadosolicitud.subscribe(estado => {
-          this.proyectos.forEach( p => { p.proyecto.estadoProyecto = {}; } )
+          this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = {}; })
           this.onChangeEstado();
-          if (estado)
-          if (this.cantidadProyecto > 0)
-          {
-            switch (estado.codigo) {
-              case EstadosSolicitud.AprobadaPorComiteTecnico:
-                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
-                break;
-              case this.estadosSolicitud.RechazadaPorComiteTecnico:
-                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico);
-                break;
-              case this.estadosSolicitud.DevueltaPorComiteTecnico:
-                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico);
-                break;
-            }
-          }else{
-            switch (estado.codigo) {
-              case EstadosSolicitud.AprobadaPorComiteTecnico:
-                this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
-                break;
-              default:
-                this.listaEstados = this.listaEstadosCompleta.filter(e => ["3","5"].includes(e.codigo));
-            }
+          if (estado) {
+            if (this.cantidadProyecto > 0) {
+              switch (estado.codigo) {
+                case EstadosSolicitud.AprobadaPorComiteTecnico:
+                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
+                  this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.AprobadoComiteTecnico; })
+                  break;
+                case this.estadosSolicitud.RechazadaPorComiteTecnico:
+                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico);
+                  this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.RechazadoComiteTecnico; })
+                  break;
+                case this.estadosSolicitud.DevueltaPorComiteTecnico:
+                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico);
+                  this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.DevueltoComiteTecnico; })
+                  break;
+              }
+            } else {
+              switch (estado.codigo) {
+                case EstadosSolicitud.AprobadaPorComiteTecnico:
+                  this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
+                  break;
+                default:
+                  this.listaEstados = this.listaEstadosCompleta.filter(e => ["5", "7"].includes(e.codigo));
+              }
 
+            }
+            this.proyectos.forEach(p => 
+              { 
+                let estado = this.listaEstados.find( e => e.codigo == p.proyecto.estadoProyectoCodigo ); 
+                p.proyecto.estadoProyectoCodigo = estado ? estado.codigo : null;
+              });
           }
-                      
+
         })
-        
+
       })
 
-      
+
 
 
     this.dataSource.sort = this.sort;
@@ -128,8 +138,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
     ])
   }
 
-  onChangeEstado(){
-    this.ActualizarProyectos.emit( this.proyectos );
+  onChangeEstado() {
+    this.ActualizarProyectos.emit(this.proyectos);
   }
 
   cargarRegistro() {
@@ -137,7 +147,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
     //this.proyectos = [];
 
     if (this.sesionComiteSolicitud.contratacion) {
-      this.projectContractingService.getContratacionByContratacionId(this.sesionComiteSolicitud.contratacion.contratacionId)
+      let promesa = new Promise( resolve => {
+        this.projectContractingService.getContratacionByContratacionId(this.sesionComiteSolicitud.contratacion.contratacionId)
         .subscribe(contra => {
           this.cantidadProyecto = contra.contratacionProyecto.length;
 
@@ -145,17 +156,29 @@ export class TablaFormSolicitudMultipleComponent implements OnInit {
             this.projectService.getProyectoGrillaByProyectoId(cp.proyectoId)
               .subscribe(proy => {
                 cp.proyecto = proy;
-                
+                resolve();
               })
-        
-            this.proyectos = contra.contratacionProyecto;  
-            this.ActualizarProyectos.emit( this.proyectos );
+
+            this.proyectos = contra.contratacionProyecto;
+            this.ActualizarProyectos.emit(this.proyectos);
             this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
-           
+
           })
 
         })
 
+      })
+
+      promesa.then( () => {
+        this.proyectos.forEach(p => 
+          { 
+            let estado = this.listaEstados.find( e => e.codigo == p.proyecto.estadoProyectoCodigo ); 
+            p.proyecto.estadoProyectoCodigo = estado ? estado.codigo : null;
+          });
+      })
+
+      
+      
     }
   }
 

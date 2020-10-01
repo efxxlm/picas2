@@ -106,13 +106,13 @@ export class RegistrarComponent implements OnInit {
 
     this.fuenteRecursosArray.clear();
     const aportante = this.nombresAportantes.find(nom => nom.cofinanciacionAportanteId == this.idAportante);
+    console.log("este es el apo");
     console.log(aportante);
-    console.log(aportante.cuentaConRp);
     this.addressForm.get('tieneRP').setValue(aportante.cuentaConRp==true?"1":"0");
     if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
     {
       this.addressForm.get('nombreAportanteFFIE').setValue(aportante);  
-      this.changeNombreAportanteFFIE();            
+        this.changeNombreAportanteFFIE();            
     }
     else if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString())){
       
@@ -150,6 +150,8 @@ export class RegistrarComponent implements OnInit {
     
     this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
       this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista);
+      console.log("esta es la lista de fuentes");
+      console.log(lista);
       lista.forEach(ff => {          
         if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
         {
@@ -195,26 +197,27 @@ export class RegistrarComponent implements OnInit {
 
           listaCuentas.push(grupoCuenta);
         });
-        // Registro Presupuestal
-        ff.aportante.registroPresupuestal.forEach(rp => {
-          const grupoRegistroP = this.createRP();
-
-          grupoRegistroP.get('registroPresupuestalId').setValue(rp.registroPresupuestalId);
-          grupoRegistroP.get('numeroRP').setValue(rp.numeroRp);
-          grupoRegistroP.get('fecha').setValue(rp.fechaRp);
-          console.log("busco "+rp.cofinanciacionDocumentoId);
-          console.log(this.listaDocumentos);
-          let documentose=this.listaDocumentos.filter(x=>x.cofinanciacionDocumentoId==rp.cofinanciacionDocumentoId);
-          console.log(documentose);
-          grupoRegistroP.get('numerodocumentoRP').setValue(documentose[0]);
-
-          this.addressForm.get('cuantosRP').setValue(ff.aportante.registroPresupuestal.length);
-
-          listaRegistrosP.push(grupoRegistroP);
-
-        });
+        
 
         this.fuenteRecursosArray.push(grupo);
+      });
+      // Registro Presupuestal
+      lista[0].aportante.registroPresupuestal.forEach(rp => {
+        const grupoRegistroP = this.createRP();
+
+        grupoRegistroP.get('registroPresupuestalId').setValue(rp.registroPresupuestalId);
+        grupoRegistroP.get('numeroRP').setValue(rp.numeroRp);
+        grupoRegistroP.get('fecha').setValue(rp.fechaRp);
+        console.log("busco "+rp.cofinanciacionDocumentoId);
+        console.log(this.listaDocumentos);
+        let documentose=this.listaDocumentos.filter(x=>x.cofinanciacionDocumentoId==rp.cofinanciacionDocumentoId);
+        console.log(documentose);
+        grupoRegistroP.get('numerodocumentoRP').setValue(documentose[0]);
+
+        this.addressForm.get('cuantosRP').setValue(lista[0].aportante.registroPresupuestal.length);
+
+        listaRegistrosP.push(grupoRegistroP);
+
       });
     });
   }
@@ -273,15 +276,12 @@ export class RegistrarComponent implements OnInit {
 
         this.nombresAportantes = res[4].filter(x=>x.cofinanciacion.registroCompleto==true);//solo muestro los completos
         if(this.idAportante>0)//funciona porque recien empezo
-        {
-          console.log("es edición");
+        {          
           this.edicion=true;        
         }
         else
         {          
           this.edicion=false;
-          console.log("no es edición");
-          console.log(this.nombresAportantes);
           this.nombresAportantes =this.nombresAportantes.filter(x=>x.fuenteFinanciacion.length==0)  
         }
         const nombresAportantesTemp: Dominio[] = res[0];
@@ -295,9 +295,7 @@ export class RegistrarComponent implements OnInit {
 
         this.fuentesDeRecursosLista = res[1];
         this.fuentesDeRecursosListaArr.push(res[1]);
-        console.log(this.fuentesDeRecursosListaArr);
         this.bancos = res[2];
-        console.log(res[3]);
         this.departamentos = res[3];
         this.listaFuentes = res[5];
 
@@ -514,10 +512,10 @@ export class RegistrarComponent implements OnInit {
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
     if(FormNumvigencias.cuantasVigencias!=null && FormNumvigencias.cuantasVigencias!="")
     {
-      if (FormNumvigencias.cuantasVigencias > this.vigencias1[j].length && FormNumvigencias.cuantasVigencias < 100) {
+      if (FormNumvigencias.cuantasVigencias > this.vigencias1(j).length && FormNumvigencias.cuantasVigencias < 100) {
         if(FormNumvigencias.cuantasVigencias==1)
         {
-          this.vigencias1[j].push(this.fb.group({
+          this.vigencias1(j).push(this.fb.group({
             vigenciaAporteId: [],
             vigenciaAportante: [null],
             valorVigencia: [this.addressForm.get("fuenteRecursosArray")['controls'][j].value.valorFuenteRecursos, Validators.compose([
@@ -527,12 +525,12 @@ export class RegistrarComponent implements OnInit {
         }
         else
         {
-          while (this.vigencias1[j].length < FormNumvigencias.cuantasVigencias) {
-            this.vigencias1[j].push(this.createVigencia());
+          while (this.vigencias1(j).length < FormNumvigencias.cuantasVigencias) {
+            this.vigencias1(j).push(this.createVigencia());
           }  
         }
         
-      } else if (FormNumvigencias.cuantasVigencias <= this.vigencias1[j].length && FormNumvigencias.cuantasVigencias >= 0) {
+      } else if (FormNumvigencias.cuantasVigencias <= this.vigencias1(j).length && FormNumvigencias.cuantasVigencias >= 0) {
         //valido si tiene data
         let bitestavacio=true;
         FormNumvigencias.vigencias.forEach(element => {
@@ -543,14 +541,14 @@ export class RegistrarComponent implements OnInit {
         });
         if(bitestavacio)
         {
-          while (this.vigencias1[j].length > FormNumvigencias.cuantasVigencias) {
-            this.removeItemVigencia(this.vigencias1[j], this.vigencias1[j].length - 1,j,false);
+          while (this.vigencias1(j).length > FormNumvigencias.cuantasVigencias) {
+            this.removeItemVigencia(this.vigencias1(j), this.vigencias1(j).length - 1,j,false);
           }
-          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1[j].length);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
         else{
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
-          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1[j].length);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
       }          
     }
@@ -654,7 +652,7 @@ export class RegistrarComponent implements OnInit {
   removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
   {
     borrarForm.removeAt(i);
-    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1[i].length);    
+    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(i).length);    
     if(mensaje)
     {
       this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
@@ -811,12 +809,12 @@ export class RegistrarComponent implements OnInit {
   
   validateonevige(j){
     console.log(this.addressForm.get("valorFuenteRecursos"));
-    console.log(this.vigencias1[j].controls.length);
+    console.log(this.vigencias1(j).controls.length);
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
     if(FormNumvigencias.cuantasVigencias==1)
     {
       console.log("lo seteo");
-      this.vigencias1[j].controls[0].get("valorVigencia").setValue(FormNumvigencias.valorFuenteRecursos);
+      this.vigencias1(j).controls[0].get("valorVigencia").setValue(FormNumvigencias.valorFuenteRecursos);
     }
   }
   changefuenteRecursos(j)

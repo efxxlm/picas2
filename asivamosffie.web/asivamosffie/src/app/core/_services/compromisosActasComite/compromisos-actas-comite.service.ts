@@ -11,7 +11,9 @@ export class CompromisosActasComiteService {
   private url: string = `${ environment.apiUrl }/ManagementCommitteeReport`;
   devolverActa: DevolverActa = {
     comiteTecnicoId: 0,
-    observacion: '',fecha:null,sesionComentarioId:null
+    observacion: '',
+    fecha: null,
+    sesionComentarioId: null
   }
 
   constructor ( private http: HttpClient ) {};

@@ -11,16 +11,17 @@
     </h1>
   </div>
 
-  <p class="text-detalle" *ngIf="contratacionProyecto">
-    <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
-    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+  <p class="text-detalle flex-center" *ngIf="contratacionProyecto" style="margin-top: 1em;">
+    <span style="margin-right: 2em"><b>{{ tipoIntervencion }}</b></span>
+    <span style="margin-right: 2em">{{ contratacionProyecto.tipoIntervencionCodigo }}</span>
+    <span style="margin-right: 2em"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
     <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
   </p>
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-content>
-        <div class="row">
+        <div class="row" style="margin-left: .7em;">
           <div class="pr-1">
             <label class="label-left" for="reasignacion">¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web? </label>
           </div>

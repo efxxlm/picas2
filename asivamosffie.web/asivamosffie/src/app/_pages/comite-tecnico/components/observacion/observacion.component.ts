@@ -100,7 +100,7 @@ export class ObservacionComponent implements OnInit {
       .subscribe( respuesta => {
         this.openDialog( '', respuesta.message )
         if (respuesta.code == "200")
-          this.router.navigate(['/comiteTecnico/crearActa', 15]);
+          this.router.navigate(['/comiteTecnico/crearActa', this.comiteTecnicoId]);
       })
 
   }

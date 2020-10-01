@@ -90,6 +90,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
+    console.log(e.editor.getLength()+" "+n);
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
@@ -99,12 +100,20 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     let diligenciado: boolean = false;
 
     this.grupos.controls.forEach( control => {
-      let nombreGrupo: string = control.get('nombreGrupo').value ? control.get('nombreGrupo').value : '';
+      /*let nombreGrupo: string = control.get('nombreGrupo').value ? control.get('nombreGrupo').value : '';
       let plazoGrupo:  string = control.get('plazoMeses').value ? control.get('plazoMeses').value : '';
 
       if (nombreGrupo.length > 0 || plazoGrupo.length > 0){
         console.log( nombreGrupo.length, plazoGrupo.length )
         diligenciado = true;
+      }*/
+      if(control.get('nombreGrupo').value!="" || control.get('nombreGrupo').value!=null)
+      {
+        diligenciado=true;
+      }
+      if(control.get('plazoMeses').value!="" || control.get('plazoMeses').value!=null)
+      {
+        diligenciado=true;
       }
 
     })
@@ -115,25 +124,28 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   CambioNumeroAportantes() {
 
     const FormGrupos = this.addressForm.value;
+    if(FormGrupos.cuantosGrupos>=1)
+    {
+      if (FormGrupos.cuantosGrupos < this.grupos.length)
+        if (this.validarGruposDiligenciados()){
+          this.openDialog('','<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>');
 
-    if (FormGrupos.cuantosGrupos < this.grupos.length)
-      if (this.validarGruposDiligenciados()){
-        this.openDialog('','Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+          this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
+          
+          return false;
+        }
 
-        this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
-        
-        return false;
-      }
-
-    if (FormGrupos.cuantosGrupos > this.grupos.length && FormGrupos.cuantosGrupos < 100) {
-      while (this.grupos.length < FormGrupos.cuantosGrupos) {
-        this.grupos.push(this.createGrupo());
-      }
-    } else if (FormGrupos.cuantosGrupos <= this.grupos.length && FormGrupos.cuantosGrupos >= 0) {
-      while (this.grupos.length > FormGrupos.cuantosGrupos) {
-        this.borrarArray(this.grupos, this.grupos.length - 1);
+      if (FormGrupos.cuantosGrupos > this.grupos.length && FormGrupos.cuantosGrupos < 100) {
+        while (this.grupos.length < FormGrupos.cuantosGrupos) {
+          this.grupos.push(this.createGrupo());
+        }
+      } else if (FormGrupos.cuantosGrupos <= this.grupos.length && FormGrupos.cuantosGrupos >= 0) {
+        while (this.grupos.length > FormGrupos.cuantosGrupos) {
+          this.borrarArray(this.grupos, this.grupos.length - 1);
+        }
       }
     }
+    
     
   }
 
@@ -227,6 +239,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
+    console.log("textolimpio "+textolimpio.length);
     return textolimpio.length;
   }
 
@@ -335,5 +348,10 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         listaCronograma.push(control);
       });
     });
+  }
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
   }
 }

@@ -180,4 +180,9 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         listaCotizaciones.push(control);
     });
   }
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
 }
