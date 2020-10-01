@@ -20,3 +20,7 @@
 .col:last-child {
   margin-right: 0;
 }
+
+.mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
+  content: '*';
+}

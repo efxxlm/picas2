@@ -472,15 +472,15 @@ export class FormularioProyectosComponent implements OnInit {
       infraestrucutraIntervenirProyectoId: 0,
       proyectoId: 0,
       infraestructuraCodigo: '',
-      cantidad: 0,
+      cantidad: null,
       eliminado: false,
       fechaCreacion: null,
       usuarioCreacion: '',
       usuarioEliminacion: '',
-      plazoMesesObra: 0,
-      plazoDiasObra: 0,
-      plazoMesesInterventoria: 0,
-      plazoDiasInterventoria: 0,
+      plazoMesesObra: null,
+      plazoDiasObra: null,
+      plazoMesesInterventoria: null,
+      plazoDiasInterventoria: null,
       coordinacionResponsableCodigo: ''
     });
   }

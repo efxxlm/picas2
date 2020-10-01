@@ -514,10 +514,10 @@ export class RegistrarComponent implements OnInit {
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
     if(FormNumvigencias.cuantasVigencias!=null && FormNumvigencias.cuantasVigencias!="")
     {
-      if (FormNumvigencias.cuantasVigencias > this.vigencias1[j].length && FormNumvigencias.cuantasVigencias < 100) {
+      if (FormNumvigencias.cuantasVigencias > this.vigencias1(j).length && FormNumvigencias.cuantasVigencias < 100) {
         if(FormNumvigencias.cuantasVigencias==1)
         {
-          this.vigencias1[j].push(this.fb.group({
+          this.vigencias1(j).push(this.fb.group({
             vigenciaAporteId: [],
             vigenciaAportante: [null],
             valorVigencia: [this.addressForm.get("fuenteRecursosArray")['controls'][j].value.valorFuenteRecursos, Validators.compose([
@@ -527,12 +527,12 @@ export class RegistrarComponent implements OnInit {
         }
         else
         {
-          while (this.vigencias1[j].length < FormNumvigencias.cuantasVigencias) {
-            this.vigencias1[j].push(this.createVigencia());
+          while (this.vigencias1(j).length < FormNumvigencias.cuantasVigencias) {
+            this.vigencias1(j).push(this.createVigencia());
           }  
         }
         
-      } else if (FormNumvigencias.cuantasVigencias <= this.vigencias1[j].length && FormNumvigencias.cuantasVigencias >= 0) {
+      } else if (FormNumvigencias.cuantasVigencias <= this.vigencias1(j).length && FormNumvigencias.cuantasVigencias >= 0) {
         //valido si tiene data
         let bitestavacio=true;
         FormNumvigencias.vigencias.forEach(element => {
@@ -543,14 +543,14 @@ export class RegistrarComponent implements OnInit {
         });
         if(bitestavacio)
         {
-          while (this.vigencias1[j].length > FormNumvigencias.cuantasVigencias) {
-            this.removeItemVigencia(this.vigencias1[j], this.vigencias1[j].length - 1,j,false);
+          while (this.vigencias1(j).length > FormNumvigencias.cuantasVigencias) {
+            this.removeItemVigencia(this.vigencias1(j), this.vigencias1(j).length - 1,j,false);
           }
-          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1[j].length);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
         else{
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
-          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1[j].length);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
       }          
     }
@@ -654,7 +654,7 @@ export class RegistrarComponent implements OnInit {
   removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
   {
     borrarForm.removeAt(i);
-    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1[i].length);    
+    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(i).length);    
     if(mensaje)
     {
       this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
@@ -811,12 +811,12 @@ export class RegistrarComponent implements OnInit {
   
   validateonevige(j){
     console.log(this.addressForm.get("valorFuenteRecursos"));
-    console.log(this.vigencias1[j].controls.length);
+    console.log(this.vigencias1(j).controls.length);
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
     if(FormNumvigencias.cuantasVigencias==1)
     {
       console.log("lo seteo");
-      this.vigencias1[j].controls[0].get("valorVigencia").setValue(FormNumvigencias.valorFuenteRecursos);
+      this.vigencias1(j).controls[0].get("valorVigencia").setValue(FormNumvigencias.valorFuenteRecursos);
     }
   }
   changefuenteRecursos(j)

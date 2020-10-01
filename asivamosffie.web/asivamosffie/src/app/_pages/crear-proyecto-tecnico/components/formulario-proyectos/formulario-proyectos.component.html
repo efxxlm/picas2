@@ -595,7 +595,7 @@
                 <mat-form-field class="full-width">
                   <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="32"
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
-                    max="999" required type="number">
+                    max="999" required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span class="contador">{{20 - (aportantes.valorObra?aportantes.valorObra.toString().length:0)}}</span>
               </div>
@@ -612,7 +612,7 @@
                 <mat-form-field class="full-width">
                   <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)"
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    maxlength="32" min="1" max="999" required type="number">
+                    maxlength="32" min="1" max="999" required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span
                   class="contador">{{20 - (aportantes.valorInterventoria?aportantes.valorInterventoria.toString().length:0)}}</span>
@@ -630,7 +630,7 @@
                 <mat-form-field class="full-width">
                   <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="32" min="1" max="999" required
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    type="number" readonly>
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" readonly>
                 </mat-form-field>
                 <span
                   class="contador">{{20 - (aportantes.valorTotalAportante?aportantes.valorTotalAportante.toString().length:0)}}</span>

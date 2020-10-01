@@ -127,7 +127,7 @@ namespace asivamosffie.services
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.Direccion)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.DocumentoAcreditacionCodigo)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.NumeroDocumento)
-                  || string.IsNullOrEmpty(proyecto.PredioPrincipal.CedulaCatastral)
+                  //|| string.IsNullOrEmpty(proyecto.PredioPrincipal.CedulaCatastral)
                     )
                 {
                     return false;
@@ -1591,7 +1591,7 @@ namespace asivamosffie.services
 
             try
             {
-                List<ProyectoAdministrativo> ListProyectosAdministrativo = await _context.ProyectoAdministrativo.Where(r => !(bool)r.Eliminado).ToListAsync();
+                List<ProyectoAdministrativo> ListProyectosAdministrativo = await _context.ProyectoAdministrativo.Where(r => !(bool)r.Eliminado).Include(x=>x.ProyectoAdministrativoAportante).ThenInclude(x=>x.AportanteFuenteFinanciacion).ToListAsync();
 
                 foreach (var proyecto in ListProyectosAdministrativo)
                 {
@@ -1604,7 +1604,8 @@ namespace asivamosffie.services
                     {
                         ProyectoAdminitracionId = proyecto.ProyectoAdministrativoId,
                         Enviado = (bool)proyecto.Enviado,
-                        Estado =proyecto.RegistroCompleto
+                        Estado =proyecto.RegistroCompleto,
+                        Proyecto = proyecto
                     };
                     ListProyectoAdministrativoGrilla.Add(proyectoAdministrativoGrilla);
                 }

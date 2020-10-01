@@ -7,7 +7,7 @@
         (onContentChanged)="maxLength($event, 2000)" formControlName="objeto" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('objeto').value">
-      {{2000 - textoLimpio(addressForm.get('objeto').value)}}
+      {{2000 - (textoLimpio(addressForm.get('objeto').value)>2000?2000:textoLimpio(addressForm.get('objeto').value))}}
     </span>
     <span class="contador miles" *ngIf="!addressForm.get('objeto').value">
       2000
@@ -21,7 +21,7 @@
         (onContentChanged)="maxLength($event, 3000)" formControlName="alcanceParticular" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('alcanceParticular').value">
-      {{3000 - textoLimpio(addressForm.get('alcanceParticular').value)}}
+      {{3000 - (textoLimpio(addressForm.get('alcanceParticular').value)>3000?3000:textoLimpio(addressForm.get('alcanceParticular').value))}}
     </span>
     <span class="contador miles" *ngIf="!addressForm.get('alcanceParticular').value">
       3000
@@ -35,7 +35,7 @@
         (onContentChanged)="maxLength($event, 3000)" formControlName="justificacion" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('justificacion').value">
-      {{3000 - textoLimpio(addressForm.get('justificacion').value)}}
+      {{3000 - (textoLimpio(addressForm.get('justificacion').value)>3000?3000:textoLimpio(addressForm.get('justificacion').value))}}
     </span>
     <span class="contador miles" *ngIf="addressForm.get('justificacion').value === null">
       3000
@@ -49,7 +49,7 @@
         (onContentChanged)="maxLength($event, 3000)" formControlName="criterios" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('criterios').value">
-      {{3000 - textoLimpio(addressForm.get('criterios').value)}}
+      {{3000 - (textoLimpio(addressForm.get('criterios').value)>3000?3000:textoLimpio(addressForm.get('criterios').value))}}
     </span>
     <span class="contador miles" *ngIf="addressForm.get('criterios').value === null">
       3000
@@ -119,7 +119,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosGrupos type="number" min="1" max="99" formControlName="cuantosGrupos"
+                <input matInput #cuantosGrupos type="number" min="2" max="99" maxlength="2" formControlName="cuantosGrupos"
+                (keypress)="validateNumberKeypress($event)"
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   (keyup)="CambioNumeroAportantes()" required>
               </mat-form-field>
               <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
@@ -129,9 +131,10 @@
       </div>
 
       <div formGroupName="grupos">
+        <h2 class="card-subTitle">Grupos</h2>
         <div *ngFor="let grupo of grupos.controls; let i = index">
           <div [formGroupName]="i">
-            <h2 class="card-subTitle">Grupos</h2>
+            
             <mat-card-title class="header-card--text sub-text">
               Grupo {{ i + 1 }}
             </mat-card-title>
@@ -143,10 +146,10 @@
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #nombreGrupo type="text" maxlength="100" formControlName="nombreGrupo" required>
+                      <input matInput #nombreGrupo type="text" maxlength="500" formControlName="nombreGrupo" required>
                       <input type="hidden" formControlName="procesoSeleccionGrupoId">
                     </mat-form-field>
-                    <span class="contador">{{100 - nombreGrupo.value.length}}</span>
+                    <span class="contador">{{500 - nombreGrupo.value.length}}</span>
                   </div>
                 </div>
               </div>
@@ -176,7 +179,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valor type="number" maxlength="20" formControlName="valor">
+                  <input matInput #valor currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20" formControlName="valor">
                 </mat-form-field>
                 <span class="contador">{{20 - valor.value.length}}</span>
               </div>
@@ -188,7 +191,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMinimoCategoria type="number" maxlength="20"
+                  <input matInput #valorMinimoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
                     formControlName="valorMinimoCategoria">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMinimoCategoria.value.length}}</span>
@@ -201,7 +204,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMaximoCategoria type="number" maxlength="20"
+                  <input matInput #valorMaximoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
                     formControlName="valorMaximoCategoria">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMaximoCategoria.value.length}}</span>
@@ -215,7 +218,10 @@
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #plazoMeses type="number" min="1" max="99" formControlName="plazoMeses" required>
+                      <input matInput #plazoMeses type="number" min="1" max="99" maxlength="2" 
+                      (keypress)="validateNumberKeypress($event)"
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  (keyup)="CambioNumeroAportantes()" formControlName="plazoMeses" required>
                     </mat-form-field>
                     <span class="contador">{{2 - plazoMeses.value.length}}</span>
                   </div>
@@ -263,22 +269,22 @@
                   <td class="mat-cell cdk-cell ng-star-inserted">
                     <div class="d-flex justify-content-center">
                       <span class="contador mt-1em" *ngIf="cronograma.get('descripcion').value">
-                        {{500 - textoLimpio(cronograma.get('descripcion').value)}}
-                      </span>
-                      <span class="contador mt-1em" *ngIf="cronograma.get('descripcion').value === null">
+                        {{500 - (textoLimpio(cronograma.get('descripcion').value)>500?500:textoLimpio(cronograma.get('descripcion').value))}}
+                      </span>                      
+                      <span class="contador mt-1em" *ngIf="cronograma.get('descripcion').value === null || cronograma.get('descripcion').value == null">
                         500
-                      </span>
+                      </span><span class="required-form-group required-calendar" style="margin-top: 1.5em;">*</span>
                     </div>
                     <input type="hidden" formControlName="procesoSeleccionCronogramaId">
                     <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
                       (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted position-relative">
-                    <div class="d-flex justify-content-center btn-calendario-container">
-                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario">
+                    <div class="d-flex justify-content-center btn-calendario-container toptd">
+                      <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario ">
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
-                      <span class="required-form-group required-calendar">*</span>
+                      <span class="required-form-group required-calendar" style="margin-top: 1.5em;">*</span>
                     </div>
                     <mat-form-field class="example-full-width">
                       <input matInput [matDatepicker]="picker" formControlName="fechaMaxima" (click)="picker.open()" readonly>
@@ -302,7 +308,7 @@
         </div>
       </div>
 
-      <div>
+      <div *ngIf="addressForm.get('cronogramas').status=='VALID'">
         <div>
           <h2 class="card-subTitle">Responsables</h2>
 
