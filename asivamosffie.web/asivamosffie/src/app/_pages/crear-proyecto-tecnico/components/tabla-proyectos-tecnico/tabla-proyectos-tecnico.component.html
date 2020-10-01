@@ -13,8 +13,8 @@
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
     <ng-container matColumnDef="fecha">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-      <td mat-cell *matCellDef="let element"> {{ element.fecha }} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Fecha </th>
+      <td mat-cell *matCellDef="let element"> {{ element.fecha | date: 'dd/MM/yyyy' }} </td>
     </ng-container>
 
     <ng-container matColumnDef="departamento">
