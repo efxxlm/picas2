@@ -160,6 +160,7 @@ namespace asivamosffie.services
                                     .ThenInclude(r => r.CompromisoSeguimiento)
                         .Include(r => r.SesionComiteTecnicoCompromiso) 
                         .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                           .ThenInclude(r => r.SesionSolicitudCompromiso)
                         .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                         .ToListAsync();
 
