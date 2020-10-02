@@ -78,7 +78,7 @@ export class CrearActaComponent implements OnInit {
             let btnOtros = document.getElementsByName('btnOtros')
             let btnProposiciones = document.getElementsByName('btnProposiciones')
 
-            this.callChildren(btnSolicitud);
+            //this.callChildren(btnSolicitud);
             this.callChildren(btnOtros);
             this.callChildren(btnProposiciones);
 

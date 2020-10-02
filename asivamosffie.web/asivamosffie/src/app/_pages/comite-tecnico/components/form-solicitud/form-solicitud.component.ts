@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudCompromiso, SesionParticipante, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -15,12 +15,13 @@ import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/proj
   templateUrl: './form-solicitud.component.html',
   styleUrls: ['./form-solicitud.component.scss']
 })
-export class FormSolicitudComponent implements OnInit {
+export class FormSolicitudComponent implements OnInit, OnChanges {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
+  
   tiposSolicitud = TiposSolicitud;
 
   fechaSolicitud: Date;
@@ -72,7 +73,11 @@ export class FormSolicitudComponent implements OnInit {
 
   ) 
   {
-
+    
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.sesionComiteSolicitud.currentValue)
+      this.cargarRegistro();
   }
 
   ActualizarProyectos( lista ){
@@ -87,13 +92,9 @@ export class FormSolicitudComponent implements OnInit {
   }
   ngOnInit(): void {
 
-    let estados: string[] = ['1', '3', '5']
+    
 
-    this.commonService.listaEstadoSolicitud()
-      .subscribe(response => {
-
-        this.estadosArray = response.filter(s => estados.includes(s.codigo));
-      })
+    
 
   }
 
@@ -172,7 +173,7 @@ export class FormSolicitudComponent implements OnInit {
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.sesionComiteSolicitud.comiteTecnicoId,
-      estadoCodigo: this.addressForm.get('estadoSolicitud').value ? this.addressForm.get('estadoSolicitud').value.codigo : null,
+      estadoCodigo: this.addressForm.get('estadoSolicitud').value,
       observaciones: this.addressForm.get('observaciones').value,
       rutaSoporteVotacion: this.addressForm.get('url').value,
       generaCompromiso: this.addressForm.get('tieneCompromisos').value,
@@ -216,15 +217,27 @@ export class FormSolicitudComponent implements OnInit {
 
     console.log( this.sesionComiteSolicitud )
 
-    if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-    }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
-    }
+    let estados: string[] = ['1', '3', '5']
 
-    let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
+    this.commonService.listaEstadoSolicitud()
+      .subscribe(response => {
 
-    this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado)
+        this.estadosArray = response.filter(s => estados.includes(s.codigo));
+
+        if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
+          this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+        }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
+          this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+        }
+    console.log(this.estadosArray)
+
+      })
+
+    
+
+    //let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
+
+    this.addressForm.get('estadoSolicitud').setValue(this.sesionComiteSolicitud.estadoCodigo)
     this.addressForm.get('observaciones').setValue(this.sesionComiteSolicitud.observaciones)
     this.addressForm.get('url').setValue(this.sesionComiteSolicitud.rutaSoporteVotacion)
     this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromiso)
@@ -267,11 +280,11 @@ export class FormSolicitudComponent implements OnInit {
     else
       this.resultadoVotacion = 'Aprobó'
 
-    let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
+    // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
     
-    btnSolicitudMultiple.forEach( element =>{
-      element.click();
-    })
+    // btnSolicitudMultiple.forEach( element =>{
+    //   element.click();
+    // })
     
 
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion){

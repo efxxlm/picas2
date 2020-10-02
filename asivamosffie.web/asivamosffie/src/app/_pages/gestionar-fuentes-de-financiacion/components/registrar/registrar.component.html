@@ -15,7 +15,7 @@
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
-      <mat-card-header class="header-card">
+      <mat-card-header class="header-card mlmenor">
         <mat-card-title class="header-card--text">
           Datos del aportante
         </mat-card-title>
@@ -204,7 +204,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #cuantosRP type="number" min="1" max="99" formControlName="cuantosRP"
+                  <input matInput #cuantosRP type="number" min="1" class="maincolor" max="99" formControlName="cuantosRP"
                     maxlength="20" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
@@ -223,7 +223,7 @@
                       <label class="label-left">Número de RP</label>
                     </div>
                     <div class="col d-flex">
-                      <mat-form-field class="full-width">
+                      <mat-form-field class="full-width maincolor">
                         <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50" 
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
@@ -238,7 +238,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="picker" formControlName="fecha" 
+                        <input matInput [matDatepicker]="picker" formControlName="fecha" class="maincolor" 
                         placeholder="DD/MM/AAAA" [max]="maxDate" (click)="picker.open()" readonly >
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
@@ -275,7 +275,7 @@
       <div *ngFor="let fuente of fuenteRecursosArray.controls; let j = index">
         <div [formGroupName]="j">
           <mat-card class="shipping-card">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card mlmenor">
               <mat-card-title class="header-card--text">
                 Datos de la fuente
                 <span *ngIf="addressForm.value.fuenteRecursosArray.length > 1">{{ j + 1 }}</span>
@@ -304,11 +304,11 @@
                       <label class="label-left">Valor aporte fuente de recursos</label>
                     </div>
                     <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                        <input matInput #valorAporte currencyMask  formControlName="valorFuenteRecursos" maxlength="20"
+                      <mat-form-field class="full-width maincolor">
+                        <input matInput #valorAporte currencyMask formControlName="valorFuenteRecursos" maxlength="20"
                           required (keypress)="validateNumberKeypress($event);validateonevige(j)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                           >                          
                       </mat-form-field>
                       <span class="contador">{{20 - valorAporte.value.length}}</span>
@@ -325,7 +325,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #cuantasVigencias type="number" min="1" max="99" maxlength="2"
+                        <input matInput #cuantasVigencias type="number" class="maincolor" min="1" max="99" maxlength="2"
                           formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)" required
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
@@ -367,12 +367,12 @@
                             <label class="label-left">Valor aporte de la vigencia</label>
                           </div>
                           <div class="col d-flex">
-                            <mat-form-field class="full-width">
+                            <mat-form-field class="full-width maincolor">
                               <input matInput #valorVigencia currencyMask formControlName="valorVigencia"
                                 maxlength="20" required (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                 [readonly]="vigencias1(j).controls.length==1"
-                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                 >
                             </mat-form-field>
                             <span class="contador">{{20 - valorVigencia.value.length}}</span>
@@ -403,7 +403,7 @@
                         <label class="label-left">Número de cuenta</label>
                       </div>
                       <div class="col d-flex">
-                        <mat-form-field class="full-width">
+                        <mat-form-field class="full-width maincolor">
                           <input matInput #numeroCuemta type="number" formControlName="numeroCuenta" maxlength="20"
                             required (keypress)="validateNumberKeypress($event)"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
@@ -416,7 +416,7 @@
                         <label class="label-left">Nombre de cuenta</label>
                       </div>
                       <div class="col d-flex">
-                        <mat-form-field class="full-width">
+                        <mat-form-field class="full-width maincolor">
                           <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta"
                             required>
                           <input type="hidden" formControlName="cuentaBancariaId">
@@ -431,7 +431,7 @@
                             <label class="label-left">Código SIFI</label>
                           </div>
                           <div class="col d-flex">
-                            <mat-form-field class="full-width">
+                            <mat-form-field class="full-width maincolor">
                               <input matInput #codigoSIFI type="text" formControlName="codigoSIFI" maxlength="6" required>
                             </mat-form-field>
                             <span class="contador">{{6 - codigoSIFI.value.length}}</span>

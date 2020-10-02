@@ -13,12 +13,6 @@ export interface PeriodicElement {
 }
 
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  { id: 1, fecha: '26/05/2020', numero: '003', tipo: 'Modificación contractual', estadoRegistro: false },
-  { id: 2, fecha: '26/05/2020', numero: 'PI_003', tipo: 'Contratación', estadoRegistro: false },
-  { id: 3, fecha: '26/05/2020', numero: 'PI_002', tipo: 'Contratación', estadoRegistro: false },
-];
-
 @Component({
   selector: 'app-tabla-en-validacion',
   templateUrl: './tabla-en-validacion.component.html',
@@ -28,7 +22,7 @@ export class TablaEnValidacionComponent implements OnInit {
 
   @Input()disponibilidadPresupuestal: any;
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

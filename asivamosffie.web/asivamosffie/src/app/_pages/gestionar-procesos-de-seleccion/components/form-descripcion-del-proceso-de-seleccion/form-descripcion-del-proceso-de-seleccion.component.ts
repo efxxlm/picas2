@@ -29,7 +29,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   addressForm = this.fb.group({});
 
   editorStyle = {
-    height: '100px'
+    height: '100px',
+    color: 'var(--mainColor)',
   };
 
   config = {
@@ -40,6 +41,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  listaLimite: Dominio[]=[];
+  listaSalarioMinimo: Dominio[]=[];
 
   constructor(
               private fb: FormBuilder,
@@ -58,6 +61,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.commonService.listaTipoAlcance(),
         this.commonService.listaPresupuestoProcesoSeleccion(),
         this.commonService.getUsuariosByPerfil(2),
+        this.commonService.listaLimiteSalarios(),
+        this.commonService.listaSalarios()
 
       ]).subscribe(respuesta => {
 
@@ -65,6 +70,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.listaTipoAlcance = respuesta[1];
         this.listatipoPresupuesto = respuesta[2];
         this.listaResponsables = respuesta[3];
+        this.listaLimite = respuesta[4];
+        this.listaSalarioMinimo = respuesta[5];
 
         this.listaTipoAlcance = this.listaTipoAlcance.filter( t => t.codigo == "1" || t.codigo == "2" || t.codigo == "3" )
 
@@ -121,9 +128,24 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     return diligenciado;
   }
 
+  CambioNumeroMeses(i:number)
+  {
+    console.log(this.addressForm.controls.grupos.value[i]);
+    if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
+    {
+      this.openDialog("","<b>La cantidad de meses no puede ser 0.</b>");
+      return;
+    }
+  }
+
   CambioNumeroAportantes() {
 
     const FormGrupos = this.addressForm.value;
+    if(FormGrupos.cuantosGrupos<=1)
+    {
+      this.openDialog("","<b>La cantidad de grupos no puede ser menor a 2.</b>");
+      return;
+    }
     if(FormGrupos.cuantosGrupos>=1)
     {
       if (FormGrupos.cuantosGrupos < this.grupos.length)
@@ -153,7 +175,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionGrupoId: [],
       nombreGrupo: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       tipoPresupuesto: [null, Validators.required],
       valor: [],
@@ -238,8 +260,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    console.log("textolimpio "+textolimpio.length);
+    const textolimpio = texto.replace(/<[^>]*>/g, '');    
     return textolimpio.length;
   }
 
@@ -353,5 +374,30 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
+  }
+
+  nosuperarlimite(i:number,caso:number)
+  {
+    let maximo=parseInt(this.listaLimite[0].descripcion)*parseInt(this.listaSalarioMinimo[0].descripcion);
+    if(caso==1)
+    {
+      if(this.addressForm.controls.grupos.value[i].valor>maximo)
+      {
+        this.openDialog("","<b>El monto digitado supera el monto limite de salarios mínimos legales vigentes.</b>");
+      }
+    }
+    else if(caso==2)
+    {
+      if(this.addressForm.controls.grupos.value[i].valorMaximoCategoria>maximo)
+      {
+        this.openDialog("","<b>El monto digitado supera el monto limite de salarios mínimos legales vigentes.</b>");
+      }
+    }
+    else{
+      if(this.addressForm.controls.grupos.value[i].valorMinimoCategoria>maximo)
+      {
+        this.openDialog("","<b>El monto digitado supera el monto limite de salarios mínimos legales vigentes.</b>");
+      }
+    }
   }
 }

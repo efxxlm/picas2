@@ -36,6 +36,8 @@ export interface ContratacionProyecto{
     tipoIntervencionCodigo?: string,
     tipoSolicitudCodigo?: string,
 
+    proyectoGrilla?: ProyectoGrilla,
+
 }
 
 export interface ContratistaGrilla{

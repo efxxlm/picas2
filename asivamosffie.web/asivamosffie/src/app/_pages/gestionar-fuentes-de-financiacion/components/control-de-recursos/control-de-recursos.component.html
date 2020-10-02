@@ -65,7 +65,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput type="number" formControlName="numeroCuenta" readonly >
+                <input matInput type="number" class="maincolor" formControlName="numeroCuenta" readonly >
               </mat-form-field>
               <!-- <span class="contador">{{10 - numDocumento.value.length}}</span> -->
             </div>
@@ -88,58 +88,46 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="vigencia">Vigencia</label>
-                </div>
-                <div class="col">
-                  <mat-form-field class="select-width">
-                    <mat-select formControlName="vigencia">
-                      <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
-                        {{ vigencia.tipoVigenciaCodigo }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
+          <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">            
+              <div class="pr-1">
+                <label class="label-left" for="vigencia">Vigencia</label>
               </div>
-            </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="vigencia">
+                    <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                      {{ vigencia.tipoVigenciaCodigo }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
-              <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" class="fechaConsignacion">Fecha de consignación</label>
+                  <label class="label-left" for="fechaConsignacion">Fecha de consignación</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fechaConsignacion" readonly (click)="picker.open()">
+                    <input matInput [matDatepicker]="picker" class="maincolor" placeholder="DD/MM/AAAA" formControlName="fechaConsignacion" readonly (click)="picker.open()">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                   </button>
-                </div>
-              </div>
-            </div>
+                </div>            
           </div>
           <div class="row">
-            <div class="col-md-8">
-              <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="numeroCuenta">Valor de consignación</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorConsignacion currencyMask maxlength="50" 
+                    <input matInput #valorConsignacion currencyMask maxlength="50" class="maincolor"
                     formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false"
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                   </mat-form-field>
                   <span class="contador">{{50 - valorConsignacion.value.length}}</span>
-                </div>
-              </div>
-            </div>
+                </div>            
           </div>
   
         </mat-card-content>

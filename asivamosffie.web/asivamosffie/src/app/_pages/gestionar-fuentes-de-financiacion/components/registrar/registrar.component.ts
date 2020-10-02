@@ -106,13 +106,13 @@ export class RegistrarComponent implements OnInit {
 
     this.fuenteRecursosArray.clear();
     const aportante = this.nombresAportantes.find(nom => nom.cofinanciacionAportanteId == this.idAportante);
+    console.log("este es el apo");
     console.log(aportante);
-    console.log(aportante.cuentaConRp);
     this.addressForm.get('tieneRP').setValue(aportante.cuentaConRp==true?"1":"0");
     if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
     {
       this.addressForm.get('nombreAportanteFFIE').setValue(aportante);  
-      this.changeNombreAportanteFFIE();            
+        this.changeNombreAportanteFFIE();            
     }
     else if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString())){
       
@@ -149,8 +149,12 @@ export class RegistrarComponent implements OnInit {
 
     
     this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
-      this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista);
+      
+      console.log("esta es la lista de fuentes");
+      console.log(lista);
+      let i=0;
       lista.forEach(ff => {          
+        this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista);
         if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
         {
           
@@ -160,7 +164,8 @@ export class RegistrarComponent implements OnInit {
           this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
         }
         const grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
-        const fuenteRecursosSeleccionada = this.fuentesDeRecursosLista.find(f => f.codigo === ff.fuenteRecursosCodigo);
+        const fuenteRecursosSeleccionada = this.fuentesDeRecursosListaArr[i].find(f => f.codigo === ff.fuenteRecursosCodigo);
+        i++;
         const listaVigencias = grupo.get('vigencias') as FormArray;
         const listaCuentas = grupo.get('cuentasBancaria') as FormArray;
 
@@ -195,26 +200,27 @@ export class RegistrarComponent implements OnInit {
 
           listaCuentas.push(grupoCuenta);
         });
-        // Registro Presupuestal
-        ff.aportante.registroPresupuestal.forEach(rp => {
-          const grupoRegistroP = this.createRP();
-
-          grupoRegistroP.get('registroPresupuestalId').setValue(rp.registroPresupuestalId);
-          grupoRegistroP.get('numeroRP').setValue(rp.numeroRp);
-          grupoRegistroP.get('fecha').setValue(rp.fechaRp);
-          console.log("busco "+rp.cofinanciacionDocumentoId);
-          console.log(this.listaDocumentos);
-          let documentose=this.listaDocumentos.filter(x=>x.cofinanciacionDocumentoId==rp.cofinanciacionDocumentoId);
-          console.log(documentose);
-          grupoRegistroP.get('numerodocumentoRP').setValue(documentose[0]);
-
-          this.addressForm.get('cuantosRP').setValue(ff.aportante.registroPresupuestal.length);
-
-          listaRegistrosP.push(grupoRegistroP);
-
-        });
+        
 
         this.fuenteRecursosArray.push(grupo);
+      });
+      // Registro Presupuestal
+      lista[0].aportante.registroPresupuestal.forEach(rp => {
+        const grupoRegistroP = this.createRP();
+
+        grupoRegistroP.get('registroPresupuestalId').setValue(rp.registroPresupuestalId);
+        grupoRegistroP.get('numeroRP').setValue(rp.numeroRp);
+        grupoRegistroP.get('fecha').setValue(rp.fechaRp);
+        console.log("busco "+rp.cofinanciacionDocumentoId);
+        console.log(this.listaDocumentos);
+        let documentose=this.listaDocumentos.filter(x=>x.cofinanciacionDocumentoId==rp.cofinanciacionDocumentoId);
+        console.log(documentose);
+        grupoRegistroP.get('numerodocumentoRP').setValue(documentose[0]);
+
+        this.addressForm.get('cuantosRP').setValue(lista[0].aportante.registroPresupuestal.length);
+
+        listaRegistrosP.push(grupoRegistroP);
+
       });
     });
   }
@@ -273,16 +279,14 @@ export class RegistrarComponent implements OnInit {
 
         this.nombresAportantes = res[4].filter(x=>x.cofinanciacion.registroCompleto==true);//solo muestro los completos
         if(this.idAportante>0)//funciona porque recien empezo
-        {
-          console.log("es edición");
+        {          
           this.edicion=true;        
         }
         else
         {          
           this.edicion=false;
-          console.log("no es edición");
-          console.log(this.nombresAportantes);
-          this.nombresAportantes =this.nombresAportantes.filter(x=>x.fuenteFinanciacion.length==0)  
+          this.nombresAportantes =this.nombresAportantes.filter(x=>x.fuenteFinanciacion.length==0) ;
+          this.fuentesDeRecursosListaArr.push(res[1]);
         }
         const nombresAportantesTemp: Dominio[] = res[0];
 
@@ -294,10 +298,8 @@ export class RegistrarComponent implements OnInit {
         });
 
         this.fuentesDeRecursosLista = res[1];
-        this.fuentesDeRecursosListaArr.push(res[1]);
-        console.log(this.fuentesDeRecursosListaArr);
+        
         this.bancos = res[2];
-        console.log(res[3]);
         this.departamentos = res[3];
         this.listaFuentes = res[5];
 
@@ -357,11 +359,11 @@ export class RegistrarComponent implements OnInit {
 
   changeDepartamento() {
     console.log("change departamento");
+    console.log(this.nombresAportantes);
     const idDepartamento = this.addressForm.get('departamento').value.localizacionId;
-    this.nombresAportantes2=this.nombresAportantes.filter(z=>z.departamentoId==idDepartamento);
+    this.nombresAportantes2=this.nombresAportantes.filter(z=>z.departamentoId==idDepartamento && z.municipioId==null);
     this.commonService.listaMunicipiosByIdDepartamento(idDepartamento).subscribe(mun => {
       this.municipios = mun;
-      console.log(mun);
     });
   }
 
@@ -563,14 +565,18 @@ export class RegistrarComponent implements OnInit {
     this.cuentasBancaria(i).push(this.createCuentaBancaria());
   }
 
+  
   agregaFuente() {
-    console.log("es edición"+this.edicion);
-    if(!this.edicion)
-    {      
+    console.log("es edición"+this.edicion);         
+    if(this.addressForm.value.fuenteRecursosArray.length==2)
+    {
+      this.openDialog("","<b>Ya cuenta con los dos tipos de fuente de financiación disponibles.</b>");
+      return;
+    }
       this.addressForm.value.fuenteRecursosArray.forEach(element => {      
         this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista.filter(x=>x!=element.fuenteRecursos));
-      });
-    }          
+      });              
+    console.log(this.fuentesDeRecursosListaArr);
     this.fuenteRecursosArray.push(this.crearFuente());
   }
 

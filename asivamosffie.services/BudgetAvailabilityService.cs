@@ -14,6 +14,9 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using Z.EntityFramework.Plus;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+using System.IO;
 
 namespace asivamosffie.services
 {
@@ -22,11 +25,13 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
 
         private readonly ICommonService _commonService;
+        public readonly IConverter _converter;
 
-        public BudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public BudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConverter converter)
         {
             _context = context;
             _commonService = commonService;
+            _converter = converter;
         }
 
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestal()
@@ -437,14 +442,70 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
 
         public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero)
         {
-            /*Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
+            if (id == 0)
+            {
+                return Array.Empty<byte>();
+            }
+            DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
+                .Where(r => r.DisponibilidadPresupuestalId == id).FirstOrDefaultAsync();
+                    //.Include(r => r.SesionComiteTema).FirstOrDefaultAsync();
 
-            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
+            if (disponibilidad == null)
+            {
+                return Array.Empty<byte>();
+            }
+            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_DDP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
-            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-            return PDF.Convertir(Plantilla);*/
-            return null;
+            plantilla.Contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad);
+            return ConvertirPDF(plantilla);
+        }
+
+        private byte[] ConvertirPDF(Plantilla pPlantilla)
+        {
+            string strEncabezado = "";
+            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            {
+                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            }
+
+            var globalSettings = new GlobalSettings
+            {
+                ImageQuality = 1080,
+                PageOffset = 0,
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings
+                {
+                    Top = pPlantilla.MargenArriba,
+                    Left = pPlantilla.MargenIzquierda,
+                    Right = pPlantilla.MargenDerecha,
+                    Bottom = pPlantilla.MargenAbajo
+                },
+                DocumentTitle = DateTime.Now.ToString(),
+            };
+
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = pPlantilla.Contenido,
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
+                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
+            };
+
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings },
+            };
+
+            return _converter.Convert(pdf);
+        }
+
+        private string ReemplazarDatosDDP(string contenido, DisponibilidadPresupuestal disponibilidad)
+        {
+            return contenido;
         }
 
         /*autor: jflorez

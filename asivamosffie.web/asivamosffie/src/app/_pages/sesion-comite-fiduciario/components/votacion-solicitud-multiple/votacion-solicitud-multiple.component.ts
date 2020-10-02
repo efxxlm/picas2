@@ -127,37 +127,23 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
 
     this.proyectos.clear();
 
-console.log( this.data.sesionComiteSolicitud );
+    this.projectContractingService.getContratacionByContratacionId(this.data.sesionComiteSolicitud.contratacion.contratacionId)
+      .subscribe(respuesta => {
 
-    this.projectContractingService.getContratacionByContratacionId( this.data.sesionComiteSolicitud.contratacion.contratacionId )
-      .subscribe( respuesta =>{
-
-      //})
-      this.data.sesionComiteSolicitud.contratacion = respuesta;
-    this.data.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach(cp => {
-
-
-
-      //this.projectService.getProjectById(cp.proyecto.proyectoId)
-      //  .subscribe(response => {
-
-
+        this.data.sesionComiteSolicitud.contratacion = respuesta;
+        this.data.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach(cp => {
 
           let grupoProyecto = this.crearProyectos();
 
           let listaObservaciones = grupoProyecto.get('observaciones') as FormArray;
 
-          grupoProyecto.get('llaveMen').setValue( cp.proyecto.llaveMen);
-          grupoProyecto.get('nombreInstitucion').setValue( ''/*cp.proyecto.institucionEducativa.nombre*/);
+          grupoProyecto.get('llaveMen').setValue(cp.proyecto.llaveMen);
+          grupoProyecto.get('nombreInstitucion').setValue(''/*cp.proyecto.institucionEducativa.nombre*/);
           grupoProyecto.get('nombreSede').setValue(''/*response.sede.nombre*/);
 
-          console.log('d', this.data.sesionComiteSolicitud)
-
           this.data.sesionComiteSolicitud.sesionSolicitudObservacionProyecto
-            //.filter(o => o.contratacionProyectoId == cp.contratacionProyectoId)
+            .filter(o => o.contratacionProyectoId == cp.contratacionProyectoId)
             .forEach(op => {
-
-              console.log(op)
 
               let grupoObservacion = this.crearObservaciones();
 
@@ -174,9 +160,7 @@ console.log( this.data.sesionComiteSolicitud );
 
           this.proyectos.push(grupoProyecto)
         })
-    })
-    //  })
-
+      })
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -224,10 +208,10 @@ console.log( this.data.sesionComiteSolicitud );
 
     })
 
-    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
+    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteFiduciario;
     sesionComiteSolicitud.sesionSolicitudVoto.forEach(sv => {
       if (sv.esAprobado != true)
-        sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
+        sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteFiduciario;
     })
 
     console.log(sesionComiteSolicitud);

@@ -477,7 +477,7 @@ namespace asivamosffie.services
                         ValorObra = pProyecto.ValorObra,
                         ValorInterventoria = pProyecto.ValorInterventoria,
                         ValorTotal = pProyecto.ValorTotal,
-                        TipoPredioCodigo = pProyecto.TipoIntervencionCodigo.ToString()
+                        TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString()
                     };
                     //si el tipo de intervancion es nuevo el estado juridico es sin revision 
                     if (proyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))

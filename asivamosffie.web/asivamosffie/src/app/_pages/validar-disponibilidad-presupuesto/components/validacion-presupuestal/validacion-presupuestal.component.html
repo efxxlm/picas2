@@ -8,7 +8,7 @@
         Validación presupuestal solicitud {{detailavailabilityBudget[0].numeroSolicitud}}
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de la solicitud: <b> {{detailavailabilityBudget[0].fechaSolicitud}}</b></span>
+        <span>Fecha de la solicitud: <b> {{detailavailabilityBudget[0].fechaSolicitud | date:'dd/MM/yyyy'}}</b></span>
         <span><b>{{detailavailabilityBudget[0].tipoSolicitudText}}</b></span>
         <span>Estado: <b>{{detailavailabilityBudget[0].estadoStr}}</b></span>
     </p>

@@ -29,7 +29,12 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #nombre type="text" maxlength="100" formControlName="nombre" required>
+            <input matInput #nombre type="text" maxlength="100" [formControl]="myControl" required [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredName  | async" [value]="nombres">
+                {{nombres}}
+              </mat-option>
+            </mat-autocomplete>
             <input type="hidden" formControlName="procesoSeleccionProponenteId" >
           </mat-form-field>
           <span class="contador">{{100 - nombre.value.length}}</span>
@@ -147,7 +152,12 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #nombre2 type="text" maxlength="100" formControlName="nombre" required>
+            <input matInput #nombre2 type="text" maxlength="100" formControlName="nombre" required [matAutocomplete]="auto2">
+            <mat-autocomplete #auto2="matAutocomplete">
+              <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredNameJuridica  | async" [value]="nombres">
+                {{nombres}}
+              </mat-option>
+            </mat-autocomplete>
             <input type="hidden" formControlName="procesoSeleccionProponenteId" >
           </mat-form-field>
           <span class="contador">{{100 - nombre2.value.length}}</span>
@@ -340,7 +350,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required>
+                        <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required >
                       </mat-form-field>
                       <span class="contador">{{100 - nombre3.value.length}}</span>
                     </div>

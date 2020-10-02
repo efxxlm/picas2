@@ -11,6 +11,9 @@ export class ValidarComponent implements OnInit {
 
   verAyuda = false;
   listaDisponibilidades: any;
+  listaestado=['En validación presupuestal','Devuelta por coordinación financiera',
+    'Devuelta por validación presupuestal','Con validación presupuestal',
+    'Con disponibilidad presupuestal','Rechazada por validación presupuestal','Con disponibilidad cancelada']
 
   constructor(private disponibilidadServices: DisponibilidadPresupuestalService) {}
 

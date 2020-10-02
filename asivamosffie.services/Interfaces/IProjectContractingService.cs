@@ -37,5 +37,7 @@ namespace asivamosffie.services.Interfaces
         Task<ContratacionProyecto> GetContratacionProyectoById(int idContratacionProyecto);
 
         Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion);
+
+        Task<Contratacion> GetContratacionByContratacionIdWithGrillaProyecto(int pContratacionId);
     }
 }

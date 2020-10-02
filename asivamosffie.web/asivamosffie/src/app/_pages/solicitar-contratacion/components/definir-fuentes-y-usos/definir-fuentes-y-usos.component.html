@@ -13,10 +13,10 @@
   <p class="text-detalle d-flex" *ngIf="contratacionProyecto" style="justify-content: center;">
     <span style="margin-right: 2em;"><b> {{ tipoIntervencion }} </b></span>
     <span style="margin-right: 2em;"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
-    <span style="margin-right: 2em;">{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+    <span style="margin-right: 2em;"> {{ municipio }} </span>
   </p>
 
-  <div class="container-valor" *ngIf="contratacionProyecto">
+  <div class="container-valor" *ngIf="contratacionProyecto" style="margin: 1em;">
     <p>Valor total del proyecto <b> ${{ contratacionProyecto.proyecto.valorTotal | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
     <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
     <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>

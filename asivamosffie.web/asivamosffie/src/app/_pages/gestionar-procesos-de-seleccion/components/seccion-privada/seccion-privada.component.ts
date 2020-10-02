@@ -98,7 +98,8 @@ export class SeccionPrivadaComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if(result)
         {
-          this.router.navigate([`/seleccion/seccionPrivada/${ id }`])
+          this.router.navigate([`/seleccion/seccionPrivada/${ id }`]);
+          location.reload();
         }
       });
     }
@@ -119,5 +120,7 @@ export class SeccionPrivadaComponent implements OnInit {
      () => {})
   }
 
-  
+  estaIncompleto(objeto){
+    return true;
+  }
 }

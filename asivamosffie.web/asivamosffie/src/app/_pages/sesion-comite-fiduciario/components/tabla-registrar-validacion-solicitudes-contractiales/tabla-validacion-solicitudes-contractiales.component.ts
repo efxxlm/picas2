@@ -11,6 +11,8 @@ import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiducia
 import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { promise } from 'protractor';
+import { resolve } from 'dns';
 
 
 export interface OrdenDelDia {
@@ -62,7 +64,19 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   openDialogValidacionSolicitudes(elemento: SesionComiteSolicitud) {
 
-
+    let promesa = new Promise( resolve => {
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion){
+        this.projectContractingService.getContratacionByContratacionId(elemento.contratacion.contratacionId)
+            .subscribe(respuesta => {
+              console.log( respuesta );
+             elemento.contratacion = respuesta;
+             resolve();
+            });
+      }
+    })
+    
+    
+          
 
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
@@ -95,19 +109,15 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
           esAprobado: null,
           observacion: null,
 
-
-
         }
         solicitudVoto.sesionComiteSolicitud = elemento;
-        //solicitudVoto.nom breParticipante = `${usuario.nombres} ${usuario.apellidos}`;
       }
 
+
       if (elemento.tipoSolicitudCodigo == TiposSolicitud.Contratacion) {
-        //this.projectContractingService.getContratacionByContratacionId(elemento.contratacion.contratacionId)
-        //  .subscribe(respuesta => {
-        //    console.log( respuesta );
-        //    sesionComiteSolicitud.contratacion = respuesta; 
-        //    elemento.contratacion = respuesta;
+
+        promesa.then(()=>{
+          console.log(elemento.contratacion)
             elemento.contratacion.contratacionProyecto.forEach(c => {
 
               let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
@@ -127,6 +137,8 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
               sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
             })
+        })
+            
          // })
 
       }

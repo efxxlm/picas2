@@ -270,7 +270,7 @@
               <label class="label-left">Tipo de Predio(s)</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width">                
                 <mat-select required [(ngModel)]="proyecto.tipoPredioCodigo">
                   <mat-option *ngFor="let listado of listadoPredios" [value]="listado.codigo">
                     {{ listado.nombre }}
@@ -556,7 +556,7 @@
               </div>
               <div class="col capitalize ">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event,ii)">
+                  <mat-select [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event,ii)">
                     <mat-option *ngFor="let listado of listadoMun[ii]" [value]="listado.localizacionId" class="capitalize">
                       {{ listado.descripcion }}
                     </mat-option>

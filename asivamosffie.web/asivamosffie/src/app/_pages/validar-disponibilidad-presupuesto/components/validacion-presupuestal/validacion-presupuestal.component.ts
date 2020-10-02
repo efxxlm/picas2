@@ -32,9 +32,16 @@ export class ValidacionPresupuestalComponent implements OnInit {
   }
   download()
   {
-    this.disponibilidadServices.StartDownloadPDF(this.detailavailabilityBudget).subscribe(listas => {
+    this.disponibilidadServices.StartDownloadPDF(this.detailavailabilityBudget).subscribe((listas:any) => {
       console.log(listas);
-      this.openDialog('', 'Error al descargar el PDF');
+      const documento = `DDP ${ this.detailavailabilityBudget }.pdf`;
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
     });
   }
 
