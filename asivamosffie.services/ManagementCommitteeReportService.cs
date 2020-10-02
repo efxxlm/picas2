@@ -57,8 +57,7 @@ namespace asivamosffie.services
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
                 try
-                {
-                     
+                { 
                     GrillaSesionComiteTecnicoCompromiso grillaSesionComiteTecnicoCompromiso = new GrillaSesionComiteTecnicoCompromiso
                     {
                         ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId,
@@ -71,22 +70,17 @@ namespace asivamosffie.services
                         grillaSesionComiteTecnicoCompromiso.Compromiso = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().Tarea;
                         grillaSesionComiteTecnicoCompromiso.FechaCumplimiento = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().FechaCumplimiento;
                         grillaSesionComiteTecnicoCompromiso.EstadoCodigo = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().EstadoCodigo;
-
                     }
                     grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
                 }
                 catch (Exception ex)
                 {
+
                 }
             }
             return grillaSesionComiteTecnicoCompromisos;
         }
-
-
-
-
-
-
+         
         //Detalle gestion compromisos
         public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
         {
@@ -114,8 +108,7 @@ namespace asivamosffie.services
                 throw;
             }
         }
-
-
+         
         //Gestion de actas
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport(int pUserId)
         {
@@ -125,30 +118,15 @@ namespace asivamosffie.services
             return await _context.ComiteTecnico.FromSqlRaw(StrSql)
                       .Include(r => r.SesionComiteTecnicoCompromiso)
                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                      .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                  .ToListAsync(); ;
+                      .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).OrderByDescending(r=> r.ComiteTecnicoId)
+                  .ToListAsync(); 
         }
-
-
-
+          
         //Detalle gestion de actas
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReportById(int comiteTecnicoId)
         {
             try
-            {
-                //return await (from a in _context.SesionComiteTecnicoCompromiso
-                //              join s in _context.ComiteTecnico on a.ComiteTecnicoId equals s.ComiteTecnicoId
-                //              join sc in _context.SesionComiteSolicitud on a.ComiteTecnicoId equals sc.ComiteTecnicoId
-                //              where s.Eliminado != true && sc.ComiteTecnicoId == comiteTecnicoId
-                //              select new ComiteTecnico
-                //              {
-                //                  ComiteTecnicoId = s.ComiteTecnicoId,
-                //                  FechaCreacion = s.FechaCreacion,
-                //                  NumeroComite = s.NumeroComite,
-                //                  EstadoComiteCodigo = sc.EstadoActaCodigo != null ? _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(sc.EstadoActaCodigo) && r.TipoDominioId == (int)EnumeratorTipoDominio.EstadoAcataComiteTecnico).Select(r => r.Nombre).FirstOrDefault() : "Sin revision",
-
-                //              }).ToListAsync();
-
+            { 
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                         .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                               .Include(r => r.SesionComentario)
