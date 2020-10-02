@@ -1,5 +1,5 @@
 body {
-    color: var(--fontColor);
+    color: $fontColor;
 }
 
 b,
@@ -20,12 +20,11 @@ strong {
 }
 
 .colorMainColor {
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 .color-secondaryColor {
-    color: #d21e18;
-    color: var(--secondaryColor);
+    color: $secondaryColor;
 }
 
 .container {
@@ -43,7 +42,7 @@ strong {
 }
 
 .color-mainColor {
-    color: var(--mainColor)
+    color: $mainColor
 }
 
 .text-center {
@@ -69,7 +68,7 @@ strong {
 .title-menu {
     .mat-typography &--h1 {
         text-align: center;
-        color: var(--mainColor);
+        color: $mainColor;
         font-weight: 500;
         // margin-top: 1.5em;
         margin-bottom: 0;
@@ -80,7 +79,7 @@ strong {
             display: block;
             position: relative;
             height: .15em;
-            background-color: var(--mainColor);
+            background-color: $mainColor;
             border-radius: 1em;
             width: calc(100% + 1em);
             max-width: calc(100vw + .5em);
@@ -94,7 +93,7 @@ strong {
 .mat-typography .info-sub-title {
     margin-top: .8em;
     margin-bottom: 1.2em;
-    color: var(--mainColor);
+    color: $mainColor;
 
     span {
         margin-left: 1em;

@@ -1,63 +1,65 @@
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-
-  <ng-container matColumnDef="llaveMen">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Id MEN </th>
-    <td mat-cell *matCellDef="let element" align="center">
-      <span> {{ element.contratacion.llaveMen }} </span>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="tipoIntervencion">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Intervención </th>
-    <td mat-cell *matCellDef="let element" align="center">
-      {{ element.contratacion.tipoIntervencion }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="departamentoMunicipio">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento/Municipio </th>
-    <td mat-cell *matCellDef="let element" align="center">
-      {{ element.contratacion.departamento }}/{{ element.municipio }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="institucionEducativa">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
-    <td mat-cell *matCellDef="let element" align="center">
-      {{ element.contratacion.institucionEducativa }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="sede">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
-    <td mat-cell *matCellDef="let element" align="center">
-      {{ element.contratacion.sede }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="estadoProyecto">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del proyecto </th>
-    <td mat-cell *matCellDef="let element" align="center">
-      {{ element.contratacion.estadoProyecto }}
-    </td>
-  </ng-container>
+<div class="table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort>
   
-    <ng-container matColumnDef="gestion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 19%;"> Gestión </th>
-      <td mat-cell *matCellDef="let element">
-  
-        <button mat-raised-button 
-                color="accent" 
-                class="btn-table"
-                [disabled]="estadoObservaciones( element.contratacion.estadoProyectoCodigo )"
-                (click)="openDialogObservacion( element )">
-                Observaciones
-        </button>
-  
+    <ng-container matColumnDef="llaveMen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id MEN </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <span> {{ element.contratacion.llaveMen }} </span>
       </td>
     </ng-container>
   
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+    <ng-container matColumnDef="tipoIntervencion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Intervención </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        {{ element.contratacion.tipoIntervencion }}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="departamentoMunicipio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento/Municipio </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        {{ element.contratacion.departamento }}/{{ element.municipio }}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="institucionEducativa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        {{ element.contratacion.institucionEducativa }}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="sede">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        {{ element.contratacion.sede }}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="estadoProyecto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del proyecto </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        {{ element.contratacion.estadoProyecto }}
+      </td>
+    </ng-container>
+    
+      <ng-container matColumnDef="gestion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 19%;"> Gestión </th>
+        <td mat-cell *matCellDef="let element">
+    
+          <button mat-raised-button 
+                  color="accent" 
+                  class="btn-table"
+                  [disabled]="estadoObservaciones( element.contratacion.estadoProyectoCodigo )"
+                  (click)="openDialogObservacion( element )">
+                  Observaciones
+          </button>
+    
+        </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
 

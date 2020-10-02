@@ -1,12 +1,12 @@
 .mat-select-panel {
     border-radius: 2em !important;
-    // border: solid 1px var(--mainColor);
+    // border: solid 1px $mainColor;
     padding: 0 1em !important;
     box-shadow: 0 0 0 1.2em #fff,
-                0 0 0 calc(1.2em + 1px) var(--mainColor) !important;
+                0 0 0 calc(1.2em + 1px) $mainColor !important;
     overflow: auto;
-    --thumb-color: var(--mainColor);
-    --thumb-color-hover: var(--mainColor);
+    --thumb-color: $mainColor;
+    --thumb-color-hover: $mainColor;
     --track-color: #e8e8e8;
 
     &::-webkit-scrollbar {
@@ -31,14 +31,14 @@
     position: relative;
 
     &-text {
-        color: var(--mainColor);
+        color: $mainColor;
         // border-bottom: solid 1px;
         position: relative;
 
         &::after {
             content: "";
             display: block;
-            background-color: var(--mainColor);
+            background-color: $mainColor;
             height: 1px;
             width: 100%;
             position: absolute;
@@ -50,7 +50,7 @@
     &::before {
         content: "";
         display: inline-block;
-        border: solid 1px var(--mainColor);
+        border: solid 1px $mainColor;
         border-radius: 50%;
         height: 1.5em;
         min-width: 1.5em;
@@ -60,7 +60,7 @@
     &::after {
         content: "";
         display: block;
-        background-color: var(--mainColor);
+        background-color: $mainColor;
         border-radius: 50%;
         height: 16px;
         width: 16px;

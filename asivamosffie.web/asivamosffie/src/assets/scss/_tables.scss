@@ -1,5 +1,5 @@
 th.mat-header-cell {
-    background-color: var(--mainColor);
+    background-color: $mainColor;
     color: #fff;
     text-align: center;
 }
@@ -17,22 +17,21 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 }
 
 th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    border-left: solid 1px $mainColor;
     padding: 0 .8em !important;
 }
 
 th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
-    border-right: none;
+    border-right: solid 1px $mainColor;
     padding: 0 .8em !important;
 }
 
 .mat-cell, .mat-footer-cell {
-    color: #174193;
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
-    border-bottom-color: #174193;
-    border-bottom-color: var(--mainColor);
+    border-bottom-color: $mainColor;
 }
 
 table {
@@ -128,8 +127,7 @@ div.mat-paginator {
 
 %botones-paginador {
     content: "";
-    color: #174193;
-    color: var(--mainColor);
+    color: $mainColor;
     border-top: 1em solid transparent;
     border-bottom: 1em solid transparent;
     margin: 0 4px;
@@ -157,10 +155,8 @@ div.mat-paginator {
     }
 }
 .btn-table:hover {
-    background-color: #d1d1d1;
-    background-color: var(--grayColor);
-    color: #174193;;
-    color: var(--mainColor);
+    background-color: $grayColor;
+    color: $mainColor;
 }
 .mat-header-cell{
     font-style: italic;
