@@ -1834,7 +1834,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.MenuPadreId).HasComment("Identificador del Menu Padre");
 
                 entity.Property(e => e.Nombre)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasComment("Nombre del Menu en el sistema");
 

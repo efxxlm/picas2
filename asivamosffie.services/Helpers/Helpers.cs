@@ -54,7 +54,7 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data);
+            result = sha.ComputeHash(data) ;
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
