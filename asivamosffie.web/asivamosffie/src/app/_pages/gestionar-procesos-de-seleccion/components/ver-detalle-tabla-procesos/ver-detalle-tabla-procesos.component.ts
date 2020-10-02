@@ -60,7 +60,7 @@ console.log(this.data.tipoProcesoCodigo)
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
-         this.openDialog("Proceso Seleccion", "La información se ha eliminado correctamente,");
+         this.openDialog("", "La información se ha eliminado correctamente,");
          this.router.navigate(['/seleccion']);
          this.dialogRef.close();
        }else
@@ -75,7 +75,22 @@ console.log(this.data.tipoProcesoCodigo)
     }
 
      this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
-       this.openDialog("Proceso Seleccion", respuesta.message);
+       this.openDialog("", respuesta.message);
+       if ( respuesta.code == "200" ){
+          this.dialogRef.close();
+          this.router.navigate(['/seleccion']);
+       }
+    })
+  }
+
+  onAperturaComite( pId: number ){
+    let proceso: ProcesoSeleccion = {
+      procesoSeleccionId: pId,
+      estadoProcesoSeleccionCodigo: this.estadosProcesoSeleccion.AperturaEntramite
+    }
+
+     this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
+       this.openDialog("", respuesta.message);
        if ( respuesta.code == "200" ){
           this.dialogRef.close();
           this.router.navigate(['/seleccion']);

@@ -129,7 +129,7 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.CondicionesAsignacionPuntaje = procesoSeleccion.CondicionesAsignacionPuntaje;
                     ProcesoSeleccionAntiguo.CantidadCotizaciones = procesoSeleccion.CantidadCotizaciones;
                     ProcesoSeleccionAntiguo.CantidadProponentes = procesoSeleccion.CantidadProponentes;
-                    ProcesoSeleccionAntiguo.EsCompleto = procesoSeleccion.EsCompleto;
+                    ProcesoSeleccionAntiguo.EsCompleto = EsCompleto(procesoSeleccion);
                     ProcesoSeleccionAntiguo.EstadoProcesoSeleccionCodigo = procesoSeleccion.EstadoProcesoSeleccionCodigo;
                     ProcesoSeleccionAntiguo.EtapaProcesoSeleccionCodigo = procesoSeleccion.EtapaProcesoSeleccionCodigo;
                     ProcesoSeleccionAntiguo.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
@@ -249,7 +249,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado )
+        public async Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender )
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
@@ -257,18 +257,34 @@ namespace asivamosffie.services
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
-                    strCrearEditar = "CAMBIAR ESTADO PROCESO SELECCION";
-                    ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
-                    //Auditoria
-                    ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
-                    ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+                strCrearEditar = "CAMBIAR ESTADO PROCESO SELECCION";
+                ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
+                //Auditoria
+                ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
-                    //Registros
-                    ProcesoSeleccionAntiguo.EstadoProcesoSeleccionCodigo = pCodigoEstado;
+                //Registros
+                ProcesoSeleccionAntiguo.EstadoProcesoSeleccionCodigo = pCodigoEstado;
 
-                    //_context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
+                //_context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
+                //si el estado es apertura tramite se debe enviar un mensaje a la secretaria de comite jflorez
+                if(pCodigoEstado== ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite)
+                {
+                    var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+                    foreach(var usuario in usuariosecretario)
+                    {
+                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
+                        string template = TemplateRecoveryPassword.Contenido;
+                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Proceso de selección en tramite", template, pSentender, pPassword, pMailServer, pMailPort);
+                    }
+                    
 
-                
+                }
+
+
+
+
+
 
                 await _context.SaveChangesAsync();
 
@@ -1293,32 +1309,32 @@ namespace asivamosffie.services
         public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
         {
             if (
-                 string.IsNullOrEmpty(procesoSeleccion.Objeto)
-                 || !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
-                 || !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
-                 || !string.IsNullOrEmpty(procesoSeleccion.CriteriosSeleccion)
-                 || !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
-                 || !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
-                 || !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
-                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
-                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantGrupos))
-                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
-                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
-                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesJuridicasHabilitantes)
-                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesFinancierasHabilitantes)
-                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesAsignacionPuntaje)
-                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones))
-                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadProponentes))
-                 || !string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo)
-                 || !string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
-                 || !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
-                 || !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
-                 || !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
+                 !string.IsNullOrEmpty(procesoSeleccion.Objeto)
+                 && !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
+                 && !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
+                 //|| !string.IsNullOrEmpty(procesoSeleccion.CriteriosSeleccion)
+                 && !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
+                 && !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
+                 && !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
+                 //|| !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
+                 //|| !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantGrupos))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
+                 //|| !string.IsNullOrEmpty(procesoSeleccion.CondicionesJuridicasHabilitantes)
+                 //|| !string.IsNullOrEmpty(procesoSeleccion.CondicionesFinancierasHabilitantes)
+                 //|| !string.IsNullOrEmpty(procesoSeleccion.CondicionesAsignacionPuntaje)
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones))
+                 //|| !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadProponentes))
+                 && !string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo)
+                 && !string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+                 //|| !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
+                 //|| !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
+                 //|| !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
 
                 )
-                 return false;
+                 return true;
             else
-                return true;
+                return false;
         }
 
 

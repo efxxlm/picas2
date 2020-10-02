@@ -8,6 +8,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Financiera = 3,
         Juridica = 4,
         Administrativa = 5,
-        Miembros_Comite = 6
+        Miembros_Comite = 6,
+        Secretario_Comite=7,
+        Supervisor=8
     } 
 }

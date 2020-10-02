@@ -57,7 +57,7 @@ export class TablaProcesosComponent implements OnInit {
         
         if (nombreTipo)   proceso.tipoProcesoNombre = nombreTipo.nombre;
         if (nombreEstado) proceso.estadoProcesoSeleccionNombre = nombreEstado.nombre;
-        if (nombreEtapa)  proceso.etapaProcesoSeleccionNombre = nombreTipo.nombre;
+        if (nombreEtapa)  proceso.etapaProcesoSeleccionNombre = nombreEtapa.nombre;
 
           //this.dataSource = new MatTableDataSource( respuesta[0] );
       })

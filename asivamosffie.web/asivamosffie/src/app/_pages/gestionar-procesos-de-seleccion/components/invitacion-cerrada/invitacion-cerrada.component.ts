@@ -113,10 +113,10 @@ export class InvitacionCerradaComponent implements OnInit {
       //   this.router.navigate([`/seleccion/seccionPrivada/${ this.procesoSeleccion.tipoProcesoCodigo }/${ this.procesoSeleccion.procesoSeleccionId }`])
       // }
       this.openDialog( "", respuesta.message )
-      /*this.router.navigate(["/seleccion/invitacionCerrada", respuesta.data.procesoSeleccionId]);
+      this.router.navigate(["/seleccion/invitacionCerrada", respuesta.data.procesoSeleccionId]);
       setTimeout(() => {
         location.reload();  
-      }, 1000);*/
+      }, 1000);
       console.log('respuesta',  respuesta );
     })
   }

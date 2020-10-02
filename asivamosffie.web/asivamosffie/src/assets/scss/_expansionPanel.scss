@@ -123,3 +123,19 @@ div.mat-expansion-panel-body {
     padding-left: 0;
     padding-right: 0;
 }
+/*jflorez, lo siento no lo he terminado*/
+.en-alertaLibre::before {
+    @extend %ayuda-color;
+    /*position: absolute;
+    right: 1.2em;
+    top: 50%;*/
+    transform: translateY(-50%);
+    content: '!';
+    background-color: #fff;
+    color: $mainColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px;
+    border-radius: 25%;
+}

@@ -40,13 +40,13 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="flex-span" *ngIf="element.esCompleto">
-                        <span class="info-text completo mr-auto"></span>
+                        <span class="info-text completo mr-auto m0"></span>
                         <span>
                             {{ 'Completo' }}
                         </span>
                     </div>
                     <div class="flex-span" *ngIf="!element.esCompleto">
-                        <span class="info-text sin-diligenciar mr-auto"></span>
+                        <span class="info-text sin-diligenciar mr-auto  m0"></span>
                         <span>
                             {{ 'Incompleto' }}
                         </span>

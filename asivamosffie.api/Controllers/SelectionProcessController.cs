@@ -62,7 +62,9 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId, usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo);
+                respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId,
+                    usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo,
+                    _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return respuesta;
             }
             catch (Exception ex)

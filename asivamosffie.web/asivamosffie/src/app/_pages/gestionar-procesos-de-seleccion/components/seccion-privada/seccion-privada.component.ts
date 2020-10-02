@@ -95,7 +95,7 @@ export class SeccionPrivadaComponent implements OnInit {
 
   }
 
-  openDialog(modalTitle: string, modalText: string, redirect?:boolean, id?:number) {
+  openDialog(modalTitle: string, modalText: string, redirect?:boolean, id?:any) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
@@ -106,10 +106,17 @@ export class SeccionPrivadaComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if(result)
         {
-          this.router.navigate([`/seleccion/seccionPrivada/${ id }`]);
-          setTimeout(() => {
-            location.reload();  
-          }, 1000);
+          if(id.esCompleto)
+          {
+            this.router.navigate([`/seleccion/`]);            
+          }
+          else{
+            this.router.navigate([`/seleccion/seccionPrivada/${ id.procesoSeleccionId }`]);
+            setTimeout(() => {
+              location.reload();  
+            }, 1000);
+          }
+          
           
         }
       });
@@ -119,7 +126,7 @@ export class SeccionPrivadaComponent implements OnInit {
   onSubmit(){
     console.log(this.procesoSeleccion);
     this.procesoSeleccionService.guardarEditarProcesoSeleccion(this.procesoSeleccion).subscribe( respuesta => {
-      this.openDialog( "", respuesta.message,respuesta.code == "200",respuesta.data.procesoSeleccionId )
+      this.openDialog( "", respuesta.message,respuesta.code == "200",respuesta.data )
 
       
       //console.log('respuesta',  respuesta );
