@@ -273,7 +273,7 @@ export class RegistrarComponent implements OnInit {
         this.commonService.listaBancos(),
         this.commonService.listaDepartamentos(),
         this.cofinanciacionService.listaAportantesByTipoAportante(this.tipoAportanteId),
-        this.fuenteFinanciacionService.listaFuenteFinanciacion(),
+        //this.fuenteFinanciacionService.listaFuenteFinanciacion(),
         
       ]).subscribe(res => {
 
@@ -301,7 +301,7 @@ export class RegistrarComponent implements OnInit {
         
         this.bancos = res[2];
         this.departamentos = res[3];
-        this.listaFuentes = res[5];
+        //this.listaFuentes = res[5];
 
         if (this.idAportante > 0) {
           this.edicion=true;       

@@ -168,7 +168,7 @@ console.log(this.addressForm);
         fuenteFinanciacionId: this.fuenteFinaciacionId,
         registroPresupuestalId: rp? rp.registroPresupuestalId:null,
         valorConsignacion: this.addressForm.get('valorConsignacion').value,
-        vigenciaAporteId: this.addressForm.get('vigencia').value.vigenciaAporteId
+        vigenciaAporteId: this.addressForm.get('vigencia').value?.vigenciaAporteId
       }
 
       if (control.controlRecursoId > 0)

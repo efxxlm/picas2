@@ -181,6 +181,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [HttpGet]
+        [Route("GetListFuentesFinanciacionshort")]
+        public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacionshort()
+        {
+            try
+            {
+                var result = await _sourceFunding.GetListFuentesFinanciacionshort();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpGet]
         [Route("GetListFuentesFinanciacion")]
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
