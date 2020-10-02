@@ -21,6 +21,12 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
+        {
+            return _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r => r.Descripcion).FirstOrDefault();
+        }
+
+
         public async Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
         {
 

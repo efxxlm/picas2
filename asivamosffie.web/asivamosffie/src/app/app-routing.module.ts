@@ -108,12 +108,12 @@ const routes: Routes = [
         .then(m => m.GestionarProcesosDeSeleccionModule)
       },
       {
-<<<<<<< HEAD
+
         path: 'generarActaInicioFaseIIConstruccion',
         loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
         .then(m => m.GestionarActaInicioFdosConstrModule)
       },
-=======
+      {
         path: 'comiteFiduciario',
         loadChildren: () => import( './_pages/sesion-comite-fiduciario/comite-fiduciario.module' )
           .then( module => module.ComiteFiduciarioModule )
@@ -140,7 +140,7 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
       }
->>>>>>> efcf96985df223fc8e04e6ee0776980ad74f248d
+
     ]
 
   },
