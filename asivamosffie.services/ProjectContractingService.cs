@@ -221,7 +221,9 @@ namespace asivamosffie.services
         {
 
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
-                .Include(r => r.ContratacionProyecto)
+               .Include(r => r.ContratacionObservacion)
+               .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r=> r.SesionSolicitudObservacionProyecto)
                            .FirstOrDefaultAsync();
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
