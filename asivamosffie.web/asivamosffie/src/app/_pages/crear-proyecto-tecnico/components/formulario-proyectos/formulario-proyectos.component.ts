@@ -91,9 +91,31 @@ export class FormularioProyectosComponent implements OnInit {
     this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' + this.proyecto.predioPrincipal.ubicacionLongitud2;
     //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
     //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
+    //voy a revisar algunos datos minimos
+    console.log(this.proyecto)
+    if(!this.proyecto.tipoIntervencionCodigo)
+    {
+      this.openDialog('', '<b>El tipo de intervención es obligatorio.</b>');
+      return;
+    }
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(respuesta => {
-      this.openDialog('', respuesta.message);
-      this.router.navigate(['/crearProyecto']);
+      if(respuesta.code=="200")
+      {
+        this.openDialog('', respuesta.message);
+        this.router.navigate(['/crearProyecto']); 
+      }
+      else
+      {
+        if(respuesta.code)
+        {
+          this.openDialog('', respuesta.message);
+        }
+        else{
+          this.openDialog('','<b>Error en el formulario, debe ingresar los datos obligatorios.</b>');
+        }
+        
+      }
+      
     },
       err => {
         let mensaje: string;

@@ -105,7 +105,7 @@ namespace asivamosffie.services
                     || string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
                     || string.IsNullOrEmpty(proyecto.SedeId.ToString())
                     || string.IsNullOrEmpty(proyecto.EnConvocatoria.ToString())
-                    || string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
+                    //|| string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
                     || string.IsNullOrEmpty(proyecto.CantPrediosPostulados.ToString())
                     || string.IsNullOrEmpty(proyecto.TipoPredioCodigo.ToString())
                     || string.IsNullOrEmpty(proyecto.PredioPrincipalId.ToString())
@@ -223,7 +223,7 @@ namespace asivamosffie.services
                   || string.IsNullOrEmpty(predio.Direccion)
                   || string.IsNullOrEmpty(predio.DocumentoAcreditacionCodigo)
                   || string.IsNullOrEmpty(predio.NumeroDocumento)
-                  || string.IsNullOrEmpty(predio.CedulaCatastral)
+                  //|| string.IsNullOrEmpty(predio.CedulaCatastral)
                     )
                 {
                     return false;
@@ -240,7 +240,7 @@ namespace asivamosffie.services
                          //|| string.IsNullOrEmpty(Predio.Predio.Direccion)
                          string.IsNullOrEmpty(Predio.Predio.DocumentoAcreditacionCodigo)
                         || string.IsNullOrEmpty(Predio.Predio.NumeroDocumento)
-                        || string.IsNullOrEmpty(Predio.Predio.CedulaCatastral)
+                        //|| string.IsNullOrEmpty(Predio.Predio.CedulaCatastral)
                        )
                     {
                         return false;

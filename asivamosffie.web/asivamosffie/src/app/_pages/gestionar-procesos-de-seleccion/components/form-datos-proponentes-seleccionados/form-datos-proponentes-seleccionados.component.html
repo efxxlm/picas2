@@ -62,7 +62,7 @@
               <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
                   <mat-option *ngFor="let departamento of listaDepartamentos" [value]="departamento">
                     {{ departamento.descripcion }}
@@ -80,7 +80,7 @@
               <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="municipio" required>
                   <mat-option *ngFor="let municipio of listaMunicipios" [value]="municipio">
                     {{ municipio.descripcion }}
@@ -215,7 +215,7 @@
               <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
                   <mat-option *ngFor="let departamento of listaDepartamentos" [value]="departamento">
                     {{ departamento.descripcion }}
@@ -233,7 +233,7 @@
               <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="municipio" required>
                   <mat-option *ngFor="let municipio of listaMunicipios" [value]="municipio">
                     {{ municipio.descripcion }}
@@ -311,7 +311,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantasEntidades type="number" min="1" formControlName="cuantasEntidades" (keyup)="CambioNumeroCotizantes()"
+                <input matInput #cuantasEntidades type="number" min="1" max="99" formControlName="cuantasEntidades" (keyup)="CambioNumeroCotizantes()"
                 maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                  required>
                 <input type="hidden" formControlName="procesoSeleccionProponenteId" >
@@ -444,7 +444,7 @@
                 <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
               </div>
               <div class="col">
-                <mat-form-field class="select-width">
+                <mat-form-field class="select-width capitalize">
                   <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
                     <mat-option *ngFor="let departamento of listaDepartamentos" [value]="departamento">
                       {{ departamento.descripcion }}
@@ -462,7 +462,7 @@
                 <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
               </div>
               <div class="col">
-                <mat-form-field class="select-width">
+                <mat-form-field class="select-width capitalize">
                   <mat-select formControlName="municipio" required>
                     <mat-option *ngFor="let municipio of listaMunicipios" [value]="municipio">
                       {{ municipio.descripcion }}

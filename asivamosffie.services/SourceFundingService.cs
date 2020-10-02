@@ -343,10 +343,11 @@ namespace asivamosffie.services
             //jflorez, cambio esto para tener el retorno con todas las variables
 
             var retorno = await _context.FuenteFinanciacion.
-                Where(r => !(bool)r.Eliminado).Include(r => r.ControlRecurso).
+                Where(r => !(bool)r.Eliminado).
                 Include(r => r.Aportante).ToListAsync();
             foreach (var ret in retorno)
             {
+                ret.ControlRecurso = _context.ControlRecurso.Where(x=>x.FuenteFinanciacionId==ret.FuenteFinanciacionId && !(bool)x.Eliminado).ToList();
                 ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
                 if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                 {
