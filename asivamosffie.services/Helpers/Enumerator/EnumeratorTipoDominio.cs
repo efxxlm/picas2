@@ -1,4 +1,4 @@
-﻿s
+﻿
 namespace asivamosffie.services.Helpers.Enumerator
 {
     public enum EnumeratorTipoDominio : int

@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './form-datos-proponentes-seleccionados-invitacion-cerrada.component';
+//import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './form-datos-proponentes-seleccionados-invitacion-cerrada.component';
+import { FormDatosProponentesSeleccionadosInvitacionCerradaComponent } from './proponentes-seleccionados-invitacion-cerrada.component';
 
 describe('FormDatosProponentesSeleccionadosInvitacionCerradaComponent', () => {
   let component: FormDatosProponentesSeleccionadosInvitacionCerradaComponent;

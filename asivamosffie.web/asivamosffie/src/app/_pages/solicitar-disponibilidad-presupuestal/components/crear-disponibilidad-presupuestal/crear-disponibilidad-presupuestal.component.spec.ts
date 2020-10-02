@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CrearSolicitudDeDisponibilidadPresupuestalComponent } from './crear-solicitud-de-disponibilidad-presupuestal.component';
+//import { CrearSolicitudDeDisponibilidadPresupuestalComponent } from './crear-solicitud-de-disponibilidad-presupuestal.component'
+import { CrearSolicitudDeDisponibilidadPresupuestalComponent } from './crear-disponibilidad-presupuestal.component';;
 
 describe('CrearSolicitudDeDisponibilidadPresupuestalComponent', () => {
   let component: CrearSolicitudDeDisponibilidadPresupuestalComponent;

@@ -31,6 +31,50 @@ namespace asivamosffie.services
             _settings = settings;
         }
 
+        public replaceTags()
+        {
+            string str="";
+            string valor="";
+
+            str = str.Replace("_Numero_Identificacion_Entidad_Contratista_Interventoria_", valor);
+            str = str.Replace("_Nombre_Representante_Contratista_Interventoria_", valor);
+            str = str.Replace("_Nombre_Entidad_Contratista_Interventoria_", valor);
+            str = str.Replace("_Nombre_Representante_Contratista_Obra_", valor);
+            str = str.Replace("_Nombre_Entidad_Contratista_Obra _", valor);
+            str = str.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", valor);
+            str = str.Replace(" _Fecha_Prevista_Terminacion_", valor);
+            str = str.Replace("_OBSERVACION_O_CONSIDERACIONES_ESPECIALES_", valor);
+            str = str.Replace("_Plazo_Ejecucion_Fase_1_Preconstruccion_", valor);
+            str = str.Replace("_Plazo_Ejecucion_Fase_2_Construccion_", valor);
+            str = str.Replace("_Valor_Actual_Contrato_", valor);
+            str = str.Replace("_Plazo_Inicial_Contrato_", valor);
+            str = str.Replace("_Valor_Fase_1_preconstruccion_", valor);
+            str = str.Replace("_Valor_Fase_2_Construccion_Obra_", valor);
+            str = str.Replace("_Nombre_Entidad_Contratista_Obra_", valor);
+            str = str.Replace("_Valor_Inicial_Contrato_", valor);
+            str = str.Replace("_Fecha_Aprobacion_Garantia_Poliza_", valor);
+            str = str.Replace("_Objeto_", valor);
+            str = str.Replace("_Numero_DRP_", valor);
+            str = str.Replace("_Fecha_Generación_DRP_", valor);
+            str = str.Replace("_Institucion_Educativa_Llave_MEN_", valor);
+            str = str.Replace("_Departamento_y_Municipio_Llave_MEN_", valor);
+            str = str.Replace("_Fecha_Acta_Inicio_", valor);
+            str = str.Replace("_Llave_MEN_Contrato_", valor);
+            str = str.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", valor);
+            str = str.Replace("_Numero_Contrato_Obra_ ", valor);
+            str = str.Replace("_Nombre_Entidad_Contratista_Obra_", valor);
+            str = str.Replace("_Numero_Identificacion_Contratista_Interventoria_", valor);
+            str = str.Replace("_Nombre_Representante_Contratista_Obra_", valor);
+            str = str.Replace("_Nombre_Representante_Contratista_Interventoria_", valor);
+            str = str.Replace("_Nombre_Entidad_Contratista_Interventoria_", valor);
+            str = str.Replace("_Fecha_Acta_Inicio_", valor);
+            str = str.Replace("_Numero_Contrato_Obra_", valor);
+            str = str.Replace("", valor);
+
+
+
+        }
+
         public async Task<VistaGenerarActaInicioContrato> GetVistaGenerarActaInicio(int pContratoId )
         {
             VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
@@ -150,7 +194,8 @@ namespace asivamosffie.services
                     //FechaAprobacionRequisitos="[FechaAprobacionRequisitos] [contrato] FechaAprobacionRequisitos",
                     NumeroContrato = contrato.NumeroContrato,
                     VigenciaContrato = "2021 PENDIENTE",
-                    FechaFirmaContrato = contrato.FechaFirmaContrato.ToString("dd/MM/yyyy"),
+                    FechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
+                    
                     NumeroDRP1 = "DisponibilidadPresupuestal - NumeroDrp PENDIENTE",
 
                     FechaGeneracionDRP1 = "2021 PENDIENTE",
