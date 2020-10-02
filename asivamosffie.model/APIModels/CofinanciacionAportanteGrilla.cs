@@ -23,5 +23,6 @@ namespace asivamosffie.model.APIModels
         public DateTime? FechaCreacion { get; set; }
         public string MunicipioId { get; set; }
         public string DepartamentoId { get; set; }
+        public bool? RegistroCompleto { get; set; }
     }
 }

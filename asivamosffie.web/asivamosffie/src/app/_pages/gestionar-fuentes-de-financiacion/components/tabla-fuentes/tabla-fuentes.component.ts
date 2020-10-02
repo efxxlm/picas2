@@ -46,7 +46,7 @@ export class TablaFuentesComponent implements OnInit {
   ngOnInit(): void {
     
     forkJoin([
-      this.fuenteFinanciacionService.listaFuenteFinanciacion(),
+      this.fuenteFinanciacionService.listaFuenteFinanciacionshort(),
       this.commonService.listaNombreAportante(),
       this.commonService.listaTipoAportante(),
       this.commonService.listaFuenteRecursos()

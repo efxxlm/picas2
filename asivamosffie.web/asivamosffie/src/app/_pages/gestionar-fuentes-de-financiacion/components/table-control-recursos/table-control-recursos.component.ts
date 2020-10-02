@@ -97,7 +97,24 @@ export class TableControlRecursosComponent implements OnInit {
       {
         this.fuenteFinanciacionServices.DeleteResourceFundingBySourceFunding(borrarForm).subscribe(res=>{
           console.log(res);
+          this.openDialog("",res.message);
         });
+      }           
+    });
+  }
+  openDialog(modalTitle: string, modalText: string,borrarForm?: any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:false }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])   
+        setTimeout(() => {
+          location.reload(); 
+        }, 1000);    
       }           
     });
   }

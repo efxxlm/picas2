@@ -593,7 +593,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="32"
+                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="28"
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
                     max="999" required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
@@ -612,7 +612,7 @@
                 <mat-form-field class="full-width">
                   <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)"
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    maxlength="32" min="1" max="999" required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                    maxlength="28" min="1" max="999" required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span
                   class="contador">{{20 - (aportantes.valorInterventoria?aportantes.valorInterventoria.toString().length:0)}}</span>
@@ -628,12 +628,12 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="32" min="1" max="999" required
+                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="54" min="1" max="999" required
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" readonly>
                 </mat-form-field>
                 <span
-                  class="contador">{{20 - (aportantes.valorTotalAportante?aportantes.valorTotalAportante.toString().length:0)}}</span>
+                  class="contador">{{40 - (aportantes.valorTotalAportante?aportantes.valorTotalAportante.toString().length:0)}}</span>
               </div>
             </div>
           </div>

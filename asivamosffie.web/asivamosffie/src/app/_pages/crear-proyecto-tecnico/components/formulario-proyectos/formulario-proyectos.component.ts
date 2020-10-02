@@ -627,18 +627,20 @@ export class FormularioProyectosComponent implements OnInit {
 
   getAportante(event: MatSelectChange, i: number) {
     this.commonServices.listaAportanteByTipoAportanteId(event.value).subscribe(respuesta => {
+      let respuestaok=respuesta.filter(x=>x.registroCompleto==true);
       this.listaVigencias[i]=[];
       this.listaAportante[i]=[];
       if(this.tipoAportante.FFIE.includes(event.value.toString()))
       {
-        this.listaVigencias[i]=respuesta;
+        this.listaVigencias[i]=respuestaok;
       }
       else
       {
         if(this.tipoAportante.ET.includes(event.value.toString()))
         {
-          this.listaAportante[i]=respuesta;
+          this.listaAportante[i]=respuestaok;
           console.log(this.listaAportante[i]);
+          this.listadoDepto[i]=[{localizacionId:0,descripcion:"un momento por favor."}]
           this.commonServices.listaDepartamentos().subscribe(res=>{
             this.listadoDepto[i]=res;
           });
@@ -647,8 +649,8 @@ export class FormularioProyectosComponent implements OnInit {
         else
         {
 
-          this.listaAportante[i]=respuesta;
-          respuesta.forEach(element => {
+          this.listaAportante[i]=respuestaok;
+          respuestaok.forEach(element => {
             
             console.log("evaluo");
             console.log(element.nombre);
@@ -691,17 +693,18 @@ export class FormularioProyectosComponent implements OnInit {
 
   getAportanteById(id: number, i: number) {
     this.commonServices.listaAportanteByTipoAportanteId(id).subscribe(respuesta => {
+      let respuestaok=respuesta.filter(x=>x.registroCompleto==true);
       this.listaVigencias[i]=[];
       this.listaAportante[i]=[];
       if(this.tipoAportante.FFIE.includes(id.toString()))
       {
-        this.listaVigencias[i]=respuesta;
+        this.listaVigencias[i]=respuestaok;
       }
       else
       {
         if(this.tipoAportante.ET.includes(id.toString()))
         {
-          this.listaAportante[i]=respuesta;
+          this.listaAportante[i]=respuestaok;
           console.log(this.listaAportante[i]);
           this.commonServices.listaDepartamentos().subscribe(res=>{
             this.listadoDepto[i]=res;
@@ -719,8 +722,8 @@ export class FormularioProyectosComponent implements OnInit {
         else
         {
 
-          this.listaAportante[i]=respuesta;
-          respuesta.forEach(element => {
+          this.listaAportante[i]=respuestaok;
+          respuestaok.forEach(element => {
             
             console.log("evaluo");
             console.log(element.nombre);

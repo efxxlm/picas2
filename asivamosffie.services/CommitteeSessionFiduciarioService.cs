@@ -1428,7 +1428,7 @@ namespace asivamosffie.services
                         sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
                         //sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
                     }
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
                 }
 
                 return

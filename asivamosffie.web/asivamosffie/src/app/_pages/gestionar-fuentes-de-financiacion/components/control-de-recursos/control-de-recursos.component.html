@@ -80,7 +80,7 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="rp">
+                <mat-select formControlName="rp" required>
                   <mat-option *ngFor="let rp of rpArray" [value]="rp">
                     {{ rp.numeroRp }}
                   </mat-option>
@@ -94,7 +94,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select formControlName="vigencia">
+                  <mat-select formControlName="vigencia" required>
                     <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
                       {{ vigencia.tipoVigenciaCodigo }}
                     </mat-option>

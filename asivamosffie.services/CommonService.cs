@@ -141,7 +141,7 @@ namespace asivamosffie.services
             .Select(x => new Localicacion
             {
                 LocalizacionId = x.LocalizacionId,
-                Descripcion = x.Descripcion.ToUpper()
+                Descripcion = x.Descripcion.ToLower()//jflorez lo paso a min para usar en frontedn la clase capitalize
             }).ToListAsync();
         }
 
@@ -152,7 +152,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdDepartamento)).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion.ToUpper()
+                    Descripcion = x.Descripcion.ToLower()//jflorez lo cambio para usar en  fron la clase capitalize
                 }).ToListAsync();
             }
             else
@@ -160,7 +160,7 @@ namespace asivamosffie.services
                 return await _context.Localizacion.Where(r => r.Nivel == 2).Select(x => new Localicacion
                 {
                     LocalizacionId = x.LocalizacionId,
-                    Descripcion = x.Descripcion.ToUpper()
+                    Descripcion = x.Descripcion.ToLower()//jflorez lo cambio para usar en  fron la clase capitalize
                 }).ToListAsync();
             }
 

@@ -10,6 +10,7 @@ import { mergeMap, tap, toArray } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class FuenteFinanciacionService {
+  
 
   constructor( private http:HttpClient
 
@@ -22,6 +23,9 @@ export class FuenteFinanciacionService {
   listaFuenteFinanciacion(){
     return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacion`);
 
+  }
+  listaFuenteFinanciacionshort(){
+    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionshort`);
   }
 
   listaFuenteFinanciacionByAportante( id: number ){
