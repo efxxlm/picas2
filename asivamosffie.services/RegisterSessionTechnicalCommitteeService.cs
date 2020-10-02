@@ -2048,8 +2048,7 @@ namespace asivamosffie.services
                         break;
                 }
             }
-
-
+             
             return pPlantilla;
 
         }
@@ -2064,6 +2063,8 @@ namespace asivamosffie.services
 
             string TipoPlantillaRegistrosAlcance = ((int)ConstanCodigoPlantillas.Registros_Tabla_Alcance).ToString();
             string RegistroAlcance = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaRegistrosAlcance).Select(r => r.Contenido).FirstOrDefault();
+
+          //  pContratacion.ContratacionProyecto.FirstOrDefault().ContratacionProyectoAportante.FirstOrDefault().ComponenteAportante.
 
             List<Dominio> ListaParametricas = _context.Dominio.ToList();
             List<Localizacion> ListaLocalizaciones = _context.Localizacion.ToList();
@@ -2215,9 +2216,9 @@ namespace asivamosffie.services
 
 
             foreach (var ContratacionProyecto in pContratacion.ContratacionProyecto)
-            {
+            { 
                 RegistrosFuentesUso += TipoPlantillaRegistrosFuentes;
-                foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                 {
                     foreach (Dominio placeholderDominio in placeholders)
                     {
@@ -2225,8 +2226,7 @@ namespace asivamosffie.services
                         {
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_APORTANTE_FUENTES_USO:
                                 string strNombreAportante = string.Empty; 
-
-                                switch (ProyectoAportante.Aportante.TipoAportanteId)
+                                switch (ContratacionProyectoAportante.CofinanciacionAportante.TipoAportanteId)
                                 {
                                     case ConstanTipoAportante.Ffie:
                                         strNombreAportante = ConstanStringTipoAportante.Ffie;
@@ -2234,34 +2234,32 @@ namespace asivamosffie.services
 
                                     case ConstanTipoAportante.ET:
 
-                                        if (ProyectoAportante.Aportante.Departamento != null) {
-                                            strNombreAportante = ProyectoAportante.Aportante.Departamento.Descripcion;
+                                        if (ContratacionProyectoAportante.CofinanciacionAportante.Departamento != null) {
+                                            strNombreAportante = ContratacionProyectoAportante.CofinanciacionAportante.Departamento.Descripcion;
                                         }
                                         else {
-                                            strNombreAportante = ProyectoAportante.Aportante.Municipio.Descripcion;
+                                            strNombreAportante = ContratacionProyectoAportante.CofinanciacionAportante.Municipio.Descripcion;
                                         } 
                                         break; 
                                     case ConstanTipoAportante.Tercero:
-                                        strNombreAportante = ProyectoAportante.Aportante.NombreAportante.Nombre;
+                                        strNombreAportante = ContratacionProyectoAportante.CofinanciacionAportante.NombreAportante.Nombre;
                                         break;
                                 }
-
-
                                 RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, strNombreAportante);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.VALOR_APORTANTE_PROYECTO_FUENTES_USO: 
 
-                                string ValorAportante = "$" + String.Format("{0:n0}", ProyectoAportante.ValorInterventoria);
-                                if (pContratacion.TipoContratacionCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString()) {
+                                string ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.ValorAporte);
+                                //if (pContratacion.TipoContratacionCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString()) {
 
-                                     ValorAportante = "$" + String.Format("{0:n0}", ProyectoAportante.ValorObra);
-                                }
+                                //     ValorAportante = "$" + String.Format("{0:n0}", ProyectoAportante.ValorObra);
+                                //}
                                 RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, ValorAportante);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.COMPONENTE_FUENTES_USO:
-                                RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, "COMPONENTE FUENTES USO");
+                              //  RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, ContratacionProyectoAportante.CofinanciacionAportante.);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.FASE_FUENTES_USO:
@@ -2397,7 +2395,10 @@ namespace asivamosffie.services
 
                 }
             }
-            //Preguntas    //Preguntas 
+      
+
+
+
             //Preguntas    //Preguntas 
             string strPregunta_1 = " ";
 
@@ -2415,9 +2416,7 @@ namespace asivamosffie.services
 
             string strPregunta_6 = "";
             string ContenidoPregunta6 = _context.Plantilla.Where(r => r.Codigo.Equals(((int)ConstanCodigoPlantillas.seis_pregunta_tecnica_o_juridica).ToString())).FirstOrDefault().Contenido;
-
-
-
+             
             if (pContratacion.ContratacionProyecto.Count() > 0)
             {
 
@@ -2426,13 +2425,13 @@ namespace asivamosffie.services
                     !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreoWeb)
                 {
                     //Si la respuesta a la pregunta 1, fue “No”, el sistema mostrará la pregunta 4
-                    strPregunta_1 = " no";
+                    strPregunta_1 = ConstanStringRespuestasBool.NO;
                     // strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
                 }
                 else
                 {
                     //Si la respuesta fue “Si”, el sistema mostrará la pregunta 2.  
-                    strPregunta_1 = " si";
+                    strPregunta_1 = ConstanStringRespuestasBool.SI;
 
                     //pregunta 2
                     if (pContratacion.ContratacionProyecto.FirstOrDefault().EsReasignacion == null
@@ -2446,17 +2445,17 @@ namespace asivamosffie.services
                         }
                         else
                         {
-                            string strPregunta6 = "no";
+                            string strPregunta6 = ConstanStringRespuestasBool.NO;
                             if (pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente != null && pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente == true) {
-                                strPregunta6 =  "si";
+                                strPregunta6 = ConstanStringRespuestasBool.SI;
                             }
-                            strPregunta_5 = ContenidoPregunta5 + " si";
+                            strPregunta_5 = ContenidoPregunta5 + ConstanStringRespuestasBool.SI;
                             strPregunta_6 = ContenidoPregunta6 + " " + strPregunta6;
                         }
                     }
                     else
                     {
-                        strPregunta_2 = ContenidoPregunta2 + " si";
+                        strPregunta_2 = ContenidoPregunta2 + ConstanStringRespuestasBool.SI;
                         //pregunta 3
                         if (pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra == null
                            || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra)
@@ -2466,7 +2465,7 @@ namespace asivamosffie.services
                         else
                         {
 
-                            strPregunta_3 = ContenidoPregunta3 + " si";
+                            strPregunta_3 = ContenidoPregunta3 + ConstanStringRespuestasBool.SI;
                             strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
                             //pregunta 5
                             if (pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia == null
@@ -2476,13 +2475,13 @@ namespace asivamosffie.services
                             }
                             else
                             {
-                                strPregunta_5 = ContenidoPregunta5 + " si";
+                                strPregunta_5 = ContenidoPregunta5 + ConstanStringRespuestasBool.SI;
                                 if (pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente == null || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente)
                                 {
-                                    strPregunta_6 = ContenidoPregunta6 + " no";
+                                    strPregunta_6 = ContenidoPregunta6 + ConstanStringRespuestasBool.NO;
                                 }
                                 {
-                                    strPregunta_6 = ContenidoPregunta6 + " si";
+                                    strPregunta_6 = ContenidoPregunta6 + ConstanStringRespuestasBool.SI;
                                 }
 
                             }
@@ -2492,24 +2491,15 @@ namespace asivamosffie.services
 
                 }
             }
-
-
-
-
+             
+            //Replace Preguntas
             pPlantilla = pPlantilla.Replace("[PREGUNTA_1]", strPregunta_1);
             pPlantilla = pPlantilla.Replace("[PREGUNTA_2]", strPregunta_2);
             pPlantilla = pPlantilla.Replace("[PREGUNTA_3]", strPregunta_3);
             pPlantilla = pPlantilla.Replace("[PREGUNTA_4]", strPregunta_4);
             pPlantilla = pPlantilla.Replace("[PREGUNTA_5]", strPregunta_5);
             pPlantilla = pPlantilla.Replace("[PREGUNTA_6]", strPregunta_6);
-
-
-
-
-
-
-
-
+             
             return pPlantilla;
         }
 
@@ -2619,9 +2609,7 @@ namespace asivamosffie.services
 
 
         #endregion
-
-
-
+         
         public async Task<Respuesta> CrearObservacionProyecto(ContratacionObservacion pContratacionObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Contratacion, (int)EnumeratorTipoDominio.Acciones);
@@ -2718,10 +2706,7 @@ namespace asivamosffie.services
             plantilla.Contenido = await ReemplazarDatosPlantillaActa(plantilla.Contenido, comiteTecnico);
             return ConvertirPDF(plantilla);
         }
-
-
-
-
+         
         private async Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
             try
@@ -2846,7 +2831,7 @@ namespace asivamosffie.services
                         //TIPO SOLICITUD CONTRATACION
                         //TIPO SOLICITUD CONTRATACION
                         case ConstanCodigoTipoSolicitud.Contratacion:
-                            Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
+                            Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(SesionComiteSolicitud.SolicitudId);
 
                             foreach (Dominio placeholderDominio in placeholders)
                             {
@@ -2900,7 +2885,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_PROYECTO:
 
-                                        foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+                                        foreach (var ContratacionProyecto in contratacion.ContratacionProyecto.Where(r=> !(bool)r.Eliminado))
                                         {
                                             RegistrosProyectos += PlantillaRegistrosProyectos;
                                             Localizacion Municipio = localizacions.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();

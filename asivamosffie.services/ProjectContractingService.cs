@@ -25,6 +25,7 @@ using asivamosffie.services.Filters;
 using System.Data.Common;
 using Z.EntityFramework.Plus;
 
+
 namespace asivamosffie.services
 {
     public class ProjectContractingService : IProjectContractingService
@@ -504,8 +505,8 @@ namespace asivamosffie.services
             }
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
+         
 
-        //CrearContratacion
         public async Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion)
         {
             Respuesta respuesta = new Respuesta();
