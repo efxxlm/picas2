@@ -55,7 +55,9 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title 
+                class="expansion-style--title sin-diligenciar"
+                [ngClass]="estadoAcordeon">
                     Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -70,6 +72,7 @@
             <app-form-proposiciones-varios
                 #proposiciones
                 [objetoComiteTecnico]="objetoComiteTecnico"
+                (semaforo)="changeSemaforo($event)"
             >
         </app-form-proposiciones-varios>
         </mat-expansion-panel>
