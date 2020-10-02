@@ -1,0 +1,81 @@
+<div align="left">
+    <mat-card class="border">
+        <mat-card-content>
+            <p><b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>: Sí</p>
+            <p><b>Url con soporte</b>: https://drive.google.com/drive/informeinterventoria1</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div align="left">
+    <mat-card class="border">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                Valor total de la fase 2 construcción
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p><b>a. Costo directo</b>: $17.000.000</p>
+            <p><b>b. A (administracion)</b>: $5.000.000</p>
+            <p><b>c. I (Imprevistos)</b>: $10.000.000</p>
+            <p><b>d. U (Utilidad)</b>: $17.000.000</p>
+            <p><b>Valor total de la fase 2 - Construcción</b>: $49.000.000</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div align="center">
+    <p><b>¿Se requirió modificación contractual?</b>: Sí</p>
+</div>
+<div align="left" style="margin-top: 20px;">
+    <mat-card class="border">
+        <mat-card-content>
+            <p><b>Número de solicitud de la modificación</b>: PI_00089</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div align="center">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <div class="row" align="center">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left" for="tieneObservaciones">¿Este tema del orden del día generó
+                            compromisos?</label>
+                    </div>
+                    <div class="col">
+                        <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                            <mat-radio-button [value]="true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false">No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-editor mt-2em" *ngIf="addressForm.value.tieneObservaciones == true">
+            <mat-card class="shipping-card w-80">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text">
+                        Observaciones al diagnóstico
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+
+                    <quill-editor class="quill-editor-style w-65 ml-1em" [styles]="editorStyle" [modules]="config"
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones">
+                    </quill-editor>
+
+                </mat-card-content>
+            </mat-card>
+            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">
+                {{1000 - textoLimpio(addressForm.get('observaciones').value)}}
+            </span>
+            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
+                1000
+            </span>
+        </div>
+        <div class="text-center mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+</div>
