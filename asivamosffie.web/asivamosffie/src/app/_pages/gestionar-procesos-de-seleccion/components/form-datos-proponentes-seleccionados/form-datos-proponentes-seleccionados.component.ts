@@ -466,7 +466,7 @@ console.log(this.tipoProponente.value.codigo);
   
           this.personaNaturalForm.get('nombre').setValue( proponente.nombreProponente );
           this.personaNaturalForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
-          this.personaNaturalForm.get('telefono').setValue( proponente.telefonoProponente );
+          this.personaNaturalForm.get('telefono').setValue( proponente.telefonoProponente );                    
           
         }
         case "2": {

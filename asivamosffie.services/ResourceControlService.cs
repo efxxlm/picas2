@@ -38,9 +38,9 @@ namespace asivamosffie.services
      
             try
             {
-                //TODO: Faber Revisar todos los include ya que no se esta validando si esta eliminado
+                
                 var ControlGrid = _context.ControlRecurso
-                .Where( cr => cr.FuenteFinanciacionId == id)
+                .Where( cr => cr.FuenteFinanciacionId == id && !(bool)cr.Eliminado)
                     .Include(RC => RC.FuenteFinanciacion)
                     .ThenInclude(FF => FF.Aportante)
                     .ThenInclude(APO => APO.Cofinanciacion)
@@ -181,7 +181,7 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Code = ConstantMessagesResourceControl.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, pUsuario, "Eliminado")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EliminadoExitosamente, idAccionCrearFuentesFinanciacion, pUsuario, "Eliminado")
                 };
                
             }

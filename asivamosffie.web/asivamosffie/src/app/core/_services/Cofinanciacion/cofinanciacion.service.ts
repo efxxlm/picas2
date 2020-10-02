@@ -64,6 +64,8 @@ export interface Cofinanciacion{
 }
 
 export interface CofinanciacionAportante{
+  municipio?: any;
+  departamento?: any;
   cofinanciacionAportanteId: number,
   cofinanciacionId: number,
   tipoAportanteId: any,

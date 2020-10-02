@@ -229,7 +229,7 @@ namespace asivamosffie.services
                     cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
                     cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
                     cofinanciacionEdit.FechaModificacion = DateTime.Now;
-                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion.ToUpper();
+                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion.ToUpper();                    
                 }
 
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
@@ -299,7 +299,7 @@ namespace asivamosffie.services
                 cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
                 cofinanciacionAportanteEdit.TipoAportanteId = pcofinanciacionAportante.TipoAportanteId;
                 cofinanciacionAportanteEdit.NombreAportanteId = pcofinanciacionAportante.NombreAportanteId;
-
+                cofinanciacionAportanteEdit.DepartamentoId = pcofinanciacionAportante.DepartamentoId;
                 return pcofinanciacionAportante.CofinanciacionAportanteId;
             }
             catch (Exception)
@@ -401,7 +401,8 @@ namespace asivamosffie.services
                     Vigencia = cofinanciacionAportante.Cofinanciacion.VigenciaCofinanciacionId,
                     FechaCreacion = cofinanciacionAportante.FechaCreacion,
                     MunicipioId = cofinanciacionAportante.MunicipioId,
-                    DepartamentoId = cofinanciacionAportante.DepartamentoId
+                    DepartamentoId = cofinanciacionAportante.DepartamentoId,
+                    RegistroCompleto = cofinanciacionAportante.Cofinanciacion.RegistroCompleto
             };
                 ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
             }

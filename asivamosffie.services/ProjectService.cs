@@ -450,7 +450,7 @@ namespace asivamosffie.services
                         Direccion = pProyecto.PredioPrincipal.Direccion,
                         DocumentoAcreditacionCodigo = pProyecto.PredioPrincipal.DocumentoAcreditacionCodigo,
                         NumeroDocumento = pProyecto.PredioPrincipal.NumeroDocumento,
-                        CedulaCatastral = pProyecto.PredioPrincipal.CedulaCatastral
+                        CedulaCatastral = pProyecto.PredioPrincipal.CedulaCatastral,                       
                     };
                     _context.Predio.Add(predioPrincipal);
                     _context.SaveChanges();
@@ -534,6 +534,9 @@ namespace asivamosffie.services
                         _context.SaveChanges();
                     }
 
+                    decimal valortotal = 0;
+                    decimal valorobra = 0;
+                    decimal valorinterventoria = 0;
                     //Crear relacion proyectoAportante 
                     foreach (var proyectoAportante in pProyecto.ProyectoAportante)
                     {
@@ -550,10 +553,15 @@ namespace asivamosffie.services
                             ValorInterventoria = proyectoAportante.ValorInterventoria,
                             ValorTotalAportante = proyectoAportante.ValorTotalAportante,
                         };
+                        valorobra += proyectoAportante.ValorObra!=null? Convert.ToDecimal(proyectoAportante.ValorObra):0;
+                        valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0; 
+                        valortotal += proyectoAportante.ValorTotalAportante != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0;
                         _context.ProyectoAportante.Add(proyectoAportante1);
                         _context.SaveChanges();
                     }
-
+                    proyecto.ValorInterventoria = valorinterventoria;
+                    proyecto.ValorObra = valorobra;
+                    proyecto.ValorTotal = valortotal;
 
                     //Agregar Infraestructura  a intervenir 
                     foreach (var infraestructuraIntervenirProyecto in pProyecto.InfraestructuraIntervenirProyecto)
