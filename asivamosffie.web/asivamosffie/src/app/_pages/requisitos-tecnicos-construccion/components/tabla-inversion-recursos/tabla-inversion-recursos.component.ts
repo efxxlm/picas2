@@ -4,14 +4,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { DialogObservacionesProgramacionComponent } from '../dialog-observaciones-programacion/dialog-observaciones-programacion.component';
+import { DialogObservacionesFlujoRecursosComponent } from '../dialog-observaciones-flujo-recursos/dialog-observaciones-flujo-recursos.component';
 
 @Component({
-  selector: 'app-tabla-programacion-obra',
-  templateUrl: './tabla-programacion-obra.component.html',
-  styleUrls: ['./tabla-programacion-obra.component.scss']
+  selector: 'app-tabla-inversion-recursos',
+  templateUrl: './tabla-inversion-recursos.component.html',
+  styleUrls: ['./tabla-inversion-recursos.component.scss']
 })
-export class TablaProgramacionObraComponent implements OnInit {
+export class TablaInversionRecursosComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -30,19 +30,18 @@ export class TablaProgramacionObraComponent implements OnInit {
       totalRegistros: '5',
       registrosValidos: '3',
       registrosInvalidos: '2',
-      estadoCargue: 'Fallido',
+      estadoCargue: 'Validos',
       gestion: 1,
     }
   ]
-  constructor(private dialog: MatDialog) {
-  }
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.dataSource                        = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator              = this.paginator;
     this.dataSource.sort                   = this.sort;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-  };
+  }
 
   applyFilter ( event: Event ) {
     const filterValue      = (event.target as HTMLInputElement).value;
@@ -50,7 +49,7 @@ export class TablaProgramacionObraComponent implements OnInit {
   };
   
   addObservaciones(){
-    const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
+   const dialogCargarProgramacion = this.dialog.open( DialogObservacionesFlujoRecursosComponent, {
       width: '75em'
     });
 
@@ -58,4 +57,4 @@ export class TablaProgramacionObraComponent implements OnInit {
       console.log( resp );
     } );
   }
-};
+}

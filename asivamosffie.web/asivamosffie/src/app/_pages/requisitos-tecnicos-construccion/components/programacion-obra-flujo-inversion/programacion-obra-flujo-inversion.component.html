@@ -22,4 +22,9 @@
   </button>
 </section>
 
-<app-tabla-programacion-obra></app-tabla-programacion-obra>
+<div *ngIf="!esFlujoInversion">
+        <app-tabla-programacion-obra></app-tabla-programacion-obra>
+</div>
+<div *ngIf="esFlujoInversion">
+        <app-tabla-inversion-recursos></app-tabla-inversion-recursos>
+</div>

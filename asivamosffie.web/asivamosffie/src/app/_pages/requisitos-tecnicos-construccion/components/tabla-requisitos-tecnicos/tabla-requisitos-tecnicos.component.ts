@@ -48,7 +48,7 @@ export class TablaRequisitosTecnicosComponent implements OnInit {
       proyectosAsociados: '1',
       proyectosAprobados: '0',
       proyectosPendientes: '1',
-      estadoRequisito: '1',
+      estadoRequisito: '3',
       id: 3
     }
   ]
