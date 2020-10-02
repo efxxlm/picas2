@@ -23,6 +23,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   tipoProponente: FormControl;
   myControl = new FormControl();
   myJuridica = new FormControl();
+  myJuridica2 = new FormControl();
 
   personaNaturalForm = this.fb.group({
     procesoSeleccionProponenteId: [],
@@ -75,7 +76,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   unionTemporalForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     cuantasEntidades: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(2)])
+      Validators.required, ])
     ],
     nombreConsorcio: [null, Validators.compose([
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
@@ -85,25 +86,26 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
     numeroIdentificacion: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      Validators.required,  Validators.maxLength(12)])
     ],
     cedulaRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      Validators.required,  Validators.maxLength(12)])
     ],
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required,  Validators.maxLength(100)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+      Validators.required,  Validators.maxLength(10)])
     ]
   });
   listaProponentesNombres: any[]=[];
   nombresapo: string[]=[];
+  filteredNameJuridica2: Observable<string[]>;
 
   get entidades() {
     return this.unionTemporalForm.get('entidades') as FormArray;
@@ -154,6 +156,10 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
           startWith(''),
           map(value => this._filter(value))
         );
+        this.filteredNameJuridica2 = this.myJuridica2.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter2(value))
+        );
         
         resolve();
       })
@@ -163,7 +169,6 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();    
-console.log(this.tipoProponente.value.codigo);
     if(value!="")
     {      
       let filtroportipo:string[]=[];
@@ -181,7 +186,34 @@ console.log(this.tipoProponente.value.codigo);
     }
     else
     {
-      return this.nombresapo;
+      return [];
+    }
+    
+  }
+
+  private _filter2(value: string): string[] {
+    const filterValue = value.toLowerCase();    
+    console.log("valor"+ value);
+    if(value!="")
+    {      
+      let filtroportipo:string[]=[];
+      this.listaProponentesNombres.forEach(element => {        
+        if(element.tipoProponenteCodigo==this.tipoProponente.value.codigo && element.nombreRepresentanteLegal)
+        {
+          if(!filtroportipo.includes(element.nombreRepresentanteLegal))
+          {
+            filtroportipo.push(element.nombreRepresentanteLegal);
+          }
+        }
+      });
+      console.log("por tipo j");
+      console.log(filtroportipo);
+      let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      
+      return ret;
+    }
+    else
+    {
+      return [];
     }
     
   }
@@ -196,6 +228,19 @@ console.log(this.tipoProponente.value.codigo);
     });
     
     let ret= lista.filter(x=> x.nombreProponente.toLowerCase() === nombre.toLowerCase());
+    this.setValueAutocomplete(ret[0]);    
+  }
+
+  seleccionAutocomplete2(nombre:string){
+    let lista:any[]=[];
+    this.listaProponentesNombres.forEach(element => {
+      if(element.nombreRepresentanteLegal)
+      {
+        lista.push(element);
+      }      
+    });
+    
+    let ret= lista.filter(x=> x.nombreRepresentanteLegal.toLowerCase() === nombre.toLowerCase());
     this.setValueAutocomplete(ret[0]);    
   }
 
@@ -230,15 +275,37 @@ console.log(this.tipoProponente.value.codigo);
 
   CambioNumeroCotizantes() {
     const formIntegrantes = this.unionTemporalForm.value;
-    if (formIntegrantes.cuantasEntidades > this.entidades.length && formIntegrantes.cuantasEntidades < 100) {
-      while (this.entidades.length < formIntegrantes.cuantasEntidades) {
-        this.entidades.push( this.createIntegrante() );
-      }
-    } else if (formIntegrantes.cuantasEntidades <= this.entidades.length && formIntegrantes.cuantasEntidades >= 0) {
-      while (this.entidades.length > formIntegrantes.cuantasEntidades) {
-        this.borrarArray(this.entidades, this.entidades.length - 1);
+    console.log(formIntegrantes);
+    if(formIntegrantes.cuantasEntidades!=''&&formIntegrantes.cuantasEntidades!=0)
+    {
+      if (formIntegrantes.cuantasEntidades > this.entidades.length && formIntegrantes.cuantasEntidades < 100) {
+        while (this.entidades.length < formIntegrantes.cuantasEntidades) {
+          this.entidades.push( this.createIntegrante() );
+        }
+      } else if (formIntegrantes.cuantasEntidades <= this.entidades.length && formIntegrantes.cuantasEntidades >= 0) {
+        //valido si tiene data
+        let bitestavacio=true;
+        formIntegrantes.entidades.forEach(element => {
+          if(element.nombre!=null || element.porcentaje!=null)
+          {
+            bitestavacio=false
+          }
+        });
+        if(bitestavacio)
+        {
+          while (this.entidades.length > formIntegrantes.cuantasEntidades) {
+            this.borrarArray(this.entidades, this.entidades.length - 1);
+          }
+          this.unionTemporalForm.get("cuantasEntidades").setValue(this.entidades.length);
+        }
+        else{
+          this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
+          this.unionTemporalForm.get("cuantasEntidades").setValue(this.entidades.length);
+        }
+        
       }
     }
+    
   }
 
   createIntegrante(): FormGroup {
@@ -255,6 +322,7 @@ console.log(this.tipoProponente.value.codigo);
 
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
+    this.unionTemporalForm.get("cuantasEntidades").setValue(borrarForm.length);
   }
 
   onSubmitPersonaNatural() {
@@ -309,9 +377,15 @@ console.log(this.tipoProponente.value.codigo);
     let mensaje = '';
 
     if ( porcentaje != 100 )
-      mensaje = 'Los porcentajes de participación no suman 100%.'
+      mensaje = '<b>Los porcentajes de participación no suman 100%.</b>'
 
     return mensaje;
+  }
+
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
   }
 
   onSubmitUnionTemporal() {
@@ -331,7 +405,7 @@ console.log(this.tipoProponente.value.codigo);
 
       nombreProponente: this.unionTemporalForm.get('nombreConsorcio').value,
       numeroIdentificacion: this.unionTemporalForm.get('numeroIdentificacion').value,
-      nombreRepresentanteLegal: this.unionTemporalForm.get('nombre').value,
+      nombreRepresentanteLegal: this.myJuridica2.value,//this.unionTemporalForm.get('nombre').value,
       cedulaRepresentanteLegal: this.unionTemporalForm.get('cedulaRepresentanteLegal').value,
       localizacionIdMunicipio: this.unionTemporalForm.get('municipio').value ? this.unionTemporalForm.get('municipio').value.localizacionId : null,
       direccionProponente: this.unionTemporalForm.get('direccion').value,
@@ -394,6 +468,7 @@ console.log(this.tipoProponente.value.codigo);
                 this.personaNaturalForm.get('municipio').setValue( proponente.localizacionIdMunicipio );
 
                 this.personaNaturalForm.get('nombre').setValue( proponente.nombreProponente );
+                this.myControl.setValue(proponente.nombreProponente);
                 this.personaNaturalForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
                 this.personaNaturalForm.get('telefono').setValue( proponente.telefonoProponente );
                 
@@ -402,6 +477,7 @@ console.log(this.tipoProponente.value.codigo);
                 this.personaJuridicaIndividualForm.get('depaetamento').setValue( departamentoSeleccionado );
                 this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').setValue( proponente.procesoSeleccionProponenteId );
                 this.personaJuridicaIndividualForm.get('nombre').setValue( proponente.nombreProponente );
+                this.myJuridica.setValue(proponente.nombreProponente);
                 this.personaJuridicaIndividualForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
                 this.personaJuridicaIndividualForm.get('representanteLegal').setValue( proponente.nombreRepresentanteLegal );
                 this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').setValue( proponente.cedulaRepresentanteLegal );
@@ -419,6 +495,7 @@ console.log(this.tipoProponente.value.codigo);
                 this.unionTemporalForm.get('nombreConsorcio').setValue( proponente.nombreProponente );
                 this.unionTemporalForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
                 this.unionTemporalForm.get('nombre').setValue( proponente.nombreRepresentanteLegal );
+                this.myJuridica2.setValue(proponente.nombreRepresentanteLegal);
                 this.unionTemporalForm.get('cedulaRepresentanteLegal').setValue( proponente.cedulaRepresentanteLegal );
                 this.unionTemporalForm.get('municipio').setValue( municipio );
                 this.unionTemporalForm.get('direccion').setValue( proponente.direccionProponente );
@@ -513,5 +590,43 @@ console.log(this.tipoProponente.value.codigo);
       }
   
     });
+  }
+  limpiarForms()
+  {
+      this.myControl.setValue( "" );    
+      this.personaNaturalForm.get('municipio').setValue( "" );
+      this.personaNaturalForm.get('depaetamento').setValue( "" );
+      this.personaNaturalForm.get('procesoSeleccionProponenteId').setValue( "");
+      this.personaNaturalForm.get('direccion').setValue( "" );
+      this.personaNaturalForm.get('correoElectronico').setValue( "" );
+      this.personaNaturalForm.get('nombre').setValue( "" );
+      this.personaNaturalForm.get('numeroIdentificacion').setValue("" );
+      this.personaNaturalForm.get('telefono').setValue( "" );                    
+      
+      this.myJuridica.setValue( "" );    
+      this.personaJuridicaIndividualForm.get('depaetamento').setValue( "");
+      this.personaJuridicaIndividualForm.get('municipio').setValue( "" );                
+      this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').setValue("" );
+      this.personaJuridicaIndividualForm.get('nombre').setValue( "" );
+      this.personaJuridicaIndividualForm.get('numeroIdentificacion').setValue("" );
+      this.personaJuridicaIndividualForm.get('representanteLegal').setValue( "" );
+      this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').setValue("" );
+      
+      this.personaJuridicaIndividualForm.get('direccion').setValue( "" );
+      this.personaJuridicaIndividualForm.get('telefono').setValue( "" );
+      this.personaJuridicaIndividualForm.get('correoElectronico').setValue("" );
+    
+      let listaIntegrantes =  this.unionTemporalForm.get('entidades') as FormArray;
+      
+      this.unionTemporalForm.get('depaetamento').setValue( "" );
+      this.unionTemporalForm.get('procesoSeleccionProponenteId').setValue("" ),
+      this.unionTemporalForm.get('nombreConsorcio').setValue( "" );
+      this.unionTemporalForm.get('numeroIdentificacion').setValue("" );
+      this.unionTemporalForm.get('nombre').setValue( "" );
+      this.unionTemporalForm.get('cedulaRepresentanteLegal').setValue("" );
+      this.unionTemporalForm.get('municipio').setValue( "");
+      this.unionTemporalForm.get('direccion').setValue("" );
+      this.unionTemporalForm.get('telefono').setValue( "" );
+      this.unionTemporalForm.get('correoElectronico').setValue("" );
   }
 }

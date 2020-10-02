@@ -99,7 +99,10 @@ export class SeccionPrivadaComponent implements OnInit {
         if(result)
         {
           this.router.navigate([`/seleccion/seccionPrivada/${ id }`]);
-          location.reload();
+          setTimeout(() => {
+            location.reload();  
+          }, 1000);
+          
         }
       });
     }

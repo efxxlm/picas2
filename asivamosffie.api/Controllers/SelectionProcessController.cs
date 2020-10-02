@@ -61,7 +61,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                string usuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId, usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo);
                 return respuesta;
             }
@@ -78,7 +78,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                string usuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.DeleteProcesoSeleccion(pId, usuarioCreacion);
                 return respuesta;
                 //
@@ -96,7 +96,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                procesoSeleccionCronograma.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                procesoSeleccionCronograma.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCronograma(procesoSeleccionCronograma, false);
                 return respuesta;
                 //
@@ -177,7 +177,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                procesoSeleccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                procesoSeleccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccion(procesoSeleccion);
                 return Ok(respuesta);
                 //
@@ -249,7 +249,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                procesoSeleccionCotizacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                procesoSeleccionCotizacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCotizacion(procesoSeleccionCotizacion);
                 return Ok(respuesta);
                 //
@@ -306,6 +306,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
+                procesoSeleccionProponente.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionProponente(procesoSeleccionProponente);
                 return Ok(respuesta);
             }
