@@ -102,9 +102,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TipoDominio> TipoDominio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -901,7 +900,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ActaApropiacionFechaRadicado).HasColumnType("datetime");
 
-                entity.Property(e => e.Administración).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.Administracion).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.AprovechamientoForestalApropiacionFechaRadicado).HasColumnType("datetime");
 
@@ -989,6 +988,12 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ContratoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContratoConstruccion_Contrato");
+
+                entity.HasOne(d => d.Proyecto)
+                    .WithMany(p => p.ContratoConstruccion)
+                    .HasForeignKey(d => d.ProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContratoConstruccion_Proyecto");
             });
 
             modelBuilder.Entity<ContratoObservacion>(entity =>
@@ -3559,6 +3564,24 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.UsuarioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_usuario");
+            });
+
+            modelBuilder.Entity<VRequisitosTecnicosInicioConstruccion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RequisitosTecnicosInicioConstruccion");
+
+                entity.Property(e => e.EstadoRequisitos)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VigenciaAporte>(entity =>
