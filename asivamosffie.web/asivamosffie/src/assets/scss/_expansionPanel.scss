@@ -73,7 +73,8 @@
 
         &.sin-diligenciar::after,
         &.en-proceso::after,
-        &.completo::after {
+        &.completo::after,
+        &.en-alerta::after {
             @extend %ayuda-color;
             position: absolute;
             right: 1.2em;
@@ -81,11 +82,6 @@
             transform: translateY(-50%);
         }
         &.en-alerta::after {
-            @extend %ayuda-color;
-            position: absolute;
-            right: 1.2em;
-            top: 50%;
-            transform: translateY(-50%);
             content: '!';
             background-color: #fff;
             color: $mainColor;
