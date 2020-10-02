@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./form-proposiciones-varios.component.scss']
 })
 export class FormProposicionesVariosComponent {
+  
   @Input() objetoComiteTecnico: ComiteTecnico 
+  @Output() semaforo: EventEmitter<string> = new EventEmitter();
   listaMiembros: Dominio[] = [];
 
 
@@ -114,7 +116,7 @@ export class FormProposicionesVariosComponent {
         .subscribe( respuesta => {
           this.openDialog('Comité Técnico', respuesta.message)
           if ( respuesta.code == "200" )
-            this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
+            this.validarCompletos(respuesta.data);
         })
 
     }else{
@@ -122,8 +124,46 @@ export class FormProposicionesVariosComponent {
     }
   }
 
+  validarCompletos(comite: ComiteTecnico) {
+
+    let completo = true;
+    let cantidadIncompletos = 0;
+    let lista = comite.sesionComiteTema.filter(t => t.esProposicionesVarios);
+
+    lista.forEach(tema => {
+
+      if (tema.tema == undefined || tema.tema.length == 0) {
+        completo = false;
+        cantidadIncompletos++;
+
+      }
+      if (tema.responsableCodigo == undefined || tema.responsableCodigo.length == 0) {
+        completo = false;
+        cantidadIncompletos++;
+      }
+      if (tema.tiempoIntervencion == undefined || tema.tiempoIntervencion == 0) {
+        completo = false;
+        cantidadIncompletos++;
+      }
+
+    })
+
+    if (lista.length == 1 && cantidadIncompletos == 3) {
+      this.semaforo.emit('sin-diligenciar');
+    }
+    else if (!completo) {
+      this.semaforo.emit('en-proceso');
+    }
+    else if (completo) {
+      this.semaforo.emit('completo');
+    }
+
+    console.log(cantidadIncompletos)
+  }
+
   cargarRegistros(){
 
+    this.validarCompletos(this.objetoComiteTecnico);
     let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => t.esProposicionesVarios )
 
     lista.forEach( te => {
