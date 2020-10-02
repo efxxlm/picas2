@@ -11,15 +11,15 @@ namespace asivamosffie.services.Interfaces
     {
         Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio();
 
-        Task<ActionResult<List<VistaGenerarActaInicioContrato>>> GetVistaGenerarActaInicio();
+        Task<ActionResult<VistaGenerarActaInicioContrato>> GetListVistaGenerarActaInicio();
 
-        Task<Respuesta> GuardarTieneObservacionesActaInicio(int contratoId, string ObervacionesActa);
+        Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa);
 
         //        ---guardar
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
         //ConObervacionesActa  - Contrato
 
-        Task<Respuesta> GuardarCargarActaSuscritaContrato(int contratoId, DateTime FechaFirmaContratista, DateTime FechaFirmaActaContratistaInterventoria
+        Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */
             );
 
@@ -27,7 +27,7 @@ namespace asivamosffie.services.Interfaces
         //FechaFirmaActaContratistaInterventoria  - contrato
         //----cargar archivo pdf VALIDAR FORMATO PDF?? NATALIA   - julian cargar archivo ???
 
-        Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int contratoId, int PlazoFase2PreMeses, int PlazoFase2PreDias, string ObservacionesConsideracionesEspeciales);
+        Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales);
         //:  Meses: xx Días: xx   - PlazoFase2PreMeses  - PlazoFase2PreDias - contrato
         //ObservacionesConsideracionesEspeciales Observaciones  - contrato
 

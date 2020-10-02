@@ -6,7 +6,7 @@ namespace asivamosffie.model.APIModels
 {
     public class VistaGenerarActaInicioContrato
     {
-        public string FechaAprobacionRequisitos { get; set; }
+        //public string FechaAprobacionRequisitos { get; set; }
         public string NumeroContrato { get; set; }
         public string VigenciaContrato { get; set; }
         public string FechaFirmaContrato { get; set; }
@@ -19,7 +19,7 @@ namespace asivamosffie.model.APIModels
         public string ValorInicialContrato { get; set; }
         public string ValorActualContrato { get; set; }
         public string ValorFase1Preconstruccion { get; set; }
-        public string Valorfase2construccionObra { get; set; }
+        public string Valorfase2ConstruccionObra { get; set; }
         public string NumeroIdentificacionRepresentanteContratistaInterventoria { get; set; }
         public string NombreRepresentanteContratistaInterventoria { get; set; }
         public string NumeroIdentificacionContratistaInterventoria { get; set; }
@@ -30,6 +30,10 @@ namespace asivamosffie.model.APIModels
         public string NumeroIdentificacionEntidadContratistaObra { get; set; }
         public string NombreEntidadContratistaObra { get; set; }
 
-
+        //datos PDF opcionales
+        public string? LlaveMENContrato { get; set; }
+        public string? InstitucionEducativaLlaveMEN { get; set; }
+        public string? DepartamentoYMunicipioLlaveMEN { get; set; }       
+            
     }
 }

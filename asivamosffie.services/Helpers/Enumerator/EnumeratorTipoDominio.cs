@@ -54,7 +54,11 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Estado_Juridico_Predios = 25,
 		Estado_Cronograma_Seguimiento = 40,
 
-			Estado_Acta_Contrato=60
+		Estado_Contrato_Poliza = 51,
+		Tipo_Contrato = 52,
+		Tipo_Modificacion_Contrato_Poliza = 56,
+		Tipo_Garantia_Poliza = 58,
+		Estado_Acta_Contrato =60
 
 
 	}

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Enumerator;
 using Z.EntityFramework.Plus;
 
-namespace asivamosffie.services
+namespace asivamosffie.services 
 {
     public class CommonService : ICommonService
     {
@@ -165,6 +165,27 @@ namespace asivamosffie.services
         { 
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
         }
+
+        public async Task<ContratoPoliza> GetContratoPolizaByContratoId(int pContratoId)
+        {
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).FirstOrDefaultAsync();
+        }
+
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        {
+            return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
+        }
+
+        public async Task<PolizaObservacion> GetPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
+        {
+            return await _context.PolizaObservacion.Where(r => r.ContratoPolizaId.Equals(pContratoPolizaId)).FirstOrDefaultAsync();
+        }
+
+        public async Task<PolizaGarantia> GetPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
+        {
+            return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId.Equals(pContratoPolizaId)).FirstOrDefaultAsync();
+        }
+
 
         public async Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio)
         {
