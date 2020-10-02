@@ -119,6 +119,17 @@ namespace asivamosffie.services
         {
             return await _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
+               //para logica plantilla ficha contratacion
+               .Include(r => r.Contrato)
+                .Include(r=> r.ContratacionProyecto)
+                .ThenInclude(r=> r.ContratacionProyectoAportante)
+                 .ThenInclude(r => r.CofinanciacionAportante)
+                   .ThenInclude(r => r.ProyectoAportante)
+                       .Include(r => r.ContratacionProyecto)
+                .ThenInclude(r => r.ContratacionProyectoAportante)
+                 .ThenInclude(r => r.ComponenteAportante)
+                   .ThenInclude(r => r.ComponenteUso) 
+              //
               .Include(r => r.Contratista)
                  .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)

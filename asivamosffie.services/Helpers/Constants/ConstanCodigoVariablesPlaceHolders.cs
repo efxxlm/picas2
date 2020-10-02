@@ -36,12 +36,15 @@
         public const string REGISTROS_ALCANCE = "31";
         public const string DETALLES_PROYECTOS = "32";
         
-        public const string NOMBRE_APORTANTE_FUENTES_USO = "171";
+        public const string  NOMBRE_APORTANTE_FUENTES_USO = "171";
         public const string  VALOR_APORTANTE_PROYECTO_FUENTES_USO ="172";
         public const string  COMPONENTE_FUENTES_USO ="173";
         public const string  FASE_FUENTES_USO ="174";
         public const string  USO_FUENTES_USO ="175";
         public const string  VALOR_USO_FUENTE_USO ="176";
+        public const string  REGISTROS_USOS = "178";
+        public const string  ROWSPAN_CANTIDAD_USOS = "179";
+
         #endregion
 
         #region procesos de selección
