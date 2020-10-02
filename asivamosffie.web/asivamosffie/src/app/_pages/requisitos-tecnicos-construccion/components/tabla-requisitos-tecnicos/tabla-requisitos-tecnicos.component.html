@@ -76,7 +76,8 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoRequisito === '3'">
+                *ngIf="element.estadoRequisito === '3'"
+                (click)="verDetalle(element.id)">
                 Ver detalle
         </button>
   

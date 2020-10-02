@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RequisitosTecnicosConstruccionComponent } from './components/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.component';
 import { FormRequisitosTecnicosConstruccionComponent } from './components/form-requisitos-tecnicos-construccion/form-requisitos-tecnicos-construccion.component';
+import { VerDetalleReqTecConstrComponent } from './components/ver-detalle-req-tec-constr/ver-detalle-req-tec-constr.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: 'gestionarInicioContrato/:id',
     component: FormRequisitosTecnicosConstruccionComponent
+  },
+  {
+    path: 'verDetalles/:id',
+    component: VerDetalleReqTecConstrComponent
   }
 ];
 

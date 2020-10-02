@@ -76,7 +76,7 @@ export class TablaRequisitosTecnicosComponent implements OnInit {
   };
 
   verDetalle ( id: number ) {
-    console.log( id );
+    this.routes.navigate( [ '/requisitosTecnicosConstruccion/verDetalles', id ] )
   }
 
 };

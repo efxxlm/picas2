@@ -20,11 +20,17 @@ import { DialogObservacionesProgramacionComponent } from './components/dialog-ob
 import { TablaInversionRecursosComponent } from './components/tabla-inversion-recursos/tabla-inversion-recursos.component';
 import { DialogObservacionesFlujoRecursosComponent } from './components/dialog-observaciones-flujo-recursos/dialog-observaciones-flujo-recursos.component';
 import { VerDetalleReqTecConstrComponent } from './components/ver-detalle-req-tec-constr/ver-detalle-req-tec-constr.component';
+import { DetalleDiagnosticoComponent } from './components/detalle-diagnostico/detalle-diagnostico.component';
+import { DetallePlanesProgramasComponent } from './components/detalle-planes-programas/detalle-planes-programas.component';
+import { DetalleManejoAnticipoComponent } from './components/detalle-manejo-anticipo/detalle-manejo-anticipo.component';
+import { DetalleHojasVidaContratistaComponent } from './components/detalle-hojas-vida-contratista/detalle-hojas-vida-contratista.component';
+import { DetalleTablaProgramacionObraComponent } from './components/detalle-tabla-programacion-obra/detalle-tabla-programacion-obra.component';
+import { DetalleTablaFlujoRecursosComponent } from './components/detalle-tabla-flujo-recursos/detalle-tabla-flujo-recursos.component';
 
 @NgModule({
   declarations: [
     RequisitosTecnicosConstruccionComponent, 
-    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent, PlanesProgramasComponent, DialogObservacionesComponent, ManejoAnticipoComponent, HojaVidaContratistaComponent, DialogCargarProgramacionComponent, TablaProgramacionObraComponent, ProgramacionObraFlujoInversionComponent, DialogObservacionesProgramacionComponent, TablaInversionRecursosComponent, DialogObservacionesFlujoRecursosComponent, VerDetalleReqTecConstrComponent
+    TablaRequisitosTecnicosComponent, FormRequisitosTecnicosConstruccionComponent, DiagnosticoComponent, PlanesProgramasComponent, DialogObservacionesComponent, ManejoAnticipoComponent, HojaVidaContratistaComponent, DialogCargarProgramacionComponent, TablaProgramacionObraComponent, ProgramacionObraFlujoInversionComponent, DialogObservacionesProgramacionComponent, TablaInversionRecursosComponent, DialogObservacionesFlujoRecursosComponent, VerDetalleReqTecConstrComponent, DetalleDiagnosticoComponent, DetallePlanesProgramasComponent, DetalleManejoAnticipoComponent, DetalleHojasVidaContratistaComponent, DetalleTablaProgramacionObraComponent, DetalleTablaFlujoRecursosComponent
   ],
   imports: [
     CommonModule,
