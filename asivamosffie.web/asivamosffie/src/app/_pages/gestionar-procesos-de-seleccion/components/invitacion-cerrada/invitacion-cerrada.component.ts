@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProcesoSeleccion, ProcesoSeleccionService, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionService, TiposProcesoSeleccion, EstadosProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -13,6 +13,7 @@ import { forkJoin } from 'rxjs';
 export class InvitacionCerradaComponent implements OnInit {
 
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
+  estadosProcesoSeleccion = EstadosProcesoSeleccion;
 
   procesoSeleccion: ProcesoSeleccion = {
     alcanceParticular: '',
@@ -27,6 +28,8 @@ export class InvitacionCerradaComponent implements OnInit {
     tipoProcesoCodigo: '',
     procesoSeleccionGrupo: [],
     procesoSeleccionCronograma: [],
+    estadoProcesoSeleccionCodigo: this.estadosProcesoSeleccion.Creado,
+    
 
   };
 
@@ -106,6 +109,28 @@ export class InvitacionCerradaComponent implements OnInit {
       this.router.navigate(["/seleccion/invitacionCerrada", respuesta.data.procesoSeleccionId])
       console.log('respuesta',  respuesta );
     })
+  }
+
+  getStyleEvaluacion(){
+    if (this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario )
+      return 'auto'
+    else
+      return 'none'
+
+  }
+
+  getStyleProponentesSeleccionados(){
+    if ( this.procesoSeleccion.evaluacionDescripcion && this.procesoSeleccion.evaluacionDescripcion.length > 0 )
+      return 'auto'
+    else
+      return 'none'
+  }
+
+  getStyleProponentesCreado(){
+    if (this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.Creado )
+      return 'auto'
+    else
+      return 'none'
   }
 
 }

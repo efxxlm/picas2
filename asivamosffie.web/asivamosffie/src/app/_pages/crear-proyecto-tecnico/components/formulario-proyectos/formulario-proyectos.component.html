@@ -25,7 +25,8 @@
             </div>
             <div class="col d-flex align-items-center">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="picker" [(ngModel)]="proyecto.fechaSesionJunta" required
+                <input matInput [matDatepicker]="picker"  placeholder="DD/MM/AAAA"
+                 [(ngModel)]="proyecto.fechaSesionJunta" required
                   [max]="maxDate" readonly (click)="picker.open()">
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -97,7 +98,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid">
-                  <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -115,7 +116,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid">
-                  <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -134,7 +135,7 @@
               <mat-form-field class="select-width">
                 <mat-select required [(ngModel)]="proyecto.localizacionIdMunicipio"
                   (selectionChange)="getInstitucion()">
-                  <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.localizacionId">
+                  <mat-option *ngFor="let listado of listadoMunicipio" [value]="listado.localizacionId"  class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -269,7 +270,7 @@
               <label class="label-left">Tipo de Predio(s)</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width">                
                 <mat-select required [(ngModel)]="proyecto.tipoPredioCodigo">
                   <mat-option *ngFor="let listado of listadoPredios" [value]="listado.codigo">
                     {{ listado.nombre }}
@@ -332,29 +333,35 @@
         </div>
       </div>
       <div class="row">
-        <div class="pr-1">
-          <label class="label-left">Dirección del predio principal</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text">
-          </mat-form-field>
-          <span
-            class="contador">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Dirección del predio principal</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text">
+              </mat-form-field>
+              <span
+                class="contador">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="pr-1">
-          <label class="label-left">Documento de acreditación del predio</label>
-        </div>
-        <div class="col">
-          <mat-form-field class="select-width">
-            <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo">
-              <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
-                {{ listado.nombre }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+      <div class="row col-md-12">
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left">Documento de acreditación del predio</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo">
+                <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
+                  {{ listado.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -374,7 +381,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" [ngClass]="{'opaco': proyecto.predioPrincipal.documentoAcreditacionCodigo!='1'}">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -382,7 +389,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral" maxlength="20" required
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral" 
+                  [disabled]="proyecto.predioPrincipal.documentoAcreditacionCodigo!='1'"
+                maxlength="20" required
                   type="text">
               </mat-form-field>
               <span
@@ -407,8 +416,8 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="predios.Predio.DocumentoAcreditacionCodigo">
-                      <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
+                    <mat-select required [(ngModel)]="predios.Predio.documentoAcreditacionCodigo">
+                      <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
@@ -425,33 +434,34 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.Predio.NumeroDocumento" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.Predio.numeroDocumento" maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.Predio.NumeroDocumento?predios.Predio.NumeroDocumento.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.Predio.numeroDocumento?predios.Predio.numeroDocumento.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
+          <div class="row" >
+            <div class="col-md-8" [ngClass]="{'opaco': predios.Predio.documentoAcreditacionCodigo!='1'}">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left">Cédula catastral del predio</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.Predio.CedulaCatastral" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.Predio.cedulaCatastral" [disabled]="predios.Predio.documentoAcreditacionCodigo!='1'"
+                     maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.Predio.CedulaCatastral?predios.Predio.CedulaCatastral.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.Predio.cedulaCatastral?predios.Predio.cedulaCatastral.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
             <div class="col-md-4 text-right">
               <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteAportante(i)">
                 <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
-                Eliminar aportante
+                Eliminar predio
               </button>
             </div>
           </div>
@@ -502,7 +512,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="this.tipoAportante.Tercero.includes(aportantes.aportante.tipoAportanteId.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -510,9 +520,45 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="getVigencia($event,ii)">
-                    <mat-option *ngFor="let listado of listaAportante[ii]" [value]="listado.cofinanciacionAportanteId">
-                      {{ listado.nombre }}
+                  <mat-select required [(ngModel)]="aportantes.nombreAportante" (selectionChange)="getVigencia($event,ii)">
+                    <mat-option *ngFor="let listado of listaNombreAportantes[ii]" [value]="listado">
+                      {{ listado }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Departamento</label>
+              </div>
+              <div class="col capitalize">
+                <mat-form-field class="select-width">
+                  <mat-select required [(ngModel)]="aportantes.depto" (selectionChange)="getMunAportante($event,ii)">
+                    <mat-option *ngFor="let listado of listadoDepto[ii]" [value]="listado.localizacionId" class="capitalize">
+                      {{ listado.descripcion }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Municipio</label>
+              </div>
+              <div class="col capitalize ">
+                <mat-form-field class="select-width">
+                  <mat-select [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event,ii)">
+                    <mat-option *ngFor="let listado of listadoMun[ii]" [value]="listado.localizacionId" class="capitalize">
+                      {{ listado.descripcion }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -528,9 +574,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="select-width">
-                  <mat-select required [(ngModel)]="aportantes.cofinanciacionDocumentoId">
-                    <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionDocumentoId">
-                      {{ listado.vigenciaAporte }}
+                  <mat-select required [(ngModel)]="aportantes.aportanteId">
+                    <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionAportanteId">
+                      Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date:'dd/MM/yyyy' }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -547,9 +593,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="32"
+                  <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="28"
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
-                    max="999" required type="number">
+                    max="999" required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span class="contador">{{20 - (aportantes.valorObra?aportantes.valorObra.toString().length:0)}}</span>
               </div>
@@ -566,7 +612,7 @@
                 <mat-form-field class="full-width">
                   <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)"
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    maxlength="32" min="1" max="999" required type="number">
+                    maxlength="28" min="1" max="999" required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span
                   class="contador">{{20 - (aportantes.valorInterventoria?aportantes.valorInterventoria.toString().length:0)}}</span>
@@ -582,15 +628,21 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="32" min="1" max="999" required
+                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="54" min="1" max="999" required
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    type="number" readonly>
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" readonly>
                 </mat-form-field>
                 <span
-                  class="contador">{{20 - (aportantes.valorTotalAportante?aportantes.valorTotalAportante.toString().length:0)}}</span>
+                  class="contador">{{40 - (aportantes.valorTotalAportante?aportantes.valorTotalAportante.toString().length:0)}}</span>
               </div>
             </div>
           </div>
+        </div>
+        <div class="text-right" *ngIf="proyecto.proyectoAportante.length>1">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteAportanteAportante(ii)">
+            <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
+            Eliminar aportante
+          </button>
         </div>
       </div>
 
@@ -601,18 +653,22 @@
           Infraestructura {{i+1}}
         </mat-card-title>
         <div class="row">
-          <div class="pr-1">
-            <label class="label-left">Infraestructura a intervenir</label>
-          </div>
-          <div class="col">
-            <mat-form-field class="select-width">
-              {{infraestructura.infraestructuraCodigo}}
-              <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo">
-                <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
-                  {{ listado.nombre }} {{listado.codigo}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left">Infraestructura a intervenir</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <!-- {{infraestructura.infraestructuraCodigo}} -->
+                  <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo">
+                    <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
+                      {{ listado.nombre }} {{listado.codigo}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -641,7 +697,7 @@
               </div>
               <div class="col">
                 <label class="label-left sub-label">
-                  Mes
+                  Meses
                 </label>
                 <mat-form-field class="w-8em">
                   <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="2" min="1" max="99" required
@@ -649,10 +705,10 @@
                     type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
-                  Día
+                  Días
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" maxlength="2" min="1" max="31" required
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" maxlength="2" min="1" max="30" required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                     type="number">
@@ -669,7 +725,7 @@
               </div>
               <div class="col">
                 <label class="label-left sub-label">
-                  Mes
+                  Meses
                 </label>
                 <mat-form-field class="w-8em">
                   <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="99"
@@ -677,12 +733,12 @@
                     required type="number">
                 </mat-form-field>
                 <label class="label-left sub-label">
-                  Día
+                  Días
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" maxlength="2" min="1" max="31"
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" min="1" max="30"
                     (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                    onKeyPress="if(this.value>=this.max)return false;"
                     required type="number">
                 </mat-form-field>
               </div>
@@ -707,7 +763,14 @@
             </div>
           </div>
         </div>
+        <div class="text-right" *ngIf="proyecto.infraestructuraIntervenirProyecto.length>1">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteInfraestructura(i)">
+            <img src="assets/img/icon/menos.svg" alt="Eliminar infraestructura">
+            Eliminar infraestructura a intervenir
+          </button>
+        </div>
       </div>
+      
       <div class="text-right">
         <button mat-button color="warn" type="button" class="btn-eliminar" (click)="addInfraestructura()">
           <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura">
@@ -718,7 +781,7 @@
   </mat-card>
   <div class="text-center animatedOpacity">
     <button mat-button color="warn" class="btn-guardar" *ngIf="formularioCompleto()" type="button" (click)="onSubmit()">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>
 </div>

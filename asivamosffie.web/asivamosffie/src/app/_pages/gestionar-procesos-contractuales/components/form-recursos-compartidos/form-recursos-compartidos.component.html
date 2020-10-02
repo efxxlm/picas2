@@ -1,0 +1,17 @@
+<div align="left" *ngFor="let element of dataForm">
+  <mat-card class="border">
+    <mat-card-title class="text-area-quill--label">{{ element.nombre }}</mat-card-title>
+    <mat-card-content>
+      <p><b>Tipo de identificación</b>: {{ element.tipoIdentificacion }}</p>
+      <p><b>Número de identificación</b>: {{ element.numeroIdentificacion }}</p>
+      <p><b>Nombre del representante legal</b>: {{ element.nombreRepresentanteLegal }}</p>
+      <p><b>Número de la invitación</b>: {{ element.numeroInvitacion }}</p>
+      <h2 class="card-subTitle back-color">{{ element.drp }}</h2>
+
+      <div class="text-center">
+        <app-tabla-recursos-aportantes [data]="element.aportantes"></app-tabla-recursos-aportantes>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

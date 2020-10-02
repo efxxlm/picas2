@@ -163,6 +163,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                registroPresupuestal.UsuarioCreacion = pUsuarioModifico.ToUpper();
                 var result = await _contributor.CreateEditBudgetRecords(registroPresupuestal);
                 return Ok(result);
             }

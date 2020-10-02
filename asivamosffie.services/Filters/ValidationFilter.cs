@@ -10,28 +10,28 @@ namespace asivamosffie.services.Filters
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!context.ModelState.IsValid)
-            {
-                //context.Result = new BadRequestObjectResult(context.ModelState);
-                var errors = context.ModelState.Values.Where(v => v.Errors.Count > 0)
-                  .SelectMany(v => v.Errors)
-                  .Select(v => v.ErrorMessage)
-                  .ToList();
+            // if (!context.ModelState.IsValid)
+            // {
+            //     //context.Result = new BadRequestObjectResult(context.ModelState);
+            //     var errors = context.ModelState.Values.Where(v => v.Errors.Count > 0)
+            //       .SelectMany(v => v.Errors)
+            //       .Select(v => v.ErrorMessage)
+            //       .ToList();
 
-                var responseObj = new Respuesta
-                {
-                    Message = "Error validacion en campos",
-                    Code = "501",
-                    Data = context.ModelState.Values
-                };
+            //     var responseObj = new Respuesta
+            //     {
+            //         Message = "Error validacion en campos",
+            //         Code = "501",
+            //         Data = context.ModelState.Values
+            //     };
 
-                context.Result = new JsonResult(responseObj)
-                {
-                    StatusCode = 400
-                };
+            //     context.Result = new JsonResult(responseObj)
+            //     {
+            //         StatusCode = 400
+            //     };
 
-                return;
-            }
+            //     return;
+            // }
 
             await next();
         }

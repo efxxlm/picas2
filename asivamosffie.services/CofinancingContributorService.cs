@@ -167,6 +167,7 @@ namespace asivamosffie.services
             Respuesta _reponse = new Respuesta();
             try
             {
+                registroPresupuestal.Eliminado = false;
                 if (registroPresupuestal.RegistroPresupuestalId == null || registroPresupuestal.RegistroPresupuestalId == 0)
                     await this.BudgetRecords(registroPresupuestal);
                 else
@@ -189,8 +190,7 @@ namespace asivamosffie.services
             Respuesta _reponse = new Respuesta();
             try
             {
-                registroPresupuestal.FechaCreacion = DateTime.Now;
-                registroPresupuestal.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                registroPresupuestal.FechaCreacion = DateTime.Now;                
                 _context.Add(registroPresupuestal);
                 //await _context.SaveChangesAsync();
                 _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };

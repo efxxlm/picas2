@@ -10,7 +10,7 @@ import { ControlDeRecursosComponent } from './components/control-de-recursos/con
 import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableControlRecursosComponent } from './components/table-control-recursos/table-control-recursos.component';
-
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [BtnRegistrarComponent, RegistrarComponent, TablaFuentesComponent, ControlDeRecursosComponent, TableControlRecursosComponent],
@@ -19,6 +19,7 @@ import { TableControlRecursosComponent } from './components/table-control-recurs
     GestionarFuentesDeFinanciacionRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
+    CurrencyMaskModule
   ]
 })
 export class GestionarFuentesDeFinanciacionModule { }

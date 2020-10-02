@@ -1,0 +1,105 @@
+<section class="container text-center">
+  <div class="text-right">
+    <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Validar disponibilidad de presupuesto para ejecución de proyecto
+  </h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+    <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+      <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+    </button>
+    Bienvenida/o aquí podrá realizar la validación de las solicitudes y las modificaciones de disponibilidad generadas
+    de los recursos requeridos para los proyectos de infraestructura que ejecutará el FFIE, que han surtido el trámite
+    de los comités y que han sido remitidas por el equipo técnico.
+  </div>
+</section>
+
+<section class="container">
+  <div class="container text-center">
+    <p>
+      <span class="info-text sin-diligenciar">Sin diligenciar</span>
+      <!-- <span class="info-text en-proceso">En proceso</span> -->
+      <span class="info-text completo">Completo</span>
+    </p>
+  </div>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style" *ngFor="let disponibilidad of listaDisponibilidades">
+      <mat-expansion-panel-header class="expansion-style--header"
+      *ngIf="listaestado.includes(disponibilidad.nombreEstado)">
+        <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar': disponibilidad.completo=='Incompleto', 'completo': disponibilidad.completo=='Completo'}"><!----->
+          {{disponibilidad.nombreEstado}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-en-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='En validación presupuestal'"></app-tabla-en-validacion>
+      <app-tabla-devuelta-por-coordinacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Devuelta por coordinación financiera'"></app-tabla-devuelta-por-coordinacion>
+      <app-tabla-devuelta-por-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Devuelta por validación presupuestal'"></app-tabla-devuelta-por-validacion>
+      <app-tabla-con-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con validación presupuestal' || disponibilidad.nombreEstado=='Con disponibilidad presupuestal'"></app-tabla-con-validacion>
+      <app-tabla-rechasada-por-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Rechazada por validación presupuestal'"></app-tabla-rechasada-por-validacion>
+      <app-tabla-con-disponibilidad-cancelada [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='Con disponibilidad cancelada'"></app-tabla-con-disponibilidad-cancelada>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-accordion *ngIf="false">
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title sin-diligenciar">
+          En validación presupuestal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-en-validacion></app-tabla-en-validacion>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title sin-diligenciar">
+          Devuelta por coordinación financiera
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-devuelta-por-coordinacion></app-tabla-devuelta-por-coordinacion>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Devuelta por validación presupuestal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-devuelta-por-validacion></app-tabla-devuelta-por-validacion>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Con validación presupuestal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-con-validacion></app-tabla-con-validacion>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Con disponibilidad presupuestal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-con-validacion></app-tabla-con-validacion>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Rechazada por validación presupuestal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-rechasada-por-validacion></app-tabla-rechasada-por-validacion>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Con disponibilidad cancelada
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-con-disponibilidad-cancelada></app-tabla-con-disponibilidad-cancelada>
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>

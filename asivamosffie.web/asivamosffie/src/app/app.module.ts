@@ -1,6 +1,6 @@
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -8,6 +8,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
+import { registerLocaleData } from '@angular/common';
+import es from '@angular/common/locales/es';
+registerLocaleData( es );
 //import sha1  from 'sha1';
 
 // components
@@ -21,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+//import { LoaderInterceptor } from './_helpers/loader.interceptor';
 
 export const customCurrencyMaskConfig = {
   align: 'right',
