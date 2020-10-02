@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.api;
 
 namespace asivamosffie.services
 {
@@ -20,9 +21,9 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
-        private readonly IOptions<AppSettings> _settings;
+        private readonly IOptions<AppSettingsService> _settings;
 
-        public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettings> settings)
+        public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettingsService> settings)
         {
 
             _commonService = commonService;
@@ -32,74 +33,119 @@ namespace asivamosffie.services
 
         public async Task<VistaGenerarActaInicioContrato> GetVistaGenerarActaInicio(int pContratoId )
         {
-            VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato();
-                
-            //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-            Contrato contrato =  _context.Contrato.Where(r => !(bool)r.Estado && r.ContratoId==pContratoId).FirstOrDefault();
-            //cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
+            VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
-            Contratacion contratacion;
-            contratacion = _context.Contratacion.Where(r => !(bool)r.Estado && r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+            VistaGenerarActaInicioContrato actaInicioInterventoria = new VistaGenerarActaInicioContrato();
+            VistaGenerarActaInicioContrato actaInicioObra = new VistaGenerarActaInicioContrato();
+            int pTipoContrato =0;
 
-            string strTipoContratacion = "sin definir";
-            //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-            Dominio TipoContratacionCodigo;
+            //               --Contratacion.TipoContratacionCodigo  14 DOM, tipoidentificacion
+            
+            //DOM 14 1   Obra            
+            pTipoContrato = 1;
+            actaInicioObra = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+            
+            //DOM 14 2   Interventoría
+            pTipoContrato = 2;
+            actaInicioInterventoria = await getDataActaInicioAsync(pContratoId, pTipoContrato);
 
-            if (contratacion != null)
-            {
-                TipoContratacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
-                if (TipoContratacionCodigo != null)
-                    strTipoContratacion = TipoContratacionCodigo.Nombre;
+            actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioInterventoria);
 
-            }
+            return actaInicioConsolidado;
 
- //               --Contratacion.TipoContratacionCodigo  14 DOM, tipoidentificacion
- //14 1   Obra
- //14 2   Interventoría
+        }
 
-            Contratista contratista;
-            contratista = _context.Contratista.Where(r => (bool)r.Activo && r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+        private async Task<VistaGenerarActaInicioContrato> GetDataConsolidadoActaInicioAsync(VistaGenerarActaInicioContrato actaInicioObra, VistaGenerarActaInicioContrato actaInicioInterventoria)
+        {
 
-            string strTipoIdentificacionCodigoContratista = "sin definir";
-            Dominio TipoIdentificacionCodigoContratista;
+            VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
-            //30  Tipo Documento
-            //        tipoIdentificacionCodigo - contratista                   
+            //interventoria
+            actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaInterventoria = "";// Contratista . numeroIdentificaionRepresentante
+            actaInicioConsolidado.NombreRepresentanteContratistaInterventoria = actaInicioInterventoria.NombreRepresentanteContratistaInterventoria;
 
-            if (contratista != null)
-            {
-                TipoIdentificacionCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
-                if (TipoIdentificacionCodigoContratista != null)
-                    strTipoIdentificacionCodigoContratista = TipoIdentificacionCodigoContratista.Nombre;
-            }
+            //obra
+            actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaObraInterventoria = actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria;
+            actaInicioConsolidado.NombreRepresentanteContratistaObra = actaInicioObra.NombreRepresentanteContratistaObra;
 
+            actaInicioConsolidado.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
+            actaInicioConsolidado.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;                
+
+            return actaInicioConsolidado;
+
+        }
+
+        private async Task<VistaGenerarActaInicioContrato> getDataActaInicioAsync(int pContratoId, int pTipoContrato)
+        {
+            //VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato();
+            VistaGenerarActaInicioContrato actaInicio ;
             try
             {
-                    ContratoPoliza contratoPoliza;
-                    contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
+                Contrato contrato = _context.Contrato.Where(r => !(bool)r.Estado && r.ContratoId == pContratoId && r.TipoContratoCodigo==pTipoContrato.ToString()).FirstOrDefault();
+                //cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
 
-                    //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
-                    string strEstadoSolicitudCodigoContratoPoliza = "sin definir";                
+                Contratacion contratacion;
+                contratacion = _context.Contratacion.Where(r => !(bool)r.Estado && r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+                string strTipoContratacion = "sin definir";
+                //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                Dominio TipoContratacionCodigo;
+
+                if (contratacion != null)
+                {
+                    TipoContratacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
+                    if (TipoContratacionCodigo != null)
+                        strTipoContratacion = TipoContratacionCodigo.Nombre;
+
+                }                      
+
+                Contratista contratista;
+                contratista = _context.Contratista.Where(r => (bool)r.Activo && r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+
+                string strTipoIdentificacionCodigoContratista = "sin definir";
+                Dominio TipoIdentificacionCodigoContratista;
+
+                //30  Tipo Documento
+                //        tipoIdentificacionCodigo - contratista                   
+
+                if (contratista != null)
+                {
+                    TipoIdentificacionCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+                    if (TipoIdentificacionCodigoContratista != null)
+                        strTipoIdentificacionCodigoContratista = TipoIdentificacionCodigoContratista.Nombre;
+                }
+                //contratista obra
+                //TipoContratoCodigo 12,37
+                //1   Obra
+
+
+                ContratoPoliza contratoPoliza;
+                contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+
+                //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                string strTipoSolicitudCodigoContratoPoliza = "sin definir";
+                string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
 
                 //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                   Dominio TipoSolicitudCodigoContratoPoliza;
-                    Dominio EstadoSolicitudCodigoContratoPoliza;           
-                              
-                    if (contratoPoliza != null) 
-                    {
-                        TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-                        if (TipoSolicitudCodigoContratoPoliza != null)
-                            strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                Dominio TipoSolicitudCodigoContratoPoliza;
+                Dominio EstadoSolicitudCodigoContratoPoliza;
 
-                        EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                        if (EstadoSolicitudCodigoContratoPoliza != null)
-                            strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+                if (contratoPoliza != null)
+                {
+                    TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+                    if (TipoSolicitudCodigoContratoPoliza != null)
+                        strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
 
-                    }
+                    EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    if (EstadoSolicitudCodigoContratoPoliza != null)
+                        strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+
+                }
 
                 //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                VistaGenerarActaInicioContrato contratoGrilla = new VistaGenerarActaInicioContrato
+                //VistaGenerarActaInicioContrato
+                actaInicio = new VistaGenerarActaInicioContrato
                 {
                     //FechaAprobacionRequisitos="[FechaAprobacionRequisitos] [contrato] FechaAprobacionRequisitos",
                     NumeroContrato = contrato.NumeroContrato,
@@ -111,43 +157,52 @@ namespace asivamosffie.services
 
                     NumeroDRP2 = "DisponibilidadPresupuestal - NumeroDrp PENDIENTE",
                     FechaGeneracionDRP2 = " PENDIENTE",
-                    FechaAprobacionGarantiaPoliza= contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
-                    Objeto=contrato.Objeto,
-                    ValorInicialContrato= contrato.Valor.ToString(),
-                    ValorActualContrato= " PENDIENTE",
+                    FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
+                    Objeto = contrato.Objeto,
+                    ValorInicialContrato = contrato.Valor.ToString(),
+                    ValorActualContrato = " PENDIENTE",
                     ValorFase1Preconstruccion = " PENDIENTE",
                     Valorfase2ConstruccionObra = " PENDIENTE",
+                    PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
+
+                    NombreEntidadContratistaObra = contratista.Nombre,
+                    NombreEntidadContratistaSupervisorInterventoria = contratista.Nombre
 
 
-                 
-                        
-                        //RegistroCompleto = contrato.RegistroCompleto
-                       
-                        //,EstadoRegistro = "COMPLETO"
-                    };
 
-                    //if (!(bool)proyecto.RegistroCompleto)
-                    //{
-                    //    proyectoGrilla.EstadoRegistro = "INCOMPLETO";
-                    //}
-                    
-                }
-                catch (Exception e)
+
+
+
+
+
+                    //RegistroCompleto = contrato.RegistroCompleto
+
+                    //,EstadoRegistro = "COMPLETO"
+                };
+
+                //if (!(bool)proyecto.RegistroCompleto)
+                //{
+                //    proyectoGrilla.EstadoRegistro = "INCOMPLETO";
+                //}
+
+            }
+            catch (Exception e)
+            {
+                //VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato
+                 actaInicio = new VistaGenerarActaInicioContrato
                 {
-                    VistaGenerarActaInicioContrato proyectoGrilla = new VistaGenerarActaInicioContrato
-                    {
 
-                        //ContratoId = contrato.ContratoId,
-                        //FechaFirma = e.ToString(),
-                        //NumeroContrato = e.InnerException.ToString(),
-                        
-                        //TipoSolicitud = "ERROR"
-                        //,
-                        //RegistroCompleto = false
+                    //ContratoId = contrato.ContratoId,
+                    //FechaFirma = e.ToString(),
+                    //NumeroContrato = e.InnerException.ToString(),
 
-                    };                    
-                }            
+                    //TipoSolicitud = "ERROR"
+                    //,
+                    //RegistroCompleto = false
+
+                };
+            }
             return actaInicio;
         }
     }
-}
+    }
