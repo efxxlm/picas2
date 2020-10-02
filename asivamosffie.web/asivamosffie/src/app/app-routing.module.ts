@@ -133,6 +133,11 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
+      },
+      {
+        path: 'verificarRequisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/verificar-requisitos-construccion/verificar-requisitos-construccion.module' )
+          .then( module => module.VerificarRequisitosConstruccionModule )
       }
     ]
 
