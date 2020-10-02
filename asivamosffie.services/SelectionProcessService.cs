@@ -446,7 +446,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION GRUPO";
                     procesoSeleccionGrupo.FechaCreacion = DateTime.Now;
                     procesoSeleccionGrupo.Eliminado = false;
-                    procesoSeleccionGrupo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo.ToUpper();
+                    procesoSeleccionGrupo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo!=null?procesoSeleccionGrupo.NombreGrupo.ToUpper():"";
                     _context.ProcesoSeleccionGrupo.Add(procesoSeleccionGrupo);
                 }
                 else

@@ -17,14 +17,14 @@
           </div>
         </div>
       </div>
-      <div class="row" 
-        *ngIf="procesoSeleccion.procesoSeleccionProponente && (procesoSeleccion.procesoSeleccionProponente.length < addressForm.value.cuantosProponentes)" >
+      <div class="row">
         <div class="pr-1">
-          <label for="nombresProponentes" class="label-left">Nombres de proponentes</label>
+          <label for="nombresProponentes" class="label-left">Nombres de proponentes:</label>
         </div>
         <div class="col">
           <mat-form-field class="select-width">
-            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente()" >
+            <mat-select formControlName="nombresProponentes" required
+             (selectionChange)="changeProponente()" multiple>
               <mat-option *ngFor="let nombreProponente of nombresProponentesList" 
                           [value]="nombreProponente" >
                 {{ nombreProponente.nombreProponente }}
@@ -69,12 +69,12 @@
         </p>
       </div>
     <!-- </div> -->
-      <div *ngIf=" this.addressForm.get('nombresProponentes').value == 'Nuevo' ">
-      <app-form-datos-proponentes-seleccionados 
+      <div *ngIf="nuevo">
+      <app-form-datos-proponentes-nuevo 
                                                 #proponente 
                                                 [procesoSeleccion]="procesoSeleccion" 
                                                 (guardar)="onSubmitNuevoProponente()">
-      </app-form-datos-proponentes-seleccionados>
+      </app-form-datos-proponentes-nuevo>
       <button style="display: none;" 
               type="button" 
               (click)="proponente.cargarRegistro()" 

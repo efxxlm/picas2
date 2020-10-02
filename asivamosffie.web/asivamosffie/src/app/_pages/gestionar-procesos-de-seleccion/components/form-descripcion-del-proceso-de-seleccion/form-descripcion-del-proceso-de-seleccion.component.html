@@ -157,7 +157,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #valor currencyMask 
                   [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                   maxlength="20" formControlName="valor" (change)="nosuperarlimite(i,1)" required>
+                   maxlength="20" formControlName="valor" (focusout)="nosuperarlimite(i,1)" required>
                 </mat-form-field>
                 <span class="contador">{{20 - valor.value.length}}</span>
               </div>
@@ -170,7 +170,7 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #valorMinimoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"  required
-                    formControlName="valorMinimoCategoria" (change)="nosuperarlimite(i,3)">
+                    formControlName="valorMinimoCategoria" (focusout)="nosuperarlimite(i,3)">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMinimoCategoria.value.length}}</span>
               </div>
@@ -183,7 +183,7 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput #valorMaximoCategoria currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"  required
-                    formControlName="valorMaximoCategoria" (change)="nosuperarlimite(i,2)">
+                    formControlName="valorMaximoCategoria" (focusout)="nosuperarlimite(i,2)">
                 </mat-form-field>
                 <span class="contador">{{20 - valorMaximoCategoria.value.length}}</span>
               </div>

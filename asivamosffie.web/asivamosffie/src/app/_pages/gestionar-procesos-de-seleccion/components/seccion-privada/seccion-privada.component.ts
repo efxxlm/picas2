@@ -142,8 +142,8 @@ export class SeccionPrivadaComponent implements OnInit {
     pProceso.tipoIntervencionCodigo!="" ||
     pProceso.tipoAlcanceCodigo!="" ||
     //pProceso.esDistribucionGrupos!="" ||
-    pProceso.responsableEstructuradorUsuarioid!="" ||
-    pProceso.responsableTecnicoUsuarioId!="" ||
+    pProceso.responsableEstructuradorUsuarioid!=undefined ||
+    pProceso.responsableTecnicoUsuarioId!=undefined ||
     pProceso.procesoSeleccionGrupo.length>=1||
     pProceso.procesoSeleccionCronograma.length>=1)
     {
@@ -162,16 +162,16 @@ export class SeccionPrivadaComponent implements OnInit {
         retorno= 2;
       }
       else{
-        console.log(pProceso.objeto);
-      console.log(pProceso.alcanceParticular);
-      console.log(pProceso.justificacion);
+        console.log(pProceso.objeto!="");
+      console.log(pProceso.alcanceParticular!="");
+      console.log(pProceso.justificacion!="");
 
-      console.log(pProceso.tipoIntervencionCodigo);
-      console.log(pProceso.tipoAlcanceCodigo);
+      console.log(pProceso.tipoIntervencionCodigo!="");
+      console.log(pProceso.tipoAlcanceCodigo!="");
       console.log(pProceso.responsableEstructuradorUsuarioid!=undefined);
       console.log(pProceso.responsableTecnicoUsuarioId!=undefined);
-      console.log(pProceso.procesoSeleccionGrupo.length);
-      console.log(pProceso.procesoSeleccionCronograma.length);
+      console.log(pProceso.procesoSeleccionGrupo.length>=1);
+      console.log(pProceso.procesoSeleccionCronograma.length>=1);
       retorno=1;
       }
     }
