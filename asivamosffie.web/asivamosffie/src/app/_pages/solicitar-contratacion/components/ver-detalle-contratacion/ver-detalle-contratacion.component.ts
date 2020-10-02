@@ -29,7 +29,6 @@ export class VerDetalleContratacionComponent implements OnInit {
   ];
   dataTable: any[] = [];
 
-
   constructor ( private activatedRoute: ActivatedRoute,
                 private projectContractingSvc: ProjectContractingService ) {
     console.log( this.activatedRoute.snapshot.params.id );
@@ -44,16 +43,18 @@ export class VerDetalleContratacionComponent implements OnInit {
       .subscribe( resp => {
         this.contratacion = resp;
         console.log( this.contratacion );
-        this.dataTable.push(
-          {
-            tipoIntervencionCodigo: this.contratacion.contratacionProyecto[0].proyecto.tipoIntervencionCodigo,
-            llaveMen: this.contratacion.contratacionProyecto[0].proyecto.llaveMen,
-            usuarioModificacion: this.contratacion.contratacionProyecto[0].proyecto.usuarioModificacion,
-            localizacionIdMunicipio: this.contratacion.contratacionProyecto[0].proyecto.localizacionIdMunicipio,
-            institucionEducativa: this.contratacion.contratacionProyecto[0].proyecto.institucionEducativa.nombre,
-            sede: this.contratacion.contratacionProyecto[0].proyecto.sede.nombre
-          }
-        )
+        for ( let contratacionProyecto of this.contratacion.contratacionProyecto ) {
+          this.dataTable.push(
+            {
+              tipoIntervencionCodigo: contratacionProyecto.proyecto.tipoIntervencionCodigo,
+              llaveMen:contratacionProyecto.proyecto.llaveMen,
+              usuarioModificacion: contratacionProyecto.proyecto.usuarioModificacion,
+              localizacionIdMunicipio: contratacionProyecto.proyecto.localizacionIdMunicipio,
+              institucionEducativa: contratacionProyecto.proyecto.institucionEducativa.nombre,
+              sede: contratacionProyecto.proyecto.sede.nombre
+            }
+          )
+        }
       } );
   }
 

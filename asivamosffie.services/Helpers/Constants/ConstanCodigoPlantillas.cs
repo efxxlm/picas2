@@ -44,7 +44,8 @@
         Registros_Fuentes_Uso = 32,
         Registros_Compromiso_Solicitud = 33,
         Registros_Firmas = 34,
-      
-        Registros_Fuente_De_Uso = 	38
+
+        Registros_Fuente_De_Uso = 38, 
+        Registros_Usos_Registros_Fuente_de_Uso = 39
     }
 }

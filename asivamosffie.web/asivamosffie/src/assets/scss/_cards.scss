@@ -1,6 +1,5 @@
 mat-card.mat-card:not([class*=mat-elevation-z]) {
-    border: solid 1px #174193;;
-    border: solid 1px var(--mainColor);
+    border: solid 1px $mainColor;
     border-radius: 1.5em;
     padding: 1em 4em;
     box-shadow: none;
@@ -16,8 +15,7 @@ mat-card.mat-card:not([class*=mat-elevation-z]) {
     background-color: #fff;
     padding-left: .5em;
     padding-right: .5em;
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
 
     &.sub-text {
         margin-top: 1em !important;
@@ -28,8 +26,7 @@ mat-card.mat-card:not([class*=mat-elevation-z]) {
 
 .card-subTitle,
 h2.card-subTitle {
-    background-color: #174193;;
-    background-color: var(--mainColor);
+    background-color: $mainColor;
     font-size: 1rem;
     margin: 1.5em -3.5em;
     color: #fff;
@@ -42,5 +39,5 @@ h2.card-subTitle {
 
 
 mat-card.mat-card {
-    color: var(--fontColor);
+    color: $fontColor;
 }

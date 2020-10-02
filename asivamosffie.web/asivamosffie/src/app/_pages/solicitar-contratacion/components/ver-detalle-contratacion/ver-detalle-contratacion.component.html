@@ -52,51 +52,51 @@
           </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-card class="border" align="left">
+      <mat-card class="border" align="left" *ngFor="let proyecto of contratacion.contratacionProyecto">
         <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
         <mat-card-content class="mt-1em">
 
-          <p *ngIf="!contratacion.contratacionProyecto[0].tieneMonitoreoWeb"> 
+          <p *ngIf="!proyecto.tieneMonitoreoWeb"> 
             <b>
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
             </b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].tieneMonitoreoWeb">
+          <p *ngIf="proyecto.tieneMonitoreoWeb">
             <b>
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
             </b>: Sí
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].esReasignacion">
+          <p *ngIf="proyecto.esReasignacion">
             <b>¿El proyecto es una reasignación?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].esReasignacion">
+          <p *ngIf="!proyecto.esReasignacion">
             <b>¿El proyecto es una reasignación?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].esAvanceobra">
+          <p *ngIf="proyecto.esAvanceobra">
             <b>¿El proyecto tiene avance de obra?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].esAvanceobra">
+          <p *ngIf="!proyecto.esAvanceobra">
             <b>¿El proyecto tiene avance de obra?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].porcentajeAvanceObra.length > 0">
+          <p *ngIf="proyecto.porcentajeAvanceObra.length > 0">
             <b>¿Cuál es el porcentaje de avance de obra?</b>: {{ contratacion.contratacionProyecto[0].porcentajeAvanceObra }}%
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].requiereLicencia">
+          <p *ngIf="proyecto.requiereLicencia">
             <b>¿El proyecto requiere licencias?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].requiereLicencia">
+          <p *ngIf="!proyecto.requiereLicencia">
             <b>¿El proyecto requiere licencias?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].licenciaVigente">
+          <p *ngIf="proyecto.licenciaVigente">
             <b>¿El proyecto tiene licencia vigente?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].licenciaVigente">
+          <p *ngIf="!proyecto.licenciaVigente">
             <b>¿El proyecto tiene licencia vigente?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].numeroLicencia.length > 0">
+          <p *ngIf="proyecto.numeroLicencia">
             <b>Número de licencia</b>: {{ contratacion.contratacionProyecto[0].numeroLicencia }}
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].fechaVigencia">
+          <p *ngIf="proyecto.fechaVigencia">
             <b>Fecha de vigencia</b>: {{ contratacion.contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
           </p>
 

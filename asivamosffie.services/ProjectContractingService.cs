@@ -119,6 +119,17 @@ namespace asivamosffie.services
         {
             return await _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
+               //para logica plantilla ficha contratacion
+               .Include(r => r.Contrato)
+                .Include(r=> r.ContratacionProyecto)
+                .ThenInclude(r=> r.ContratacionProyectoAportante)
+                 .ThenInclude(r => r.CofinanciacionAportante)
+                   .ThenInclude(r => r.ProyectoAportante)
+                       .Include(r => r.ContratacionProyecto)
+                .ThenInclude(r => r.ContratacionProyectoAportante)
+                 .ThenInclude(r => r.ComponenteAportante)
+                   .ThenInclude(r => r.ComponenteUso) 
+              //
               .Include(r => r.Contratista)
                  .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
@@ -210,7 +221,9 @@ namespace asivamosffie.services
         {
 
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
-                .Include(r => r.ContratacionProyecto)
+               .Include(r => r.ContratacionObservacion)
+               .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r=> r.SesionSolicitudObservacionProyecto)
                            .FirstOrDefaultAsync();
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();

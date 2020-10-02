@@ -10,7 +10,7 @@
 </div>
 
 <div class="table-responsive">
-  <table mat-table [dataSource]="dataSource" matSort class="table-form mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="table-form">
 
     <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{columna.titulo}} </th>
