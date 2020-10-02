@@ -17,7 +17,9 @@ export class SeccionPrivadaComponent implements OnInit {
 
   listaTipoIntervencion: Dominio[] = [];
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
-  
+  descripcion_class:number=0;
+  estudio_class:number=0;
+  datos_class:number=0;
   procesoSeleccion: ProcesoSeleccion = {
     alcanceParticular: '',
     criteriosSeleccion: '',
@@ -51,7 +53,10 @@ export class SeccionPrivadaComponent implements OnInit {
       this.procesoSeleccion.tipoProcesoCodigo = this.tiposProcesoSeleccion.Privada;
 
       if (this.procesoSeleccion.procesoSeleccionId > 0)
+      {
         this.editMode();
+        
+      }
 
     })
   }
@@ -64,6 +69,9 @@ export class SeccionPrivadaComponent implements OnInit {
         this.procesoSeleccionService.getProcesoSeleccionById( this.procesoSeleccion.procesoSeleccionId )
       ]).subscribe( proceso => {
           this.procesoSeleccion = proceso[0];
+          this.descripcion_class=this.estaIncompletoDescripcion(this.procesoSeleccion);
+          this.estudio_class=this.estaIncompletoEstudio(this.procesoSeleccion);
+          this.datos_class=this.estaIncompletoDatos(this.procesoSeleccion.procesoSeleccionProponente[0]);
           setTimeout(() => { resolve(); },1000)
       });
     });
@@ -123,7 +131,172 @@ export class SeccionPrivadaComponent implements OnInit {
      () => {})
   }
 
-  estaIncompleto(objeto){
-    return true;
+  estaIncompletoDescripcion(pProceso:any):number{    
+    console.log(pProceso);
+    
+    let retorno:number=0;
+    if(pProceso.objeto !="" ||
+    pProceso.alcanceParticular!="" ||
+    pProceso.justificacion!="" ||
+    //pProceso.criteriosSeleccion!="" ||
+    pProceso.tipoIntervencionCodigo!="" ||
+    pProceso.tipoAlcanceCodigo!="" ||
+    //pProceso.esDistribucionGrupos!="" ||
+    pProceso.responsableEstructuradorUsuarioid!="" ||
+    pProceso.responsableTecnicoUsuarioId!="" ||
+    pProceso.procesoSeleccionGrupo.length>=1||
+    pProceso.procesoSeleccionCronograma.length>=1)
+    {
+      if(pProceso.objeto !="" &&
+      pProceso.alcanceParticular!="" &&
+      pProceso.justificacion!="" &&
+     // pProceso.criteriosSeleccion!="" &&
+      pProceso.tipoIntervencionCodigo!="" &&
+      pProceso.tipoAlcanceCodigo!="" &&
+      //pProceso.esDistribucionGrupos!="" &&
+      pProceso.responsableEstructuradorUsuarioid!=undefined &&
+      pProceso.responsableTecnicoUsuarioId!=undefined &&
+      pProceso.procesoSeleccionGrupo.length>0 &&
+      pProceso.procesoSeleccionCronograma.length>0)
+      {
+        retorno= 2;
+      }
+      else{
+        console.log(pProceso.objeto);
+      console.log(pProceso.alcanceParticular);
+      console.log(pProceso.justificacion);
+
+      console.log(pProceso.tipoIntervencionCodigo);
+      console.log(pProceso.tipoAlcanceCodigo);
+      console.log(pProceso.responsableEstructuradorUsuarioid!=undefined);
+      console.log(pProceso.responsableTecnicoUsuarioId!=undefined);
+      console.log(pProceso.procesoSeleccionGrupo.length);
+      console.log(pProceso.procesoSeleccionCronograma.length);
+      retorno=1;
+      }
+    }
+    return retorno;
+  }
+
+  estaIncompletoDatos(pProceso:any):number{
+    let retorno=0;
+    
+    switch (pProceso.tipoProponenteCodigo)
+    {
+      case "1": {
+        if(
+          pProceso.procesoSeleccionProponenteId!="" ||
+        pProceso.direccionProponente!="" ||
+        pProceso.emailProponente!="" ||
+        pProceso.localizacionIdMunicipio!="" ||
+        pProceso.nombreProponente!="" ||
+        pProceso.numeroIdentificacion!="" ||
+        pProceso.telefonoProponente!="")
+        {
+          if(
+            pProceso.procesoSeleccionProponenteId!="" &&
+            pProceso.direccionProponente!="" &&
+            pProceso.emailProponente!="" &&
+            pProceso.localizacionIdMunicipio!="" &&
+            pProceso.nombreProponente!="" &&
+            pProceso.numeroIdentificacion!="" &&
+            pProceso.telefonoProponente!="")
+          {
+            retorno=2;
+          } 
+          else{
+            retorno=1;
+          }
+          
+        }break;
+          }
+          case "2": {
+            if(
+            pProceso.procesoSeleccionProponenteId!="" ||
+            pProceso.nombreProponente!="" ||
+            pProceso.nombreProponente!="" ||
+            pProceso.numeroIdentificacion!="" ||
+            pProceso.nombreRepresentanteLegal!="" ||
+            pProceso.cedulaRepresentanteLegal!="" ||
+            pProceso.direccionProponente!="" ||
+            pProceso.telefonoProponente!="" ||
+            pProceso.emailProponente!="")
+            {
+              if(
+                pProceso.procesoSeleccionProponenteId!="" &&
+                pProceso.nombreProponente!="" &&
+                pProceso.nombreProponente!="" &&
+                pProceso.numeroIdentificacion!="" &&
+                pProceso.nombreRepresentanteLegal!="" &&
+                pProceso.cedulaRepresentanteLegal!="" &&
+                pProceso.direccionProponente!="" &&
+                pProceso.telefonoProponente!="" &&
+                pProceso.emailProponente!="")
+                {
+                  retorno=2
+                }
+                else{
+                  retorno=1;
+                }              
+            }
+            break;
+          }
+          case "4": {
+            if(
+            pProceso.procesoSeleccionProponenteId !="" ||
+            pProceso.nombreProponente!="" ||            
+            pProceso.nombreRepresentanteLegal!="" ||
+            pProceso.cedulaRepresentanteLegal!="" ||
+            pProceso.direccionProponente!="" ||
+            pProceso.telefonoProponente!="" ||
+            pProceso.emailProponente!="" ||
+            pProceso.procesoSeleccionIntegrante!=""
+            )
+            {
+              if(
+                pProceso.procesoSeleccionProponenteId !="" &&
+                pProceso.nombreProponente!=""  &&                
+                pProceso.nombreRepresentanteLegal!=""  &&
+                pProceso.cedulaRepresentanteLegal!=""  &&
+                pProceso.direccionProponente!=""  &&
+                pProceso.telefonoProponente!=""  &&
+                pProceso.emailProponente!=""  &&
+                pProceso.procesoSeleccionIntegrante!=""
+                )
+                {
+                  retorno=2;
+                }
+                else{
+                  retorno=1;
+                }
+            }
+            break;
+          }
+        
+    }
+
+    return retorno;
+  }
+
+
+  estaIncompletoEstudio(pProceso:any):number{
+    let retorno=0;
+    if(pProceso.cantidadCotizaciones ||
+      pProceso.procesoSeleccionCotizacion.length>0
+    )
+    {
+      if(pProceso.cantidadCotizaciones &&
+      pProceso.procesoSeleccionCotizacion.length>0
+      )
+      {
+        retorno= 2;
+      } 
+      else{
+        retorno =1;
+      }
+    }
+
+    
+    return retorno;
   }
 }

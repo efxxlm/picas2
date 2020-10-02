@@ -44,6 +44,7 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionCotizacion)
                                             .Include(r => r.ProcesoSeleccionCronograma)
                                             .Include(r => r.ProcesoSeleccionGrupo)
+                                            .OrderByDescending(x=>x.FechaCreacion)
                                             .ToListAsync();
             }
             catch (Exception ex)
@@ -90,19 +91,20 @@ namespace asivamosffie.services
                     int countMax = _context.ProcesoSeleccion.Count(p => p.TipoProcesoCodigo == procesoSeleccion.TipoProcesoCodigo);
 
                     //Auditoria
-                    strCrearEditar = "CREAR PPROCESO SELECCION";
+                    strCrearEditar = "CREAR PROCESO SELECCION";
                     procesoSeleccion.FechaCreacion = DateTime.Now;
                     procesoSeleccion.Eliminado = false;
                     procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
                     procesoSeleccion.NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax);
                     procesoSeleccion.EstadoProcesoSeleccionCodigo = "1";
+                    procesoSeleccion.EtapaProcesoSeleccionCodigo = "1";
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
                     
                 }
                 else
                 {
-                    strCrearEditar = "EDIT PROCESO CELECCION";
+                    strCrearEditar = "EDIT PROCESO SELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
                     //Auditoria
                     //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioCreacion.ToUpper();
@@ -166,7 +168,7 @@ namespace asivamosffie.services
                 foreach( ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente )
                 {
                     proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    proponente.NombreRepresentanteLegal = proponente.NombreRepresentanteLegal.ToUpper();
+                    proponente.NombreRepresentanteLegal = proponente.NombreRepresentanteLegal==null?"": proponente.NombreRepresentanteLegal.ToUpper();
                     proponente.NombreProponente = proponente.NombreProponente.ToUpper();
                     proponente.DireccionProponente = proponente.DireccionProponente.ToUpper();
                     proponente.EmailProponente = proponente.EmailProponente.ToUpper();                    

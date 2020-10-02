@@ -68,7 +68,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         //valido si tiene algo
         let bitVacio=false;
         this.cotizaciones.value.forEach(element => {
-          console.log(element);
+          
           if(element.nombreOrganizacion!=null)
           {
             bitVacio=true;

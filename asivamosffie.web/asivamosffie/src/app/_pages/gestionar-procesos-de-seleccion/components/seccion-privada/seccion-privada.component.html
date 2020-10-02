@@ -18,7 +18,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="{' sin-diligenciar':estaIncompleto(procesoSeleccion)}">
+                <mat-panel-title class="expansion-style--title" [ngClass]="{'sin-diligenciar':descripcion_class===0,'en-proceso':descripcion_class===1,'completo':descripcion_class===2}">
                     Descripción del proceso de selección
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -30,8 +30,8 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title "  [ngClass]="{' sin-diligenciar':1==1}">
-                    Estudio de mercado
+                <mat-panel-title class="expansion-style--title "  [ngClass]="{'sin-diligenciar':estudio_class==0,'en-proceso':estudio_class==1,'completo':estudio_class==2}">
+                    Estudio de mercado 
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="estudio.cargarRegistro()" id="botonEstudio"></button>
@@ -41,8 +41,8 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title "  [ngClass]="{' sin-diligenciar':1==1}">
-                    Datos de proponentes seleccionados
+                <mat-panel-title class="expansion-style--title "  [ngClass]="{'sin-diligenciar':datos_class==0,'en-proceso':datos_class==1,'completo':datos_class==2}">
+                    Datos de proponentes seleccionados {{datos_class}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>

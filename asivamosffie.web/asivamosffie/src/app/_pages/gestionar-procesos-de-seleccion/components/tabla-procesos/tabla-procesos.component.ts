@@ -62,15 +62,15 @@ export class TablaProcesosComponent implements OnInit {
           //this.dataSource = new MatTableDataSource( respuesta[0] );
       })
       this.dataSource = new MatTableDataSource( this.listaProceso );
-      
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.previousPageLabel = 'Anterior';  
 
     })
 
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    
   }
 
   verMas(e: number) {

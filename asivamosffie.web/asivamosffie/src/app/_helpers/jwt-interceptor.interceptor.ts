@@ -15,6 +15,7 @@ import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-di
 
 @Injectable()
 export class JwtInterceptorInterceptor implements HttpInterceptor {
+    mensajeenviado: boolean=false;
     constructor(private authenticationService: AutenticacionService,public dialog: MatDialog,) { }
     private isTokenRefreshing: boolean = false;
     tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
@@ -34,7 +35,12 @@ export class JwtInterceptorInterceptor implements HttpInterceptor {
                         case 401:
                             console.log("Token expired. Attempting refresh ...");
                             //revisar esto de abajo, no debería ir aqui
-                            this.openDialog("Error","Su sesión ha expirado.");
+                            if(!this.mensajeenviado)
+                            {
+                                this.openDialog("Error","Su sesión ha expirado.");
+                                this.mensajeenviado=true;
+                            }
+                            
                             return this.handleHttpResponseError(request, next);
                         case 400:
                             return this.handleError(err);
@@ -169,7 +175,11 @@ export class JwtInterceptorInterceptor implements HttpInterceptor {
           // The response body may contain clues as to what went wrong,
           if ([401, 403].indexOf(errorResponse.status) !== -1) {
               //     // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-              this.openDialog("Error","Su sesión ha expirado.");
+                if(!this.mensajeenviado)
+                {
+                    this.openDialog("Error","Su sesión ha expirado.");
+                    this.mensajeenviado=true;
+                }
               
               this.authenticationService.logout(true);
               //location.reload(true);
