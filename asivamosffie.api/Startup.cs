@@ -13,10 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using asivamosffie.services.Filters;
-using FluentValidation.AspNetCore;
 using System;
 using System.Text;
+using DinkToPdf.Contracts;
+using DinkToPdf;
+using System.IO;
+using asivamosffie.api.Helpers;
 
 namespace asivamosffie.api
 {
@@ -26,6 +28,8 @@ namespace asivamosffie.api
         {
             Configuration = configuration;
         }
+
+
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
@@ -69,6 +73,7 @@ namespace asivamosffie.api
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = appSettings.asivamosffieIssuerJwt,
                             ValidAudience = appSettings.asivamosffieAudienceJwt,
+                            ClockSkew = TimeSpan.Zero,
                             IssuerSigningKey = new SymmetricSecurityKey(
                                 Encoding.ASCII.GetBytes("asivamosffie@2020application"))
 
@@ -96,7 +101,13 @@ namespace asivamosffie.api
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-           
+            #region A gregado pora implementacion de descargas de PDF
+            var context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
+            #endregion
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -115,13 +126,25 @@ namespace asivamosffie.api
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
+            services.AddTransient<IContributorService, ContributorService>();
+            services.AddTransient<ISourceFundingService, SourceFundingService>();
+            services.AddTransient<ICommitteeSessionFiduciarioService, CommitteeSessionFiduciarioService>();
+            services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
+            services.AddTransient<IBankAccountService, BankAccountService>();
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
+            services.AddTransient<IProjectContractingService, ProjectContractingService>();            
+            services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
+            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();      
+            services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
+            services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
+            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();             
+            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
-            services.AddTransient<ISourceFundingService, SourceFundingService>();
-            services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
-            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
+            
+
+
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

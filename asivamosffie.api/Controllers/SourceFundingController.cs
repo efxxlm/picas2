@@ -80,7 +80,15 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                fuentefinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if(fuentefinanciacion.FuenteFinanciacionId>0)
+                {
+                    fuentefinanciacion.UsuarioModificacion= HttpContext.User.FindFirst("User").Value.ToUpper();
+                }
+                else
+                {
+                    fuentefinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                }
+                
                 respuesta = await _sourceFunding.CreateEditFuentesFinanciacion(fuentefinanciacion);
                 return Ok(respuesta);
             }
@@ -135,6 +143,52 @@ namespace asivamosffie.api.Controllers
             try
             {
                 var result = await _sourceFunding.GetFuentesFinanciacionByAportanteId(AportanteId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListFuentesFinanciacionByAportanteId")]        
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByAportanteId(int AportanteId)
+        {
+            try
+            {
+                var result = await _sourceFunding.GetListFuentesFinanciacionByAportanteId(AportanteId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid")]
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID)
+        {
+            try
+            {
+                var result = await _sourceFunding.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(disponibilidadPresupuestalProyectoid, aportanteID);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        
+        [HttpGet]
+        [Route("GetListFuentesFinanciacionshort")]
+        public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacionshort()
+        {
+            try
+            {
+                var result = await _sourceFunding.GetListFuentesFinanciacionshort();
                 return result;
             }
             catch (Exception ex)

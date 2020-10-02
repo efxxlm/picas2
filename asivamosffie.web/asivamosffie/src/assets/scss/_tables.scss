@@ -147,6 +147,11 @@ div.mat-paginator {
     width: 100%;
     min-width: 9em;
 
+    &.btn-table--sm {
+        width: 7em;
+        min-width: 7em;
+    }
+
     .mat-button-wrapper {
         white-space: break-spaces;
     }
@@ -212,7 +217,12 @@ div.mat-paginator {
     }
 }
 
-.table-responsive {
-    max-width: 100%;
-    overflow: auto;
+.mat-paginator-container {
+    width: 95% !important;
+}
+
+.info-table--img {
+    height: 2em;
+    margin-bottom: -.65em;
+    margin-right: .5em;
 }

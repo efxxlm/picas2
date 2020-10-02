@@ -21,7 +21,8 @@ mat-card.mat-card:not([class*=mat-elevation-z]) {
 
     &.sub-text {
         margin-top: 1em !important;
-        margin-left: -1em;
+        margin-left: 0;
+        padding: 0;
     }
 }
 

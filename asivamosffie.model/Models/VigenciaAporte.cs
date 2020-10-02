@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class VigenciaAporte
     {
-        public VigenciaAporte()
-        {
-            ControlRecurso = new HashSet<ControlRecurso>();
-        }
-
         public int VigenciaAporteId { get; set; }
         public int? FuenteFinanciacionId { get; set; }
         public string TipoVigenciaCodigo { get; set; }
@@ -21,6 +16,5 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
-        public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
     }
 }

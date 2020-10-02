@@ -18,7 +18,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public bool Eliminado { get; set; }
         public bool? EsReasignacion { get; set; }
-        public decimal? PorcentajeAvanceObra { get; set; }
+        public string PorcentajeAvanceObra { get; set; }
         public bool? RequiereLicencia { get; set; }
         public bool? LicenciaVigente { get; set; }
         public string NumeroLicencia { get; set; }
@@ -27,7 +27,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Activo { get; set; }
         public bool? EsAvanceobra { get; set; }
-        public bool? TieneMonitoreWeb { get; set; }
+        public bool? TieneMonitoreoWeb { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }

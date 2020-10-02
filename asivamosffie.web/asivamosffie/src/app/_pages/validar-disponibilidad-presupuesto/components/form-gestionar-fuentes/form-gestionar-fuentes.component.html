@@ -1,0 +1,173 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1">
+    Gestionar fuentes solicitud {{solicitud}}
+  </h1>
+
+  <p class="info-sub-title">
+    <span>Nombre del aportante: <b>
+        {{nombreAportante}}
+      </b></span>
+    <span>Valor de aportante al proyecto: <b>
+        {{valorAportante|currency:'':'symbol':'3.0'}}
+      </b></span>
+  </p>
+</div>
+
+<mat-dialog-content class="mat-typography">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-6">
+              <p>
+                  <strong>Llave MEN:</strong>
+                  {{llaveMen}}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                  <strong>Tipo de intervención:</strong>
+                  {{tipoInterventor}}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                  <strong>Departamento:</strong>
+                  {{departamento}}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                  <strong>Municipio:</strong>
+                  {{municipio}}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                  <strong>Institución educativa:</strong>
+                  {{institucion}}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                  <strong>Sede:</strong>
+                  {{sede}}
+              </p>
+            </div>
+            <div class="col-md-12">
+              <p>
+                  <strong>Valor total del proyecto:</strong>
+                  {{valorAportante|currency:'':'symbol':'3.0'}}
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+    </mat-card>
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Fuentes
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div formGroupName="fuentes">
+          <div class="animatedDown" *ngFor="let fuente of fuentes.controls; let i = index">
+            <div [formGroupName]="i">
+              <mat-card-title class="header-card--text alineacion-titulos2" *ngIf="fuentes.controls.length > 1">
+                Fuente {{ i + 1 }}
+              </mat-card-title>
+  
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Fuente</label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="fuentecampo" required  (selectionChange)="fuenteCambio(fuente)">
+                      <mat-option *ngFor="let fuentelistado of fuentesArray" [value]="fuentelistado.value">
+                        {{ fuentelistado.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Saldo actual de la fuente</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width sin-contador">
+                        <input matInput currencyMask readonly
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                          formControlName="saldoActual">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Valor solicitado de la fuente</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #valorSolicitado currencyMask (keyup)="reste(fuente)" required maxLength="20"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                          formControlName="valorSolicitado">
+                      </mat-form-field>
+                      <span class="contador">{{20 - valorSolicitado.value.length}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Nuevo saldo de la fuente</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width sin-contador">
+                        <input matInput currencyMask readonly
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                          formControlName="nuevoSaldo">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="text-right" *ngIf="fuentes.controls.length > 1">
+                    <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(fuentes, i)">
+                      <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                      Eliminar fuente
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaFuente()">
+            <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente">
+            Agregar otra fuente
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>
