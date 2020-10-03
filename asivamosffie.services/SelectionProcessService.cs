@@ -36,7 +36,7 @@ namespace asivamosffie.services
 
             try
             {
-                return await _context.ProcesoSeleccion
+                var procesosSeleccion= await _context.ProcesoSeleccion
                                             .Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
@@ -46,6 +46,11 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionGrupo)
                                             .OrderByDescending(x=>x.FechaCreacion)
                                             .ToListAsync();
+                foreach(var proceso in procesosSeleccion)
+                {
+                    proceso.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
+                }
+                return procesosSeleccion;
             }
             catch (Exception ex)
             {
@@ -59,7 +64,7 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
+                var procesoSeleccion= await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
                                             .Include(r => r.ProcesoSeleccionProponente)
@@ -67,6 +72,8 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionCronograma)
                                             .Include(r => r.ProcesoSeleccionGrupo)
                                             .FirstOrDefaultAsync( proceso => proceso.ProcesoSeleccionId == id );
+                procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
+                return procesoSeleccion;
             }
             catch (Exception ex)
             {
@@ -900,11 +907,11 @@ namespace asivamosffie.services
                     //contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
                     contratista.Activo = true;
                     contratista.FechaCreacion = DateTime.Now;
-                    contratista.UsuarioCreacion = pUsuarioCreo;
+                    contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();
                     
                     _context.Contratista.Add( contratista );
 
-                });
+                });                
 
                 await _context.SaveChangesAsync();
 

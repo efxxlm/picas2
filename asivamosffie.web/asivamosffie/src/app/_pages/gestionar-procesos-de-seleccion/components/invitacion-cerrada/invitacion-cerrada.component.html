@@ -64,7 +64,7 @@
 
         <mat-expansion-panel class="expansion-style" >
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':evaluacion_class===0,'en-proceso':evaluacion_class===1,'completo':evaluacion_class===2, 'en-alerta':evaluacion_class===3}">
                     Evaluación
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -76,7 +76,7 @@
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="{'sin-diligenciar':proponentes_class===0,'en-proceso':proponentes_class===1,'completo':proponentes_class===2, 'en-alerta':proponentes_class===3}">
                     Datos de proponentes seleccionados
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -90,7 +90,7 @@
         </mat-expansion-panel>
 
     </mat-accordion>
-    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre" *ngIf="1==1">
+    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
     Cuando la solicitud se encuentra en estado <b>“Aprobada apertura de comité fiduciario”</b> el sistema habilitará las opciones para continuar el proceso.
     </div>
 </div>

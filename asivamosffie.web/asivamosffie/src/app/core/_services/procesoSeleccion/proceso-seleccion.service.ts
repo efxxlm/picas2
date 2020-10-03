@@ -73,6 +73,7 @@ export class ProcesoSeleccionService implements OnInit {
 }
 
 export interface ProcesoSeleccion{
+  listaContratistas?: any[];
   procesoSeleccionId?: number,
   numeroProceso?: string,
   objeto?: string,
@@ -103,6 +104,9 @@ export interface ProcesoSeleccion{
   urlSoporteEvaluacion?: string,
   tipoOrdenEligibilidadCodigo?: string,
   cantidadProponentesInvitados?: number,
+
+  fechaCreacion?:Date,
+  urlSoporteProponentesSeleccionados?:string,
 
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma[],

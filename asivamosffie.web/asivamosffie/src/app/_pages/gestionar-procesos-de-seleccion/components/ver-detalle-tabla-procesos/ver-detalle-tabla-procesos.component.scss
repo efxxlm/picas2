@@ -2,7 +2,8 @@
     margin-top: 2em;
     margin-bottom: 3em;
     width: 38em;
-
+    margin-right: auto;/*jflorez, pa que se centre*/
+    margin-left: auto;
     &--button {
         width: 17em;
         margin-bottom: 1em;
@@ -14,7 +15,7 @@
 
 .ml9
 {
-    margin-left: 9em;
+    margin-left: 31%;
 }
 
 .mr-2em

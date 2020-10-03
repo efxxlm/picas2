@@ -94,6 +94,7 @@ console.log(this.data.tipoProcesoCodigo)
        if ( respuesta.code == "200" ){
           this.dialogRef.close();
           this.router.navigate(['/seleccion']);
+          location.reload();
        }
     })
   }

@@ -276,9 +276,10 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.procesoSeleccion.criteriosSeleccion = this.addressForm.get('criterios').value,
       this.procesoSeleccion.tipoIntervencionCodigo = this.addressForm.get('tipoIntervencion').value ? this.addressForm.get('tipoIntervencion').value.codigo : null,
       this.procesoSeleccion.tipoAlcanceCodigo = this.addressForm.get('tipoAlcance').value ? this.addressForm.get('tipoAlcance').value.codigo : null,
-      this.procesoSeleccion.esDistribucionGrupos = this.addressForm.get('distribucionEnGrupos').value ? this.addressForm.get('distribucionEnGrupos').value.codigo : null,
+      this.procesoSeleccion.esDistribucionGrupos = this.addressForm.get('distribucionEnGrupos').value ? this.addressForm.get('distribucionEnGrupos').value : null,
       this.procesoSeleccion.responsableTecnicoUsuarioId = this.addressForm.get('responsableEquipoTecnico').value ? this.addressForm.get('responsableEquipoTecnico').value.usuarioId : null,
       this.procesoSeleccion.responsableEstructuradorUsuarioid = this.addressForm.get('responsableEquipoestructurado').value ? this.addressForm.get('responsableEquipoestructurado').value.usuarioId : null,
+      this.procesoSeleccion.cantGrupos = this.addressForm.get('cuantosGrupos').value ? this.addressForm.get('cuantosGrupos').value : null,
       this.procesoSeleccion.procesoSeleccionGrupo = [],
       this.procesoSeleccion.procesoSeleccionCronograma = [];
 
@@ -340,6 +341,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.addressForm.get('tipoIntervencion').setValue(tipoIntervencion);
       this.addressForm.get('tipoAlcance').setValue(tipoAlcance);
       this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos ? this.procesoSeleccion.esDistribucionGrupos.toString() : null);
+      this.addressForm.get('cuantosGrupos').setValue(this.procesoSeleccion.cantGrupos);
 
       this.addressForm.get('responsableEquipoTecnico').setValue(responsableEquipoTecnico);
       this.addressForm.get('responsableEquipoestructurado').setValue(responsableEquipoestructurado);
