@@ -38,6 +38,7 @@ export interface ComiteTecnico{
     numeroCompromisos?: number,
     numeroCompromisosCumplidos?: number,
     tipoTemaFiduciarioCodigo?: string,
+    estadoActaCodigo?: string,
 
     sesionComiteTema?: SesionComiteTema[],
     sesionComiteSolicitudComiteTecnico?: SesionComiteSolicitud[],

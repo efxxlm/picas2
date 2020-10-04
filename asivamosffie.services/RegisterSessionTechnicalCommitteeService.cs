@@ -158,6 +158,20 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<List<SesionComentario>> GetCometariosDelActa(int pComietTecnicoId)
+        {
+
+            List<SesionComentario> listaComentarios = new List<SesionComentario>();
+
+            listaComentarios = _context.SesionComentario
+                                .Where(sc => sc.ComiteTecnicoId == pComietTecnicoId &&
+                                             sc.EstadoActaVoto == null)
+                                .Include(r => r.MiembroSesionParticipante)
+                                .ToList();
+
+            return listaComentarios;
+        }
+
         public async Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comite_Tema_Voto, (int)EnumeratorTipoDominio.Acciones);
@@ -1055,7 +1069,7 @@ namespace asivamosffie.services
                   .Include(r => r.SesionComiteSolicitudComiteTecnico)
                      .ThenInclude(r => r.SesionSolicitudVoto)
                   .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                     .ThenInclude(r => r.SesionSolicitudCompromiso) 
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
                        .ThenInclude(r => r.ResponsableSesionParticipante)
                          .ThenInclude(r => r.Usuario)
                   .Include(r => r.SesionComiteTema)
@@ -2221,7 +2235,7 @@ namespace asivamosffie.services
             string PlantillaRegistrosUsosFuenteUsos = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaRegistrosUsosFuenteUsos).Select(r => r.Contenido).FirstOrDefault();
             string RegistrosRegistrosUsosFuenteUsos = string.Empty;
 
- 
+
             foreach (var ContratacionProyectoAportante in pContratacion.ContratacionProyecto.FirstOrDefault().ContratacionProyectoAportante)
             {
                 RegistrosFuentesUso += TipoPlantillaRegistrosFuentes;
@@ -2255,7 +2269,7 @@ namespace asivamosffie.services
                             RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, strNombreAportante);
                             break;
 
-                        case ConstanCodigoVariablesPlaceHolders.VALOR_APORTANTE_PROYECTO_FUENTES_USO: 
+                        case ConstanCodigoVariablesPlaceHolders.VALOR_APORTANTE_PROYECTO_FUENTES_USO:
                             string ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.CofinanciacionAportante.ProyectoAportante.FirstOrDefault().ValorObra);
                             if (pContratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                             {
@@ -2265,21 +2279,21 @@ namespace asivamosffie.services
                             break;
 
 
-                        case ConstanCodigoVariablesPlaceHolders.FASE_FUENTES_USO: 
+                        case ConstanCodigoVariablesPlaceHolders.FASE_FUENTES_USO:
                             string strFase = string.Empty;
-                            strFase = ListaParametricas.Where(r=> r.Codigo == ContratacionProyectoAportante.ComponenteAportante.FirstOrDefault().FaseCodigo && 
+                            strFase = ListaParametricas.Where(r => r.Codigo == ContratacionProyectoAportante.ComponenteAportante.FirstOrDefault().FaseCodigo &&
                             r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault().Nombre;
                             RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, strFase);
                             break;
 
-                        case ConstanCodigoVariablesPlaceHolders.COMPONENTE_FUENTES_USO: 
-                          
+                        case ConstanCodigoVariablesPlaceHolders.COMPONENTE_FUENTES_USO:
+
                             string strTipoComponente = ListaParametricas.Where(r => r.Codigo == ContratacionProyectoAportante.ComponenteAportante.FirstOrDefault().TipoComponenteCodigo &&
                             r.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).FirstOrDefault().Nombre;
-                            
+
                             RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, strTipoComponente);
                             break;
-                             
+
                         case ConstanCodigoVariablesPlaceHolders.USO_FUENTES_USO:
                             RegistrosRegistrosUsosFuenteUsos = string.Empty;
                             string strTipoUso = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Usos && r.Codigo == ContratacionProyectoAportante.ComponenteAportante.FirstOrDefault().ComponenteUso.FirstOrDefault().TipoUsoCodigo).FirstOrDefault().Nombre;
@@ -2291,20 +2305,20 @@ namespace asivamosffie.services
                             {
                                 string strTipoUso2 = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Usos && r.Codigo == ComponenteAportante.ComponenteUso.FirstOrDefault().TipoUsoCodigo).FirstOrDefault().Nombre;
 
-                                RegistrosRegistrosUsosFuenteUsos += PlantillaRegistrosUsosFuenteUsos; 
+                                RegistrosRegistrosUsosFuenteUsos += PlantillaRegistrosUsosFuenteUsos;
                                 RegistrosRegistrosUsosFuenteUsos = RegistrosRegistrosUsosFuenteUsos.Replace("[USO_FUENTES_USO]", strTipoUso2);
                                 RegistrosRegistrosUsosFuenteUsos = RegistrosRegistrosUsosFuenteUsos.Replace("[VALOR_USO_FUENTE_USO]", "$" + String.Format("{0:n0}", ComponenteAportante.ComponenteUso.FirstOrDefault().ValorUso.ToString()));
-                              }
+                            }
                             RegistrosRegistrosUsosFuenteUsos = RegistrosRegistrosUsosFuenteUsos.Replace(placeholderDominio.Nombre, "USO FUENTES USO");
                             break;
-                             
-                        case ConstanCodigoVariablesPlaceHolders.REGISTROS_USOS: 
+
+                        case ConstanCodigoVariablesPlaceHolders.REGISTROS_USOS:
                             RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, RegistrosRegistrosUsosFuenteUsos);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.ROWSPAN_CANTIDAD_USOS:
-                            RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, (ContratacionProyectoAportante.ComponenteAportante.Count()+1).ToString());
-                            break; 
+                            RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, (ContratacionProyectoAportante.ComponenteAportante.Count() + 1).ToString());
+                            break;
                     }
                 }
             }
