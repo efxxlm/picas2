@@ -64,7 +64,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Tipo_Solicitud = 29,
         Tipo_de_Solicitud = 29,
 		Estado_Comite = 38,
-		Estado_Cronograma_Seguimiento = 40,
+		//Estado_Cronograma_Seguimiento = 40,
         //Es para proyecto ?
         Estado_Solicitud = 31,
 
@@ -97,15 +97,15 @@ namespace asivamosffie.services.Helpers.Enumerator
 		EstadoAcataComiteTecnico = 47, 
         Estados_Acta = 47, 
         Estado_Sesion_Comite_Solicitud = 50, 
-        Estado_Proyecto = 63
-
-		EstadoAcataComiteTecnico = 47,
-
-        Estados_Acta = 47,
-
-        Estado_Sesion_Comite_Solicitud = 50,
-
         Estado_Proyecto = 63,
+
+		//EstadoAcataComiteTecnico = 47,
+
+     //   Estados_Acta = 47,
+
+       // Estado_Sesion_Comite_Solicitud = 50,
+
+        //Estado_Proyecto = 63,
         
         PlaceHolderDDP = 66,
 
