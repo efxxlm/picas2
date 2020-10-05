@@ -16,9 +16,10 @@ import { ProgramacionObraVerificarRequisitosComponent } from './components/progr
 import { InversionFljrecursosVerificarRequisitosComponent } from './components/inversion-fljrecursos-verificar-requisitos/inversion-fljrecursos-verificar-requisitos.component';
 import { VerdetalleObraVrtcComponent } from './components/verdetalle-obra-vrtc/verdetalle-obra-vrtc.component';
 import { VerdetalleInterventoriaVrtcComponent } from './components/verdetalle-interventoria-vrtc/verdetalle-interventoria-vrtc.component';
+import { FormInterventoriaVerificacionRequisitosComponent } from './components/form-interventoria-verificacion-requisitos/form-interventoria-verificacion-requisitos.component';
 
 @NgModule({
-  declarations: [VerificarRequisitosConstruccionComponent, TablaContratosObraVrtcComponent, TablaContratosInterventoriaVrtcComponent, FormVerificacionRequisitosComponent, DiagnosticoVerificarRequisitosComponent, PlanesProgramasVerificarRequisitosComponent, ManejoAnticipoVerificarRequisitosComponent, HojasVidaVerificarRequisitosComponent, ProgramacionObraVerificarRequisitosComponent, InversionFljrecursosVerificarRequisitosComponent, VerdetalleObraVrtcComponent, VerdetalleInterventoriaVrtcComponent],
+  declarations: [VerificarRequisitosConstruccionComponent, TablaContratosObraVrtcComponent, TablaContratosInterventoriaVrtcComponent, FormVerificacionRequisitosComponent, DiagnosticoVerificarRequisitosComponent, PlanesProgramasVerificarRequisitosComponent, ManejoAnticipoVerificarRequisitosComponent, HojasVidaVerificarRequisitosComponent, ProgramacionObraVerificarRequisitosComponent, InversionFljrecursosVerificarRequisitosComponent, VerdetalleObraVrtcComponent, VerdetalleInterventoriaVrtcComponent, FormInterventoriaVerificacionRequisitosComponent],
   imports: [
     CommonModule,
     MaterialModule,

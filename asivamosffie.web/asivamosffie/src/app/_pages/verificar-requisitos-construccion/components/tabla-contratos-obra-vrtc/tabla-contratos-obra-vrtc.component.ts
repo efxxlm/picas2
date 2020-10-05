@@ -75,6 +75,6 @@ export class TablaContratosObraVrtcComponent implements OnInit {
   };
 
   verDetalle ( id: number ) {
-    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verDetalles', id ] )
+    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verDetalleObra', id ] )
   }
 }
