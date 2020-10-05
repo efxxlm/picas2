@@ -16,8 +16,8 @@ export class FaseUnoPreconstruccionService {
     return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.url_api }/GetListContratacion` );
   };
 
-  getContratacionByContratoId ( pContratoId: number ) {
-    return this.http.get( `${ this.url_api }/GetContratacionByContratoId?pContratoId=${ pContratoId }` );
+  getContratacionByContratoId ( pContratoId: string ) {
+    return this.http.get( `${ this.url_api }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
   }
 
   createEditContratoPerfil ( pContrato: any ) {

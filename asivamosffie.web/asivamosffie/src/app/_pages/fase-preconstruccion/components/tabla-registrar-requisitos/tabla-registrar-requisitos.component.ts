@@ -14,36 +14,6 @@ export interface PeriodicElement {
   estado: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    id: 0,
-    fecha: '21/06/2020',
-    numContrato: 'C223456789',
-    proyAsociados: 2,
-    proyConRequisitosAprovados: 0,
-    proyConRequisitosPendientes: 2,
-    estado: 'Sin aprobación de requisitos técnicos'
-  },
-  {
-    id: 1,
-    fecha: '20/06/2020',
-    numContrato: 'A886675445',
-    proyAsociados: 1,
-    proyConRequisitosAprovados: 0,
-    proyConRequisitosPendientes: 1,
-    estado: 'Sin aprobación de requisitos técnicos'
-  },
-  {
-    id: 2,
-    fecha: '11/05/2020',
-    numContrato: 'C333344786',
-    proyAsociados: 1,
-    proyConRequisitosAprovados: 0,
-    proyConRequisitosPendientes: 1,
-    estado: 'Sin aprobación de requisitos técnicos'
-  },
-];
-
 @Component({
   selector: 'app-tabla-registrar-requisitos',
   templateUrl: './tabla-registrar-requisitos.component.html',
@@ -74,6 +44,7 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
   constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.faseUnoPreconstruccionSvc.getListContratacion()
       .subscribe( listas => {
+        console.log( listas );
         this.dataSource = new MatTableDataSource( listas );
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
