@@ -177,7 +177,8 @@
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
-          (click)="aprobarActa( acta.comiteTecnicoId )">
+          (click)="aprobarActa( acta.comiteTecnicoId )"
+          [disabled]="acta.estadoActaCodigo !=='2'">
           Aprobar acta
   </button>
   <button mat-raised-button 
@@ -188,12 +189,12 @@
           Comentar y devolver acta
   </button>
   <button mat-raised-button 
-  color="accent" 
-  class="tabs--btn"
-  (click)="comentarios = !comentarios"
-  *ngIf="acta.estadoActaCodigo ==='4'">
-  Comentarios del acta
-</button>
+          color="accent" 
+          class="tabs--btn"
+          (click)="comentarios = !comentarios"
+          *ngIf="acta.estadoActaCodigo ==='4'">
+          Comentarios del acta
+  </button>
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
