@@ -54,6 +54,7 @@
 
         Titulo_solicitudes_contractuales =	43,
         Titulo_temas_nuevos	= 44,
-        Titulo_proposicione_varios	= 45
+        Titulo_proposicione_varios	= 45,
+        Descargar_Acta_Comite_Fiduciario = 35,
     }
 }
