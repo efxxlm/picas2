@@ -36,8 +36,8 @@ export class InvitacionCerradaComponent implements OnInit {
   descripcion_class: number=0;
   estudio_class: number=0;
   datos_class: number=0;
-  evaluacion_class:number=0;
-  proponentes_class:number=0;
+  evaluacion_class:number=3;//asumo que en creación no tiene el estado necesario
+  proponentes_class:number=3;//asumo que en creación no tiene el estado necesario
 
   constructor(
                 private procesoSeleccionService: ProcesoSeleccionService,

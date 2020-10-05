@@ -187,8 +187,12 @@ export class SeccionPrivadaComponent implements OnInit {
 
   estaIncompletoDatos(pProceso:any):number{
     let retorno=0;
-    
-    switch (pProceso.tipoProponenteCodigo)
+
+
+    if(pProceso)
+    {
+
+      switch (pProceso.tipoProponenteCodigo)
     {
       case "1": {
         if(
@@ -280,7 +284,9 @@ export class SeccionPrivadaComponent implements OnInit {
             break;
           }
         
+      }
     }
+    
 
     return retorno;
   }

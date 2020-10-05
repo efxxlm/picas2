@@ -39,7 +39,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante);
         Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento);
          Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
-         Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico);
+         Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument,int procesoSeleccionId, string pUsuarioModifico);
          Task<Respuesta> DeleteProcesoSeleccion( int pId, string pUsuarioModificacion );
          Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado, string mailServer, int mailPort, bool enableSSL, string password, string sender);
          Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes();

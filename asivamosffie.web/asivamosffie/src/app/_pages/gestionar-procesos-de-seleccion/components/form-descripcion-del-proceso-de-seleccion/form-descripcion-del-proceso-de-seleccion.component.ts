@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin, timer } from 'rxjs';
-import { ProcesoSeleccion, ProcesoSeleccionGrupo, ProcesoSeleccionCronograma, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionGrupo, ProcesoSeleccionCronograma, ProcesoSeleccionService, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { delay } from 'rxjs/operators';
 import { promise } from 'protractor';
 import { resolve } from 'dns';
@@ -27,6 +27,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   listatipoPresupuesto: Dominio[];
   listaResponsables: Usuario[];
   addressForm = this.fb.group({});
+  tiposProceso=TiposProcesoSeleccion;
 
   editorStyle = {
     height: '100px',
@@ -43,6 +44,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   };
   listaLimite: Dominio[]=[];
   listaSalarioMinimo: Dominio[]=[];
+  
 
   constructor(
               private fb: FormBuilder,
@@ -131,11 +133,15 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   CambioNumeroMeses(i:number)
   {
     console.log(this.addressForm.controls.grupos.value[i]);
-    if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
+    if(this.addressForm.controls.grupos.value[i].plazoMeses!="")
     {
-      this.openDialog("","<b>La cantidad de meses no puede ser 0.</b>");
-      return;
+      if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
+      {
+        this.openDialog("","<b>La cantidad de meses no puede ser 0.</b>");
+        return;
+      }
     }
+    
   }
 
   CambioNumeroAportantes() {
@@ -226,6 +232,10 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       ],
       responsableEquipoTecnico: [],
       responsableEquipoestructurado: [],
+      condicionesFinancieras: [null, Validators.required],
+      condicionesTecnicas: [null, Validators.required],
+      condicionesJuridicas: [null, Validators.required],
+      condicionesAsignacion: [null, Validators.required],
       grupos: this.fb.array([
         this.fb.group({
           procesoSeleccionGrupoId: [],
@@ -282,6 +292,11 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.procesoSeleccion.cantGrupos = this.addressForm.get('cuantosGrupos').value ? this.addressForm.get('cuantosGrupos').value : null,
       this.procesoSeleccion.procesoSeleccionGrupo = [],
       this.procesoSeleccion.procesoSeleccionCronograma = [];
+      //para invitacion abierta
+      this.procesoSeleccion.condicionesAsignacionPuntaje=this.addressForm.get('condicionesAsignacion').value?this.addressForm.get('condicionesAsignacion').value:null;
+      this.procesoSeleccion.condicionesFinancierasHabilitantes=this.addressForm.get('condicionesFinancieras').value?this.addressForm.get('condicionesFinancieras').value:null;
+      this.procesoSeleccion.condicionesJuridicasHabilitantes=this.addressForm.get('condicionesJuridicas').value?this.addressForm.get('condicionesJuridicas').value:null;
+      this.procesoSeleccion.condicionesTecnicasHabilitantes=this.addressForm.get('condicionesTecnicas').value?this.addressForm.get('condicionesTecnicas').value:null;
 
     this.procesoSeleccion.procesoSeleccionGrupo = [];
 
@@ -340,9 +355,12 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.addressForm.get('criterios').setValue(this.procesoSeleccion.criteriosSeleccion);
       this.addressForm.get('tipoIntervencion').setValue(tipoIntervencion);
       this.addressForm.get('tipoAlcance').setValue(tipoAlcance);
-      this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos ? this.procesoSeleccion.esDistribucionGrupos.toString() : null);
+      this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos?"true":"false");
       this.addressForm.get('cuantosGrupos').setValue(this.procesoSeleccion.cantGrupos);
-
+      this.addressForm.get('condicionesJuridicas').setValue(this.procesoSeleccion.condicionesJuridicasHabilitantes);
+      this.addressForm.get('condicionesFinancieras').setValue(this.procesoSeleccion.condicionesFinancierasHabilitantes);
+      this.addressForm.get('condicionesTecnicas').setValue(this.procesoSeleccion.condicionesTecnicasHabilitantes);
+      this.addressForm.get('condicionesAsignacion').setValue(this.procesoSeleccion.condicionesAsignacionPuntaje);      
       this.addressForm.get('responsableEquipoTecnico').setValue(responsableEquipoTecnico);
       this.addressForm.get('responsableEquipoestructurado').setValue(responsableEquipoestructurado);
 

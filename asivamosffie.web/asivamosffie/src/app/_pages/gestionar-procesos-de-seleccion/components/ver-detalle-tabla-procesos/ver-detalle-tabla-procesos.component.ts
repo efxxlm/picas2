@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ProcesoSeleccion, ProcesoSeleccionService, EstadosProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionService, EstadosProcesoSeleccion, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { pid } from 'process';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
@@ -13,10 +13,13 @@ import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.se
   styleUrls: ['./ver-detalle-tabla-procesos.component.scss']
 })
 
+
+
 export class VerDetalleTablaProcesosComponent {
 
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
-
+  tiposProcesoSeleccion = TiposProcesoSeleccion; 
+  
   constructor(
               public dialogRef: MatDialogRef<VerDetalleTablaProcesosComponent>,
               @Inject(MAT_DIALOG_DATA) public data: ProcesoSeleccion,
@@ -29,7 +32,7 @@ export class VerDetalleTablaProcesosComponent {
   }
 
   onEditar(){
-console.log(this.data.tipoProcesoCodigo)
+    
     switch (this.data.tipoProcesoCodigo)
     {
       case "1": { this.router.navigate(['/seleccion/seccionPrivada', this.data.procesoSeleccionId ]); } break;
@@ -87,6 +90,22 @@ console.log(this.data.tipoProcesoCodigo)
     let proceso: ProcesoSeleccion = {
       procesoSeleccionId: pId,
       estadoProcesoSeleccionCodigo: this.estadosProcesoSeleccion.AperturaEntramite
+    }
+
+     this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
+       this.openDialog("", respuesta.message);
+       if ( respuesta.code == "200" ){
+          this.dialogRef.close();
+          this.router.navigate(['/seleccion']);
+          location.reload();
+       }
+    })
+  }
+
+  onAperturaEvaluacion(pId:number){
+    let proceso: ProcesoSeleccion = {
+      procesoSeleccionId: pId,
+      estadoProcesoSeleccionCodigo: this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite
     }
 
      this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {

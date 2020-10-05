@@ -998,7 +998,7 @@ namespace asivamosffie.services
                     //Controlar Registros
                     //Filas <=
                     //No comienza desde 0 por lo tanto el = no es necesario
-                    for (int i = 2; i < worksheet.Dimension.Rows; i++)
+                    for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                     {
                         try
                         {
@@ -1045,7 +1045,7 @@ namespace asivamosffie.services
                                 temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
                                 temp.EstaValidado = false;
                                 temp.FechaCreacion = DateTime.Now;
-                                temp.UsuarioCreacion = pUsuarioCreo;
+                                temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
 
                                 // #1
                                 //Tipo proponente
@@ -1061,7 +1061,7 @@ namespace asivamosffie.services
                                 //Nombre proponente
                                 if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
                                 {
-                                    temp.NombreProponente = worksheet.Cells[i, 2].Text;
+                                    temp.NombreProponente = worksheet.Cells[i, 2].Text.ToUpper();
                                 }
 
                                 //#3
@@ -1088,7 +1088,7 @@ namespace asivamosffie.services
 
                                 //#6
                                 //Direccion del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 6].Text)) { temp.Direccion = Convert.ToString(worksheet.Cells[i, 6].Text); } else { temp.Direccion = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 6].Text)) { temp.Direccion = Convert.ToString(worksheet.Cells[i, 6].Text).ToUpper(); } else { temp.Direccion = string.Empty; }
 
                                 //#7
                                 //Telefono del proponente
@@ -1096,7 +1096,7 @@ namespace asivamosffie.services
 
                                 //#8
                                 //Correo del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) { temp.Correo = Convert.ToString(worksheet.Cells[i, 8].Text); } else { temp.Correo = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) { temp.Correo = Convert.ToString(worksheet.Cells[i, 8].Text).ToUpper(); } else { temp.Correo = string.Empty; }
 
                                 //#9
                                 //Correo del proponente
@@ -1113,7 +1113,7 @@ namespace asivamosffie.services
                                 //Correo del proponente
                                 if (!string.IsNullOrEmpty(worksheet.Cells[i, 11].Text))
                                 {
-                                    temp.RepresentanteLegal = Convert.ToString(worksheet.Cells[i, 11].Text) != string.Empty ? Convert.ToString(worksheet.Cells[i, 11].Text) : "";
+                                    temp.RepresentanteLegal = Convert.ToString(worksheet.Cells[i, 11].Text) != string.Empty ? Convert.ToString(worksheet.Cells[i, 11].Text).ToUpper() : "";
                                 }
                                 else
                                 {
@@ -1139,25 +1139,13 @@ namespace asivamosffie.services
                                 //Municipio representante legal
                                 if (!string.IsNullOrEmpty(worksheet.Cells[i, 14].Text))
                                 {
-                                    int DepartamentoIdRL = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 12].Text, "0");
-                                    temp.MunucipioRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, DepartamentoIdRL.ToString());//temp.Departamento.ToString()
+                                    int DepartamentoIdRL = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
+                                    temp.MunucipioRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 14].Text, DepartamentoIdRL.ToString());//temp.Departamento.ToString()
                                 }
-
-
-                                //#14
-                                //Legal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 13].Text))
-                                {
-                                    temp.Legal = Convert.ToString(await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0"));
-                                }
-                                else
-                                {
-                                    temp.Legal = string.Empty;
-                                }
-
+                                
                                 //#15
                                 //Direccion Representante Legal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 15].Text)) { temp.DireccionRl = worksheet.Cells[i, 15].Text; } else { temp.DireccionRl = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 15].Text)) { temp.DireccionRl = worksheet.Cells[i, 15].Text.ToUpper(); } else { temp.DireccionRl = string.Empty; }
 
                                 //#16
                                 //Telefono Representante Legal
@@ -1165,11 +1153,11 @@ namespace asivamosffie.services
 
                                 //#17
                                 //Correo Representante Legal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)) { temp.CorreoRl = worksheet.Cells[i, 17].Text; } else { temp.CorreoRl = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)) { temp.CorreoRl = worksheet.Cells[i, 17].Text.ToUpper(); } else { temp.CorreoRl = string.Empty; }
 
                                 //#18
                                 //Nombre del representante legal del la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 18].Text)) { temp.NombreOtoConsorcio = worksheet.Cells[i, 18].Text; } else { temp.NombreOtoConsorcio = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 18].Text)) { temp.NombreOtoConsorcio = worksheet.Cells[i, 18].Text.ToUpper(); } else { temp.NombreOtoConsorcio = string.Empty; }
 
                                 //#19
                                 //Entiddaes que integran la union temporal
@@ -1181,7 +1169,7 @@ namespace asivamosffie.services
 
                                 //#20
                                 //Nombre integrante
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 20].Text)) { temp.NombreIntegrante = worksheet.Cells[i, 20].Text; } else { temp.NombreIntegrante = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 20].Text)) { temp.NombreIntegrante = worksheet.Cells[i, 20].Text.ToUpper(); } else { temp.NombreIntegrante = string.Empty; }
 
 
                                 //#21
@@ -1194,7 +1182,7 @@ namespace asivamosffie.services
 
                                 //#22
                                 //Nombre  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 22].Text; } else { temp.NombreRlutoConsorcio = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 22].Text.ToUpper(); } else { temp.NombreRlutoConsorcio = string.Empty; }
 
                                 //#23
                                 //Cedula  del representante legal de la UT o consorcio
@@ -1218,7 +1206,7 @@ namespace asivamosffie.services
 
                                 //#26
                                 //Direccion  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 26].Text; } else { temp.DireccionRlutoConsorcio = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 26].Text.ToUpper(); } else { temp.DireccionRlutoConsorcio = string.Empty; }
 
                                 //#27
                                 //Telefono  del representante legal de la UT o consorcio
@@ -1226,7 +1214,7 @@ namespace asivamosffie.services
 
                                 //#28
                                 //Correo  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text; } else { temp.CorreoRlutoConsorcio = string.Empty; }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
 
 
                                 //Guarda Cambios en una tabla temporal
@@ -1315,7 +1303,32 @@ namespace asivamosffie.services
 
         public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
         {
-            if (
+            //depende del tipo
+            if(procesoSeleccion.TipoProcesoCodigo==ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
+            {
+                if (
+                 !string.IsNullOrEmpty(procesoSeleccion.Objeto)
+                 && !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
+                 && !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
+                 && !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
+                 && !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
+                 && !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes))
+                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes))
+
+                )
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                if (
                  !string.IsNullOrEmpty(procesoSeleccion.Objeto)
                  && !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
                  && !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
@@ -1334,18 +1347,20 @@ namespace asivamosffie.services
                  //|| !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadProponentes))
                  && !string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo)
                  && !string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
-                 //|| !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
-                 //|| !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
-                 //|| !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
+                //|| !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
+                //|| !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
+                //|| !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
 
                 )
-                 return true;
-            else
-                return false;
+                    return true;
+                else
+                    return false;
+            }
+            
         }
 
 
-        public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico)
+        public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument,int procesoSeleccionId, string pUsuarioModifico)
         {
             Respuesta respuesta = new Respuesta();
 
@@ -1381,7 +1396,7 @@ namespace asivamosffie.services
                         {
 
                             //procesoSeleccionProponente Registros 
-                            ProcesoSeleccionId = 50,
+                            ProcesoSeleccionId = procesoSeleccionId,
                             TipoProponenteCodigo = tempOrdenLegibilidad.TipoProponenteId.ToString(),
                             NombreProponente = tempOrdenLegibilidad.NombreProponente,
                             //TipoIdentificacionCodigo = tempOrdenLegibilidad.id ?

@@ -323,6 +323,64 @@
               </div>
             </div>
           </div>
+          <div *ngIf="addressForm.get('responsableEquipoestructurado')!=null &&
+          addressForm.get('responsableEquipoestructurado')!=null && 
+          procesoSeleccion.tipoProcesoCodigo==tiposProceso.Abierta"><br>
+            <div class="d-flex align-items-center">
+              <div class="text-area-quill">
+                <label for="condicionesJuridicas" class="text-area-quill--label">Condiciones jurídicas habilitantes</label>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesJuridicas" required></quill-editor>
+              </div>
+              <span class="contador miles" *ngIf="addressForm.get('condicionesJuridicas').value">
+                {{3000 - (textoLimpio(addressForm.get('condicionesJuridicas').value)>3000?3000:textoLimpio(addressForm.get('condicionesJuridicas').value))}}
+              </span>
+              <span class="contador miles" *ngIf="!addressForm.get('condicionesJuridicas').value">
+                3000
+              </span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="text-area-quill">
+                <label for="condicionesFinancieras" class="text-area-quill--label">Condiciones financieras habilitantes</label>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesFinancieras" required></quill-editor>
+              </div>
+              <span class="contador miles" *ngIf="addressForm.get('condicionesFinancieras').value">
+                {{3000 - (textoLimpio(addressForm.get('condicionesFinancieras').value)>3000?3000:textoLimpio(addressForm.get('condicionesFinancieras').value))}}
+              </span>
+              <span class="contador miles" *ngIf="!addressForm.get('condicionesFinancieras').value">
+                3000
+              </span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="text-area-quill">
+                <label for="condicionesTecnicas" class="text-area-quill--label">Condiciones técnicas habilitantes</label>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesTecnicas" required></quill-editor>
+              </div>
+              <span class="contador miles" *ngIf="addressForm.get('condicionesTecnicas').value">
+                {{3000 - (textoLimpio(addressForm.get('condicionesTecnicas').value)>3000?3000:textoLimpio(addressForm.get('condicionesTecnicas').value))}}
+              </span>
+              <span class="contador miles" *ngIf="!addressForm.get('condicionesTecnicas').value">
+                3000
+              </span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="text-area-quill">
+                <label for="condicionesAsignacion" class="text-area-quill--label">Condiciones de asignación de puntaje</label>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesAsignacion" required></quill-editor>
+              </div>
+              <span class="contador miles" *ngIf="addressForm.get('condicionesAsignacion').value">
+                {{3000 - (textoLimpio(addressForm.get('condicionesAsignacion').value)>3000?3000:textoLimpio(addressForm.get('condicionesAsignacion').value))}}
+              </span>
+              <span class="contador miles" *ngIf="!addressForm.get('condicionesAsignacion').value">
+                3000
+              </span>
+            </div>
+          </div>
+
+
         </div>
       </div>
 

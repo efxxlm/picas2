@@ -441,13 +441,13 @@ namespace asivamosffie.api.Controllers
 
         [Route("UploadMassiveLoadElegibilidad")]
         [HttpPost]
-        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
+        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument, int procesoSeleccionId)
         {
             try
             {
                 Respuesta respuesta = new Respuesta();
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _selectionProcessService.UploadMassiveLoadElegibilidad(pIdDocument, pUsuarioModifico);
+                respuesta = await _selectionProcessService.UploadMassiveLoadElegibilidad(pIdDocument, procesoSeleccionId, pUsuarioModifico);
 
                 return Ok(respuesta);
             }
