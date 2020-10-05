@@ -503,9 +503,52 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
             return _converter.Convert(pdf);
         }
 
-        private string ReemplazarDatosDDP(string contenido, DisponibilidadPresupuestal disponibilidad)
+        private string ReemplazarDatosDDP(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad)
         {
-            return contenido;
+            List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolderDDP).ToList();
+            foreach(var place in placeholders)
+            {
+                switch (place.Codigo)
+                {
+                    case ConstanCodigoVariablesPlaceHolders.DDP_FECHA:
+                        pStrContenido = pStrContenido
+                            .Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY"));
+                    break;                                        
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_SOLICITUD: 
+                        pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NO: pStrContenido = 
+                            pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroDdp); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_RUBRO_POR_FINANCIAR: 
+                        pStrContenido = pStrContenido.Replace(place.Nombre, _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
+                                && r.Codigo == pDisponibilidad.TipoSolicitudCodigo).FirstOrDefault().Descripcion); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TIPO_SOLICITUD: pStrContenido = 
+                            pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudCodigo != null ? _context.Dominio.Where(r=>r.Codigo==pDisponibilidad.TipoSolicitudCodigo && r.TipoDominioId==(int)EnumeratorTipoDominio.Tipo_de_Solicitud).FirstOrDefault().Nombre : ""); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_OPCION_CONTRATAR: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_FECHA_COMITE_TECNICO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_COMITE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TABLAAPORTANTES: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOS: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOSLETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TABLA_PROYECTOS: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_LIMITACION_ESPECIAL: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NOMBRE_APORTANTE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_FUENTE_APORTANTE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_NUMERO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_LETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                                        
+                    case ConstanCodigoVariablesPlaceHolders.DDP_LLAVE_MEN: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_INSTITUCION_EDUCATIVA: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_SEDE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_SALDO_ACTUAL_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_SOLICITADO_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NUEVO_SALDO_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("d/m/YY")); break;
+
+
+                }
+            }
+            return pStrContenido;
         }
 
         /*autor: jflorez

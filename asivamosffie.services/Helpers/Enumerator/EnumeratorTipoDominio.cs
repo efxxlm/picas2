@@ -92,6 +92,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Sesion_Comite_Solicitud = 50,
 
-        Estado_Proyecto = 63
+        Estado_Proyecto = 63,
+        
+        PlaceHolderDDP = 66,
     }
 }

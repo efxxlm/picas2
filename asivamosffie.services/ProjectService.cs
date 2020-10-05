@@ -480,6 +480,8 @@ namespace asivamosffie.services
                         TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString()
                     };
                     //si el tipo de intervancion es nuevo el estado juridico es sin revision 
+                    //jflorez20201004 todos van en aprovado segun iaranda
+                    /*
                     if (proyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))
                     {
                         proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Sin_Revision;
@@ -487,7 +489,8 @@ namespace asivamosffie.services
                     else
                     {
                         proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
-                    }
+                    }*/
+                    proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                     proyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Completo;
                     proyecto.RegistroCompleto = ValidarRegistroCREAR(pProyecto, predioPrincipal);
                     _context.Proyecto.Add(proyecto);

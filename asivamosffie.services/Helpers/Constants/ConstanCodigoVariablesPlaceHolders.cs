@@ -152,6 +152,43 @@
         #endregion
 
 
+        #region DDP
+
+        public const string DDP_FECHA = "1";
+        //Ya exsite numero Solicitu
+        //public const string NUMERO_SOLICITUD="77";
+        public const string DDP_NUMERO_SOLICITUD = "2";
+        public const string DDP_NO="3";
+        public const string DDP_RUBRO_POR_FINANCIAR = "4";
+        public const string DDP_TIPO_SOLICITUD = "5";
+        public const string DDP_OPCION_CONTRATAR = "6";
+        public const string DDP_FECHA_COMITE_TECNICO = "7";
+        public const string DDP_NUMERO_COMITE = "8";
+        public const string DDP_OBJETO = "9";
+        public const string DDP_TABLAAPORTANTES = "10";        
+        public const string DDP_NOMBRE_APORTANTE = "11";
+        public const string DDP_FUENTE_APORTANTE = "12";
+        public const string DDP_VALOR_NUMERO = "13";
+        public const string DDP_VALOR_LETRAS = "14";
+        public const string DDP_TOTAL_DE_RECURSOS = "15";
+        public const string DDP_TOTAL_DE_RECURSOSLETRAS = "16";
+        public const string DDP_TABLA_PROYECTOS = "17";
+        public const string DDP_LLAVE_MEN = "18";
+        public const string DDP_INSTITUCION_EDUCATIVA = "19";
+        public const string DDP_SEDE = "20";
+        //public const string DDP_NOMBRE_APORTANTE = "98";
+        public const string DDP_FUENTE = "21";
+        public const string DDP_SALDO_ACTUAL_FUENTE = "22";
+        public const string DDP_VALOR_SOLICITADO_FUENTE = "23";
+        public const string DDP_NUEVO_SALDO_FUENTE = "24";
+        public const string DDP_LIMITACION_ESPECIAL = "25";
+        
+
+        #endregion
+
+
+
+
         #region Acta
         public const string NUMERO_COMITE = "120";
         public const string FECHA_COMITE = "121";
