@@ -10,7 +10,7 @@
 <div align="left">
     <p><b>Url con soporte</b>: https://drive.google.com/drive/ManejodeAnticipo123</p>
 </div>
-<div align="center">
+<div align="center" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row" align="center">
             <div class="col-md-8">
@@ -55,4 +55,17 @@
             </button>
         </div>
     </form>
+</div>
+<div align="center" *ngIf="this.observacionesCompleted==true" style="margin-top: 30px;">
+    <p><b>¿Tiene observaciones al manejo del anticipo?:</b> Sí</p>
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+               Observaciones
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000</p>
+        </mat-card-content>
+    </mat-card>
 </div>

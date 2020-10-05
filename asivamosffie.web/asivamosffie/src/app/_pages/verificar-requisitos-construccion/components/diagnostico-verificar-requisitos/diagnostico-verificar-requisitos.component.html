@@ -32,14 +32,13 @@
         </mat-card-content>
     </mat-card>
 </div>
-<div align="center">
+<div align="center" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row" align="center">
             <div class="col-md-8">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left" for="tieneObservaciones">¿Este tema del orden del día generó
-                            compromisos?</label>
+                        <label class="label-left" for="tieneObservaciones">¿Tiene observaciones al diagnóstico?</label>
                     </div>
                     <div class="col">
                         <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
@@ -78,4 +77,17 @@
             </button>
         </div>
     </form>
+</div>
+<div align="center" *ngIf="this.observacionesCompleted==true">
+    <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+               Observaciones
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000</p>
+        </mat-card-content>
+    </mat-card>
 </div>
