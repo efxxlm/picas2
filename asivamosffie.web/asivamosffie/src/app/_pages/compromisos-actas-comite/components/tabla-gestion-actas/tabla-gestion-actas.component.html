@@ -1,0 +1,69 @@
+<div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)">
+  </mat-form-field>
+  <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+    <img src="assets/img/icon/lupa.svg" alt="Buscar">
+  </button>
+</div>
+
+<div class="margin-70">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+    <ng-container matColumnDef="fechaCreacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroComite">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de comité </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroComite }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estadoComiteCodigo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del acta </th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <span *ngIf="element.estadoActaCodigo === '2'">Revisar acta</span>
+        <span *ngIf="element.estadoActaCodigo === '4'">Devuelta</span>
+        <span *ngIf="element.estadoActaCodigo === '3'">Aprobada</span>
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="gestion">
+      <th class="w-20" mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+      <td mat-cell *matCellDef="let element">
+  
+        <button mat-raised-button 
+                color="accent" 
+                class="btn-table"
+                *ngIf="element.estadoActaCodigo === '2'"
+                (click)="revisarActa( element )">
+                Revisar acta
+        </button>
+
+        <button mat-raised-button 
+                color="accent"
+                *ngIf="element.estadoActaCodigo === '4'"
+                class="btn-table"
+                (click)="revisarActa( element )">
+                Ver detalle
+        </button>
+  
+        <button mat-raised-button 
+                color="accent"
+                class="btn-table"
+                *ngIf="element.estadoActaCodigo === '3'"
+                (click)="getActaPdf( element.comiteTecnicoId, element.numeroComite )">
+                Descargar acta aprobada
+        </button>
+  
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

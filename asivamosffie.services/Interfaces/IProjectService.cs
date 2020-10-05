@@ -1,3 +1,4 @@
+﻿ 
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IProjectService
     {
+       Task<ProyectoGrilla> GetProyectoGrillaByProyectoId(int idProyecto);
+
+        Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto);
+
         Task<Respuesta> CreateOrEditAdministrativeProject(ProyectoAdministrativo pProyectoAdministrativo);
 
         Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto);
@@ -19,14 +24,14 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument, string pUsuarioModifico);
 
         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
-         
+
         Task<Proyecto> GetProyectoByProyectoId(int idProyecto);
 
-        Task<bool> DeleteProyectoByProyectoId(int pProyectoId);    
-        
+        Task<bool> DeleteProyectoByProyectoId(int pProyectoId);
+
         Task<List<ProyectoGrilla>> ListProyectos();
 
-        Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId,string usuario);
+        Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId, string usuario);
 
         Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string usuario);
 

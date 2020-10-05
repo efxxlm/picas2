@@ -62,7 +62,7 @@ namespace asivamosffie.services.Helpers.Constant
     public class ConstantMessagesContrasena
     {
         #region Mensajes Informativos
-
+       
         //cambio de contraseña
         public const string ErrorContrasenaAntigua = "101";
         public const string ErrorSesion = "102";
@@ -88,13 +88,15 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CreadoCorrrectamente = "103";
         public const string RecursoNoEncontrado = "104";
 
-
+        
 
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
+        public const string EliminacionCancelada = "202";
 
         #endregion Mensajes Exitoso
 
@@ -103,7 +105,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string DirecCambioContrasena = "301";
 
         #endregion Mensajes Redireccion
-
+        
     }
 
     public class ConstantMessagesContributor
@@ -200,6 +202,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminadoExitosamente = "201";
 
         #endregion Mensajes Exitoso
 
@@ -235,165 +238,19 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
-    public class ConstantMessagesProcesoSeleccion
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
-
-    public class ConstantMessagesProcessSchedule
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
-
-    public class ConstantMessagesProcessQuotation
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
-
-    public class ConstantMessagesSelectionProcessGroup
-    {
-        #region Mensajes Error
-
-
-        public const string ErrorInterno = "501";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Informativos
-
-
-        public const string CamposIncompletos = "101";
-        public const string EditadoCorrrectamente = "102";
-        public const string CreadoCorrrectamente = "103";
-        public const string RecursoNoEncontrado = "104";
-
-
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        public const string DirecCambioContrasena = "301";
-
-        #endregion Mensajes Redireccion
-
-    }
 
     public class ConstantMessagesFuentesFinanciacion
     {
 
         #region Mensajes Informativos
-
+        
 
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
 
@@ -491,6 +348,315 @@ namespace asivamosffie.services.Helpers.Constant
         #region 
         public const string Error = "500";
         #endregion
+    }
+
+    public class ConstantMessagesDisponibilidadPresupuesta
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+    public class ConstantSesionComiteTecnico
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantSesionComiteFiduciario
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesContratacionProyecto
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+    public class ConstantMessagesGenerateBudget
+    {
+
+        #region Mensajes Informativos
+        public const string CanceladoCorrrectamente = "201";
+        public const string DevueltoCorrrectamente = "202";
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantGestionarProcesosContractuales
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesProcessSchedule
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+    }
+
+    public class ConstantMessagesProcessQuotation
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+    }
+
+    public class ConstantMessagesProcesoSeleccion
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
+    }
+
+    public class ConstantMessagesSesionComiteTema
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+    
+    
+    
+    public class ConstantMessagesSelectionProcessGroup
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        public const string DirecCambioContrasena = "301";
+
+        #endregion Mensajes Redireccion
+
     }
 
     public class ConstantMessagesContratoPoliza

@@ -71,16 +71,16 @@ console.log(this.data.tipoProcesoCodigo)
   onCerrarProceso( pId: number ){
     let proceso: ProcesoSeleccion = {
       procesoSeleccionId: pId,
-      //estadoProcesoSeleccionCodigo: this.estadosProcesoSeleccion.Creado
+      estadoProcesoSeleccionCodigo: this.estadosProcesoSeleccion.Cerrado
     }
 
-    this.openDialog("Proceso Seleccion", "falta integrar, falta el estado 'cerrado'.");
-
-    // this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
-    //   this.openDialog("Proceso Seleccion", respuesta.message);
-    //   if ( respuesta.code == "200" )
-    //      this.dialogRef.close();
-    // })
+     this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
+       this.openDialog("Proceso Seleccion", respuesta.message);
+       if ( respuesta.code == "200" ){
+          this.dialogRef.close();
+          this.router.navigate(['/seleccion']);
+       }
+    })
   }
 
   openDialog(modalTitle: string, modalText: string) {

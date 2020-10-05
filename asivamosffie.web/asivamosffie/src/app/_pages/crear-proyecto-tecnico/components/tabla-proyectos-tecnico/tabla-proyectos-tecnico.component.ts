@@ -18,7 +18,8 @@ export interface RegistrosCargados {
     institucion:string,
     sede:string,
     estado:string,
-    estadoj:string    ,
+    estadoj:string,
+    estadop:string,
     gestion:string
 }
 
@@ -28,19 +29,10 @@ export interface RegistrosCargados {
   styleUrls: ['./tabla-proyectos-tecnico.component.scss']
 })
 export class TablaProyectosTecnicoComponent {
-  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','gestion'];
-  
+  //no se va a usar estado juridico
+  //displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
 
-  columnas = [
-    { titulo: 'Fecha',name: 'fecha' },
-    { titulo: 'Departamento',name: 'departamento' },
-    { titulo: 'Municipio',name: 'municipio' },
-    { titulo: 'Institución Educativa',name: 'institucion' },
-    { titulo: 'Sede',name: 'sede' },
-    { titulo: 'Estado del registro',name: 'estado' },
-    { titulo: 'Estado jurídico de los predios',name: 'estadoj' },
-  ];
-
+  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadop','gestion'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataSource= new MatTableDataSource();
@@ -109,7 +101,7 @@ export class TablaProyectosTecnicoComponent {
       respuesta.forEach(element => {
         datos.push({fecha:element.fecha
           ,id:element.proyectoId,departamento:element.departamento,municipio:element.municipio,
-          estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,
+          estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,estadop:element.estadoProyecto,
           institucion:element.institucionEducativa,sede:element.sede,gestion:element.proyectoId});
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);

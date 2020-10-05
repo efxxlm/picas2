@@ -9,15 +9,28 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<string> EnumeradorComiteTecnico();
+
+        Task<string> EnumeradorComiteFiduciario();
+
+        Task<string> EnumeradorContratacion();
+
+
+        Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
+  
+        string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId);
+        string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio);
+        string GetNombreRegionByIdMunicipio(string pIdDepartamento);
+
         Task<List<MenuPerfil>> GetMenuByRol(int pUserId);
         Task<List<Perfil>> GetProfile();
 
-        Task <Template> GetTemplateByTipo(string pTipo);
+        Task<Template> GetTemplateByTipo(string pTipo);
 
         Task<Template> GetTemplateById(int pId);
 
-        Task <List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio);
-         
+        Task<List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio);
+
         Task<string> GetMensajesValidacionesByModuloAndCodigo(int pMenuId, string pCodigo, int pAccionId, string pUsuario, string pObservaciones);
 
         Task<int> GetDominioIdByCodigoAndTipoDominio(string pCodigo, int pTipoDominioId);
@@ -67,6 +80,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio);
 
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
-        Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil );
+        Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
     }
 }

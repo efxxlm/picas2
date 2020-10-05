@@ -40,6 +40,7 @@ const routes: Routes = [
         path: 'cambiarContrasena',
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
       },
+      //verificar ruta duplicada
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
@@ -75,7 +76,8 @@ const routes: Routes = [
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
-        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
+          .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
         path: 'gestionarFuentes',
@@ -85,6 +87,20 @@ const routes: Routes = [
       {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
+      },
+      {
+        path: 'solicitarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
+          .then(m => m.SolicitarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'validarDisponibilidadPresupuesto',
+        loadChildren: () => import('./_pages/validar-disponibilidad-presupuesto/validar-disponibilidad-presupuesto.module')
+        .then(m => m.ValidarDisponibilidadPresupuestoModule)
+      },
+      {
+        path: 'comiteTecnico',
+        loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
       },
       {
         path: 'seleccion',
@@ -101,8 +117,8 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/inicio',
-    // loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    // redirectTo: '/inicio',
+    loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 @NgModule({

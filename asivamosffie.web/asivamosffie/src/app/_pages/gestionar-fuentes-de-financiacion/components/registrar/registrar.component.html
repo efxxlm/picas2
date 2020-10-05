@@ -15,27 +15,42 @@
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
-      <mat-card-header class="header-card">
+      <mat-card-header class="header-card mlmenor">
         <mat-card-title class="header-card--text">
           Datos del aportante
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="row">
+        <div class="row"  *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
           <div class="pr-1">
             <label class="label-left">Nombre del aportante</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportante()" required>
-                <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
-                  {{ nombreAportantes.nombreAportante }}
+              <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportanteTercero()" required>
+                <mat-option *ngFor="let nombreAportantes of solonombres" [value]="nombreAportantes">
+                  {{ nombreAportantes }} 
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
-        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+        <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label class="label-left">Acuerdos de cofinanciación</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="nombreAportanteFFIE" (selectionChange)="changeNombreAportanteFFIE()" required>
+                <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} Creado el: {{ nombreAportantes.fechaCreacion | date:'dd/MM/yyyy' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <!--pueden ser varios documentos por acuerdo, entonces lo cambio por una lista
+          <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -65,16 +80,45 @@
               </div>
             </div>
           </div>
+        </div>-->
+        <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label class="label-left">Tipo de documento</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="tipoDocumento" required  (selectionChange)="filterDocumento($event.value)">
+                <mat-option *ngFor="let nombreAportantes of tipoDocumentoap"
+                [value]="nombreAportantes.dominioId">
+                  {{ nombreAportantes.nombre}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label class="label-left">Número de documento de apropiación</label>
+          </div> 
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="numerodocumento" required>
+                <mat-option *ngFor="let nombreAportantes of listaDocumentosApropiacion" [value]="nombreAportantes">
+                  {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
             <label class="label-left">Departamento</label>
           </div>
-          <div class="col">
-            <mat-form-field class="select-width" style="pointer-events: none;">
+          <div class="col capitalize">
+            <mat-form-field class="select-width" >              
               <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" required>
-                <mat-option *ngFor="let nombreAportantes of departamentos" [value]="nombreAportantes">
-                  {{ nombreAportantes.descripcion }}
+                <mat-option *ngFor="let depto of departamentos" [value]="depto" class="capitalize">
+                  {{ depto.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -84,12 +128,12 @@
           <div class="pr-1">
             <label class="label-left">Municipio</label>
           </div>
-          <div class="col">
-            <mat-form-field class="select-width" style="pointer-events: none;">
-              <mat-select formControlName="municipio" required>
+          <div class="col capitalize">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()" >
                 <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let municipio of municipios" [value]="municipio">
-                  {{ municipio.descripcion }}
+                <mat-option *ngFor="let mun of municipios" [value]="mun"  class="capitalize">
+                  {{ mun.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -100,11 +144,10 @@
             <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width" style="pointer-events: none;">
-              <mat-select formControlName="vigenciaAcuerdo" required>
-                <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let vigencia of VigenciasAporte" [value]="vigencia">
-                  {{ vigencia }}
+            <mat-form-field class="select-width">
+              <mat-select formControlName="vigenciaAcuerdo"  (selectionChange)="changeVigencia()" required>
+                <mat-option *ngFor="let nombreAportantes of nombresAportantes2" [value]="nombreAportantes">
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} Creado el: {{ nombreAportantes.fechaCreacion | date:'dd/MM/yyyy' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -120,11 +163,11 @@
           <div class="col-md-6">
             <p><b>Documento de apropiación: </b> Documento {{ i + 1}} </p>
             <p><b>Tipo de documento: </b>{{ documento.tipoDocumento.nombre }} </p>
-            <p><b>Fecha: </b> {{ documento.fechaAcuerdo | date }} </p>
+            <p><b>Fecha: </b> {{ documento.fechaAcuerdo | date:'dd/MM/yyyy' }} </p>
           </div>
           <div class="col-md-6">
             <p><b>Vigencia del aporte: </b> {{ documento.vigenciaAporte }} </p>
-            <p><b>Número de documento: </b> {{ documento.numeroActa }} </p>
+            <p><b>Número de documento: </b> {{ documento.numeroAcuerdo }} {{ documento.numeroActa }} </p>
             <p><b>Valor: </b> {{ documento.valorDocumento | currency }} </p>
           </div>
         </div>
@@ -148,12 +191,12 @@
           </div>
           <div class="col">
             <mat-radio-group class="radioInput" formControlName="tieneRP">
-              <mat-radio-button value="1">Sí</mat-radio-button>
+              <mat-radio-button value="1" >Sí</mat-radio-button>
               <mat-radio-button value="0">No</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('tieneRP').value==1 || registrosPresupuestales.controls.length>0"> 
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -161,7 +204,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #cuantosRP type="number" min="1" max="99" required formControlName="cuantosRP"
+                  <input matInput #cuantosRP type="number" min="1" class="maincolor" max="99" formControlName="cuantosRP"
                     maxlength="20" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
@@ -180,8 +223,8 @@
                       <label class="label-left">Número de RP</label>
                     </div>
                     <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50" required
+                      <mat-form-field class="full-width maincolor">
+                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50" 
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         <input type="hidden" formControlName="registroPresupuestalId">
@@ -195,13 +238,28 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="picker" formControlName="fecha" [max]="maxDate" (click)="picker.open()" readonly required>
+                        <input matInput [matDatepicker]="picker" formControlName="fecha" class="maincolor" 
+                        placeholder="DD/MM/AAAA" [max]="maxDate" (click)="picker.open()" readonly >
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                       <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
 
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left">Documento de apropiación</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <mat-select formControlName="numerodocumentoRP" >
+                          <mat-option *ngFor="let nombreAportantes of listaDocumentos" [value]="nombreAportantes">
+                            {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>                      
                     </div>
                   </div>
                 </div>
@@ -217,7 +275,7 @@
       <div *ngFor="let fuente of fuenteRecursosArray.controls; let j = index">
         <div [formGroupName]="j">
           <mat-card class="shipping-card">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card mlmenor">
               <mat-card-title class="header-card--text">
                 Datos de la fuente
                 <span *ngIf="addressForm.value.fuenteRecursosArray.length > 1">{{ j + 1 }}</span>
@@ -230,8 +288,8 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="fuenteRecursos" required>
-                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosLista" [value]="fuenteDeRecursos1">
+                    <mat-select formControlName="fuenteRecursos" required >
+                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosListaArr[j]" [value]="fuenteDeRecursos1">
                         {{ fuenteDeRecursos1.nombre }}
                         <input formControlName="fuenteFinanciacionId" type="hidden">
                       </mat-option>
@@ -246,10 +304,12 @@
                       <label class="label-left">Valor aporte fuente de recursos</label>
                     </div>
                     <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                        <input matInput #valorAporte type="number" formControlName="valorFuenteRecursos" maxlength="20"
-                          required (keypress)="validateNumberKeypress($event)"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                      <mat-form-field class="full-width maincolor">
+                        <input matInput #valorAporte currencyMask formControlName="valorFuenteRecursos" maxlength="20"
+                          required (keypress)="validateNumberKeypress($event);validateonevige(j)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                          >                          
                       </mat-form-field>
                       <span class="contador">{{20 - valorAporte.value.length}}</span>
                     </div>
@@ -265,7 +325,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #cuantasVigencias type="number" min="1" max="99" maxlength="2"
+                        <input matInput #cuantasVigencias type="number" class="maincolor" min="1" max="99" maxlength="2"
                           formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)" required
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
@@ -277,7 +337,7 @@
               </div>
               <div formGroupName="vigencias" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
 
-                <div *ngFor="let vigencia of vigencias1.controls; let i = index">
+                <div *ngFor="let vigencia of vigencias1(j).controls; let i = index">
                   <div [formGroupName]="i">
                     <mat-card-title class="header-card--text sub-text">
                       Vigencia {{ i + 1}}
@@ -307,18 +367,21 @@
                             <label class="label-left">Valor aporte de la vigencia</label>
                           </div>
                           <div class="col d-flex">
-                            <mat-form-field class="full-width">
-                              <input matInput #valorVigencia type="number" formControlName="valorVigencia"
+                            <mat-form-field class="full-width maincolor">
+                              <input matInput #valorVigencia currencyMask formControlName="valorVigencia"
                                 maxlength="20" required (keypress)="validateNumberKeypress($event)"
-                                onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                [readonly]="vigencias1(j).controls.length==1"
+                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                >
                             </mat-form-field>
                             <span class="contador">{{20 - valorVigencia.value.length}}</span>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4 text-right">
-                        <button mat-button color="warn" type="button" class="btn-eliminar"
-                          (click)="borrarArray(vigencias1, i)">
+                        <button mat-button color="warn" *ngIf="vigencias1(j).controls.length>1" type="button" class="btn-eliminar"
+                          (click)="borrarArrayVigencias(vigencias1(j), i,j)">
                           <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                           Eliminar vigencia
                         </button>
@@ -340,12 +403,12 @@
                         <label class="label-left">Número de cuenta</label>
                       </div>
                       <div class="col d-flex">
-                        <mat-form-field class="full-width">
-                          <input matInput #numeroCuemta type="number" formControlName="numeroCuenta" maxlength="50"
+                        <mat-form-field class="full-width maincolor">
+                          <input matInput #numeroCuemta type="number" formControlName="numeroCuenta" maxlength="20"
                             required (keypress)="validateNumberKeypress($event)"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
-                        <span class="contador">{{50 - numeroCuemta.value.length}}</span>
+                        <span class="contador">{{20 - numeroCuemta.value.length}}</span>
                       </div>
                     </div>
                     <div class="row">
@@ -353,7 +416,7 @@
                         <label class="label-left">Nombre de cuenta</label>
                       </div>
                       <div class="col d-flex">
-                        <mat-form-field class="full-width">
+                        <mat-form-field class="full-width maincolor">
                           <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta"
                             required>
                           <input type="hidden" formControlName="cuentaBancariaId">
@@ -368,7 +431,7 @@
                             <label class="label-left">Código SIFI</label>
                           </div>
                           <div class="col d-flex">
-                            <mat-form-field class="full-width">
+                            <mat-form-field class="full-width maincolor">
                               <input matInput #codigoSIFI type="text" formControlName="codigoSIFI" maxlength="6" required>
                             </mat-form-field>
                             <span class="contador">{{6 - codigoSIFI.value.length}}</span>
@@ -428,7 +491,7 @@
                       <div class="col-md-4 text-right">
                         <button mat-button color="warn" type="button" class="btn-eliminar"
                           *ngIf="addressForm.value.fuenteRecursosArray[j].cuentasBancaria.length > 1"
-                          (click)="borrarArray(cuentasBancaria, i)">
+                          (click)="borrarArray(cuentasBancaria(j).controls, j,3,i)">
                           <img src="assets/img/icon/menos.svg" alt="Eliminar cuenta bancaria">
                           Eliminar cuenta bancaria
                         </button>
@@ -445,7 +508,7 @@
               Agregar otra cuenta bancaria
             </button>
             <button mat-button color="warn" type="button" class="btn-eliminar"
-              (click)="borrarArray(fuenteRecursosArray, j)" *ngIf="addressForm.value.fuenteRecursosArray.length > 1">
+              (click)="borrarArray(fuenteRecursosArray, j,2,0)" *ngIf="addressForm.value.fuenteRecursosArray.length > 1">
               <img src="assets/img/icon/menos.svg" alt="Eliminar fuente de recursos">
               Eliminar fuente de recursos
             </button>

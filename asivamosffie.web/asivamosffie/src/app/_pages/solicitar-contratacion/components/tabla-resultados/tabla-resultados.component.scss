@@ -1,0 +1,8 @@
+.cantidad-seleccionados{ 
+    position: relative;
+    &--button {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+}
