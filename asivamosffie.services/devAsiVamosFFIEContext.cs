@@ -1122,7 +1122,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoPolizaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -1135,17 +1134,14 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NombreAseguradora)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroCertificado)
-                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroPoliza)
-                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
@@ -1178,7 +1174,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Vigencia).HasColumnType("datetime");
 
                 entity.Property(e => e.VigenciaAmparo)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .IsFixedLength();
 

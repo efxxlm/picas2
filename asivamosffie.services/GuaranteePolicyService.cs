@@ -237,7 +237,7 @@ namespace asivamosffie.services
 
                     //_context.Add(contratoPoliza);
 
-                    contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                     LimpiarEntradasContratoPoliza(ref contratoPoliza);
@@ -329,7 +329,7 @@ namespace asivamosffie.services
 
                     //_context.Add(contratoPoliza);
 
-                    contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                     LimpiarEntradasContratoPoliza(ref contratoPoliza);
