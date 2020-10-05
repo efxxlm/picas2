@@ -41,6 +41,7 @@ namespace asivamosffie.services
                           .ThenInclude(r => r.PolizaGarantia).ToListAsync();
 
                 List<Dominio> listEstadosVerificacionContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).ToList();
+                List<Dominio> listTipoContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).ToList();
 
                 listContratos = listContratos.Where(r => r.ContratoPoliza.Count() > 0).ToList();
 
@@ -57,7 +58,7 @@ namespace asivamosffie.services
                     }
                 }
                 //TODO Validar DRP
-                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP)
+                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP.Distinct().OrderByDescending(r=> r.ContratoId).ToList())
                 {
                     int ProyectosNoCompletos = 0;
                     bool VerBotonAprobarInicio = true;
@@ -97,6 +98,8 @@ namespace asivamosffie.services
                             ProyectosNoCompletos,
                             EstadoVerificacionNombre = listEstadosVerificacionContrato.Where(r => r.Codigo.Equals(ContratoConPolizasYDRP.EstadoVerificacionCodigo)).FirstOrDefault().Nombre,
                             idContrato = ContratoConPolizasYDRP.ContratoId,
+                            TipoContracto = listTipoContrato.Where(r => r.Codigo == ContratoConPolizasYDRP.TipoContratoCodigo).FirstOrDefault().Nombre,
+                            TipoContractoCodigo = ContratoConPolizasYDRP.TipoContratoCodigo, 
                             VerBotonAprobarInicio
                         });
                     }
@@ -119,6 +122,7 @@ namespace asivamosffie.services
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                     .Include(r => r.ContratoObservacion)
                     .Include(r => r.ContratoPerfil)
+                         .ThenInclude(r => r.ContratoPerfilObservacion)
                     .Include(r => r.ContratoPoliza)
                     .Include(r => r.Contratacion)
                         .ThenInclude(r => r.ContratacionProyecto)
