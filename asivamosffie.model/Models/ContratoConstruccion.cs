@@ -17,7 +17,6 @@ namespace asivamosffie.model.Models
         public bool? EsInformeDiagnostico { get; set; }
         public string RutaInforme { get; set; }
         public decimal? CostoDirecto { get; set; }
-        public decimal? Administración { get; set; }
         public decimal? Imprevistos { get; set; }
         public decimal? Utilidad { get; set; }
         public decimal? ValorTotalFaseConstruccion { get; set; }
@@ -83,8 +82,11 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public int ProyectoId { get; set; }
+        public decimal? Administracion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
+        public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<ConstruccionCargue> ConstruccionCargue { get; set; }
         public virtual ICollection<ConstruccionObservacion> ConstruccionObservacion { get; set; }
         public virtual ICollection<ConstruccionPerfil> ConstruccionPerfil { get; set; }

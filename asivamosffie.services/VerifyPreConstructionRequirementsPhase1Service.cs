@@ -29,7 +29,7 @@ namespace asivamosffie.services
                 List<dynamic> ListContratacion = new List<dynamic>();
                 List<Contrato> ListContratosConPolizasYDRP = new List<Contrato>();
                 List<Contrato> listContratos = await _context.Contrato
-                    .Where(r => !(bool)r.Eliminado && r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados)
+                    .Where(r => !(bool)r.Eliminado && r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Sin_Verificación_de_requisitos_tecnicos)
                           .Include(r => r.Contratacion)
                              .ThenInclude(r => r.DisponibilidadPresupuestal)
                                           .Include(r => r.ContratoPerfil)
@@ -90,7 +90,7 @@ namespace asivamosffie.services
                     {
                         ListContratacion.Add(new
                         {
-                            FechaAprobacionPoliza = ContratoConPolizasYDRP.ContratoPoliza.FirstOrDefault().FechaAprobacion.ToString("dd-MM-yyyy"),
+                            FechaAprobacionPoliza = ((DateTime)ContratoConPolizasYDRP.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
                             ContratoConPolizasYDRP.NumeroContrato,
                             CantidadProyectosAsociados,
                             ProyectosCompletos,

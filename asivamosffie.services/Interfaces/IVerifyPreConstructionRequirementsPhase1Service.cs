@@ -11,5 +11,7 @@ namespace asivamosffie.services.Interfaces
     public interface IVerifyPreConstructionRequirementsPhase1Service
     {
         Task<dynamic> GetListContratacion();
+
+        Task<Contrato> GetContratoByContratoId(int pContratoId);
     }
 }

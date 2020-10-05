@@ -88,7 +88,7 @@ namespace asivamosffie.services
                     {
                         ListContratacion.Add(new
                         {
-                            FechaAprobacionPoliza = ContratoConPolizasYDRP.ContratoPoliza.FirstOrDefault().FechaAprobacion.ToString("dd-MM-yyyy"),
+                            FechaAprobacionPoliza = ((DateTime)ContratoConPolizasYDRP.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
                             ContratoConPolizasYDRP.NumeroContrato,
                             CantidadProyectosAsociados,
                             ProyectosCompletos,

@@ -29,7 +29,7 @@ namespace asivamosffie.model.Models
         public bool IncluyeReciboPago { get; set; }
         public bool IncluyeCondicionesGenerales { get; set; }
         public string ObservacionesRevisionGeneral { get; set; }
-        public DateTime FechaAprobacion { get; set; }
+        public DateTime? FechaAprobacion { get; set; }
         public string ResponsableAprobacion { get; set; }
         public bool Estado { get; set; }
         public string EstadoPolizaCodigo { get; set; }
