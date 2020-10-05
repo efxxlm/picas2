@@ -9,9 +9,16 @@ import { TablaContratosObraVrtcComponent } from './components/tabla-contratos-ob
 import { TablaContratosInterventoriaVrtcComponent } from './components/tabla-contratos-interventoria-vrtc/tabla-contratos-interventoria-vrtc.component';
 import { FormVerificacionRequisitosComponent } from './components/form-verificacion-requisitos/form-verificacion-requisitos.component';
 import { DiagnosticoVerificarRequisitosComponent } from './components/diagnostico-verificar-requisitos/diagnostico-verificar-requisitos.component';
+import { PlanesProgramasVerificarRequisitosComponent } from './components/planes-programas-verificar-requisitos/planes-programas-verificar-requisitos.component';
+import { ManejoAnticipoVerificarRequisitosComponent } from './components/manejo-anticipo-verificar-requisitos/manejo-anticipo-verificar-requisitos.component';
+import { HojasVidaVerificarRequisitosComponent } from './components/hojas-vida-verificar-requisitos/hojas-vida-verificar-requisitos.component';
+import { ProgramacionObraVerificarRequisitosComponent } from './components/programacion-obra-verificar-requisitos/programacion-obra-verificar-requisitos.component';
+import { InversionFljrecursosVerificarRequisitosComponent } from './components/inversion-fljrecursos-verificar-requisitos/inversion-fljrecursos-verificar-requisitos.component';
+import { VerdetalleObraVrtcComponent } from './components/verdetalle-obra-vrtc/verdetalle-obra-vrtc.component';
+import { VerdetalleInterventoriaVrtcComponent } from './components/verdetalle-interventoria-vrtc/verdetalle-interventoria-vrtc.component';
 
 @NgModule({
-  declarations: [VerificarRequisitosConstruccionComponent, TablaContratosObraVrtcComponent, TablaContratosInterventoriaVrtcComponent, FormVerificacionRequisitosComponent, DiagnosticoVerificarRequisitosComponent],
+  declarations: [VerificarRequisitosConstruccionComponent, TablaContratosObraVrtcComponent, TablaContratosInterventoriaVrtcComponent, FormVerificacionRequisitosComponent, DiagnosticoVerificarRequisitosComponent, PlanesProgramasVerificarRequisitosComponent, ManejoAnticipoVerificarRequisitosComponent, HojasVidaVerificarRequisitosComponent, ProgramacionObraVerificarRequisitosComponent, InversionFljrecursosVerificarRequisitosComponent, VerdetalleObraVrtcComponent, VerdetalleInterventoriaVrtcComponent],
   imports: [
     CommonModule,
     MaterialModule,
