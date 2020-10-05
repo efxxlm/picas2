@@ -159,6 +159,20 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<List<SesionComentario>> GetCometariosDelActa(int pComietTecnicoId)
+        {
+
+            List<SesionComentario> listaComentarios = new List<SesionComentario>();
+
+            listaComentarios = _context.SesionComentario
+                                .Where(sc => sc.ComiteTecnicoId == pComietTecnicoId &&
+                                             sc.EstadoActaVoto == null)
+                                .Include(r => r.MiembroSesionParticipante)
+                                .ToList();
+
+            return listaComentarios;
+        }
+
         public async Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comite_Tema_Voto, (int)EnumeratorTipoDominio.Acciones);

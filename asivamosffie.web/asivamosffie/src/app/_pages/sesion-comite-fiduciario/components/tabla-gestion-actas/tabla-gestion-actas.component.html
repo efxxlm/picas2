@@ -47,9 +47,18 @@
                         color="accent" 
                         class="btn-table">
                 Ver detalle</a>
+
+                <a *ngIf="element.estadoActa == 'Devuelta'"  
+                        [routerLink]="['crearActa', element.id]" 
+                        mat-raised-button 
+                        color="accent" 
+                        class="btn-table">
+                Ver detalle/Editar</a>
+
+                
     
                 <button type="button" 
-                        *ngIf="element.registroCompleto && element.estadoActa == 'Sin Acta'" 
+                        *ngIf="element.registroCompleto && (element.estadoActa == 'Sin Acta' || element.estadoActa == 'Devuelta')" 
                         (click)="enviarSolicitud(element.id)" 
                         mat-raised-button color="accent" 
                         class="btn-table">

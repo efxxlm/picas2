@@ -151,4 +151,11 @@
 
         </mat-expansion-panel>
     </mat-accordion>
+    <div class="d-flex align-items-center" *ngIf="objetoComiteTecnico.estadoActaCodigo == '4'">
+        <div class="text-area-quill">
+            <label class="text-area-quill--label">Comentarios al acta</label>
+            <app-tabla-comentarios-acta [data]="listaComentarios"></app-tabla-comentarios-acta>
+        </div>
+
+    </div>
 </section>

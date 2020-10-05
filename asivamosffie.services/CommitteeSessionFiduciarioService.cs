@@ -57,8 +57,9 @@ namespace asivamosffie.services
 
             try
             {
-                List<ComiteTecnico> listaComites = await _context.ComiteTecnico.Where(ct => ct.EsComiteFiduciario == null || ct.EsComiteFiduciario == false)
+                List<ComiteTecnico> listaComites = await _context.ComiteTecnico.Where(ct => (ct.EsComiteFiduciario == null || ct.EsComiteFiduciario == false) && ct.EstadoActaCodigo == "3" ) // aprobada
                                                                                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                                                //.Include( r => r.SesionComiteSolicitudComiteTecnicoFiduciario )
                                                                                 .ToListAsync(); //Aprobadas
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
@@ -68,7 +69,7 @@ namespace asivamosffie.services
                     dynamic comite = new { nombreSesion = c.NumeroComite, fecha = c.FechaOrdenDia, data = new List<dynamic>() };
                     foreach (var ss in c.SesionComiteSolicitudComiteTecnico)
                     {
-                        if (ss.EstadoCodigo == "1")
+                        if (ss.EstadoCodigo == "1" && ss.ComiteTecnicoFiduciarioId == null)
                             switch (ss.TipoSolicitudCodigo)
                             {
                                 case ConstanCodigoTipoSolicitud.Contratacion:
@@ -82,7 +83,7 @@ namespace asivamosffie.services
                                                 IdSolicitud = ss.SesionComiteSolicitudId,
                                                 FechaSolicitud = contratacion.FechaTramite.HasValue ? (DateTime?)contratacion.FechaTramite.Value : null,
                                                 NumeroSolicitud = contratacion.NumeroSolicitud,
-                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Contratacion).FirstOrDefault().Nombre,
                                                 tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Contratacion
                                             });
                                         break;
