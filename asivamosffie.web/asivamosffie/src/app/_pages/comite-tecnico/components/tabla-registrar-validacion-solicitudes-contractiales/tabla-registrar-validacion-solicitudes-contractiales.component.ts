@@ -11,6 +11,7 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ProjectService, Proyecto } from 'src/app/core/_services/project/project.service';
 import { forkJoin } from 'rxjs';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
@@ -41,6 +42,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     private commonService: CommonService,
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     private projectService: ProjectService,
+    private projectContractingService: ProjectContractingService,
 
   ) {
 
@@ -48,8 +50,21 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   openDialogValidacionSolicitudes(elemento: SesionComiteSolicitud) {
 
+    let promesa = new Promise(resolve => {
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
+        this.projectContractingService.getContratacionByContratacionId(elemento.contratacion.contratacionId)
+          .subscribe(respuesta => {
+            console.log(respuesta);
+            elemento.contratacion = respuesta;
+            resolve();
+          });
+      }
+    })
+
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+      tipoSolicitudCodigo: elemento.tipoSolicitudCodigo,
+      contratacion: elemento.contratacion,
 
 
       sesionSolicitudObservacionProyecto: [],
@@ -60,7 +75,10 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
 
     this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
-      let solicitudVoto: SesionSolicitudVoto = elemento.sesionSolicitudVoto.find(v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId && v.sesionParticipanteId == p.sesionParticipanteId);
+      let solicitudVoto: SesionSolicitudVoto = elemento.sesionSolicitudVoto
+                                                .find(v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId && 
+                                                      v.sesionParticipanteId == p.sesionParticipanteId);
+                                                      
       let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
 
 
@@ -83,28 +101,29 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         //solicitudVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
       }
 
-
-
       if (elemento.contratacion && elemento.contratacion.contratacionProyecto) {
 
-        elemento.contratacion.contratacionProyecto.forEach(c => {
+        promesa.then(() => {
+          console.log(elemento.contratacion)
+          elemento.contratacion.contratacionProyecto.forEach(c => {
 
-          let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
-            .find(o => o.contratacionProyectoId == c.contratacionProyectoId
-              && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+            let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
+              .find(o => o.contratacionProyectoId == c.contratacionProyectoId
+                && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
 
-          let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
-            sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
-            sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
-            sesionParticipanteId: p.sesionParticipanteId,
-            contratacionProyectoId: c.contratacionProyectoId,
-            observacion: observacion ? observacion.observacion : null,
-            nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+            let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
+              sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
+              sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+              sesionParticipanteId: p.sesionParticipanteId,
+              contratacionProyectoId: c.contratacionProyectoId,
+              observacion: observacion ? observacion.observacion : null,
+              nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
 
-            proyecto: c.proyecto,
-          }
+              proyecto: c.proyecto,
+            }
 
-          sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+            sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+          })
         })
       }
 
@@ -136,6 +155,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   abrirPopupVotacion(elemento: SesionComiteSolicitud) {
 
+    console.log(elemento.tipoSolicitudCodigo)
     if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
 
       const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {

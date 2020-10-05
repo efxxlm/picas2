@@ -204,6 +204,21 @@
         public const string NOMBRE_PARTICIPANTE = "168";
         public const string CARGO_PARTICIPANTE = "169";
         public const string FIRMA_PARTICIPANTE = "170";
+        public const string TABLA_VALIDACION_CONTRACTUAL = "178";	
+        public const string REGISTROS_SOLICITUDES_CONTRACTUALES = "179";
+        //public const string FECHA_SOLICITUD = "180";
+        //public const string NUMERO_SOLICITUD = "181";
+        //public const string TIPO_SOLICITUD = "182";
+        public const string NUMERADOR_TEMA = "183";
+        public const string NOMBRE_TEMA = "184";
+        public const string RESPONSABLE_TEMA = "185";
+        public const string TIEMPO_INTERVENCION_MINUTOS_TEMA = "186";
+        public const string URL_CON_SOPORTE_TEMA = "187";
+        public const string TABLA_TEMAS = "188";
+        public const string TABLA_PROPOSICIONES_VARIOS = "189";
+  	    public const string TITULO_SOLICITUDES_CONTRACTUALES = "190";
+        public const string TITULOS_TEMAS_NUEVOS = "191";
+        public const string TITULO_PROPOSICIONES_VARIOS = "192";
         #endregion
     }
 }
