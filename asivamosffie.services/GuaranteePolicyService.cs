@@ -308,6 +308,22 @@ namespace asivamosffie.services
                 if (contratoPoliza != null)
                 {
                     contratoPoliza.FechaCreacion = DateTime.Now;
+                    DateTime? dt = null;
+                    //DateTime? dt;
+                    //DateTime dt = new DateTime(1957, 1, 1);
+                    //Nullable<DateTime> dt = null;
+                    //Nullable<DateTime> dt;
+                    //x  dt = null;
+
+                    //DateTime dt = new DateTime();
+
+                    //contratoPoliza.FechaAprobacion = dt.Value;
+                    //contratoPoliza.FechaAprobacion = default(DateTime);
+                    contratoPoliza.FechaAprobacion = dt.GetValueOrDefault();
+                    //if (contratoPoliza.FechaAprobacion.Year==1)
+                        //contratoPoliza.FechaAprobacion = (DateTime)dt;
+                        //contratoPoliza.FechaAprobacion.Year= 1977;
+
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
                     //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
 
@@ -322,8 +338,13 @@ namespace asivamosffie.services
                     if (contratoPoliza.TipoSolicitudCodigo == "3")
                         await EnviarCorreoSupervisor(contratoPoliza,  appSettingsService);
 
+                    //_context.ExecuteStoreCommand("SET IDENTITY_INSERT [dbo].[MyUser] ON");
+
+                    
                     _context.ContratoPoliza.Add(contratoPoliza);
-                    await _context.SaveChangesAsync();
+                    //await _context.SaveChangesAsync();
+                     _context.SaveChanges();
+                    
 
 
                     return
@@ -369,6 +390,11 @@ namespace asivamosffie.services
             string fechaFirmaContrato="";
             string correo = "cdaza@ivolucion.com";
             VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
+
+            int perfilId = 0;
+
+            perfilId = 8; //  Supervisor
+            correo = getCorreos(perfilId);
 
             try
             {
@@ -425,9 +451,9 @@ namespace asivamosffie.services
         {
             msjNotificacion.NombreAseguradora = contratoPoliza.NombreAseguradora;
             msjNotificacion.NumeroPoliza = contratoPoliza.NumeroPoliza;
-            msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy");
+            //msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy");
             msjNotificacion.Observaciones = contratoPoliza.Observaciones;
-            //msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
+            msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
 
             PolizaObservacion polizaObservacion;
 
@@ -538,7 +564,16 @@ namespace asivamosffie.services
 
             NotificacionMensajeGestionPoliza msjNotificacion;
             msjNotificacion = new NotificacionMensajeGestionPoliza();
-            
+
+            //notificación al responsable jurídico, al supervisor del equipo técnico del FFIE, 
+            //y al interventor para que revise el gestor de tareas,
+            int perfilId = 0;                                   
+                        
+            perfilId = 4; //  Jurídica
+            correo = getCorreos(perfilId);
+
+            perfilId = 8; //    Supervisor
+            correo = correo+=";"+getCorreos(perfilId);
 
             //get
             //string fechaFirmaContrato;
@@ -610,8 +645,35 @@ namespace asivamosffie.services
             }
         }
 
-        
-            //public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        private string getCorreos(int perfilId)
+        {
+            //[Usuario], [UsuarioPerfil] , [Perfil]
+            string lstCorreos="";
+
+            //            1   Administrador  - //2   Técnica
+            //3   Financiera - //4   Jurídica
+            //5   Administrativa - //6   Miembros Comite
+            //7   Secretario comité - //8   Supervisor
+            List<UsuarioPerfil> lstUsuariosPerfil= new List<UsuarioPerfil>();
+
+            lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId==perfilId).ToList();
+
+            List <Usuario> lstUsuarios= new List<Usuario>();
+
+            foreach (var item in lstUsuariosPerfil)
+            {
+                lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                foreach (var usuario in lstUsuarios)
+                {
+                    lstCorreos = lstCorreos += usuario.Email+";";
+                }
+           }
+            return lstCorreos;            
+        }
+
+
+        //public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         public async Task<Respuesta> EnviarCorreoGestionPoliza(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate, NotificacionMensajeGestionPoliza objNotificacionAseguradora=null)
         {
             bool blEnvioCorreo = false;
