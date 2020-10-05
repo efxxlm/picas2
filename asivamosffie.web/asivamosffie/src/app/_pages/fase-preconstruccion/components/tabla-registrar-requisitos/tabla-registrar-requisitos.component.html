@@ -32,37 +32,37 @@
 
     <table mat-table [dataSource]="dataSource" matSort class="tabla text-center mat-elevation-z8">
 
-        <ng-container matColumnDef="fecha">
+        <ng-container matColumnDef="fechaAprobacionPoliza">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de póliza </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fecha}}</b> </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionPoliza}}</b> </td>
         </ng-container>
 
-        <ng-container matColumnDef="numContrato">
+        <ng-container matColumnDef="numeroContrato">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
-            <td mat-cell *matCellDef="let element"> {{element.numContrato}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.numeroContrato}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="proyAsociados">
+        <ng-container matColumnDef="cantidadProyectosAsociados">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos asociados </th>
-            <td mat-cell *matCellDef="let element"> {{element.proyAsociados}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.cantidadProyectosAsociados}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="proyConRequisitosAprovados">
+        <ng-container matColumnDef="proyectosCompletos">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos con requisitos aprobados </th>
-            <td mat-cell *matCellDef="let element"> {{element.proyConRequisitosAprovados}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.proyectosCompletos}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="proyConRequisitosPendientes">
+        <ng-container matColumnDef="proyectosNoCompletos">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos con requisitos pendientes </th>
-            <td mat-cell *matCellDef="let element"> {{element.proyConRequisitosPendientes}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.proyectosNoCompletos}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="estado">
+        <ng-container matColumnDef="estadoVerificacionNombre">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de requisitos </th>
-            <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.estadoVerificacionNombre}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="id">
+        <ng-container matColumnDef="gestion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
                 <a [routerLink]="['gestionarRequisitos', element.id]" mat-raised-button color="accent" class="btn-table">Gestionar requisitos para inicio</a>

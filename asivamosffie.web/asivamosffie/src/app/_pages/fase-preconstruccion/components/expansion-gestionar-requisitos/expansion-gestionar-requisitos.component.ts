@@ -8,14 +8,8 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class ExpansionGestionarRequisitosComponent implements OnInit {
 
-  cantidadPerfiles: FormControl;
-
   constructor() {
-    this.declararPerfiles();
-    this.cantidadPerfiles.valueChanges
-    .subscribe(value => {
-      console.log(value);
-    });
+
   }
 
   ngOnInit(): void {
@@ -26,16 +20,6 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
-  }
-
-  private declararPerfiles() {
-    this.cantidadPerfiles = new FormControl('', [
-      Validators.required,
-      Validators.minLength(1),
-      Validators.maxLength(3),
-      Validators.min(1),
-      Validators.max(999)
-    ]);
   }
 
 }
