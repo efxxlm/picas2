@@ -93,9 +93,21 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Solicitud_Disponibilidad_Presupuestal = 39,
         Tipo_DDP_Espacial = 49,		
 	    Estado_Compromiso = 45,
+
 		EstadoAcataComiteTecnico = 47, 
         Estados_Acta = 47, 
         Estado_Sesion_Comite_Solicitud = 50, 
         Estado_Proyecto = 63
+
+		EstadoAcataComiteTecnico = 47,
+
+        Estados_Acta = 47,
+
+        Estado_Sesion_Comite_Solicitud = 50,
+
+        Estado_Proyecto = 63,
+        
+        PlaceHolderDDP = 66,
+
     }
 }

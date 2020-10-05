@@ -18,6 +18,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
+  @Input() fechaMaxima: any;
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   tiposSolicitud = TiposSolicitud;
@@ -89,7 +90,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       return 'none';
   }
   ngOnInit(): void {
-
+    console.log( this.fechaMaxima );
   }
 
   maxLength(e: any, n: number) {

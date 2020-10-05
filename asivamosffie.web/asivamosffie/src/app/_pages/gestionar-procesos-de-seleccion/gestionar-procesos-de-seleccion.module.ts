@@ -34,6 +34,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormDatosProponentesNuevoComponent } from './components/form-datos-proponentes-nuevo/form-datos-proponentes-nuevo.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MonitorearCronogramaComponent,
     TablaCronogramaComponent,
     TablaDetalleCronogramaComponent,
-    RegistrarSeguimientoCronogramaComponent
+    RegistrarSeguimientoCronogramaComponent,
+    FormDatosProponentesNuevoComponent
   ],
   imports: [
     CommonModule,

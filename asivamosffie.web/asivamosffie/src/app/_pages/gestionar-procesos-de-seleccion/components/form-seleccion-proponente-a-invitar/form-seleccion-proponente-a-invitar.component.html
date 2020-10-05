@@ -1,4 +1,5 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
@@ -38,7 +39,9 @@
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <section class="example-section">
-                    <mat-checkbox type="checkbox" (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId" ></mat-checkbox>
+                    <mat-checkbox type="checkbox"
+                    [checked]="validateSel(proponente.numeroIdentificacion)"
+                     (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId" ></mat-checkbox>
                   </section>
                 </td>
               </tr>
@@ -54,7 +57,7 @@
             <mat-form-field class="full-width">
               <input matInput type="url" formControlName="url">
             </mat-form-field>
-            <p class="text-center colorMainColor">Indique la ruta del soporte de esta información</p>
+            <p class="text-center cursivayeso ">Indique la ruta del soporte de esta información</p>
           </div>
         </div>
       </div>

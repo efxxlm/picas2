@@ -20,7 +20,6 @@ export class TablaSesionesComponent implements OnInit {
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'seleccionar' ];
   @Input() dataSolicitud: SolicitudContractual;
   columnas: ColumnasTabla[] = [
-    { titulo: 'Fecha de la solicitud', name: 'fechaSolicitud' },
     { titulo: 'Número de solicitud', name: 'numeroSolicitud' },
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' },
   ];

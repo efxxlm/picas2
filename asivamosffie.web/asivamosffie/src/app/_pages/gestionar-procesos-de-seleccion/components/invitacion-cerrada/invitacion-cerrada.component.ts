@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { forkJoin } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-invitacion-cerrada',
@@ -32,6 +33,11 @@ export class InvitacionCerradaComponent implements OnInit {
     
 
   };
+  descripcion_class: number=0;
+  estudio_class: number=0;
+  datos_class: number=0;
+  evaluacion_class:number=3;//asumo que en creación no tiene el estado necesario
+  proponentes_class:number=3;//asumo que en creación no tiene el estado necesario
 
   constructor(
                 private procesoSeleccionService: ProcesoSeleccionService,
@@ -70,6 +76,11 @@ export class InvitacionCerradaComponent implements OnInit {
         this.procesoSeleccionService.getProcesoSeleccionById( this.procesoSeleccion.procesoSeleccionId )
       ]).subscribe( proceso => {
           this.procesoSeleccion = proceso[0];
+          this.descripcion_class=this.estaIncompletoDescripcion(this.procesoSeleccion);
+          this.estudio_class=this.estaIncompletoEstudio(this.procesoSeleccion);
+          this.datos_class=this.estaIncompletoDatos(this.procesoSeleccion);
+          this.evaluacion_class=this.estaIncompletoEvaluacion(this.procesoSeleccion);
+          this.proponentes_class=this.estaIncompletoProponentes(this.procesoSeleccion);
           setTimeout(() => { resolve(); },1000)
       });
     });
@@ -98,15 +109,17 @@ export class InvitacionCerradaComponent implements OnInit {
 
   }
 
-  onSubmit(){
-    console.log(this.procesoSeleccion);
+  onSubmit(){    
     this.procesoSeleccionService.guardarEditarProcesoSeleccion(this.procesoSeleccion).subscribe( respuesta => {
       // if ( respuesta.code == "200" )
       // {
       //   this.router.navigate([`/seleccion/seccionPrivada/${ this.procesoSeleccion.tipoProcesoCodigo }/${ this.procesoSeleccion.procesoSeleccionId }`])
       // }
-      this.openDialog( "Proceso seleccion", respuesta.message )
-      this.router.navigate(["/seleccion/invitacionCerrada", respuesta.data.procesoSeleccionId])
+      this.openDialog( "", respuesta.message )
+      this.router.navigate(["/seleccion/invitacionCerrada", respuesta.data.procesoSeleccionId]);
+      setTimeout(() => {
+        location.reload();  
+      }, 1000);
       console.log('respuesta',  respuesta );
     })
   }
@@ -131,6 +144,116 @@ export class InvitacionCerradaComponent implements OnInit {
       return 'auto'
     else
       return 'none'
+  }
+
+  estaIncompletoDescripcion(pProceso:any):number{        
+    
+    let retorno:number=0;
+    if(pProceso.objeto !="" ||
+    pProceso.alcanceParticular!="" ||
+    pProceso.justificacion!="" ||
+    pProceso.criteriosSeleccion!="" ||
+    pProceso.tipoIntervencionCodigo!="" ||
+    pProceso.tipoAlcanceCodigo!="" ||
+    //pProceso.esDistribucionGrupos!="" ||
+    pProceso.responsableEstructuradorUsuarioid!=undefined ||
+    pProceso.responsableTecnicoUsuarioId!=undefined ||
+    pProceso.procesoSeleccionGrupo.length>=1||
+    pProceso.procesoSeleccionCronograma.length>=1)
+    {
+      if(pProceso.objeto !="" &&
+      pProceso.alcanceParticular!="" &&
+      pProceso.justificacion!="" &&
+      pProceso.criteriosSeleccion!="" &&
+      pProceso.tipoIntervencionCodigo!="" &&
+      pProceso.tipoAlcanceCodigo!="" &&
+      //pProceso.esDistribucionGrupos!="" &&
+      pProceso.responsableEstructuradorUsuarioid!=undefined &&
+      pProceso.responsableTecnicoUsuarioId!=undefined &&
+      pProceso.procesoSeleccionGrupo.length>0 &&
+      pProceso.procesoSeleccionCronograma.length>0)
+      {
+        retorno= 2;
+      }
+      else{       
+      retorno=1;
+      }
+    }
+    return retorno;
+  }
+
+  estaIncompletoDatos(pProceso:any):number{
+    let retorno=0;
+    
+      if(pProceso.procesoSeleccionProponente.length>0)
+      {
+        retorno=2;
+      }
+      else
+      {
+        retorno=1;
+      }
+    
+    return retorno;
+  }
+
+  estaIncompletoEvaluacion(pProceso:any):number{
+    let retorno=0;    
+    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    {
+      retorno=3;
+    }
+    else
+    {
+     if(pProceso.evaluacionDescripcion!="" || pProceso.urlSoporteEvaluacion!="")
+     {
+      if(pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="")
+      {
+        retorno=2;
+      }  
+      else{
+        retorno=1;
+      }
+     } 
+    }
+    return retorno;
+  }
+  estaIncompletoProponentes(pProceso:any):number{
+    let retorno=0;
+    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    {
+      retorno=3;
+    }
+    else
+    {
+      if(pProceso.listaContratistas.length>0)
+      {
+        return 2;
+      }
+    }
+        return retorno;
+  }
+
+
+  estaIncompletoEstudio(pProceso:any):number{
+    let retorno=0;
+    if(pProceso.cantidadCotizaciones ||
+      pProceso.procesoSeleccionCotizacion.length>0
+    )
+    {
+      if(pProceso.cantidadCotizaciones &&
+      pProceso.procesoSeleccionCotizacion.length>0
+      )
+      {
+        retorno= 2;
+      } 
+      else{
+        retorno =1;
+      }
+    }
+
+    
+    return retorno;
   }
 
 }

@@ -32,7 +32,7 @@
       </mat-expansion-panel-header>
 
       <div align="left">
-        <mat-card class="border">
+        <mat-card class="border" style="margin-top: 3em;">
           <mat-card-content class="mt-1em">
             <p><b>Nombre del contratista</b>: {{ contratacion['contratista'].nombre }}</p>
             <p><b>Tipo de identificación</b>: {{ '' }}</p>
@@ -52,51 +52,51 @@
           </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-card class="border" align="left">
+      <mat-card class="border" align="left" *ngFor="let proyecto of contratacion.contratacionProyecto">
         <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
         <mat-card-content class="mt-1em">
 
-          <p *ngIf="!contratacion.contratacionProyecto[0].tieneMonitoreoWeb"> 
+          <p *ngIf="!proyecto.tieneMonitoreoWeb"> 
             <b>
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
             </b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].tieneMonitoreoWeb">
+          <p *ngIf="proyecto.tieneMonitoreoWeb">
             <b>
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
             </b>: Sí
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].esReasignacion">
+          <p *ngIf="proyecto.esReasignacion">
             <b>¿El proyecto es una reasignación?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].esReasignacion">
+          <p *ngIf="!proyecto.esReasignacion">
             <b>¿El proyecto es una reasignación?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].esAvanceobra">
+          <p *ngIf="proyecto.esAvanceobra">
             <b>¿El proyecto tiene avance de obra?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].esAvanceobra">
+          <p *ngIf="!proyecto.esAvanceobra">
             <b>¿El proyecto tiene avance de obra?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].porcentajeAvanceObra.length > 0">
+          <p *ngIf="proyecto.porcentajeAvanceObra.length > 0">
             <b>¿Cuál es el porcentaje de avance de obra?</b>: {{ contratacion.contratacionProyecto[0].porcentajeAvanceObra }}%
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].requiereLicencia">
+          <p *ngIf="proyecto.requiereLicencia">
             <b>¿El proyecto requiere licencias?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].requiereLicencia">
+          <p *ngIf="!proyecto.requiereLicencia">
             <b>¿El proyecto requiere licencias?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].licenciaVigente">
+          <p *ngIf="proyecto.licenciaVigente">
             <b>¿El proyecto tiene licencia vigente?</b>: Sí
           </p>
-          <p *ngIf="!contratacion.contratacionProyecto[0].licenciaVigente">
+          <p *ngIf="!proyecto.licenciaVigente">
             <b>¿El proyecto tiene licencia vigente?</b>: No
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].numeroLicencia.length > 0">
+          <p *ngIf="proyecto.numeroLicencia">
             <b>Número de licencia</b>: {{ contratacion.contratacionProyecto[0].numeroLicencia }}
           </p>
-          <p *ngIf="contratacion.contratacionProyecto[0].fechaVigencia">
+          <p *ngIf="proyecto.fechaVigencia">
             <b>Fecha de vigencia</b>: {{ contratacion.contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
           </p>
 
@@ -113,7 +113,7 @@
       </mat-expansion-panel-header>
 
       <div align="left">
-        <mat-card class="border">
+        <mat-card class="border" style="margin-top: 2em;">
           <mat-card-content class="mt-1em">
             <p *ngIf="contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: Si</p>
             <p *ngIf="!contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: No</p>
@@ -143,6 +143,41 @@
           <p style="margin-right: 2em;"><b> {{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }} </b></p>
           <p><b> {{ contratacionProyecto.proyecto.localizacionIdMunicipio }} </b></p>
         </section>
+
+        <!--                 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        
+                    <ng-container matColumnDef="componente">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Componente </th>
+                        <td mat-cell *matCellDef="let element"> <b>{{element.componente}}</b></td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="uso">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Uso </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div  class="supportElement" *ngFor="let el of element.uso ; let i = index">
+                                    {{el.nombre}}
+                            </div>
+                        </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="valorUso">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de Uso </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="supportElement" *ngFor="let el of element.valorUso ; let i = index">
+                                    {{el.valor}}
+                            </div>
+                        </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="valorTotal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Total </th>
+                        <td mat-cell *matCellDef="let element"> {{element.valorTotal}} </td>
+                    </ng-container>
+        
+        
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table> -->
   
       </mat-expansion-panel>
 

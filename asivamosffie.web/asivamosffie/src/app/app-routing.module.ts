@@ -80,11 +80,6 @@ const routes: Routes = [
           .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
-        path: 'gestionarFuentes',
-        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
-        .then(m => m.GestionarFuentesDeFinanciacionModule)
-      },
-      {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
