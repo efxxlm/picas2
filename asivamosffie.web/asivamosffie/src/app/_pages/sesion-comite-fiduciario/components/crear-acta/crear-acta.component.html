@@ -8,8 +8,8 @@
         <h1 class="title-menu--h1">
             Crear acta {{ objetoComiteTecnico.numeroComite }}
         </h1>
-        <b class="sub-text">{{ objetoComiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</b>
     </div>
+    <p><b class="sub-text flex-date">{{ objetoComiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</b></p>
     <mat-card class="shipping-card">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text">
@@ -62,6 +62,7 @@
                         #Solicitud 
                         [sesionComiteSolicitud]="sesionComiteSolicitud"
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante"
+                        [fechaMaxima]="objetoComiteTecnico.fechaOrdenDia"
                         (validar)="habilitar($event)"
                     >
 

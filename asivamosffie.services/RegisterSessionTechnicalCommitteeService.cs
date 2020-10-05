@@ -1648,6 +1648,60 @@ namespace asivamosffie.services
 
                 }
 
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                {
+                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(sesionComiteSolicitudOld.SolicitudId);
+                    if (procesoSeleccion != null)
+                    {
+                        if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite)
+                        {
+                            switch (sesionComiteSolicitudOld.EstadoCodigo)
+                            {
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteTecnico;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaAperturaPorComiteTecnico;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaAperturaPorComiteTecnico;
+                                    break;
+                            }
+                        }
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.EnProcesoDeSeleccion){
+                            switch (sesionComiteSolicitudOld.EstadoCodigo)
+                            {
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaSeleccionPorComiteTecnico;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaSeleccionPorComiteTecnico;
+                                    break;
+                            }
+                        }
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite){
+                            switch (sesionComiteSolicitudOld.EstadoCodigo)
+                            {
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltoPorComiteTecnico;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadoPorComiteTecnico;
+                                    break;
+                            }
+                        }
+
+
+                    }
+
+                }
+
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {

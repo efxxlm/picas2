@@ -1932,6 +1932,60 @@ namespace asivamosffie.services
 
                 }
 
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                {
+                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(pSesionComiteSolicitud.SolicitudId);
+                    if (procesoSeleccion != null)
+                    {
+                        if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteTecnico)
+                        {
+                            switch (sesionComiteSolicitudOld.EstadoCodigo)
+                            {
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaAperturaPorComiteFiduciario;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaAperturaPorComiteFiduciario;
+                                    break;
+                            }
+                        }
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico){
+                            switch (sesionComiteSolicitudOld.EstadoCodigo)
+                            {
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario;
+                                    break;
+                            }
+                        }
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico){
+                            switch (sesionComiteSolicitudOld.EstadoCodigo)
+                            {
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteFiduciario;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltoPorComiteFiduciario;
+                                    break;
+                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
+                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadoPorComiteFiduciario;
+                                    break;
+                            }
+                        }
+
+
+                    }
+
+                }
+
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
                     if (SesionSolicitudCompromiso.SesionSolicitudCompromisoId == 0)
@@ -2691,13 +2745,13 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                            .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitud);
+                                            .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitudFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
                                         string strRequiereVotacion = "Sí fue requerida";
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacionFiduciario)
                                         {
                                             strRequiereVotacion = "No fue requerida";
                                         }
@@ -2707,18 +2761,18 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
                                         string TextoResultadoVotacion = PlantillaVotacionUnanime;
 
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacionFiduciario)
                                         {
 
                                             TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                         }
-                                        TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+                                        TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacionFiduciario);
 
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
