@@ -1510,7 +1510,7 @@ namespace asivamosffie.services
                     _context.SaveChanges();
 
                     //Como la relacion es de 3 niveles dentro de este esta el otro nivel fuentes de financiación
-                    foreach (var FuenteFinanciacion in ProyectoAdministrativo.Aportante.FuenteFinanciacion)
+                    foreach (var FuenteFinanciacion in ProyectoAdministrativo.AportanteFuenteFinanciacion)
                     {
                         AportanteFuenteFinanciacion aportanteFuenteFinanciacion = new AportanteFuenteFinanciacion
                         {
@@ -1521,7 +1521,7 @@ namespace asivamosffie.services
 
                             //Registros
                             FuenteFinanciacionId = FuenteFinanciacion.FuenteFinanciacionId,
-                            AportanteId = ProyectoAdministrativo.AportanteId
+                            AportanteFuenteFinanciacionId = ProyectoAdministrativo.AportanteId
                         };
                         _context.AportanteFuenteFinanciacion.Add(aportanteFuenteFinanciacion);
                         //Guarda relacion

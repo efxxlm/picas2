@@ -11,7 +11,6 @@ namespace asivamosffie.model.Models
             PolizaObservacion = new HashSet<PolizaObservacion>();
         }
 
-        public int ContratoPolizaId { get; set; }
         public int ContratoId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
         public string TipoModificacionCodigo { get; set; }
@@ -30,7 +29,7 @@ namespace asivamosffie.model.Models
         public bool IncluyeReciboPago { get; set; }
         public bool IncluyeCondicionesGenerales { get; set; }
         public string ObservacionesRevisionGeneral { get; set; }
-        public DateTime FechaAprobacion { get; set; }
+        public DateTime? FechaAprobacion { get; set; }
         public string ResponsableAprobacion { get; set; }
         public bool Estado { get; set; }
         public string EstadoPolizaCodigo { get; set; }
@@ -40,6 +39,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public int ContratoPolizaId { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual ICollection<PolizaGarantia> PolizaGarantia { get; set; }

@@ -122,6 +122,7 @@ namespace asivamosffie.api
 
             //Agregar Interfaces y clases
             services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>();
+
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
@@ -140,6 +141,9 @@ namespace asivamosffie.api
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
             services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
+
+           
+            
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
         
