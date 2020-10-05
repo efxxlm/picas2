@@ -198,3 +198,7 @@ input[type=number]::-webkit-outer-spin-button {
 .capitalize option{
     text-transform: capitalize;
 }
+
+.col-md-8:first-child {
+    padding-left: 0;
+}

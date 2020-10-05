@@ -22,10 +22,12 @@
         </div>
     </div>
 
-    <button mat-raised-button color="accent" class="btn-cargar-proyecto"
-        (click)="crearSolicitud()" [disabled]="tipoDisponibilidad.invalid && perfil != 5">
-        Crear solicitud
-    </button>
+    <div class="text-center mb-1em">
+        <button mat-raised-button color="accent" class="btn-cargar-proyecto"
+            (click)="crearSolicitud()" [disabled]="tipoDisponibilidad.invalid && perfil != 5">
+            Crear solicitud
+        </button>
+    </div>
 
     <app-tabla-crear-solicitud-administrativa *ngIf="perfil == 5"></app-tabla-crear-solicitud-administrativa>
 </div>
