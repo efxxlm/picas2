@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -48,6 +48,8 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+
+@Input() observacionesCompleted;
   constructor ( private dialog: MatDialog,private fb: FormBuilder ) {
     this.getDataPlanesProgramas();
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -27,6 +27,8 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit {
     ]
   };
 
+
+  @Input() observacionesCompleted;
   constructor(private dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -42,16 +44,16 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
   }
-  
-  openDialog (modalTitle: string, modalText: string) {
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data : { modalTitle, modalText }
+      data: { modalTitle, modalText }
     });
   };
 
-  onSubmit(){
-    this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+  onSubmit() {
+    this.openDialog('La información ha sido guardada exitosamente.', '');
   }
 
 }
