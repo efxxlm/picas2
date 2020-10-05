@@ -1,6 +1,11 @@
 <div class="w-table table-responsive">
   <table mat-table matSort [dataSource]="dataSource">
 
+    <ng-container matColumnDef="fechaSolicitud">
+      <th mat-header-cell *matHeaderCellDef> Seleccionar </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaSolicitud | date: 'dd/MM/yyyy' }} </td>
+    </ng-container>
+
     <!-- Data Column -->
     <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.titulo }} </th>
