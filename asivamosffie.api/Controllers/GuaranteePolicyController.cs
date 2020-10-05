@@ -21,17 +21,24 @@ namespace asivamosffie.api.Controllers
     {
         public readonly IGuaranteePolicyService _guaranteePolicy;
         private readonly IOptions<AppSettings> _settings;
+        public AppSettingsService toAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService();
+            appSettingsService.MailPort = appSettings.Value.MailPort;
+            appSettingsService.MailServer = appSettings.Value.MailServer;
+            appSettingsService.Password = appSettings.Value.Password;
+            appSettingsService.Sender = appSettings.Value.Sender;
+
+            return appSettingsService;
+
+        }
 
         public GuaranteePolicyController(IGuaranteePolicyService guaranteePolicy, IOptions<AppSettings> settings)
         {
             _guaranteePolicy = guaranteePolicy;
             _settings = settings;
 
-        }
-
-
-        
-
+        } 
         [HttpPost]
         [Route("CreatePolizaObservacion")]
         public async Task<IActionResult> InsertPolizaObservacion(PolizaObservacion polizaObservacion)
@@ -49,9 +56,8 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-                
-
-         [HttpPost]
+         
+        [HttpPost]
         [Route("CreatePolizaGarantia")]
         public async Task<IActionResult> InsertPolizaGarantia(PolizaGarantia polizaGarantia)
         {
@@ -107,9 +113,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-               
-
+         
         [Route("GetListPolizaObservacionByContratoPolizaId")]
         [HttpGet]
         public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
@@ -126,7 +130,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [Route("GetListPolizaGarantiaByContratoPolizaId")]
-        [HttpGet]        
+        [HttpGet]
         public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
         {
             try
@@ -139,8 +143,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+         
         //[Route("GetContratoPolizaByIdContratoPolizaId")]
         //[HttpGet]
         ////public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
@@ -162,17 +165,17 @@ namespace asivamosffie.api.Controllers
         [Route("AprobarContratoByIdContrato")]
         public async Task<IActionResult> AprobarContratoByIdContrato(int pIdContrato)
         {
-            Respuesta rta= new Respuesta();
+            Respuesta rta = new Respuesta();
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 //string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 //AppSettings _appSettingsService;
-                 asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
 
                 _appSettingsService = toAppSettingsService(_settings);
                 rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato, _appSettingsService);
-        
+
                 return Ok(rta);
             }
             catch (Exception ex)
@@ -185,18 +188,7 @@ namespace asivamosffie.api.Controllers
             //return respuesta;
         }
 
-        public AppSettingsService toAppSettingsService(IOptions<AppSettings> appSettings)
-        {
-            AppSettingsService appSettingsService = new AppSettingsService();
-            appSettingsService.MailPort = appSettings.Value.MailPort;
-            appSettingsService.MailServer = appSettings.Value.MailServer;
-            appSettingsService.Password = appSettings.Value.Password;
-            appSettingsService.Sender = appSettings.Value.Sender;
-
-            return appSettingsService;
-
-        }
-
+      
         [Route("GetContratoPolizaByIdContratoPolizaId")]
         [HttpGet]
         //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
@@ -219,9 +211,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
-
+         
         [HttpGet]
         [Route("GetListGrillaContratoGarantiaPoliza")]
         public async Task<ActionResult<List<GrillaContratoGarantiaPoliza>>> GetListGrillaContratoGarantiaPoliza()

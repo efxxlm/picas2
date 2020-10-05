@@ -283,7 +283,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> InsertContratoPoliza([FromBody] ContratoPoliza contratoPoliza, AppSettingsService appSettingsService)
+        public async Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService)
         {
             Respuesta _response = new Respuesta();
 
