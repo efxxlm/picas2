@@ -11,6 +11,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.api;
+using asivamosffie.services.Helpers.Constant;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+
 
 namespace asivamosffie.services
 {
@@ -31,7 +35,56 @@ namespace asivamosffie.services
             _settings = settings;
         }
 
-        public replaceTags()
+        async Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion)
+        {
+            Respuesta _response = new Respuesta();
+
+            //            ConObervacionesActa - Contrato
+            Contrato contrato;
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+
+            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.EditadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+                contrato.FechaModificacion = DateTime.Now;
+                contrato.UsuarioModificacion = pUsuarioModificacion;
+                contrato.ConObervacionesActa = true;
+                contrato.Observaciones = pObervacionesActa;
+
+                //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
+                //DOM 60  1   Sin acta generada
+                //DOM 60  3   Con acta generada
+                //contrato.EstadoActa = "3";
+
+                _context.Contrato.Update(contrato);
+
+                            return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
+                    Message =
+                    await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
+                    ConstantMessagesActaInicio.EditadoCorrrectamente, idAccionCrearActaInicio
+                    , contrato.UsuarioModificacion, " GUARDAR OBSERVACION CONTRATO ACTA"
+                    )
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno,Message= ex.InnerException.ToString().Substring(0, 500) };
+            }
+        }
+            //_context.Add(contratoPoliza);
+
+
+
+            public void replaceTags()
         {
             string str="";
             string valor="";

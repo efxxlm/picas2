@@ -633,5 +633,31 @@ namespace asivamosffie.services.Helpers.Constant
 
     }
 
-   
+    public class ConstantMessagesActaInicio
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        public const string CreadoCorrectamente = "103";
+        public const string EditadoCorrrectamente = "102";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        public const string ErrorInterno = "501";
+        #endregion
+    }
+
+
 }
