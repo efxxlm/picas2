@@ -1173,9 +1173,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Vigencia).HasColumnType("datetime");
 
-                entity.Property(e => e.VigenciaAmparo)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.VigenciaAmparo).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ContratoPoliza)

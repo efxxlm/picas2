@@ -319,7 +319,7 @@ namespace asivamosffie.services
 
                     //contratoPoliza.FechaAprobacion = dt.Value;
                     //contratoPoliza.FechaAprobacion = default(DateTime);
-                    contratoPoliza.FechaAprobacion = dt.GetValueOrDefault();
+                    //contratoPoliza.FechaAprobacion = dt.GetValueOrDefault();
                     //if (contratoPoliza.FechaAprobacion.Year==1)
                         //contratoPoliza.FechaAprobacion = (DateTime)dt;
                         //contratoPoliza.FechaAprobacion.Year= 1977;
