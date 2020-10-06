@@ -14,10 +14,10 @@ export class PolizaGarantiaService implements OnInit {
 
   }
   CreatePolizaObservacion(polizaObservacion: CreatePolizaObservacion) {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreatePolizaObservacion`, polizaObservacion);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateEditPolizaObservacion`, polizaObservacion);
   }
   CreatePolizaGarantia(polizaGarantia: CreatePolizaGarantia) {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreatePolizaGarantia`, polizaGarantia);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateEditPolizaGarantia`, polizaGarantia);
   }
   CreateContratoPoliza(contratoPoliza: InsertPoliza) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateContratoPoliza`, contratoPoliza);

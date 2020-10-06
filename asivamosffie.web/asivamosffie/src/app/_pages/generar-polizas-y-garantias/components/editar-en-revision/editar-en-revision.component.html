@@ -335,8 +335,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select formControlName="estadoRevision" required>
-                    <mat-option *ngFor="let polizaYSeguro of estadoArray" [value]="polizaYSeguro.value">
-                      {{ polizaYSeguro.name }}
+                    <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
+                      {{ estadoRevision.name }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
