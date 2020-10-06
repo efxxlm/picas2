@@ -77,6 +77,7 @@ export class EditarEnRevisionComponent implements OnInit {
   public observacionesOn;
   public idContrato;
   public idPoliza;
+  public idObservacion;
   selected: any;
 
   constructor(
@@ -132,15 +133,18 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('fechaRevision').setValue(data_A[0].fechaRevision);
       this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
       this.addressForm.get('observacionesGenerales').setValue(data_A[0].observacion);
+      this.loadGarantia(data_A[0].polizaObservacionId);
     });
+  }
+
+  loadGarantia(id){
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_B=>{
       const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.value == data_B[0].tipoGarantiaCodigo);
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
-
-    })
+    });
+    this.idObservacion = id;
   }
-
   dataLoad2(data){
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
@@ -171,6 +175,8 @@ export class EditarEnRevisionComponent implements OnInit {
   }
 
   onSubmit() {
+    let auxValue = this.addressForm.value.estadoRevision;
+    console.log(auxValue.value);
     const contratoArray :EditPoliza ={
       contratoId: this.idContrato,
       nombreAseguradora: this.addressForm.value.nombre,
@@ -196,14 +202,15 @@ export class EditarEnRevisionComponent implements OnInit {
     };
     const polizaGarantia: CreatePolizaGarantia={
       contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: this.selected,
+      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
     };
     const polizaObservacion: CreatePolizaObservacion={
+      polizaObservacionId: this.idObservacion,
       contratoPolizaId: this.idPoliza,
       observacion: this.addressForm.value.observacionesGenerales,
       fechaRevision: this.addressForm.value.fechaRevision,
-      estadoRevisionCodigo: this.addressForm.value.estadoRevision
+      estadoRevisionCodigo: auxValue.value
     }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){

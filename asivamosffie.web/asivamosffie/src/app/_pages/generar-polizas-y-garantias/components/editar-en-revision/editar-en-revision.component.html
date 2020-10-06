@@ -177,9 +177,9 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="polizasYSeguros" multiple required [(value)]="this.selected">
-                <mat-option *ngFor="let polizaYSeguro of polizasYSegurosArray" [value]="polizaYSeguro.value">
-                  {{ polizaYSeguro.name }}
+              <mat-select formControlName="polizasYSeguros" multiple required>
+                <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
+                  {{ polizasYSeguros.name }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -335,7 +335,7 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select formControlName="estadoRevision" required>
-                    <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
+                    <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision" >
                       {{ estadoRevision.name }}
                     </mat-option>
                   </mat-select>

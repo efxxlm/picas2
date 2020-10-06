@@ -46,6 +46,7 @@ export class PolizaGarantiaService implements OnInit {
 }
 
 export interface CreatePolizaObservacion {
+  polizaObservacionId:number;
   contratoPolizaId: number;
   observacion: string;
   fechaRevision: Date;
