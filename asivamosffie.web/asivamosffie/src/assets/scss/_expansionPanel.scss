@@ -22,11 +22,6 @@
     display: inline-block;
     margin-right: 2em;
 
-    &.tabla {
-        display: block;
-        margin-right: 0;
-    }
-
     &::before {
         @extend %ayuda-color;
         margin-right: .2em;
@@ -101,7 +96,4 @@ span.mat-expansion-indicator::after {
     border-bottom: 0;
     transform: rotate(0deg);
     padding: 1px;
-}
-mat-panel-title.mat-expansion-panel-header-title:hover{
-    opacity: 0.5
 }

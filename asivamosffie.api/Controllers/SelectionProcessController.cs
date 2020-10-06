@@ -61,7 +61,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId, usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo);
                 return respuesta;
             }
@@ -78,7 +78,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.DeleteProcesoSeleccion(pId, usuarioCreacion);
                 return respuesta;
                 //
@@ -96,7 +96,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                procesoSeleccionCronograma.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                procesoSeleccionCronograma.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCronograma(procesoSeleccionCronograma, false);
                 return respuesta;
                 //
@@ -177,7 +177,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                procesoSeleccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                procesoSeleccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccion(procesoSeleccion);
                 return Ok(respuesta);
                 //
@@ -249,7 +249,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                procesoSeleccionCotizacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                procesoSeleccionCotizacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCotizacion(procesoSeleccionCotizacion);
                 return Ok(respuesta);
                 //
@@ -306,7 +306,6 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                procesoSeleccionProponente.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionProponente(procesoSeleccionProponente);
                 return Ok(respuesta);
             }
@@ -419,22 +418,29 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("CreateContractorsFromProponent")]
-        [HttpPost]
-        public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion){
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                string usuario = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _selectionProcessService.CreateContractorsFromProponent( pProcesoSeleccion, usuario );
-                return respuesta;
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.InnerException.ToString();
-                return respuesta;
-            }
-        }
+        // [Route("GetViewSchedules")]
+        // public async Task<IActionResult> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
+        // {
+        //     try
+        //     {
+        //         var result = await _selectionProcessService.GetViewSchedules(ProcesoSeleccionCronogramaId);
+        //         return Ok(result);
+        //     }
+        //     catch (Exception ex)
+        //     {
+
+        //         throw ex;
+        //     }
+        // }
+
+
+
+
+
+
+
+
+
 
 
         [Route("UploadMassiveLoadElegibilidad")]

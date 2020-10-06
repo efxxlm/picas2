@@ -147,11 +147,6 @@ div.mat-paginator {
     width: 100%;
     min-width: 9em;
 
-    &.btn-table--sm {
-        width: 7em;
-        min-width: 7em;
-    }
-
     .mat-button-wrapper {
         white-space: break-spaces;
     }
@@ -215,10 +210,6 @@ div.mat-paginator {
             margin-right: auto;
         }
     }
-}
-
-.mat-paginator-container {
-    width: 95% !important;
 }
 
 .info-table--img {

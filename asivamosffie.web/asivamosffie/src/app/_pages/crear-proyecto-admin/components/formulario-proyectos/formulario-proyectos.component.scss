@@ -7,6 +7,11 @@
   margin: 20px auto;
 }
 
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -29,9 +34,4 @@
 .mt1
 {
   margin-top: 1em;
-}
-
-.mt3
-{
-  margin-top: 3em;
 }

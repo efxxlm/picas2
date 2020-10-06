@@ -7,7 +7,6 @@ namespace asivamosffie.model.APIModels
     {
         public int ProyectoAdminitracionId { get; set; }
         public bool Enviado { get; set; }
-        public bool? Estado { get; set; }
-        public ProyectoAdministrativo Proyecto { get; set; }
+      
     }
 }

@@ -7,6 +7,11 @@
     margin: 20px auto;
   }
   
+  .mat-radio-button {
+    display: block;
+    margin: 5px 0;
+  }
+  
   .row {
     display: flex;
     flex-direction: row;
@@ -21,6 +26,3 @@
     margin-right: 0;
   }
   
-  .maincolor{
-    color: var(--mainColor);
-    }

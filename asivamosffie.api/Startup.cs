@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using asivamosffie.services.Filters;
+using FluentValidation.AspNetCore;
 using System;
 using System.Text;
 using DinkToPdf.Contracts;
@@ -29,8 +31,6 @@ namespace asivamosffie.api
         {
             Configuration = configuration;
         }
-
-
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
@@ -74,7 +74,6 @@ namespace asivamosffie.api
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = appSettings.asivamosffieIssuerJwt,
                             ValidAudience = appSettings.asivamosffieAudienceJwt,
-                            ClockSkew = TimeSpan.Zero,
                             IssuerSigningKey = new SymmetricSecurityKey(
                                 Encoding.ASCII.GetBytes("asivamosffie@2020application"))
 
@@ -128,10 +127,10 @@ namespace asivamosffie.api
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
-            services.AddTransient<IContributorService, ContributorService>();
-            services.AddTransient<ISourceFundingService, SourceFundingService>();
-            services.AddTransient<ICommitteeSessionFiduciarioService, CommitteeSessionFiduciarioService>();
+            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
+            services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<IProjectContractingService, ProjectContractingService>();

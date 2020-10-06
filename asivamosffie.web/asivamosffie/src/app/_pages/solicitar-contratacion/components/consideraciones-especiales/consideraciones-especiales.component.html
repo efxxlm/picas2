@@ -8,27 +8,14 @@
             <mat-radio-button value="false">No</mat-radio-button>
         </mat-radio-group>
     </div>
-    <div class="animatedDown d-flex w-center" *ngIf="addressForm.controls.reasignacion.value === 'true'">
-        <mat-card style="width: 65%;">
-            <mat-card-content>
-                {{ addressForm.get( 'descripcion' ).value }}
-                <quill-editor class="quill-editor-style" 
-                              [styles]="editorStyle"
-                              [modules]="config"
-                              (onContentChanged)="maxLength($event, 2000)" 
-                              formControlName="descripcion">
-                </quill-editor>
-            </mat-card-content>
-        </mat-card>
-        <span class="contador miles" *ngIf="addressForm.get('descripcion').value !== null" style="margin-bottom: 2em;">
-            {{2000 - textoLimpio(addressForm.get('descripcion').value)}}
-        </span>
-        <span class="contador miles" *ngIf="addressForm.get('descripcion').value === null" style="margin-bottom: 2em;">
-            2000
-        </span>
+    <div class="animatedDown" *ngIf="addressForm.controls.reasignacion.value === 'true'">
+        <mat-form-field class="full-width">
+            <textarea matInput formControlName="descripcion"></textarea>
+        </mat-form-field>
     </div>
     <div class="text-center animatedDown" *ngIf="addressForm.controls.reasignacion.value !== ''">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
+        <button mat-button color="warn" class="btn-guardar" type="submit"
+            [disabled]="addressForm.controls.reasignacion.value === 'true' && addressForm.controls.descripcion.value === '' || !addressForm.controls.descripcion.dirty">
             <img src="assets/img/icon/guardar.svg" alt="guardar">
         </button>
     </div>

@@ -39,7 +39,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ContratoConstruccion> ContratoConstruccion { get; set; }
         public virtual DbSet<ContratoObservacion> ContratoObservacion { get; set; }
         public virtual DbSet<ContratoPerfil> ContratoPerfil { get; set; }
-        public virtual DbSet<ContratoPerfilNumeroRadicado> ContratoPerfilNumeroRadicado { get; set; }
         public virtual DbSet<ContratoPerfilObservacion> ContratoPerfilObservacion { get; set; }
         public virtual DbSet<ContratoPoliza> ContratoPoliza { get; set; }
         public virtual DbSet<ControlRecurso> ControlRecurso { get; set; }
@@ -1999,6 +1998,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<PolizaGarantia>(entity =>
             {
+                entity.Property(e => e.PolizaGarantiaId).ValueGeneratedNever();
+
                 entity.Property(e => e.TipoGarantiaCodigo)
                     .IsRequired()
                     .HasMaxLength(100)

@@ -40,7 +40,6 @@ const routes: Routes = [
         path: 'cambiarContrasena',
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
       },
-      //verificar ruta duplicada
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
@@ -76,8 +75,7 @@ const routes: Routes = [
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
-        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
-          .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
         path: 'gestionarFuentes',
@@ -98,16 +96,6 @@ const routes: Routes = [
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
- /*     {
-        path: 'solicitarDisponibilidadPresupuestal',
-        loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
-          .then(m => m.SolicitarDisponibilidadPresupuestalModule)
-      },
-      {
-        path: 'validarDisponibilidadPresupuesto',
-        loadChildren: () => import('./_pages/validar-disponibilidad-presupuesto/validar-disponibilidad-presupuesto.module')
-        .then(m => m.ValidarDisponibilidadPresupuestoModule)
-      },*/
       {
         path: 'comiteTecnico',
         loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
@@ -123,11 +111,6 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.module' )
           .then( module => module.ContratosModificacionesContractualesModule )
       },
- /*    {
-        path: 'comiteFiduciario',
-        loadChildren: () => import( './_pages/sesion-comite-fiduciario/comite-fiduciario.module' )
-          .then( module => module.ComiteFiduciarioModule )
-      },*/
       {
  
         path: 'procesosContractuales',
@@ -140,21 +123,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
         .then(m => m.SolicitarContratacionModule)
       },
-      { 
+      {
         path: 'preconstruccion',
         loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
         .then(m => m.FasePreconstruccionModule)
       },
-    { 
-        path: 'generarDisponibilidadPresupuestal',
-        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
-        .then(m => m.GenerarDisponibilidadPresupuestalModule)
-      },
-      {
-        path: 'compromisosActasComite',
-        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
-          .then( module => module.CompromisosActasComiteModule )
-      } 
     ]
   },
   {

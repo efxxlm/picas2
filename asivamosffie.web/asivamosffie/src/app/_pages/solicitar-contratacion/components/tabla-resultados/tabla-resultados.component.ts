@@ -30,7 +30,7 @@ export class TablaResultadosComponent implements OnInit {
     'sede',
     'id'
   ];
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource(this.listaResultados);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -38,7 +38,7 @@ export class TablaResultadosComponent implements OnInit {
   elementosSelecciondos: any[] = [];
    
 
-  constructor ( public dialog: MatDialog ) { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
     console.log('lista', this.esMultiproyecto );
@@ -53,31 +53,20 @@ export class TablaResultadosComponent implements OnInit {
   }
 
   addElement(seleccionado: boolean, elemento: any) {
-    if (seleccionado) {
+    if (seleccionado)
       this.elementosSelecciondos.push(elemento);
-    } else {
-      this.elementosSelecciondos.forEach( ( value, index ) => {
-        if ( value.proyectoId === elemento.proyectoId ) {
-          this.elementosSelecciondos.splice( index, 1 );
-        };
-      } );
-    };
-  };
+  }
 
   verSeleccionados() {
-    //console.log(this.elementosSelecciondos);
+    console.log(this.elementosSelecciondos);
     const dialogRef = this.dialog.open(DialogTableProyectosSeleccionadosComponent, {
       data: this.elementosSelecciondos
     });
-
-    dialogRef.afterClosed().subscribe( console.log );
   }
 
   openPopup() {
-
     this.dialog.open(AsociadaComponent, {
       data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto}
     });
-
   }
 }

@@ -7,6 +7,11 @@
   margin: 20px auto;
 }
 
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -19,24 +24,4 @@
 
 .col:last-child {
   margin-right: 0;
-}
-
-.mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
-  content: '*';
-}
-
-.mainColor{
-  color: var(--mainColor);
-}
-
-.size1{
-  font-size: 0.8rem;
-  color: var(--fontColor);
-  font-style: italic;
-}
-
-.mcenter
-{
-  margin-left: auto;
-  margin-right: auto;
 }

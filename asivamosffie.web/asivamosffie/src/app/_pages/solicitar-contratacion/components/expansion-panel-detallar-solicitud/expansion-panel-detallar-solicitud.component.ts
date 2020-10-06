@@ -13,11 +13,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
 
   contratacion: Contratacion = {};
-  estadoSemaforos = {
-    sinDiligenciar: 'sin-diligenciar',
-    enProceso: 'en-proceso',
-    completo: 'completo'
-  }
 
   constructor(
               private route: ActivatedRoute,
@@ -56,38 +51,6 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       })
 
     });
-  };
-
-  semaforoAcordeon ( acordeon: string ) {
-    
-    if ( acordeon === 'consideracionEspecial' ) {
-      if ( this.contratacion.esObligacionEspecial !== null ) {
-        return this.estadoSemaforos.completo;
-      } else{
-        return this.estadoSemaforos.enProceso;
-      };
-    } else if ( acordeon === 'datosContratista' ) {
-      if ( this.contratacion[ 'contratista' ] ) {
-        return this.estadoSemaforos.completo;
-      } else{
-        return this.estadoSemaforos.enProceso;
-      };
-    } else if ( acordeon === 'caracteristicasTecnicas' ) {
-      let contProyectos = 0;
-      if ( this.contratacion.contratacionProyecto ) {
-        for ( let contratacionProyecto of this.contratacion.contratacionProyecto ) {
-          if ( contratacionProyecto.tieneMonitoreoWeb !== null ) {
-            contProyectos += 1;
-          };
-        };
-        if ( contProyectos === this.contratacion.contratacionProyecto.length ) {
-          return this.estadoSemaforos.completo;
-        } else {
-          return this.estadoSemaforos.enProceso;
-        }
-      }
-    }
-    
   }
 
   openDialog(modalTitle: string, modalText: string) {

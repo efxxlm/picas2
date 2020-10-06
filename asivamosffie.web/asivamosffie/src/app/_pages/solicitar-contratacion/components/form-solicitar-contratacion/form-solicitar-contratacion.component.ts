@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
 import { ProjectService, InstitucionEducativa, ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 import { forkJoin } from 'rxjs';
@@ -15,7 +15,7 @@ export class FormSolicitarContratacionComponent implements OnInit {
 
   verBusqueda = false;
 
-  addressForm: FormGroup = this.fb.group({
+  addressForm = this.fb.group({
     tipoInterventor: [null],
     llaveMEN: [null],
     region: [null],
@@ -61,18 +61,6 @@ export class FormSolicitarContratacionComponent implements OnInit {
       this.selectRegion = response[1]
     })
   }
-
-  reiniciarFiltro () {
-    this.addressForm.setValue({
-      tipoInterventor: null,
-      llaveMEN: null,
-      region: null,
-      departamento: null,
-      municipio: null,
-      institucionEducativa: null,
-      sede: null
-    });
-  };
 
   private declararEsMultiple() {
     this.esMultiple = new FormControl('free', Validators.required);
@@ -121,8 +109,6 @@ export class FormSolicitarContratacionComponent implements OnInit {
     
     let pTipoIntervencion: Dominio = this.addressForm.get('tipoInterventor').value;
     let pLlaveMen: string = this.addressForm.get('llaveMEN').value;
-    let pRegion: Localizacion = this.addressForm.get('region').value;
-    let pDepartamento: Localizacion = this.addressForm.get('departamento').value;
     let pMunicipio: Localizacion = this.addressForm.get('municipio').value;
     let pIdInstitucionEducativa: InstitucionEducativa = this.addressForm.get('institucionEducativa').value;
     let pIdSede: InstitucionEducativa = this.addressForm.get('sede').value;
@@ -130,8 +116,6 @@ export class FormSolicitarContratacionComponent implements OnInit {
     this.projectService.listaProyectoConFiltros( 
                                                   pTipoIntervencion ? pTipoIntervencion.codigo : "", 
                                                   pLlaveMen ? pLlaveMen : "", 
-                                                  pRegion ? pRegion.localizacionId == "7" ? "" : pRegion.localizacionId : "",
-                                                  pDepartamento ? pDepartamento.localizacionId : "",
                                                   pMunicipio ? pMunicipio.localizacionId : "", 
                                                   pIdInstitucionEducativa ? pIdInstitucionEducativa.institucionEducativaSedeId : 0, 
                                                   pIdSede ? pIdSede.institucionEducativaSedeId : 0 

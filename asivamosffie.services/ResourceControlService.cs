@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services
-{  
+{
     public class ResourceControlService : IResourceControlService
     {
         private readonly devAsiVamosFFIEContext _context;
@@ -38,9 +38,10 @@ namespace asivamosffie.services
      
             try
             {
-                
-                var ControlGrid = _context.ControlRecurso
-                .Where( cr => cr.FuenteFinanciacionId == id && !(bool)cr.Eliminado)
+                //TODO: Faber Revisar todos los include ya que no se esta validando si esta eliminado
+                List<ControlRecurso> ControlGrid = new List<ControlRecurso>();
+                ControlGrid = await _context.ControlRecurso
+                .Where( cr => cr.FuenteFinanciacionId == id)
                     .Include(RC => RC.FuenteFinanciacion)
                     .ThenInclude(FF => FF.Aportante)
                     .ThenInclude(APO => APO.Cofinanciacion)
@@ -69,35 +70,17 @@ namespace asivamosffie.services
             { 
                 if (controlRecurso != null)
                 {
-                    controlRecurso.Eliminado = false;
-                    if(controlRecurso.ControlRecursoId>0)
-                    {
-                        controlRecurso.FechaModificacion = DateTime.Now;
-                        _context.Add(controlRecurso);
-                        await _context.SaveChangesAsync();
-                        return new Respuesta
-                        {
-                            IsSuccessful = true,
-                            IsException = false,
-                            IsValidation = false,
-                            Code = ConstantMessagesResourceControl.OperacionExitosa,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "CREAR CONTROL RECURSO")
-                        };
-                    }
-                    else                    
-                    {
-                        controlRecurso.FechaCreacion = DateTime.Now;
-                        _context.Add(controlRecurso);
-                        await _context.SaveChangesAsync();
-                        return new Respuesta
-                        {
-                            IsSuccessful = true,
-                            IsException = false,
-                            IsValidation = false,
-                            Code = ConstantMessagesResourceControl.OperacionExitosa,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "CREAR CONTROL RECURSO")
-                        };
-                    }                                        
+                    _context.Add(controlRecurso);
+                    await _context.SaveChangesAsync();
+                    return new Respuesta
+                       {
+                           IsSuccessful = true,
+                           IsException = false,
+                           IsValidation = false,
+                           Code = ConstantMessagesResourceControl.OperacionExitosa,
+                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "CREAR CONTROL RECURSO")
+                       };
+                    
                 }
                 else
                 {                    
@@ -185,7 +168,7 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Code = ConstantMessagesResourceControl.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EliminadoExitosamente, idAccionCrearFuentesFinanciacion, pUsuario, "Eliminado")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, pUsuario, "Eliminado")
                 };
                
             }

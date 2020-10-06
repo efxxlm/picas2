@@ -87,43 +87,32 @@ export class SeccionPrivadaComponent implements OnInit {
 
   }
 
-  openDialog(modalTitle: string, modalText: string, redirect?:boolean, id?:number) {
+  openDialog(modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });   
-    
-    if ( redirect )
-    {
-      dialogRef.afterClosed().subscribe(result => {
-        if(result)
-        {
-          this.router.navigate([`/seleccion/seccionPrivada/${ id }`]);
-          setTimeout(() => {
-            location.reload();  
-          }, 1000);
-          
-        }
-      });
-    }
   }
 
   onSubmit(){
     console.log(this.procesoSeleccion);
     this.procesoSeleccionService.guardarEditarProcesoSeleccion(this.procesoSeleccion).subscribe( respuesta => {
-      this.openDialog( "", respuesta.message,respuesta.code == "200",respuesta.data.procesoSeleccionId )
+      this.openDialog( "Proceso seleccion", respuesta.message )
 
+       if ( respuesta.code == "200" )
+       {
+         this.router.navigate([`/seleccion/seccionPrivada/${ respuesta.data.procesoSeleccionId }`])
+            
+       }
       
       //console.log('respuesta',  respuesta );
     },
     error => {
-      this.openDialog( "", error )
+      this.openDialog( "Proceso seleccion", error )
       console.log('respuesta',  error );
     },
      () => {})
   }
 
-  estaIncompleto(objeto){
-    return true;
-  }
+  
 }

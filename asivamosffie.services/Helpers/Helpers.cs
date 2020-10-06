@@ -9,13 +9,9 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
+using System; 
 using System.IO;
 using asivamosffie.model.APIModels;
-using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Reflection;
-
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -54,7 +50,7 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data) ;
+            result = sha.ComputeHash(data);
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
@@ -88,90 +84,6 @@ namespace asivamosffie.services.Helpers
 
             return text;
         }
-
-        public static string Consecutive(string input, int countMax)
-        {
-            //("D4") indica la cantidad de ceros a la izquierda (0001) ver mas => https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
-            var number = Convert.ToInt32(countMax);
-
-            //Seleccion privada SP
-            if (input == "1")
-            {
-                return $"{"SP"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
-            }
-
-            if (input == "DE")
-            {
-                return $"{"DE_"}{(++number).ToString("D4")}";
-            }
-
-            //Comite Fiduciario
-            if (input == "CF")
-            {
-                return $"{"CF_"}{(++number).ToString("D5")}";
-            }
-            if (input == "PA")
-            {
-                return $"{"PA_"}{(++number).ToString("D4")}";
-            }
-
-            //Invitacion Cerrada SC
-            else if (input == "2")
-            {
-                return $"{"SC"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
-            }
-
-            //Concecutivo Proyecto Administrativo
-            if (input == "D4")
-            {
-                return $"{(number).ToString("D4")}";
-            }
-
-
-            //Invitacion Abierta SA
-            else
-            {
-                return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
-            }
-        }
-
-        //TODO: Implementacion para cosultas complejas
-        public static List<T> ExecuteQuery<T>(string query) where T : class, new()
-        {
-            devAsiVamosFFIEContext _context = new devAsiVamosFFIEContext();
-            using (var command = _context.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = query;
-                command.CommandType = CommandType.Text;
-
-                _context.Database.OpenConnection();
-
-                using (var reader = command.ExecuteReader())
-                {
-                    var lst = new List<T>();
-                    var lstColumns = new T().GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).ToList();
-                    while (reader.Read())
-                    {
-                        var newObject = new T();
-                        for (var i = 0; i < reader.FieldCount; i++)
-                        {
-                            var name = reader.GetName(i);
-                            PropertyInfo prop = lstColumns.FirstOrDefault(a => a.Name.ToLower().Equals(name.ToLower()));
-                            if (prop == null)
-                            {
-                                continue;
-                            }
-                            var val = reader.IsDBNull(i) ? null : reader[i];
-                            prop.SetValue(newObject, val, null);
-                        }
-                        lst.Add(newObject);
-                    }
-
-                    return lst;
-                }
-            }
-        }
-
 
         public static object ConvertToUpercase(object dataObject)
         {

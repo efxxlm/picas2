@@ -31,9 +31,6 @@ import { TablaSolicitudesEnviadasComponent } from './components/tabla-solicitude
     FormsModule,
     QuillModule.forRoot(),
     GestionarProcesosContractualesRoutingModule
-  ],
-  exports: [
-    TablaOtrosDescuentosComponent
   ]
 })
 export class GestionarProcesosContractualesModule { }

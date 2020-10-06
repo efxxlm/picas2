@@ -44,17 +44,11 @@ export class TablaOtrosTemasComponent implements OnInit {
     };
   }
 
-  goToLink(url: string){
-    window.open('//' + url, "_blank");
-  }
-
   cargarRegistros(){
     let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
 
     this.dataSource = new MatTableDataSource( lista );
     
   }
-
-
 
 }

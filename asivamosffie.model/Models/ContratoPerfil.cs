@@ -7,7 +7,6 @@ namespace asivamosffie.model.Models
     {
         public ContratoPerfil()
         {
-            ContratoPerfilNumeroRadicado = new HashSet<ContratoPerfilNumeroRadicado>();
             ContratoPerfilObservacion = new HashSet<ContratoPerfilObservacion>();
         }
 

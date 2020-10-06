@@ -39,7 +39,7 @@
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a (click)="definirCaracteristicas( element.contratacionProyectoId, element.proyecto.localizacionIdMunicipio )" mat-raised-button color="accent" class="btn-table">Definir características</a>
+                <a [routerLink]="['/solicitarContratacion/definir-caracteristicas', element.contratacionProyectoId]" mat-raised-button color="accent" class="btn-table">Definir características</a>
             </td>
         </ng-container>
 

@@ -1,11 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { min } from 'rxjs/operators';
-import { ProcesoSeleccion, ProcesoSeleccionProponente, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
-import { $ } from 'protractor';
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 
 @Component({
   selector: 'app-form-seleccion-proponente-a-invitar',
@@ -16,7 +12,6 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
-  listaProponentes: ProcesoSeleccionProponente[] = [];
 
   addressForm = this.fb.group({
     cuantosProponentes: [null, Validators.compose([
@@ -27,53 +22,20 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     ]
   });
 
-  constructor(
-              private fb: FormBuilder,
-              private procesoSeleccionService: ProcesoSeleccionService,
-              private dialog: MatDialog,    
-              private router: Router,
-
-             )
-  {
-
-  }
-
-
+  constructor(private fb: FormBuilder) {}
   ngOnInit(): void {
     
   }
 
-  onSaveContractors() {
-
-    let proceso: ProcesoSeleccion = {
-      numeroProceso: this.procesoSeleccion.numeroProceso,
-      procesoSeleccionProponente: this.listaProponentes,
-
-    }
-
-    console.log(this.listaProponentes);
-
-
-    this.procesoSeleccionService.createContractorsFromProponent( proceso )
-      .subscribe( respuesta => {
-        this.openDialog('Proceso Selección', respuesta.message)
-        if (respuesta.code == "200")
-          this.router.navigate(['/seleccion/invitacionCerrada',this.procesoSeleccion.procesoSeleccionId]);
-      })
+  onSubmit() {
+    console.log(this.addressForm.value);
 
     // this.procesoSeleccion.procesoSeleccionId = this.addressForm.get('procesoSeleccionId').value,
     // this.procesoSeleccion.evaluacionDescripcion = this.addressForm.get('descricion').value,
     // this.procesoSeleccion.urlSoporteEvaluacion = this.addressForm.get('url').value,
     
     //console.log(procesoS);
-    //this.guardar.emit(null);
-  }
-
-  openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText }
-    });   
+    this.guardar.emit(null);
   }
 
   cargarRegistro(){
@@ -82,32 +44,6 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     // this.addressForm.get('descricion').setValue( this.procesoSeleccion.evaluacionDescripcion );
     // this.addressForm.get('url').setValue( this.procesoSeleccion.urlSoporteEvaluacion );
 
-  }
-
-  onSubmit(){
-
-  }
-
-  changeSeleccion( check, elemento ){
-
-    let cantidad = this.addressForm.get('cuantosProponentes').value ? this.addressForm.get('cuantosProponentes').value : 0
-
-    if (check.checked){
-      if ( cantidad >= (this.listaProponentes.length + 1) ){
-        this.listaProponentes.push( elemento );
-      }else{
-        let c: any = document.getElementById( check.id );
-        //console.log('check', c );    
-        c.checked = false;
-      }
-    }
-    else
-    {
-      let posicion = this.listaProponentes.indexOf( elemento );
-      this.listaProponentes.splice( posicion, 1 );
-      
-    }
-    //console.log( cantidad, check, elemento, this.listaProponentes );
   }
 
 }

@@ -2,7 +2,6 @@ import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
 import { Contratacion } from './project-contracting';
 import { Proyecto } from '../core/_services/project/project.service';
 import { dashCaseToCamelCase } from '@angular/compiler/src/util';
-import { ProcesoSeleccion } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface SolicitudesContractuales{
     id?: number,
@@ -35,13 +34,9 @@ export interface ComiteTecnico{
     fechaOrdenDia?: Date,
     numeroComite?: string,
     estadoComiteCodigo?: string,
-    numeroCompromisos?: number,
-    numeroCompromisosCumplidos?: number,
-    tipoTemaFiduciarioCodigo?: string,
 
     sesionComiteTema?: SesionComiteTema[],
-    sesionComiteSolicitudComiteTecnico?: SesionComiteSolicitud[],
-    sesionComiteSolicitudComiteTecnicoFiduciario?: SesionComiteSolicitud[],
+    sesionComiteSolicitud?: SesionComiteSolicitud[],
     sesionParticipante?: SesionParticipante[],
     sesionInvitado?: SesionInvitado[],
 
@@ -67,7 +62,6 @@ export interface SesionComiteTema{
     estadoTemaCodigo?: string,
     generaCompromiso?: boolean,
     cantCompromisos?: number,
-    registroCompleto?: boolean,
 
     completo?: boolean,
 
@@ -92,18 +86,7 @@ export interface SesionComiteSolicitud {
     cantCompromisos?: number,
     eliminado?: boolean,
     requiereVotacion?: boolean,
-    registroCompleto?: boolean,
-    desarrolloSolicitud?: string,
 
-    comiteTecnicoFiduciarioId?: number,
-    registroCompletoFiduciaria?: boolean,
-    desarrolloSolicitudFiduciario?: string,
-    estadoActaCodigoFiduciario?: string,
-    observacionesFiduciario?: string,
-    rutaSoporteVotacionFiduciario?: string,
-    generaCompromisoFiduciario?: boolean,
-    cantCompromisosFiduciario?: number,
-    requiereVotacionFiduciario?: boolean,
 
     tipoSolicitud?: string,
     numeroSolicitud?: string,
@@ -114,7 +97,6 @@ export interface SesionComiteSolicitud {
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
     sesionSolicitudCompromiso?: SesionSolicitudCompromiso[],
     contratacion?: Contratacion,
-    procesoSeleccion?: ProcesoSeleccion,
 
 
 }
@@ -161,7 +143,6 @@ export interface SesionSolicitudVoto{
     eliminado?: boolean,
     usuarioModificacion?: string,
     fechaModificacion?: Date,
-    comiteTecnicoFiduciarioId?: number,
 
     nombreParticipante?: string,
 
@@ -191,13 +172,7 @@ export interface ComiteGrilla{
     numeroComite?: string,
     estadoComite?: string, 
     estadoComiteCodigo?: string,
-    estadoActa?: string,
-    estadoActaCodigo?: string,
-    registroCompleto?: boolean,
-    registroCompletoNombre?: string,
-    numeroCompromisos?: number,
-    numeroCompromisosCumplidos?: number,
-    esComiteFiduciario?: boolean,
+    
 }
 
 export interface SesionSolicitudObservacionProyecto{
@@ -229,14 +204,6 @@ export interface SesionSolicitudCompromiso{
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
-    estadoCodigo?: string,
-    esFiduciario?: boolean,
-
-
-    nombreResponsable?: string,
-    responsableSesionParticipante?: SesionParticipante,
-    nombreEstado?: string,
-
 }
 
 export interface TemaCompromiso{
@@ -250,12 +217,6 @@ export interface TemaCompromiso{
     fechaModificacion?: Date,
     usuarioModificacion?: Date,
     eliminado?: boolean,
-    estadoCodigo?: string,
-
-    nombreResponsable?: string,
-    responsableNavigation?: SesionParticipante,
-    nombreEstado?: string,
-
 }
 
 interface EstadoComite{

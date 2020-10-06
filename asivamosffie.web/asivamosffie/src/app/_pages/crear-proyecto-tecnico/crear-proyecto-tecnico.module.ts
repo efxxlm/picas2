@@ -8,7 +8,7 @@ import { FormularioProyectosComponent } from './components/formulario-proyectos/
 import { TablaProyectosTecnicoComponent } from './components/tabla-proyectos-tecnico/tabla-proyectos-tecnico.component';
 import { MaterialModule } from 'src/app/material/material.module';
 
-import { CurrencyMaskModule } from 'ng2-currency-mask';
+
 
 @NgModule({
   declarations: [CrearProyectoTenicoComponent, FormularioProyectosComponent, TablaProyectosTecnicoComponent],
@@ -17,8 +17,7 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     CrearProyectoTecnicoRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule,
-    CurrencyMaskModule
+    FormsModule
   ]
 })
 export class CrearProyectoTecnicoModule { }

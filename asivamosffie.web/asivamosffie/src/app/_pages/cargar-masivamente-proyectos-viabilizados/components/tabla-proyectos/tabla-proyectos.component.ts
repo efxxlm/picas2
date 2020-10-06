@@ -59,14 +59,8 @@ export class TablaProyectosComponent implements OnInit {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
       respuesta.forEach(element => {
-        datos.push({
-          fechaCargue:this.datepipe.transform(element.fechaCreacion, 'yyyy-MM-dd'),
-          id:element.archivoCargueId,
-          registrosInvalidos:element.cantidadRegistrosInvalidos,
-          registrosValidos:element.cantidadRegistrosValidos,
-          totalRegistros:element.cantidadRegistros,
-          gestion:element.nombre
-        });
+        datos.push({fechaCargue:this.datepipe.transform(element.fechaCreacion, 'yyyy-MM-dd')
+          ,id:element.archivoCargueId,registrosInvalidos:element.cantidadRegistrosInvalidos,registrosValidos:element.cantidadRegistrosValidos,totalRegistros:element.cantidadRegistros,gestion:element.nombre});
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;

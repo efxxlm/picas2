@@ -15,7 +15,6 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
   objetoComiteTecnico: ComiteTecnico = {};
 
   estadosComite = EstadosComite
-  estadoAcordeon : string = "";
 
   constructor(
                 public dialog: MatDialog,
@@ -51,11 +50,6 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
         this.openDialog('', '“No se cuenta con el Quorum necesario para realizar la sesión”.');
         this.ngOnInit();
       })
-  }
-
-  changeSemaforo(e){
-    this.estadoAcordeon = e;
-    console.log( e )
   }
 
   ngOnInit(): void {

@@ -21,16 +21,6 @@
     margin-right: 0;
 }
 
-.iniciarSesion,
-.recuperar-pass {
-    .mat-form-field-empty.mat-form-field-label {
-        transform: translateY(5px);
-    }
-    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-        transform: translateY(-0.9em) scale(0.75);
-    }
-}
-
 .mat-form-field-appearance-outline .mat-form-field-outline,
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
     color: #174193;;
@@ -93,7 +83,7 @@ mat-form-field {
 
 .mat-select-arrow-wrapper {
     position: relative;
-    right: -2.7em;
+    right: -1.7em;
     top: .3em
 }
 
@@ -114,6 +104,9 @@ div.mat-select-arrow {
     color: #174193;;
     color: var(--mainColor);
     font-weight: 500;
+    height: 2.4em;
+    width: 2.4em;
+    min-width: 2.4em;
     height: 2em;
     width: 2em;
     min-width: 2em;
@@ -123,11 +116,6 @@ div.mat-select-arrow {
     justify-content: center;
     align-items: center;
     margin-left: .8em;
-
-    &.miles {
-        height: 2.4em;
-        min-width: 2.4em;
-    }
 }
 
 .mat-form-field-appearance-legacy .mat-form-field-wrapper {
@@ -153,7 +141,6 @@ div.mat-select-arrow {
     right: 0;
     top: 45%;
     font-weight: 600;
-    color: var(--mainColor);
 }
 
 .mat-select[required]::after {
@@ -162,7 +149,6 @@ div.mat-select-arrow {
     right: 0;
     font-weight: 600;
     top: 25%;
-    color: var(--mainColor);
 }
 
 .mat-placeholder-required {
@@ -199,19 +185,4 @@ div.mat-select-arrow {
 .mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
     background: #174193 !important;
     background: var(--mainColor) !important;
-}
-
-.sin-contador{
-    padding-right: 2.9em;
-}
-/* lo vole jflorez
-.mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
-    content: '';
-}*/
-.mat-form-field.nocontent input:required ~ .mat-form-field-label-wrapper::after {
-    content: '';
-}
-
-.radio-color-detalle {
-    --mainColor: var( --fontColor ) !important;
 }

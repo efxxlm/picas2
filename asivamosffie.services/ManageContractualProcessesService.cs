@@ -306,7 +306,7 @@ namespace asivamosffie.services
 
                             try
                             {
-                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
+                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante;
                             }
                             catch (Exception)
                             {
@@ -644,9 +644,9 @@ namespace asivamosffie.services
             {
                 if (sesionComiteSolicitud.FechaComiteFiduciario != null)
                 {
-                    //contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
+                    contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
                 }
-                //contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
+                contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
             }
 
             if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
@@ -678,14 +678,14 @@ namespace asivamosffie.services
                 {
                     if (ProyectoAportante.Aportante.TipoAportanteId > 0)
                     {
-                        ProyectoAportante.Aportante.TipoAportanteString = LisParametricas
+                        ProyectoAportante.Aportante.TipoAportante = LisParametricas
                             .Where(r => r.DominioId == ProyectoAportante.Aportante.TipoAportanteId)
                             .FirstOrDefault().Nombre;
                     }
                     if (ProyectoAportante.Aportante.NombreAportanteId > 0)
                     {
 
-                        ProyectoAportante.Aportante.NombreAportanteString = LisParametricas
+                        ProyectoAportante.Aportante.NombreAportante = LisParametricas
                             .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
                             .FirstOrDefault().Nombre;
                     }
