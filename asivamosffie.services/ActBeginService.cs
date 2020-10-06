@@ -14,7 +14,7 @@ using asivamosffie.api;
 using asivamosffie.services.Helpers.Constant;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-
+using System.IO;
 
 namespace asivamosffie.services
 {
@@ -27,15 +27,23 @@ namespace asivamosffie.services
 
         private readonly IOptions<AppSettingsService> _settings;
 
-        public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettingsService> settings)
+        private readonly IDocumentService _documentService;
+
+
+
+
+        
+
+        public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettingsService> settings, IDocumentService documentService)
         {
 
             _commonService = commonService;
             _context = context;
             _settings = settings;
-        }
+        _documentService = documentService;
+    }
 
-        async Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion)
+        async Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObservacionesActa, string pUsuarioModificacion)
         {
             Respuesta _response = new Respuesta();
 
@@ -51,7 +59,7 @@ namespace asivamosffie.services
                 contrato.FechaModificacion = DateTime.Now;
                 contrato.UsuarioModificacion = pUsuarioModificacion;
                 contrato.ConObervacionesActa = true;
-                contrato.Observaciones = pObervacionesActa;
+                contrato.Observaciones = pObservacionesActa;
 
                 //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
                 //DOM 60  1   Sin acta generada
@@ -80,11 +88,149 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno,Message= ex.InnerException.ToString().Substring(0, 500) };
             }
         }
-            //_context.Add(contratoPoliza);
+        //_context.Add(contratoPoliza);
 
 
+        async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion)
+        {
+            Respuesta _response = new Respuesta();
 
-            public void replaceTags()
+            //            ConObervacionesActa - Contrato
+            Contrato contrato;
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+
+            ContratoObservacion contratoObservacion= new ContratoObservacion();
+
+            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.EditadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+                //contrato.FechaModificacion = DateTime.Now;
+                //contrato.UsuarioModificacion = pUsuarioModificacion;
+                //contrato.ConObervacionesActa = true;
+                //contrato.Observaciones = pObservacionesConsideracionesEspeciales;
+
+                contratoObservacion.Observaciones=pObservacionesConsideracionesEspeciales;
+                contratoObservacion.ContratoId = contrato.ContratoId;
+                contratoObservacion.EsActaFase2 = true;
+                contratoObservacion.EsActa = true;
+
+                contratoObservacion.FechaCreacion = DateTime.Now;
+                contratoObservacion.UsuarioModificacion = pUsuarioModificacion;
+
+                //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
+                //DOM 60  1   Sin acta generada
+                //DOM 60  3   Con acta generada
+                //contrato.EstadoActa = "3";                
+
+                _context.Add(contratoObservacion);
+                await _context.SaveChangesAsync();
+
+
+                //            Plazo de ejecución fase 1 – Preconstrucción: Meses: 4 Días: 3 - PlazoFase1PreMeses - PlazoFase1PreDias - contrato
+
+                //---- - guardar    OK
+                //  Plazo de ejecución fase 2 – Construcción: Meses: xx Días: xx - PlazoFase2PreMeses - PlazoFase2PreDias - contrato
+
+                //Observaciones o consideraciones especiales   Observaciones - contrato
+
+                return
+   new Respuesta
+           {
+               IsSuccessful = true,
+               IsException = false,
+               IsValidation = false,
+               Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
+               Message =
+               await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
+               ConstantMessagesActaInicio.EditadoCorrrectamente, idAccionCrearActaInicio
+               , contrato.UsuarioModificacion, " GUARDAR OBSERVACION CONTRATO ACTA"
+               )
+           };
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
+            }
+        }
+
+
+        public async Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
+            /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
+            )
+        {
+            //            Fecha de la firma del documento por parte del contratista de obra -FechaFirmaContratista - contrato
+            //Fecha de la firma del documento por parte del contratista de interventoría -FechaFirmaActaContratistaInterventoria - contrato
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contratacion, (int)EnumeratorTipoDominio.Acciones);
+
+            Contrato contrato;
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+
+            try
+            {
+
+                contrato.FechaFirmaContratista = pFechaFirmaContratista;
+                contrato.FechaFirmaActaContratistaInterventoriaFase2 = pFechaFirmaActaContratistaInterventoria;
+                contrato.UsuarioModificacion = pUsuarioModificacion;
+
+
+                string strFilePatch = "";
+                //Save Files  
+                if (pFile == null)
+                {
+                }
+                else
+                {
+                    if (pFile.Length > 0)
+                    {
+                        strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaInicio, pContratoId.ToString());
+                        await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
+
+                    }
+                }
+
+
+                //Auditoria
+                //contratacionOld.FechaModificacion = DateTime.Now;
+                //contratacionOld.UsuarioModificacion = pContratacion.UsuarioCreacion;
+                //Registros
+                //contratacionOld.RutaMinuta = strFilePatch;
+                //contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
+                //contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
+
+                contrato.RutaActaSuscrita = strFilePatch + "//" + pFile.FileName;
+                //contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantGestionarProcesosContractuales.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantGestionarProcesosContractuales.OperacionExitosa, idAccion, contrato.UsuarioModificacion, "CARGAR ACTA SUSCRITA CONTRATO")
+                 };
+
+            }
+
+            catch (Exception ex)
+            {
+                return
+              new Respuesta
+              {
+                  IsSuccessful = false,
+                  IsException = true,
+                  IsValidation = false,
+                  Code = ConstantGestionarProcesosContractuales.Error,
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantGestionarProcesosContractuales.Error, idAccion, contrato.UsuarioModificacion, ex.InnerException.ToString())
+              };
+            }
+        }
+
+
+public void replaceTags()
         {
             string str="";
             string valor="";
