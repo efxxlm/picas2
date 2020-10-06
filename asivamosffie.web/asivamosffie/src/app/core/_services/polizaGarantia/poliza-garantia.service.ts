@@ -166,13 +166,12 @@ export interface Contratista {
 }
 
 export interface InsertPoliza{
-  contratoPolizaId: number;
-  contratoId: number;
-  nombreAseguradora: string;
-  numeroPoliza: string;
-  numeroCertificado: string;
-  fechaExpedicion: Date;
-  vigencia: Date;
-  vigenciaAmparo: Date;
-  valorAmparo: number;
+  contratoId:string;
+  nombreAseguradora:string;
+  numeroPoliza:string;
+  numeroCertificado:string;
+  fechaExpedicion:Date;
+  vigencia:Date;
+  vigenciaAmparo:Date;
+  valorAmparo:number;
 }

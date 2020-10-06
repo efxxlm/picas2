@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { InsertPoliza, PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-editar-en-revision',
   templateUrl: './editar-en-revision.component.html',
@@ -78,6 +78,7 @@ export class EditarEnRevisionComponent implements OnInit {
   public idContrato;
 
   constructor(
+    private router: Router,
     private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
     public dialog: MatDialog,
@@ -154,8 +155,7 @@ export class EditarEnRevisionComponent implements OnInit {
 
   onSubmit() {
     const contratoArray :InsertPoliza ={
-      contratoPolizaId: this.idContrato,
-      contratoId: this.idContrato,
+      contratoId: this.idContrato.toString(),
       nombreAseguradora: this.addressForm.value.nombre,
       numeroPoliza:this.addressForm.value.numeroPoliza,
       numeroCertificado: this.addressForm.value.numeroCertificado,
@@ -165,13 +165,13 @@ export class EditarEnRevisionComponent implements OnInit {
       valorAmparo: this.addressForm.value.polizasYSeguros
     };
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
-      /*if(data.isSuccessful==true){
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      if(data.isSuccessful==true){
+        this.openDialog('', data.message);
+        this.router.navigate[('generarPolizasYGarantias')];
       }
       else{
-        this.openDialog('', 'Error en el servicio.');
-      }*/
-      this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.openDialog('', data.message);
+      }
     });
     console.log(this.addressForm.value);
   }
