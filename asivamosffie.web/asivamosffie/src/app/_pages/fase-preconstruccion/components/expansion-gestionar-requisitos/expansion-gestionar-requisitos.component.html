@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="contrato !== undefined">
 	<div class="text-center">
 		<div class="text-right">
 			<a routerLink="/preconstruccion" mat-button color="primary" class="btn-regresar">
@@ -6,19 +6,19 @@
 			</a>
 		</div>
 		<h1 class="title-menu--h1">
-			Gestionar requisitos para inicio contrato C223456789 fase 1 - Preconstrucción
+			Gestionar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
 		</h1>
 		<p class="text-primary">
 			<span class="mx-2em">
 				Fecha de aprobacion de póliza:
 				<b>
-					21/06/2020
+					{{ contrato.fechaPoliza | date: 'dd/MM/yyyy' }}
 				</b>
 			</span>
 			<span class="mx-2em">
 				Proyectos asociados:
 				<b>
-					2
+					{{ contrato.contratacion.contratacionProyecto.length }}
 				</b>
 			</span>
 		</p>
@@ -29,12 +29,11 @@
 		</p>
 	</div>
 
-	<mat-accordion>
+	<mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto">
 		<mat-expansion-panel class="expansion-style">
 			<mat-expansion-panel-header class="expansion-style--header">
 				<mat-panel-title class="expansion-style--title completo">
-					<!-- en-proceso sin-diligenciar -->
-					Proyectos de la solicitud
+					{{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
 				</mat-panel-title>
 			</mat-expansion-panel-header>
 
@@ -42,58 +41,32 @@
 				<mat-card-content>
 					<p>
 						<b>Nombre del contratista:</b>
-						Constructora
+						{{ contrato.contratacion.contratista.nombre }}
 					</p>
 					<p>
 						<b>Número de identificación (NIT/RUT):</b>
-						900.675.987-4
+						{{ contrato.contratacion.contratista.numeroIdentificacion }}
 					</p>
 					<p>
 						<b>Tipo de intervención:</b>
-						Remodelación
+						{{ contratacion.proyecto.tipoIntervencionCodigo }}
 					</p>
 					<p>
 						<b>Departamento:</b>
-						Atlántico
+						{{ contratacion.proyecto.departamento }}
 					</p>
 					<p>
 						<b>Municipio:</b>
-						Galapa
+						{{ contratacion.proyecto.municipio }}
 					</p>
 					<p>
 						<b>Valor total del proyecto:</b>
-						$ 80.000.000
+						{{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
 					</p>
 				</mat-card-content>
 			</mat-card>
 
-			<div class="row">
-				<div class="pr-1">
-					<label class="label-left" for="cuantosCompromisos">¿Cuántos compromisos se generaron en este tema del
-						orden del día?</label>
-				</div>
-				<div class="col d-flex">
-					<mat-form-field class="full-width">
-						<input matInput #canPerfiles type="number" min="1" max="999" maxLength="3" [formControl]="cantidadPerfiles"
-							(keypress)="validateNumberKeypress($event)"
-							onKeyPress="if(this.value.length>=this.maxLength) return false;">
-					</mat-form-field>
-					<span class="contador">{{3 - canPerfiles.value.length}}</span>
-				</div>
-			</div>
-
-			<mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
-                            Tema 1
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-
-                    <app-form-perfil></app-form-perfil>
-
-                </mat-expansion-panel>
-            </mat-accordion>
+			<app-form-perfil [contratacionProyecto]="contrato.contratacion.contratacionProyecto"></app-form-perfil>
 
 		</mat-expansion-panel>
 	</mat-accordion>

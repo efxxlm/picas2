@@ -119,10 +119,17 @@ namespace asivamosffie.services
                     .Include(r => r.ContratoPerfil)
                     .Include(r => r.ContratoPoliza)
                     .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
+                       .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.InstitucionEducativa)
+                                 .Include(r => r.Contratacion)
+                       .ThenInclude(r => r.ContratacionProyecto)
+                             .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.Sede)
+                       .Include(r => r.Contratacion) 
                     .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
+                        .ThenInclude(r => r.Contratista)
+                           .FirstOrDefaultAsync();
 
                 if (contrato.ContratoPerfil.Count() > 0)
                 {
@@ -138,7 +145,7 @@ namespace asivamosffie.services
                 }
                 return contrato;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new Contrato();
             }
@@ -146,18 +153,16 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditContratoPerfil(Contrato pContrato)
         {
-
-            string CreateEdit = "";
+            string CreateEdit = string.Empty;
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                //Create Edit
                 foreach (var ContratoPerfil in pContrato.ContratoPerfil)
                 {
                     if (ContratoPerfil.ContratoPerfilId > 0)
                     {
-                        CreateEdit = "CREAR CONTRATO PERFIL";
+                        CreateEdit = "EDITAR CONTRATO PERFIL";
                         ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
                         contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
                         contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
@@ -197,7 +202,7 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        CreateEdit = "EDITAR CONTRATO PERFIL";
+                        CreateEdit = "CREAR CONTRATO PERFIL";
                         ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
                         ContratoPerfil.FechaCreacion = DateTime.Now;
                         ContratoPerfil.Eliminado = false;
@@ -214,19 +219,19 @@ namespace asivamosffie.services
 
                             _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                         }
-                    } 
-                }  
+                    }
+                }
                 //Cambiar Estado Requisitos 
                 if (pContrato.ContratoPerfil
-                    .Where(r => (bool)r.RegistroCompleto).Count() 
-                    == pContrato.ContratoPerfil.Count() 
+                    .Where(r => (bool)r.RegistroCompleto).Count()
+                    == pContrato.ContratoPerfil.Count()
                     && pContrato.ContratoPerfil.Count() > 1)
                 {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.En_proceso_de_aprobación_de_requisitos_tecnicos;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
-                } 
+                }
                 _context.SaveChanges();
                 return
                     new Respuesta
@@ -251,7 +256,7 @@ namespace asivamosffie.services
                     };
             }
         }
- 
+
 
         public async Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion)
         {
@@ -316,7 +321,7 @@ namespace asivamosffie.services
             try
             {
                 Contrato contratoAprobar = _context.Contrato.Find(pContratoId);
-                contratoAprobar.FechaModificacion = DateTime.Now;  
+                contratoAprobar.FechaModificacion = DateTime.Now;
                 contratoAprobar.UsuarioModificacion = UsuarioModificacion;
                 contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados;
                 _context.SaveChanges();

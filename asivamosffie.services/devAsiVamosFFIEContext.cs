@@ -114,6 +114,7 @@ namespace asivamosffie.model.Models
         //            }
         //        }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -1074,6 +1075,12 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ContratoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContratoPerfil_Contrato");
+
+                entity.HasOne(d => d.Proyecto)
+                    .WithMany(p => p.ContratoPerfil)
+                    .HasForeignKey(d => d.ProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContratoPerfil_Proyecto");
             });
 
             modelBuilder.Entity<ContratoPerfilObservacion>(entity =>
@@ -1115,7 +1122,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoPolizaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -1128,17 +1134,14 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NombreAseguradora)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroCertificado)
-                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroPoliza)
-                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
@@ -1170,10 +1173,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Vigencia).HasColumnType("datetime");
 
-                entity.Property(e => e.VigenciaAmparo)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.VigenciaAmparo).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ContratoPoliza)
