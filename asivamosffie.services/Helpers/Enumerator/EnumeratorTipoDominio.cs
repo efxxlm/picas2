@@ -62,10 +62,16 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Solicitud = 31,
 
         Estado_Solicitud_Presupuestal = 33,
+        Tipo_Proceso_Seleccion = 27,
+
+        Tipo_Proponente = 28,
 
         Opcion_Por_Contratar = 37,
 
         EstadoComite = 38,
+
+        //Es para proyecto ?
+        Estado_Solicitud = 31,
 
         // Para disponibilidad presupuestal
 
@@ -76,6 +82,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_Disponibilidad_Presupuestal = 36,
     
+        Opcion_Por_Contratar = 37,
+
+        Estado_Comite = 38,
+
+        Estado_Cronograma_Seguimiento = 40,
+
         Dias_Comite = 43,
 
         PlaceHolder = 44,
@@ -95,5 +107,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Proyecto = 63,
         
         PlaceHolderDDP = 66,
+ 
+        Estado_Sesion_Comite_Solicitud = 50,
+ 
+        Estado_Verificacion_Contrato = 53
+ 
     }
 }
