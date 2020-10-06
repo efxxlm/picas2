@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { InsertPoliza, PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { CreatePolizaGarantia, CreatePolizaObservacion, EditPoliza, InsertPoliza, PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-editar-en-revision',
@@ -76,6 +76,8 @@ export class EditarEnRevisionComponent implements OnInit {
   public numContrato;
   public observacionesOn;
   public idContrato;
+  public idPoliza;
+  selected: any;
 
   constructor(
     private router: Router,
@@ -120,13 +122,25 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('cumpleAfianzado').setValue(data.cumpleDatosTomador);
       this.addressForm.get('reciboDePago').setValue(data.incluyeReciboPago);
       this.addressForm.get('condicionesGenerales').setValue(data.incluyeCondicionesGenerales);
-    });
+      this.dataLoad2(data);
+    }); 
   }
 
   loadObservations(id){
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
-
+      this.selected = this.polizasYSegurosArray;
+      this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data[0].esIncluidaPoliza);
     });
+    this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_A=>{
+      this.addressForm.get('fechaRevision').setValue(data_A[0].fechaRevision);
+      this.addressForm.get('estadoRevision').setValue(data_A[0].estadoRevisionCodigo);
+      this.addressForm.get('observacionesGenerales').setValue(data_A[0].observacion);
+    })
+  }
+
+  dataLoad2(data){
+    this.idContrato = data.contratoId;
+    this.idPoliza = data.contratoPolizaId;
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -154,24 +168,51 @@ export class EditarEnRevisionComponent implements OnInit {
   }
 
   onSubmit() {
-    const contratoArray :InsertPoliza ={
-      contratoId: this.idContrato.toString(),
+    alert(this.idContrato);
+    const contratoArray :EditPoliza ={
+      contratoId: this.idContrato,
       nombreAseguradora: this.addressForm.value.nombre,
       numeroPoliza:this.addressForm.value.numeroPoliza,
       numeroCertificado: this.addressForm.value.numeroCertificado,
       fechaExpedicion:this.addressForm.value.fecha,
       vigencia: this.addressForm.value.vigenciaPoliza,
       vigenciaAmparo: this.addressForm.value.vigenciaAmparo,
-      valorAmparo: this.addressForm.value.polizasYSeguros
+      valorAmparo: this.addressForm.value.valorAmparo,
+      estadoPolizaCodigo:"",
+      usuarioCreacion:"",
+      registroCompleto:false,
+      fechaModificacion: this.addressForm.value.fecha,
+      usuarioModificacion:"",
+      contratoPolizaId:this.idPoliza,
+      polizaGarantia:[],
+      polizaObservacion:[],
+      cumpleDatosAsegurado:true
     };
-    this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
+    const polizaGarantia: CreatePolizaGarantia={
+      contratoPolizaId: this.idPoliza,
+      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
+      esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
+    };
+    const polizaObservacion: CreatePolizaObservacion={
+      contratoPolizaId: this.idPoliza,
+      observacion: this.addressForm.value.observacionesGenerales,
+      fechaRevision: this.addressForm.value.fechaRevision,
+      estadoRevisionCodigo: this.addressForm.value.estadoRevision
+    }
+    this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){
         this.openDialog('', data.message);
-        this.router.navigate[('generarPolizasYGarantias')];
+        this.router.navigate[('/generarPolizasYGarantias')];
       }
       else{
         this.openDialog('', data.message);
       }
+    });
+    this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data1=>{
+
+    });
+    this.polizaService.CreatePolizaObservacion(polizaObservacion).subscribe(data2=>{
+
     });
     console.log(this.addressForm.value);
   }
