@@ -1,1 +1,35 @@
-<p>aprobar-requisitos-construccion works!</p>
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Aprobar requisitos técnicos de inicio para fase 2 - Construcción
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenida/o aquí podrá realizar la validación de los requisitos técnicos de inicio aprobados para la fase 2 - construcción para los contratos de
+        obra y la aprobación de los requisitos técnicos de inicio para los contratos de interventoría que se encuentran bajo su supervisión, que se
+        encuentran activos, que cuentan con póliza aprobada y registro presupuestal y que solo tienen proyectado la fase de construcción o que tienen las
+        dos fases (preconstrucción y construcción) pero tienen suscrita y cargada el acta de inicio de la fase de pre construcción y que serán ejecutados
+        en el marco de la gestión del FFIE.
+    </div>
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1">Contratos de
+            obra</button>
+        <div *ngIf="this.selTab==1" class="button-activated">Contratos de obra</div>
+        <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2">Contratos de
+            interventoría</button>
+        <div *ngIf="this.selTab==2" class="button-activated">Contratos de interventoría</div>
+    </div>
+    <div *ngIf="this.selTab==1">
+        <app-tabla-contrato-obra-artc></app-tabla-contrato-obra-artc>
+    </div>
+    <div *ngIf="this.selTab==2">
+        <app-tabla-contrato-interventoria-artc></app-tabla-contrato-interventoria-artc>
+    </div>
+</div>
