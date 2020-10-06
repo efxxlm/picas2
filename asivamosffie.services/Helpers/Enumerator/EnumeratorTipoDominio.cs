@@ -54,10 +54,17 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Tipo_Proponente = 28,
 		Estado_Proceso_Seleccion = 35,
 		Estado_Juridico_Predios = 25,
+ 
+		Estado_Cronograma_Seguimiento = 40,
+
+		Estado_Contrato_Poliza = 51,  
+		Tipo_Contrato = 52,
+		Tipo_Modificacion_Contrato_Poliza = 56,
+		Tipo_Garantia_Poliza = 58, 
 		Tipo_Solicitud = 29,
         Tipo_de_Solicitud = 29,
 		Estado_Comite = 38,
-		Estado_Cronograma_Seguimiento = 40,
+		//Estado_Cronograma_Seguimiento = 40,
         //Es para proyecto ?
         Estado_Solicitud = 31,
 
@@ -98,13 +105,19 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Solicitud_Disponibilidad_Presupuestal = 39,
         Tipo_DDP_Espacial = 49,		
 	    Estado_Compromiso = 45,
-		EstadoAcataComiteTecnico = 47,
 
-        Estados_Acta = 47,
-
-        Estado_Sesion_Comite_Solicitud = 50,
-
+		EstadoAcataComiteTecnico = 47, 
+        Estados_Acta = 47, 
+        Estado_Sesion_Comite_Solicitud = 50, 
         Estado_Proyecto = 63,
+
+		//EstadoAcataComiteTecnico = 47,
+
+     //   Estados_Acta = 47,
+
+       // Estado_Sesion_Comite_Solicitud = 50,
+
+        //Estado_Proyecto = 63,
         
         PlaceHolderDDP = 66,
  
@@ -112,5 +125,6 @@ namespace asivamosffie.services.Helpers.Enumerator
  
         Estado_Verificacion_Contrato = 53
  
+
     }
 }

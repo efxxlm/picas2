@@ -109,32 +109,10 @@ const routes: Routes = [
           .then( module => module.ContratosModificacionesContractualesModule )
       },
       {
-        path: 'comiteFiduciario',
-        loadChildren: () => import( './_pages/sesion-comite-fiduciario/comite-fiduciario.module' )
-          .then( module => module.ComiteFiduciarioModule )
+        path: 'generarPolizasYGarantias',
+        loadChildren: () => import('./_pages/generar-polizas-y-garantias/generar-polizas-y-garantias.module')
+          .then(m => m.GenerarPolizasYGarantiasModule)
       },
-      {
- 
-        path: 'procesosContractuales',
-        loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
-          .then( module => module.GestionarProcesosContractualesModule )
-      },
-      {
- 
-        path: 'solicitarContratacion',
-        loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
-        .then(m => m.SolicitarContratacionModule)
-      },
-      {
-        path: 'generarDisponibilidadPresupuestal',
-        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
-        .then(m => m.GenerarDisponibilidadPresupuestalModule)
-      },
-      {
-        path: 'compromisosActasComite',
-        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
-          .then( module => module.CompromisosActasComiteModule )
-      }
     ]
 
   },

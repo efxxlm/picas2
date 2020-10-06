@@ -54,7 +54,7 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data);
+            result = sha.ComputeHash(data) ;
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
@@ -206,8 +206,9 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort)
-        {
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false)
+
+   {
             try
             {
                 MailMessage mail = new MailMessage();
@@ -218,6 +219,8 @@ namespace asivamosffie.services.Helpers
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
 
+                if(pMailHighPriority)
+                    mail.Priority = MailPriority.High;
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;
                 SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);
