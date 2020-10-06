@@ -158,68 +158,75 @@ namespace asivamosffie.services
 
             try
             {
-                foreach (var ContratoPerfil in pContrato.ContratoPerfil)
+                foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto)
                 {
-                    if (ContratoPerfil.ContratoPerfilId > 0)
+
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
-                        CreateEdit = "EDITAR CONTRATO PERFIL";
-                        ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
-                        contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
-                        contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
-                        contratoPerfilOld.CantidadHvRequeridas = ContratoPerfil.CantidadHvRequeridas;
-                        contratoPerfilOld.CantidadHvRecibidas = ContratoPerfil.CantidadHvRecibidas;
-                        contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
-                        contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
-
-                        contratoPerfilOld.NumeroRadicadoFfie = ContratoPerfil.NumeroRadicadoFfie;
-                        contratoPerfilOld.NumeroRadicadoFfie1 = ContratoPerfil.NumeroRadicadoFfie1;
-                        contratoPerfilOld.NumeroRadicadoFfie2 = ContratoPerfil.NumeroRadicadoFfie2;
-                        contratoPerfilOld.NumeroRadicadoFfie3 = ContratoPerfil.NumeroRadicadoFfie3;
-                        contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
-                        contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
-                        contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
-
-
-                        foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
+                        if (ContratoPerfil.ContratoPerfilId > 0)
                         {
-                            if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
+                            CreateEdit = "EDITAR CONTRATO PERFIL";
+                            ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
+                            contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
+                            contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
+                            contratoPerfilOld.CantidadHvRequeridas = ContratoPerfil.CantidadHvRequeridas;
+                            contratoPerfilOld.CantidadHvRecibidas = ContratoPerfil.CantidadHvRecibidas;
+                            contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
+                            contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
+
+                            contratoPerfilOld.NumeroRadicadoFfie = ContratoPerfil.NumeroRadicadoFfie;
+                            contratoPerfilOld.NumeroRadicadoFfie1 = ContratoPerfil.NumeroRadicadoFfie1;
+                            contratoPerfilOld.NumeroRadicadoFfie2 = ContratoPerfil.NumeroRadicadoFfie2;
+                            contratoPerfilOld.NumeroRadicadoFfie3 = ContratoPerfil.NumeroRadicadoFfie3;
+                            contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
+                            contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
+                            contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
+
+
+                            foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
-                                ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
-                                contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                                contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
-                                // contratoPerfilObservacionOld.Eliminado = false;  
-                                contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
+                                if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
+                                {
+                                    ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
+                                    contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
+                                    // contratoPerfilObservacionOld.Eliminado = false;  
+                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
+                                }
+                                else
+                                {
+                                    ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
+                                    // ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+
+                                    _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
+                                }
                             }
-                            else
+                        }
+                        else
+                        {
+                            CreateEdit = "CREAR CONTRATO PERFIL";
+                            ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
+                            ContratoPerfil.FechaCreacion = DateTime.Now;
+                            ContratoPerfil.Eliminado = false;
+                            ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
+                            _context.ContratoPerfil.Add(ContratoPerfil);
+
+
+                            foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
+
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                                // ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                                ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
 
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
                         }
                     }
-                    else
-                    {
-                        CreateEdit = "CREAR CONTRATO PERFIL";
-                        ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
-                        ContratoPerfil.FechaCreacion = DateTime.Now;
-                        ContratoPerfil.Eliminado = false;
-                        ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
-                        _context.ContratoPerfil.Add(ContratoPerfil);
 
 
-                        foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
-                        {
-
-                            ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
-                            ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                            ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
-
-                            _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
-                        }
-                    }
+                 
                 }
                 //Cambiar Estado Requisitos 
                 if (pContrato.ContratoPerfil
