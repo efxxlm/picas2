@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { PolizaGarantiaService, ContratoPoliza, InsertPoliza } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestionar-polizas',
@@ -77,6 +77,7 @@ export class GestionarPolizasComponent implements OnInit {
   public idContrato;
 
   constructor(
+    private router: Router,
     private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
     public dialog: MatDialog,
@@ -132,24 +133,23 @@ export class GestionarPolizasComponent implements OnInit {
 
   onSubmit() {
     const contratoArray :InsertPoliza ={
-      contratoPolizaId: this.idContrato,
-      contratoId: this.idContrato,
+      contratoId: this.idContrato.toString(),
       nombreAseguradora: this.addressForm.value.nombre,
       numeroPoliza:this.addressForm.value.numeroPoliza,
       numeroCertificado: this.addressForm.value.numeroCertificado,
       fechaExpedicion:this.addressForm.value.fecha,
       vigencia: this.addressForm.value.vigenciaPoliza,
       vigenciaAmparo: this.addressForm.value.vigenciaAmparo,
-      valorAmparo: this.addressForm.value.polizasYSeguros
+      valorAmparo: this.addressForm.value.valorAmparo
     };
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
-      /*if(data.isSuccessful==true){
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      if(data.isSuccessful==true){
+        this.openDialog('', data.message);
+        this.router.navigate(['/generarPolizasYGarantias']);
       }
       else{
-        this.openDialog('', 'Error en el servicio.');
-      }*/
-      this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.openDialog('', data.message);
+      }
     });
     console.log(this.addressForm.value);
   }

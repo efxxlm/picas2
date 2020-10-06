@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MenuComponent } from './components/menu/menu.component';
 import { GestionarPolizasComponent } from './components/gestionar-polizas/gestionar-polizas.component';
 import { EditarEnRevisionComponent } from './components/editar-en-revision/editar-en-revision.component';
+import { EditarObservadaODevueltaComponent } from './components/editar-observada-o-devuelta/editar-observada-o-devuelta.component';
 
 
 const routes: Routes = [
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'enRevision/:id',
     component: EditarEnRevisionComponent
+  },
+  {
+    path: 'observadaODevuelta/:id',
+    component: EditarObservadaODevueltaComponent
   }
 ];
 

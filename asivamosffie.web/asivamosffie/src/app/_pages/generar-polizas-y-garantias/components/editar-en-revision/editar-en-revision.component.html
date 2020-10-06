@@ -177,7 +177,7 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="polizasYSeguros" multiple required>
+              <mat-select formControlName="polizasYSeguros" multiple required [(value)]="this.selected">
                 <mat-option *ngFor="let polizaYSeguro of polizasYSegurosArray" [value]="polizaYSeguro.value">
                   {{ polizaYSeguro.name }}
                 </mat-option>
@@ -197,26 +197,6 @@
               </div>
               <div class="col">
                 <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
-                  <mat-radio-button [value]="false">No</mat-radio-button>
-                </mat-radio-group>
-                <span class="required-form-group">*</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-
-        </mat-card-title>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left" for="estabilidadYCalidad">¿Está incluida en la póliza
-                  presentada?</label>
-              </div>
-              <div class="col">
-                <mat-radio-group class="radioInput" formControlName="estabilidadYCalidad" required>
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
@@ -355,7 +335,7 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select formControlName="estadoRevision" required>
-                    <mat-option *ngFor="let polizaYSeguro of polizasYSegurosArray" [value]="polizaYSeguro.value">
+                    <mat-option *ngFor="let polizaYSeguro of estadoArray" [value]="polizaYSeguro.value">
                       {{ polizaYSeguro.name }}
                     </mat-option>
                   </mat-select>
