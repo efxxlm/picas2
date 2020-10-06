@@ -145,7 +145,7 @@ export class GestionarPolizasComponent implements OnInit {
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){
         this.openDialog('', data.message);
-        this.router.navigate[('generarPolizasYGarantias')];
+        this.router.navigate(['/generarPolizasYGarantias']);
       }
       else{
         this.openDialog('', data.message);

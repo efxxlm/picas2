@@ -86,6 +86,7 @@ export interface ContratoPoliza {
   fechaModificacion: Date;
   usuarioModificacion: string;
   eliminado: boolean;
+
 }
 
 

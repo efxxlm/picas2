@@ -188,11 +188,15 @@ export class EditarEnRevisionComponent implements OnInit {
       contratoPolizaId:this.idPoliza,
       polizaGarantia:[],
       polizaObservacion:[],
-      cumpleDatosAsegurado:true
+      cumpleDatosAsegurado: this.addressForm.value.cumpleAsegurado,
+      cumpleDatosBeneficiario: this.addressForm.value.cumpleBeneficiario,
+      cumpleDatosTomador: this.addressForm.value.cumpleAfianzado,
+      incluyeReciboPago: this.addressForm.value.reciboDePago,
+      incluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales
     };
     const polizaGarantia: CreatePolizaGarantia={
       contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
+      tipoGarantiaCodigo: this.selected,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
     };
     const polizaObservacion: CreatePolizaObservacion={
@@ -204,7 +208,7 @@ export class EditarEnRevisionComponent implements OnInit {
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){
         this.openDialog('', data.message);
-        this.router.navigate[('/generarPolizasYGarantias')];
+        this.router.navigate(['/generarPolizasYGarantias']);
       }
       else{
         this.openDialog('', data.message);
