@@ -1,0 +1,18 @@
+.w-table {
+  width: 80%;
+  display: inline-table;
+  margin-top: 1em;
+}
+
+.supportElement{
+  padding: .2em;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+.sub-item-table {
+  display: block;
+  &:not(:first-child) {
+      border-top: solid 1px var(--mainColor);
+  }
+}
