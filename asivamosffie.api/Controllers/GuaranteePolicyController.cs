@@ -81,8 +81,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
-                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+            {                
+                //contratoPoliza.UsuarioModificacion= HttpContext.User.FindFirst("User").Value;
                 respuesta = await _guaranteePolicy.EditarContratoPoliza(contratoPoliza);
                 return Ok(respuesta);
             }
@@ -103,7 +103,7 @@ namespace asivamosffie.api.Controllers
                 asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
 
                 _appSettingsService = toAppSettingsService(_settings);
-                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _guaranteePolicy.InsertContratoPoliza(contratoPoliza, _appSettingsService);
                 return Ok(respuesta);
             }

@@ -44,8 +44,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75,
         CargueOrdenesMasivos = 76, 
-        DescargarExcelOrdenes = 77, 
-        Notificacion_Gestion_Poliza=90 
+        DescargarExcelOrdenes = 77,   
+        Notificacion_Gestion_Poliza =90 
  
  
     }
