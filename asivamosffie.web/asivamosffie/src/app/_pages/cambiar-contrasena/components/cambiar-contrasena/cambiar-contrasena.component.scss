@@ -30,6 +30,7 @@
 
 .btn-cambiar-pass {
     margin-top: 2em;
+    margin-bottom: 2em;
 }
 .text-clean{
     margin-left: 15%;
@@ -41,7 +42,7 @@
     content: "*";
     position: absolute;
     top: 1em;
-    right: -0.5em;
+    right: 0.5em;
     font-weight: 600;
     color:var(--mainColor);
 }

@@ -199,6 +199,10 @@ input[type=number]::-webkit-outer-spin-button {
     text-transform: capitalize;
 }
 
-.col-md-8:first-child {
-    padding-left: 0;
+.mat-card {
+    .col-md-8:first-child,
+    .col-md-10:first-child,
+    .col-md-12:first-child {
+        padding-left: 0;
+    }
 }
