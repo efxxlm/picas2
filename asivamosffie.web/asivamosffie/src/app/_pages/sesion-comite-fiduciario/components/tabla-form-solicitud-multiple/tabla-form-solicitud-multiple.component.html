@@ -1,0 +1,64 @@
+<div class="text-center table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="tabla mat-elevation-z8">
+
+        <ng-container matColumnDef="idMen">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Id MEN </th>
+            <td mat-cell *matCellDef="let element"> <b>{{element.proyectoGrilla.llaveMen}}</b> </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipoInterventor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Intervención </th>
+            <td mat-cell *matCellDef="let element"> {{element.proyectoGrilla.tipoIntervencion}} </td>
+        </ng-container>
+ 
+        <ng-container matColumnDef="departamento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento/ Municipio </th>
+            <td mat-cell *matCellDef="let element"> {{element.proyectoGrilla.departamento}} / {{element.proyectoGrilla.municipio}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="institucionEducativa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
+            <td mat-cell *matCellDef="let element"> {{ element.proyectoGrilla.institucionEducativa }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sede">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+            <td mat-cell *matCellDef="let element"> {{element.proyectoGrilla.sede}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del proyecto </th>
+            <td mat-cell *matCellDef="let element">
+                <mat-form-field class="select-width">
+                    <mat-select 
+                    required [(ngModel)]="element.proyecto.estadoProyectoCodigo"
+                    (selectionChange)="onChangeEstado()"
+                    >
+                        <mat-option *ngFor="let estado of listaEstados" [value]="estado.codigo">
+                            {{ estado.nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-raised-button 
+                    (click)="Observaciones(element.contratacionProyectoId, element.contratacionId);"
+                    mat-raised-button 
+                    color="accent" 
+                    class="btn-table"
+                    [disabled]="element.estadoSolicitud && element.estadoSolicitud.codigo == estadosSolicitud.AprobadaPorComiteTecnico"
+                    >
+                    Observaciones
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

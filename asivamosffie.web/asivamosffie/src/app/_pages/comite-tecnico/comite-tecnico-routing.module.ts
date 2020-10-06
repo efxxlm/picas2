@@ -31,7 +31,7 @@ const routes: Routes = [
     component: CrearActaComponent
   },
   {
-    path: 'crearActa/:id/observacion/:id',
+    path: 'crearActa/:id/observacion/:idsesionComiteSolicitud/:idcomiteTecnico/:idcontratacionProyecto/:idcontratacion',
     component: ObservacionComponent
   },
   {

@@ -1,0 +1,229 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/generarDisponibilidadPresupuestal" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar DDP solicitud {{detailavailabilityBudget.numeroSolicitud}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Fecha de la solicitud: <b>{{detailavailabilityBudget.fechaComiteTecnico}}</b></span>
+        <span><b>{{detailavailabilityBudget.tipoSolicitudText}}</b></span>
+    </p>
+
+</section>
+<section class="container">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+            <p>
+                <strong>Rubro por financiar:</strong>
+                Proyecto de infraestructura
+            </p>
+            <p>
+                <strong>Valor de la solicitud:</strong>
+                $ 140.000.000
+            </p>
+            <p>
+                <strong>Plazo:</strong>
+                9 meses / 30 días
+            </p>
+            <p>
+                <strong>Objeto:</strong>
+            </p>
+            <p>
+                Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
+                estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
+                instituciones rurales.
+            </p>
+            <p>
+                <strong>Número de comité técnico:</strong>
+                CT_003
+            </p>
+            <p>
+                <strong>Fecha comité técnico:</strong>
+                {{detailavailabilityBudget.fechaComiteTecnico}}
+            </p>
+
+        </mat-card-content>
+    </mat-card>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    LJ776554 - I.E. María Villa Campo - Única sede
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card sub-card var-main-gris">
+                <mat-card-content>
+                    <p>
+                        <strong>Tipo de intervención:</strong>
+                        RemodelaciónDDP_001
+                    </p>
+                    <p>
+                        <strong>Departamento:</strong>
+                        Atlántico
+                    </p>
+                    <p>
+                        <strong>Municipio:</strong>
+                        Malambo
+                    </p>
+                    <p>
+                        <strong>Valor total del proyecto:</strong>
+                        $ 50.000.000
+                    </p>
+
+                    <h2 class="card-subTitle">Aportantes</h2>
+
+                    <mat-card-title class="header-card--text sub-text">
+                        Aportante 1
+                    </mat-card-title>
+
+                    <p>
+                        <strong>Tipo de aportante:</strong>
+                        FFIE
+                    </p>
+                    <p>
+                        <strong>Nombre del aportante:</strong>
+                        FFIE
+                    </p>
+                    <p>
+                        <strong>Valor del aportante al proyecto:</strong>
+                        $ 7.000.000
+                    </p>
+
+                    <mat-card-title class="header-card--text sub-text">
+                        Fuente
+                    </mat-card-title>
+
+                    <p>
+                        <strong>Fuente:</strong>
+                        Contingencia
+                    </p>
+                    <p>
+                        <strong>Saldo actual de la fuente:</strong>
+                        $ 70.000.000
+                    </p>
+                    <p>
+                        <strong>Valor solicitado de la fuente:</strong>
+                        $ 7.000.000
+                    </p>
+                    <p>
+                        <strong>Nuevo saldo de la fuente:</strong>
+                        $ 63.000.000
+                    </p>
+                    <p>
+                        <strong>Estado de las fuentes:</strong>
+                        Completo
+                    </p>
+
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Modificaciones
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-accordion *ngIf="false">
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title">
+                            Solicitud PI_001
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content>
+                            <p>
+                                <strong>Tipo de modificación:</strong>
+                                Remodelación
+                            </p>
+                            <p>
+                                <strong>Departamento:</strong>
+                                Atlántico
+                            </p>
+                            <p>
+                                <strong>Municipio:</strong>
+                                Manatí
+                            </p>
+                            <p>
+                                <strong>Valor total del proyecto:</strong>
+                                $ 50.000.000
+                            </p>
+
+                            <h2 class="card-subTitle">Aportantes</h2>
+
+                            <mat-card-title class="header-card--text sub-text">
+                                Aportante 1
+                            </mat-card-title>
+
+                            <p>
+                                <strong>Tipo de aportante:</strong>
+                                FFIE
+                            </p>
+                            <p>
+                                <strong>Nombre del aportante:</strong>
+                                FFIE
+                            </p>
+                            <p>
+                                <strong>Valor del aportante al proyecto:</strong>
+                                $ 7.000.000
+                            </p>
+
+                            <mat-card-title class="header-card--text sub-text">
+                                Fuente
+                            </mat-card-title>
+
+                            <p>
+                                <strong>Fuente:</strong>
+                                Contingencia
+                            </p>
+                            <p>
+                                <strong>Saldo actual de la fuente:</strong>
+                                $ 70.000.000
+                            </p>
+                            <p>
+                                <strong>Valor solicitado de la fuente:</strong>
+                                $ 7.000.000
+                            </p>
+                            <p>
+                                <strong>Nuevo saldo de la fuente:</strong>
+                                $ 63.000.000
+                            </p>
+                            <p>
+                                <strong>Estado de las fuentes:</strong>
+                                Completo
+                            </p>
+
+                        </mat-card-content>
+                    </mat-card>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Proyectos asociados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-tabla-proyectos-asociados></app-tabla-proyectos-asociados>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="generarddp()">Generar DDP</button>
+        <!-- <button mat-raised-button color="accent">Actualizar DDP</button> -->
+        <button mat-raised-button color="accent" (click)="openDialogDevolver()">Devolver a <br> validación
+            financiera</button>
+        <button mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar DDP</button>
+    </div>
+
+</section>

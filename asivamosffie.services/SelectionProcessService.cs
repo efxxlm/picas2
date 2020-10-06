@@ -85,10 +85,17 @@ namespace asivamosffie.services
 
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
+
+                    //int? countMaxId = _context.ProcesoSeleccion.Max(p => (int?)p.ProcesoSeleccionId);
+                    int countMax = _context.ProcesoSeleccion.Count(p => p.TipoProcesoCodigo == procesoSeleccion.TipoProcesoCodigo);
+
                     //Auditoria
                     strCrearEditar = "CREAR PPROCESO SELECCION";
                     procesoSeleccion.FechaCreacion = DateTime.Now;
                     procesoSeleccion.Eliminado = false;
+                    procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
+                    procesoSeleccion.NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax);
+                    procesoSeleccion.EstadoProcesoSeleccionCodigo = "1";
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
                     
@@ -98,7 +105,7 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO CELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
                     //Auditoria
-                    //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioCreacion;
+                    //ProcesoSeleccionAntiguo.UsuarioModificacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     //Registros
@@ -126,6 +133,9 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
                     ProcesoSeleccionAntiguo.UrlSoporteEvaluacion = procesoSeleccion.UrlSoporteEvaluacion;
                     ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
+                    ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
+                    ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
+                    
                     //ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     ProcesoSeleccionAntiguo.Eliminado = false;
                     //ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
@@ -135,31 +145,38 @@ namespace asivamosffie.services
 
                 foreach( ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo )
                 {
-                    grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     await this.CreateEditarProcesoSeleccionGrupo( grupo );
                 }
 
                 foreach( ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma )
                 {
-                    cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     await this.CreateEditarProcesoSeleccionCronograma( cronograma, true );
                 }
                 
                 foreach( ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion )
                 {
-                    cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion.ToUpper();
+                    cotizacion.UrlSoporte = cotizacion.UrlSoporte.ToUpper();
                     await this.CreateEditarProcesoSeleccionCotizacion( cotizacion );
                 }
 
                 foreach( ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente )
                 {
-                    //proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    proponente.NombreRepresentanteLegal = proponente.NombreRepresentanteLegal.ToUpper();
+                    proponente.NombreProponente = proponente.NombreProponente.ToUpper();
+                    proponente.DireccionProponente = proponente.DireccionProponente.ToUpper();
+                    proponente.EmailProponente = proponente.EmailProponente.ToUpper();                    
                     await this.CreateEditarProcesoSeleccionProponente( proponente );
                 }
 
                 foreach( ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante )
                 {
-                    integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    integrante.NombreIntegrante = integrante.NombreIntegrante.ToUpper();
                     await this.CreateEditarProcesoSeleccionIntegrante( integrante );
                 }
 
@@ -358,7 +375,7 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO SELECCION CRONOGRAMA";
                     procesoSeleccionCronogramaAntiguo = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCronograma.ProcesoSeleccionCronogramaId);
                     //Auditoria
-                    procesoSeleccionCronogramaAntiguo.UsuarioModificacion = procesoSeleccionCronograma.UsuarioCreacion;
+                    procesoSeleccionCronogramaAntiguo.UsuarioModificacion = procesoSeleccionCronograma.UsuarioCreacion.ToUpper();
                     procesoSeleccionCronogramaAntiguo.FechaModificacion = DateTime.Now;
 
                     //Registros
@@ -427,6 +444,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION GRUPO";
                     procesoSeleccionGrupo.FechaCreacion = DateTime.Now;
                     procesoSeleccionGrupo.Eliminado = false;
+                    procesoSeleccionGrupo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo.ToUpper();
                     _context.ProcesoSeleccionGrupo.Add(procesoSeleccionGrupo);
                 }
                 else
@@ -434,14 +452,14 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO SELECCION GRUPO";
                     ProcesoSeleccionGrupoAntiguo = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupo.ProcesoSeleccionGrupoId);
                     //Auditoria
-                    ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = procesoSeleccionGrupo.UsuarioCreacion;
+                    ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = procesoSeleccionGrupo.UsuarioCreacion.ToUpper();
+                    ProcesoSeleccionGrupoAntiguo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo==null?"":procesoSeleccionGrupo.NombreGrupo.ToUpper();
                     ProcesoSeleccionGrupoAntiguo.FechaModificacion = DateTime.Now;
 
 
                     //Registros
 
                     ProcesoSeleccionGrupoAntiguo.ProcesoSeleccionId = procesoSeleccionGrupo.ProcesoSeleccionId;
-                    ProcesoSeleccionGrupoAntiguo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo;
                     ProcesoSeleccionGrupoAntiguo.TipoPresupuestoCodigo = procesoSeleccionGrupo.TipoPresupuestoCodigo;
                     ProcesoSeleccionGrupoAntiguo.Valor = procesoSeleccionGrupo.Valor;
                     ProcesoSeleccionGrupoAntiguo.ValorMinimoCategoria = procesoSeleccionGrupo.ValorMinimoCategoria;
@@ -530,7 +548,7 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO SELECCION COTIZACION";
                     ProcesoSeleccionCotizacionAntiguo = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId);
                     //Auditoria
-                    ProcesoSeleccionCotizacionAntiguo.UsuarioModificacion = procesoSeleccionCotizacion.UsuarioCreacion;
+                    ProcesoSeleccionCotizacionAntiguo.UsuarioModificacion = procesoSeleccionCotizacion.UsuarioCreacion.ToUpper();
                     ProcesoSeleccionCotizacionAntiguo.FechaModificacion = DateTime.Now;
 
 
@@ -615,8 +633,8 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
 
             string strCrearEditar = "";
-            string userAction = "jsorozcof";//httpContext.User.FindFirst("User").Value;
-            ProcesoSeleccionProponente ProcesoSeleccionProponenteAntiguo = null;
+            
+            ProcesoSeleccionProponente ProcesoSeleccionProponenteAntiguo = _context.ProcesoSeleccionProponente.Find(procesoSeleccionProponente.ProcesoSeleccionProponenteId);
             try
             {
 
@@ -624,11 +642,17 @@ namespace asivamosffie.services
                 {
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION PROPONENTE";
+                    procesoSeleccionProponente.FechaCreacion = DateTime.Now;
+                    procesoSeleccionProponente.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion.ToUpper();
+                    procesoSeleccionProponente.Eliminado = false;
                     _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
                 }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO SELECCION PROPONENTE";
+                    ProcesoSeleccionProponenteAntiguo.FechaModificacion = DateTime.Now;
+                    ProcesoSeleccionProponenteAntiguo.Eliminado = false;
+                    ProcesoSeleccionProponenteAntiguo.UsuarioModificacion = procesoSeleccionProponente.UsuarioModificacion;
                     ProcesoSeleccionProponenteAntiguo = _context.ProcesoSeleccionProponente.Find(procesoSeleccionProponente.ProcesoSeleccionProponenteId);
 
                     //Registros
@@ -656,7 +680,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, userAction, ex.InnerException.ToString().Substring(0, 500))
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, procesoSeleccionProponente.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
@@ -713,7 +737,7 @@ namespace asivamosffie.services
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION INTEGRANTE";
                     procesoSeleccionIntegrante.FechaCreacion = DateTime.Now;
-                    procesoSeleccionIntegrante.UsuarioCreacion = procesoSeleccionIntegrante.UsuarioCreacion;
+                    procesoSeleccionIntegrante.UsuarioCreacion = procesoSeleccionIntegrante.UsuarioCreacion.ToUpper();
                     procesoSeleccionIntegrante.Eliminado = false;
 
                     _context.ProcesoSeleccionIntegrante.Add(procesoSeleccionIntegrante);
@@ -774,7 +798,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR CRONOGRAMA SEGUIMIENTO";
                     cronogramaSeguimiento.FechaCreacion = DateTime.Now;
                     cronogramaSeguimiento.Eliminado = false;
-                    cronogramaSeguimiento.UsuarioCreacion = cronogramaSeguimiento.UsuarioCreacion;
+                    cronogramaSeguimiento.UsuarioCreacion = cronogramaSeguimiento.UsuarioCreacion.ToUpper();
 
 
                     _context.CronogramaSeguimiento.Add(cronogramaSeguimiento);
@@ -830,6 +854,62 @@ namespace asivamosffie.services
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, cronogramaSeguimiento.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+
+        //Registrar Seguimiento cronograma
+        public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_contratistas_desde_proponentes, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+            CronogramaSeguimiento cronogramaSeguimientoAntiguo = null;
+            try
+            {
+
+                pProcesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach( p => {
+                    Contratista contratista = new Contratista();
+
+                    contratista.TipoIdentificacionCodigo =  ( p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2" ) ? "3" : "1"; //Nit - cedula
+                    contratista.NumeroIdentificacion =  string.IsNullOrEmpty( p.NumeroIdentificacion ) ? "0" : p.NumeroIdentificacion;
+                    contratista.Nombre = p.NombreProponente;
+                    contratista.RepresentanteLegal = string.IsNullOrEmpty( p.NombreRepresentanteLegal ) ? p.NombreProponente : p.NombreRepresentanteLegal;
+                    contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
+                    //contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
+                    contratista.Activo = true;
+                    contratista.FechaCreacion = DateTime.Now;
+                    contratista.UsuarioCreacion = pUsuarioCreo;
+                    
+                    _context.Contratista.Add( contratista );
+
+                });
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = cronogramaSeguimientoAntiguo,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, pUsuarioCreo, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, pUsuarioCreo, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
@@ -1208,6 +1288,36 @@ namespace asivamosffie.services
 
         }
 
+        public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
+        {
+            if (
+                 string.IsNullOrEmpty(procesoSeleccion.Objeto)
+                 || !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
+                 || !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CriteriosSeleccion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantGrupos))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesJuridicasHabilitantes)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesFinancierasHabilitantes)
+                 || !string.IsNullOrEmpty(procesoSeleccion.CondicionesAsignacionPuntaje)
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones))
+                 || !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadProponentes))
+                 || !string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+                 || !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
+                 || !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
+
+                )
+                 return false;
+            else
+                return true;
+        }
 
 
         public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico)

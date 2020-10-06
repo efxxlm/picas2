@@ -19,7 +19,13 @@ namespace asivamosffie.services.Helpers.Enumerator
         Procesos_Seleccion_Grupo = 21,
         CargueMasivoOrdenes = 22,
         CronogramaSeguimiento = 23,
+        DisponibilidadPresupuestal = 30,
+        SesionComiteTema = 26,
         RegistrarComiteTecnico = 24,
+        RegistrarSesionComiteFiduciario = 29,
+
+        GenerarDisponibilidadPresupuestal = 28,
+        
 
         Gestionar_Procesos_Contractuales = 31,
 
@@ -33,12 +39,11 @@ namespace asivamosffie.services.Helpers.Enumerator
         SolicitarContraseña = 53,
         CrearActualizarCofinanciacion = 55,
         Error = 56,
-        ValidarExcel = 63, 
+        ValidarExcel = 63,
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75,
         CargueOrdenesMasivos = 76,
         DescargarExcelOrdenes = 77
-
     }
 
 }

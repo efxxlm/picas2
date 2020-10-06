@@ -10,7 +10,7 @@
 </div>
 
 <div class="table-responsive">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="table-form mat-elevation-z8">
 
     <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{columna.titulo}} </th>
@@ -25,7 +25,7 @@
         <button mat-button color="warn" mat-raised-button color="accent"
           class="btn-table btn-cargar-proyecto m05_important" type="button"
           (click)="eliminar(gestion)">Eliminar</button>
-        <button mat-button color="warn" mat-raised-button color="accent"
+        <button mat-button color="warn" mat-raised-button color="accent" *ngIf="gestion.estado=='Completo'"
           class="btn-table btn-cargar-proyecto m05_important" type="button" (click)="enviar(gestion)">Enviar</button>
       </td>
     </ng-container>

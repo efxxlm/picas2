@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { SesionComiteTema, SesionParticipante, TemaCompromiso } from 'src/app/_interfaces/technicalCommitteSession';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-otros-temas',
@@ -18,6 +19,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   @Input() sesionComiteTema: SesionComiteTema;
   @Input() listaMiembros: SesionParticipante[];
+  @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   listaResponsables: Dominio[] = [];
   responsable: Dominio = {}
@@ -77,6 +79,9 @@ export class FormOtrosTemasComponent implements OnInit {
         this.estadosArray = response[0].filter(s => estados.includes(s.codigo));
         this.listaResponsables = response[1];
       })
+
+    this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
+
 
   }
 
@@ -163,16 +168,23 @@ export class FormOtrosTemasComponent implements OnInit {
     })
 
     console.log(tema)
-
     this.technicalCommitteSessionService.createEditTemasCompromiso(tema)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
-        if (respuesta.code == "200")
+        this.validar.emit( respuesta.data );
+        
+        if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteTema.comiteTecnicoId])
       })
   }
 
   cargarRegistro() {
+
+    if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
+      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+    }else if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
+      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+    }
 
     this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
 
