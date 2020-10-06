@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { ContratacionProyecto2 } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { CommonService } from '../../../../core/_services/common/common.service';
 
 @Component({
   selector: 'app-form-perfil',
@@ -9,6 +11,7 @@ import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@ang
 export class FormPerfilComponent implements OnInit {
 
   formContratista: FormGroup;
+  @Input() contratacionProyecto: ContratacionProyecto2[] = [];
   editorStyle = {
     height: '45px'
   };
@@ -25,7 +28,8 @@ export class FormPerfilComponent implements OnInit {
     { value: 'Ingeniero electrico' }
   ]
 
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder,
+                private commonSvc: CommonService ) {
     this.crearFormulario();
   }
 
@@ -49,7 +53,8 @@ export class FormPerfilComponent implements OnInit {
             ) 
           )
         }
-      } )
+      } );
+    console.log( this.contratacionProyecto );
   };
 
   get perfiles () {
