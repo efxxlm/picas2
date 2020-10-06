@@ -117,19 +117,22 @@ namespace asivamosffie.services
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                     .Include(r => r.ContratoObservacion)
                     .Include(r => r.ContratoPerfil)
+                           .ThenInclude(r => r.ContratoPerfilObservacion)
+                    .Include(r => r.ContratoPerfil)
+                           .ThenInclude(r => r.ContratoPerfilNumeroRadicado)
                     .Include(r => r.ContratoPoliza)
                     .Include(r => r.Contratacion)
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
-                                 .Include(r => r.Contratacion)
+                   .Include(r => r.Contratacion)
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
-                                .ThenInclude(r => r.Sede)
-                       .Include(r => r.Contratacion) 
+                                 .ThenInclude(r => r.Sede)
+                    .Include(r => r.Contratacion)
                     .Include(r => r.Contratacion)
                         .ThenInclude(r => r.Contratista)
-                           .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync();
 
                 if (contrato.ContratoPerfil.Count() > 0)
                 {
@@ -183,6 +186,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
 
 
+
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
@@ -202,6 +206,24 @@ namespace asivamosffie.services
                                     _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                                 }
                             }
+
+                            foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
+                            {
+                                if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
+                                {
+                                    ContratoPerfilNumeroRadicado.Eliminado = false;
+                                    ContratoPerfilNumeroRadicado.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilNumeroRadicado.FechaCreacion = DateTime.Now;
+                                    _context.ContratoPerfilNumeroRadicado.Add(ContratoPerfilNumeroRadicado);
+                                }
+                                else {
+                                    ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
+                                    contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
+                                    ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now; 
+                                }
+                            }
+
                         }
                         else
                         {
@@ -222,11 +244,29 @@ namespace asivamosffie.services
 
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
+
+                            foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
+                            {
+                                if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
+                                {
+                                    ContratoPerfilNumeroRadicado.Eliminado = false;
+                                    ContratoPerfilNumeroRadicado.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilNumeroRadicado.FechaCreacion = DateTime.Now;
+                                    _context.ContratoPerfilNumeroRadicado.Add(ContratoPerfilNumeroRadicado);
+                                }
+                                else
+                                {
+                                    ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
+                                    contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
+                                    ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
+                                }
+                            }
                         }
                     }
 
 
-                 
+
                 }
                 //Cambiar Estado Requisitos 
                 if (pContrato.ContratoPerfil

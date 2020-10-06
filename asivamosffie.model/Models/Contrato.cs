@@ -59,6 +59,9 @@ namespace asivamosffie.model.Models
         public string RutaActaFase2 { get; set; }
         public string RutaActaSuscrita { get; set; }
         public int ContratoId { get; set; }
+        public string EstadoFase2 { get; set; }
+        public string EstadoActaFase2 { get; set; }
+        public DateTime? FechaAprobacionRequisitos { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
