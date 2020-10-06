@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ProcesoSeleccion, ProcesoSeleccionService, EstadosProcesoSeleccion, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
@@ -14,8 +14,7 @@ import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.se
 })
 
 
-
-export class VerDetalleTablaProcesosComponent {
+export class VerDetalleTablaProcesosComponent implements OnInit{
 
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
@@ -29,6 +28,74 @@ export class VerDetalleTablaProcesosComponent {
              ) 
   {
 
+  }
+  ngOnInit(): void {
+    this.activarBotones();
+  }
+
+  editarVerDetalle:boolean=false;
+  verDetalle:boolean=false;
+  solicitarApertura:boolean=false;
+  eliminar:boolean=false;
+  monitorear:boolean=false;
+  presentarEvaluacion:boolean=false;
+  cerrarProceso:boolean=false;
+  obervaciones:boolean=false;
+
+  activarBotones()
+  {
+    this.editarVerDetalle=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico;
+    
+    this.verDetalle=!this.editarVerDetalle;
+    
+    this.solicitarApertura=this.data.esCompleto 
+      && (this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite)
+        ;
+    
+    this.presentarEvaluacion=
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario
+      && (this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Abierta ||
+        this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Cerrada)
+      && this.data.procesoSeleccionProponente.length>0;
+
+    this.eliminar=this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite;
+
+    this.monitorear=this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite ;
+
+    this.cerrarProceso=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado;
+    this.obervaciones=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteTecnico;
+    
+    
   }
 
   onEditar(){
@@ -137,5 +204,23 @@ export class VerDetalleTablaProcesosComponent {
         this.eliminarRegistro(e);
       }           
     });
+  }
+
+  onVer()
+  {
+    switch (this.data.tipoProcesoCodigo)
+    {
+      case "1": { this.router.navigate(['/seleccion/seccionPrivada', this.data.procesoSeleccionId ]); } break;
+      case "2": { this.router.navigate(['/seleccion/invitacionCerrada', this.data.procesoSeleccionId ]); } break;
+      case "3": { this.router.navigate(['/seleccion/invitacionAbierta', this.data.procesoSeleccionId ]); } break;
+    }
+
+    
+    this.dialogRef.close();
+  }
+
+  onObservaciones(id)
+  {
+
   }
 }

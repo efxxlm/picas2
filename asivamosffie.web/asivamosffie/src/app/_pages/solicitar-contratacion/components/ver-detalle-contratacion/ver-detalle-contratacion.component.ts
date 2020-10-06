@@ -13,6 +13,7 @@ import { CommonService, Dominio } from '../../../../core/_services/common/common
 export class VerDetalleContratacionComponent implements OnInit {
 
   contratacion: Contratacion;
+  aportanteVacio: boolean = false;
   ELEMENT_DATA    : any[]    = [
     { titulo: 'Tipo de intervención', name: 'tipoIntervencionCodigo' },
     { titulo: 'Llave MEN', name: 'llaveMen' },
@@ -49,10 +50,10 @@ export class VerDetalleContratacionComponent implements OnInit {
     this.projectContractingSvc.getContratacionByContratacionId( id )
       .subscribe( resp => {
         this.contratacion = resp;
-        //console.log( this.contratacion );
+        console.log( this.contratacion.contratacionProyecto );
         for ( let contratacionProyecto of this.contratacion.contratacionProyecto ) {
-
-          this.getDataAportantes( contratacionProyecto.contratacionProyectoAportante );
+          
+          contratacionProyecto.dataAportantes = this.getDataAportantes( contratacionProyecto.contratacionProyectoAportante );
 
           this.dataTable.push(
             {
@@ -69,20 +70,13 @@ export class VerDetalleContratacionComponent implements OnInit {
   }
 
   getDataAportantes ( contratacionProyecto: any ) {
-    console.log( contratacionProyecto );
-    const aportante = {
-      componentes: [],
-      fases: [],
-      tipoUsoCodigo: '',
-      valorUso: ''
-    }
+    const aportante = [];
     forkJoin([
       this.commonService.listaFases(),
       this.commonService.listaComponentes(),
       this.commonService.listaUsos()
     ])
     .subscribe( resp => {
-      //console.log( resp );
       this.fasesSelect = resp[0];
       this.componentesSelect = resp[1];
       this.usosSelect = resp[2];
@@ -92,16 +86,28 @@ export class VerDetalleContratacionComponent implements OnInit {
         for ( let componente of cont.componenteAportante ) {
 
           let componenteSeleccionado = this.componentesSelect.filter( value => value.codigo === componente.tipoComponenteCodigo );
-          console.log( componenteSeleccionado );
+          let faseSeleccionado = this.fasesSelect.filter( value => value.codigo === componente.faseCodigo );
 
-        }
+          for ( let uso of componente.componenteUso ) {
 
-      }
+            let usoSeleccionado = this.usosSelect.filter( value => value.codigo === uso.tipoUsoCodigo );
+            let apor = { 
+              componente: componenteSeleccionado[0].nombre,
+              fase: faseSeleccionado[0].nombre,
+              tipoUso: [], 
+              valorUso: []
+            }
+            apor.tipoUso.push( usoSeleccionado[0].nombre );
+            apor.valorUso.push( uso.valorUso  );
+            aportante.push( apor );
+          };
 
-    } )
+        };
 
-    this.dataAportantes.push(
-    )
-  }
+      };
 
-}
+    } );
+    return aportante;
+  };
+
+};

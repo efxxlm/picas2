@@ -12,22 +12,41 @@
 
 <div class="dialog-btn">
     <button mat-raised-button color="accent" class="dialog-btn--button"
-     (click)="onEditar()">Ver detalle / Editar</button>
+     (click)="onEditar()"  *ngIf="editarVerDetalle"  
+     >Ver detalle / Editar</button>
+     <button mat-raised-button color="accent" class="dialog-btn--button"
+     (click)="onVer()" 
+     *ngIf="verDetalle" 
+     >Ver detalle</button>
     <button mat-raised-button color="accent" class="dialog-btn--button"
-     (click)="onAperturaComite( data.procesoSeleccionId )" *ngIf="data.esCompleto 
-     && data.estadoProcesoSeleccionCodigo!='4'
-     ">Solicitar apertura a comité</button>
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onEliminar( data.procesoSeleccionId )">Eliminar</button>
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onMonitorearCronograma()">Monitorear cronograma</button>    
-    <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onAperturaEvaluacion( data.procesoSeleccionId )"
-    *ngIf="data.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario
-     && data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Abierta 
-    && data.procesoSeleccionProponente.length>0">
+        (click)="onAperturaComite( data.procesoSeleccionId )" *ngIf="solicitarApertura">
+        Solicitar apertura a comité</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" 
+        (click)="onEliminar( data.procesoSeleccionId )"
+        *ngIf="eliminar"
+        >Eliminar</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" 
+        (click)="onMonitorearCronograma()"
+        *ngIf="monitorear">Monitorear cronograma</button>    
+    <button mat-raised-button color="accent" class="dialog-btn--button" 
+        *ngIf="presentarEvaluacion"
+        (click)="onAperturaEvaluacion( data.procesoSeleccionId )"        >
         Presentar evaluación a comité</button>
     <button mat-raised-button color="accent" class="dialog-btn--button" 
-    (click)="onCerrarProceso( data.procesoSeleccionId )" *ngIf="data.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">Cerrar proceso</button>
-    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre" *ngIf="data.esCompleto && data.estadoProcesoSeleccionCodigo=='4'">
+        (click)="onCerrarProceso( data.procesoSeleccionId )" 
+        *ngIf="cerrarProceso"
+        >
+        Cerrar proceso</button>
+    <button mat-raised-button color="accent" class="dialog-btn--button" 
+        (click)="onObservaciones( data.procesoSeleccionId )" 
+        *ngIf="obervaciones"
+        >
+        Observaciones</button>
+    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre"
+     *ngIf="data.esCompleto && 
+     data.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
         Solicite la apertura del proceso al comité.</div>
+
 </div>
 
 <!-- <p>

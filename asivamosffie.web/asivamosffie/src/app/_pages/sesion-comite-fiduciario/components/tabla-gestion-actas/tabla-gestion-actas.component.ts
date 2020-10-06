@@ -100,7 +100,7 @@ export class TablaGestionActasComponent implements OnInit {
     this.fiduciaryCommitteeSessionService.getPlantillaActaBySesionComiteSolicitudId(id)
       .subscribe(resp => {
         console.log(resp);
-        const documento = `DDP ${ id }.pdf`;
+        const documento = `ActaComiteFiduciario ${ id }.pdf`;
         const text = documento,
           blob = new Blob([resp], { type: 'application/pdf' }),
           anchor = document.createElement('a');
