@@ -90,12 +90,9 @@ export interface ContratoPerfil {
   cantidadHvRecibidas?: number;
   cantidadHvAprobadas?: number;
   fechaAprobacion?: string;
-  numeroRadicadoFfie?: '123';
-  numeroRadicadoFfie1?: string;
-  numeroRadicadoFfie2?: string;
-  numeroRadicadoFfie3?: string;
+  numeroRadicadoFfie?: string;
   rutaSoporte?: string;
-  conObervacionesSupervision?: boolean;
+  observacion?: boolean;
   fechaCreacion?: string;
   usuarioCreacion?: string;
   fechaModificacion?: string;

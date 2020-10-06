@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { ContratacionProyecto2 } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { ContratacionProyecto2, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { CommonService } from '../../../../core/_services/common/common.service';
 
 @Component({
@@ -12,6 +12,8 @@ export class FormPerfilComponent implements OnInit {
 
   formContratista: FormGroup;
   @Input() perfilProyecto: any[] = [];
+  @Input() contratoId: number;
+  @Input() proyectoId: number;
   @Output() enviarPerfilesContrato = new EventEmitter();
   editorStyle = {
     height: '45px'
@@ -51,14 +53,14 @@ export class FormPerfilComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
-                tipoPerfil: [ null ],
-                cvRequeridas: [ '' ],
-                cvRecibidas: [ '' ],
-                cvAprobadas: [ '' ],
-                fechaAprobacionCv: [ null ],
-                observaciones: [ null ],
-                numeroRadicadoFfieAprobacionCv: this.fb.array([ [ '' ] ]),
-                urlSoporte: [ '' ]
+                perfilCodigo: [ null ],
+                cantidadHvRequeridas: [ '' ],
+                cantidadHvRecibidas: [ '' ],
+                cantidadHvAprobadas: [ '' ],
+                fechaAprobacion: [ null ],
+                observacion: [ null ],
+                numeroRadicadoFfie: this.fb.array([ [ '' ] ]),
+                rutaSoporte: [ '' ]
               }
             )
           );
@@ -68,7 +70,7 @@ export class FormPerfilComponent implements OnInit {
   };
 
   numeroRadicado ( i: number ) {
-    return this.perfiles.controls[i].get( 'numeroRadicadoFfieAprobacionCv' ) as FormArray;
+    return this.perfiles.controls[i].get( 'numeroRadicadoFfie' ) as FormArray;
   }
 
   textoLimpio (texto: string) {
@@ -106,7 +108,6 @@ export class FormPerfilComponent implements OnInit {
   };
 
   agregarNumeroRadicado ( numeroRadicado: number ) {
-    console.log( this.perfiles.controls[0].get( 'numeroRadicadoFfieAprobacionCv' ) as FormArray );
     this.numeroRadicado( numeroRadicado ).push( this.fb.control( '' ) )
   }
 
@@ -115,7 +116,21 @@ export class FormPerfilComponent implements OnInit {
   };
 
   guardar () {
-    this.enviarPerfilesContrato.emit( this.formContratista.get( 'perfiles' ).value );
+    let perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
+
+    perfiles.forEach( value => {
+      value.cantidadHvAprobadas  = Number( value.cantidadHvAprobadas );
+      value.cantidadHvRecibidas  = Number( value.cantidadHvRecibidas );
+      value.cantidadHvRequeridas = Number( value.cantidadHvRequeridas );
+      value.numeroRadicadoFfie   = value.numeroRadicadoFfie[0];
+
+      value.fechaAprobacion = new Date( value.fechaAprobacion ).toISOString()
+      value.contratoId = this.contratoId;
+      value.proyectoId = this.proyectoId;
+    } )
+
+    console.log( perfiles );
+    this.enviarPerfilesContrato.emit( perfiles );
   };
   
 };

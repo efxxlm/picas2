@@ -22,7 +22,7 @@
           <section class="d-flex mt-1em">
             <label class="mr-label mr-min label-left" style="margin-top: 1.7em;"><b>Perfil</b></label>
             <mat-form-field class="w-50" appearance="fill">
-              <mat-select formControlName="tipoPerfil" class="padding-left">
+              <mat-select formControlName="perfilCodigo" class="padding-left">
                 <mat-option></mat-option>
                 <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.value">
                   {{perfilCv.value}}
@@ -35,9 +35,9 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
             <div class="col d-flex w-30">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cvRequeridas">
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cvRequeridas' ).value.length}}</span>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.length}}</span>
             </div>
           </section>
 
@@ -45,9 +45,9 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
             <div class="col d-flex w-31">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cvRecibidas">
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cvRecibidas' ).value.length}}</span>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.length}}</span>
             </div>
           </section>
 
@@ -55,9 +55,9 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
             <div class="col d-flex w-30">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cvAprobadas">
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cvAprobadas' ).value.length}}</span>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.length}}</span>
             </div>
           </section>
 
@@ -68,15 +68,15 @@
                               appearance="fill"
                               style="width: 77%;">
               <input  matInput 
-                      [matDatepicker]="fechaAprobacionCv" 
-                      formControlName="fechaAprobacionCv"
+                      [matDatepicker]="fechaAprobacion" 
+                      formControlName="fechaAprobacion"
                       placeholder="DD/MM/AAAA">
-              <mat-datepicker #fechaAprobacionCv></mat-datepicker>
+              <mat-datepicker #fechaAprobacion></mat-datepicker>
               </mat-form-field>
               <button mat-button 
                       color="primary" 
                       type="button" 
-                      (click)="fechaAprobacionCv.open()" 
+                      (click)="fechaAprobacion.open()" 
                       class="btn-calendario">
               <img  class="mr-bottom-1" 
                     src="assets/img/icon/calendarioCirculo.svg" 
@@ -91,18 +91,18 @@
                           [styles]="editorStyle"
                           [modules]="config"
                           (onContentChanged)="maxLength($event, 1000)" 
-                          formControlName="observaciones"></quill-editor>
+                          formControlName="observacion"></quill-editor>
             <div class="d-flex" style="align-items: flex-end;">
-              <span class="contador miles" *ngIf="perfil.get('observaciones').value !== null">
-                {{1000 - textoLimpio(perfil.get('observaciones').value)}}
+              <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
+                {{1000 - textoLimpio(perfil.get('observacion').value)}}
               </span>
-              <span class="contador miles" *ngIf="perfil.get('observaciones').value === null">
+              <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
                 1000
               </span>
             </div>
           </section>
 
-          <section formArrayName="numeroRadicadoFfieAprobacionCv">
+          <section formArrayName="numeroRadicadoFfie">
             <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
               <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida</b></label>
               <div class="col d-flex" style="width: 25%;">
@@ -136,7 +136,7 @@
             <label class="mr-label mr-min mt-1em"><b>URL con soporte</b></label>
             <div class="col d-flex" style="width: 85%;">
               <mat-form-field class="w-38">
-                <input matInput type="text" formControlName="urlSoporte">          
+                <input matInput type="text" formControlName="rutaSoporte">          
               </mat-form-field>
             </div>
           </section>
