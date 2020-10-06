@@ -116,22 +116,19 @@ namespace asivamosffie.services
                 List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                     .Include(r => r.ContratoObservacion) 
-                    .Include(r => r.ContratoPerfil)
-                    .Include(r => r.ContratoPoliza)
+                    .Include(r => r.ContratoPerfil) 
                     .Include(r => r.Contratacion)
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
-                       .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
-                             .ThenInclude(r => r.Proyecto)
-                                .ThenInclude(r => r.Municipio)
-                                   .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
-                             .ThenInclude(r => r.Proyecto)
-                                .ThenInclude(r => r.Departamento)
-         
-                              
+                    //   .Include(r => r.Contratacion)
+                    //    .ThenInclude(r => r.ContratacionProyecto)
+                    //         .ThenInclude(r => r.Proyecto)
+                    //            .ThenInclude(r => r.Municipio)
+                    //.Include(r => r.Contratacion)
+                    //    .ThenInclude(r => r.ContratacionProyecto)
+                    //         .ThenInclude(r => r.Proyecto)
+                    //            .ThenInclude(r => r.Departamento) 
                     .Include(r => r.Contratacion)
                         .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
 
@@ -149,7 +146,7 @@ namespace asivamosffie.services
                 }
                 return contrato;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new Contrato();
             }
