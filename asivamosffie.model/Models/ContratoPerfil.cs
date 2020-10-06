@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public ContratoPerfil()
         {
+            ContratoPerfilNumeroRadicado = new HashSet<ContratoPerfilNumeroRadicado>();
             ContratoPerfilObservacion = new HashSet<ContratoPerfilObservacion>();
         }
 
@@ -29,8 +30,11 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool Eliminado { get; set; }
         public bool RegistroCompleto { get; set; }
+        public int ProyectoId { get; set; }
 
         public virtual Contrato Contrato { get; set; }
+        public virtual Proyecto Proyecto { get; set; }
+        public virtual ICollection<ContratoPerfilNumeroRadicado> ContratoPerfilNumeroRadicado { get; set; }
         public virtual ICollection<ContratoPerfilObservacion> ContratoPerfilObservacion { get; set; }
     }
 }
