@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
             PolizaObservacion = new HashSet<PolizaObservacion>();
         }
 
-        public int ContratoId { get; set; } //
+        public int ContratoId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
         public string TipoModificacionCodigo { get; set; }
         public string DescripcionModificacion { get; set; }
