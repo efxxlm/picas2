@@ -1,0 +1,111 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/generarRegistroPresupuestal" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar DRP contrato {{this.numContrato}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Fecha de firma del contrato: <b>{{this.fechaContrato}}</b></span>
+        <span><b>{{this.solicitudContrato}}</b></span>
+        <span>Estado: <b>{{this.estadoSolicitud}}</b></span>
+    </p>
+</section>
+<section class="container">
+    <mat-card class="shipping-card mainGris">
+        <mat-card-content>
+            <p><strong>Fecha de solicitud: </strong>26/05/2020</p>
+            <p><strong>Número de solicitud: </strong>0000003</p>
+            <p><strong>Número DRP: </strong>DRP_PI_002</p>
+            <p><strong>Número DDP: </strong>DDP_PI_001</p>
+            <p><strong>Tipo de contrato: </strong>Interventoría</p>
+            <p><strong>Valor del contrato: </strong>$ 80.000.000</p>
+            <p><strong>Plazo: </strong>10 meses / 25 días</p>
+            <p><strong>Objeto:</strong></p>
+            <p><strong>1. </strong>Contrato de modificación de obra que compromete el diagnóstico y/o actualización y/o
+                complementación y/o elaboraciónde estudios
+                y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las instituciones
+                rurales.</p>
+            <p><strong>Tipo de modificación: </strong>Adición y plazo</p>
+            <p><strong>Valor después de la modificación: </strong>$ 90.000.000</p>
+            <p><strong>Plazo después de la modificación: </strong>20 meses / 5 días</p>
+            <p><strong>Detalle de la modificación:</strong></p>
+            <p>Se realiza adición de recursos para obras complementarias</p>
+            <h2 class="card-subTitle grissub">Aportantes</h2>
+            <mat-card-title class="header-card--text sub-text textoGris">Aportante 1</mat-card-title>
+                <p><strong>Tipo de aportante: </strong>FFIE</p>
+                <p><strong>Nombre del aportante: </strong>FFIE</p>
+                <p><strong>Valor del aportante al proyecto: </strong>$ 90.000.000</p>
+            <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
+            <mat-card-title class="header-card--text sub-text textoGris">Fuente 1</mat-card-title>
+                <p><strong>Fuente: </strong>recursos propios</p>
+                <p><strong>Saldo actual de la fuente: </strong>$ 180.000.000</p>
+                <p><strong>Valor solicitado de la fuente: </strong>$ 70.000.000</p>
+                <p><strong>Saldo actual de la fuente: </strong>$ 110.000.000</p>
+            <mat-card-title class="header-card--text sub-text textoGris">Fuente 2</mat-card-title>
+                <p><strong>Fuente: </strong>Contingencias</p>
+                <p><strong>Saldo actual de la fuente: </strong>$ 70.000.000</p>
+                <p><strong>Valor solicitado de la fuente: </strong>$ 20.000.000</p>
+                <p><strong>Saldo actual de la fuente: </strong>$ 50.000.000</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    <!--Valor quemado-->
+                    LM675466 - I.E. María Auxiliadora - Única sede
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="info-sub-title text-center">
+                <span>Tipo de intervención: <b>Remodelación</b></span>
+                <span>Departamento: <b>Atlántico</b></span>
+                <span>Municipio: <b>Galapa</b></span>
+            </p>
+            <div class="table-responsive text-center">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        
+                    <ng-container matColumnDef="componente">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Componente </th>
+                        <!-- Caso mapeado <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date:'dd/MM/yyyy'}}</b></td>-->
+                        <td mat-cell *matCellDef="let element"> <b>{{element.componente}}</b></td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="uso">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Uso </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div  class="supportElement" *ngFor="let el of element.uso ; let i = index">
+                                    {{el.nombre}}
+                            </div>
+                        </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="valorUso">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de Uso </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="supportElement" *ngFor="let el of element.valorUso ; let i = index">
+                                    {{el.valor}}
+                            </div>
+                        </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="valorTotal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Total </th>
+                        <td mat-cell *matCellDef="let element"> {{element.valorTotal}} </td>
+                    </ng-container>
+        
+        
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="this.descargarDDPBoton()">Descargar DDP</button>
+        <button mat-raised-button color="accent" (click)="this.generarDRPBoton()">Generar DRP</button>
+        <button mat-raised-button color="accent" (click)="this.cancelarDRPBoton()">Cancelar DRP</button>
+    </div>
+</section>
