@@ -177,7 +177,7 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="polizasYSeguros" multiple required [(value)]="selected">
+              <mat-select formControlName="polizasYSeguros" multiple required [(value)]="this.selected">
                 <mat-option *ngFor="let polizaYSeguro of polizasYSegurosArray" [value]="polizaYSeguro.value">
                   {{ polizaYSeguro.name }}
                 </mat-option>
@@ -185,10 +185,10 @@
             </mat-form-field>
           </div>
         </div>
-        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" *ngIf="polizasYSegurosArray[0].name">
+        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
           Buen manejo y correcta inversión del anticipo
         </mat-card-title>
-        <div class="row" *ngIf="polizasYSegurosArray[0].name">
+        <div class="row">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">

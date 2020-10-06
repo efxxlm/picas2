@@ -128,12 +128,14 @@ export class EditarEnRevisionComponent implements OnInit {
 
   loadObservations(id){
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
-      this.selected = this.polizasYSegurosArray;
+      let tipoGarantiaCodigo = this.polizasYSegurosArray.filter(t => t.value == data[0].tipoGarantiaCodigo);
+      this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data[0].esIncluidaPoliza);
     });
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_A=>{
+      const estadoRevisionCodigo = this.polizasYSegurosArray.find(p => p.value === data_A[0].estadoRevisionCodigo);
       this.addressForm.get('fechaRevision').setValue(data_A[0].fechaRevision);
-      this.addressForm.get('estadoRevision').setValue(data_A[0].estadoRevisionCodigo);
+      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
       this.addressForm.get('observacionesGenerales').setValue(data_A[0].observacion);
     })
   }

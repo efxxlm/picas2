@@ -128,7 +128,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
 
   loadObservations(id){
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
-      this.selected = this.polizasYSegurosArray;
+      this.selected = data[0].tipoGarantiaCodigo;
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data[0].esIncluidaPoliza);
     });
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_A=>{
@@ -190,7 +190,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     };
     const polizaGarantia: CreatePolizaGarantia={
       contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
+      tipoGarantiaCodigo: this.selected,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
     };
     const polizaObservacion: CreatePolizaObservacion={
