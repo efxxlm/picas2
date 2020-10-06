@@ -119,4 +119,8 @@ export interface EditPoliza{
   polizaGarantia:any;
   polizaObservacion:any;
   cumpleDatosAsegurado:boolean;
+  cumpleDatosBeneficiario: boolean;
+  cumpleDatosTomador: boolean;
+  incluyeReciboPago: boolean;
+  incluyeCondicionesGenerales: boolean;
 }
