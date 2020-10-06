@@ -5,6 +5,7 @@ import { QuillModule } from 'ngx-quill';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { AprobarRequisitosConstruccionComponent } from './components/aprobar-requisitos-construccion/aprobar-requisitos-construccion.component';
+import { FormValidacionRequisitosObraArtcComponent } from './components/form-validacion-requisitos-obra-artc/form-validacion-requisitos-obra-artc.component';
 
 
 
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: '',
     component: AprobarRequisitosConstruccionComponent
+  },
+  {
+    path: 'validarRequisitosInicio/:id',
+    component: FormValidacionRequisitosObraArtcComponent
   }
 ];
 

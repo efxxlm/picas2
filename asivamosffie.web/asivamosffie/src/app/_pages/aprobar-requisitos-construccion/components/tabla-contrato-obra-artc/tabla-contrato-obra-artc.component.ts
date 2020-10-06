@@ -68,7 +68,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
   };
 
   getForm ( id: number ) {
-    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verificarRequisitosInicio', id ] )
+    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/validarRequisitosInicio', id ] )
   };
 
   aprobarInicio ( id: number ) {
@@ -76,7 +76,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
   };
 
   verDetalle ( id: number ) {
-    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verDetalleObra', id ] )
+    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/verDetalleObra', id ] )
   }
 
 }
