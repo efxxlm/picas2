@@ -82,27 +82,27 @@ interface ContratoPoliza {
   polizaObservacion: any[];
 }
 
-interface ContratoPerfil {
-  contratoPerfilId: number;
-  contratoId: number;
-  perfilCodigo: string;
-  cantidadHvRequeridas: number;
-  cantidadHvRecibidas: number;
-  cantidadHvAprobadas: number;
-  fechaAprobacion: string;
-  numeroRadicadoFfie: string;
-  numeroRadicadoFfie1: string;
-  numeroRadicadoFfie2: string;
-  numeroRadicadoFfie3: string;
-  rutaSoporte: string;
-  conObervacionesSupervision: boolean;
-  fechaCreacion: string;
-  usuarioCreacion: string;
-  fechaModificacion: string;
-  eliminado: boolean;
-  registroCompleto: boolean;
-  proyectoId: number;
-  contratoPerfilObservacion: any[];
+export interface ContratoPerfil {
+  contratoPerfilId?: number;
+  contratoId?: number;
+  perfilCodigo?: string;
+  cantidadHvRequeridas?: number;
+  cantidadHvRecibidas?: number;
+  cantidadHvAprobadas?: number;
+  fechaAprobacion?: string;
+  numeroRadicadoFfie?: '123';
+  numeroRadicadoFfie1?: string;
+  numeroRadicadoFfie2?: string;
+  numeroRadicadoFfie3?: string;
+  rutaSoporte?: string;
+  conObervacionesSupervision?: boolean;
+  fechaCreacion?: string;
+  usuarioCreacion?: string;
+  fechaModificacion?: string;
+  eliminado?: boolean;
+  registroCompleto?: boolean;
+  proyectoId?: number;
+  contratoPerfilObservacion?: any[];
 }
 
 interface Contratacion {
@@ -167,7 +167,7 @@ interface Proyecto2 {
   localizacionIdMunicipioNavigation: LocalizacionIdMunicipioNavigation;
   contratacionProyecto: any[];
   contratoConstruccion: any[];
-  contratoPerfil: any[];
+  contratoPerfil?: ContratoPerfil[];
   disponibilidadPresupuestalProyecto: any[];
   infraestructuraIntervenirProyecto: any[];
   proyectoAportante: any[];

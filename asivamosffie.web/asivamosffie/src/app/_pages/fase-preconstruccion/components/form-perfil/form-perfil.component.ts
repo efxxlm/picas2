@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ContratacionProyecto2 } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { CommonService } from '../../../../core/_services/common/common.service';
@@ -11,7 +11,8 @@ import { CommonService } from '../../../../core/_services/common/common.service'
 export class FormPerfilComponent implements OnInit {
 
   formContratista: FormGroup;
-  @Input() contratacionProyecto: ContratacionProyecto2[] = [];
+  @Input() perfilProyecto: any[] = [];
+  @Output() enviarPerfilesContrato = new EventEmitter();
   editorStyle = {
     height: '45px'
   };
@@ -34,7 +35,16 @@ export class FormPerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.formContratista.get( 'numeroPerfiles' ).valueChanges
+    this.perfilesProyecto();
+  };
+
+  get perfiles () {
+    return this.formContratista.get( 'perfiles' ) as FormArray;
+  };
+
+  perfilesProyecto () {
+    if ( this.perfilProyecto.length === 0 ) {
+      this.formContratista.get( 'numeroPerfiles' ).valueChanges
       .subscribe( value => {
         this.perfiles.clear();
         for ( let i = 0; i < Number(value); i++ ) {
@@ -50,15 +60,11 @@ export class FormPerfilComponent implements OnInit {
                 numeroRadicadoFfieAprobacionCv: this.fb.array([ [ '' ] ]),
                 urlSoporte: [ '' ]
               }
-            ) 
-          )
-        }
+            )
+          );
+        };
       } );
-    console.log( this.contratacionProyecto );
-  };
-
-  get perfiles () {
-    return this.formContratista.get( 'perfiles' ) as FormArray;
+    };
   };
 
   numeroRadicado ( i: number ) {
@@ -109,7 +115,7 @@ export class FormPerfilComponent implements OnInit {
   };
 
   guardar () {
-    console.log( this.formContratista );
-  }
+    this.enviarPerfilesContrato.emit( this.formContratista.get( 'perfiles' ).value );
+  };
   
-}
+};
