@@ -53,6 +53,7 @@ export interface CreatePolizaObservacion {
   estadoRevisionCodigo: string;
 }
 export interface CreatePolizaGarantia {
+  polizaGarantiaId: number;
   contratoPolizaId: number;
   tipoGarantiaCodigo: any[];
   esIncluidaPoliza: boolean;

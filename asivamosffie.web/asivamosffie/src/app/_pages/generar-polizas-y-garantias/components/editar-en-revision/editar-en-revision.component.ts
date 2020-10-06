@@ -77,6 +77,7 @@ export class EditarEnRevisionComponent implements OnInit {
   public observacionesOn;
   public idContrato;
   public idPoliza;
+  public idPoliza2;
   public idObservacion;
   selected: any;
 
@@ -142,12 +143,16 @@ export class EditarEnRevisionComponent implements OnInit {
       const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.value == data_B[0].tipoGarantiaCodigo);
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
+      this.loadGrantiaID(data_B[0].contratoPolizaId);
     });
     this.idObservacion = id;
   }
   dataLoad2(data){
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
+  }
+  loadGrantiaID(id){
+    this.idPoliza2 = id;
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -201,6 +206,7 @@ export class EditarEnRevisionComponent implements OnInit {
       incluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales
     };
     const polizaGarantia: CreatePolizaGarantia={
+      polizaGarantiaId : this.idPoliza2,
       contratoPolizaId: this.idPoliza,
       tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
