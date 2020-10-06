@@ -119,9 +119,19 @@ namespace asivamosffie.services
                     .Include(r => r.ContratoPerfil)
                     .Include(r => r.ContratoPoliza)
                     .Include(r => r.Contratacion)
+                       .ThenInclude(r => r.ContratacionProyecto)
+                             .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.InstitucionEducativa)
+                       .Include(r => r.Contratacion)
                         .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                 .ThenInclude(r => r.Municipio)
+                                   .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.ContratacionProyecto)
+                             .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.Departamento)
+         
+                              
                     .Include(r => r.Contratacion)
                         .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
 
