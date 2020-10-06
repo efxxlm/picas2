@@ -40,14 +40,14 @@ namespace asivamosffie.api.Controllers
 
         } 
         [HttpPost]
-        [Route("CreatePolizaObservacion")]
-        public async Task<IActionResult> InsertPolizaObservacion(PolizaObservacion polizaObservacion)
+        [Route("CreateEditPolizaObservacion")]
+        public async Task<IActionResult> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _guaranteePolicy.InsertPolizaObservacion(polizaObservacion);
+                respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -58,14 +58,14 @@ namespace asivamosffie.api.Controllers
         }
          
         [HttpPost]
-        [Route("CreatePolizaGarantia")]
-        public async Task<IActionResult> InsertPolizaGarantia(PolizaGarantia polizaGarantia)
+        [Route("CreateEditPolizaGarantia")]
+        public async Task<IActionResult> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _guaranteePolicy.InsertPolizaGarantia(polizaGarantia);
+                respuesta = await _guaranteePolicy.InsertEditPolizaGarantia(polizaGarantia);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -116,11 +116,11 @@ namespace asivamosffie.api.Controllers
          
         [Route("GetListPolizaObservacionByContratoPolizaId")]
         [HttpGet]
-        public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
+        public async Task<ActionResult<List<PolizaObservacion>>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
         {
             try
             {
-                return await _guaranteePolicy.GetListPolizaGarantiaByContratoPolizaId(pContratoPolizaId);
+                return await _guaranteePolicy.GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId);
 
             }
             catch (Exception ex)

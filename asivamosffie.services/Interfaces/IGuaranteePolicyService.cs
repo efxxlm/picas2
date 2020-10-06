@@ -43,8 +43,8 @@ namespace asivamosffie.services.Interfaces
         //FechaRevision   datetime
         //EstadoRevisionCodigo    varchar
 
-        Task<Respuesta> InsertPolizaObservacion(PolizaObservacion polizaObservacion);
-        Task<Respuesta> InsertPolizaGarantia(PolizaGarantia polizaGarantia);
+        Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion);
+        Task<Respuesta> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia);
         
 
         //    cambiarEstadoContrato()

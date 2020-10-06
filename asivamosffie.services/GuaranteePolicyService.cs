@@ -87,7 +87,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> InsertPolizaGarantia( PolizaGarantia polizaGarantia)
+        public async Task<Respuesta> InsertEditPolizaGarantia( PolizaGarantia polizaGarantia)
         {
             Respuesta _response = new Respuesta();
 
@@ -96,11 +96,26 @@ namespace asivamosffie.services
             //GUARDAR
             //PolizaObservacion - FechaRevision
             //    EstadoRevisionCodigo - PolizaObservacion
-
+            string strCrearEditar;
             try
             {
                 if (polizaGarantia != null)
                 {
+                    if ( polizaGarantia.PolizaGarantiaId == 0)
+                    {
+                        //Auditoria
+                        strCrearEditar = "REGISTRAR POLIZA GARANTIA";
+                        _context.PolizaGarantia.Add(polizaGarantia);
+                        await _context.SaveChangesAsync();
+
+                    }
+                    else
+                    {
+                        strCrearEditar = "EDIT POLIZA GARANTIA";
+                        _context.PolizaGarantia.Update(polizaGarantia);
+
+                        //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
+                    }
                     //contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
 
@@ -108,9 +123,7 @@ namespace asivamosffie.services
                     //_context.Add(contratoPoliza);
 
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-
-                    _context.PolizaGarantia.Add(polizaGarantia);
-                    await _context.SaveChangesAsync();
+                                    
 
                     return
                         new Respuesta
@@ -125,7 +138,7 @@ namespace asivamosffie.services
                             //contratoPoliza
                             1
                             ,
-                            "UsuarioCreacion", "REGISTRAR POLIZA OBSERVACION"
+                            "UsuarioCreacion", strCrearEditar
                             //contratoPoliza.UsuarioCreacion, "REGISTRAR POLIZA GARANTIA"
                             )
                         };
@@ -146,7 +159,7 @@ namespace asivamosffie.services
             }
 
         }
-        public async Task<Respuesta> InsertPolizaObservacion( PolizaObservacion polizaObservacion)
+        public async Task<Respuesta> InsertEditPolizaObservacion( PolizaObservacion polizaObservacion)
         {
             Respuesta _response = new Respuesta();
 
@@ -156,20 +169,35 @@ namespace asivamosffie.services
             //PolizaObservacion - FechaRevision
             //    EstadoRevisionCodigo - PolizaObservacion
 
+            string strCrearEditar;
             try
             {
                 if (polizaObservacion != null)
                 {
+                    polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
+
+                    if (polizaObservacion.PolizaObservacionId == 0)
+                    {
+                        //Auditoria
+                        strCrearEditar = "REGISTRAR POLIZA OBSERVACION";
+                        _context.PolizaObservacion.Add(polizaObservacion);
+                        await _context.SaveChangesAsync();
+
+                    }
+                    else
+                    {
+                        strCrearEditar = "EDIT POLIZA OBSERVACION";
+                        _context.PolizaObservacion.Update(polizaObservacion);
+
+                        //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
+                    }
                     //contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
 
                     //_context.Add(contratoPoliza);
 
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-                    polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
                     
-                    _context.PolizaObservacion.Add(polizaObservacion);
-                    await _context.SaveChangesAsync();
 
                     return
                         new Respuesta
