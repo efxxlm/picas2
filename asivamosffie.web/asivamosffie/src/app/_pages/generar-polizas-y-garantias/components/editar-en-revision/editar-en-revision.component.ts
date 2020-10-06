@@ -170,7 +170,6 @@ export class EditarEnRevisionComponent implements OnInit {
   }
 
   onSubmit() {
-    alert(this.idContrato);
     const contratoArray :EditPoliza ={
       contratoId: this.idContrato,
       nombreAseguradora: this.addressForm.value.nombre,
