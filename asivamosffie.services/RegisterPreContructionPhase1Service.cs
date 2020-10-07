@@ -140,10 +140,10 @@ namespace asivamosffie.services
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
                         if (ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
-                           ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
+                             ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
 
                         if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
-                            ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
+                               ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
                     }
 
 
@@ -187,6 +187,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
+
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
 
@@ -197,7 +198,7 @@ namespace asivamosffie.services
                                     ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
-                                    // contratoPerfilObservacionOld.Eliminado = false;  
+                                     contratoPerfilObservacionOld.Eliminado = false;  
                                     contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
                                 }
                                 else
@@ -205,7 +206,7 @@ namespace asivamosffie.services
                                     ContratoPerfilObservacion.TipoObservacionCodigo = "1";
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                                    // ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                                    ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
 
                                     _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                                 }
