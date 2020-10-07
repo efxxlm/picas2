@@ -21,6 +21,11 @@
     margin-right: 0;
 }
 
+.mat-card .mat-input-element {
+  color: $mainColor;
+  font-weight: 400;
+}
+
 .iniciarSesion,
 .recuperar-pass {
     .mat-form-field-empty.mat-form-field-label {
