@@ -170,11 +170,7 @@ namespace asivamosffie.services
                         contratoPerfilOld.CantidadHvRecibidas = ContratoPerfil.CantidadHvRecibidas;
                         contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
                         contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
-
-                        contratoPerfilOld.NumeroRadicadoFfie = ContratoPerfil.NumeroRadicadoFfie;
-                        contratoPerfilOld.NumeroRadicadoFfie1 = ContratoPerfil.NumeroRadicadoFfie1;
-                        contratoPerfilOld.NumeroRadicadoFfie2 = ContratoPerfil.NumeroRadicadoFfie2;
-                        contratoPerfilOld.NumeroRadicadoFfie3 = ContratoPerfil.NumeroRadicadoFfie3;
+                         
                         contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
                         contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                         contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
@@ -299,11 +295,7 @@ namespace asivamosffie.services
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRequeridas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRecibidas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvAprobadas.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie1.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie2.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie3.ToString())
+                 || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString()) 
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
 
                 //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
