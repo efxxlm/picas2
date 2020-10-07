@@ -350,5 +350,13 @@ namespace asivamosffie.services
             }
         }
 
+
+        public async Task<Respuesta> AprobarInicio(int pContratoId, string UsuarioModificacion) { 
+        
+        
+        
+        }
+
+
     }
 }
