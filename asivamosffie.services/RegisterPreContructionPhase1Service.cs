@@ -195,13 +195,13 @@ namespace asivamosffie.services
                                 {
                                     ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                                    contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
-                                    contratoPerfilObservacionOld.TipoObservacionCodigo = "1";
+                                    contratoPerfilObservacionOld.FechaModificacion = DateTime.Now; 
                                     // contratoPerfilObservacionOld.Eliminado = false;  
                                     contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
                                 }
                                 else
                                 {
+                                    ContratoPerfilObservacion.TipoObservacionCodigo = "1";
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                     // ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
