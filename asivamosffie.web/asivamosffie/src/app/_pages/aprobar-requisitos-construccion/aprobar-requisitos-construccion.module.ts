@@ -14,11 +14,12 @@ import { ManejoAnticipoArtcComponent } from './components/manejo-anticipo-artc/m
 import { HojasVidaContratistaArtcComponent } from './components/hojas-vida-contratista-artc/hojas-vida-contratista-artc.component';
 import { ProgramacionObraArtcComponent } from './components/programacion-obra-artc/programacion-obra-artc.component';
 import { FlujoInversionRecursosArtcComponent } from './components/flujo-inversion-recursos-artc/flujo-inversion-recursos-artc.component';
+import { VerDetalleContratoObraArtcComponent } from './components/ver-detalle-contrato-obra-artc/ver-detalle-contrato-obra-artc.component';
 
 
 
 @NgModule({
-  declarations: [AprobarRequisitosConstruccionComponent, TablaContratoObraArtcComponent, TablaContratoInterventoriaArtcComponent, FormValidacionRequisitosObraArtcComponent, DiagnosticoArtcComponent, PlanesProgramasArtcComponent, ManejoAnticipoArtcComponent, HojasVidaContratistaArtcComponent, ProgramacionObraArtcComponent, FlujoInversionRecursosArtcComponent],
+  declarations: [AprobarRequisitosConstruccionComponent, TablaContratoObraArtcComponent, TablaContratoInterventoriaArtcComponent, FormValidacionRequisitosObraArtcComponent, DiagnosticoArtcComponent, PlanesProgramasArtcComponent, ManejoAnticipoArtcComponent, HojasVidaContratistaArtcComponent, ProgramacionObraArtcComponent, FlujoInversionRecursosArtcComponent, VerDetalleContratoObraArtcComponent],
   imports: [
     CommonModule,
     MaterialModule,
