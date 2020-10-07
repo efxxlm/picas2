@@ -6,6 +6,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -131,18 +132,18 @@ namespace asivamosffie.services
                     .FirstOrDefaultAsync();
 
 
-                if (contrato.ContratoPerfil.Count() > 0)
-                {
-                    contrato.ContratoPerfil = contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado).ToList();
-
-                }
-                foreach (var ContratoPerfil in contrato.ContratoPerfil)
-                {
-                    if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
+                foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
+                { 
+                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() > 0)
+                             ContratacionProyecto.Proyecto.ContratoPerfil = ContratacionProyecto.Proyecto.ContratoPerfil.Where(t => !(bool)t.Eliminado).ToList();
+                     
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
-                        ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
+                        if(ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
+                              ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
                     }
                 }
+                 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
                     Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
