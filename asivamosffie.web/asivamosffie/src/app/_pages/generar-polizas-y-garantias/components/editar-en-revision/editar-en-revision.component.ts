@@ -181,6 +181,7 @@ export class EditarEnRevisionComponent implements OnInit {
 
   onSubmit() {
     let auxValue = this.addressForm.value.estadoRevision;
+    let auxValue2 = this.addressForm.value.polizasYSeguros;
     console.log(auxValue.value);
     const contratoArray :EditPoliza ={
       contratoId: this.idContrato,
@@ -208,7 +209,7 @@ export class EditarEnRevisionComponent implements OnInit {
     const polizaGarantia: CreatePolizaGarantia={
       polizaGarantiaId : this.idPoliza2,
       contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
+      tipoGarantiaCodigo: auxValue2.value,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
     };
     const polizaObservacion: CreatePolizaObservacion={
