@@ -13,17 +13,13 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 export interface Contrato {
+  id:number,
   fechaFirma: string;
   numeroContrato: string;
   tipoSolicitud: string;
   estado: string;
 }
 
-const ELEMENT_DATA: Contrato[] = [
-  {fechaFirma: "20/06/2020", numeroContrato: 'A886675445',tipoSolicitud:'Modificación Contractual',estado:'Sin registro presupuestal'},
-  {fechaFirma: "21/06/2020", numeroContrato: 'C223456789',tipoSolicitud:'Contratación',estado:'Sin registro presupuestal'},
-  {fechaFirma: "10/06/2020", numeroContrato: 'C848784551',tipoSolicitud:'Modificación Contractual',estado:'Cancelada'},
-];
 @Component({
   selector: 'app-tabla-registro-presupuestal',
   templateUrl: './tabla-registro-presupuestal.component.html',
@@ -46,12 +42,14 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
       
       listas.disponibilidadPresupuestal.forEach(element => {
         console.log(element);
-        elementos.push({estado:element.estadoRegistro,
+        elementos.push({
+          id:element.disponibilidadPresupuestalId,
+          estado:element.estadoRegistro,
           fechaFirma:element.fechaFirmaContrato,
           numeroContrato:element.numeroContrato,
           tipoSolicitud:element.tipoSolicitud});
       });
-      this.dataSource = new MatTableDataSource(listas);
+      this.dataSource = new MatTableDataSource(elementos);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -61,10 +59,12 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
     
     
   }
+  /*
+  jflorez, lo cambio por router link
   gestionarDRP(){
-    this.router.navigate(['/generarRegistroPresupuestal/gestionarDrp']);
+    this.router.navigate(['/generarRegistroPresupuestal/gestionarDrp', this.d.id]);
   }
   verDetalle(){
-    this.router.navigate(['/generarRegistroPresupuestal/verDetalle']);
-  }
+    this.router.navigate(['/generarRegistroPresupuestal/verDetalle', element.id]);
+  }*/
 }

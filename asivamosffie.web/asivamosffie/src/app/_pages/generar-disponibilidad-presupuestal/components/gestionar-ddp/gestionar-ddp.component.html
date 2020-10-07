@@ -8,7 +8,7 @@
         Gestionar DDP solicitud {{detailavailabilityBudget.numeroSolicitud}}
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de la solicitud: <b>{{detailavailabilityBudget.fechaComiteTecnico}}</b></span>
+        <span>Fecha de la solicitud: <b>{{detailavailabilityBudget.fechaComiteTecnico| date:'dd/MM/yyyy'}}</b></span>
         <span><b>{{detailavailabilityBudget.tipoSolicitudText}}</b></span>
     </p>
 
@@ -17,39 +17,39 @@
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
             <p>
+                <strong>Número DDP:</strong>
+                {{detailavailabilityBudget.numeroDDP}}
+            </p>
+            <p>
                 <strong>Rubro por financiar:</strong>
-                Proyecto de infraestructura
+                {{detailavailabilityBudget.rubroPorFinanciar}}
             </p>
             <p>
                 <strong>Valor de la solicitud:</strong>
-                $ 140.000.000
+                {{detailavailabilityBudget.valorSolicitud | currency:'':'symbol':'3.0'}}
             </p>
             <p>
                 <strong>Plazo:</strong>
-                9 meses / 30 días
+                {{detailavailabilityBudget.plazo}}
             </p>
+            <div>
+                <strong>Objeto:</strong>                                
+                <div [innerHtml]="detailavailabilityBudget.objeto"></div> 
+            </div>
             <p>
-                <strong>Objeto:</strong>
-            </p>
-            <p>
-                Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
-                estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
-                instituciones rurales.
-            </p>
-            <p>
-                <strong>Número de comité técnico:</strong>
-                CT_003
+                <strong>Número comité técnico:</strong>
+                {{detailavailabilityBudget.numeroComite}}
             </p>
             <p>
                 <strong>Fecha comité técnico:</strong>
-                {{detailavailabilityBudget.fechaComiteTecnico}}
+                {{detailavailabilityBudget.fechaComiteTecnico | date: 'dd/MM/yyyy' }}
             </p>
 
         </mat-card-content>
     </mat-card>
 
     <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of detailavailabilityBudget.proyectos">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                     LJ776554 - I.E. María Villa Campo - Única sede

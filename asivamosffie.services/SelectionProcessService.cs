@@ -275,7 +275,8 @@ namespace asivamosffie.services
 
                 //_context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 //si el estado es apertura tramite se debe enviar un mensaje a la secretaria de comite jflorez
-                if(pCodigoEstado== ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite)
+                if(pCodigoEstado== ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite ||
+                    pCodigoEstado == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite)
                 {
                     var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
                     foreach(var usuario in usuariosecretario)
