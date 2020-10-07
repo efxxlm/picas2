@@ -116,8 +116,24 @@ namespace asivamosffie.services
                     strTipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
                 }
 
+                DateTime? fechaContrato = null;
+                string numeroContrato = "";
+                if (DisponibilidadPresupuestal.ContratacionId != null)
+                {
+                    var contrato = _context.Contrato.Find(DisponibilidadPresupuestal.ContratacionId);
+                    fechaContrato = contrato != null? contrato.FechaFirmaContrato: null;
+                    numeroContrato = DisponibilidadPresupuestal.NumeroContrato == null ?
+                        contrato!=null? contrato.NumeroContrato:""
+                        : DisponibilidadPresupuestal.NumeroContrato;
+                }
+                else
+                {
+                    numeroContrato = DisponibilidadPresupuestal.NumeroContrato != null ?
+                         DisponibilidadPresupuestal.NumeroContrato:"";
+                }
+
                 
-                var fechaContrato=_context.Contrato.Where(x=>x.ContratacionId==DisponibilidadPresupuestal.ContratacionId).FirstOrDefault().FechaFirmaContrato;
+
                 DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
                 {
 
@@ -127,9 +143,7 @@ namespace asivamosffie.services
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
                     FechaFirmaContrato = fechaContrato==null?"":Convert.ToDateTime(fechaContrato).ToString("yy-MM-dd"),
-                    NumeroContrato=DisponibilidadPresupuestal.NumeroContrato==null ?
-                        _context.Contrato.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId).FirstOrDefault().NumeroContrato
-                        : DisponibilidadPresupuestal.NumeroContrato,
+                    NumeroContrato=numeroContrato,
 
                 }; 
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);

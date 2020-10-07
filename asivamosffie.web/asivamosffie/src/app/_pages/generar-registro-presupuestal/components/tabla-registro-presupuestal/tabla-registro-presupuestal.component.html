@@ -10,11 +10,10 @@
     </div>
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-
             <ng-container matColumnDef="fechaFirma">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de firma del contrato </th>
                 <!-- Caso mapeado <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date:'dd/MM/yyyy'}}</b></td>-->
-                <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma}}</b></td>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma| date:'dd/MM/yyyy'}}</b></td>
             </ng-container>
 
             <ng-container matColumnDef="numeroContrato">
@@ -35,8 +34,8 @@
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estado=='Cancelada'" (click)="this.verDetalle()">Ver detalle</button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estado!='Cancelada'" (click)="this.gestionarDRP()">Gestionar DRP</button>
+                    <a mat-raised-button color="accent" class="btn-table" *ngIf="element.estado=='Cancelada'" [routerLink]="['verDetalle', element.id]">Ver detalle</a>
+                    <a mat-raised-button color="accent" class="btn-table" *ngIf="element.estado!='Cancelada'" [routerLink]="['gestionarDrp', element.id]">Gestionar DRP</a>
                 </td>
             </ng-container>
 
