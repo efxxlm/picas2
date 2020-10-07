@@ -339,8 +339,15 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal()
         {
-            var respuesta = await _budgetAvailabilityService.GetListGenerarRegistroPresupuestal();
-            return respuesta;
+            try
+            {
+                var respuesta = await _budgetAvailabilityService.GetListGenerarRegistroPresupuestal();
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return new EstadosDisponibilidad();
+            }
         }
         /*autor: jflorez
             descripción: cancela la ddp
