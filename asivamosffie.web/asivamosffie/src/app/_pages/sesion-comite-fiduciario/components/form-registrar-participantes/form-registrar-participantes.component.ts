@@ -204,49 +204,54 @@ export class FormRegistrarParticipantesComponent {
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
 
-    this.objetoComiteTecnico.sesionComiteTema
-      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
-        tem.completo = true;
+      this.objetoComiteTecnico.sesionComiteTema
+        .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
+          tem.completo = true;
 
-        if (tem.requiereVotacion == true) {
-          //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-          if (tem.sesionTemaVoto.length == 0)
+          if (tem.requiereVotacion == true) {
+            //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
+            if (tem.sesionTemaVoto.length == 0)
+              cantidadTemas++;
+
+            tem.sesionTemaVoto.forEach(vot => {
+              cantidadTemas++;
+
+              if (vot.esAprobado == false || vot.esAprobado == true) {
+                cantidadTemasCompletas++;
+              } else {
+                tem.completo = false;
+
+              }
+            })
+            //})
+          } else if (tem.requiereVotacion == false) {
             cantidadTemas++;
-
-          tem.sesionTemaVoto.forEach(vot => {
-            cantidadTemas++;
-
-            if (vot.esAprobado == false || vot.esAprobado == true) {
-              cantidadTemasCompletas++;
-            } else {
-              tem.completo = false;
-
-            }
-          })
-          //})
-        } else if (tem.requiereVotacion == false) {
-          cantidadTemas++;
-          cantidadTemasCompletas++;
-        }
-        else {
-          cantidadTemasCompletas--;
-        }
-      })
+            cantidadTemasCompletas++;
+          }
+          else {
+            cantidadTemasCompletas--;
+          }
+        })
 
 
 
-    if (cantidadTemas > 0) {
-      if (esProposicion)
-        this.estadoProposiciones = this.estadoFormulario.enProceso;
-      else
-        this.estadoOtrosTemas = this.estadoFormulario.enProceso;
-
-      if (cantidadTemas == cantidadTemasCompletas)
+      if (cantidadTemas > 0) {
         if (esProposicion)
-          this.estadoProposiciones = this.estadoFormulario.completo;
+          this.estadoProposiciones = this.estadoFormulario.enProceso;
         else
-          this.estadoOtrosTemas = this.estadoFormulario.completo;
-    }
+          this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+
+        if (cantidadTemas == cantidadTemasCompletas)
+          if (esProposicion)
+            this.estadoProposiciones = this.estadoFormulario.completo;
+          else
+            this.estadoOtrosTemas = this.estadoFormulario.completo;
+      }else{
+        if (esProposicion)
+          this.estadoProposiciones = '';
+        else 
+          this.estadoOtrosTemas = '';
+      }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
 

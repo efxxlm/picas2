@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class DisponibilidadPresupuestalService {
+  
 
   constructor( private http: HttpClient ) {}
 
@@ -13,6 +14,10 @@ export class DisponibilidadPresupuestalService {
   GetListGenerarDisponibilidadPresupuestal()
   {
     return this.http.get<any[]>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarDisponibilidadPresupuestal`);
+  }
+
+  GetListGenerarRegistroPresupuestal() {
+    return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarRegistroPresupuestal`);
   }
 
   
@@ -28,6 +33,11 @@ export class DisponibilidadPresupuestalService {
     return this.http.get(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`, { responseType: "blob" } );
   }
 
+  
+  GenerateDDP(id)
+  {        
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}`, { responseType: "blob" } );
+  }
   CreateDDP(id)
   {
     return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/CreateDDP?id=${id}`,null);

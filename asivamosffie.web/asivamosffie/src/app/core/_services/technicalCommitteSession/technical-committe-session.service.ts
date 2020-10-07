@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto, SesionSolicitudCompromiso, SesionSolicitudObservacionProyecto, SesionParticipante } from 'src/app/_interfaces/technicalCommitteSession';
 import { Session } from 'protractor';
 import { ProyectoGrilla, ContratacionObservacion } from 'src/app/_interfaces/project-contracting';
+import { SesionComentario } from 'src/app/_interfaces/compromisos-actas-comite.interfaces';
 
 
 @Injectable({
@@ -116,6 +117,10 @@ export class TechnicalCommitteSessionService {
 
    getPlantillaActaBySesionComiteSolicitudId( id: number ){
     return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetPlantillaActaIdComite?IdComite=${ id }`, { responseType: "blob" } );
+   }
+
+   getCometariosDelActa( id: number ){
+    return this.http.get<SesionComentario[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCometariosDelActa?pComietTecnicoId=${ id }`);
    }
   
 }

@@ -1,9 +1,9 @@
 .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 .text-area-quill {
-    border: solid 1px var(--mainColor);
+    border: solid 1px $mainColor;
     border-radius: 1.5em;
     padding: .5em 2em 1.2em;
     width: 100%;
@@ -57,7 +57,7 @@
     &.card {
         width: 100%;
         .ql-container.ql-snow {
-            border-bottom: var(--fontColor) solid 1px;
+            border-bottom: $fontColor solid 1px;
         }
     }
 

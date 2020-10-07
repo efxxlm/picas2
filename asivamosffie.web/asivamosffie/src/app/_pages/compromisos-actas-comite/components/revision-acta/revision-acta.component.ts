@@ -5,6 +5,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 import { TechnicalCommitteSessionService } from '../../../../core/_services/technicalCommitteSession/technical-committe-session.service';
+import { CommonService } from '../../../../core/_services/common/common.service';
+import { forkJoin } from 'rxjs';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
 @Component({
   selector: 'app-revision-acta',
@@ -17,6 +20,7 @@ export class RevisionActaComponent implements OnInit {
   form:FormGroup;
   comentarActa: boolean = false;
   comentarios: boolean = false;
+  tablaDecisiones: any[] = [];
   editorStyle = {
     height: '45px'
   };
@@ -36,19 +40,23 @@ export class RevisionActaComponent implements OnInit {
                 public dialog: MatDialog,
                 private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
+                private commonSvc: CommonService,
+                private technicalCommitteeSessionSvc: TechnicalCommitteSessionService,
                 private compromisoSvc: CompromisosActasComiteService,
+                private projectContractingSvc: ProjectContractingService,
                 private comiteTecnicoSvc: TechnicalCommitteSessionService ) {
     this.getActa( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
   };
 
-  ngOnInit(): void { };
+  ngOnInit(): void {
+  };
 
   getActa ( comiteTecnicoId: number ) {
     this.compromisoSvc.getActa( comiteTecnicoId )
       .subscribe( ( resp: any ) => {
         this.acta = resp[0];
-        console.log( resp[0] );
+        this.acta.sesionComiteSolicitudComiteTecnico = null;
 
         for ( let temas of resp[0].sesionComiteTema ) {
           if ( !temas.esProposicionesVarios ) {
@@ -62,7 +70,8 @@ export class RevisionActaComponent implements OnInit {
           this.miembrosParticipantes.push( `${ participantes.usuario.nombres } ${ participantes.usuario.apellidos }` )
         };
 
-        console.log( this.temas );
+        this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId( this.activatedRoute.snapshot.params.id )
+        .subscribe( ( response: any ) => this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico );
 
       } );
   };

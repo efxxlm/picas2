@@ -8,6 +8,7 @@ import { pid } from 'process';
   providedIn: 'root'
 })
 export class ProcesoSeleccionService implements OnInit {
+  
 
   constructor(
                private http: HttpClient
@@ -61,18 +62,29 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/setValidateMassiveLoadElegibilidad`, formData);
   }
 
-  uploadMassiveLoadElegibilidad( pId: string ){
+  uploadMassiveLoadElegibilidad( pId: string,procesoSeleccionId:number ){
     let objeto = { pIdDocument: pId }
-    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad?pIdDocument=${ pId }`, null);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad?pIdDocument=${ pId }&procesoSeleccionId=${ procesoSeleccionId }`, null);
   }
 
   createContractorsFromProponent( proceso: ProcesoSeleccion ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/createContractorsFromProponent`, proceso);
   }
+
+  deleteProcesoSeleccionCotizacionByID(procesoSeleccionCotizacionId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/deleteProcesoSeleccionCotizacionByID?procesoSeleccionCotizacionId=${procesoSeleccionCotizacionId}`, null);
+  }
+  deleteProcesoSeleccionGrupoByID(procesoSeleccionCotizacionId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/deleteProcesoSeleccionGrupoByID?procesoSeleccionCotizacionId=${procesoSeleccionCotizacionId}`, null);
+  }
+  deleteProcesoSeleccionActividadesByID(procesoSeleccionCotizacionId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/deleteProcesoSeleccionActividadesByID?procesoSeleccionCotizacionId=${procesoSeleccionCotizacionId}`, null);
+  }
   
 }
 
 export interface ProcesoSeleccion{
+  listaContratistas?: any[];
   procesoSeleccionId?: number,
   numeroProceso?: string,
   objeto?: string,
@@ -103,6 +115,9 @@ export interface ProcesoSeleccion{
   urlSoporteEvaluacion?: string,
   tipoOrdenEligibilidadCodigo?: string,
   cantidadProponentesInvitados?: number,
+
+  fechaCreacion?:Date,
+  urlSoporteProponentesSeleccionados?:string,
 
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma[],
@@ -141,6 +156,7 @@ export interface ProcesoSeleccionCotizacion {
   valorCotizacion?: number,
   descripcion?: string,
   urlSoporte?: string,
+  eliminado?:boolean,
   procesoSeleccion?: ProcesoSeleccion,
 }
 

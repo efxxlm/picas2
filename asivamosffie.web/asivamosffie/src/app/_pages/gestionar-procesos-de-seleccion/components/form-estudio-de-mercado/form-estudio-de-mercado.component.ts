@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ProcesoSeleccion, ProcesoSeleccionCotizacion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionCotizacion, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
@@ -44,7 +44,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     });
   }
 
-  constructor(private fb: FormBuilder,public dialog: MatDialog,) { }
+  constructor(private fb: FormBuilder,public dialog: MatDialog,private procesoSeleccionService: ProcesoSeleccionService,) { }
   ngOnInit(): void {
     this.addressForm = this.createFormulario();
   }
@@ -68,7 +68,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         //valido si tiene algo
         let bitVacio=false;
         this.cotizaciones.value.forEach(element => {
-          console.log(element);
+          
           if(element.nombreOrganizacion!=null)
           {
             bitVacio=true;
@@ -126,13 +126,19 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         Validators.required, Validators.minLength(4), Validators.maxLength(20)])
       ],
       descripcion: [null, Validators.required],
-      url: [null, Validators.required]
+      url: [null, Validators.required],
+      eliminado:['0']
     });
   }
 
   borrarArray(borrarForm: any, i: number) {    
     borrarForm.removeAt(i);
-    //ajusto el contador
+    //consumo servicio
+    if(borrarForm.value[0].procesoSeleccionCotizacionId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[0].procesoSeleccionCotizacionId).subscribe();
+    }
+    //ajusto el contador  
     this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
   }
 
@@ -155,6 +161,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         procesoSeleccionCotizacionId: control.get('procesoSeleccionCotizacionId').value,
         urlSoporte: control.get('url').value,
         valorCotizacion: control.get('valor').value,
+        eliminado:control.get('eliminado').value,
       };
       this.procesoSeleccion.procesoSeleccionCotizacion.push(cotizacion);
     });
@@ -179,7 +186,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         control.get('procesoSeleccionCotizacionId').setValue(cotizacion.procesoSeleccionCotizacionId),
         control.get('url').setValue(cotizacion.urlSoporte),
         control.get('valor').setValue(cotizacion.valorCotizacion),
-
+        control.get('eliminado').setValue(cotizacion.eliminado),
         listaCotizaciones.push(control);
     });
   }

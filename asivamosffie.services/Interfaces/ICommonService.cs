@@ -60,6 +60,7 @@ namespace asivamosffie.services.Interfaces
         Task<PolizaObservacion> GetPolizaObservacionByContratoPolizaId(int pContratoPolizaId);
 
         Task<PolizaGarantia> GetPolizaGarantiaByContratoPolizaId(int pContratoPolizaId);
+        Task<Contratista> GetContratistaByContratistaId(int pContratistaId);
 
         Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio);
 

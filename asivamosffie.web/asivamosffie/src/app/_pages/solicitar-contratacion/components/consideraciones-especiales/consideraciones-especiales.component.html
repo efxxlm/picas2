@@ -9,9 +9,9 @@
         </mat-radio-group>
     </div>
     <div class="animatedDown d-flex w-center" *ngIf="addressForm.controls.reasignacion.value === 'true'">
-        <mat-card style="width: 65%;">
+        <mat-card style="width: 70%;">
+            <mat-card-title class="text-area-quill--label">Observaciones</mat-card-title>
             <mat-card-content>
-                {{ addressForm.get( 'descripcion' ).value }}
                 <quill-editor class="quill-editor-style" 
                               [styles]="editorStyle"
                               [modules]="config"

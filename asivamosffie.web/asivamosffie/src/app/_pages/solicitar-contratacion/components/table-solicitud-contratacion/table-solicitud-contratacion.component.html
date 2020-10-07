@@ -8,86 +8,89 @@
             <img src="assets/img/icon/lupa.svg" alt="Buscar">
         </button>
     </div>
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-
-        <ng-container matColumnDef="fecha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion | date: ' dd/MM/yyyy '}}</b> </td>
-        </ng-container>
-
-        <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.numeroSolicitud}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="opcionPorContratar">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción por contratar </th>
-            <td mat-cell *matCellDef="let element"> {{element.tipoSolicitudCodigo}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="estadoSolicitud">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.estadoSolicitudCodigo}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="estadoDelIngreso">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element" align="center">
-                <div class="flex-span" *ngIf="element.registroCompleto">
-                    <span class="info-text completo mr-auto"></span>
-                    <span>
-                        {{ 'Completo' }}
-                    </span>
-                </div>
-                <div class="flex-span" *ngIf="!element.registroCompleto">
-                    <span class="info-text sin-diligenciar mr-auto"></span>
-                    <span>
-                        {{ 'Incompleto' }}
-                    </span>
-                </div>
-            </td>
-        </ng-container>
-
-
-
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-            <td mat-cell *matCellDef="let element">
-                <a  mat-raised-button
-                    color="accent"
-                    class="btn-table"
-                    [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
-                    *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && !element.registroCompleto && element.contratistaId === null">
-                    Detallar la <br>solicitud
-                </a>
-                <button mat-raised-button 
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort>
+    
+            <ng-container matColumnDef="fecha">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion | date: ' dd/MM/yyyy '}}</b> </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="numero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
+                <td mat-cell *matCellDef="let element"> {{element.numeroSolicitud}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="opcionPorContratar">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción por contratar </th>
+                <td mat-cell *matCellDef="let element"> {{element.tipoSolicitudCodigo}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="estadoSolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de solicitud </th>
+                <td mat-cell *matCellDef="let element"> {{element.estadoSolicitudCodigo}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="estadoDelIngreso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <div class="flex-span" *ngIf="element.registroCompleto">
+                        <span class="info-text completo mr-auto"></span>
+                        <span>
+                            {{ 'Completo' }}
+                        </span>
+                    </div>
+                    <div class="flex-span" *ngIf="!element.registroCompleto">
+                        <span class="info-text sin-diligenciar mr-auto"></span>
+                        <span>
+                            {{ 'Incompleto' }}
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+    
+    
+    
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+                    <a  mat-raised-button
                         color="accent"
                         class="btn-table"
-                        (click)="onDelete(element.contratacionId)"
-                        *ngIf="element.estadoSolicitudCodigo == 'Sin registro'">
-                        Eliminar
-                </button>
-                <a  mat-raised-button
-                    color="accent"
-                    class="btn-table"
-                    [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
-                    *ngIf="element.contratistaId && element.estadoSolicitudCodigo == 'Sin registro'">
-                    Ver detalle / Editar
-                </a>
-                <button mat-raised-button color="accent" class="btn-table"
-                        (click)="enviarSolicitud(element.contratacionId)" 
-                        *ngIf="element.estadoSolicitudCodigo === 'Sin registro' && element.registroCompleto">Enviar
-                        Solicitud.</button>
-                <button mat-raised-button color="accent" class="btn-table"
-                        [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
-                        *ngIf="element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto">
-                        Ver detalle</button>
-
-                    
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+                        [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
+                        *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && !element.registroCompleto && !element.contratistaId">
+                        Detallar la <br>solicitud
+                    </a>
+                    <button mat-raised-button 
+                            color="accent"
+                            class="btn-table"
+                            (click)="onDelete(element.contratacionId)"
+                            *ngIf="element.estadoSolicitudCodigo == 'Sin registro'">
+                            Eliminar
+                    </button>
+                    <a  mat-raised-button
+                        color="accent"
+                        class="btn-table"
+                        [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
+                        *ngIf="element.contratistaId && element.estadoSolicitudCodigo == 'Sin registro'">
+                        Ver detalle / Editar
+                    </a>
+                    <button mat-raised-button color="accent" class="btn-table"
+                            (click)="enviarSolicitud(element.contratacionId)" 
+                            *ngIf="element.estadoSolicitudCodigo === 'Sin registro' && element.registroCompleto">Enviar
+                            Solicitud.</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                            [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
+                            *ngIf="element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto">
+                            Ver detalle</button>
+    
+                        
+                </td>
+            </ng-container>
+    
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

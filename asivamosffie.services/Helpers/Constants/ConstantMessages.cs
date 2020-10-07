@@ -15,6 +15,32 @@ namespace asivamosffie.services.Helpers.Constant
         public const string ErrorEnviarCorreo = "107";
         public const string EmailObligatorio = "108";
         public const string ErrorGuardarCambios = "109";
+
+        //        101	<b>Se ha enviado un correo de notificacion
+        //       102	  Se ha actualizado registro a estado "Con aprobación de pólizas"
+        //102	<b>El usuario no existe en el sistema.</b> Contacte al administrador.     NOO
+        //103	<b>El usuario se encuentra inactivo.</b> Contacte al administrador.   NOOOOO
+        //104	<b>El usuario se encuentra bloqueado,</b> debe remitirse a la opción “Recordar Contraseña”.   NOOOOOO
+        //105	<b>La contraseña es incorrecta.</b>     NOOOO
+        //301	Será direccionado para cambiar su contraseña.      NOOOOO
+        //200	<b>La información ha sido guardada exitosamente.</b>    NOOOO  YAAA
+        //106	<b>El usuario no existe en el sistema.</b> Contacte al administrador.   NOOOO
+        //107	Ocurrio un error al enviar el correo.  
+        //108	El email es obligatorio.    NOOOO
+        //109	Error al guardar cambios     nooo??
+        //500	Error al guardar cambios     nooo   YAAAA
+        //501 Ha ocurrido un error al interno
+
+
+        //public const string CorreoEnviado = "101";
+        //public const string OperacionExitosa = "200";
+        //public const string CreadoCorrrectamente = "103";     ?????
+        //public const string EditarContratoPolizaCorrrectamente = "102";
+        //public const string Error = "500";
+        //public const string ErrorInterno = "501";
+        //public const string ErrorEnviarCorreo = "107";
+        //public const string CorreoNoExiste = "106";
+
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -633,7 +659,7 @@ namespace asivamosffie.services.Helpers.Constant
 
     }
 
-    public class ConstantMessagesActaInicio
+     public class ConstantMessagesActaInicio
     {
 
         #region Mensajes Informativos
@@ -659,5 +685,34 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
+    public class ConstantMessagesContratoPoliza
+    {
 
+        #region Mensajes Informativos
+
+        public const string RecursoNoEncontrado = "104";
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string CorreoEnviado = "101";
+        public const string OperacionExitosa = "200";
+        public const string CreadoCorrrectamente = "103";
+        public const string EditarContratoPolizaCorrrectamente = "102";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        public const string ErrorInterno = "501";
+        public const string ErrorEnviarCorreo = "107";
+        public const string CorreoNoExiste = "106";
+        #endregion
+    }
 }

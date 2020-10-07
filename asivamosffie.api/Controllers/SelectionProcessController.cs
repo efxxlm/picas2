@@ -62,7 +62,9 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId, usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo);
+                respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId,
+                    usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo,_settings.Value.DominioFront,
+                    _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return respuesta;
             }
             catch (Exception ex)
@@ -439,13 +441,13 @@ namespace asivamosffie.api.Controllers
 
         [Route("UploadMassiveLoadElegibilidad")]
         [HttpPost]
-        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument)
+        public async Task<IActionResult> UploadMassiveLoadProjects([FromQuery] string pIdDocument, int procesoSeleccionId)
         {
             try
             {
                 Respuesta respuesta = new Respuesta();
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _selectionProcessService.UploadMassiveLoadElegibilidad(pIdDocument, pUsuarioModifico);
+                respuesta = await _selectionProcessService.UploadMassiveLoadElegibilidad(pIdDocument, procesoSeleccionId, pUsuarioModifico);
 
                 return Ok(respuesta);
             }
@@ -458,5 +460,76 @@ namespace asivamosffie.api.Controllers
 
         #endregion
 
+
+        /*autor: jflorez
+            descripción: borra las cotizaciones en editar
+            impacto: CU 3.1.3*/
+        [HttpPost]
+        [Route("deleteProcesoSeleccionCotizacionByID")]
+        public async Task<IActionResult> deleteProcesoSeleccionCotizacionByID([FromQuery] int procesoSeleccionCotizacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _selectionProcessService.deleteProcesoSeleccionCotizacionByID(procesoSeleccionCotizacionId, UsuarioModificacion);
+                return Ok(respuesta);
+                //
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+    
+
+    /*autor: jflorez
+            descripción: borra los grupos en editar
+            impacto: CU 3.1.3*/
+    [HttpPost]
+    [Route("deleteProcesoSeleccionGrupoByID")]
+    public async Task<IActionResult> deleteProcesoSeleccionGrupoByID([FromQuery] int procesoSeleccionCotizacionId)
+    {
+        Respuesta respuesta = new Respuesta();
+        try
+        {
+
+            string UsuarioModificacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+            respuesta = await _selectionProcessService.deleteProcesoSeleccionGrupoByID(procesoSeleccionCotizacionId, UsuarioModificacion);
+            return Ok(respuesta);
+            //
+        }
+        catch (Exception ex)
+        {
+            respuesta.Data = ex.InnerException.ToString();
+            return BadRequest(respuesta);
+        }
+    }
+
+
+    /*autor: jflorez
+            descripción: borra las actividades en editar
+            impacto: CU 3.1.3*/
+        [HttpPost]
+        [Route("deleteProcesoSeleccionActividadesByID")]
+        public async Task<IActionResult> deleteProcesoSeleccionActividadesByID([FromQuery] int procesoSeleccionCotizacionId)
+        {
+        Respuesta respuesta = new Respuesta();
+        try
+        {
+
+            string UsuarioModificacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+            respuesta = await _selectionProcessService.deleteProcesoSeleccionActividadesByID(procesoSeleccionCotizacionId, UsuarioModificacion);
+            return Ok(respuesta);
+            //
+        }
+        catch (Exception ex)
+        {
+            respuesta.Data = ex.InnerException.ToString();
+            return BadRequest(respuesta);
+        }
+        }
     }
 }
