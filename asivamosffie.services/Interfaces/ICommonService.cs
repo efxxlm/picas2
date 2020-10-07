@@ -11,8 +11,6 @@ namespace asivamosffie.services.Interfaces
     {
         Task<string> EnumeradorComiteTecnico();
 
-        Task<string> EnumeradorComiteFiduciario();
-
         Task<string> EnumeradorContratacion();
 
 

@@ -1,5 +1,5 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
-import { CommonModule, registerLocaleData } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { SolicitarContratacionRoutingModule } from './solicitar-contratacion-routing.module';
 import { SolicitarContratacionComponent } from './components/solicitar-contratacion/solicitar-contratacion.component';
@@ -25,12 +25,7 @@ import { TableFuentesYUsosComponent } from './components/table-fuentes-y-usos/ta
 import { DefinirFuentesYUsosComponent } from './components/definir-fuentes-y-usos/definir-fuentes-y-usos.component';
 import { AsociadaComponent } from './components/asociada/asociada.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
-import { VerDetalleContratacionComponent } from './components/ver-detalle-contratacion/ver-detalle-contratacion.component';
-import { GestionarProcesosContractualesModule } from '../gestionar-procesos-contractuales/gestionar-procesos-contractuales.module';
-import { QuillModule } from 'ngx-quill';
 
-import es from '@angular/common/locales/es';
-registerLocaleData( es );
 
 @NgModule({
   declarations: [
@@ -47,8 +42,7 @@ registerLocaleData( es );
     ConsideracionesEspecialesComponent,
     TableFuentesYUsosComponent,
     DefinirFuentesYUsosComponent,
-    AsociadaComponent,
-    VerDetalleContratacionComponent
+    AsociadaComponent
   ],
   imports: [
     CommonModule,
@@ -59,13 +53,8 @@ registerLocaleData( es );
     MatSelectModule,
     MatRadioModule,
     MatCardModule,
-    QuillModule.forRoot(),
-    GestionarProcesosContractualesModule,
     ReactiveFormsModule,
     CurrencyMaskModule
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: "es-ES" }
   ]
 })
 export class SolicitarContratacionModule { }

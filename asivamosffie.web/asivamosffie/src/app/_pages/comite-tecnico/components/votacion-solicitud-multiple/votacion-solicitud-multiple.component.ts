@@ -6,7 +6,6 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 import { Router } from '@angular/router';
 import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-votacion-solicitud-multiple',
@@ -205,13 +204,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
 
     })
 
-    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
-    sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
-      if ( sv.esAprobado != true )
-      sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
-    })
-
-    console.log( sesionComiteSolicitud ); 
+    console.log( sesionComiteSolicitud );
 
     this.technicalCommitteSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
     .subscribe( respuesta => {

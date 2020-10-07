@@ -1,0 +1,57 @@
+<div class="container text-center">
+    <div class="busqueda">
+        <mat-form-field appearance="outline" class="busqueda--input">
+            <mat-label>Buscador / Filtro</mat-label>
+            <input matInput #filtro (keyup)="applyFilter($event)">
+        </mat-form-field>
+        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+            <img src="assets/img/icon/lupa.svg" alt="Buscar">
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="fechaAprobacionSupervisor">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de requisitos por el
+                    supervisor </th>
+                <!-- Caso mapeado <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date:'dd/MM/yyyy'}}</b></td>-->
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionSupervisor}}</b></td>
+            </ng-container>
+
+            <ng-container matColumnDef="numeroContrato">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato de obra</th>
+                <td mat-cell *matCellDef="let element">{{element.numeroContrato}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del acta </th>
+                <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarActaParaFirma()"
+                        *ngIf="element.estado=='Con validación del supervisor'">Enviar acta para firma</button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita()"
+                        *ngIf="element.estado=='Con acta en proceso de firma'"> Cargar Acta Suscrita</button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="descargarActaDesdeTabla()"
+                        *ngIf="element.estado=='Con acta en proceso de firma'"> Descargar Acta</button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.generarActaFUno()"
+                        *ngIf="element.actaGenerada==false">Generar Acta</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="this.verDetalleEditarActaFUno(element.observaciones)"
+                        *ngIf="element.actaGenerada==true || element.estado=='Enviada por el supervisor'"> Ver detalle /
+                        Editar</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="this.verDetalleActaFUno(element.observaciones,element.actaSuscrita)"
+                        *ngIf="element.revisionOAprobacion==true || element.estado=='Con acta en proceso de firma' || element.estado=='Con acta suscrita y cargada'">
+                        Ver detalle</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

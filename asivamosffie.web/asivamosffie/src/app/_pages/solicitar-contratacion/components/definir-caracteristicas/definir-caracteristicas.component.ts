@@ -1,11 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Contratacion, ContratacionProyecto } from 'src/app/_interfaces/project-contracting';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-definir-caracteristicas',
@@ -15,10 +14,8 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
 export class DefinirCaracteristicasComponent implements OnInit {
 
   contratacionProyecto: ContratacionProyecto;
-  tipoIntervencion: string;
-  municipio: string;
 
-  addressForm: FormGroup = this.fb.group({
+  addressForm = this.fb.group({
     completada: null,
     reasignacion: null,
     avanceObra: null,
@@ -27,7 +24,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
     ],
     requiereLicencias: null,
     licenciaVigente: null,
-    numeroLicencia:'',
+    numeroLicencia: null,
     fechaVigencia: null
   });
 
@@ -36,15 +33,12 @@ export class DefinirCaracteristicasComponent implements OnInit {
   constructor(
               private fb: FormBuilder,
               private route: ActivatedRoute,
-              private commonService: CommonService,
               private projectContractingService: ProjectContractingService,
               public dialog: MatDialog,    
               private router: Router,
               
              ) 
-  {
-    this.getMunicipio();
-  }
+  {}
 
     ngOnInit(): void {
       this.route.params.subscribe((params: Params) => {
@@ -55,25 +49,15 @@ export class DefinirCaracteristicasComponent implements OnInit {
           this.contratacionProyecto = response;
 
           setTimeout(() => {
-            this.commonService.listaTipoIntervencion()
-              .subscribe( ( intervenciones: any ) => {
-                console.log( intervenciones );
-                for ( let intervencion of intervenciones ) {
-                  if ( intervencion.codigo === this.contratacionProyecto.proyecto.tipoIntervencionCodigo ) {
-                    this.tipoIntervencion = intervencion.nombre;
-                    break;
-                  };
-                }
-              } );
 
-            this.addressForm.get('reasignacion').setValue( ( ( this.contratacionProyecto.esReasignacion !== null ) ? this.contratacionProyecto.esReasignacion : null ) );
-            this.addressForm.get('avanceObra').setValue( ( ( this.contratacionProyecto.esAvanceobra !== null ) ? this.contratacionProyecto.esAvanceobra : null ) );    
-            this.addressForm.get('porcentajeAvanceObra').setValue( Number( this.contratacionProyecto.porcentajeAvanceObra ) );
-            this.addressForm.get('requiereLicencias').setValue( ( ( this.contratacionProyecto.requiereLicencia !== null ) ? this.contratacionProyecto.requiereLicencia : null ) );
-            this.addressForm.get('licenciaVigente').setValue( ( ( this.contratacionProyecto.licenciaVigente !== null ) ? this.contratacionProyecto.licenciaVigente : null ) );
-            this.addressForm.get('numeroLicencia').setValue( this.contratacionProyecto.numeroLicencia );
+            this.addressForm.get('reasignacion').setValue( this.contratacionProyecto.esReasignacion ? this.contratacionProyecto.esReasignacion.toString() : false );    
+            this.addressForm.get('avanceObra').setValue( this.contratacionProyecto.esAvanceObra ? this.contratacionProyecto.esAvanceObra.toString() : false );    
+            this.addressForm.get('porcentajeAvanceObra').setValue( this.contratacionProyecto.porcentajeAvanceObra );    
+            this.addressForm.get('requiereLicencias').setValue( this.contratacionProyecto.requiereLicencia ? this.contratacionProyecto.requiereLicencia.toString() : false );    
+            this.addressForm.get('licenciaVigente').setValue( this.contratacionProyecto.licenciaVigente ? this.contratacionProyecto.licenciaVigente.toString() : false );    
+            this.addressForm.get('numeroLicencia').setValue( this.contratacionProyecto.numeroLicencia );    
             this.addressForm.get('fechaVigencia').setValue( this.contratacionProyecto.fechaVigencia );
-            this.addressForm.get('completada').setValue( ( ( this.contratacionProyecto.tieneMonitoreoWeb !== null ) ? this.contratacionProyecto.tieneMonitoreoWeb : null ) );
+            this.addressForm.get('completada').setValue( this.contratacionProyecto.contempladaServicioMonitoreo ? this.contratacionProyecto.contempladaServicioMonitoreo.toString() : false ) ;    
 
             this.idSolicitud = this.contratacionProyecto.contratacionId;
 
@@ -86,16 +70,6 @@ export class DefinirCaracteristicasComponent implements OnInit {
       });
     }
 
-    getMunicipio () {
-      if ( this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false ) {
-        this.router.navigate( [ '/solicitarContratacion' ] );
-        return;
-      }
-      
-      this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
-      
-    }
-
     openDialog(modalTitle: string, modalText: string) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
@@ -105,25 +79,27 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
   onSubmit() {
 
-    this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;
-    this.contratacionProyecto.esAvanceobra = this.addressForm.get('avanceObra').value;
-    this.contratacionProyecto.porcentajeAvanceObra = String( this.addressForm.get('porcentajeAvanceObra').value );
-    this.contratacionProyecto.requiereLicencia = this.addressForm.get('requiereLicencias').value;
-    this.contratacionProyecto.licenciaVigente = this.addressForm.get('licenciaVigente').value;
-    this.contratacionProyecto.numeroLicencia = this.addressForm.get('numeroLicencia').value;
+    this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;    
+    this.contratacionProyecto.esAvanceObra = this.addressForm.get('avanceObra').value;    
+    this.contratacionProyecto.porcentajeAvanceObra = this.addressForm.get('porcentajeAvanceObra').value;    
+    this.contratacionProyecto.requiereLicencia = this.addressForm.get('requiereLicencias').value;    
+    this.contratacionProyecto.licenciaVigente = this.addressForm.get('licenciaVigente').value;    
+    this.contratacionProyecto.numeroLicencia = this.addressForm.get('numeroLicencia').value;    
     this.contratacionProyecto.fechaVigencia = this.addressForm.get('fechaVigencia').value;
-    this.contratacionProyecto.tieneMonitoreoWeb = this.addressForm.get('completada').value;
+    this.contratacionProyecto.contempladaServicioMonitoreo = this.addressForm.get('completada').value;  
 
-    this.projectContractingService.createEditContratacionProyecto( this.contratacionProyecto )
+    this.projectContractingService.createContratacionProyecto( this.contratacionProyecto )
       .subscribe( respuesta => {
 
         this.openDialog( "Solicitud Contratación", respuesta.message )
-        console.log( respuesta );
+
         if (respuesta.code == "200")
           this.router.navigate(["/solicitarContratacion/solicitud", this.contratacionProyecto.contratacionId ]);
 
       })
 
   }
+
+  
 
 }

@@ -31,7 +31,7 @@ namespace asivamosffie.api.Controllers
             try
             { 
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 Task<Respuesta> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
                 object respuesta = await result;
                 return Ok(respuesta);
@@ -95,7 +95,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
 
                 return Ok(respuesta);

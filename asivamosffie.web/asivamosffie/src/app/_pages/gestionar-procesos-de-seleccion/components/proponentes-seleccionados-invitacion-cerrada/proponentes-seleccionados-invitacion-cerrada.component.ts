@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ProcesoSeleccionService, ProcesoSeleccionProponente, ProcesoSeleccion, ProcesoSeleccionIntegrante } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
-import { Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-form-datos-proponentes-seleccionados-invitacion-cerrada',
@@ -15,7 +13,6 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
   nombresProponentesList: ProcesoSeleccionProponente[] = [];
-  listaDepartamentos: Localizacion[] = [];
   idProponenteExistente: string;
   
   addressForm = this.fb.group({
@@ -55,24 +52,14 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   constructor(
               private fb: FormBuilder,
-              private procesoSeleccionService: ProcesoSeleccionService,
-              private commonService: CommonService,
-
+              private procesoSeleccionService: ProcesoSeleccionService
              ) 
   {
 
   }
   ngOnInit(){
     return new Promise( resolve => {
-
-      forkJoin([
-        this.procesoSeleccionService.getProcesoSeleccionProponentes(),
-        this.commonService.listaDepartamentos(),
-
-      ]).subscribe( resultado => {
-
-        let lista = resultado[0];
-        this.listaDepartamentos = resultado[1]
+      this.procesoSeleccionService.getProcesoSeleccionProponentes().subscribe( lista => {
 
         if (!this.procesoSeleccion.procesoSeleccionProponente)
           this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -86,21 +73,6 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         }
 
         this.nombresProponentesList = lista;
-
-        this.procesoSeleccion.procesoSeleccionProponente.forEach( p => {
-          if (p.localizacionIdMunicipio)
-          this.commonService.listaMunicipiosByIdDepartamento( p.localizacionIdMunicipio.substring(0,5) )
-            .subscribe( municipios =>{
-               let nombreMunicipio = municipios.find( m => m.localizacionId == p.localizacionIdMunicipio )
-               let nombreDepartamento = this.listaDepartamentos.find( d => d.localizacionId == p.localizacionIdMunicipio.substring(0,5) )
-
-               p.nombreMunicipio = nombreMunicipio.descripcion;
-               p.nombreDepartamento = nombreDepartamento.descripcion; 
-            })
-          
-        });
-
-        console.log(this.nombresProponentesList)
         resolve();
       })
     })
@@ -133,20 +105,15 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
     this.ngOnInit().then(() =>       
         { 
-          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
+          
         });
   }
 
   onSubmit() {
-    
-    this.addressForm.get('nombresProponentes').setValue( null );
-    this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     this.guardar.emit(null);
   }
 
   onSubmitNuevoProponente(){
-    this.addressForm.get('nombresProponentes').setValue( null );
-
     this.guardar.emit(null);
   }
 

@@ -18,7 +18,7 @@
         padding: 0 .5em;
         margin-left: .5em;
         font-size: 1.1em;
-        // color: #464646;
+        color: #464646;
     }
 }
 
@@ -56,20 +56,9 @@
 
     &.card {
         width: 100%;
+        margin-bottom: .5em;
         .ql-container.ql-snow {
             border-bottom: var(--fontColor) solid 1px;
-        }
-    }
-
-    &[required] {
-        // position: relative;
-        &::after {
-            content: "*";
-            position: absolute;
-            right: .8em;
-            font-weight: 600;
-            top: 50%;
-            transform: translateY(-50%);
         }
     }
 }

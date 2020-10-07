@@ -69,19 +69,12 @@ namespace asivamosffie.api.Controllers
             return await _projectContractingService.GetContratacionByContratacionId(pContratacionId);
         }
 
-        [Route("GetContratacionByContratacionIdWithGrillaProyecto")]
-        [HttpGet]
-        public async Task<Contratacion> GetContratacionByContratacionIdWithGrillaProyecto(int pContratacionId)
-        {
-            return await _projectContractingService.GetContratacionByContratacionIdWithGrillaProyecto(pContratacionId);
-        }
-
 
         [Route("GetListProyectsByFilters")]
         [HttpGet]
-        public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen,string pRegion ,string pDepartamento, string pMunicipio, int pIdInstitucionEducativa, int pIdSede)
+        public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pMunicipio, int pIdInstitucionEducativa, int pIdSede)
         {
-            var respuesta = await _projectContractingService.GetListProyectsByFilters(pTipoIntervencion, pLlaveMen, pRegion, pDepartamento, pMunicipio, pIdInstitucionEducativa, pIdSede);
+            var respuesta = await _projectContractingService.GetListProyectsByFilters(pTipoIntervencion, pLlaveMen, pMunicipio, pIdInstitucionEducativa, pIdSede);
             return respuesta;
         }
 
@@ -155,9 +148,10 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-              //  pContratacionProyecto.PorcentajeAvanceObra = decimal.Parse(pContratacionProyecto.PorcentajeAvanceObraString);
-                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+            {
+                string pUsuarioModifico = " ";
+                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
+                pContratacionProyecto.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto , false);
                 return Ok(respuesta);
             }

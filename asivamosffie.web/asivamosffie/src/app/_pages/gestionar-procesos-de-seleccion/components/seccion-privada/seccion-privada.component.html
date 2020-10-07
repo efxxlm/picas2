@@ -1,12 +1,12 @@
 <div class="container">
     <div class="text-right">
-        <a routerLink="/seleccion" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/seleccion/nuevo" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Selección privada
+            Nuevo proceso de selección
         </h1>
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
@@ -18,11 +18,11 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="{' sin-diligenciar':estaIncompleto(procesoSeleccion)}">
+                <mat-panel-title class="expansion-style--title completo">
                     Descripción del proceso de selección
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>            
+            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>
             <app-form-descripcion-del-proceso-de-seleccion 
                 #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
                 >
@@ -30,7 +30,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title "  [ngClass]="{' sin-diligenciar':1==1}">
+                <mat-panel-title class="expansion-style--title en-proceso">
                     Estudio de mercado
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -41,7 +41,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title "  [ngClass]="{' sin-diligenciar':1==1}">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
                     Datos de proponentes seleccionados
                 </mat-panel-title>
             </mat-expansion-panel-header>

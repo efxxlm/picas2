@@ -8,12 +8,12 @@
             <form [formGroup]="formLogin" novalidate (ngSubmit)="login($event)">
                 <h1>Iniciar Sesión</h1>
                 <hr>
-                <mat-form-field appearance="outline" class="nocontent">
-                    <mat-label>Usuario *</mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-label>Usuario</mat-label>
                     <input matInput type="email" minlength="4" maxlength="50" required formControlName="emailField">
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="nocontent">
-                    <mat-label>Contraseña *</mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-label>Contraseña</mat-label>
                     <input matInput [type]="verClave ? 'password' : 'text'" maxlength="15" required formControlName="passwordField">
                     <button mat-icon-button matSuffix (click)="verClave = !verClave" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="verClave" class="ver-contrasena" type="button">
                         <img [src]="verClave ? 'assets/img/icon/ojo-gris.svg' : 'assets/img/icon/ojo-azul.svg'" alt="Ver contraseña">

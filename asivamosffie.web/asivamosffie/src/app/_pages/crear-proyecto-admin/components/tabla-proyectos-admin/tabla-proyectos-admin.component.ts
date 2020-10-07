@@ -57,7 +57,7 @@ export class TablaProyectosAdminComponent {
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
-      width: '38em',
+      width: '28em',
       data: { modalTitle, modalText }
     });
   }
@@ -105,7 +105,7 @@ export class TablaProyectosAdminComponent {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
       respuesta.forEach(element => {
-        datos.push({id:element.proyectoAdminitracionId,estado:element.estado?"Completo":"Incompleto",consecutivo:element.proyectoAdminitracionId});
+        datos.push({id:element.proyectoAdminitracionId,estado:element.enviado?"Completo":"Incompleto",consecutivo:element.proyectoAdminitracionId});
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;
@@ -149,7 +149,7 @@ export class TablaProyectosAdminComponent {
   enviar(gestion:any)
   {
     this.proyectoid=gestion.id;
-    this.openDialog('Su solicitud del proyecto '+gestion.id, "Ha sido enviada para que inicie el tramite <br><b>“Solicitud de documento de disponibilidad presupuestal”.</b>",);
+    this.openDialog('', "Su solicitud del proyecto "+gestion.id+" Ha sido enviada para que inicie el tramité “Solicitud de documento de disponibilidad presupuestal”.",);
   }
 
 }

@@ -17,8 +17,7 @@
           </div>
         </div>
       </div>
-      <div class="row" 
-        *ngIf="procesoSeleccion.procesoSeleccionProponente && (procesoSeleccion.procesoSeleccionProponente.length < addressForm.value.cuantosProponentes)" >
+      <div class="row" >
         <div class="pr-1">
           <label for="nombresProponentes" class="label-left">Nombres de proponentes</label>
         </div>
@@ -34,7 +33,7 @@
           </mat-form-field>
         </div>
       </div>
-      <!-- <div *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' "> -->
+      <div *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' ">
       <div class="pt-1em" *ngFor=" let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index " >
         <mat-card-title class="header-card--text">
           Proponente {{ i + 1 }}
@@ -49,11 +48,11 @@
         </p>
         <p>
           <strong>Departamento del domicilio del proponente:</strong>
-          {{ proponente.nombreDepartamento }}
+          Atlántico
         </p>
         <p>
           <strong>Municipio del domicilio del proponente:</strong>
-          {{ proponente.nombreMunicipio }}
+          Malambo
         </p>
         <p>
           <strong>Dirección del proponente:</strong>
@@ -68,7 +67,7 @@
           {{ proponente.emailProponente }}
         </p>
       </div>
-    <!-- </div> -->
+    </div>
       <div *ngIf=" this.addressForm.get('nombresProponentes').value == 'Nuevo' ">
       <app-form-datos-proponentes-seleccionados 
                                                 #proponente 
@@ -86,10 +85,7 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" 
-            class="btn-guardar" 
-            type="submit" 
-            >
+    <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' ">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>

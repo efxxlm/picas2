@@ -5,7 +5,7 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán seleccionados en el 
+              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el
                 proceso?</label>
             </div>
             <div class="col d-flex">
@@ -20,7 +20,7 @@
       <div class="margin-tabla"
         *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
         <div class="table-responsive">
-          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
+          <table class="mat-table cdk-table mat-sort mat-table-style">
             <thead>
               <tr class="mat-header-row cdk-header-row ng-star-inserted">
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted">
@@ -32,13 +32,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionProponente">
+              <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionCotizacion">
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ proponente.nombreProponente }}
+                  {{ proponente.nombreOrganizacion }}
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <section class="example-section">
-                    <mat-checkbox type="checkbox" (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId" ></mat-checkbox>
+                    <mat-checkbox></mat-checkbox>
                   </section>
                 </td>
               </tr>
@@ -48,13 +48,12 @@
 
         <div class="row mt-2em">
           <div class="pr-1">
-            <label for="url" class="label-left">Url con soporte</label>
+            <label for="url" class="label-left">Nombre de la organización</label>
           </div>
-          <div class="col">
+          <div class="col d-flex">
             <mat-form-field class="full-width">
               <input matInput type="url" formControlName="url">
             </mat-form-field>
-            <p class="text-center colorMainColor">Indique la ruta del soporte de esta información</p>
           </div>
         </div>
       </div>
@@ -63,7 +62,7 @@
 
   <div class="text-center"
     *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
-    <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>

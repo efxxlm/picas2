@@ -40,8 +40,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
-        {
-
+        { 
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -52,13 +51,12 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
                 //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
-                if (false)
-                {
-                    Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
-                    contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                    contratacion.FechaModificacion = DateTime.Now;
-                    contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-                }
+
+                Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
+                contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                contratacion.FechaModificacion = DateTime.Now;
+                contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+
                 _context.SaveChanges();
 
                 return new Respuesta
@@ -83,8 +81,8 @@ namespace asivamosffie.services
             }
 
         }
-         
-        public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID , string pPatchLogo)
+
+        public async Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID, string pPatchLogo)
         {
             //Al modificar verificar a que tipo de solicitud corresponde el comite y hacer switch         
             SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitudID)
@@ -106,16 +104,16 @@ namespace asivamosffie.services
 
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion, sesionComiteSolicitud);
 
-            return ConvertirPDF(Plantilla , pPatchLogo);
+            return ConvertirPDF(Plantilla, pPatchLogo);
         }
 
-        public byte[] ConvertirPDF(Plantilla pPlantilla , string pPatchLogo)
+        public byte[] ConvertirPDF(Plantilla pPlantilla, string pPatchLogo)
         {
             string strEncabezado = "";
             if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
-            { 
-                 pPlantilla.Encabezado.Contenido = pPlantilla.Encabezado.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
-              strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            {
+                pPlantilla.Encabezado.Contenido = pPlantilla.Encabezado.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
                 //strEncabezado = pPlantilla.Encabezado.Contenido;
             }
 
@@ -135,15 +133,15 @@ namespace asivamosffie.services
                 },
                 DocumentTitle = DateTime.Now.ToString(),
             };
-             string ImageIcon = "<img src= '"+ Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png") + " >";
+            string ImageIcon = "<img src= '" + Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png") + " >";
 
             var objectSettings = new ObjectSettings
             {
                 PagesCount = true,
                 HtmlContent = pPlantilla.Contenido,
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 , Right =""},
-                FooterSettings = {  FontName = "Ariel", FontSize = 10, Center = "[page]" ,  },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18, Right = "" },
+                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]", },
             };
 
             var pdf = new HtmlToPdfDocument()
@@ -179,7 +177,7 @@ namespace asivamosffie.services
 
             //Registros Tabla Aportantes
             foreach (var ContratacionProyecto in pContratacion.ContratacionProyecto)
-            { 
+            {
                 foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
                 {
                     TotalPlantillaRegistrosAportante += PlantillaRegistrosAportante;
@@ -206,7 +204,7 @@ namespace asivamosffie.services
                                 string FuenteFinanciacionNombre = "";
                                 foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
                                 {
-                       
+
                                     bool allDigits3 = FuenteFinanciacion.FuenteRecursosCodigo.All(char.IsDigit);
 
                                     if (allDigits3 && !string.IsNullOrEmpty(FuenteFinanciacion.FuenteRecursosCodigo))
@@ -216,17 +214,18 @@ namespace asivamosffie.services
                                            && r.Codigo == FuenteFinanciacion.FuenteRecursosCodigo
                                            ).FirstOrDefault().Nombre;
                                     }
-                                    else {
-                                        
-                                                      FuenteFinanciacionNombre = LisParametricas
-                                           .Where(r =>  r.Nombre == FuenteFinanciacion.FuenteRecursosCodigo
-                                           ).FirstOrDefault().Codigo;
+                                    else
+                                    {
 
-                                        FuenteFinanciacionNombre =  LisParametricas
+                                        FuenteFinanciacionNombre = LisParametricas
+                             .Where(r => r.Nombre == FuenteFinanciacion.FuenteRecursosCodigo
+                             ).FirstOrDefault().Codigo;
+
+                                        FuenteFinanciacionNombre = LisParametricas
                                            .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion
                                            && r.Codigo == FuenteFinanciacionNombre
                                            ).FirstOrDefault().Nombre;
-                              
+
                                     }
                                 }
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
@@ -241,7 +240,7 @@ namespace asivamosffie.services
                                 }
 
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
-                             .Replace(placeholderDominio.Nombre, string.Format("${0:#,0}", ValorFuenteNumero)+ " pesos");
+                             .Replace(placeholderDominio.Nombre, string.Format("${0:#,0}", ValorFuenteNumero) + " pesos");
                                 TotalValorSolicitadoFuente += ValorFuenteNumero;
                                 break;
 
@@ -251,7 +250,7 @@ namespace asivamosffie.services
                                 foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
                                 {
                                     ValorFuenteNumero2 += FuenteFinanciacion.ValorFuente;
-                                } 
+                                }
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
                                     .Replace(placeholderDominio.Nombre,
                                     CultureInfo.CurrentCulture.TextInfo
@@ -268,7 +267,7 @@ namespace asivamosffie.services
             {
                 TotalRegistrosContratacionProyectos += PlantillaRegistrosProyectosContratacion;
                 foreach (Dominio placeholderDominio in placeholders)
-                { 
+                {
                     InstitucionEducativaSede Sede = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
                     InstitucionEducativaSede institucionEducativa = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
 
@@ -307,7 +306,7 @@ namespace asivamosffie.services
 
                             try
                             {
-                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
+                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante;
                             }
                             catch (Exception)
                             {
@@ -317,7 +316,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SALDO_ACTUAL_FUENTE:
-                            
+
                             try
                             {
 
@@ -326,12 +325,12 @@ namespace asivamosffie.services
                                     .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
                                     .FirstOrDefault().Aportante.FuenteFinanciacion
                                     .FirstOrDefault().GestionFuenteFinanciacion
-                                    .Sum(r => r.SaldoActual))); 
+                                    .Sum(r => r.SaldoActual)));
                             }
                             catch (Exception)
-                            { 
+                            {
                                 TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                    .Replace(placeholderDominio.Nombre," "); 
+                                    .Replace(placeholderDominio.Nombre, " ");
                             }
 
 
@@ -350,7 +349,7 @@ namespace asivamosffie.services
                             catch (Exception)
                             {
                                 TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                             .Replace(placeholderDominio.Nombre," ");
+                                             .Replace(placeholderDominio.Nombre, " ");
                             }
                             break;
 
@@ -367,7 +366,7 @@ namespace asivamosffie.services
                             catch (Exception)
                             {
                                 TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                          .Replace(placeholderDominio.Nombre," ");
+                                          .Replace(placeholderDominio.Nombre, " ");
                             }
                             break;
                     }
@@ -382,7 +381,7 @@ namespace asivamosffie.services
                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_PROYECTOS_CONTRATACION_DDP:
                         pPlantilla = pPlantilla
                             .Replace(placeholderDominio.Nombre, TotalRegistrosContratacionProyectos);
-                        break; 
+                        break;
                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_APORTANTE:
                         pPlantilla = pPlantilla
                             .Replace(placeholderDominio.Nombre, TotalPlantillaRegistrosAportante);
@@ -418,11 +417,11 @@ namespace asivamosffie.services
                         catch (Exception)
                         {
                             pPlantilla = pPlantilla
-                             .Replace(placeholderDominio.Nombre, " "); 
+                             .Replace(placeholderDominio.Nombre, " ");
                         }
                         break;
-              
-                  
+
+
                     case ConstanCodigoVariablesPlaceHolders.FECHA_EXPEDICION:
                         string FechaExpedicion = "";
                         if (!string.IsNullOrEmpty(pContratacion.FechaTramite.ToString()))
@@ -465,7 +464,7 @@ namespace asivamosffie.services
                         if (!string.IsNullOrEmpty(pSesionComiteSolicitud.TipoSolicitudCodigo))
                         {
                             TipoSolicitud = LisParametricas.Where(r => r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).FirstOrDefault().Nombre;
-                           }
+                        }
                         pPlantilla = pPlantilla
                             .Replace(placeholderDominio.Nombre, TipoSolicitud);
                         break;
@@ -496,11 +495,11 @@ namespace asivamosffie.services
 
                     case ConstanCodigoVariablesPlaceHolders.CANTIDAD_TOTAL_NUMERO:
                         pPlantilla = pPlantilla
-                            .Replace(placeholderDominio.Nombre, string.Format("${0:#,0}", TotalValorSolicitadoFuente)+" pesos");
+                            .Replace(placeholderDominio.Nombre, string.Format("${0:#,0}", TotalValorSolicitadoFuente) + " pesos");
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.CANTIDAD_TOTAL_LETRAS:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, 
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre,
                         CultureInfo.CurrentCulture.TextInfo
                         .ToTitleCase(Helpers.Conversores
                         .NumeroALetras(TotalValorSolicitadoFuente).ToLower()));
@@ -645,9 +644,9 @@ namespace asivamosffie.services
             {
                 if (sesionComiteSolicitud.FechaComiteFiduciario != null)
                 {
-                    //contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
+                    contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
                 }
-                //contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
+                contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
             }
 
             if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
@@ -679,14 +678,14 @@ namespace asivamosffie.services
                 {
                     if (ProyectoAportante.Aportante.TipoAportanteId > 0)
                     {
-                        ProyectoAportante.Aportante.TipoAportanteString = LisParametricas
+                        ProyectoAportante.Aportante.TipoAportante = LisParametricas
                             .Where(r => r.DominioId == ProyectoAportante.Aportante.TipoAportanteId)
                             .FirstOrDefault().Nombre;
                     }
                     if (ProyectoAportante.Aportante.NombreAportanteId > 0)
                     {
 
-                        ProyectoAportante.Aportante.NombreAportanteString = LisParametricas
+                        ProyectoAportante.Aportante.NombreAportante = LisParametricas
                             .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
                             .FirstOrDefault().Nombre;
                     }
@@ -724,9 +723,11 @@ namespace asivamosffie.services
                 //Save Files  
                 if (pFile == null)
                 {
-                 }
-                else {
-                    if (pFile.Length > 0) {
+                }
+                else
+                {
+                    if (pFile.Length > 0)
+                    {
                         strFilePatch = Path.Combine(pDirectorioBase, pDirectorioMinuta, pContratacion.ContratacionId.ToString());
                         await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
 
@@ -742,9 +743,9 @@ namespace asivamosffie.services
                 contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
-                contratacionOld.RutaMinuta = strFilePatch +"//" + pFile.FileName;
+                contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
                 contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
-                 
+
                 await _context.SaveChangesAsync();
 
                 return
@@ -772,9 +773,8 @@ namespace asivamosffie.services
             }
         }
 
-
-
-        public static bool ValidarCamposContratacion(Contratacion pContratacion) {
+        public static bool ValidarCamposContratacion(Contratacion pContratacion)
+        {
 
             if (
                     !string.IsNullOrEmpty(pContratacion.TipoSolicitudCodigo)
@@ -784,7 +784,8 @@ namespace asivamosffie.services
                    || !string.IsNullOrEmpty(pContratacion.RutaMinuta)
                    || !string.IsNullOrEmpty(pContratacion.FechaEnvioDocumentacion.ToString())
                    || !string.IsNullOrEmpty(pContratacion.ConsideracionDescripcion.ToString())
-                    ) {
+                    )
+            {
                 return true;
             }
             return false;

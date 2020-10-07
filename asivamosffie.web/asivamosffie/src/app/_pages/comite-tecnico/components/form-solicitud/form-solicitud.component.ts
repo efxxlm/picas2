@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudCompromiso, SesionParticipante, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -8,20 +8,17 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
-import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-solicitud',
   templateUrl: './form-solicitud.component.html',
   styleUrls: ['./form-solicitud.component.scss']
 })
-export class FormSolicitudComponent implements OnInit, OnChanges {
+export class FormSolicitudComponent implements OnInit {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
-  @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
-  
   tiposSolicitud = TiposSolicitud;
 
   fechaSolicitud: Date;
@@ -33,10 +30,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   cantidadNoAprobado: number = 0;
   resultadoVotacion: string = '';
 
-  proyectos: ContratacionProyecto[];
+
 
   addressForm = this.fb.group({
-    desarrolloSolicitud: [],
     estadoSolicitud: [null, Validators.required],
     observaciones: [null, Validators.required],
     url: null,
@@ -71,30 +67,18 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     public dialog: MatDialog,
     private router: Router,
 
-  ) 
-  {
-    
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.sesionComiteSolicitud.currentValue)
-      this.cargarRegistro();
-  }
+  ) {
 
-  ActualizarProyectos( lista ){
-    this.proyectos = lista;
-  }
-
-  getMostrarProyectos(){
-    if ( this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion )
-      return 'block';
-    else
-      return 'none';
   }
   ngOnInit(): void {
 
-    
+    let estados: string[] = ['1', '3', '5']
 
-    
+    this.commonService.listaEstadoSolicitud()
+      .subscribe(response => {
+
+        this.estadosArray = response.filter(s => estados.includes(s.codigo));
+      })
 
   }
 
@@ -151,39 +135,16 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     });
   }
 
-  getObservableEstadoSolicitud(){
-    return this.addressForm.get('estadoSolicitud').valueChanges;
-  }
-
   onSubmit() {
-
-    if (this.proyectos)
-      this.proyectos.forEach( p => 
-        {
-            let proyecto = p.proyecto
-            p.proyecto = {
-              EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
-              proyectoId: proyecto.proyectoId,
-              
-
-            }
-            p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
-        })
 
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
-      comiteTecnicoId: this.sesionComiteSolicitud.comiteTecnicoId,
-      estadoCodigo: this.addressForm.get('estadoSolicitud').value,
+      estadoCodigo: this.addressForm.get('estadoSolicitud').value ? this.addressForm.get('estadoSolicitud').value.codigo : null,
       observaciones: this.addressForm.get('observaciones').value,
       rutaSoporteVotacion: this.addressForm.get('url').value,
       generaCompromiso: this.addressForm.get('tieneCompromisos').value,
       cantCompromisos: this.addressForm.get('cuantosCompromisos').value,
-      desarrolloSolicitud: this.addressForm.get('desarrolloSolicitud').value,
-      tipoSolicitud: this.sesionComiteSolicitud.tipoSolicitudCodigo,
-      sesionSolicitudCompromiso: [],
-      contratacion: {
-        contratacionProyecto: this.proyectos ? this.proyectos : null
-      }
+      sesionSolicitudCompromiso: []
 
     }
 
@@ -205,9 +166,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
-        console.log( respuesta.data )
-        this.validar.emit( respuesta.data );
-        if (respuesta.code == "200" && !respuesta.data)
+        if (respuesta.code == "200")
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
       })
 
@@ -215,35 +174,13 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   cargarRegistro() {
 
-    console.log( this.sesionComiteSolicitud )
+    let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
 
-    let estados: string[] = ['1', '3', '5']
-
-    this.commonService.listaEstadoSolicitud()
-      .subscribe(response => {
-
-        this.estadosArray = response.filter(s => estados.includes(s.codigo));
-
-        if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-          this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-        }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-          this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
-        }
-    console.log(this.estadosArray)
-
-      })
-
-    
-
-    //let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
-
-    this.addressForm.get('estadoSolicitud').setValue(this.sesionComiteSolicitud.estadoCodigo)
+    this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado)
     this.addressForm.get('observaciones').setValue(this.sesionComiteSolicitud.observaciones)
     this.addressForm.get('url').setValue(this.sesionComiteSolicitud.rutaSoporteVotacion)
     this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromiso)
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisos)
-    this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitud)
-    
 
     this.commonService.listaUsuarios().then((respuesta) => {
 
@@ -268,29 +205,10 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     });
 
-    this.sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
-      if (sv.esAprobado)
-        this.cantidadAprobado++;
-      else
-        this.cantidadNoAprobado++;
-    })
+    let btnSolicitudMultiple = document.getElementById( 'btnSolicitudMultiple' );
+    console.log(this.sesionComiteSolicitud)
 
-    if ( this.cantidadNoAprobado > 0 )
-      this.resultadoVotacion = 'No Aprobó'
-    else
-      this.resultadoVotacion = 'Aprobó'
-
-    // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
-    
-    // btnSolicitudMultiple.forEach( element =>{
-    //   element.click();
-    // })
-    
-
-    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion){
-      this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
-    }
-    
+    btnSolicitudMultiple.click();
 
   }
 

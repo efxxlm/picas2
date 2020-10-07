@@ -13,12 +13,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using asivamosffie.services.Filters;
+using FluentValidation.AspNetCore;
 using System;
 using System.Text;
 using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.IO;
 using asivamosffie.api.Helpers;
+using asivamosffie.api.Controllers;
 
 namespace asivamosffie.api
 {
@@ -28,8 +31,6 @@ namespace asivamosffie.api
         {
             Configuration = configuration;
         }
-
-
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
@@ -73,7 +74,6 @@ namespace asivamosffie.api
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = appSettings.asivamosffieIssuerJwt,
                             ValidAudience = appSettings.asivamosffieAudienceJwt,
-                            ClockSkew = TimeSpan.Zero,
                             IssuerSigningKey = new SymmetricSecurityKey(
                                 Encoding.ASCII.GetBytes("asivamosffie@2020application"))
 
@@ -120,34 +120,39 @@ namespace asivamosffie.api
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
-          //Agregar Interfaces y clases
+            //Agregar Interfaces y clases
+            services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>();
 
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
-            services.AddTransient<IContributorService, ContributorService>();
-            services.AddTransient<ISourceFundingService, SourceFundingService>();
-            services.AddTransient<ICommitteeSessionFiduciarioService, CommitteeSessionFiduciarioService>();
+            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
+            services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
-            services.AddTransient<IProjectContractingService, ProjectContractingService>();            
-            services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
-            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();      
+            services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
+            services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
-            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
-            services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();             
-            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
             
 
+            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>();
+            services.AddTransient<ISelectionProcessService, SelectionProcessService>();  
+            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();  
+            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
+            services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
 
+           
+            
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors(MyAllowSpecificOrigins);

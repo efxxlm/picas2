@@ -18,7 +18,7 @@
 
             <ng-container matColumnDef="numeroAcuerdo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del acuerdo </th>
-                <td mat-cell *matCellDef="let element"> {{element.registroCompleto==1?element.cofinanciacionId:""}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.cofinanciacionId}} </td>
             </ng-container>
 
             <ng-container matColumnDef="vigenciaAcuerdo">
@@ -34,7 +34,7 @@
 
             <ng-container matColumnDef="estadoRegistro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-                <td mat-cell *matCellDef="let element"> {{element.registroCompleto==1?"Completo":"Incompleto"}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.registroCompleto?"Completo":"Incompleto"}} </td>
             </ng-container>
 
             <ng-container matColumnDef="id">

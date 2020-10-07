@@ -6,6 +6,12 @@
   min-width: 120px;
   margin: 20px auto;
 }
+
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -84,10 +90,10 @@
 }
 
 .alineacion-titulos {
- margin-left: -35px;
- }
+  margin-left: -35px;
+}
 .alineacion-titulos2 {
-  margin-left: 0px;
+  margin-left: -19px;
 }
 /*
 .mat-select-required:after {
@@ -106,15 +112,4 @@ input:required
     color: #174193;
     color: var(--mainColor);
     font-weight: 500;
-}
-
-.maincolor{
-color: var(--mainColor);
-}
-
-.mlmenor{
-  margin-left: -1em;
-}
-.mainColor{
-  color: var(--mainColor);
 }

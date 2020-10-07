@@ -7,6 +7,11 @@
   margin: 20px auto;
 }
 
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -30,11 +35,3 @@
 .btn-guardar {
   margin-bottom: 1em;
 }
-
-.maincolor{
-  color: var(--mainColor);
-  }
-
-  .mlmenor{
-    margin-left: -2em;
-  }

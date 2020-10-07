@@ -13,7 +13,7 @@
 
             <ng-container matColumnDef="fechaCreacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
-                <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date:'dd/MM/yyyy'}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.fechaCreacion}} </td>
             </ng-container>
 
             <ng-container matColumnDef="nombreCuenta">
@@ -29,7 +29,7 @@
             <ng-container matColumnDef="rp">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> RP </th>
                 <td mat-cell *matCellDef="let element">
-                    {{element.registroPresupuestal?element.registroPresupuestal.numeroRp:"No aplica"}} </td>
+                    {{element.registroPresupuestal?element.registroPresupuestal.numeroRp:null}} </td>
             </ng-container>
 
             <ng-container matColumnDef="vigencia">
@@ -40,12 +40,12 @@
 
             <ng-container matColumnDef="fechaConsignacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de consignación </th>
-                <td mat-cell *matCellDef="let element"> {{element.fechaConsignacion | date:'dd/MM/yyyy'}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.fechaConsignacion}} </td>
             </ng-container>
 
             <ng-container matColumnDef="valorConsignacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de consignación </th>
-                <td mat-cell *matCellDef="let element"> {{element.valorConsignacion| currency:'':'symbol':'3.0'}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.valorConsignacion}} </td>
             </ng-container>
 
             <ng-container matColumnDef="id">

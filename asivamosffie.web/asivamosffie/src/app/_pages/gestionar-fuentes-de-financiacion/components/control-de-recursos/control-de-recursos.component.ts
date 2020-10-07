@@ -53,7 +53,7 @@ export class ControlDeRecursosComponent implements OnInit {
       nombreCuenta: [null, Validators.required],
       numeroCuenta: [this.fb.array([]), Validators.required],
       rp: [null],
-      vigencia: [null],
+      vigencia: [null, Validators.required],
       fechaConsignacion: [null, Validators.required],
       valorConsignacion: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(50)])
@@ -67,51 +67,39 @@ export class ControlDeRecursosComponent implements OnInit {
       forkJoin([
         this.fuenteFinanciacionServices.getFuenteFinanciacion( this.idFuente ),
         this.commonService.listaNombreAportante(),
-        this.commonService.listaFuenteTipoFinanciacion(),
+        this.commonService.listaFuenteRecursos(),
         this.commonService.listaDepartamentos()
         
-      ]).subscribe( respuesta => {        
+      ]).subscribe( respuesta => {
         this.fuente = respuesta[0];
         this.listaNombres = respuesta[1];
         this.listaFuentes = respuesta[2];
         this.listaDepartamentos = respuesta[3];
-        this.tipoAportanteId = this.fuente.aportante.tipoAportanteId;
-        if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString()))
-        {
-          let valorDepartamento = this.listaDepartamentos.find( de => de.localizacionId.toString() == 
-          this.fuente.aportante.departamentoId.toString() )
-          if (valorDepartamento){
-            console.log("tiene departamento ");
-            console.log(valorDepartamento);
-            this.commonService.listaMunicipiosByIdDepartamento( this.fuente.aportante.departamentoId.toString() ).subscribe( mun => {
-              if (mun){
-                let valorMunicipio = mun.find( m => m.localizacionId == this.fuente.aportante.municipioId.toString() )
-                this.municipio = valorMunicipio?valorMunicipio.descripcion:"";
-              }
-            })
-            this.departamento = valorDepartamento?valorDepartamento.descripcion:"";
-          }
-          
-          
-        }
+        
+        let valorDepartamento = this.listaDepartamentos.find( de => de.localizacionId.toString() == 
+                                                                    this.fuente.aportante.municipioId.toString().substring(0,5) )
         let valorNombre = this.listaNombres.find( nom => nom.dominioId == this.fuente.aportante.nombreAportanteId );
         let valorFuente = this.listaFuentes.find( fue => fue.codigo == this.fuente.fuenteRecursosCodigo );
         let valorMunicipio: string = '';
-        
+        if (valorDepartamento){
+          this.commonService.listaMunicipiosByIdDepartamento( valorDepartamento.localizacionId ).subscribe( mun => {
+            if (mun){
+              let valorMunicipio = mun.find( m => m.localizacionId == this.fuente.aportante.municipioId.toString() )
+              this.municipio = valorMunicipio.descripcion;
+            }
+          })
+        }
 
-        
-        //this.nombreAportante = valorNombre.nombre;
+        this.tipoAportanteId = this.fuente.aportante.tipoAportanteId;
+        this.nombreAportante = valorNombre.nombre;
+        this.departamento = valorDepartamento?valorDepartamento.descripcion:null;
         this.nombreFuente = valorFuente.nombre;
         this.valorFuente = this.fuente.valorFuente;
         this.fuenteFinaciacionId = this.fuente.fuenteFinanciacionId;
         this.vigencia = this.fuente.aportante.cofinanciacion.vigenciaCofinanciacionId;
         this.NombresDeLaCuenta = this.fuente.cuentaBancaria;
         this.rpArray = this.fuente.aportante.registroPresupuestal;
-        //la lista de vigencias son los documentos registrados en acuerdos de cofinanciacion 
-        this.fuente.aportante.cofinanciacionDocumento.forEach(element => {
-          this.listaVigencias.push({tipoVigenciaCodigo:element.vigenciaAporte.toString(),fuenteFinanciacionId:null,valorAporte:null,vigenciaAporteId:element.cofinanciacionDocumentoId});
-        });
-        //this.listaVigencias = this.fuente.vigenciaAporte;
+        this.listaVigencias = this.fuente.vigenciaAporte;
 
         if (this.idControl > 0 )
           this.editMode();
@@ -147,20 +135,13 @@ export class ControlDeRecursosComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });   
-    dialogRef.afterClosed().subscribe(result => {
-      if(result)
-      {
-        location.reload();
-      }
-    });
   }
 
   onSubmit(){
     if (this.addressForm.valid){
 
       let rp = this.addressForm.get('rp').value;
-console.log(this.addressForm.get('vigencia').value);
-console.log(this.addressForm);
+
       let control: ControlRecurso = {
         controlRecursoId: this.addressForm.get('controlRecursoId').value,
         cuentaBancariaId: this.addressForm.get('nombreCuenta').value.cuentaBancariaId,
@@ -168,7 +149,7 @@ console.log(this.addressForm);
         fuenteFinanciacionId: this.fuenteFinaciacionId,
         registroPresupuestalId: rp? rp.registroPresupuestalId:null,
         valorConsignacion: this.addressForm.get('valorConsignacion').value,
-        vigenciaAporteId: this.addressForm.get('vigencia').value?.vigenciaAporteId
+        vigenciaAporteId: this.addressForm.get('vigencia').value.vigenciaAporteId
       }
 
       if (control.controlRecursoId > 0)

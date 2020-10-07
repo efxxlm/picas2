@@ -4,13 +4,28 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogVerDetalleComponent } from '../dialog-ver-detalle/dialog-ver-detalle.component';
-import { ActivatedRoute } from '@angular/router';
-import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
-import { forkJoin } from 'rxjs';
-import { ComiteTecnico, SesionComiteTema, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
+export interface OrdenDelDia {
+  id: number;
+  tarea: string;
+  responsable: string;
+  fechaCumplimiento: string;
+  fechaReporte: string;
+  estadoReportado: string;
+  gestionRealizada: number;
+}
+
+const ELEMENT_DATA: OrdenDelDia[] = [
+  {
+    id: 0,
+    tarea: 'Realizar seguimiento semanal del cronograma',
+    responsable: 'Julian Guillermo García Pedreros',
+    fechaCumplimiento: '30/06/2020',
+    fechaReporte: '02/07/2020',
+    estadoReportado: 'En proceso',
+    gestionRealizada: 0
+  }
+];
 
 @Component({
   selector: 'app-tabla-verificar-cumplimiento',
@@ -18,8 +33,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./tabla-verificar-cumplimiento.component.scss']
 })
 export class TablaVerificarCumplimientoComponent implements OnInit {
-
-  listaCompromisos: any[] = [];
 
   displayedColumns: string[] = [
     'tarea',
@@ -30,9 +43,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     'gestionRealizada',
     'id'
   ];
-  dataSource = new MatTableDataSource();
-
-  estadosArray: Dominio[] = []
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -42,54 +53,9 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(
-    public dialog: MatDialog,
-    private activatedRoute: ActivatedRoute,
-    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-    private commonService: CommonService,
-
-  ) { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
-
-
-    this.estadosArray
-
-    this.activatedRoute.params.subscribe(parametros => {
-
-      forkJoin([
-        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id),
-        this.commonService.listaEstadoCompromisos(),
-
-      ]).subscribe(respuesta => {
-
-        respuesta[0].sesionComiteTema.forEach(tem => {
-          tem.temaCompromiso.forEach(tc => {
-            tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
-            tc.nombreEstado = tc.estadoCodigo;
-            tc.estadoCodigo = null;
-          });
-          this.listaCompromisos = this.listaCompromisos.concat(tem.temaCompromiso);
-        })
-
-        if (respuesta[0].sesionComiteSolicitudComiteTecnico) {
-          respuesta[0].sesionComiteSolicitudComiteTecnico.forEach(sol => {
-            sol.sesionSolicitudCompromiso.forEach(sc => {
-              sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
-              sc.nombreEstado = sc.estadoCodigo;
-              sc.estadoCodigo = null;
-            });
-            this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
-          })
-        }
-
-        this.estadosArray = respuesta[1];
-
-        this.dataSource = new MatTableDataSource(this.listaCompromisos);
-
-      })
-    })
-
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -107,52 +73,10 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     };
   }
 
-  onChange(id: number, valor: any) {
-
-  }
-
   openVerDetalle(id: number) {
     this.dialog.open(DialogVerDetalleComponent, {
       width: '70em'
     });
-  }
-
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText }
-    });
-  }
-
-  onSave() {
-
-    let comite: ComiteTecnico = {
-      sesionComiteTema: [],
-      sesionComiteSolicitudComiteTecnico: []
-    }
-
-    let tema: SesionComiteTema = {
-      temaCompromiso: this.listaCompromisos.filter(c => c.temaCompromisoId > 0 && c.estadoCodigo)
-    }
-    if (tema.temaCompromiso.length > 0)
-      comite.sesionComiteTema.push(tema);
-
-    let solicitud: SesionComiteSolicitud = {
-      sesionSolicitudCompromiso: this.listaCompromisos.filter(c => c.sesionSolicitudCompromisoId > 0 && c.estadoCodigo)
-    }
-    if (solicitud.sesionSolicitudCompromiso.length > 0)
-      comite.sesionComiteSolicitudComiteTecnico.push(solicitud);
-
-    this.technicalCommitteeSessionService.verificarTemasCompromisos(comite)
-      .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
-        if (respuesta.code == "200") {
-          this.listaCompromisos = [];
-          this.ngOnInit();
-        }
-
-      })
-
   }
 
 }

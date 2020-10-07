@@ -1,12 +1,19 @@
-﻿using asivamosffie.model.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace asivamosffie.model.APIModels
 {
 
-    
+
+    public class HTMLContent
+    {
+        public string HTML { get; set; }
+        public HTMLContent(string sHTML)
+        {
+            HTML = sHTML;
+        }
+    }
 
     public class GrillaValidarDisponibilidadPresupuesal
     {
@@ -16,8 +23,7 @@ namespace asivamosffie.model.APIModels
         public string TipoSolicitudCodigo { get; set; }
         public string TipoSolicitudText { get; set; }
         public bool EstadoRegistro { get; set; }
-        public string EstadoRegistroText { get; set; }
-
+        public string  EstadoRegistroText { get; set; }
     }
 
     public class DetailValidarDisponibilidadPresupuesal
@@ -52,10 +58,5 @@ namespace asivamosffie.model.APIModels
         public string EstadosDeLasFuentes { get; set; }
         public string Observaciones { get; set; }
         public StringBuilder htmlContent { get; set; }
-        public DateTime FechaSolicitud { get; set; }
-        public string EstadoStr { get; set; }
-        public string Plazo { get; set; }
-        public List<ProyectoGrilla> Proyectos { get; set; }
-        public List<CofinanicacionAportanteGrilla> Aportantes { get; set; }        
     }
 }

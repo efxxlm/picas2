@@ -12,38 +12,28 @@
 
     <ng-container matColumnDef="fecha">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
-        <td mat-cell *matCellDef="let element"> <b>{{element.fechaComite  | date: 'dd/MM/yyyy'}}</b> </td>
+        <td mat-cell *matCellDef="let element"> <b>{{element.fecha}}</b> </td>
     </ng-container>
 
     <ng-container matColumnDef="numero">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de comité </th>
-        <td mat-cell *matCellDef="let element"> {{element.numeroComite}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
     </ng-container>
 
     <ng-container matColumnDef="numeroCompromisos">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de compromisos </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del aprobación del acta </th>
         <td mat-cell *matCellDef="let element"> {{element.numeroCompromisos}} </td>
     </ng-container>
 
     <ng-container matColumnDef="nivelCumplimiento">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nivel de cumplimiento </th>
-        <td mat-cell *matCellDef="let element"> {{element.numeroCompromisosCumplidos}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+        <td mat-cell *matCellDef="let element"> {{element.nivelCumplimiento}} </td>
     </ng-container>
 
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <a [routerLink]="['verificarCumplimiento', element.id]" 
-                mat-raised-button color="accent" 
-                class="btn-table">
-                {{ 
-                element.numeroCompromisosCumplidos == 0 ? 'Verificar cumplimiento' : 
-                element.numeroCompromisosCumplidos != element.numeroCompromisos ? 'Ver detalle/editar':
-                element.numeroCompromisosCumplidos == element.numeroCompromisos ? 'Ver detalle': ''
-                
-            }}
-                
-            </a>
+            <a [routerLink]="['verificarCumplimiento', element.id]" mat-raised-button color="accent" class="btn-table">Verificar cumplimiento</a>
         </td>
     </ng-container>
 

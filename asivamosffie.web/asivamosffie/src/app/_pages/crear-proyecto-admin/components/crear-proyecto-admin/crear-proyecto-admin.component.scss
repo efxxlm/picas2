@@ -7,6 +7,11 @@
   margin: 20px auto;
 }
 
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -22,6 +27,6 @@
 }
 
 .w-table-administrativo {
-  max-width: 650px;
+  width: 550px;
   margin: auto;
 }

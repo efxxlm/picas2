@@ -2,8 +2,18 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+
+export interface OrdenDelDia {
+  id: number;
+  fecha: string;
+  numero: string;
+  numeroCompromisos: number;
+  nivelCumplimiento: string;
+}
+
+const ELEMENT_DATA: OrdenDelDia[] = [
+  { id: 0, fecha: '24/06/2020', numero: 'CT_00001', numeroCompromisos: 2, nivelCumplimiento: '0' }
+];
 
 @Component({
   selector: 'app-tabla-monitoreo-compromisos',
@@ -13,7 +23,7 @@ import { EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
   displayedColumns: string[] = ['fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id'];
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -23,22 +33,9 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-
-             ) 
-  {
-
-  }
+  constructor() { }
 
   ngOnInit(): void {
-
-      this.technicalCommitteeSessionService.getListComiteGrilla()
-        .subscribe( response => {
-          response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
-          this.dataSource = new MatTableDataSource( response );
-      })
-
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
