@@ -130,17 +130,19 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.Contratista)
                     .FirstOrDefaultAsync();
 
-                if (contrato.ContratoPerfil.Count() > 0)
-                {
-                    contrato.ContratoPerfil = contrato.ContratoPerfil.Where(c => !(bool)c.Eliminado).ToList();
-                }
-     
 
                 if (contrato.ContratoPerfil.Count() > 0)
                 {
                     contrato.ContratoPerfil = contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado).ToList();
-                }
 
+                }
+                foreach (var ContratoPerfil in contrato.ContratoPerfil)
+                {
+                    if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
+                    {
+                        ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+                }
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
                     Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -177,18 +179,18 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvRequeridas = ContratoPerfil.CantidadHvRequeridas;
                             contratoPerfilOld.CantidadHvRecibidas = ContratoPerfil.CantidadHvRecibidas;
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
-                            contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion; 
+                            contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
-                             
+
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
                                 {
                                     ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                                    contratoPerfilObservacionOld.FechaModificacion = DateTime.Now; 
+                                    contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
                                     // contratoPerfilObservacionOld.Eliminado = false;  
                                     contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
                                 }
@@ -299,7 +301,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
         public async Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
@@ -372,6 +374,45 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Code = RegisterPreContructionPhase1.OperacionExitosa,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, UsuarioModificacion, "APROBAR INICIO CONTRATO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, UsuarioModificacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+
+
+
+        public async Task<Respuesta> DeleteContratoPerfilNumeroRadicado(int ContratoPerfilNumeroRadicadoId, string UsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Numero_Radicado, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicadoId);
+                contratoPerfilNumeroRadicadoOld.Eliminado = true;
+                contratoPerfilNumeroRadicadoOld.UsuarioModificacion = UsuarioModificacion;
+                contratoPerfilNumeroRadicadoOld.FechaModificacion = DateTime.Now;
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, UsuarioModificacion, "Contrato Perfil Numero Radicado".ToUpper())
                     };
             }
             catch (Exception ex)

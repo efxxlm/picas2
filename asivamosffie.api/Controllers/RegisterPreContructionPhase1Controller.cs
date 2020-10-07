@@ -60,6 +60,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("DeleteContratoPerfilNumeroRadicado")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteContratoPerfilNumeroRadicado([FromQuery] int ContratoPerfilNumeroRadicadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerPreContructionPhase1Service.DeleteContratoPerfilNumeroRadicado(ContratoPerfilNumeroRadicadoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+ 
         [Route("DeleteContratoPerfil")]
         [HttpDelete]
         public async Task<IActionResult> DeleteContratoPerfil([FromQuery]  int ContratoPerfilId)

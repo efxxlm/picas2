@@ -71,6 +71,8 @@
 
         public const string Eliminar_Contrato_Perfil = "83";
 
-        public const string  Aprobar_Inicio_Contrato = "84";
+        public const string Aprobar_Inicio_Contrato = "84";
+
+        public const string Eliminar_Numero_Radicado = "99";
     } 
 }
