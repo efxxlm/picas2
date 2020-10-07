@@ -59,7 +59,7 @@ export class FormPerfilComponent implements OnInit {
                 cantidadHvAprobadas: [ '' ],
                 fechaAprobacion: [ null ],
                 observacion: [ null ],
-                numeroRadicadoFfie: this.fb.array([ [ '' ] ]),
+                ContratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
                 rutaSoporte: [ '' ]
               }
             )
@@ -70,7 +70,7 @@ export class FormPerfilComponent implements OnInit {
   };
 
   numeroRadicado ( i: number ) {
-    return this.perfiles.controls[i].get( 'numeroRadicadoFfie' ) as FormArray;
+    return this.perfiles.controls[i].get( 'ContratoPerfilNumeroRadicado' ) as FormArray;
   }
 
   textoLimpio (texto: string) {
@@ -108,7 +108,7 @@ export class FormPerfilComponent implements OnInit {
   };
 
   agregarNumeroRadicado ( numeroRadicado: number ) {
-    this.numeroRadicado( numeroRadicado ).push( this.fb.control( '' ) )
+    this.numeroRadicado( numeroRadicado ).push( this.fb.group({ numeroRadicado: [ '' ] }) )
   }
 
   eliminarNumeroRadicado ( numeroPerfil: number, numeroRadicado ) {
@@ -119,14 +119,13 @@ export class FormPerfilComponent implements OnInit {
     let perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     perfiles.forEach( value => {
-      value.cantidadHvAprobadas  = Number( value.cantidadHvAprobadas );
-      value.cantidadHvRecibidas  = Number( value.cantidadHvRecibidas );
-      value.cantidadHvRequeridas = Number( value.cantidadHvRequeridas );
-      value.numeroRadicadoFfie   = value.numeroRadicadoFfie[0];
-
-      value.fechaAprobacion = new Date( value.fechaAprobacion ).toISOString()
-      value.contratoId = this.contratoId;
-      value.proyectoId = this.proyectoId;
+      value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
+      value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
+      value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
+      value.ContratoPerfilNumeroRadicado = value.ContratoPerfilNumeroRadicado;
+      value.fechaAprobacion              = new Date( value.fechaAprobacion ).toISOString()
+      value.contratoId                   = this.contratoId;
+      value.proyectoId                   = this.proyectoId;
     } )
 
     console.log( perfiles );

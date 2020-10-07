@@ -102,12 +102,12 @@
             </div>
           </section>
 
-          <section formArrayName="numeroRadicadoFfie">
+          <section formArrayName="ContratoPerfilNumeroRadicado">
             <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
               <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida</b></label>
-              <div class="col d-flex" style="width: 25%;">
+              <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
                 <mat-form-field class="w-38">
-                  <input matInput type="text" maxlength="20" [formControlName]="j">
+                  <input matInput type="text" maxlength="20" formControlName="numeroRadicado">
                 </mat-form-field>
                 <span class="contador">{{20 - numero.value.length}}</span>
               </div>

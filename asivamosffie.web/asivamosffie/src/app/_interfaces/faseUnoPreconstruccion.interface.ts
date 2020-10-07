@@ -97,6 +97,7 @@ export interface ContratoPerfil {
   usuarioCreacion?: string;
   fechaModificacion?: string;
   eliminado?: boolean;
+  ContratoPerfilNumeroRadicado?: string[];
   registroCompleto?: boolean;
   proyectoId?: number;
   contratoPerfilObservacion?: any[];
