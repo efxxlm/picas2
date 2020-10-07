@@ -199,10 +199,11 @@ namespace asivamosffie.services
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
                                     contratoPerfilObservacionOld.Eliminado = false;
-                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
+                                    contratoPerfilObservacionOld.Observacion = (string)Helpers.Helpers.ConvertToUpercase(ContratoPerfilObservacion.Observacion);
                                 }
                                 else
                                 {
+                                    ContratoPerfilObservacion.Observacion = (string)Helpers.Helpers.ConvertToUpercase(ContratoPerfilObservacion.Observacion); 
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                     ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
