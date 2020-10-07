@@ -6,6 +6,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +43,6 @@ namespace asivamosffie.services
 
                 listContratos = listContratos.Where(r => r.ContratoPoliza.Count() > 0).ToList();
 
-                //TODO Ver boton 
                 foreach (var contrato in listContratos)
                 {
                     foreach (var DisponibilidadPresupuestal in contrato.Contratacion.DisponibilidadPresupuestal)
@@ -54,8 +54,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-                //TODO Validar DRP
-                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP)
+                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP.Distinct().OrderByDescending(r => r.ContratoId).ToList())
                 {
                     int ProyectosNoCompletos = 0;
                     bool VerBotonAprobarInicio = true;
@@ -68,7 +67,6 @@ namespace asivamosffie.services
                     {
                         if (!string.IsNullOrEmpty(ContratoPerfil.FechaAprobacion.ToString()))
                         {
-
                             VerBotonAprobarInicio = false;
                         }
                     }
@@ -76,7 +74,6 @@ namespace asivamosffie.services
                     {
                         if (ContratacionProyecto.Proyecto.RegistroCompleto == null || (bool)ContratacionProyecto.Proyecto.RegistroCompleto)
                         {
-
                             ProyectosNoCompletos++;
                         }
                     }
@@ -117,23 +114,39 @@ namespace asivamosffie.services
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                     .Include(r => r.ContratoObservacion)
                     .Include(r => r.ContratoPerfil)
+                           .ThenInclude(r => r.ContratoPerfilObservacion)
+                    .Include(r => r.ContratoPerfil)
+                           .ThenInclude(r => r.ContratoPerfilNumeroRadicado)
                     .Include(r => r.ContratoPoliza)
                     .Include(r => r.Contratacion)
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
-                                 .Include(r => r.Contratacion)
+                   .Include(r => r.Contratacion)
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
-                                .ThenInclude(r => r.Sede)
-                       .Include(r => r.Contratacion) 
+                                 .ThenInclude(r => r.Sede)
+                    .Include(r => r.Contratacion)
                     .Include(r => r.Contratacion)
                         .ThenInclude(r => r.Contratista)
-                           .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync();
 
-                if (contrato.ContratoPerfil.Count() > 0)
+
+                foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
-                    contrato.ContratoPerfil = contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado).ToList();
+                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() > 0)
+                        ContratacionProyecto.Proyecto.ContratoPerfil = ContratacionProyecto.Proyecto.ContratoPerfil.Where(t => !(bool)t.Eliminado).ToList();
+
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
+                    {
+                        if (ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
+                             ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
+
+                        if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
+                               ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+
+
                 }
 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
@@ -158,69 +171,112 @@ namespace asivamosffie.services
 
             try
             {
-                foreach (var ContratoPerfil in pContrato.ContratoPerfil)
+                foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto)
                 {
-                    if (ContratoPerfil.ContratoPerfilId > 0)
+
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
-                        CreateEdit = "EDITAR CONTRATO PERFIL";
-                        ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
-                        contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
-                        contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
-                        contratoPerfilOld.CantidadHvRequeridas = ContratoPerfil.CantidadHvRequeridas;
-                        contratoPerfilOld.CantidadHvRecibidas = ContratoPerfil.CantidadHvRecibidas;
-                        contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
-                        contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
-                         
-                        contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
-                        contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
-                        contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
-
-
-                        foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
+                        if (ContratoPerfil.ContratoPerfilId > 0)
                         {
-                            if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
+                            CreateEdit = "EDITAR CONTRATO PERFIL";
+                            ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
+                            contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
+                            contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
+                            contratoPerfilOld.CantidadHvRequeridas = ContratoPerfil.CantidadHvRequeridas;
+                            contratoPerfilOld.CantidadHvRecibidas = ContratoPerfil.CantidadHvRecibidas;
+                            contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
+                            contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
+                            contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
+
+                            contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
+                            contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
+
+                            foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
-                                ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
-                                contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                                contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
-                                // contratoPerfilObservacionOld.Eliminado = false;  
-                                contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
+                                if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
+                                {
+                                    ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
+                                    contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
+                                     contratoPerfilObservacionOld.Eliminado = false;  
+                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
+                                }
+                                else
+                                {
+                                    ContratoPerfilObservacion.TipoObservacionCodigo = "1";
+                                    ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
+                                    ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+
+                                    _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
+                                }
                             }
-                            else
+
+                            foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
                             {
+                                if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
+                                {
+                                    ContratoPerfilNumeroRadicado.Eliminado = false;
+                                    ContratoPerfilNumeroRadicado.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilNumeroRadicado.FechaCreacion = DateTime.Now;
+                                    _context.ContratoPerfilNumeroRadicado.Add(ContratoPerfilNumeroRadicado);
+                                }
+                                else
+                                {
+                                    ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
+                                    contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
+                                    contratoPerfilNumeroRadicadoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    contratoPerfilNumeroRadicadoOld.FechaModificacion = DateTime.Now;
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            CreateEdit = "CREAR CONTRATO PERFIL";
+                            ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
+                            ContratoPerfil.FechaCreacion = DateTime.Now;
+                            ContratoPerfil.Eliminado = false;
+                            ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
+                            _context.ContratoPerfil.Add(ContratoPerfil);
+
+
+                            foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
+                            {
+
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                                // ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                                ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
 
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
+
+                            foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
+                            {
+                                if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
+                                {
+                                    ContratoPerfilNumeroRadicado.Eliminado = false;
+                                    ContratoPerfilNumeroRadicado.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilNumeroRadicado.FechaCreacion = DateTime.Now;
+                                    _context.ContratoPerfilNumeroRadicado.Add(ContratoPerfilNumeroRadicado);
+                                }
+                                else
+                                {
+                                    ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
+                                    contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
+                                    ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
+                                }
+                            }
                         }
                     }
-                    else
-                    {
-                        CreateEdit = "CREAR CONTRATO PERFIL";
-                        ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
-                        ContratoPerfil.FechaCreacion = DateTime.Now;
-                        ContratoPerfil.Eliminado = false;
-                        ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
-                        _context.ContratoPerfil.Add(ContratoPerfil);
 
 
-                        foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
-                        {
 
-                            ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
-                            ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                            ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
-
-                            _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
-                        }
-                    }
                 }
                 //Cambiar Estado Requisitos 
                 if (pContrato.ContratoPerfil
-                    .Where(r => (bool)r.RegistroCompleto).Count()
-                    == pContrato.ContratoPerfil.Count()
+                    .Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count()
                     && pContrato.ContratoPerfil.Count() > 1)
                 {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
@@ -252,7 +308,6 @@ namespace asivamosffie.services
                     };
             }
         }
-
 
         public async Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion)
         {
@@ -295,7 +350,7 @@ namespace asivamosffie.services
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRequeridas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRecibidas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvAprobadas.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString()) 
+                 || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
 
                 //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
@@ -326,6 +381,45 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Code = RegisterPreContructionPhase1.OperacionExitosa,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, UsuarioModificacion, "APROBAR INICIO CONTRATO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, UsuarioModificacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+
+
+
+        public async Task<Respuesta> DeleteContratoPerfilNumeroRadicado(int ContratoPerfilNumeroRadicadoId, string UsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Numero_Radicado, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicadoId);
+                contratoPerfilNumeroRadicadoOld.Eliminado = true;
+                contratoPerfilNumeroRadicadoOld.UsuarioModificacion = UsuarioModificacion;
+                contratoPerfilNumeroRadicadoOld.FechaModificacion = DateTime.Now;
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, UsuarioModificacion, "Contrato Perfil Numero Radicado".ToUpper())
                     };
             }
             catch (Exception ex)

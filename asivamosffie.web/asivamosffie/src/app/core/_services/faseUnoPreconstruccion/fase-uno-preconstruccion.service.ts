@@ -19,24 +19,19 @@ export class FaseUnoPreconstruccionService {
   };
 
   getContratacionByContratoId ( pContratoId: string ) {
-    return this.http.get( `${ this.url_api }/GetContratoByContratoId?pContratoId=${ pContratoId }` )
-      .pipe(
-        map<Contrato, ContratoModificado>( contrato => {
-          return {
-            contratacion: contrato.contratacion,
-            fechaPoliza: contrato.contratoPoliza[0].fechaAprobacion,
-            numeroContrato: contrato.numeroContrato
-          };
-        } )
-      );
+    return this.http.get<Contrato>( `${ this.url_api }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
   };
 
-  createEditContratoPerfil ( pContrato: any ) {
+  createEditContratoPerfil ( pContrato: Contrato ) {
     return this.http.post( `${ this.url_api }/CreateEditContratoPerfil`, pContrato );
   };
 
   deleteContratoPerfil ( contratoPerfilId: number ) {
     return ( this.http.delete( `${ this.url_api }/DeleteContratoPerfil?ContratoPerfilId=${ contratoPerfilId }` ) );
-  }
+  };
+
+  deleteContratoPerfilNumeroRadicado ( contratoPerfilNumeroRadicadoId: number ) {
+    return this.http.post( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
+  };
 
 };
