@@ -3588,7 +3588,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NombreEstado)
+                entity.Property(e => e.EstadoNombre)
                     .IsRequired()
                     .HasColumnName("nombreEstado")
                     .HasMaxLength(100)

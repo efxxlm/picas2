@@ -74,5 +74,7 @@
         public const string Aprobar_Inicio_Contrato = "84";
 
         public const string Eliminar_Numero_Radicado = "99";
+
+        public const string Crear_Editar_Contrato_Construccion = "101";
     } 
 }

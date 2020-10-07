@@ -33,11 +33,59 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContractsGrid")]
         [HttpGet]
-        public async Task<List<dynamic>> GetContractsGrid()
+        public async Task<List<dynamic>> GetContractsGrid( int pUsuarioId )
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetContractsGrid();
+                return await _technicalRequirementsConstructionPhaseService.GetContractsGrid( pUsuarioId );
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("GetContratoByContratoId")]
+        [HttpGet]
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        {
+            try
+            {
+                return await _technicalRequirementsConstructionPhaseService.GetContratoByContratoId( pContratoId );
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("CreateEditDiagnostico")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditDiagnostico(pConstruccion);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("CreateEditPlanesProgramas")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditPlanesProgramas(pConstruccion);
+                return respuesta;
             }
             catch (Exception ex)
             {

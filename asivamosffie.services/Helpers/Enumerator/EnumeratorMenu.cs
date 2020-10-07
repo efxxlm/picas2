@@ -23,7 +23,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Gestionar_Procesos_Contractuales = 31,
 
-        Preconstruccion_Fase_1 = 37
+        Preconstruccion_Fase_1 = 37,
+
+        Registrar_Requisitos_Tecnicos_Construccion = 41,
+        
     }
 
     public enum enumeratorAccion
