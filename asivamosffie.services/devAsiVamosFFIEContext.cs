@@ -262,8 +262,8 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.Municipio)
                     .WithMany(p => p.CofinanciacionAportanteMunicipio)
                     .HasForeignKey(d => d.MunicipioId)
-                    .HasConstraintName("fk_cofinanciacionMunicipio");
-                 
+                    .HasConstraintName("fk_cofinanciacionMunicipio"); 
+
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
@@ -802,10 +802,6 @@ namespace asivamosffie.model.Models
                     .IsFixedLength();
 
                 entity.Property(e => e.EstadoDocumentoCodigo)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EstadoFase1)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
