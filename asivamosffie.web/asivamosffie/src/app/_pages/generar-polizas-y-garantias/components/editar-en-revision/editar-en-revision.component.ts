@@ -134,25 +134,38 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('fechaRevision').setValue(data_A[0].fechaRevision);
       this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
       this.addressForm.get('observacionesGenerales').setValue(data_A[0].observacion);
-      this.loadGarantia(data_A[0].polizaObservacionId);
+      this.loadGarantia(data_A[0].contratoPolizaId);
+      this.loadObservacionId2(data_A[0].polizaObservacionId);
     });
   }
 
   loadGarantia(id){
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_B=>{
-      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.value == data_B[0].tipoGarantiaCodigo);
-      this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
+      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.value == data_B[0].tipoGarantiaCodigo);
+      this.addressForm.get('polizasYSeguros').setValue([tipoGarantiaCodigo]);
       this.loadGrantiaID(data_B[0].polizaGarantiaId);
     });
-    this.idObservacion = id;
   }
   dataLoad2(data){
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
   }
   loadGrantiaID(id){
-    this.idPoliza2 = id;
+    if(id!=undefined){
+      this.idPoliza2 = id;
+    }
+    else{
+      this.idPoliza2 = undefined;
+    }
+  }
+  loadObservacionId2(id){
+    if(id!=undefined){
+      this.idObservacion = id;
+    }
+    else{
+      this.idObservacion = undefined;
+    }
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -205,7 +218,6 @@ export class EditarEnRevisionComponent implements OnInit {
       incluyeReciboPago: this.addressForm.value.reciboDePago,
       incluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales
     };
-    console.log(this.idPoliza2+"_"+auxValue2.value);
     const polizaGarantia: CreatePolizaGarantia={
       polizaGarantiaId : this.idPoliza2,
       contratoPolizaId: this.idPoliza,
