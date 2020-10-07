@@ -55,7 +55,7 @@ namespace asivamosffie.services
                     }
                 }
                 //TODO Validar DRP
-                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP)
+                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP.Distinct().OrderByDescending(r=> r.ContratoId).ToList())
                 {
                     int ProyectosNoCompletos = 0;
                     bool VerBotonAprobarInicio = true;
@@ -183,7 +183,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.NumeroRadicadoFfie3 = ContratoPerfil.NumeroRadicadoFfie3;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
-                            //contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
+                            contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
 
 
 
@@ -231,7 +231,7 @@ namespace asivamosffie.services
                             ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
                             ContratoPerfil.FechaCreacion = DateTime.Now;
                             ContratoPerfil.Eliminado = false;
-                            //ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
+                            ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
 
 
