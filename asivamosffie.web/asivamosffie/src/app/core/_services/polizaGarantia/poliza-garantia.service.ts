@@ -55,7 +55,7 @@ export interface CreatePolizaObservacion {
 export interface CreatePolizaGarantia {
   polizaGarantiaId: number;
   contratoPolizaId: number;
-  tipoGarantiaCodigo: any[];
+  tipoGarantiaCodigo: any;
   esIncluidaPoliza: boolean;
 }
 export interface ContratoPoliza {

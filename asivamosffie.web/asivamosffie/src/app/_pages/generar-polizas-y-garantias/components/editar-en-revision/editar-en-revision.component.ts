@@ -143,7 +143,7 @@ export class EditarEnRevisionComponent implements OnInit {
       const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.value == data_B[0].tipoGarantiaCodigo);
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
-      this.loadGrantiaID(data_B[0].contratoPolizaId);
+      this.loadGrantiaID(data_B[0].polizaGarantiaId);
     });
     this.idObservacion = id;
   }
@@ -182,7 +182,6 @@ export class EditarEnRevisionComponent implements OnInit {
   onSubmit() {
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
-    console.log(auxValue.value);
     const contratoArray :EditPoliza ={
       contratoId: this.idContrato,
       nombreAseguradora: this.addressForm.value.nombre,
@@ -206,10 +205,11 @@ export class EditarEnRevisionComponent implements OnInit {
       incluyeReciboPago: this.addressForm.value.reciboDePago,
       incluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales
     };
+    console.log(this.idPoliza2+"_"+auxValue2.value);
     const polizaGarantia: CreatePolizaGarantia={
       polizaGarantiaId : this.idPoliza2,
       contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: auxValue2.value,
+      tipoGarantiaCodigo: auxValue2[0].value,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
     };
     const polizaObservacion: CreatePolizaObservacion={
