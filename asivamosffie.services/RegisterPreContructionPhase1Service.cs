@@ -26,7 +26,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListContratacion()
         {
             try
-            { 
+            {
                 List<dynamic> ListContratacion = new List<dynamic>();
                 List<Contrato> ListContratosConPolizasYDRP = new List<Contrato>();
                 List<Contrato> listContratos = await _context.Contrato
@@ -140,10 +140,10 @@ namespace asivamosffie.services
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
                         if (ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
-                             ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
+                            ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
 
                         if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
-                               ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
+                            ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
                     }
 
 
@@ -198,12 +198,11 @@ namespace asivamosffie.services
                                     ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
-                                     contratoPerfilObservacionOld.Eliminado = false;  
+                                    contratoPerfilObservacionOld.Eliminado = false;
                                     contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
                                 }
                                 else
                                 {
-                                    ContratoPerfilObservacion.TipoObservacionCodigo = "1";
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                     ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
