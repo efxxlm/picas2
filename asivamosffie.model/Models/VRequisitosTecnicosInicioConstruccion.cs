@@ -10,8 +10,8 @@ namespace asivamosffie.model.Models
         public string NumeroContrato { get; set; }
         public int? CantidadProyectosAsociados { get; set; }
         public int? CantidadProyectosRequisitosAprobados { get; set; }
-        public string EstadoRequisitos { get; set; }
-        public string NombreEstado { get; set; }
+        public string EstadoCodigo { get; set; }
+        public string EstadoNombre { get; set; }
         public bool? ExisteRegistro { get; set; }
     }
 }
