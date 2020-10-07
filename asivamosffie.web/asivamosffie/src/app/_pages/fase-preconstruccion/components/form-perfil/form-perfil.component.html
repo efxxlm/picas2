@@ -3,7 +3,7 @@
     <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el proyecto?</b></label>
     <div class="col d-flex">
       <mat-form-field class="w-38">
-        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles">          
+        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles>          
       </mat-form-field>
       <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
     </div>
@@ -102,31 +102,53 @@
             </div>
           </section>
 
-          <section formArrayName="ContratoPerfilNumeroRadicado">
+          <section formArrayName="contratoPerfilNumeroRadicado">
             <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
               <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida</b></label>
               <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
                 <mat-form-field class="w-38">
                   <input matInput type="text" maxlength="20" formControlName="numeroRadicado">
                 </mat-form-field>
-                <span class="contador">{{20 - numero.value.length}}</span>
+                <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
               </div>
               <div class="text-right" *ngIf="numeroRadicado( i ).length > 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarNumeroRadicado( i, j )">
+                <button mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="eliminarNumeroRadicado( i, j )"
+                        *ngIf="perfilProyecto.length === 0">
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                  Eliminar número de radicado
+                </button>
+                <button mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="deleteRadicado( numero.get( 'contratoPerfilNumeroRadicadoId' ).value )"
+                        *ngIf="perfilProyecto.length > 0 && numero.get( 'contratoPerfilNumeroRadicadoId' ).value !== 0">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                   Eliminar número de radicado
                 </button>
               </div>
               <div class="text-right" *ngIf="numeroRadicado( i ).length === 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarNumeroRadicado( i )">
-                  <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos">
+                <button mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                  <img src="assets/img/icon/mas.svg">
                   Agregar otro número de radicado
                 </button>
               </div>
             </div>
             <div class="text-right w-margin" *ngIf="numeroRadicado( i ).length > 1">
-              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarNumeroRadicado( i )">
-                <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos">
+              <button mat-button
+                      color="warn"
+                      type="button"
+                      class="btn-eliminar"
+                      (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                <img src="assets/img/icon/mas.svg">
                 Agregar otro número de radicado
               </button>
             </div>
@@ -143,8 +165,22 @@
         </mat-card-content>
       </mat-card>
       <div class="text-right" *ngIf="perfiles.controls.length > 1">
-        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( i )">
-          <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+        <button mat-button
+                color="warn"
+                type="button"
+                class="btn-eliminar"
+                (click)="eliminarPerfil( i )"
+                *ngIf="perfilProyecto.length === 0">
+          <img src="assets/img/icon/menos.svg">
+          Eliminar perfil
+        </button>
+        <button mat-button
+                color="warn"
+                type="button"
+                class="btn-eliminar"
+                (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value )"
+                *ngIf="perfilProyecto.length > 0">
+          <img src="assets/img/icon/menos.svg">
           Eliminar perfil
         </button>
       </div>

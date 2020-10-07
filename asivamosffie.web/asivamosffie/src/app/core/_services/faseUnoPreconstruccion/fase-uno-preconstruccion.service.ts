@@ -28,6 +28,10 @@ export class FaseUnoPreconstruccionService {
 
   deleteContratoPerfil ( contratoPerfilId: number ) {
     return ( this.http.delete( `${ this.url_api }/DeleteContratoPerfil?ContratoPerfilId=${ contratoPerfilId }` ) );
-  }
+  };
+
+  deleteContratoPerfilNumeroRadicado ( contratoPerfilNumeroRadicadoId: number ) {
+    return this.http.post( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
+  };
 
 };

@@ -92,12 +92,12 @@ export interface ContratoPerfil {
   fechaAprobacion?: string;
   numeroRadicadoFfie?: string;
   rutaSoporte?: string;
-  observacion?: boolean;
+  observacion?: string;
   fechaCreacion?: string;
   usuarioCreacion?: string;
   fechaModificacion?: string;
   eliminado?: boolean;
-  ContratoPerfilNumeroRadicado?: string[];
+  contratoPerfilNumeroRadicado?: string[];
   registroCompleto?: boolean;
   proyectoId?: number;
   contratoPerfilObservacion?: any[];
