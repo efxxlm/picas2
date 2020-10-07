@@ -42,7 +42,6 @@ namespace asivamosffie.services
 
                 listContratos = listContratos.Where(r => r.ContratoPoliza.Count() > 0).ToList();
 
-                //TODO Ver boton 
                 foreach (var contrato in listContratos)
                 {
                     foreach (var DisponibilidadPresupuestal in contrato.Contratacion.DisponibilidadPresupuestal)
@@ -54,8 +53,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-                //TODO Validar DRP
-                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP.Distinct().OrderByDescending(r=> r.ContratoId).ToList())
+                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP.Distinct().OrderByDescending(r => r.ContratoId).ToList())
                 {
                     int ProyectosNoCompletos = 0;
                     bool VerBotonAprobarInicio = true;
@@ -68,7 +66,6 @@ namespace asivamosffie.services
                     {
                         if (!string.IsNullOrEmpty(ContratoPerfil.FechaAprobacion.ToString()))
                         {
-
                             VerBotonAprobarInicio = false;
                         }
                     }
@@ -76,7 +73,6 @@ namespace asivamosffie.services
                     {
                         if (ContratacionProyecto.Proyecto.RegistroCompleto == null || (bool)ContratacionProyecto.Proyecto.RegistroCompleto)
                         {
-
                             ProyectosNoCompletos++;
                         }
                     }
@@ -133,6 +129,12 @@ namespace asivamosffie.services
                     .Include(r => r.Contratacion)
                         .ThenInclude(r => r.Contratista)
                     .FirstOrDefaultAsync();
+
+                if (contrato.ContratoPerfil.Count() > 0)
+                {
+                    contrato.ContratoPerfil = contrato.ContratoPerfil.Where(c => !(bool)c.Eliminado).ToList();
+                }
+     
 
                 if (contrato.ContratoPerfil.Count() > 0)
                 {
@@ -216,11 +218,12 @@ namespace asivamosffie.services
                                     ContratoPerfilNumeroRadicado.FechaCreacion = DateTime.Now;
                                     _context.ContratoPerfilNumeroRadicado.Add(ContratoPerfilNumeroRadicado);
                                 }
-                                else {
+                                else
+                                {
                                     ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
                                     contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
                                     ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
-                                    ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now; 
+                                    ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
                                 }
                             }
 
@@ -270,8 +273,7 @@ namespace asivamosffie.services
                 }
                 //Cambiar Estado Requisitos 
                 if (pContrato.ContratoPerfil
-                    .Where(r => (bool)r.RegistroCompleto).Count()
-                    == pContrato.ContratoPerfil.Count()
+                    .Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count()
                     && pContrato.ContratoPerfil.Count() > 1)
                 {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
@@ -303,8 +305,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-
+         
         public async Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
@@ -347,10 +348,6 @@ namespace asivamosffie.services
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRecibidas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvAprobadas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie1.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie2.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.NumeroRadicadoFfie3.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
 
                 //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
