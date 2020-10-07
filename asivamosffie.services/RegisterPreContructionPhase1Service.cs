@@ -26,11 +26,11 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListContratacion()
         {
             try
-            {
+            { 
                 List<dynamic> ListContratacion = new List<dynamic>();
                 List<Contrato> ListContratosConPolizasYDRP = new List<Contrato>();
                 List<Contrato> listContratos = await _context.Contrato
-                    .Where(r => !(bool)r.Eliminado)
+                    .Where(r => !(bool)r.Eliminado && r.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
                           .Include(r => r.Contratacion)
                              .ThenInclude(r => r.DisponibilidadPresupuestal)
                     .Include(r => r.Contratacion)
@@ -280,7 +280,7 @@ namespace asivamosffie.services
                     && pContrato.ContratoPerfil.Count() > 1)
                 {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
-                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.En_proceso_de_aprobación_de_requisitos_tecnicos;
+                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
                 }
@@ -370,7 +370,7 @@ namespace asivamosffie.services
                 Contrato contratoAprobar = _context.Contrato.Find(pContratoId);
                 contratoAprobar.FechaModificacion = DateTime.Now;
                 contratoAprobar.UsuarioModificacion = UsuarioModificacion;
-                contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados;
+                contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
                 _context.SaveChanges();
 
                 return
