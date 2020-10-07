@@ -350,6 +350,12 @@ namespace asivamosffie.services
 
             try
             {
+                ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(pContratoPerfilObservacion.ContratoPerfilId);
+                contratoPerfilOld.ConObervacionesSupervision = true;
+                contratoPerfilOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
+                contratoPerfilOld.FechaModificacion = DateTime.Now;
+
+
                 pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                 pContratoPerfilObservacion.Eliminado = false;
                 pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
