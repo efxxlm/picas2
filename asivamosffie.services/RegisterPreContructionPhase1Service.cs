@@ -140,7 +140,7 @@ namespace asivamosffie.services
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
                         if (ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
-                            ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
+                           ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
 
                         if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
                             ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
@@ -224,8 +224,8 @@ namespace asivamosffie.services
                                 {
                                     ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
                                     contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
-                                    ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
-                                    ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
+                                    contratoPerfilNumeroRadicadoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    contratoPerfilNumeroRadicadoOld.FechaModificacion = DateTime.Now;
                                 }
                             }
 

@@ -264,7 +264,7 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.MunicipioId)
                     .HasConstraintName("fk_cofinanciacionMunicipio");
 
-        
+           
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
@@ -1079,12 +1079,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroRadicado)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.NumeroRadicado).HasMaxLength(50);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -1095,7 +1092,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ContratoPerfil)
                     .WithMany(p => p.ContratoPerfilNumeroRadicado)
                     .HasForeignKey(d => d.ContratoPerfilId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContratoPerfilNumeroRadicado_ContratoPerfil");
             });
 
