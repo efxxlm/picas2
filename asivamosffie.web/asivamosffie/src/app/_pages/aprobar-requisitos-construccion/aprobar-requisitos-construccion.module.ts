@@ -15,11 +15,13 @@ import { HojasVidaContratistaArtcComponent } from './components/hojas-vida-contr
 import { ProgramacionObraArtcComponent } from './components/programacion-obra-artc/programacion-obra-artc.component';
 import { FlujoInversionRecursosArtcComponent } from './components/flujo-inversion-recursos-artc/flujo-inversion-recursos-artc.component';
 import { VerDetalleContratoObraArtcComponent } from './components/ver-detalle-contrato-obra-artc/ver-detalle-contrato-obra-artc.component';
+import { FormValidacionRequisitosInterventoriaArtcComponent } from './components/form-validacion-requisitos-interventoria-artc/form-validacion-requisitos-interventoria-artc.component';
+import { VerDetalleContratoInterventoriaArtcComponent } from './components/ver-detalle-contrato-interventoria-artc/ver-detalle-contrato-interventoria-artc.component';
 
 
 
 @NgModule({
-  declarations: [AprobarRequisitosConstruccionComponent, TablaContratoObraArtcComponent, TablaContratoInterventoriaArtcComponent, FormValidacionRequisitosObraArtcComponent, DiagnosticoArtcComponent, PlanesProgramasArtcComponent, ManejoAnticipoArtcComponent, HojasVidaContratistaArtcComponent, ProgramacionObraArtcComponent, FlujoInversionRecursosArtcComponent, VerDetalleContratoObraArtcComponent],
+  declarations: [AprobarRequisitosConstruccionComponent, TablaContratoObraArtcComponent, TablaContratoInterventoriaArtcComponent, FormValidacionRequisitosObraArtcComponent, DiagnosticoArtcComponent, PlanesProgramasArtcComponent, ManejoAnticipoArtcComponent, HojasVidaContratistaArtcComponent, ProgramacionObraArtcComponent, FlujoInversionRecursosArtcComponent, VerDetalleContratoObraArtcComponent, FormValidacionRequisitosInterventoriaArtcComponent, VerDetalleContratoInterventoriaArtcComponent],
   imports: [
     CommonModule,
     MaterialModule,

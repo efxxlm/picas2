@@ -68,7 +68,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
   };
 
   getForm ( id: number ) {
-    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/validarRequisitosInicio', id ] )
+    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/validarRequisitosInicioObra', id ] )
   };
 
   aprobarInicio ( id: number ) {
