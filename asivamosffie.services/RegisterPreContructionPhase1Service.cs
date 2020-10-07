@@ -139,8 +139,8 @@ namespace asivamosffie.services
                      
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
-                        if(ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
-                              ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
+                        //if(ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
+                           //   ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.el).ToList();
                     }
                 }
                  
