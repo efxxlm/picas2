@@ -1324,18 +1324,18 @@ namespace asivamosffie.services
                     {
                         var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
                             Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.AportanteFuenteFinanciacion).ThenInclude(x => x.FuenteFinanciacion);
-                        /*foreach(var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
+                        foreach(var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
                         {
                             List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
-                            foreach (var font in apo.Aportante.FuenteFinanciacion)
+                            foreach (var font in apo.AportanteFuenteFinanciacion)
                             {
                                 fuentes.Add(new GrillaFuentesFinanciacion
                                 {
-                                    Fuente = _context.Dominio.Where(x=>x.Codigo==font.FuenteRecursosCodigo 
+                                    Fuente = _context.Dominio.Where(x=>x.Codigo==font.FuenteFinanciacion.FuenteRecursosCodigo 
                                         && x.TipoDominioId== (int)EnumeratorTipoDominio.Fuente_de_Recurso).FirstOrDefault().Nombre,
                                     Estado_de_las_fuentes = "",
                                     FuenteFinanciacionID=font.FuenteFinanciacionId,
-                                    Valor_solicitado_de_la_fuente=font.ValorFuente,
+                                    Valor_solicitado_de_la_fuente=font.FuenteFinanciacion.ValorFuente,
                                     Nuevo_saldo_de_la_fuente=0,
                                     Saldo_actual_de_la_fuente=0
                                 });
@@ -1349,12 +1349,14 @@ namespace asivamosffie.services
                                 FuentesFinanciacion= fuentes
                             }); 
                             
-                        }*/
+                        }
                     }
                     else
                     {
-                        foreach(var aportante in proyectospp.Proyecto.ProyectoAportante)
+                        
+                        foreach (var aportante in proyectospp.Proyecto.ProyectoAportante)
                         {
+                            List<GrillaComponentes> grilla = new List<GrillaComponentes>();
                             var confinanciacion = _context.CofinanciacionAportante.Where(x=>x.CofinanciacionAportanteId==aportante.AportanteId).Include(x=>x.CofinanciacionDocumento).FirstOrDefault() ;
                             var localizacion = _context.Localizacion.Where(x => x.LocalizacionId==proyectospp.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                             var sede = _context.InstitucionEducativaSede.Find(proyectospp.Proyecto.SedeId);
@@ -1392,10 +1394,24 @@ namespace asivamosffie.services
                                 {
                                     valorAportate += cof.ValorTotalAportante;
                                 }
+                                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId).Include(x=>x.ComponenteUso);
+                                foreach(var compAp in componenteAp)
+                                {
+                                    foreach(var comp in compAp.ComponenteUso )
+                                    {
+                                        grilla.Add(
+                                        new GrillaComponentes
+                                        {
+                                            ComponenteAportanteId = comp.ComponenteAportanteId,
+                                            Componente = comp.TipoUsoCodigo,
+                                            ComponenteUsoId = comp.ComponenteUsoId,
+                                            Uso = comp.TipoUsoCodigo,
+                                            ValorTotal = comp.ValorUso,
+                                            ValorUso = comp.ValorUso
+                                        });
+                                    }                                    
+                                }                                
                             }
-
-                            
-                               
 
                             proyecto.Add(new ProyectoGrilla
                             {
@@ -1409,7 +1425,8 @@ namespace asivamosffie.services
                                 ValorAportante = valorAportate,
                                 AportanteID = confinanciacion==null?0: confinanciacion.CofinanciacionAportanteId,
                                 DisponibilidadPresupuestalProyecto=proyectospp.DisponibilidadPresupuestalProyectoId,
-                                ValorGestionado=_context.GestionFuenteFinanciacion.Where(x=>x.DisponibilidadPresupuestalProyectoId== proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x=>x.ValorSolicitado)
+                                ValorGestionado=_context.GestionFuenteFinanciacion.Where(x=>x.DisponibilidadPresupuestalProyectoId== proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x=>x.ValorSolicitado),
+                                ComponenteGrilla = grilla
                             });
                         }
                         
