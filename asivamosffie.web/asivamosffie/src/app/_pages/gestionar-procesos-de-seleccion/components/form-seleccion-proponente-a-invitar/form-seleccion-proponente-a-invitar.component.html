@@ -11,7 +11,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" min="1" max="99" formControlName="cuantosProponentes">
+                <input matInput #cuantosProponentes type="number" min="1" max="99" 
+                 maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                 formControlName="cuantosProponentes">
               </mat-form-field>
               <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
             </div>

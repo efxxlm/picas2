@@ -10,6 +10,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 	MsjFiduciariaJuridicaGestionPoliza=6,
 	MsjInterventorGestionPoliza=7,
 	MsjSupervisorJuridicaGestionPoliza=8,
+        SolicitarApertura=10,
+        proyectoadministrativocreado=12
  
 
  

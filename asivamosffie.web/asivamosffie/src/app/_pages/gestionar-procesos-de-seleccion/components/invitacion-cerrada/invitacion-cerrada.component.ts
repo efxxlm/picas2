@@ -184,14 +184,18 @@ export class InvitacionCerradaComponent implements OnInit {
 
   estaIncompletoDatos(pProceso:any):number{
     let retorno=0;
+    console.log("vantidad propo"+pProceso.procesoSeleccionProponente.length);
     
-      if(pProceso.procesoSeleccionProponente.length>0)
+      if(pProceso.procesoSeleccionProponente.length>=3)
       {
         retorno=2;
       }
       else
       {
-        retorno=1;
+        if(pProceso.procesoSeleccionProponente.length>0 &&pProceso.procesoSeleccionProponente.length<3 )
+        {
+         retorno=1;
+        }      
       }
     
     return retorno;
@@ -205,16 +209,20 @@ export class InvitacionCerradaComponent implements OnInit {
     }
     else
     {
-     if(pProceso.evaluacionDescripcion!="" || pProceso.urlSoporteEvaluacion!="")
-     {
-      if(pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="")
+      if(pProceso.evaluacionDescripcion)
       {
-        retorno=2;
-      }  
-      else{
-        retorno=1;
+        if(pProceso.evaluacionDescripcion!="" || pProceso.urlSoporteEvaluacion!="")
+        {
+         if(pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="")
+         {
+           retorno=2;
+         }  
+         else{
+           retorno=1;
+         }
+        }
       }
-     } 
+      
     }
     return retorno;
   }

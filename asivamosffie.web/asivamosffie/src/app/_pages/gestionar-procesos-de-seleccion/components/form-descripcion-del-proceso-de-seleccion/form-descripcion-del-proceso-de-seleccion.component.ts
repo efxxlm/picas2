@@ -49,7 +49,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   constructor(
               private fb: FormBuilder,
               private commonService: CommonService,
-              public dialog: MatDialog,    
+              public dialog: MatDialog,
+              private procesoSeleccionService: ProcesoSeleccionService,    
   ) { }
 
   ngOnInit() {
@@ -196,9 +197,26 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   borrarArray(borrarForm: any, i: number) {
     
     borrarForm.removeAt(i);
+    //si tiene id lo envio al servicio de eliminar
+    console.log(borrarForm);
 
+    if(borrarForm.value[0].procesoSeleccionGrupoId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionGrupoByID(borrarForm.value[0].procesoSeleccionGrupoId).subscribe();
+    }
     this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
 
+  }
+
+  borrarActividades(borrarForm: any, i: number) {
+    
+    borrarForm.removeAt(i);
+    //si tiene id lo envio al servicio de eliminar
+
+    if(borrarForm.value[0].procesoSeleccionCronogramaId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(borrarForm.value[0].procesoSeleccionCronogramaId).subscribe();
+    }    
   }
 
   agregarActividad() {
@@ -213,7 +231,12 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
   }
 
-  borrarCronograma( i: number ){
+  borrarCronograma( i: number ){    
+    console.log(this.cronogramas[i].value);
+    if(this.cronogramas[i].value.procesoSeleccionCronogramaId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(this.cronogramas[i].value.procesoSeleccionCronogramaId).subscribe();
+    }
     this.cronogramas.removeAt(i);
   }
 

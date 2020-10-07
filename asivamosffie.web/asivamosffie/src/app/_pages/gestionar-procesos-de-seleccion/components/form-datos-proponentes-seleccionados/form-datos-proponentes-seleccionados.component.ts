@@ -24,6 +24,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   myControl = new FormControl();
   myJuridica = new FormControl();
   myJuridica2 = new FormControl();
+  representanteLegal = new FormControl();
 
   personaNaturalForm = this.fb.group({
     procesoSeleccionProponenteId: [],
@@ -112,6 +113,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   }
   filteredName: Observable<string[]>;
   filteredNameJuridica: Observable<string[]>;
+  filteredNameJuridicaName: Observable<string[]>;
 
   constructor(
               private fb: FormBuilder,
@@ -158,6 +160,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
           startWith(''),
           map(value => this._filter2(value))
         );
+        this.filteredNameJuridicaName = this.representanteLegal.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter3(value))
+        );
+
         
         resolve();
       })
@@ -190,6 +197,29 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   }
 
   private _filter2(value: string): string[] {
+    const filterValue = value.toLowerCase();    
+    if(value!="")
+    {      
+      let filtroportipo:string[]=[];
+      this.listaProponentesNombres.forEach(element => {        
+        if(element.tipoProponenteCodigo==this.tipoProponente.value.codigo && element.nombreProponente)
+        {
+          if(!filtroportipo.includes(element.nombreProponente))
+          {
+            filtroportipo.push(element.nombreProponente);
+          }
+        }
+      });
+      let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      
+      return ret;
+    }
+    else
+    {
+      return [];
+    }
+    
+  }
+  private _filter3(value: string): string[] {
     const filterValue = value.toLowerCase();    
     if(value!="")
     {      
@@ -238,6 +268,20 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     let ret= lista.filter(x=> x.nombreRepresentanteLegal.toLowerCase() === nombre.toLowerCase());
     this.setValueAutocomplete(ret[0]);    
   }
+  
+  seleccionAutocomplete3(nombre:string){
+    let lista:any[]=[];
+    this.listaProponentesNombres.forEach(element => {
+      if(element.nombreProponente)
+      {
+        lista.push(element);
+      }      
+    });
+    
+    let ret= lista.filter(x=> x.nombreProponente.toLowerCase() === nombre.toLowerCase());
+    this.setValueAutocomplete(ret[0]);    
+  }
+  
 
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
@@ -484,6 +528,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
                 this.myJuridica.setValue(proponente.nombreProponente);
                 this.personaJuridicaIndividualForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
                 this.personaJuridicaIndividualForm.get('representanteLegal').setValue( proponente.nombreRepresentanteLegal );
+                this.representanteLegal.setValue(proponente.nombreRepresentanteLegal);
                 this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').setValue( proponente.cedulaRepresentanteLegal );
                 this.personaJuridicaIndividualForm.get('municipio').setValue( municipio );                
                 this.personaJuridicaIndividualForm.get('direccion').setValue( proponente.direccionProponente );
@@ -558,8 +603,18 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
           this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').setValue( 0 );
           this.personaJuridicaIndividualForm.get('nombre').setValue( this.myJuridica.value );
           this.personaJuridicaIndividualForm.get('numeroIdentificacion').setValue( proponente.numeroIdentificacion );
-          this.personaJuridicaIndividualForm.get('representanteLegal').setValue( proponente.nombreRepresentanteLegal );
+          this.personaJuridicaIndividualForm.get('representanteLegal').setValue( this.representanteLegal.value );
           this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').setValue( proponente.cedulaRepresentanteLegal );
+          if(this.myJuridica.value=="")
+          {
+            this.myJuridica.setValue(proponente.nombreProponente);
+          }
+          
+          //console.log(this.representanteLegal);
+          if(this.representanteLegal.value=="")
+          {
+            this.representanteLegal.setValue(proponente.representanteLegal);
+          }
           
           this.personaJuridicaIndividualForm.get('direccion').setValue( proponente.direccionProponente );
           this.personaJuridicaIndividualForm.get('telefono').setValue( proponente.telefonoProponente );

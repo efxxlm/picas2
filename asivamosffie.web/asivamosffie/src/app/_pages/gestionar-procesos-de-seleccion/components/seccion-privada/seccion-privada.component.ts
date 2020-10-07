@@ -115,9 +115,7 @@ export class SeccionPrivadaComponent implements OnInit {
             setTimeout(() => {
               location.reload();  
             }, 1000);
-          }
-          
-          
+          }                    
         }
       });
     }

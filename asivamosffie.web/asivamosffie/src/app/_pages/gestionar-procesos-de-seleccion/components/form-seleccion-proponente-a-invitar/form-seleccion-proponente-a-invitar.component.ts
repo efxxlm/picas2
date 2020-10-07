@@ -53,6 +53,18 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       this.addressForm.get("url").setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });
   }
+  validaMinimo3()
+  {
+    if(this.addressForm.get("cuantosProponentes").value>3)
+    {
+      this.openDialog("","La cantidad de proponentes debe ser mayor o igual al 3");
+    }
+  }
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
  
   //no sirvio, ni con este ciclo ni con .include
   validateSel(numeroid:string)

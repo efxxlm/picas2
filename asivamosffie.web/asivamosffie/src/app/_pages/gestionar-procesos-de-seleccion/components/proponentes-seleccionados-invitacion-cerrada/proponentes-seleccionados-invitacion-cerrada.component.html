@@ -9,7 +9,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" maxlength="2" formControlName="cuantosProponentes"
+                <input matInput #cuantosProponentes type="number" 
+                maxlength="2" formControlName="cuantosProponentes"
+                (keyup)="validaMinimo3()" maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   required>
               </mat-form-field>
               <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
@@ -17,7 +19,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="addressForm.get('cuantosProponentes').value>=3">
         <div class="pr-1">
           <label for="nombresProponentes" class="label-left">Nombres de proponentes:</label>
         </div>
