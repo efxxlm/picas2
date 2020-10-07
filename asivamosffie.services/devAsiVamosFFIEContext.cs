@@ -3572,7 +3572,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_RequisitosTecnicosInicioConstruccion");
 
-                entity.Property(e => e.EstadoRequisitos)
+                entity.Property(e => e.EstadoCodigo)
                     .IsRequired()
                     .HasMaxLength(4)
                     .IsUnicode(false);

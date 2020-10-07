@@ -53,14 +53,46 @@ namespace asivamosffie.services
                     CantidadProyectosAsociados = c.CantidadProyectosAsociados,
                     CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,   
                     CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoRequisitos = c.EstadoRequisitos,
-                    //NombreEstado = c.NumeroContrato
+                    EstadoCodigo = c.EstadoCodigo,
+                    EstadoNombre = c.EstadoNombre,
+                    Existeregistro = c.ExisteRegistro,
 
                 });
             });
 
             return listaContrats;
 
+        }
+
+        public async Task<ContratoConstruccion> GetContratoConstruccionById( int pIdContratoConstruccion )
+        {
+            ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
+
+            contratoConstruccion = _context.ContratoConstruccion.Find( pIdContratoConstruccion );
+            contratoConstruccion.EsCompletoDiagnostico = this.EsCompletoDiagnostico( contratoConstruccion );
+
+            return contratoConstruccion;
+
+        }
+
+        private bool EsCompletoDiagnostico(ContratoConstruccion pContratoConstruccion){
+            bool esCompleto = true;
+
+            if (    pContratoConstruccion.EsInformeDiagnostico == null ||
+                    ( pContratoConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty( pContratoConstruccion.RutaInforme ) ) ||
+                    pContratoConstruccion.CostoDirecto == null ||
+                    pContratoConstruccion.Administracion == null ||
+                    pContratoConstruccion.Imprevistos == null ||
+                    pContratoConstruccion.Utilidad == null ||
+                    pContratoConstruccion.ValorTotalFaseConstruccion == null ||
+                    pContratoConstruccion.RequiereModificacionContractual == null ||
+                    ( pContratoConstruccion.RequiereModificacionContractual == true && string.IsNullOrEmpty( pContratoConstruccion.NumeroSolicitudModificacion ) )
+               )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
         }
          
     }
