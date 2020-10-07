@@ -1,11 +1,20 @@
 .sin-diligenciar {
-    --color-info: #D21E17;
+  --color-info: #D21E17;
+  &::before {
+    background-color: #D21E17;
+  }
 }
 .en-proceso {
-    --color-info: #FCC101;
+  --color-info: #FCC101;
+  &::before {
+    background-color: #FCC101;
+  }
 }
 .completo {
-    --color-info: #06B935;
+  --color-info: #06B935;
+  &::before {
+    background-color: #06B935;
+  }
 }
 
 %ayuda-color {
