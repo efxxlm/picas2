@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services
-{
+{  
     public class ResourceControlService : IResourceControlService
     {
         private readonly devAsiVamosFFIEContext _context;
