@@ -352,7 +352,7 @@ namespace asivamosffie.services
             {
                 pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                 pContratoPerfilObservacion.Eliminado = false;
-                pContratoPerfilObservacion.TipoObservacionCodigo = "2";
+                pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
                 pContratoPerfilObservacion.Observacion = (string)Helpers.Helpers.ConvertToUpercase(pContratoPerfilObservacion.Observacion);
                 _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
                 _context.SaveChanges();
