@@ -29,7 +29,8 @@ namespace asivamosffie.services
                 List<dynamic> ListContratacion = new List<dynamic>();
                 List<Contrato> ListContratosConPolizasYDRP = new List<Contrato>();
                 List<Contrato> listContratos = await _context.Contrato
-                    .Where(r => !(bool)r.Eliminado && r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Sin_Verificación_de_requisitos_tecnicos)
+                    .Where(r => !(bool)r.Eliminado) 
+                    //&& r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Sin_aprobacion_de_requisitos_tecnicos)
                           .Include(r => r.Contratacion)
                              .ThenInclude(r => r.DisponibilidadPresupuestal)
                                           .Include(r => r.ContratoPerfil)
