@@ -107,6 +107,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
@@ -262,16 +263,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CofinanciacionAportanteMunicipio)
                     .HasForeignKey(d => d.MunicipioId)
                     .HasConstraintName("fk_cofinanciacionMunicipio");
-
-                //entity.HasOne(d => d.NombreAportante)
-                //    .WithMany(p => p.CofinanciacionAportanteNombreAportante)
-                //    .HasForeignKey(d => d.NombreAportanteId)
-                //    .HasConstraintName("fk_cofinanciacionNombre");
-
-                //entity.HasOne(d => d.TipoAportante)
-                //    .WithMany(p => p.CofinanciacionAportanteTipoAportante)
-                //    .HasForeignKey(d => d.TipoAportanteId)
-                //    .HasConstraintName("fk_cofinanciacion_tipo");
+                 
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
@@ -1052,26 +1044,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.NumeroRadicadoFfie)
-                    .HasColumnName("NumeroRadicadoFFIE")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NumeroRadicadoFfie1)
-                    .HasColumnName("NumeroRadicadoFFIE1")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NumeroRadicadoFfie2)
-                    .HasColumnName("NumeroRadicadoFFIE2")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NumeroRadicadoFfie3)
-                    .HasColumnName("NumeroRadicadoFFIE3")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.PerfilCodigo)
                     .IsRequired()

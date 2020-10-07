@@ -177,18 +177,11 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvRequeridas = ContratoPerfil.CantidadHvRequeridas;
                             contratoPerfilOld.CantidadHvRecibidas = ContratoPerfil.CantidadHvRecibidas;
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
-                            contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
-
-                            contratoPerfilOld.NumeroRadicadoFfie = ContratoPerfil.NumeroRadicadoFfie;
-                            contratoPerfilOld.NumeroRadicadoFfie1 = ContratoPerfil.NumeroRadicadoFfie1;
-                            contratoPerfilOld.NumeroRadicadoFfie2 = ContratoPerfil.NumeroRadicadoFfie2;
-                            contratoPerfilOld.NumeroRadicadoFfie3 = ContratoPerfil.NumeroRadicadoFfie3;
+                            contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion; 
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
-
-
-
+                             
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
