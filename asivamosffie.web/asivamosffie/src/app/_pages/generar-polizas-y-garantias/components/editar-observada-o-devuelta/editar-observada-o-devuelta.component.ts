@@ -201,6 +201,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       incluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales
     };
     const polizaGarantia: CreatePolizaGarantia={
+      polizaGarantiaId : this.idPoliza,
       contratoPolizaId: this.idPoliza,
       tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
