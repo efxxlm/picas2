@@ -1,4 +1,4 @@
-﻿namespace asivamosffie.api
+﻿namespace asivamosffie.model.APIModels
 {
     public class AppSettingsService
     {

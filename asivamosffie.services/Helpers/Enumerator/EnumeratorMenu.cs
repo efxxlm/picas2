@@ -33,7 +33,7 @@ namespace asivamosffie.services.Helpers.Enumerator
  
         Generar_Registro_Presupuestal=36,
 
-        Gestionar_Procesos_Contractuales = 31,
+        
 
             Gestionar_acta_inicio_fase_2 = 42
     }

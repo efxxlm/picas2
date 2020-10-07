@@ -314,8 +314,21 @@ public void replaceTags()
             actaInicioConsolidado.NombreRepresentanteContratistaObra = actaInicioObra.NombreRepresentanteContratistaObra;
 
             actaInicioConsolidado.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
-            actaInicioConsolidado.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;                
+            actaInicioConsolidado.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;
 
+            actaInicioConsolidado.ValorFase1Preconstruccion = actaInicioInterventoria.ValorFase1Preconstruccion;
+            actaInicioConsolidado.Valorfase2ConstruccionObra = actaInicioObra.Valorfase2ConstruccionObra;
+
+            actaInicioConsolidado.ValorActualContrato = actaInicioInterventoria.ValorFase1Preconstruccion;
+            //actaInicioConsolidado.Valorfase2ConstruccionObra = actaInicioConsolidado.Valorfase2ConstruccionObra + actaInicioConsolidado.ValorFase1Preconstruccion;
+
+        //    Proyecto   ????
+        //             decimal? ValorObra 
+        // decimal? ValorInterventoria 
+        // decimal? ValorTotal 
+
+            //ValorFase1Preconstruccion = " PENDIENTE",
+            //        Valorfase2ConstruccionObra
             return actaInicioConsolidado;
 
         }
@@ -331,7 +344,8 @@ public void replaceTags()
                 //cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
 
                 Contratacion contratacion;
-                contratacion = _context.Contratacion.Where(r => !(bool)r.Estado && r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+                //contratacion = _context.Contratacion.Where(r => !(bool)r.Estado && r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+                contratacion = _context.Contratacion.Where(r =>  r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
 
                 string strTipoContratacion = "sin definir";
                 //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
@@ -372,6 +386,8 @@ public void replaceTags()
                 string strTipoSolicitudCodigoContratoPoliza = "sin definir";
                 string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
 
+                string strVigencia = "sin definir";
+
                 //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                 Dominio TipoSolicitudCodigoContratoPoliza;
                 Dominio EstadoSolicitudCodigoContratoPoliza;
@@ -382,11 +398,28 @@ public void replaceTags()
                     if (TipoSolicitudCodigoContratoPoliza != null)
                         strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
 
-                    EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     if (EstadoSolicitudCodigoContratoPoliza != null)
                         strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
+                    strVigencia = contratoPoliza.Vigencia.ToString();
                 }
+
+                DisponibilidadPresupuestal disponibilidadPresupuestal;
+                disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+
+                string strNumeroDRP1 = "sin definir";
+                string strFechaGeneracionDRP = "sin definir";
+
+                if (disponibilidadPresupuestal!=null)
+                {
+                    strNumeroDRP1 = disponibilidadPresupuestal.NumeroDrp;
+                    //strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDdp.ToString("dd/MM/yyyy");
+                    strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDdp != null ? Convert.ToDateTime(disponibilidadPresupuestal.FechaDdp).ToString("dd/MM/yyyy") : disponibilidadPresupuestal.FechaDdp.ToString();
+                }
+                //disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+                //                [DisponibilidadPresupuestalProyecto] - [ProyectoId]
+                //[ProyectoRequisitoTecnico][ProyectoId]
 
                 //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                 //VistaGenerarActaInicioContrato
@@ -394,15 +427,15 @@ public void replaceTags()
                 {
                     //FechaAprobacionRequisitos="[FechaAprobacionRequisitos] [contrato] FechaAprobacionRequisitos",
                     NumeroContrato = contrato.NumeroContrato,
-                    VigenciaContrato = "2021 PENDIENTE",
+                    VigenciaContrato = strVigencia, // "2021 PENDIENTE",
                     FechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
                     
-                    NumeroDRP1 = "DisponibilidadPresupuestal - NumeroDrp PENDIENTE",
+                    NumeroDRP1 = strNumeroDRP1,
 
-                    FechaGeneracionDRP1 = "2021 PENDIENTE",
+                    FechaGeneracionDRP1 = strFechaGeneracionDRP,
 
-                    NumeroDRP2 = "DisponibilidadPresupuestal - NumeroDrp PENDIENTE",
-                    FechaGeneracionDRP2 = " PENDIENTE",
+                    NumeroDRP2 = strNumeroDRP1, 
+                    FechaGeneracionDRP2 = strFechaGeneracionDRP ,
                     //FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
                     FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString(),
                     Objeto = contrato.Objeto,

@@ -250,26 +250,15 @@ namespace asivamosffie.services
         public async Task<PolizaObservacion> GetPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
         {
             return await _context.PolizaObservacion.Where(r => r.ContratoPolizaId.Equals(pContratoPolizaId)).FirstOrDefaultAsync();
-        public async Task<ContratoPoliza> GetContratoPolizaByContratoId(int pContratoId)
-        {
-            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).FirstOrDefaultAsync();
+
         }
-        
-        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
-        {
-            return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
-        }
+     
       
         public async Task<Contratista> GetContratistaByContratistaId(int pContratistaId)
         {
             return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
         }
-        public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
-        {
-            return _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r => r.Descripcion).FirstOrDefault();
-
-        }
-
+      
         public async Task<PolizaGarantia> GetPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
         {
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId.Equals(pContratoPolizaId)).FirstOrDefaultAsync();
