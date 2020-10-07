@@ -18,9 +18,8 @@ using System.IO;
 
 namespace asivamosffie.services
 {
-   public  class ActBeginService
+   public  class ActBeginService : IActBeginService
     {
-
 
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
@@ -28,11 +27,7 @@ namespace asivamosffie.services
         private readonly IOptions<AppSettingsService> _settings;
 
         private readonly IDocumentService _documentService;
-
-
-
-
-        
+                        
 
         public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettingsService> settings, IDocumentService documentService)
         {
@@ -43,7 +38,7 @@ namespace asivamosffie.services
         _documentService = documentService;
     }
 
-        async Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObservacionesActa, string pUsuarioModificacion)
+        public async Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObservacionesActa, string pUsuarioModificacion)
         {
             Respuesta _response = new Respuesta();
 
@@ -76,7 +71,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
                     Message =
-                    await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
+                    await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
                     ConstantMessagesActaInicio.EditadoCorrrectamente, idAccionCrearActaInicio
                     , contrato.UsuarioModificacion, " GUARDAR OBSERVACION CONTRATO ACTA"
                     )
@@ -90,8 +85,9 @@ namespace asivamosffie.services
         }
         //_context.Add(contratoPoliza);
 
+        
 
-        async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion)
+        public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion)
         {
             Respuesta _response = new Respuesta();
 
@@ -143,7 +139,7 @@ namespace asivamosffie.services
                IsValidation = false,
                Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
                Message =
-               await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
+               await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
                ConstantMessagesActaInicio.EditadoCorrrectamente, idAccionCrearActaInicio
                , contrato.UsuarioModificacion, " GUARDAR OBSERVACION CONTRATO ACTA"
                )
@@ -156,7 +152,7 @@ namespace asivamosffie.services
             }
         }
 
-
+        
         public async Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
             )
@@ -274,7 +270,13 @@ public void replaceTags()
 
         }
 
-        public async Task<VistaGenerarActaInicioContrato> GetVistaGenerarActaInicio(int pContratoId )
+        //Task<ActionResult<VistaGenerarActaInicioContrato>> GetListVistaGenerarActaInicio(int pContratoId);
+        //GetListVistaGenerarActaInicio
+
+    
+
+        //public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId )
+       public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId)
         {
             VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
@@ -447,6 +449,11 @@ public void replaceTags()
                 };
             }
             return actaInicio;
-        }
+        }   
+
+        
+   
+
+     
     }
     }
