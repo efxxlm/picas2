@@ -17,7 +17,7 @@
         </mat-card-content>
     </mat-card>
 </div>
-<div align="center" style="margin-top: 30px;">
+<div align="center" style="margin-top: 30px;" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row" align="center">
             <div class="col-md-8">
@@ -62,4 +62,19 @@
             </button>
         </div>
     </form>
+</div>
+<div align="center" *ngIf="this.observacionesCompleted==true">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                Validación de la supervisión
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><b>10/08/2020</b></p>
+            <p><b>¿Tiene observaciones a la programación de obra?:</b> Sí</p>
+            <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000, realice el ajuste y tenga en cuenta que estos valores deben
+                ser corregidos para poder continuar.</p>
+        </mat-card-content>
+    </mat-card>
 </div>

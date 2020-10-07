@@ -14,17 +14,10 @@
         </div>
     </section>
     <section>
-        <div class="text-center">
-            <p class="info-container">
-              <span class="info-text sin-diligenciar">Sin diligenciar</span>
-              <span class="info-text en-proceso">En proceso</span>
-              <span class="info-text completo">Completo</span>
-            </p>
-        </div>
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header w-45">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title">
                       LL457326 - I.E. Nuestra Señora Del Carmen - Única sede
                     </mat-panel-title>
                   </mat-expansion-panel-header>
@@ -44,56 +37,56 @@
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                      <mat-panel-title class="expansion-style--title sin-diligenciar">
+                      <mat-panel-title class="expansion-style--title">
                         Diagnóstico
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-diagnostico-artc></app-diagnostico-artc>
+                    <app-diagnostico-artc [observacionesCompleted]="true"></app-diagnostico-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                      <mat-panel-title class="expansion-style--title sin-diligenciar">
+                      <mat-panel-title class="expansion-style--title">
                         Planes y Programas
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-planes-programas-artc></app-planes-programas-artc>
+                    <app-planes-programas-artc [observacionesCompleted]="true"></app-planes-programas-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                      <mat-panel-title class="expansion-style--title sin-diligenciar">
+                      <mat-panel-title class="expansion-style--title">
                         Manejo de anticipo
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-manejo-anticipo-artc></app-manejo-anticipo-artc>
+                    <app-manejo-anticipo-artc [observacionesCompleted]="true"></app-manejo-anticipo-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                      <mat-panel-title class="expansion-style--title sin-diligenciar">
+                      <mat-panel-title class="expansion-style--title">
                         Hojas de vida del contratista de obra
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-hojas-vida-contratista-artc></app-hojas-vida-contratista-artc>
+                    <app-hojas-vida-contratista-artc [observacionesCompleted]="true"></app-hojas-vida-contratista-artc>
                   </mat-expansion-panel>
                  
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                      <mat-panel-title class="expansion-style--title sin-diligenciar">
+                      <mat-panel-title class="expansion-style--title">
                         Programación de obra
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-programacion-obra-artc></app-programacion-obra-artc>
+                    <app-programacion-obra-artc [observacionesCompleted]="true"></app-programacion-obra-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                      <mat-panel-title class="expansion-style--title sin-diligenciar">
+                      <mat-panel-title class="expansion-style--title">
                         Flujo de inversión de recursos
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                   <app-flujo-inversion-recursos-artc></app-flujo-inversion-recursos-artc>
+                   <app-flujo-inversion-recursos-artc [observacionesCompleted]="true"></app-flujo-inversion-recursos-artc>
                   </mat-expansion-panel>
                   
             </mat-expansion-panel>

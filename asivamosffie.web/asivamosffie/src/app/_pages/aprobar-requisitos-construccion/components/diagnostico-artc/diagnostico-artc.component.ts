@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -28,10 +29,28 @@ export class DiagnosticoArtcComponent implements OnInit {
     ]
   };
   @Input() observacionesCompleted;
-  constructor(private dialog: MatDialog, private fb: FormBuilder) { }
+
+  dataTablaHistorialObservacion: any[] = [];
+  dataSource                 = new MatTableDataSource();
+  displayedColumns: string[] = [ 
+    'fechaRevision',
+    'observacionesSupervision'
+  ];
+  constructor(private dialog: MatDialog, private fb: FormBuilder) {
+    this.getDataPlanesProgramas ();
+   }
 
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
   }
+  getDataPlanesProgramas () {
+    this.dataTablaHistorialObservacion.push(
+      {
+        fechaRevision:'10/08/2020',
+        observacionesSupervision: 'El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000, realice el ajuste y tenga en cuenta que estos valores deben ser corregidos para poder continuar.'
+      }
+    );
+  };
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
