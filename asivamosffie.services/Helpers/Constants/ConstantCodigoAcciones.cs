@@ -29,7 +29,7 @@
         public const string Crear_Editar_Vigencia_Aporte = "24";
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
-        public const string Crear_Proceso_Seleccion = "27"; 
+        public const string Crear_Proceso_Seleccion = "27";
         public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
@@ -38,7 +38,7 @@
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
         public const string Crear_Editar_SesionComiteTema = "38";
         public const string Eliminar_Sesion_Comite_Tema = "39";
-        public const string Cambiar_Estado_Comite_Sesion = "40"; 
+        public const string Cambiar_Estado_Comite_Sesion = "40";
         public const string Eliminar_Contratacion = "41";
         public const string Cambiar_Estado_Contratacion = "42";
 
@@ -47,26 +47,26 @@
         public const string Crear_Editar_Comite_Tecnico_SesionComiteSolicitud_SesionComiteTema = "49";
 
         public const string Eliminar_Sesion_Invitado = "51";
-        public const string Crear_Editar_Sesion_Solicitud_Voto = "52"; 
-        public const string Crear_Editar_Sesion_Comite_Tema = "53"; 
+        public const string Crear_Editar_Sesion_Solicitud_Voto = "52";
+        public const string Crear_Editar_Sesion_Comite_Tema = "53";
         public const string No_Requiere_Votacion_Sesion_Comite_Solicitud = "54";
         public const string Convocar_Comite_Tecnico = "55";
-        public const string Crear_Editar_Comite_Tema_Voto ="56";
+        public const string Crear_Editar_Comite_Tema_Voto = "56";
         public const string No_Requiere_Votacion_Sesion_Comite_Tema = "57";
         public const string Aplazar_Sesion_De_Comite = "58";
-        public const string Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS ="59";
+        public const string Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS = "59";
 
-        public const string Crear_Editar_Temas_Compromiso = "61";  
+        public const string Crear_Editar_Temas_Compromiso = "61";
         public const string Crear_Edit_Sesion_Observacion_Proyecto = "62";
 
         public const string Eliminar_Comite_Tecnico = "64";
-         
+
         public const string Registrar_Tramite_Contratacion = "68";
 
         public const string Cambiar_Estado_Sesion_Comite_Solicitud = "71";
-         
+
         public const string Registrar_Tramite_Contrato = "78";
-         
+
         public const string Crear_Editar_Contrato_Perfil = "82";
 
         public const string Eliminar_Contrato_Perfil = "83";
@@ -74,5 +74,7 @@
         public const string Aprobar_Inicio_Contrato = "84";
 
         public const string Eliminar_Numero_Radicado = "99";
-    } 
+
+        public const string Crear_Observacion_Contrato_Perfil = "100";
+    }
 }

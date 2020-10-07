@@ -344,9 +344,43 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CrearContratoPerfilObservacion(ContratoPerfilObservacion pContratoPerfilObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
 
-       
+            try
+            {
+                pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
+                pContratoPerfilObservacion.Eliminado = false;
+                pContratoPerfilObservacion.Observacion = (string)Helpers.Helpers.ConvertToUpercase(pContratoPerfilObservacion.Observacion);
+                _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
+                _context.SaveChanges();
 
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContratoPerfilObservacion.UsuarioCreacion, "CREAR OBSERVACION CONTRATO PERFIL")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, pContratoPerfilObservacion.UsuarioCreacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+
+        
 
     }
 }

@@ -13,5 +13,7 @@ namespace asivamosffie.services.Interfaces
         Task<dynamic> GetListContratacion();
 
         Task<Contrato> GetContratoByContratoId(int pContratoId);
+
+        Task<Respuesta> CrearContratoPerfilObservacion(ContratoPerfilObservacion pContratoPerfilObservacion);
     }
 }

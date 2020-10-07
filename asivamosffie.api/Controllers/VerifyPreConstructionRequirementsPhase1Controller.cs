@@ -38,6 +38,14 @@ namespace asivamosffie.api.Controllers
         {
             return await _verifyPreConstruction.GetContratoByContratoId(pContratoId);
         }
- 
+
+        [HttpGet]
+        [Route("CrearContratoPerfilObservacion")]
+        public async  Task<Respuesta> CrearContratoPerfilObservacion(ContratoPerfilObservacion pContratoPerfilObservacion)
+        {
+            pContratoPerfilObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
+            return await _verifyPreConstruction.CrearContratoPerfilObservacion(pContratoPerfilObservacion);
+        }
+
     }
 }
