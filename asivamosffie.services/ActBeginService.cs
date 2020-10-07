@@ -403,7 +403,8 @@ public void replaceTags()
 
                     NumeroDRP2 = "DisponibilidadPresupuestal - NumeroDrp PENDIENTE",
                     FechaGeneracionDRP2 = " PENDIENTE",
-                    FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
+                    //FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
+                    FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString(),
                     Objeto = contrato.Objeto,
                     ValorInicialContrato = contrato.Valor.ToString(),
                     ValorActualContrato = " PENDIENTE",
