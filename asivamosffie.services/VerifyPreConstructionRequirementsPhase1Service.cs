@@ -123,17 +123,39 @@ namespace asivamosffie.services
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                     .Include(r => r.ContratoObservacion)
                     .Include(r => r.ContratoPerfil)
-                         .ThenInclude(r => r.ContratoPerfilObservacion)
+                           .ThenInclude(r => r.ContratoPerfilObservacion)
+                    .Include(r => r.ContratoPerfil)
+                           .ThenInclude(r => r.ContratoPerfilNumeroRadicado)
                     .Include(r => r.ContratoPoliza)
                     .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
+                       .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.InstitucionEducativa)
+                   .Include(r => r.Contratacion)
+                       .ThenInclude(r => r.ContratacionProyecto)
+                             .ThenInclude(r => r.Proyecto)
+                                 .ThenInclude(r => r.Sede)
                     .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
+                    .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.Contratista)
+                    .FirstOrDefaultAsync();
 
-                if (contrato.ContratoPerfil.Count() > 0)
+
+                foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
-                    contrato.ContratoPerfil = contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado).ToList();
+                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() > 0)
+                        ContratacionProyecto.Proyecto.ContratoPerfil = ContratacionProyecto.Proyecto.ContratoPerfil.Where(t => !(bool)t.Eliminado).ToList();
+
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
+                    {
+                        if (ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
+                            ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
+
+                        if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
+                            ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+
+
                 }
 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
@@ -145,7 +167,7 @@ namespace asivamosffie.services
                 }
                 return contrato;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new Contrato();
             }
