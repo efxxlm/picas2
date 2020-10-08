@@ -59,17 +59,15 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
- 
-
-
+  
         [Route("ChangeStateContrato")]
         [HttpPost]
-        public async Task<IActionResult> ChangeStateContrato([FromQuery] int pContratoId, string pEstadoVerificacionContratoCodido)
+        public async Task<IActionResult> ChangeStateContrato([FromQuery] int pContratoId, string pEstadoVerificacionContratoCodigo)
         {
             Respuesta respuesta = new Respuesta();
             try
             { 
-                respuesta = await _registerPreContructionPhase1Service.ChangeStateContrato(pContratoId ,HttpContext.User.FindFirst("User").Value, pEstadoVerificacionContratoCodido);
+                respuesta = await _registerPreContructionPhase1Service.ChangeStateContrato(pContratoId ,HttpContext.User.FindFirst("User").Value, pEstadoVerificacionContratoCodigo);
                 return Ok(respuesta);
             }
             catch (Exception ex)
