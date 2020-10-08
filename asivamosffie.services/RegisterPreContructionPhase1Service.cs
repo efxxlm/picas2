@@ -23,6 +23,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+
         public async Task<dynamic> GetListContratacion()
         {
             try
@@ -406,9 +407,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-
-
+         
         public async Task<Respuesta> DeleteContratoPerfilNumeroRadicado(int ContratoPerfilNumeroRadicadoId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Numero_Radicado, (int)EnumeratorTipoDominio.Acciones);
@@ -445,6 +444,43 @@ namespace asivamosffie.services
                     };
             }
         }
+         
+        public async Task<Respuesta> ChangeStateContrato(int pContratoId, string UsuarioModificacion , string pEstadoVerificacionContratoCodido)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Verificacion_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
+            try
+            {
+                Contrato contratoMod = _context.Contrato.Find(pContratoId);
+                contratoMod.FechaModificacion = DateTime.Now;
+                contratoMod.UsuarioModificacion = UsuarioModificacion;
+                contratoMod.EstadoVerificacionCodigo = pEstadoVerificacionContratoCodido;
+                _context.SaveChanges();
+
+                string NombreEstadoMod = _context.Dominio.Where(r => r.Codigo == pEstadoVerificacionContratoCodido && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).FirstOrDefault().Nombre;
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, UsuarioModificacion, "EL CONTRATO N°: " + contratoMod.NumeroContrato+ "CAMBIO A ESTADO DE VERIFICACION "+NombreEstadoMod.ToUpper())
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, UsuarioModificacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
     }
 }

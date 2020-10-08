@@ -76,5 +76,7 @@
         public const string Eliminar_Numero_Radicado = "99";
 
         public const string Crear_Observacion_Contrato_Perfil = "100";
-    }
+ 
+        public const string Cambiar_Estado_Verificacion_Contrato = "103";
+    } 
 }

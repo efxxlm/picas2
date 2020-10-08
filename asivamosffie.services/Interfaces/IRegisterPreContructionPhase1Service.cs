@@ -24,5 +24,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion);
 
         Task<Respuesta> DeleteContratoPerfilNumeroRadicado(int ContratoPerfilNumeroRadicadoId, string UsuarioModificacion);
+
+        Task<Respuesta> ChangeStateContrato(int pContratoId, string UsuarioModificacion, string pEstadoVerificacionContratoCodido);
+
     }
 }
