@@ -185,14 +185,14 @@ namespace asivamosffie.services
                                 ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
                                 contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                 contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
-                                // contratoPerfilObservacionOld.Eliminado = false;  
+                                contratoPerfilObservacionOld.Eliminado = false;  
                                 contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
                             }
                             else
                             {
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                                // ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                                ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
 
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
@@ -361,7 +361,7 @@ namespace asivamosffie.services
                     pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                     pContratoPerfilObservacion.Eliminado = false;
                     pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
-                    pContratoPerfilObservacion.Observacion = Helpers.Helpers.CleanStringInput(pContratoPerfilObservacion.Observacion.ToUpper());
+                    pContratoPerfilObservacion.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
                     _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
                 }
                 else
