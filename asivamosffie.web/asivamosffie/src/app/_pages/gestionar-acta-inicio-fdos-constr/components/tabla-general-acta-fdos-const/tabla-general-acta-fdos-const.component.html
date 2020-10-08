@@ -46,7 +46,7 @@
                         *ngIf="element.estadoActaContrato=='Con acta preliminar generada' || element.estadoActaContrato=='Enviada por el supervisor'"> Ver detalle /
                         Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        (click)="this.verDetalleActaFDos(element.observaciones,element.actaSuscrita,element.contratoId)"
+                        (click)="this.verDetalleActaFDos(element.contratoId)"
                         *ngIf="element.revisionOAprobacion==true || element.estadoActaContrato=='Con acta en proceso de firma' || element.estadoActaContrato=='Con acta suscrita y cargada'">
                         Ver detalle</button>
                 </td>

@@ -120,7 +120,7 @@ const routes: Routes = [
       },
       {
 
-        path: 'generarActaInicioFaseIIConstruccion',
+        path: 'generarActaInicioConstruccion',
         loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
         .then(m => m.GestionarActaInicioFdosConstrModule)
       },

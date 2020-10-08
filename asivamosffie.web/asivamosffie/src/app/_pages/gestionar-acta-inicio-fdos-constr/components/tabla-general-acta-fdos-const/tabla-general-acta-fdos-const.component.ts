@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 
 export interface PeriodicElement {
   fechaAprobacionRequisitosSupervisor: string;
@@ -46,7 +47,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
   generarActaFDos(id){
-    this.router.navigate(['/generarActaInicioFaseIIConstruccion/generarActaFDos',id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   verDetalleEditarActaFDos(observaciones,id){
     if(observaciones == true){
@@ -55,7 +56,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     else{
       localStorage.setItem("conObservaciones","false");
     }
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa',id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   enviarParaRevision(idContrato, estadoActaContrato){
     /*estadoActaContrato="366";
@@ -65,30 +66,18 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
       }
     });*/
   }
-  verDetalleActaFDos(observaciones,actaSuscrita,id){
-    /*if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
-    }
-    else{
-      localStorage.setItem("conObservaciones","false");
-    }
-    if(actaSuscrita == true){
-      localStorage.setItem("actaSuscrita","true");
-    }
-    else{
-      localStorage.setItem("actaSuscrita","false");
-    }
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa',id]);*/
+  verDetalleActaFDos(id){
+    this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
   enviarActaParaFirma(){
     alert("llama al servicio donde cambia estado a true");
   }
   cargarActaSuscrita(id){
-    /*const dialogConfig = new MatDialogConfig();
+    const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
     dialogConfig.data = {id:id};
-    const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);*/
+    const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
   }
   descargarActaDesdeTabla(){
     alert("llama al servicio");
