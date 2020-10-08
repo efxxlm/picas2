@@ -18,14 +18,20 @@ namespace asivamosffie.api.Controllers
 
     public class ApprovePreConstructionPhase1Controller : Controller
     {
-        public readonly IApprovePreConstructionPhase1Service _approvePreConstructionPhase1Service;
+        public readonly IApprovePreConstructionPhase1Service _approvePreConstruction;
 
         public ApprovePreConstructionPhase1Controller(IApprovePreConstructionPhase1Service approvePreConstructionPhase1Service)
         {
-            _approvePreConstructionPhase1Service = approvePreConstructionPhase1Service;
-        } 
- 
+            _approvePreConstruction = approvePreConstructionPhase1Service;
+        }
 
+        [Route("GetListContratacion")]
+        [HttpGet]
+        public async Task<List<dynamic>> GetListContratacion()
+        {
+            var result = await _approvePreConstruction.GetListContratacion();
+            return result;
+        }
 
     }
 }
