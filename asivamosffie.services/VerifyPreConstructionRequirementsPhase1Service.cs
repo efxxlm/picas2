@@ -354,12 +354,11 @@ namespace asivamosffie.services
                 contratoPerfilOld.ConObervacionesSupervision = true;
                 contratoPerfilOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
                 contratoPerfilOld.FechaModificacion = DateTime.Now;
-
-
+                 
                 pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                 pContratoPerfilObservacion.Eliminado = false;
                 pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
-                pContratoPerfilObservacion.Observacion = (string)Helpers.Helpers.ConvertToUpercase(pContratoPerfilObservacion.Observacion);
+                pContratoPerfilObservacion.Observacion = Helpers.Helpers.CleanStringInput(pContratoPerfilObservacion.Observacion.ToUpper());
                 _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
                 _context.SaveChanges();
 
