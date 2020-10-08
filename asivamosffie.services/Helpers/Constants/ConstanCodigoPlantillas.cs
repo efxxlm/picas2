@@ -56,5 +56,7 @@
         Titulo_temas_nuevos	= 44,
         Titulo_proposicione_varios	= 45,
         Descargar_Acta_Comite_Fiduciario = 35,
+
+        Acta_inicio_obra_PDF=48
     }
 }

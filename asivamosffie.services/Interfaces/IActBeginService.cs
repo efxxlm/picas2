@@ -16,6 +16,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion);
 
+        
+        Task<byte[]> GetPlantillaActaInicio(int pContratoId);
         //        ---guardar
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
         //ConObervacionesActa  - Contrato

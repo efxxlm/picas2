@@ -15,6 +15,8 @@ using asivamosffie.services.Helpers.Constant;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 namespace asivamosffie.services
 {
@@ -27,16 +29,17 @@ namespace asivamosffie.services
         private readonly IOptions<AppSettingsService> _settings;
 
         private readonly IDocumentService _documentService;
-                        
+        public readonly IConverter _converter;
 
-        public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettingsService> settings, IDocumentService documentService)
+        public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettingsService> settings, IDocumentService documentService, IConverter converter)
         {
 
             _commonService = commonService;
             _context = context;
             _settings = settings;
         _documentService = documentService;
-    }
+            _converter = converter;
+        }
 
         public async Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObservacionesActa, string pUsuarioModificacion)
         {
@@ -225,8 +228,133 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<byte[]> GetPlantillaActaInicio(int pContratoId)
+        {
+            if (pContratoId == 0)
+            {
+                return Array.Empty<byte>();
+            }
 
-public void replaceTags()
+            VistaGenerarActaInicioContrato actaInicio;
+
+
+            int pTipoContrato = 2;
+
+            //               --Contratacion.TipoContratacionCodigo  14 DOM, tipoidentificacion
+
+            ////DOM 14 1   Obra            
+            //pTipoContrato = 1;
+
+            //DOM 14 2   interventoria            
+            pTipoContrato = 2;
+            actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+
+            if (actaInicio == null)
+            {
+                return Array.Empty<byte>();
+            }
+            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+            //Plantilla plantilla = new Plantilla();
+            //plantilla.Contenido = "";
+
+            plantilla.Contenido = await ReemplazarDatosPlantillaActaInicio(plantilla.Contenido, actaInicio);
+            return ConvertirPDF(plantilla);
+        }
+
+        private async Task<string> ReemplazarDatosPlantillaActaInicio(string strContenido, VistaGenerarActaInicioContrato pActaInicio)
+        {
+
+            string str = "";
+            string valor = "";
+
+            strContenido = strContenido.Replace("_Numero_Identificacion_Entidad_Contratista_Interventoria_", "");
+            strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Interventoria_", pActaInicio.NombreRepresentanteContratistaInterventoria);
+            strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Interventoria_", pActaInicio.NombreEntidadContratistaSupervisorInterventoria);
+            strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Obra_", pActaInicio.NombreRepresentanteContratistaObra);
+            strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra _", pActaInicio.NombreEntidadContratistaObra);
+            strContenido = strContenido.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", pActaInicio.NumeroIdentificacionEntidadContratistaObra);
+            strContenido = strContenido.Replace(" _Fecha_Prevista_Terminacion_", "");
+            strContenido = strContenido.Replace("_OBSERVACION_O_CONSIDERACIONES_ESPECIALES_", "");
+            strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_1_PreconstrContenidouccion_", "");
+            strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_2_ConstrContenidouccion_", valor);
+            strContenido = strContenido.Replace("_Valor_Actual_Contrato_", pActaInicio.ValorActualContrato);
+            strContenido = strContenido.Replace("_Plazo_Inicial_Contrato_", pActaInicio.PlazoInicialContratoSupervisor);
+            strContenido = strContenido.Replace("_Valor_Fase_1_preconstruccion_", pActaInicio.ValorFase1Preconstruccion);
+            strContenido = strContenido.Replace("_Valor_Fase_2_Construccion_Obra_", valor);
+            strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra_", pActaInicio.NombreEntidadContratistaObra);
+            strContenido = strContenido.Replace("_Valor_Inicial_Contrato_", pActaInicio.ValorInicialContrato);
+            strContenido = strContenido.Replace("_Fecha_Aprobacion_Garantia_Poliza_", pActaInicio.FechaAprobacionGarantiaPoliza);
+            strContenido = strContenido.Replace("_Objeto_", pActaInicio.Objeto);
+            strContenido = strContenido.Replace("_Numero_DRP_", pActaInicio.NumeroDRP1);
+            strContenido = strContenido.Replace("_Fecha_Generación_DRP_", pActaInicio.FechaGeneracionDRP1);
+            strContenido = strContenido.Replace("_Institucion_Educativa_Llave_MEN_", valor);
+            strContenido = strContenido.Replace("_Departamento_y_Municipio_Llave_MEN_", valor);
+            strContenido = strContenido.Replace("_Fecha_Acta_Inicio_", "");
+            strContenido = strContenido.Replace("_Llave_MEN_Contrato_", valor);
+            strContenido = strContenido.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", pActaInicio.NumeroIdentificacionEntidadContratistaObra);
+            strContenido = strContenido.Replace("_Numero_Contrato_Obra_ ", pActaInicio.NumeroContrato);
+            strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra_", pActaInicio.NombreEntidadContratistaObra);
+            strContenido = strContenido.Replace("_Numero_Identificacion_Contratista_Interventoria_", pActaInicio.NumeroIdentificacionContratistaInterventoria);
+            //strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Obra_", pActaInicio.NombreRepresentanteContratistaObra);
+            //strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Interventoria_", valor);
+            //strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Interventoria_", valor);
+            //strContenido = strContenido.Replace("_Fecha_Acta_Inicio_", valor);
+            //strContenido = strContenido.Replace("_Numero_Contrato_Obra_", valor);
+            
+            return strContenido;
+
+
+        }
+
+        public byte[] ConvertirPDF(Plantilla pPlantilla)
+        {
+            string strEncabezado = " encabezado";
+
+            //pendiente
+            //if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            //{
+            //    strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            //}
+
+            var globalSettings = new GlobalSettings
+            {
+                ImageQuality = 1080,
+                PageOffset = 0,
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings
+                {
+                    Top = pPlantilla.MargenArriba,
+                    Left = pPlantilla.MargenIzquierda,
+                    Right = pPlantilla.MargenDerecha,
+                    Bottom = pPlantilla.MargenAbajo
+                },
+                DocumentTitle = DateTime.Now.ToString(),
+            };
+
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = pPlantilla.Contenido,
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
+                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
+            };
+
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings },
+            };
+
+            return _converter.Convert(pdf);
+        }
+
+
+
+        public void replaceTags()
         {
             string str="";
             string valor="";

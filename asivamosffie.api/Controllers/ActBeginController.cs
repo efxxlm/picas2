@@ -35,8 +35,16 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+            
+        [HttpGet]
+        [Route("GetPlantillaActaInicio")]
+        public async Task<FileResult> GetPlantillaActaInicio(int pContratoId)
+        {
+            return File(await _ActBegin.GetPlantillaActaInicio(pContratoId), "application/pdf");
+        }
+
 
     }
-
    
 }
