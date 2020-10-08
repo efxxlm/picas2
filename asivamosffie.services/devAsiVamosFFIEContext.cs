@@ -1101,8 +1101,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
+                    .HasMaxLength(1250);
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .IsRequired()
@@ -1363,6 +1362,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaDdp)
                     .HasColumnName("FechaDDP")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.FechaDrp)
+                    .HasColumnName("FechaDRP")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -3589,8 +3592,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
-
-         
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
