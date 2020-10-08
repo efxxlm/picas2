@@ -125,11 +125,14 @@ namespace asivamosffie.services
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
-                   .Include(r => r.Contratacion)
+                    .Include(r => r.Contratacion)
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                  .ThenInclude(r => r.Sede)
                     .Include(r => r.ContratoObservacion)
+                    .Include(r => r.ContratoPerfil)
+                    .Include(r => r.ContratoPerfil)
+                        .ThenInclude(r => r.ContratoPerfilNumeroRadicado)
                     .Include(r => r.ContratoPerfil)
                          .ThenInclude(r => r.ContratoPerfilObservacion)
                     .Include(r => r.ContratoPoliza)
@@ -193,7 +196,7 @@ namespace asivamosffie.services
                                 ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(ContratoPerfilObservacion.ContratoPerfilObservacionId);
                                 contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                 contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
-                                contratoPerfilObservacionOld.Eliminado = false;  
+                                contratoPerfilObservacionOld.Eliminado = false;
                                 contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
                             }
                             else
@@ -358,14 +361,14 @@ namespace asivamosffie.services
 
             try
             {
-                ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(pContratoPerfilObservacion.ContratoPerfilId); 
+                ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(pContratoPerfilObservacion.ContratoPerfilId);
                 contratoPerfilOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
                 contratoPerfilOld.FechaModificacion = DateTime.Now;
 
                 if (!string.IsNullOrEmpty(pContratoPerfilObservacion.Observacion))
                 {
                     contratoPerfilOld.ConObervacionesSupervision = true;
-                   
+
                     pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                     pContratoPerfilObservacion.Eliminado = false;
                     pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
@@ -373,7 +376,7 @@ namespace asivamosffie.services
                     _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
                 }
                 else
-                { 
+                {
                     contratoPerfilOld.ConObervacionesSupervision = false;
                 }
 
