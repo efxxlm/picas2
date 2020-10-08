@@ -41,7 +41,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pContratoPerfilObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _approvePreConstruction.CreateEditContratoPerfil(pContratoPerfilObservacion);
+                respuesta = await _approvePreConstruction.CrearContratoPerfilObservacion(pContratoPerfilObservacion);
 
                 return Ok(respuesta);
             }
