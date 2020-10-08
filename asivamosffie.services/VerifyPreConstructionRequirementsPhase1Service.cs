@@ -152,6 +152,18 @@ namespace asivamosffie.services
                     ContratacionProyecto.Proyecto.Departamento = Listlocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault().Descripcion;
                     ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
                     ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+
+                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() > 0)
+                        ContratacionProyecto.Proyecto.ContratoPerfil = ContratacionProyecto.Proyecto.ContratoPerfil.Where(t => !(bool)t.Eliminado).ToList();
+
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
+                    {
+                        if (ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
+                            ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
+
+                        if (ContratoPerfil.ContratoPerfilNumeroRadicado.Count() > 0)
+                            ContratoPerfil.ContratoPerfilNumeroRadicado = ContratoPerfil.ContratoPerfilNumeroRadicado.Where(r => !(bool)r.Eliminado).ToList();
+                    }
                 }
                 return contrato;
             }
