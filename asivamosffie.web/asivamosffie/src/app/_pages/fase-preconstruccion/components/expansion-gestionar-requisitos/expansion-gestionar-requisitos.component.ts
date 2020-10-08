@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
-import { ContratoModificado } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { ContratoModificado, Contrato, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-expansion-gestionar-requisitos',
@@ -11,7 +11,7 @@ import { ContratoModificado } from '../../../../_interfaces/faseUnoPreconstrucci
 })
 export class ExpansionGestionarRequisitosComponent implements OnInit {
 
-  contrato: ContratoModificado;
+  contrato: Contrato;
 
   constructor ( private activatedRoute: ActivatedRoute,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
@@ -34,6 +34,14 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
+  };
+
+  getPerfilesContrato ( index: number, perfilContrato: ContratoPerfil[] ) {
+    this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoPerfil = perfilContrato;
+
+    console.log( this.contrato );
+    this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
+      .subscribe( console.log );
   };
 
 };

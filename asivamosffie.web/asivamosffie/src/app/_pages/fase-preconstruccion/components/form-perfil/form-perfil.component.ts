@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { ContratacionProyecto2 } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { ContratacionProyecto2, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { CommonService } from '../../../../core/_services/common/common.service';
+import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 
 @Component({
   selector: 'app-form-perfil',
@@ -11,7 +12,11 @@ import { CommonService } from '../../../../core/_services/common/common.service'
 export class FormPerfilComponent implements OnInit {
 
   formContratista: FormGroup;
-  @Input() contratacionProyecto: ContratacionProyecto2[] = [];
+  @Input() perfilProyecto: any[] = [];
+  @Input() contratoId: number;
+  @Input() proyectoId: number;
+  @Output() enviarPerfilesContrato = new EventEmitter();
+  @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
   editorStyle = {
     height: '45px'
   };
@@ -29,40 +34,80 @@ export class FormPerfilComponent implements OnInit {
   ]
 
   constructor ( private fb: FormBuilder,
-                private commonSvc: CommonService ) {
+                private commonSvc: CommonService,
+                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
-    this.formContratista.get( 'numeroPerfiles' ).valueChanges
-      .subscribe( value => {
-        this.perfiles.clear();
-        for ( let i = 0; i < Number(value); i++ ) {
-          this.perfiles.push( 
-            this.fb.group(
-              {
-                tipoPerfil: [ null ],
-                cvRequeridas: [ '' ],
-                cvRecibidas: [ '' ],
-                cvAprobadas: [ '' ],
-                fechaAprobacionCv: [ null ],
-                observaciones: [ null ],
-                numeroRadicadoFfieAprobacionCv: this.fb.array([ [ '' ] ]),
-                urlSoporte: [ '' ]
-              }
-            ) 
-          )
-        }
-      } );
-    console.log( this.contratacionProyecto );
+    this.perfilesProyecto();
   };
 
   get perfiles () {
     return this.formContratista.get( 'perfiles' ) as FormArray;
   };
 
+  perfilesProyecto () {
+    if ( this.perfilProyecto.length === 0 ) {
+      this.formContratista.get( 'numeroPerfiles' ).valueChanges
+      .subscribe( value => {
+        this.perfiles.clear();
+        for ( let i = 0; i < Number(value); i++ ) {
+          this.perfiles.push( 
+            this.fb.group(
+              {
+                perfilCodigo: [ null ],
+                cantidadHvRequeridas: [ '' ],
+                cantidadHvRecibidas: [ '' ],
+                cantidadHvAprobadas: [ '' ],
+                fechaAprobacion: [ null ],
+                observacion: [ null ],
+                contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
+                rutaSoporte: [ '' ]
+              }
+            )
+          );
+        };
+      } );
+    } else {
+      this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
+      this.formContratista.get( 'numeroPerfiles' ).valueChanges
+        .subscribe( () => {
+          this.cantidadPerfiles.nativeElement.value = String( this.perfilProyecto.length );
+        } );
+      for ( let perfil of this.perfilProyecto ) {
+        //console.log( perfil.contratoPerfilNumeroRadicado );
+        let numeroRadicados = [];
+        if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
+          numeroRadicados.push( this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId: perfil.contratoPerfilId, numeroRadicado: '' }) )
+        } else {
+          for ( let radicado of perfil.contratoPerfilNumeroRadicado ) {
+            numeroRadicados.push( this.fb.group({ contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0, contratoPerfilId: perfil.contratoPerfilId, numeroRadicado: radicado.numeroRadicado }) );
+          };
+        }
+        //console.log( numeroRadicados );
+        this.perfiles.push(
+          this.fb.group(
+            {
+              contratoPerfilId: [ perfil.contratoPerfilId ],
+              perfilObservacion: [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
+              perfilCodigo: [ perfil.perfilCodigo ],
+              cantidadHvRequeridas: [ String( perfil.cantidadHvRequeridas ) ],
+              cantidadHvRecibidas: [ String( perfil.cantidadHvRecibidas ) ],
+              cantidadHvAprobadas: [ String( perfil.cantidadHvAprobadas ) ],
+              fechaAprobacion: [ new Date( perfil.fechaAprobacion ) ],
+              observacion: [ perfil.contratoPerfilObservacion[0]?.observacion ],
+              contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
+              rutaSoporte: [ perfil.rutaSoporte ]
+            }
+          )
+        )
+      };
+    };
+  };
+
   numeroRadicado ( i: number ) {
-    return this.perfiles.controls[i].get( 'numeroRadicadoFfieAprobacionCv' ) as FormArray;
+    return this.perfiles.controls[i].get( 'contratoPerfilNumeroRadicado' ) as FormArray;
   }
 
   textoLimpio (texto: string) {
@@ -99,17 +144,61 @@ export class FormPerfilComponent implements OnInit {
     });
   };
 
-  agregarNumeroRadicado ( numeroRadicado: number ) {
-    console.log( this.perfiles.controls[0].get( 'numeroRadicadoFfieAprobacionCv' ) as FormArray );
-    this.numeroRadicado( numeroRadicado ).push( this.fb.control( '' ) )
+  agregarNumeroRadicado ( numeroRadicado: number, contratoPerfilId: number ) {
+    this.numeroRadicado( numeroRadicado ).push( this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId: contratoPerfilId, numeroRadicado: '' }) )
   }
 
   eliminarNumeroRadicado ( numeroPerfil: number, numeroRadicado ) {
     this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
   };
 
-  guardar () {
-    console.log( this.formContratista );
+  deleteRadicado ( contratoPerfilNumeroRadicadoId: number ) {
+    console.log( 'probando metodo - radicado' );
+    this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
+      .subscribe( console.log );
   }
+
+  deletePerfil( contratoPerfilId: number ) {
+    console.log( 'probando metodo - perfil', contratoPerfilId );
+    this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
+      .subscribe( console.log );
+  }
+
+  guardar () {
+    let perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
+
+    if ( this.perfilProyecto.length === 0 ) {
+      perfiles.forEach( value => {
+        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
+        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
+        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
+        value.contratoPerfilNumeroRadicado = value.contratoPerfilNumeroRadicado;
+        value.contratoPerfilObservacion    = [ { observacion: value.observacion } ];
+        value.fechaAprobacion              = new Date( value.fechaAprobacion ).toISOString()
+        value.contratoId                   = this.contratoId;
+        value.proyectoId                   = this.proyectoId;
+      } )
+    } else {
+      perfiles.forEach( value => {
+        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
+        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
+        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
+        value.contratoPerfilNumeroRadicado = value.contratoPerfilNumeroRadicado;
+        value.contratoPerfilObservacion    =  [ 
+                                                { 
+                                                  ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
+                                                  contratoPerfilId: value.contratoPerfilId,
+                                                  observacion: value.observacion 
+                                                } 
+                                              ];
+        value.fechaAprobacion              = new Date( value.fechaAprobacion ).toISOString()
+        value.contratoId                   = this.contratoId;
+        value.proyectoId                   = this.proyectoId;
+      } )
+    }
+
+    console.log( perfiles );
+    this.enviarPerfilesContrato.emit( perfiles );
+  };
   
-}
+};
