@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
+import { ActivatedRoute } from '@angular/router';
+import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
+import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 
 @Component({
   selector: 'app-expansion-gestionar-interventoria',
@@ -8,6 +12,7 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class ExpansionGestionarInterventoriaComponent implements OnInit {
 
+  contrato: Contrato;
   estado: FormControl;
   cantidadPerfiles: FormControl;
 
@@ -22,17 +27,22 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
     }
   ];
 
-
-  constructor() {
+  constructor ( private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+                private activatedRoute: ActivatedRoute,
+                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.declararEstado();
-    this.declararPerfiles();
-    this.cantidadPerfiles.valueChanges
-    .subscribe(value => {
-      console.log(value);
-    });
+    this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id )
   }
 
   ngOnInit(): void {
+  }
+
+  getContratacionByContratoId ( pContratoId: number ) {
+    this.faseUnoVerificarPreconstruccionSvc.getContratacionByContratoId( pContratoId )
+    .subscribe( contrato => {
+      this.contrato = contrato;
+      console.log( this.contrato );
+    } );
   }
 
   // evalua tecla a tecla
@@ -44,16 +54,18 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
 
   private declararEstado() {
     this.cantidadPerfiles = new FormControl('', Validators.required);
-  }
+  };
 
-  private declararPerfiles() {
-    this.cantidadPerfiles = new FormControl('', [
-      Validators.required,
-      Validators.minLength(1),
-      Validators.maxLength(3),
-      Validators.min(1),
-      Validators.max(999)
-    ]);
+  getPerfilesContrato ( index: number, evento: any ) {
+    console.log( evento );
+    this.contrato.contratacion.contratacionProyecto[index].proyecto[ 'tieneEstadoFase1EyD' ] = evento.tieneEstadoFase1EyD;
+    this.contrato.contratacion.contratacionProyecto[index].proyecto[ 'tieneEstadoFase1Diagnostico' ] = evento.tieneEstadoFase1Diagnostico;
+    this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoPerfil = evento.perfiles;
+    console.log( this.contrato.contratacion.contratacionProyecto[index] );
+
+    console.log( this.contrato );
+    this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
+      .subscribe( console.log );
   }
 
 }

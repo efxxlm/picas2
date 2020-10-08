@@ -22,6 +22,9 @@ import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.compon
     QuillModule.forRoot(),
     CurrencyMaskModule,
     ReactiveFormsModule
+  ],
+  exports: [
+    FormPerfilComponent
   ]
 })
 export class FasePreconstruccionModule { }
