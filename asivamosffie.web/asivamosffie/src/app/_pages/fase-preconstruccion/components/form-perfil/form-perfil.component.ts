@@ -47,6 +47,14 @@ export class FormPerfilComponent implements OnInit {
     return this.formContratista.get( 'perfiles' ) as FormArray;
   };
 
+  disabledDate ( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
+    if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
+    } else {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+    }
+  }
+
   perfilesProyecto () {
     if ( this.perfilProyecto.length === 0 ) {
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
