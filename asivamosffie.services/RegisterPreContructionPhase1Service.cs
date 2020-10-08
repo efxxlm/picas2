@@ -446,7 +446,7 @@ namespace asivamosffie.services
             }
         }
          
-        public async Task<Respuesta> ChangeStateContrato(int pContratoId, string UsuarioModificacion , string pEstadoVerificacionContratoCodido)
+        public async Task<Respuesta> ChangeStateContrato(int pContratoId, string UsuarioModificacion , string pEstadoVerificacionContratoCodigo)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Verificacion_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
@@ -455,10 +455,10 @@ namespace asivamosffie.services
                 Contrato contratoMod = _context.Contrato.Find(pContratoId);
                 contratoMod.FechaModificacion = DateTime.Now;
                 contratoMod.UsuarioModificacion = UsuarioModificacion;
-                contratoMod.EstadoVerificacionCodigo = pEstadoVerificacionContratoCodido;
+                contratoMod.EstadoVerificacionCodigo = pEstadoVerificacionContratoCodigo;
                 _context.SaveChanges();
 
-                string NombreEstadoMod = _context.Dominio.Where(r => r.Codigo == pEstadoVerificacionContratoCodido && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).FirstOrDefault().Nombre;
+                string NombreEstadoMod = _context.Dominio.Where(r => r.Codigo == pEstadoVerificacionContratoCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).FirstOrDefault().Nombre;
 
                 return
                     new Respuesta
