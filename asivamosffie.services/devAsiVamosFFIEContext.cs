@@ -263,8 +263,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CofinanciacionAportanteMunicipio)
                     .HasForeignKey(d => d.MunicipioId)
                     .HasConstraintName("fk_cofinanciacionMunicipio");
-
-           
+ 
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
@@ -1103,8 +1102,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
+                    .HasMaxLength(1250);
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .IsRequired()
@@ -1365,6 +1363,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaDdp)
                     .HasColumnName("FechaDDP")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.FechaDrp)
+                    .HasColumnName("FechaDRP")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -3581,18 +3583,16 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_RequisitosTecnicosInicioConstruccion");
 
-                entity.Property(e => e.EstadoRequisitos)
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoNombre)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
-
-                entity.Property(e => e.NombreEstado)
-                    .IsRequired()
-                    .HasColumnName("nombreEstado")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
