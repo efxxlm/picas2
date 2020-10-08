@@ -77,5 +77,6 @@
 
         public const string Crear_Editar_Contrato_Construccion = "101";
         public const string Crear_Editar_Construccion_Perfil = "102";
+        public const string Eliminar_Construccion_Perfil = "104";
     } 
 }

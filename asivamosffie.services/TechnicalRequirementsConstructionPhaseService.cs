@@ -142,7 +142,7 @@ namespace asivamosffie.services
                     contratoConstruccion.RequiereModificacionContractual = pConstruccion.RequiereModificacionContractual;
                     contratoConstruccion.NumeroSolicitudModificacion = pConstruccion.NumeroSolicitudModificacion;
 
-                    _context.ContratoConstruccion.Add( contratoConstruccion );
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
                 }
 
                 _context.SaveChanges();
@@ -322,7 +322,7 @@ namespace asivamosffie.services
                     contratoConstruccion.AprovechamientoForestalObservaciones = pConstruccion.AprovechamientoForestalObservaciones;
                     contratoConstruccion.ManejoAguasLluviasObservaciones = pConstruccion.ManejoAguasLluviasObservaciones;
 
-                    _context.ContratoConstruccion.Add( contratoConstruccion );
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
                 }
 
                 _context.SaveChanges();
@@ -372,7 +372,7 @@ namespace asivamosffie.services
                     contratoConstruccion.ManejoAnticipoCronogramaAmortizacion = pConstruccion.ManejoAnticipoCronogramaAmortizacion;
                     contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
                     contratoConstruccion.ManejoAnticipoConObservaciones = pConstruccion.ManejoAnticipoConObservaciones;
-                    
+
                 }
                 else
                 {
@@ -392,7 +392,7 @@ namespace asivamosffie.services
                     contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
                     contratoConstruccion.ManejoAnticipoConObservaciones = pConstruccion.ManejoAnticipoConObservaciones;
 
-                    _context.ContratoConstruccion.Add( contratoConstruccion );
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
                 }
 
                 _context.SaveChanges();
@@ -421,125 +421,130 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> CreateEditContratoPerfil(ContratoConstruccion pConstruccion)
+        public async Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion)
         {
             string CreateEdit = string.Empty;
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Construccion_Perfil, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
+                if ( pConstruccion.ContratoConstruccionId == 0 ){
+                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
 
-                    foreach (var perfil in pConstruccion.ConstruccionPerfil)
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                    contratoConstruccion.FechaCreacion = DateTime.Now;
+                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
+                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
+
+                    _context.ContratoConstruccion.Add( contratoConstruccion );
+                    _context.SaveChanges();
+
+                    pConstruccion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+                }
+
+                foreach (var perfil in pConstruccion.ConstruccionPerfil)
+                {
+                    if (perfil.ConstruccionPerfilId > 0)
                     {
-                        if (    perfil.ConstruccionPerfilId > 0)
+                        CreateEdit = "EDITAR CONSTRUCCION PERFIL";
+                        ConstruccionPerfil construccionPerfil = _context.ConstruccionPerfil.Find(perfil.ConstruccionPerfilId);
+
+                        construccionPerfil.UsuarioModificacion = pConstruccion.UsuarioModificacion;
+                        construccionPerfil.FechaModificacion = DateTime.Now;
+
+                        construccionPerfil.PerfilCodigo = perfil.PerfilCodigo;
+                        construccionPerfil.CantidadHvRequeridas = perfil.CantidadHvRequeridas;
+                        construccionPerfil.CantidadHvRecibidas = perfil.CantidadHvRecibidas;
+                        construccionPerfil.CantidadHvAprobadas = perfil.CantidadHvAprobadas;
+                        construccionPerfil.FechaAprobacion = perfil.FechaAprobacion;
+                        construccionPerfil.RutaSoporte = perfil.RutaSoporte;
+                        construccionPerfil.ConObervacionesSupervision = perfil.ConObervacionesSupervision;
+
+                        construccionPerfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(construccionPerfil);
+
+                        foreach (var observacion in perfil.ConstruccionPerfilObservacion)
                         {
-                            CreateEdit = "EDITAR CONSTRUCCION PERFIL";
-                            ConstruccionPerfil construccionPerfil = _context.ConstruccionPerfil.Find( perfil.ConstruccionPerfilId );
-
-                            construccionPerfil.UsuarioModificacion = pConstruccion.UsuarioModificacion;
-                            construccionPerfil.FechaModificacion = DateTime.Now;
-
-                            construccionPerfil.ContratoConstruccionId = perfil.ContratoConstruccionId;
-                            construccionPerfil.PerfilCodigo = perfil.PerfilCodigo;
-                            construccionPerfil.CantidadHvRequeridas = perfil.CantidadHvRequeridas;
-                            construccionPerfil.CantidadHvRecibidas = perfil.CantidadHvRecibidas;
-                            construccionPerfil.CantidadHvAprobadas = perfil.CantidadHvAprobadas;
-                            construccionPerfil.FechaAprobacion = perfil.FechaAprobacion;
-
-                            construccionPerfil.NumeroRadicadoFfie = perfil.NumeroRadicadoFfie;
-                            construccionPerfil.NumeroRadicadoFfie1 = perfil.NumeroRadicadoFfie1;
-                            construccionPerfil.NumeroRadicadoFfie2 = perfil.NumeroRadicadoFfie2;
-                            construccionPerfil.NumeroRadicadoFfie3 = perfil.NumeroRadicadoFfie3;
-
-                            construccionPerfil.RutaSoporte = perfil.RutaSoporte;
-
-                            construccionPerfil.ConObervacionesSupervision = perfil.ConObervacionesSupervision;
-                            construccionPerfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(construccionPerfil);
-
-                            foreach (var observacion in construccionPerfil.ConstruccionPerfilObservacion)
+                            if (observacion.ConstruccionPerfilObservacionId > 0)
                             {
-                                if ( observacion.ConstruccionPerfilObservacionId > 0)
-                                {
-                                    ConstruccionPerfilObservacion construccionPerfilObservacion = _context.ConstruccionPerfilObservacion.Find( observacion.ConstruccionPerfilObservacionId );
+                                ConstruccionPerfilObservacion construccionPerfilObservacion = _context.ConstruccionPerfilObservacion.Find(observacion.ConstruccionPerfilObservacionId);
 
-                                    construccionPerfilObservacion.UsuarioModificacion = pConstruccion.UsuarioCreacion;
-                                    construccionPerfilObservacion.FechaModificacion = DateTime.Now;
+                                construccionPerfilObservacion.UsuarioModificacion = pConstruccion.UsuarioCreacion;
+                                construccionPerfilObservacion.FechaModificacion = DateTime.Now;
 
-                                    construccionPerfilObservacion.Eliminado = false;  
-                                    construccionPerfilObservacion.Observacion = observacion.Observacion;
-                                    //construccionPerfilObservacion.TipoObservacionCodigo = observacion.TipoObservacionCodigo;
-                                    
-                                }
-                                else
-                                {
-                                    observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                                    observacion.FechaCreacion = DateTime.Now;
+                                construccionPerfilObservacion.Observacion = observacion.Observacion;
+                                //construccionPerfilObservacion.TipoObservacionCodigo = observacion.TipoObservacionCodigo;
 
-                                    observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
-
-                                    _context.ConstruccionPerfilObservacion.Add( observacion );
-                                }
                             }
+                            else
+                            {
+                                observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                                observacion.FechaCreacion = DateTime.Now;
 
-                            // foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
-                            // {
-                            //     if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
-                            //     {
-                            //         ContratoPerfilNumeroRadicado.Eliminado = false;
-                            //         ContratoPerfilNumeroRadicado.UsuarioCreacion = pContrato.UsuarioCreacion;
-                            //         ContratoPerfilNumeroRadicado.FechaCreacion = DateTime.Now;
-                            //         _context.ContratoPerfilNumeroRadicado.Add(ContratoPerfilNumeroRadicado);
-                            //     }
-                            //     else
-                            //     {
-                            //         ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
-                            //         contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
-                            //         contratoPerfilNumeroRadicadoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                            //         contratoPerfilNumeroRadicadoOld.FechaModificacion = DateTime.Now;
-                            //     }
-                            // }
+                                observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                                observacion.Eliminado = false;
 
+                                construccionPerfil.ConstruccionPerfilObservacion.Add( observacion );
+                            }
                         }
-                        else
+
+                        foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
                         {
-                             CreateEdit = "CREAR CONSTRUCCION PERFIL";
-                             perfil.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                             perfil.FechaCreacion = DateTime.Now;
+                            if (radicado.ConstruccionPerfilNumeroRadicadoId == 0)
+                            {
+                                radicado.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                                radicado.FechaCreacion = DateTime.Now;
 
-                             //perfil.Eliminado = false;
-                             perfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil( perfil );
-                             _context.ConstruccionPerfil.Add( perfil );
+                                radicado.Eliminado = false;
 
+                                construccionPerfil.ConstruccionPerfilNumeroRadicado.Add( radicado );
+                            }
+                            else
+                            {
+                                ConstruccionPerfilNumeroRadicado construccionPerfilNumeroRadicado = _context.ConstruccionPerfilNumeroRadicado.Find(radicado.ConstruccionPerfilNumeroRadicadoId);
+                                construccionPerfilNumeroRadicado.UsuarioModificacion = pConstruccion.UsuarioCreacion;
+                                construccionPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
 
-                             foreach (var observacion in perfil.ConstruccionPerfilObservacion)
-                             {
+                                construccionPerfilNumeroRadicado.NumeroRadicado = radicado.NumeroRadicado;
 
-                                 observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                                 observacion.FechaCreacion = DateTime.Now;
-                                 observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
-
-                                 _context.ConstruccionPerfilObservacion.Add( observacion );
-                             }
-
-                            // foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
-                            // {
-                            //     if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
-                            //     {
-                            //         ContratoPerfilNumeroRadicado.Eliminado = false;
-                            //         ContratoPerfilNumeroRadicado.UsuarioCreacion = pContrato.UsuarioCreacion;
-                            //         ContratoPerfilNumeroRadicado.FechaCreacion = DateTime.Now;
-                            //         _context.ContratoPerfilNumeroRadicado.Add(ContratoPerfilNumeroRadicado);
-                            //     }
-                            //     else
-                            //     {
-                            //         ContratoPerfilNumeroRadicado contratoPerfilNumeroRadicadoOld = _context.ContratoPerfilNumeroRadicado.Find(ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId);
-                            //         contratoPerfilNumeroRadicadoOld.NumeroRadicado = ContratoPerfilNumeroRadicado.NumeroRadicado;
-                            //         ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
-                            //         ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
-                            //     }
-                            // }
+                            }
                         }
+
                     }
+                    else
+                    {
+                        CreateEdit = "CREAR CONSTRUCCION PERFIL";
+                        perfil.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                        perfil.FechaCreacion = DateTime.Now;
+
+                        perfil.Eliminado = false;
+                        perfil.ContratoConstruccionId = pConstruccion.ContratoConstruccionId;
+                        perfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(perfil);
+                        
+
+
+                        foreach (var observacion in perfil.ConstruccionPerfilObservacion)
+                        {
+
+                            observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                            observacion.FechaCreacion = DateTime.Now;
+                            observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
+
+                            //perfil.ConstruccionPerfilObservacion.Add(observacion);
+                        }
+
+                        foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
+                        {
+                            radicado.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                            radicado.FechaCreacion = DateTime.Now;
+
+                            radicado.Eliminado = false;
+
+                            //_context.ConstruccionPerfilNumeroRadicado.Add(radicado);
+                        }
+
+                        _context.ConstruccionPerfil.Add(perfil);
+                    }
+                }
 
 
 
@@ -560,8 +565,8 @@ namespace asivamosffie.services
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
-                        Code = RegisterPreContructionPhase1.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
                     };
             }
             catch (Exception ex)
@@ -572,8 +577,43 @@ namespace asivamosffie.services
                         IsSuccessful = false,
                         IsException = true,
                         IsValidation = false,
-                        Code = RegisterPreContructionPhase1.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> DeleteConstruccionPerfil(int pConstruccionPerfilId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Construccion_Perfil, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ConstruccionPerfil perfil = _context.ConstruccionPerfil.Find( pConstruccionPerfilId );
+                perfil.Eliminado = true;
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "CONTRATO PERFIL ELIMINADO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
                     };
             }
         }

@@ -15,5 +15,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion);
+        Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion);
+        Task<Respuesta> DeleteConstruccionPerfil(int pConstruccionPerfilId, string pUsuarioModificacion);
+
     }
 }

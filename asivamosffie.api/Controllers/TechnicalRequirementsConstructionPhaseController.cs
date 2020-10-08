@@ -109,6 +109,40 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("CreateEditConstruccionPerfil")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditConstruccionPerfil(pConstruccion);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("DeleteConstruccionPerfil")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteConstruccionPerfil([FromQuery]  int pConstruccioPerfilId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteConstruccionPerfil( pConstruccioPerfilId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
         
 
     }
