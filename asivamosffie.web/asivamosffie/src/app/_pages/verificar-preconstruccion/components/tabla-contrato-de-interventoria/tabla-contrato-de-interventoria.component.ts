@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
 
 export interface PeriodicElement {
   id: number;
@@ -51,15 +52,15 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class TablaContratoDeInterventoriaComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'fecha',
-    'numContrato',
-    'proyAsociados',
-    'proyConRequisitosAprovados',
-    'proyConRequisitosPendientes',
-    'estado',
-    'id'
+    'fechaAprobacionPoliza',
+    'numeroContrato',
+    'cantidadProyectosAsociados',
+    'proyectosCompletos',
+    'proyectosNoCompletos',
+    'estadoVerificacionNombre',
+    'gestion'
   ];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -69,24 +70,29 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor ( private faseUnoVerificarPreConstruccionSvc: FaseUnoVerificarPreconstruccionService ) {
+    this.faseUnoVerificarPreConstruccionSvc.getListContratacion()
+      .subscribe( listas => {
+        this.dataSource = new MatTableDataSource( listas );
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          if (length === 0 || pageSize === 0) {
+            return '0 de ' + length;
+          }
+          length = Math.max(length, 0);
+          const startIndex = page * pageSize;
+          // If the start index exceeds the list length, do not try and fix the end index to the end.
+          const endIndex = startIndex < length ?
+            Math.min(startIndex + pageSize, length) :
+            startIndex + pageSize;
+          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+        };
+      } );
+  }
 
   ngOnInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      if (length === 0 || pageSize === 0) {
-        return '0 de ' + length;
-      }
-      length = Math.max(length, 0);
-      const startIndex = page * pageSize;
-      // If the start index exceeds the list length, do not try and fix the end index to the end.
-      const endIndex = startIndex < length ?
-        Math.min(startIndex + pageSize, length) :
-        startIndex + pageSize;
-      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-    };
   }
 
 }
