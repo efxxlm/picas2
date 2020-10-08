@@ -93,6 +93,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateEditManejoAnticipo")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditManejoAnticipo(pConstruccion);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         
 
     }

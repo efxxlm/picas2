@@ -14,5 +14,6 @@ namespace asivamosffie.services.Interfaces
         Task<Contrato> GetContratoByContratoId( int pContratoId );
         Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion);
+        Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion);
     }
 }
