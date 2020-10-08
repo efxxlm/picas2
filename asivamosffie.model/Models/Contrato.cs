@@ -63,6 +63,8 @@ namespace asivamosffie.model.Models
         public string EstadoActaFase2 { get; set; }
         public DateTime? FechaAprobacionRequisitos { get; set; }
         public bool? TieneDiagnosticoFase1 { get; set; }
+        public bool? EstadoFase1EyD { get; set; }
+        public bool? EstadoFase1Diagnostico { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }

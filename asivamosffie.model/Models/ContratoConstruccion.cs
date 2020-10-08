@@ -84,6 +84,18 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public int ProyectoId { get; set; }
         public decimal? Administracion { get; set; }
+        public string LicenciaObservaciones { get; set; }
+        public string CambioObservaciones { get; set; }
+        public string ActaApropiacionObservaciones { get; set; }
+        public string ResiduosDemolicionObservaciones { get; set; }
+        public string ManejoTransitoObservaciones { get; set; }
+        public string ManejoAmbientalObservaciones { get; set; }
+        public string AseguramientoCalidadObservaciones { get; set; }
+        public string ProgramaSeguridadObservaciones { get; set; }
+        public string ProgramaSaludObservaciones { get; set; }
+        public string InventarioArboreoObservaciones { get; set; }
+        public string AprovechamientoForestalObservaciones { get; set; }
+        public string ManejoAguasLluviasObservaciones { get; set; }
 
         public string CambioObservaciones { get; set;}
         public string ActaApropiacionObservaciones { get; set;}
