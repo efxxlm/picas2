@@ -33,7 +33,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId, string usuario);
 
-        Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string usuario);
+        Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuarioModifico,string pDominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId);
     }

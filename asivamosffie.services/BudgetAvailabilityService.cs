@@ -858,6 +858,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 DisponibilidadCancelar.UsuarioModificacion = pUsuarioModificacion.ToUpper();
                 DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
                 DisponibilidadCancelar.NumeroDrp = "DRP_PI_" + consecutivo.ToString();
+                DisponibilidadCancelar.FechaDrp = DateTime.Now;
                 //
                 //guardar el tema de platas
                 //

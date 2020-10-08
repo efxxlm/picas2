@@ -127,7 +127,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
       ],
       descripcion: [null, Validators.required],
       url: [null, Validators.required],
-      eliminado:['0']
+      eliminado:['false']
     });
   }
 

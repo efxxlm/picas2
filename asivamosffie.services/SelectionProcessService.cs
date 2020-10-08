@@ -1610,5 +1610,13 @@ namespace asivamosffie.services
                     };
             }
         }
+
+        /*jflorez
+         impacto: 3.1.3
+         resumen: trae listado de  observaciones*/
+        public async Task<List<ProcesoSeleccionObservacion>> getObservacionesProcesoSeleccionProponentes(int id)
+        {
+            return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
+        }
     }
 }

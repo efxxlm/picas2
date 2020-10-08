@@ -31,13 +31,13 @@
             <p *ngIf="esModificacion"><strong>Detalle de la modificación:</strong></p>
             <p *ngIf="esModificacion">Se realiza adición de recursos para obras complementarias</p>
             <h2 class="card-subTitle grissub" *ngIf="detailavailabilityBudget.aportantes.length>0" >Aportantes</h2>
-            <div *ngFor="let apo of detailavailabilityBudget.aportantes">
-                <mat-card-title class="header-card--text sub-text textoGris">Aportante 1</mat-card-title>
-                    <p><strong>Tipo de aportante: </strong>FFIE</p>
-                    <p><strong>Nombre del aportante: </strong>FFIE</p>
-                    <p><strong>Valor del aportante al proyecto: </strong>$ 90.000.000</p>
+            <div *ngFor="let apo of detailavailabilityBudget.aportantes;index as i">
+                <mat-card-title class="header-card--text sub-text textoGris">Aportante {{i}}</mat-card-title>
+                    <p><strong>Tipo de aportante: </strong>{{apo.tipoAportante}}</p>
+                    <p><strong>Nombre del aportante: </strong>{{apo.nombre}}</p>
+                    <p><strong>Valor del aportante al proyecto: </strong>{{apo.valorAportanteAlProyecto}}</p>
                 <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
-                <mat-card-title class="header-card--text sub-text textoGris">Fuente 1</mat-card-title>
+                <mat-card-title class="header-card--text sub-text textoGris" *ngFor="let fuente of apo.fuentesFinanciacion;index as j">Fuente {{j}}</mat-card-title>
                     <p><strong>Fuente: </strong>recursos propios</p>
                     <p><strong>Saldo actual de la fuente: </strong>$ 180.000.000</p>
                     <p><strong>Valor solicitado de la fuente: </strong>$ 70.000.000</p>

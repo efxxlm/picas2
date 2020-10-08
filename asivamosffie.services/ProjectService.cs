@@ -1652,18 +1652,30 @@ namespace asivamosffie.services
             return retorno;
         }
 
-        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario)
+        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccionCrearProyectoAdministrativo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Proyecto, (int)EnumeratorTipoDominio.Acciones);
             ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
             bool retorno = true;
             try
             {
+                
                 proyecto.Enviado = true;
                 proyecto.UsuarioModificacion = pUsuario;
                 proyecto.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
-                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
+
+                //envio correo a administrativo
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.proyectoadministrativocreado);
+                string template = TemplateRecoveryPassword.Contenido.Replace("[proyecto]",proyecto.ProyectoAdministrativoId.ToString()).Replace("_LinkF_", pDominioFront).Replace("[fecha]", Convert.ToDateTime(proyecto.FechaCreado).ToString("dd/MM/yyyy"));
+                
+                //template = template.Replace("_Link_", urlDestino);                
+                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario);
+                foreach(var usuarioadmin in usuariosadmin)
+                {
+                    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Proyecto administrativo creado", template, pSender, pPassword, pMailServer, pMailPort);
+                    string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
+                }
             }
             catch (Exception ex)
             {
@@ -1675,7 +1687,10 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId)
         {
-            var resultado = await _context.FuenteFinanciacion.Where(x => x.Aportante.TipoAportanteId == pAportanteId && !(bool)x.Eliminado ).OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
+            var resultado = await _context.FuenteFinanciacion.
+                Where(x => x.Aportante.TipoAportanteId == pAportanteId && !(bool)x.Eliminado ).
+                Include(x=>x.CofinanciacionDocumento).
+                OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
             foreach(var res in resultado)
             {
                 res.FuenteRecursosString = _context.Dominio.Where(x => x.Codigo == res.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;

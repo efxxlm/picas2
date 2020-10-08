@@ -9,6 +9,7 @@ import { pid } from 'process';
 })
 export class ProcesoSeleccionService implements OnInit {
   
+  
 
   constructor(
                private http: HttpClient
@@ -79,6 +80,10 @@ export class ProcesoSeleccionService implements OnInit {
   }
   deleteProcesoSeleccionActividadesByID(procesoSeleccionCotizacionId: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/deleteProcesoSeleccionActividadesByID?procesoSeleccionCotizacionId=${procesoSeleccionCotizacionId}`, null);
+  }
+
+  getObservacionesByID(id: any) {
+    return this.http.get<any[]>(`${environment.apiUrl}/SelectionProcess/getObservacionesProcesoSeleccionProponentes?id=${id}`);
   }
   
 }

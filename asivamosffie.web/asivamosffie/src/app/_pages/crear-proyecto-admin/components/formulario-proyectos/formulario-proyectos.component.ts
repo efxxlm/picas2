@@ -18,8 +18,10 @@ export class FormularioProyectosComponent implements OnInit {
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
 
-  addFont(aportante: Aportante) {
-    aportante.fuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '' });
+  addFont(index: number) {
+    console.log("push");
+    console.log(index);
+    this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
   }
 
   deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {

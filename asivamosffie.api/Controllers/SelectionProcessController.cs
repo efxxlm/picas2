@@ -530,6 +530,28 @@ namespace asivamosffie.api.Controllers
             respuesta.Data = ex.InnerException.ToString();
             return BadRequest(respuesta);
         }
+        
+     }
+        /*autor: jflorez
+                    descripción:trae las observaciones
+                    impacto: CU 3.1.3*/
+
+        [Route("getObservacionesProcesoSeleccionProponentes")]
+        public async Task<IActionResult> getObservacionesProcesoSeleccionProponentes(int id)
+        {
+            try
+            {
+                var result = await _selectionProcessService.getObservacionesProcesoSeleccionProponentes(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
+
     }
+
+    
 }

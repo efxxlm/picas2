@@ -29,6 +29,7 @@ const ELEMENT_DATA: tablaEjemplo[] = [
   styleUrls: ['./gestionar-drp.component.scss']
 })
 export class GestionarDrpComponent implements OnInit {
+  listacomponentes:tablaEjemplo[]=[];
   public numContrato = "A886675445";//valor quemado
   public fechaContrato = "20/06/2020";//valor quemado
   public solicitudContrato = "Modificación contractual";//valor quemado
@@ -56,13 +57,25 @@ export class GestionarDrpComponent implements OnInit {
         if(listas.length>0)
         {
           this.detailavailabilityBudget=listas[0];
+          this.detailavailabilityBudget.proyectos.forEach(element => {
+            element.componenteGrilla.forEach(element2 => {                          
+              this.listacomponentes.push({
+                componente: element2.componente, uso: [
+                  { nombre: element2.uso }//, { nombre: "Diagnostico" }, { nombre: "Obra Principal" }
+                ], valorUso: [
+                  { valor: element2.valorUso }//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
+                ], valorTotal: element2.valorTotal
+              });
+            });
+          });
+          this.dataSource = new MatTableDataSource(this.listacomponentes);
         }
         else{
           this.openDialog('','Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
         }
       });
     }
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    //this.dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   }
   cancelarDRPBoton(){

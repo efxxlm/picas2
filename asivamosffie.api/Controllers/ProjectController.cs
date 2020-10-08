@@ -156,7 +156,8 @@ namespace asivamosffie.api.Controllers
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
         {
             string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
+            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico,_settings.Value.DominioFront
+                , _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
             return respuesta;
         }
 

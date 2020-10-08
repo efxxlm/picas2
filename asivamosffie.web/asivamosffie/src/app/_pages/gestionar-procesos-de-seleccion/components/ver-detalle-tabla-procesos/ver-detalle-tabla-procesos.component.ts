@@ -5,6 +5,7 @@ import { ProcesoSeleccion, ProcesoSeleccionService, EstadosProcesoSeleccion, Tip
 import { pid } from 'process';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
+import { VerObservacionesComponent } from '../ver-observaciones/ver-observaciones.component';
 
 
 @Component({
@@ -130,11 +131,9 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
-         this.openDialog("", "La información se ha eliminado correctamente,");
-         this.router.navigate(['/seleccion']);
-         this.dialogRef.close();
+         this.openDialog("", "La información se ha eliminado correctamente,",true);         
        }else
-        this.openDialog("Proceso Seleccion", r.message);
+        this.openDialog("Proceso Seleccion", r.message,false);
     })
   }
 
@@ -145,10 +144,8 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
     }
 
      this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
-       this.openDialog("", respuesta.message);
+       this.openDialog("", respuesta.message,true);
        if ( respuesta.code == "200" ){
-          this.dialogRef.close();
-          this.router.navigate(['/seleccion']);
        }
     })
   }
@@ -160,11 +157,11 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
     }
 
      this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
-       this.openDialog("", respuesta.message);
+       this.openDialog("", respuesta.message,true);
        if ( respuesta.code == "200" ){
-          this.dialogRef.close();
-          this.router.navigate(['/seleccion']);
-          location.reload();
+          //this.dialogRef.close();
+          //this.router.navigate(['/seleccion']);
+          //location.reload();
        }
     })
   }
@@ -176,20 +173,26 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
     }
 
      this.procesoseleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
-       this.openDialog("", respuesta.message);
-       if ( respuesta.code == "200" ){
-          this.dialogRef.close();
-          this.router.navigate(['/seleccion']);
-          location.reload();
+       this.openDialog("", respuesta.message,true);
+       if ( respuesta.code == "200" ){          
        }
     })
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string,reload:boolean) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+    if(reload)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+        this.router.navigate(['/seleccion']);
+        setTimeout(() => {
+          location.reload();  
+        }, 1000);
+      });
+    }
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e:number) {
@@ -221,6 +224,12 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
 
   onObservaciones(id)
   {
-
+    let dialogRef =this.dialog.open(VerObservacionesComponent, {
+      width: '28em',
+      data: { id }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+            
+    });
   }
 }
