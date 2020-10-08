@@ -1,5 +1,5 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
-  <div class="row">
+  <div class="row" style="margin-left: 0em;">
     <div class="pr-1">
       <label class="label-left">¿En qué estado de la fase 1 - Preconstrucción se encuentra el proyecto?</label>
     </div>
@@ -48,9 +48,9 @@
             </mat-form-field>
           </section>
 
-          <section class="d-flex mt-1em">
+          <section class="d-flex mt-1em" style="width: 63%;">
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
-            <div class="col d-flex w-30">
+            <div class="col d-flex">
               <mat-form-field>
                 <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas">
               </mat-form-field>
@@ -58,9 +58,9 @@
             </div>
           </section>
 
-          <section class="d-flex mt-1em">
+          <section class="d-flex mt-1em" style="width: 63%;">
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
-            <div class="col d-flex w-31">
+            <div class="col d-flex">
               <mat-form-field>
                 <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas">
               </mat-form-field>
@@ -68,9 +68,9 @@
             </div>
           </section>
 
-          <section class="d-flex mt-1em">
+          <section class="d-flex mt-1em" style="width: 63%;">
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
-            <div class="col d-flex w-30">
+            <div class="col d-flex">
               <mat-form-field>
                 <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas">
               </mat-form-field>
@@ -87,7 +87,8 @@
               <input  matInput 
                       [matDatepicker]="fechaAprobacion" 
                       formControlName="fechaAprobacion"
-                      placeholder="DD/MM/AAAA">
+                      placeholder="DD/MM/AAAA"
+                      [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
               <mat-datepicker #fechaAprobacion></mat-datepicker>
               </mat-form-field>
               <button mat-button 
