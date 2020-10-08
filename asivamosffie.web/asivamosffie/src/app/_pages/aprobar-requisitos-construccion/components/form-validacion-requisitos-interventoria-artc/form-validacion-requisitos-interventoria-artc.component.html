@@ -1,1 +1,74 @@
-<p>form-validacion-requisitos-interventoria-artc works!</p>
+<div class="text-center container">
+    <div class="text-right">
+        <a routerLink="/aprobarRequisitosTecnicosConstruccion" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar requisitos de inicio contrato N801801 fase 2 - Construcción
+    </h1>
+    <section class="container margin-1em color-primary">
+        <div class="text-center section-flex">
+            <p class="mr-1em">Fecha de aprobacion de póliza: <b>10/08/2020</b></p>
+            <p>Proyectos asociados: <b>1</b></p>
+        </div>
+    </section>
+    <section>
+        <div class="text-center">
+            <p class="info-container">
+                <span class="info-text sin-diligenciar">Sin diligenciar</span>
+                <span class="info-text en-proceso">En proceso</span>
+                <span class="info-text completo">Completo</span>
+            </p>
+        </div>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header w-45">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        LL706706 - I.E. Gerardo Hernandez - Única sede
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div align="left">
+                    <mat-card class="border">
+                      <mat-card-content>
+                        <p><b>Nombre del contratista</b>: Constructora Almendro</p>
+                        <p><b>Número de identificación (NIT/RUT)</b>: 900.005.000-6</p>
+                        <p><b>Tipo de intervención</b>: Remodelación</p>
+                        <p><b>Departamento</b>: Antioquia</p>
+                        <p><b>Municipio</b>: Jardín</p>
+                        <p><b>Valor total del proyecto</b>: $67.000.000</p>
+                      </mat-card-content>
+                    </mat-card>
+                </div>
+                <div align="center">
+                    <p><b>¿Cuántos perfiles diferentes se requieren del interventor para ejecutar el proyecto?:</b> 1</p>
+                </div>
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style sub-expansion aux">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title  sin-diligenciar">
+                              Perfil 1
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <div align="left">
+                            <mat-card class="border">
+                                <mat-card-content>
+                                    <p><b>Perfil</b>: Interventor de obra</p>
+                                    <p><b>Cantidad de hojas de vida requeridas para el perfil</b>: 2</p>
+                                    <p><b>Cantidad de hojas de vida recibidas para el perfil:</b>: 10</p>
+                                    <p><b>Cantidad de hojas de vida aprobadas para el perfil</b>: 3</p>
+                                    <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>: 07/08/2020</p>
+                                    <p><b>Observaciones:</b></p>
+                                    <p>----</p>
+                                    <p><b>Número de radicado en FFIE de aprobación de hojas de vida</b>: FFFLL098764-00</p>
+                                    <p><b>URL con soporte</b>: https://drive.google.com/drive/perfil/Ingenierodeobra/hojasdevida</p>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <app-hojas-vida-interventoria-artc  [observacionesCompleted]="false"></app-hojas-vida-interventoria-artc>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
+</div>
