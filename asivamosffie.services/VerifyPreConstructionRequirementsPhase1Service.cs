@@ -121,6 +121,14 @@ namespace asivamosffie.services
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
                 List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                     .Include(r => r.Contratacion)
+                       .ThenInclude(r => r.ContratacionProyecto)
+                             .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.InstitucionEducativa)
+                   .Include(r => r.Contratacion)
+                       .ThenInclude(r => r.ContratacionProyecto)
+                             .ThenInclude(r => r.Proyecto)
+                                 .ThenInclude(r => r.Sede)
                     .Include(r => r.ContratoObservacion)
                     .Include(r => r.ContratoPerfil)
                          .ThenInclude(r => r.ContratoPerfilObservacion)

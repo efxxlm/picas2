@@ -126,8 +126,7 @@ namespace asivamosffie.services
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                  .ThenInclude(r => r.Sede)
-                    .Include(r => r.Contratacion)
-                    .Include(r => r.Contratacion)
+                    .Include(r => r.Contratacion) 
                         .ThenInclude(r => r.Contratista)
                     .FirstOrDefaultAsync();
 
