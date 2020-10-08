@@ -173,6 +173,15 @@ namespace asivamosffie.services
             {
                 foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto)
                 {
+                    //Guardar estado de la fase 1 preConstruccion 
+                    if (ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico != null) {
+                        Proyecto proyectoOld = _context.Proyecto.Find(ContratacionProyecto.Proyecto.ProyectoId);
+                        proyectoOld.TieneEstadoFase1Diagnostico = ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico;
+                        proyectoOld.TieneEstadoFase1EyD = ContratacionProyecto.Proyecto.TieneEstadoFase1EyD;
+                        proyectoOld.FechaModificacion = DateTime.Now;
+                        proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                    }
+                 
 
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
@@ -187,7 +196,9 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
-                        
+
+                             
+
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
 
