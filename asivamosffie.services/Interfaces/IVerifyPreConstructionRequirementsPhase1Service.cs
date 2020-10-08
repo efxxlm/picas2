@@ -15,5 +15,7 @@ namespace asivamosffie.services.Interfaces
         Task<Contrato> GetContratoByContratoId(int pContratoId);
 
         Task<Respuesta> CrearContratoPerfilObservacion(ContratoPerfilObservacion pContratoPerfilObservacion);
+
+        bool ValidarRegistroCompletoContratoPerfil(ContratoPerfil contratoPerfilOld);
     }
 }

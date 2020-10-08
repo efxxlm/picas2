@@ -311,7 +311,7 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoContratoPerfil(ContratoPerfil contratoPerfilOld)
+        public bool ValidarRegistroCompletoContratoPerfil(ContratoPerfil contratoPerfilOld)
         {
             if (
                     string.IsNullOrEmpty(contratoPerfilOld.PerfilCodigo)
