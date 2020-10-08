@@ -167,7 +167,7 @@ namespace asivamosffie.services
                 }
                 return contrato;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new Contrato();
             }

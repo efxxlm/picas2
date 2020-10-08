@@ -217,7 +217,7 @@ namespace asivamosffie.services
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                     ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
-
+                                    ContratoPerfilObservacion.Eliminado = false;
                                     _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                                 }
                             }
