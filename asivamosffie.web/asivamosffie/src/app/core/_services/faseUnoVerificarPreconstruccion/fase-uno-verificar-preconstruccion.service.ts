@@ -13,6 +13,7 @@ export class FaseUnoVerificarPreconstruccionService {
   private paramUrl ( parametro: string ) {
     return `${ this.api_url }${ parametro }`;
   };
+
   constructor( private http: HttpClient ) { };
 
   getListContratacion () {

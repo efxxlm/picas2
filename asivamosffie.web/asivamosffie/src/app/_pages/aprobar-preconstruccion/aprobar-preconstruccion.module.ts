@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from './../../material/material.module';
 import { QuillModule } from 'ngx-quill';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AprobarPreconstruccionRoutingModule } from './aprobar-preconstruccion-routing.module';
 import { FormPerfilComponent } from './components/form-perfil/form-perfil.component';
@@ -28,6 +28,7 @@ import { ExpansionInterValidarRequisitosComponent } from './components/expansion
     CommonModule,
     AprobarPreconstruccionRoutingModule,
     MaterialModule,
+    FormsModule,
     QuillModule.forRoot(),
     CurrencyMaskModule,
     ReactiveFormsModule

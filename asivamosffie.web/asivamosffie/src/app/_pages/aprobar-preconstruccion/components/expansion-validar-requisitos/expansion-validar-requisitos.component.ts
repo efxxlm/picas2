@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { FaseUnoVerificarPreconstruccionService } from 'src/app/core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
+import { Contrato, ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
+import { ObservacionPerfil } from 'src/app/_interfaces/faseUnoVerificarPreconstruccion.interface';
 
 @Component({
   selector: 'app-expansion-validar-requisitos',
@@ -8,6 +13,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class ExpansionValidarRequisitosComponent implements OnInit {
 
+  contrato: Contrato;
   addressForm = this.fb.group({
     tieneObservacion: [null, Validators.required],
     observacion: [null, Validators.required]
@@ -26,10 +32,32 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
     ]
   };
 
-  constructor(private fb: FormBuilder) { }
+  constructor ( private fb: FormBuilder,
+                private activatedRoute: ActivatedRoute,
+                private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService )
+  { 
+    this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+  }
 
   ngOnInit(): void {
   }
+
+  getContratacionByContratoId ( pContratoId: string ) {
+    this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
+      .subscribe( contrato => {
+        this.contrato = contrato;
+        for ( let contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
+
+          for ( let perfil of contratacionProyecto.proyecto.contratoPerfil ) {
+            perfil[ 'tieneObservaciones' ] = null;
+            perfil[ 'verificarObservacion' ] = '';
+          };
+
+        };
+        console.log( this.contrato );
+      } );
+  };
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -41,11 +69,24 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
-    }
-  }
+    };
+  };
 
-  onSubmit() {
-    console.log(this.addressForm.value);
+  textoLimpioObservacion(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio;
+    };
+  };
+
+  onSubmit( perfil: ContratoPerfil ) {
+    const observacionPerfil: ObservacionPerfil = {
+      contratoPerfilId: perfil.contratoPerfilId,
+      observacion: perfil[ 'verificarObservacion' ]
+    };
+    console.log( observacionPerfil );
+    //this.faseUnoVerificarPreconstruccionSvc.crearContratoPerfilObservacion( observacionPerfil )
+    //  .subscribe( console.log );
   }
 
 }

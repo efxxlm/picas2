@@ -1,24 +1,24 @@
-<section class="container">
+<section class="container" *ngIf="contrato">
   <div class="text-center">
     <div class="text-right">
-      <a routerLink="/verificarPreconstruccion" mat-button color="primary" class="btn-regresar">
+      <a routerLink="/aprobarPreconstruccion" mat-button color="primary" class="btn-regresar">
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Gestionar requisitos de inicio contrato A886675445 fase 1 - Preconstrucción
+      Validar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
     </h1>
     <p class="text-primary">
       <span class="mx-2em">
         Fecha de aprobacion de póliza:
         <b>
-          21/06/2020
+          {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
         </b>
       </span>
       <span class="mx-2em">
         Proyectos asociados:
         <b>
-          1
+          {{ contrato.contratacion.contratacionProyecto.length }}
         </b>
       </span>
     </p>
@@ -29,11 +29,11 @@
     </p>
   </div>
 
-  <mat-accordion>
+  <mat-accordion *ngFor="let contratoProyecto of contrato.contratacion.contratacionProyecto">
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title completo">
-          LM443211 - I.E. Nueva Generación - Única sede
+          {{ contratoProyecto.proyecto.llaveMen }} - {{ contratoProyecto.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratoProyecto.proyecto[ 'sede' ].nombre }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -41,71 +41,116 @@
         <mat-card-content>
           <p>
             <b>Nombre del contratista:</b>
-            Constructora
+            {{ contrato.contratacion.contratista.nombre }}
           </p>
           <p>
             <b>Número de identificación (NIT/RUT):</b>
-            900.675.987-4
+            {{ contrato.contratacion.contratista.numeroIdentificacion }}
           </p>
           <p>
             <b>Tipo de intervención:</b>
-            Remodelación
+            {{ contratoProyecto.proyecto.tipoIntervencionCodigo }}
           </p>
           <p>
             <b>Departamento:</b>
-            Atlántico
+            {{ contratoProyecto.proyecto.departamento }}
           </p>
           <p>
             <b>Municipio:</b>
-            Galapa
+            {{ contratoProyecto.proyecto.municipio }}
           </p>
           <p>
             <b>Valor total del proyecto:</b>
-            $ 80.000.000
+            {{ contratoProyecto.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
           </p>
         </mat-card-content>
       </mat-card>
 
-      <div class="row">
-        <div class="pr-1">
-          <label class="label-left">¿En qué estado de la fase 1 - Preconstrucción se encuentra el proyecto?</label>
-        </div>
-        <div class="col">
-          <mat-form-field class="select-width">
-            <mat-select required>
-              <mat-option *ngFor="let estadoProyecto of estadoProyectoArray" [value]="estadoProyecto.value">
-                {{ estadoProyecto.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="pr-1">
-          <label class="label-left" for="cuantosCompromisos">
-            ¿Cuántos perfiles diferentes se requieren del contratista de interventoría para ejecutar esta fase?
-          </label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #canPerfiles type="number" min="1" max="999" maxLength="3"
-              (keypress)="validateNumberKeypress($event)"
-              onKeyPress="if(this.value.length>=this.maxLength) return false;">
-          </mat-form-field>
-          <span class="contador">{{3 - canPerfiles.value.length}}</span>
-        </div>
-      </div>
-
-      <mat-accordion>
+      <mat-accordion *ngFor="let perfil of contratoProyecto.proyecto.contratoPerfil; index as i">
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title completo">
-              Tema 1
+              Perfil {{ i+1 }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <app-form-perfil></app-form-perfil>
+          <mat-card class="shipping-card">
+            <mat-card-content>
+              <p>
+                <b>Perfil:</b>
+                {{ perfil.perfilCodigo }}
+              </p>
+              <p>
+                <b>Cantidad de hojas de vida requeridas:</b>
+                {{ perfil.cantidadHvRequeridas }}
+              </p>
+              <p>
+                <b>Cantidad de hojas de vida recibidas:</b>
+                {{ perfil.cantidadHvRecibidas }}
+              </p>
+              <p>
+                <b>Cantidad de hojas de vida aprobadas:</b>
+                {{ perfil.cantidadHvAprobadas }}
+              </p>
+              <p>
+                <b>Fecha de aprobación de la totalidad de las hojas de vida:</b>
+                {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }}
+              </p>
+              <div *ngFor="let obs of perfil.contratoPerfilObservacion">
+                <p *ngIf="obs.tipoObservacionCodigo === '1'">
+                  <b>Oservaciones:</b>
+                  {{ textoLimpioObservacion( obs.observacion ) }}
+                </p>
+              </div>
+              <p *ngFor="let radicadoFfie of perfil.contratoPerfilNumeroRadicado; index as j">
+                <b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }}:</b>
+                {{ radicadoFfie['numeroRadicado'] }}
+              </p>
+              <p>
+                <b>URL con soporte:</b>
+                {{ perfil.rutaSoporte }}
+              </p>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="row justify-content-center mb-2em">
+            <div class="pr-1">
+              <label class="label-left" for="tieneObservacion">
+                ¿Desde la supervisión tiene observaciones a las hojas de vida de este perfil?:
+              </label>
+            </div>
+            <div>
+              <mat-radio-group class="radioInput" [(ngModel)]="perfil['tieneObservaciones']">
+                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="perfil['tieneObservaciones'] === true">
+            <div class="text-area-quill">
+              <label for="alcanceParticular" class="text-area-quill--label">
+                Observaciones a las hojas de vida del contratista de obra
+              </label>
+              <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" [(ngModel)]="perfil['verificarObservacion']" required>
+              </quill-editor>
+            </div>
+            <span class="contador" *ngIf="perfil['verificarObservacion'].length > 0">
+              {{1000 - textoLimpio(perfil['verificarObservacion'])}}
+            </span>
+            <span class="contador" *ngIf="perfil['verificarObservacion'].length === 0">
+              1000
+            </span>
+          </div>
+
+          <div class="text-center">
+            <button mat-button color="warn" class="btn-guardar" type="submit"
+            [disabled]="perfil['tieneObservaciones'] === null"
+            (click)="onSubmit( perfil )">
+              <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+          </div>
 
         </mat-expansion-panel>
       </mat-accordion>
