@@ -74,5 +74,7 @@
         public const string Aprobar_Inicio_Contrato = "84";
 
         public const string Eliminar_Numero_Radicado = "99";
+
+        public const string Cambiar_Estado_Verificacion_Contrato = "103";
     } 
 }
