@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { GenerarActaFdosConstrComponent } from './components/generar-acta-fdos-constr/generar-acta-fdos-constr.component';
+import { FormGenerarActaInicioConstTecnicoComponent } from './components/form-generar-acta-inicio-const-tecnico/form-generar-acta-inicio-const-tecnico.component';
 import { GestionarActaInicioFdosConstrComponent } from './components/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.component';
+import { VerDetalleTecnicoFdosConstrComponent } from './components/ver-detalle-tecnico-fdos-constr/ver-detalle-tecnico-fdos-constr.component';
 
 
 const routes: Routes = [
@@ -11,7 +12,11 @@ const routes: Routes = [
   },
   {
     path:'generarActaFDos/:id',
-    component: GenerarActaFdosConstrComponent
+    component: FormGenerarActaInicioConstTecnicoComponent
+  },
+  {
+    path:'verDetalleActaConstruccion/:id',
+    component: VerDetalleTecnicoFdosConstrComponent
   }
 ];
 
