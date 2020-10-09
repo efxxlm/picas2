@@ -33,7 +33,14 @@ namespace asivamosffie.model.APIModels
         //datos PDF opcionales
         public string? LlaveMENContrato { get; set; }
         public string? InstitucionEducativaLlaveMEN { get; set; }
-        public string? DepartamentoYMunicipioLlaveMEN { get; set; }       
-            
+        public string? DepartamentoYMunicipioLlaveMEN { get; set; }        
+
+        public string? ObservacionOConsideracionesEspeciales { get; set; }
+
+        public string? FechaPrevistaTerminacion { get; set; }
+
+        public string? FechaActaInicio { get; set; }               
+
+
     }
 }
