@@ -258,11 +258,11 @@ namespace asivamosffie.services
             //Plantilla plantilla = new Plantilla();
             //plantilla.Contenido = "";
 
-            plantilla.Contenido = await ReemplazarDatosPlantillaActaInicio(plantilla.Contenido, actaInicio);
+            plantilla.Contenido = await ReemplazarDatosPlantillaActaInicio(plantilla.Contenido, actaInicio,"cdaza");
             return ConvertirPDF(plantilla);
         }
 
-        private async Task<string> ReemplazarDatosPlantillaActaInicio(string strContenido, VistaGenerarActaInicioContrato pActaInicio /*, string usuario*/)
+        private async Task<string> ReemplazarDatosPlantillaActaInicio(string strContenido, VistaGenerarActaInicioContrato pActaInicio, string usuario)
         {
 
             string str = "";
@@ -274,7 +274,7 @@ namespace asivamosffie.services
 
             strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Obra_", pActaInicio.NombreRepresentanteContratistaObra);
             strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Interventoria_", pActaInicio.NombreRepresentanteContratistaObra);
-            
+
 
             strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra_", pActaInicio.NombreEntidadContratistaObra);
             strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Interventoria_", pActaInicio.NombreEntidadContratistaObra);
@@ -310,9 +310,18 @@ namespace asivamosffie.services
 
             //datos exclusivos interventoria
 
-            //List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.Usuario.Nombres == usuario).Include(y => y.Perfil).ToListAsync();
+            UsuarioPerfil UsuarioPerfil = _context.UsuarioPerfil.Where(y => y.Usuario.Email == usuario).Include(y => y.Perfil).FirstOrDefault();
 
-            strContenido = strContenido.Replace("_Cargo_Usuario_", "_Cargo_Usuario_");
+            Perfil perfil=null;
+
+            if (UsuarioPerfil != null) { 
+             perfil = _context.Perfil.Where(y => y.PerfilId == UsuarioPerfil.PerfilId).FirstOrDefault();
+
+        }
+            if (UsuarioPerfil != null)
+            {
+                strContenido = strContenido.Replace("_Cargo_Usuario_", perfil.Nombre);
+            }
             strContenido = strContenido.Replace("_Nombre_Supervisor_", "_Nombre_Supervisor_");          
 
             return strContenido;
@@ -326,6 +335,8 @@ namespace asivamosffie.services
             //pendiente
             //if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
             //{
+                pPlantilla.Contenido = pPlantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+            //    pPlantilla.Encabezado.Contenido = pPlantilla.Encabezado.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
             //    strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
             //}
 
@@ -413,10 +424,44 @@ namespace asivamosffie.services
         //Task<ActionResult<VistaGenerarActaInicioContrato>> GetListVistaGenerarActaInicio(int pContratoId);
         //GetListVistaGenerarActaInicio
 
-    
+
+        public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio()
+        {
+            //            Número del contrato de obra DisponibilidadPresupuestal? contrato - numeroContrato
+            //Estado del acta - CONTRATO - EstadoActa - DOM 60
+           List<GrillaActaInicio> lstActaInicio = new List<GrillaActaInicio>();
+            GrillaActaInicio actaInicio = new GrillaActaInicio();
+            List<Contrato> lstContratos = new List<Contrato>();
+            lstContratos = _context.Contrato.Where(r => r.Eliminado == false).ToList();
+            Contratacion contratacion;
+
+            Dominio EstadoActaFase2Contrato;
+            string strEstadoActaFase2Contrato="";
+
+             foreach (var item in lstContratos)
+            {
+                actaInicio = new GrillaActaInicio();
+
+                EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+                if (EstadoActaFase2Contrato != null)
+                    strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
+
+                actaInicio.EstadoActa = strEstadoActaFase2Contrato;
+                actaInicio.ContratoId = item.ContratoId;
+                actaInicio.NumeroContratoObra = item.NumeroContrato;
+
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
+                //actaInicio.FechaAprobacionRequisitos = contratacion.FechaAprobacion.ToString("dd/MM/yyyy");
+                actaInicio.FechaAprobacionRequisitos = contratacion.FechaAprobacion != null ? Convert.ToDateTime(contratacion.FechaAprobacion).ToString("dd/MM/yyyy") : contratacion.FechaAprobacion.ToString();
+                lstActaInicio.Add(actaInicio);
+            }
+
+            return lstActaInicio;
+
+        }
 
         //public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId )
-       public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId)
+        public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId)
         {
             VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
@@ -436,7 +481,8 @@ namespace asivamosffie.services
 
             actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioInterventoria);
 
-            return actaInicioConsolidado;
+            return actaInicioObra;
+            //return actaInicioConsolidado;
 
         }
 

@@ -33,10 +33,24 @@ namespace asivamosffie.api.Controllers
 
                 throw ex;
             }
+        }        
+
+        [HttpGet]
+        [Route("GetListGrillaActaInicio")]
+        public async Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio()
+        {
+            try
+            {
+                return await _ActBegin.GetListGrillaActaInicio();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        
-            
+
+
         [HttpGet]
         [Route("GetPlantillaActaInicio")]
         public async Task<FileResult> GetPlantillaActaInicio(int pContratoId)

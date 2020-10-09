@@ -12,6 +12,8 @@ namespace asivamosffie.services.Interfaces
     {
         //Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio();
 
+        Task<List<GrillaActaInicio>> GetListGrillaActaInicio();
+
         Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId);
 
         Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion);
