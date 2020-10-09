@@ -23,94 +23,28 @@ namespace asivamosffie.services
             _context = context;
         }
         public async Task<dynamic> GetListContratacion()
-        {
-            try
+        { 
+            List<dynamic> listaContrats = new List<dynamic>();
+
+            List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.ToListAsync();
+
+            lista.ForEach(c =>
             {
-                List<dynamic> ListContratacion = new List<dynamic>();
-                List<Contrato> ListContratosConPolizasYDRP = new List<Contrato>();
-                List<Contrato> listContratos = await _context.Contrato
-                    .Where(r => !(bool)r.Eliminado && r.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
-                          //&& r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Sin_aprobacion_de_requisitos_tecnicos)
-                          .Include(r => r.Contratacion)
-                             .ThenInclude(r => r.DisponibilidadPresupuestal)
-                                          .Include(r => r.ContratoPerfil)
-
-                    .Include(r => r.Contratacion)
-                         .ThenInclude(r => r.ContratacionProyecto)
-                             .ThenInclude(r => r.Proyecto)
-                       .Include(r => r.ContratoPoliza)
-                          .ThenInclude(r => r.PolizaGarantia).ToListAsync();
-
-                List<Dominio> listEstadosVerificacionContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).ToList();
-                List<Dominio> listTipoContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).ToList();
-
-                listContratos = listContratos.Where(r => r.ContratoPoliza.Count() > 0).ToList();
-
-                //TODO Ver boton 
-                foreach (var contrato in listContratos)
+                listaContrats.Add(new
                 {
-                    foreach (var DisponibilidadPresupuestal in contrato.Contratacion.DisponibilidadPresupuestal)
-                    {
-                        //Si no tiene drp No tiene registro presupuestal
-                        if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.NumeroDrp))
-                        {
-                            ListContratosConPolizasYDRP.Add(contrato);
-                        }
-                    }
-                }
-                //TODO Validar DRP
-                foreach (var ContratoConPolizasYDRP in ListContratosConPolizasYDRP.Distinct().OrderByDescending(r => r.ContratoId).ToList())
-                {
-                    int ProyectosNoCompletos = 0;
-                    bool VerBotonAprobarInicio = true;
+                    c.ContratoId,
+                    c.FechaAprobacion,
+                    c.NumeroContrato,
+                    c.CantidadProyectosAsociados,
+                    c.CantidadProyectosRequisitosAprobados,
+                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                    c.EstadoCodigo,
+                    c.EstadoNombre,
+                    c.ExisteRegistro, 
+                });
+            });
 
-                    if (ContratoConPolizasYDRP.ContratoPerfil.Count() == 0)
-                    {
-                        VerBotonAprobarInicio = false;
-                    }
-                    foreach (var ContratoPerfil in ContratoConPolizasYDRP.ContratoPerfil)
-                    {
-                        if (!string.IsNullOrEmpty(ContratoPerfil.FechaAprobacion.ToString()))
-                        {
-
-                            VerBotonAprobarInicio = false;
-                        }
-                    }
-                    foreach (var ContratacionProyecto in ContratoConPolizasYDRP.Contratacion.ContratacionProyecto)
-                    {
-                        if (ContratacionProyecto.Proyecto.RegistroCompleto == null || (bool)ContratacionProyecto.Proyecto.RegistroCompleto)
-                        {
-
-                            ProyectosNoCompletos++;
-                        }
-                    }
-                    int CantidadProyectosAsociados = ContratoConPolizasYDRP.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).Count();
-                    int ProyectosCompletos = CantidadProyectosAsociados - ProyectosNoCompletos;
-
-
-                    if (ContratoConPolizasYDRP.ContratoPoliza.FirstOrDefault().FechaAprobacion != null)
-                    {
-                        ListContratacion.Add(new
-                        {
-                            FechaAprobacionPoliza = ((DateTime)ContratoConPolizasYDRP.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
-                            ContratoConPolizasYDRP.NumeroContrato,
-                            CantidadProyectosAsociados,
-                            ProyectosCompletos,
-                            ProyectosNoCompletos,
-                            EstadoVerificacionNombre = listEstadosVerificacionContrato.Where(r => r.Codigo.Equals(ContratoConPolizasYDRP.EstadoVerificacionCodigo)).FirstOrDefault().Nombre,
-                            idContrato = ContratoConPolizasYDRP.ContratoId,
-                            TipoContracto = listTipoContrato.Where(r => r.Codigo == ContratoConPolizasYDRP.TipoContratoCodigo).FirstOrDefault().Nombre,
-                            TipoContractoCodigo = ContratoConPolizasYDRP.TipoContratoCodigo,
-                            VerBotonAprobarInicio
-                        });
-                    }
-                }
-                return ListContratacion;
-            }
-            catch (Exception ex)
-            {
-                return new List<dynamic>();
-            }
+            return listaContrats;
 
         }
 
