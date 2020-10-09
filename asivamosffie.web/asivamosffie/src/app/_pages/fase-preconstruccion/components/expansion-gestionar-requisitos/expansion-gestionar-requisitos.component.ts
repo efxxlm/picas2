@@ -3,6 +3,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { ContratoModificado, Contrato, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-expansion-gestionar-requisitos',
@@ -14,11 +16,19 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
   contrato: Contrato;
 
   constructor ( private activatedRoute: ActivatedRoute,
-                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
+                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+                private dialog: MatDialog ) {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id )
   };
 
   ngOnInit(): void {
+  };
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   };
 
   getContratacionByContratoId ( pContratoId: string ) {
@@ -41,7 +51,14 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
 
     console.log( this.contrato );
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
-      .subscribe( console.log );
+      .subscribe( 
+        response => {
+          this.openDialog( '', response.message );
+        },
+        err => {
+          this.openDialog( '', err.message );
+        }
+      );
   };
 
 };
