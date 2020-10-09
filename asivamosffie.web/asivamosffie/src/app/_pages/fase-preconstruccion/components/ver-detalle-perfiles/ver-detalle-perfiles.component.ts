@@ -4,11 +4,11 @@ import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPre
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
-  selector: 'app-ver-detalle',
-  templateUrl: './ver-detalle.component.html',
-  styleUrls: ['./ver-detalle.component.scss']
+  selector: 'app-ver-detalle-perfiles',
+  templateUrl: './ver-detalle-perfiles.component.html',
+  styleUrls: ['./ver-detalle-perfiles.component.scss']
 })
-export class VerDetalleComponent implements OnInit {
+export class VerDetallePerfilesComponent implements OnInit {
 
   contrato: Contrato;
 

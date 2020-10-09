@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VerDetalleComponent } from './ver-detalle.component';
+import { VerDetallePerfilesComponent } from './ver-detalle-perfiles.component';
 
-describe('VerDetalleComponent', () => {
-  let component: VerDetalleComponent;
-  let fixture: ComponentFixture<VerDetalleComponent>;
+describe('VerDetallePerfilesComponent', () => {
+  let component: VerDetallePerfilesComponent;
+  let fixture: ComponentFixture<VerDetallePerfilesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ VerDetalleComponent ]
+      declarations: [ VerDetallePerfilesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(VerDetalleComponent);
+    fixture = TestBed.createComponent(VerDetallePerfilesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

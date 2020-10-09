@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { CommonService } from '../../../../core/_services/common/common.service';
 
 export interface PeriodicElement {
   id: number;
@@ -24,12 +25,12 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
   verAyuda = false;
   dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
-    'fechaAprobacionPoliza',
+    'fechaAprobacion',
     'numeroContrato',
     'cantidadProyectosAsociados',
-    'proyectosCompletos',
-    'proyectosNoCompletos',
-    'estadoVerificacionNombre',
+    'cantidadProyectosRequisitosAprobados',
+    'cantidadProyectosRequisitosPendientes',
+    'estadoNombre',
     'gestion'
   ];
 
@@ -41,7 +42,11 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
+  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+                private commonSvc: CommonService ) 
+  {
+    commonSvc.listaEstadosVerificacionContrato()
+      .subscribe( console.log )
     this.faseUnoPreconstruccionSvc.getListContratacion()
       .subscribe( listas => {
         console.log( listas );
@@ -65,6 +70,10 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  aprobarInicio () {
+    console.log( 'Aprobando Inicio' );
   }
 
 }

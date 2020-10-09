@@ -6,6 +6,8 @@ import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUn
 import { ObservacionPerfil } from '../../../../_interfaces/faseUnoVerificarPreconstruccion.interface';
 import { ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-expansion-verificar-requisitos',
@@ -36,6 +38,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
+                private dialog: MatDialog,
                 private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) 
   {
@@ -65,7 +68,14 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
-  }
+  };
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
 
   textoLimpio(texto: string) {
     if ( texto ){
@@ -88,7 +98,10 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     };
     console.log( observacionPerfil );
     this.faseUnoVerificarPreconstruccionSvc.crearContratoPerfilObservacion( observacionPerfil )
-      .subscribe( console.log );
-  }
+      .subscribe(
+        response => this.openDialog( '', response.message ),
+        err => this.openDialog( '', err.message )
+      );
+  };
 
 }

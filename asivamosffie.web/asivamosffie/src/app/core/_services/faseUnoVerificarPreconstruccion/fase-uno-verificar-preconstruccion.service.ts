@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Contrato, GrillaFaseUnoPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 import { ObservacionPerfil } from '../../../_interfaces/faseUnoVerificarPreconstruccion.interface';
+import { Respuesta } from '../autenticacion/autenticacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class FaseUnoVerificarPreconstruccionService {
   };
 
   crearContratoPerfilObservacion ( pContratoPerfilObservacion: ObservacionPerfil ) {
-    return this.http.post( `${ this.paramUrl( '/VerifyPreConstructionRequirementsPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );
+    return this.http.post<Respuesta>( `${ this.paramUrl( '/VerifyPreConstructionRequirementsPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );
   }
 
 };
