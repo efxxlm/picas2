@@ -6,22 +6,81 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 export interface Contrato {
+  idContrato: number;
   fechaAprobacionRequisitos: string;
-  numeroContrato:string;
-  estado:string;
-  enviadoparaInterventor:boolean;
-  actaSuscrita:boolean;
+  numeroContrato: string;
+  estado: string;
+  enviadoparaInterventor: boolean;
+  actaSuscrita: boolean;
 }
 
+
+
 const ELEMENT_DATA: Contrato[] = [
-  {fechaAprobacionRequisitos:"20/06/2020",numeroContrato:"C223456789",estado:"Sin validar",enviadoparaInterventor:null,actaSuscrita:null},
-  {fechaAprobacionRequisitos:"21/06/2020",numeroContrato:"C223456790",estado:"Con observaciones",enviadoparaInterventor:null,actaSuscrita:null},
-  {fechaAprobacionRequisitos:"22/06/2020",numeroContrato:"C223456791",estado:"Con observaciones",enviadoparaInterventor:true,actaSuscrita:null},
-  {fechaAprobacionRequisitos:"23/06/2020",numeroContrato:"C223456791",estado:"Enviada al interventor",enviadoparaInterventor:null,actaSuscrita:null},
-  {fechaAprobacionRequisitos:"24/06/2020",numeroContrato:"C223456792",estado:"Sin acta generada",enviadoparaInterventor:null,actaSuscrita:null},
-  {fechaAprobacionRequisitos:"25/06/2020",numeroContrato:"C223456793",estado:"Con acta generada",enviadoparaInterventor:null,actaSuscrita:null},
-  {fechaAprobacionRequisitos:"26/06/2020",numeroContrato:"C223456794",estado:"Con acta en proceso de firma",enviadoparaInterventor:null,actaSuscrita:null},
-  {fechaAprobacionRequisitos:"27/06/2020",numeroContrato:"C223456795",estado:"Con acta suscrita y cargada",enviadoparaInterventor:null,actaSuscrita:true}
+  {
+    idContrato: 1,
+    fechaAprobacionRequisitos:"20/06/2020",
+    numeroContrato:"C223456789",
+    estado:"Sin validar",
+    enviadoparaInterventor:null,
+    actaSuscrita:null
+  },
+  {
+    idContrato: 2,
+    fechaAprobacionRequisitos:"21/06/2020",
+    numeroContrato:"C223456790",
+    estado:"Con observaciones",
+    enviadoparaInterventor:null,
+    actaSuscrita:null
+  },
+  {
+    idContrato: 3,
+    fechaAprobacionRequisitos:"22/06/2020",
+    numeroContrato:"C223456791",
+    estado:"Con observaciones",
+    enviadoparaInterventor:true,
+    actaSuscrita:null
+  },
+  {
+    idContrato: 4,
+    fechaAprobacionRequisitos:"23/06/2020",
+    numeroContrato:"C223456791",
+    estado:"Enviada al interventor",
+    enviadoparaInterventor:null,
+    actaSuscrita:null
+  },
+  {
+    idContrato: 5,
+    fechaAprobacionRequisitos:"24/06/2020",
+    numeroContrato:"C223456792",
+    estado:"Sin acta generada",
+    enviadoparaInterventor:null,
+    actaSuscrita:null
+  },
+  {
+    idContrato: 6,
+    fechaAprobacionRequisitos:"25/06/2020",
+    numeroContrato:"C223456793",
+    estado:"Con acta generada",
+    enviadoparaInterventor:null,
+    actaSuscrita:null
+  },
+  {
+    idContrato: 7,
+    fechaAprobacionRequisitos:"26/06/2020",
+    numeroContrato:"C223456794",
+    estado:"Con acta en proceso de firma",
+    enviadoparaInterventor:null,
+    actaSuscrita:null
+  },
+  {
+    idContrato: 8,
+    fechaAprobacionRequisitos:"27/06/2020",
+    numeroContrato:"C223456795",
+    estado:"Con acta suscrita y cargada",
+    enviadoparaInterventor:null,
+    actaSuscrita:true
+  }
 ];
 @Component({
   selector: 'app-tabla-contr-obra-fdos-constr',
@@ -47,24 +106,21 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
-  validarActaParaInicio(){
+  validarActaParaInicio(id){
     localStorage.setItem("origin","obra");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio']);
+    localStorage.setItem("editable","false");
+    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio',id]);
   }
-  verDetalleEditar(){
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio']);
+  verDetalleEditar(id){
+    localStorage.setItem("origin","obra");
+    localStorage.setItem("editable","true");
+    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio',id]);
   }
-  verDetalle(actaSuscrita){
-    if(actaSuscrita == true){
-      localStorage.setItem("actaSuscrita","true");
-    }
-    else{
-      localStorage.setItem("actaSuscrita","false");
-    }
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa']);
+  verDetalle(id){
+    this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
   generarActaFDos(){
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa']);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActa']);
   }
   cargarActaSuscrita(){
     const dialogConfig = new MatDialogConfig();

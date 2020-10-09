@@ -20,7 +20,7 @@ const routes: Routes = [
     component: VerDetalleTecnicoFdosConstrComponent
   },
   {
-    path:'validarActaFDos/:id',
+    path:'validarActaDeInicio/:id',
     component: FormValidarActaInicioConstruccionComponent
   }
 ];
