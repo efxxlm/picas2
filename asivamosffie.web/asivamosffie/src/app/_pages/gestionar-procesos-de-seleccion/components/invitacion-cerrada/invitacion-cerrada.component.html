@@ -24,8 +24,8 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()"
                 id="botonDescripcion"></button>
-            <app-form-descripcion-del-proceso-de-seleccion 
-                #descripcion 
+            <app-form-descripcion-del-proceso-de-seleccion
+                #descripcion
                 [procesoSeleccion]="procesoSeleccion"
                 (guardar)="onSubmit()"
                 [style.pointer-events]="getStyleProponentesCreado()">
@@ -38,9 +38,9 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="estudio.cargarRegistro()" id="botonEstudio"></button>
-            <app-form-estudio-de-mercado 
-                #estudio 
-                [procesoSeleccion]="procesoSeleccion" 
+            <app-form-estudio-de-mercado
+                #estudio
+                [procesoSeleccion]="procesoSeleccion"
                 (guardar)="onSubmit()"
                 [style.pointer-events]="getStyleProponentesCreado()">
             </app-form-estudio-de-mercado>
@@ -54,9 +54,9 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="proponenteCerrada.cargarRegistro()"
                 id="botonProponente"></button>
-            <app-form-datos-proponentes-seleccionados-invitacion-cerrada 
+            <app-form-datos-proponentes-seleccionados-invitacion-cerrada
                 #proponenteCerrada
-                [procesoSeleccion]="procesoSeleccion" 
+                [procesoSeleccion]="procesoSeleccion"
                 (guardar)="onSubmit()"
                 [style.pointer-events]="getStyleProponentesCreado()">
             </app-form-datos-proponentes-seleccionados-invitacion-cerrada>
@@ -90,7 +90,7 @@
         </mat-expansion-panel>
 
     </mat-accordion>
-    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+    <!-- <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
     Cuando la solicitud se encuentra en estado <b>“Aprobada apertura de comité fiduciario”</b> el sistema habilitará las opciones para continuar el proceso.
-    </div>
+    </div> -->
 </div>
