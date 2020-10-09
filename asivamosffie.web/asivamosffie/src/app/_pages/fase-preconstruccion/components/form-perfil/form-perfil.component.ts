@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ContratacionProyecto2, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
-import { CommonService } from '../../../../core/_services/common/common.service';
+import { CommonService, Dominio } from '../../../../core/_services/common/common.service';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -30,20 +30,25 @@ export class FormPerfilComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  perfilesCv: any[] = [
-    { value: 'Ingeniero de obra' },
-    { value: 'Ingeniero electrico' }
-  ]
+  perfilesCv: Dominio[] = []
 
   constructor ( private fb                       : FormBuilder,
                 private commonSvc                : CommonService,
                 private dialog                   : MatDialog,
-                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
+                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) 
+  {
     this.crearFormulario();
+    this.commonSvc.listaPerfil()
+      .subscribe( perfiles => {
+        this.perfilesCv = perfiles;
+        console.log( this.perfilesCv );
+      } );
   }
 
   ngOnInit(): void {
-    this.perfilesProyecto();
+    setTimeout(() => {
+      this.perfilesProyecto();
+    }, 1000);
   };
 
   get perfiles () {
@@ -102,6 +107,7 @@ export class FormPerfilComponent implements OnInit {
             );
           };
         }
+
         this.perfiles.push(
           this.fb.group(
             {
