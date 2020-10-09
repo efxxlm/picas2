@@ -29,21 +29,21 @@ namespace asivamosffie.services
 
             List<dynamic> listaContrats = new List<dynamic>();
 
-            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
+            List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra).ToListAsync();
 
             lista.ForEach(c =>
             {
                 listaContrats.Add(new
                 {
-                    ContratoId = c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacion,
-                    NumeroContrato = c.NumeroContrato,
-                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                    c.ContratoId,
+                    c.FechaAprobacion,
+                    c.NumeroContrato,
+                    c.CantidadProyectosAsociados,
+                    c.CantidadProyectosRequisitosAprobados,
                     CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoCodigo = c.EstadoCodigo,
-                    EstadoNombre = c.EstadoNombre,
-                    Existeregistro = c.ExisteRegistro,
+                    c.EstadoCodigo,
+                    c.EstadoNombre,
+                    c.ExisteRegistro,
 
                 });
             });
@@ -120,14 +120,15 @@ namespace asivamosffie.services
                 foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto)
                 {
                     //Guardar estado de la fase 1 preConstruccion 
-                    if (ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico != null) {
+                    if (ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico != null)
+                    {
                         Proyecto proyectoOld = _context.Proyecto.Find(ContratacionProyecto.Proyecto.ProyectoId);
                         proyectoOld.TieneEstadoFase1Diagnostico = ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico;
                         proyectoOld.TieneEstadoFase1EyD = ContratacionProyecto.Proyecto.TieneEstadoFase1EyD;
                         proyectoOld.FechaModificacion = DateTime.Now;
                         proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     }
-                 
+
 
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
@@ -143,7 +144,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
 
-                             
+
 
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
@@ -160,7 +161,7 @@ namespace asivamosffie.services
                                 }
                                 else
                                 {
-                                    ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper(); 
+                                    ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                     ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
@@ -353,7 +354,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
         public async Task<Respuesta> DeleteContratoPerfilNumeroRadicado(int ContratoPerfilNumeroRadicadoId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Numero_Radicado, (int)EnumeratorTipoDominio.Acciones);
@@ -390,8 +391,8 @@ namespace asivamosffie.services
                     };
             }
         }
-         
-        public async Task<Respuesta> ChangeStateContrato(int pContratoId, string UsuarioModificacion , string pEstadoVerificacionContratoCodigo)
+
+        public async Task<Respuesta> ChangeStateContrato(int pContratoId, string UsuarioModificacion, string pEstadoVerificacionContratoCodigo)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Verificacion_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
@@ -412,7 +413,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = RegisterPreContructionPhase1.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, UsuarioModificacion, "EL CONTRATO N°: " + contratoMod.NumeroContrato+ "CAMBIO A ESTADO DE VERIFICACION "+NombreEstadoMod.ToUpper())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, UsuarioModificacion, "EL CONTRATO N°: " + contratoMod.NumeroContrato + "CAMBIO A ESTADO DE VERIFICACION " + NombreEstadoMod.ToUpper())
                     };
             }
             catch (Exception ex)
