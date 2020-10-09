@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public ArchivoCargue()
         {
             TempOrdenLegibilidad = new HashSet<TempOrdenLegibilidad>();
+            TempProgramacion = new HashSet<TempProgramacion>();
             TemporalProyecto = new HashSet<TemporalProyecto>();
         }
 
@@ -26,6 +27,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
 
         public virtual ICollection<TempOrdenLegibilidad> TempOrdenLegibilidad { get; set; }
+        public virtual ICollection<TempProgramacion> TempProgramacion { get; set; }
         public virtual ICollection<TemporalProyecto> TemporalProyecto { get; set; }
     }
 }
