@@ -119,7 +119,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
             if ( apo[ 'cofinanciacionAportante' ].tipoAportanteId === 6 ){
               grupoAportante.get( 'nombreAportante' ).setValue( 'FFIE' );
             } else if ( apo[ 'cofinanciacionAportante' ].tipoAportanteId === 9 ) {
-              grupoAportante.get( 'nombreAportante' ).setValue( `${ apo[ 'cofinanciacionAportante' ].departamento.descripcion } / ${ apo[ 'cofinanciacionAportante' ].municipio.descripcion }` )
+              grupoAportante.get( 'nombreAportante' ).setValue( `${ apo[ 'cofinanciacionAportante' ].departamento.descripcion } / ${ apo[ 'cofinanciacionAportante' ].municipio?.descripcion }` )
             } else if ( apo[ 'cofinanciacionAportante' ].tipoAportanteId === 10 ) {
               grupoAportante.get( 'nombreAportante' ).setValue( `${ apo[ 'cofinanciacionAportante' ].nombreAportante.nombre }` );
             }

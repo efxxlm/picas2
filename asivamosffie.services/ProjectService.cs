@@ -706,7 +706,7 @@ namespace asivamosffie.services
                     //Aportantes 
                     foreach (var proyectoAportante in pProyecto.ProyectoAportante)
                     {
-                        if (proyectoAportante.AportanteId == 0)
+                        if (proyectoAportante.ProyectoAportanteId == 0)
                         {
                             ProyectoAportante proyectoAportante1 = new ProyectoAportante
                             {
@@ -756,8 +756,8 @@ namespace asivamosffie.services
                             {
                                 //InfraestructuraIntervenirProyecto Auditoria 
                                 Eliminado = false,
-                                UsuarioEliminacion = pProyecto.UsuarioCreacion,
-                                FechaEliminacion = DateTime.Now,
+                                UsuarioCreacion = pProyecto.UsuarioCreacion,
+                                FechaCreacion = DateTime.Now,
                                 //InfraestructuraIntervenirProyecto REGISTROS
                                 ProyectoId = pProyecto.ProyectoId,
                                 InfraestructuraCodigo = infraestructuraIntervenirProyecto.InfraestructuraCodigo,
@@ -1469,7 +1469,7 @@ namespace asivamosffie.services
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto)
                                                         .Include(y => y.InstitucionEducativa)
                                                         .Include( y => y.Sede )
-                                                        .Include( y => y.LocalizacionIdMunicipioNavigation )
+                                                        .Include( y => y.LocalizacionIdMunicipioNavigation )                                                                                                                
                                                         .FirstOrDefaultAsync();
 
             proyecto.ProyectoAportante = _context.ProyectoAportante.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false)
@@ -1477,30 +1477,40 @@ namespace asivamosffie.services
                                                                     .Include(z => z.CofinanciacionDocumento)
                                                                     .ToList();
 
-            proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();
+            proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();            
             List<InfraestructuraIntervenirProyecto> infraestructuras = _context.InfraestructuraIntervenirProyecto.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false).ToList();
             foreach (var infraestructura in infraestructuras)
             {
                 infraestructura.Proyecto = null;
             }
             proyecto.InfraestructuraIntervenirProyecto = infraestructuras;
+            proyecto.ProyectoPredio = _context.ProyectoPredio.Where(x => x.Activo == true && x.ProyectoId==proyecto.ProyectoId).Include(x => x.Predio).ToList();
             //proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).ToList();
             return proyecto;
         }
 
-        public async Task<bool> DeleteProyectoByProyectoId(int idProyecto)
+        public async Task<bool> DeleteProyectoByProyectoId(int idProyecto,string usuario)
         {
             Proyecto proyecto = await _context.Proyecto.FindAsync(idProyecto);
             bool retorno = true;
-            try
-            {
-                proyecto.Eliminado = true;
-                _context.SaveChanges();
-            }
-            catch (Exception)
+            if(_context.ContratacionProyecto.Where(x=>x.ProyectoId== idProyecto && !(bool)x.Eliminado).Count()>0 || _context.DisponibilidadPresupuestalProyecto.Where(x=>x.ProyectoId==idProyecto && !(bool)x.Eliminado).Count()>0)
             {
                 return false;
             }
+            else
+            {
+                try
+                {
+                    proyecto.Eliminado = true;
+                    proyecto.UsuarioModificacion = usuario;
+                    _context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            
             return retorno;
         }
 
@@ -1602,7 +1612,8 @@ namespace asivamosffie.services
 
             try
             {
-                List<ProyectoAdministrativo> ListProyectosAdministrativo = await _context.ProyectoAdministrativo.Where(r => !(bool)r.Eliminado).Include(x=>x.ProyectoAdministrativoAportante).ThenInclude(x=>x.AportanteFuenteFinanciacion).ToListAsync();
+                List<ProyectoAdministrativo> ListProyectosAdministrativo = await _context.ProyectoAdministrativo.Where(r => !(bool)r.Eliminado).
+                    Include(x=>x.ProyectoAdministrativoAportante).ToListAsync();
 
                 foreach (var proyecto in ListProyectosAdministrativo)
                 {
@@ -1611,6 +1622,10 @@ namespace asivamosffie.services
                     Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
                     // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
                     */
+                    foreach(var admin in proyecto.ProyectoAdministrativoAportante)
+                    {
+                        admin.AportanteFuenteFinanciacion = _context.AportanteFuenteFinanciacion.Where(x=>x.ProyectoAdministrativoAportanteId==admin.ProyectoAdministrativoAportanteId && !(bool)x.Eliminado).ToList();
+                    }
                     ProyectoAdministracionGrilla proyectoAdministrativoGrilla = new ProyectoAdministracionGrilla
                     {
                         ProyectoAdminitracionId = proyecto.ProyectoAdministrativoId,
@@ -1696,6 +1711,74 @@ namespace asivamosffie.services
                 res.FuenteRecursosString = _context.Dominio.Where(x => x.Codigo == res.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
             }
             return resultado;
+        }
+
+        public async Task<bool> deleteFontByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.AportanteFuenteFinanciacion.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Eliminado = true;
+                fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<bool> deletePredioByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.ProyectoPredio.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Activo = false;
+                //fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<bool> deleteAportantesByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.ProyectoAportante.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Eliminado = true;
+                //fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<bool> deleteInfraestructuraByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.InfraestructuraIntervenirProyecto.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Eliminado = true;
+                //fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return retorno;
         }
     }
 }

@@ -232,7 +232,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                string user = "forozco";//HttpContext.User.FindFirst("User").Value;
+                string user = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional( pDisponibilidad, user);
                 return Ok(respuesta);
 

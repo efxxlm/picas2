@@ -78,7 +78,7 @@ export class DisponibilidadPresupuestalService {
   //gestionar fuentes de financiacion
   CreateFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/CreateFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/CreateFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
   }
   DeleteFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
   {
