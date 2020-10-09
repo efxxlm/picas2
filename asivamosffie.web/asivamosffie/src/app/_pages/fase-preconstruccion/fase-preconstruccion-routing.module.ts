@@ -13,10 +13,6 @@ const routes: Routes = [
   {
     path: 'gestionarRequisitos/:id',
     component: ExpansionGestionarRequisitosComponent
-  },
-  {
-    path: 'verDetalle/:id',
-    component: VerDetalleComponent
   }
 ];
 

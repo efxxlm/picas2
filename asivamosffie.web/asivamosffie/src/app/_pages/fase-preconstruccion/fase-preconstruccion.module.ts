@@ -10,11 +10,10 @@ import { FasePreconstruccionRoutingModule } from './fase-preconstruccion-routing
 import { FormPerfilComponent } from './components/form-perfil/form-perfil.component';
 import { TablaRegistrarRequisitosComponent } from './components/tabla-registrar-requisitos/tabla-registrar-requisitos.component';
 import { ExpansionGestionarRequisitosComponent } from './components/expansion-gestionar-requisitos/expansion-gestionar-requisitos.component';
-import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.component';
 
 
 @NgModule({
-  declarations: [FormPerfilComponent, TablaRegistrarRequisitosComponent, ExpansionGestionarRequisitosComponent, VerDetalleComponent],
+  declarations: [FormPerfilComponent, TablaRegistrarRequisitosComponent, ExpansionGestionarRequisitosComponent],
   imports: [
     CommonModule,
     FasePreconstruccionRoutingModule,
