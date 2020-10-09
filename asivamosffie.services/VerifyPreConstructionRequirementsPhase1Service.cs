@@ -142,7 +142,8 @@ namespace asivamosffie.services
                                 contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                 contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
                                 contratoPerfilObservacionOld.Eliminado = false;
-                                contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
+                                if(!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
+                                     contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion;
                             }
                             else
                             {
@@ -165,8 +166,7 @@ namespace asivamosffie.services
 
 
                         foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
-                        {
-
+                        { 
                             ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                             ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                             ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
@@ -317,7 +317,8 @@ namespace asivamosffie.services
                     pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                     pContratoPerfilObservacion.Eliminado = false;
                     pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
-                    pContratoPerfilObservacion.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
+                    if(!string.IsNullOrEmpty(pContratoPerfilObservacion.Observacion))
+                        pContratoPerfilObservacion.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
                     _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
                 }
                 else

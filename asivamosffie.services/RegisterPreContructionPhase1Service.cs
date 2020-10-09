@@ -160,7 +160,8 @@ namespace asivamosffie.services
                                 }
                                 else
                                 {
-                                    ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
+                                    if(!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
+                                         ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                     ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
@@ -201,7 +202,8 @@ namespace asivamosffie.services
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
 
-                                ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
+                                if(!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
+                                    ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                 ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
