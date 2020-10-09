@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { GrillaFaseUnoPreconstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { map } from 'rxjs/operators';
 import { Contrato, ContratoModificado } from '../../../_interfaces/faseUnoPreconstruccion.interface';
+import { Respuesta } from '../autenticacion/autenticacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class FaseUnoPreconstruccionService {
   };
 
   createEditContratoPerfil ( pContrato: Contrato ) {
-    return this.http.post( `${ this.url_api }/CreateEditContratoPerfil`, pContrato );
+    return this.http.post<Respuesta>( `${ this.url_api }/CreateEditContratoPerfil`, pContrato );
   };
 
   deleteContratoPerfil ( contratoPerfilId: number ) {
@@ -31,7 +32,7 @@ export class FaseUnoPreconstruccionService {
   };
 
   deleteContratoPerfilNumeroRadicado ( contratoPerfilNumeroRadicadoId: number ) {
-    return this.http.post( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
+    return this.http.post<Respuesta>( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
   };
 
 };

@@ -4,6 +4,8 @@ import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_servic
 import { ActivatedRoute } from '@angular/router';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-expansion-gestionar-interventoria',
@@ -29,6 +31,7 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
 
   constructor ( private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
                 private activatedRoute: ActivatedRoute,
+                private dialog: MatDialog,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.declararEstado();
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id )
@@ -36,6 +39,13 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
 
   getContratacionByContratoId ( pContratoId: number ) {
     this.faseUnoVerificarPreconstruccionSvc.getContratacionByContratoId( pContratoId )
@@ -65,7 +75,14 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
 
     console.log( this.contrato );
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
-      .subscribe( console.log );
+      .subscribe( 
+        response => {
+          this.openDialog( '', response.message );
+        },
+        err => {
+          this.openDialog( '', err.message );
+        }
+      );
   }
 
 }
