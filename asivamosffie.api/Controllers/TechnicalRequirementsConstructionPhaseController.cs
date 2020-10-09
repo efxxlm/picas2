@@ -143,6 +143,45 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+        [Route("DeleteConstruccionPerfilNumeroRadicado")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteConstruccionPerfilNumeroRadicado([FromQuery]  int pConstruccionPerfilNumeroRadicadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteConstruccionPerfilNumeroRadicado( pConstruccionPerfilNumeroRadicadoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("LoadFileToValidateProgramming")]
+        [HttpPost]
+        public async Task<IActionResult> LoadFileToValidateProgramming(IFormFile file)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (file.Length > 0 && file.FileName.Contains(".xls"))
+                {
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _technicalRequirementsConstructionPhaseService.LoadFileToValidateProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario);
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
         
 
     }

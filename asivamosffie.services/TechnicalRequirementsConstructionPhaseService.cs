@@ -20,6 +20,7 @@ using System.IO;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using System.Globalization;
+using OfficeOpenXml;
 
 namespace asivamosffie.services
 {
@@ -428,7 +429,8 @@ namespace asivamosffie.services
 
             try
             {
-                if ( pConstruccion.ContratoConstruccionId == 0 ){
+                if (pConstruccion.ContratoConstruccionId == 0)
+                {
                     ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
 
                     contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
@@ -436,7 +438,7 @@ namespace asivamosffie.services
                     contratoConstruccion.ContratoId = pConstruccion.ContratoId;
                     contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
 
-                    _context.ContratoConstruccion.Add( contratoConstruccion );
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
                     _context.SaveChanges();
 
                     pConstruccion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
@@ -483,7 +485,7 @@ namespace asivamosffie.services
                                 observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
                                 observacion.Eliminado = false;
 
-                                construccionPerfil.ConstruccionPerfilObservacion.Add( observacion );
+                                construccionPerfil.ConstruccionPerfilObservacion.Add(observacion);
                             }
                         }
 
@@ -496,7 +498,7 @@ namespace asivamosffie.services
 
                                 radicado.Eliminado = false;
 
-                                construccionPerfil.ConstruccionPerfilNumeroRadicado.Add( radicado );
+                                construccionPerfil.ConstruccionPerfilNumeroRadicado.Add(radicado);
                             }
                             else
                             {
@@ -519,7 +521,7 @@ namespace asivamosffie.services
                         perfil.Eliminado = false;
                         perfil.ContratoConstruccionId = pConstruccion.ContratoConstruccionId;
                         perfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(perfil);
-                        
+
 
 
                         foreach (var observacion in perfil.ConstruccionPerfilObservacion)
@@ -589,7 +591,10 @@ namespace asivamosffie.services
 
             try
             {
-                ConstruccionPerfil perfil = _context.ConstruccionPerfil.Find( pConstruccionPerfilId );
+                ConstruccionPerfil perfil = _context.ConstruccionPerfil.Find(pConstruccionPerfilId);
+
+                perfil.UsuarioModificacion = pUsuarioModificacion;
+                perfil.FechaModificacion = DateTime.Now;
                 perfil.Eliminado = true;
 
                 _context.SaveChanges();
@@ -616,6 +621,209 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
                     };
             }
+        }
+
+        public async Task<Respuesta> DeleteConstruccionPerfilNumeroRadicado(int pConstruccionPerfilNumeroRadicadoId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Construccion_Perfil_Numero_Radicado, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ConstruccionPerfilNumeroRadicado radicado = _context.ConstruccionPerfilNumeroRadicado.Find(pConstruccionPerfilNumeroRadicadoId);
+
+                radicado.UsuarioModificacion = pUsuarioModificacion;
+                radicado.FechaModificacion = DateTime.Now;
+                radicado.Eliminado = true;
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "CONTRATO PERFIL ELIMINADO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> LoadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
+        {
+            int CantidadRegistrosVacios = 0;
+            int CantidadResgistrosValidos = 0;
+            int CantidadRegistrosInvalidos = 0;
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+            DocumentService _documentService = new DocumentService(_context, _commonService);
+
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.ProgramacionObra));
+
+            // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
+            if (archivoCarge != null)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await pFile.CopyToAsync(stream);
+
+                    using var package = new ExcelPackage(stream);
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                    //Controlar Registros
+                    //Filas <=
+                    //No comienza desde 0 por lo tanto el = no es necesario
+                    for (int i = 2; i < worksheet.Dimension.Rows; i++)
+                    {
+                        try
+                        {
+                            /* Columnas Obligatorias de excel
+                             2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
+                            Campos Obligatorios Validos   */
+                            if (
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) ||
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) ||
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) ||
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) ||
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) ||
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) 
+
+
+                                )
+                            {
+
+                                TempProgramacion temp = new TempProgramacion();
+                                //Auditoria
+                                temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                                temp.EstaValidado = false;
+                                temp.FechaCreacion = DateTime.Now;
+                                temp.UsuarioCreacion = pUsuarioCreo;
+
+                                // #1
+                                //Tipo Actividad
+                                temp.TipoActividadCodigo = worksheet.Cells[i, 1].Text;
+
+                                //#2
+                                //Nombre proponente
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
+                                {
+                                    temp.Actividad = worksheet.Cells[i, 2].Text;
+                                }
+
+                                //#3
+                                //Marca de ruta critica
+                                temp.EsRutaCritica = worksheet.Cells[i, 3].Text == "1" ? true : false ;
+
+
+                                //#4
+                                //Fecha Inicio
+                                DateTime fechaTemp;
+                                temp.FechaInicio =  DateTime.TryParse( worksheet.Cells[i, 4].Text,out fechaTemp ) ? fechaTemp : DateTime.MinValue;
+
+                                //#5
+                                //Fecha final
+                                temp.FechaFin =  DateTime.TryParse( worksheet.Cells[i, 5].Text,out fechaTemp ) ? fechaTemp : DateTime.MinValue;
+
+                                //#6
+                                //Duracion
+                                temp.Duracion = Int32.Parse( worksheet.Cells[i, 6].Text);  
+
+                                
+                                //Guarda Cambios en una tabla temporal
+
+                                _context.TempProgramacion.Add(temp);
+                                _context.SaveChanges();
+
+                                if (temp.TempProgramacionId > 0)
+                                {
+                                    CantidadResgistrosValidos++;
+                                }
+                                else
+                                {
+                                    CantidadRegistrosInvalidos++;
+                                }
+
+                            }
+                            else
+                            {
+                                //Aqui entra cuando alguno de los campos obligatorios no viene diligenciado
+                                string strValidateCampNullsOrEmpty = "";
+                                //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
+
+                                for (int j = 1; j < 7; j++)
+                                {
+                                    strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
+                                }
+                                if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
+                                {
+                                    CantidadRegistrosVacios++;
+                                }
+                                else
+                                {
+                                    CantidadRegistrosInvalidos++;
+                                }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            CantidadRegistrosInvalidos++;
+                        }
+                    }
+
+                    //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
+                    //-2 ya los registros comienzan desde esta fila
+                    archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
+                    archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
+                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
+                    _context.ArchivoCargue.Update(archivoCarge);
+
+
+                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
+                    {
+                        CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
+                        CantidadDeRegistrosInvalidos = archivoCarge.CantidadRegistrosInvalidos.ToString(),
+                        CantidadDeRegistrosValidos = archivoCarge.CantidadRegistrosValidos.ToString(),
+                        LlaveConsulta = archivoCarge.Nombre
+
+                    };
+                    return new Respuesta
+                    {
+                        Data = archivoCargueRespuesta,
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, GeneralCodes.OperacionExitosa, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "")
+                    };
+                }
+            }
+            else
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, GeneralCodes.Error, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "")
+                };
+            }
+
+
         }
 
         private bool ValidarRegistroCompletoConstruccionPerfil(ConstruccionPerfil pPerfil)

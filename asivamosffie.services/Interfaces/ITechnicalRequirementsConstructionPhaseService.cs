@@ -17,6 +17,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion);
         Task<Respuesta> DeleteConstruccionPerfil(int pConstruccionPerfilId, string pUsuarioModificacion);
+        Task<Respuesta> DeleteConstruccionPerfilNumeroRadicado(int pConstruccionPerfilNumeroRadicadoId, string pUsuarioModificacion);
+        Task<Respuesta> LoadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
 
     }
 }
