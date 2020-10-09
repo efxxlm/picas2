@@ -3,6 +3,8 @@ import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@ang
 import { ContratacionProyecto2, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { CommonService } from '../../../../core/_services/common/common.service';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-perfil',
@@ -11,10 +13,10 @@ import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUn
 })
 export class FormPerfilComponent implements OnInit {
 
-  formContratista: FormGroup;
+  formContratista        : FormGroup;
   @Input() perfilProyecto: any[] = [];
-  @Input() contratoId: number;
-  @Input() proyectoId: number;
+  @Input() contratoId    : number;
+  @Input() proyectoId    : number;
   @Output() enviarPerfilesContrato = new EventEmitter();
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
   editorStyle = {
@@ -33,8 +35,9 @@ export class FormPerfilComponent implements OnInit {
     { value: 'Ingeniero electrico' }
   ]
 
-  constructor ( private fb: FormBuilder,
-                private commonSvc: CommonService,
+  constructor ( private fb                       : FormBuilder,
+                private commonSvc                : CommonService,
+                private dialog                   : MatDialog,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.crearFormulario();
   }
@@ -46,14 +49,6 @@ export class FormPerfilComponent implements OnInit {
   get perfiles () {
     return this.formContratista.get( 'perfiles' ) as FormArray;
   };
-
-  disabledDate ( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
-    } else {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-    }
-  }
 
   perfilesProyecto () {
     if ( this.perfilProyecto.length === 0 ) {
@@ -84,34 +79,72 @@ export class FormPerfilComponent implements OnInit {
           this.cantidadPerfiles.nativeElement.value = String( this.perfilProyecto.length );
         } );
       for ( let perfil of this.perfilProyecto ) {
-        //console.log( perfil.contratoPerfilNumeroRadicado );
         let numeroRadicados = [];
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
-          numeroRadicados.push( this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId: perfil.contratoPerfilId, numeroRadicado: '' }) )
+          numeroRadicados.push( 
+            this.fb.group(
+              {
+                contratoPerfilNumeroRadicadoId: 0,
+                contratoPerfilId: perfil.contratoPerfilId,
+                numeroRadicado: ''
+              }
+            )
+          )
         } else {
           for ( let radicado of perfil.contratoPerfilNumeroRadicado ) {
-            numeroRadicados.push( this.fb.group({ contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0, contratoPerfilId: perfil.contratoPerfilId, numeroRadicado: radicado.numeroRadicado }) );
+            numeroRadicados.push( 
+              this.fb.group(
+                { contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0,
+                  contratoPerfilId: perfil.contratoPerfilId,
+                  numeroRadicado: radicado.numeroRadicado
+                }
+              )
+            );
           };
         }
-        //console.log( numeroRadicados );
         this.perfiles.push(
           this.fb.group(
             {
-              contratoPerfilId: [ perfil.contratoPerfilId ],
-              perfilObservacion: [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
-              perfilCodigo: [ perfil.perfilCodigo ],
-              cantidadHvRequeridas: [ String( perfil.cantidadHvRequeridas ) ],
-              cantidadHvRecibidas: [ String( perfil.cantidadHvRecibidas ) ],
-              cantidadHvAprobadas: [ String( perfil.cantidadHvAprobadas ) ],
-              fechaAprobacion: [ new Date( perfil.fechaAprobacion ) ],
-              observacion: [ perfil.contratoPerfilObservacion[0]?.observacion ],
+              contratoPerfilId            : [ perfil.contratoPerfilId ],
+              perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
+              perfilCodigo                : [ perfil.perfilCodigo ],
+              cantidadHvRequeridas        : [ String( perfil.cantidadHvRequeridas ) ],
+              cantidadHvRecibidas         : [ String( perfil.cantidadHvRecibidas ) ],
+              cantidadHvAprobadas         : [ String( perfil.cantidadHvAprobadas ) ],
+              fechaAprobacion             : [ new Date( perfil.fechaAprobacion ) ],
+              observacion                 : [ perfil.contratoPerfilObservacion[0]?.observacion ],
               contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
-              rutaSoporte: [ perfil.rutaSoporte ]
+              rutaSoporte                 : [ perfil.rutaSoporte ]
             }
           )
         )
       };
     };
+  };
+
+  disabledDate ( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
+    if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
+    } else {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+    }
+  };
+
+  openDialog (modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
+  openDialogTrueFalse (modalTitle: string, modalText: string) {
+    
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    return dialogRef.afterClosed();
   };
 
   numeroRadicado ( i: number ) {
@@ -146,11 +179,33 @@ export class FormPerfilComponent implements OnInit {
   };
 
   eliminarPerfil ( numeroPerfil: number ) {
-    this.perfiles.removeAt( numeroPerfil );
-    this.formContratista.patchValue({
-      numeroPerfiles: `${ this.perfiles.length }`
-    });
+    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+      .subscribe( value => {
+        if ( value ) {
+          this.perfiles.removeAt( numeroPerfil );
+          this.formContratista.patchValue({
+            numeroPerfiles: `${ this.perfiles.length }`
+          });
+          this.openDialog( '', 'La información se ha eliminado correctamente.' );
+        };
+      } );
   };
+
+  deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
+    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+      .subscribe( value => {
+        if ( value ) {
+          this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
+            .subscribe( 
+              () => {
+                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.perfiles.removeAt( numeroPerfil );
+              },
+              err => this.openDialog( '', err.message )
+            );
+        }
+      } );
+  }
 
   agregarNumeroRadicado ( numeroRadicado: number, contratoPerfilId: number ) {
     this.numeroRadicado( numeroRadicado ).push( this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId: contratoPerfilId, numeroRadicado: '' }) )
@@ -160,16 +215,12 @@ export class FormPerfilComponent implements OnInit {
     this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
   };
 
-  deleteRadicado ( contratoPerfilNumeroRadicadoId: number ) {
-    console.log( 'probando metodo - radicado' );
+  deleteRadicado ( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
     this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
-      .subscribe( console.log );
-  }
-
-  deletePerfil( contratoPerfilId: number ) {
-    console.log( 'probando metodo - perfil', contratoPerfilId );
-    this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
-      .subscribe( console.log );
+      .subscribe( () => {
+        this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+        this.openDialog( '', 'La información se ha eliminado correctamente.' );
+      } );
   }
 
   guardar () {
