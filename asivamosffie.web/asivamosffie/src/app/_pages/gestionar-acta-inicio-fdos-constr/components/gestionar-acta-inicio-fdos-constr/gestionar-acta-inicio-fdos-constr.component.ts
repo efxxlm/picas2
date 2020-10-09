@@ -1,5 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+export interface Contrato {
+  fechaAprobacionRequisitos: string;
+  numeroContrato:string;
+  estado:string;
+  enviadoparaInterventor:boolean;
+  actaSuscrita:boolean;
+}
 
+const ELEMENT_DATA: Contrato[] = [
+  {fechaAprobacionRequisitos:"20/06/2020",numeroContrato:"C223456789",estado:"Sin validar",enviadoparaInterventor:null,actaSuscrita:null},
+  {fechaAprobacionRequisitos:"21/06/2020",numeroContrato:"C223456790",estado:"Con observaciones",enviadoparaInterventor:null,actaSuscrita:null},
+  {fechaAprobacionRequisitos:"22/06/2020",numeroContrato:"C223456791",estado:"Con observaciones",enviadoparaInterventor:true,actaSuscrita:null},
+  {fechaAprobacionRequisitos:"26/06/2020",numeroContrato:"C223456794",estado:"Con acta en proceso de firma",enviadoparaInterventor:null,actaSuscrita:null},
+  {fechaAprobacionRequisitos:"27/06/2020",numeroContrato:"C223456795",estado:"Con acta suscrita y cargada",enviadoparaInterventor:null,actaSuscrita:true}
+];
 @Component({
   selector: 'app-gestionar-acta-inicio-fdos-constr',
   templateUrl: './gestionar-acta-inicio-fdos-constr.component.html',
@@ -21,7 +35,7 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
     if (this.rolAsignado == 2) {
       this.ocpion = 1;
     }
-    else {
+    else if (this.rolAsignado == 8){
       this.ocpion = 2;
     }
   }

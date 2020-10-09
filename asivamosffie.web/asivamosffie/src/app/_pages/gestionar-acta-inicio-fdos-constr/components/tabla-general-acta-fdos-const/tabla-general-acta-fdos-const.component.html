@@ -42,7 +42,7 @@
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.generarActaFDos(element.contratoId)"
                     *ngIf="element.estadoActaContrato=='Sin acta generada'">Generar Acta</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        (click)="this.verDetalleEditarActaFDos(element.observaciones,element.contratoId)"
+                        (click)="this.verDetalleEditarActaFDos(element.contratoId)"
                         *ngIf="element.estadoActaContrato=='Con acta preliminar generada' || element.estadoActaContrato=='Enviada por el supervisor'"> Ver detalle /
                         Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"

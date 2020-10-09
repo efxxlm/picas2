@@ -27,6 +27,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   public mesPlazoIni: number = 10;
   public diasPlazoIni: number = 25;
   public observacionesOn : boolean;
+  public editable: boolean;
+  public title;
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
@@ -42,9 +44,19 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
+    if(localStorage.getItem("editable")=="true"){
+      this.editable=true;
+      this.title='Ver detalle/Editar';
+    }
+    else{
+      this.editable=false;
+      this.title='Generar';
+    }
   }
   loadData(id) {
-
+    if(this.editable==true){
+      console.log("cargar servicio");
+    }
   }
 
   openDialog(modalTitle: string, modalText: string) {

@@ -47,15 +47,11 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
   generarActaFDos(id){
+    localStorage.setItem("editable","false");
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
-  verDetalleEditarActaFDos(observaciones,id){
-    if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
-    }
-    else{
-      localStorage.setItem("conObservaciones","false");
-    }
+  verDetalleEditarActaFDos(id){
+    localStorage.setItem("editable","true");
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   enviarParaRevision(idContrato, estadoActaContrato){
