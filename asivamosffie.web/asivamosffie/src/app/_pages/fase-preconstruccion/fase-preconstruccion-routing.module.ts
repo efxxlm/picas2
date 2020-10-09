@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { TablaRegistrarRequisitosComponent } from './components/tabla-registrar-requisitos/tabla-registrar-requisitos.component';
 import { ExpansionGestionarRequisitosComponent } from './components/expansion-gestionar-requisitos/expansion-gestionar-requisitos.component';
-import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.component';
 
 const routes: Routes = [
   {

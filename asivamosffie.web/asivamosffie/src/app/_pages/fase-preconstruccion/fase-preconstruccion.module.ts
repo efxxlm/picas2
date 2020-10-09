@@ -11,7 +11,6 @@ import { FormPerfilComponent } from './components/form-perfil/form-perfil.compon
 import { TablaRegistrarRequisitosComponent } from './components/tabla-registrar-requisitos/tabla-registrar-requisitos.component';
 import { ExpansionGestionarRequisitosComponent } from './components/expansion-gestionar-requisitos/expansion-gestionar-requisitos.component';
 
-
 @NgModule({
   declarations: [FormPerfilComponent, TablaRegistrarRequisitosComponent, ExpansionGestionarRequisitosComponent],
   imports: [
