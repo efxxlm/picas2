@@ -18,7 +18,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion);
         Task<Respuesta> DeleteConstruccionPerfil(int pConstruccionPerfilId, string pUsuarioModificacion);
         Task<Respuesta> DeleteConstruccionPerfilNumeroRadicado(int pConstruccionPerfilNumeroRadicadoId, string pUsuarioModificacion);
-        Task<Respuesta> LoadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
+        Task<Respuesta> UploadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId);
+        Task<Respuesta> TransferMassiveLoadProgramming(string pIdDocument, string pUsuarioModifico);
 
     }
 }

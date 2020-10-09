@@ -2497,11 +2497,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ConstruccionCargue)
+                entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.Programacion)
-                    .HasForeignKey(d => d.ConstruccionCargueId)
+                    .HasForeignKey(d => d.ContratoConstruccionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Programacion_ConstruccionCargue");
+                    .HasConstraintName("FK_Programacion_ContratoConstruccion");
             });
 
             modelBuilder.Entity<Proyecto>(entity =>

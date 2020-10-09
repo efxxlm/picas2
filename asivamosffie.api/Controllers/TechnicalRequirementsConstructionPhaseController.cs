@@ -161,9 +161,9 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("LoadFileToValidateProgramming")]
+        [Route("UploadFileToValidateProgramming")]
         [HttpPost]
-        public async Task<IActionResult> LoadFileToValidateProgramming(IFormFile file)
+        public async Task<IActionResult> UploadFileToValidateProgramming(IFormFile file, [FromQuery] int pContratoConstruccinId)
         {
             try
             {
@@ -173,8 +173,26 @@ namespace asivamosffie.api.Controllers
                 {
                     //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _technicalRequirementsConstructionPhaseService.LoadFileToValidateProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario);
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario, pContratoConstruccinId);
                 }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("TransferMassiveLoadProgramming")]
+        [HttpPost]
+        public async Task<IActionResult> TransferMassiveLoadProgramming([FromQuery] string pIdDocument)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.TransferMassiveLoadProgramming(pIdDocument, pUsuarioModifico);
+
                 return Ok(respuesta);
             }
             catch (Exception ex)

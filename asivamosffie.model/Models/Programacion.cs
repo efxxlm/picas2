@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class Programacion
     {
         public int ProgramacionId { get; set; }
-        public int ConstruccionCargueId { get; set; }
+        public int ContratoConstruccionId { get; set; }
         public string TipoActividadCodigo { get; set; }
         public string Actividad { get; set; }
         public bool EsRutaCritica { get; set; }
@@ -14,6 +14,6 @@ namespace asivamosffie.model.Models
         public DateTime FechaFin { get; set; }
         public int Duracion { get; set; }
 
-        public virtual ConstruccionCargue ConstruccionCargue { get; set; }
+        public virtual ContratoConstruccion ContratoConstruccion { get; set; }
     }
 }

@@ -661,8 +661,10 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> LoadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
+        public async Task<Respuesta> UploadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId)
         {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
+
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
@@ -686,19 +688,19 @@ namespace asivamosffie.services
                     //Controlar Registros
                     //Filas <=
                     //No comienza desde 0 por lo tanto el = no es necesario
-                    for (int i = 2; i < worksheet.Dimension.Rows; i++)
+                    for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                     {
                         try
                         {
                             /* Columnas Obligatorias de excel
-                             2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
+                             2	3	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
                             Campos Obligatorios Validos   */
                             if (
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) ||
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) ||
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) ||
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) ||
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) ||
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) &&
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) &&
+                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) &&
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) &&
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) &&
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) 
 
 
@@ -711,6 +713,7 @@ namespace asivamosffie.services
                                 temp.EstaValidado = false;
                                 temp.FechaCreacion = DateTime.Now;
                                 temp.UsuarioCreacion = pUsuarioCreo;
+                                temp.ContratoConstruccionId = pContratoConstruccionId;
 
                                 // #1
                                 //Tipo Actividad
@@ -725,7 +728,11 @@ namespace asivamosffie.services
 
                                 //#3
                                 //Marca de ruta critica
-                                temp.EsRutaCritica = worksheet.Cells[i, 3].Text == "1" ? true : false ;
+                                if (string.IsNullOrEmpty( worksheet.Cells[i, 3].Text )){
+                                    temp.EsRutaCritica = false;
+                                }else{
+                                    temp.EsRutaCritica = worksheet.Cells[i, 3].Text == "1" ? true : false ;
+                                }
 
 
                                 //#4
@@ -778,7 +785,7 @@ namespace asivamosffie.services
                             }
 
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             CantidadRegistrosInvalidos++;
                         }
@@ -788,7 +795,7 @@ namespace asivamosffie.services
                     //-2 ya los registros comienzan desde esta fila
                     archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                     archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
+                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
                     _context.ArchivoCargue.Update(archivoCarge);
 
 
@@ -807,7 +814,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, GeneralCodes.OperacionExitosa, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
                     };
                 }
             }
@@ -819,10 +826,114 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, GeneralCodes.Error, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
                 };
             }
 
+
+        }
+
+        public async Task<Respuesta> TransferMassiveLoadProgramming(string pIdDocument, string pUsuarioModifico)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
+
+            Respuesta respuesta = new Respuesta();
+
+            if (string.IsNullOrEmpty(pIdDocument))
+            {
+                return respuesta =
+                 new Respuesta
+                 {
+                     IsSuccessful = false,
+                     IsException = false,
+                     IsValidation = true,
+                     Code = GeneralCodes.CamposVacios,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.CamposVacios, idAccion, pUsuarioModifico, "")
+                 };
+            }
+            try
+            {
+
+
+                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.ProgramacionObra, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+
+                ArchivoCargue archivoCargue = _context.ArchivoCargue
+                                                .Where(r => r.OrigenId == 3 && 
+                                                        r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())
+                                                      )
+                                                .FirstOrDefault();
+
+                List<TempProgramacion> listTempProgramacion = await _context.TempProgramacion
+                                                                .Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado)
+                                                                .ToListAsync();
+
+                if (listTempProgramacion.Count() > 0)
+                {
+                    foreach (TempProgramacion tempProgramacion in listTempProgramacion)
+                    {
+
+                        //ProcesoSeleccionProponente
+                        Programacion programacion = new Programacion()
+                        {
+                            ContratoConstruccionId = tempProgramacion.ContratoConstruccionId,
+                            TipoActividadCodigo = tempProgramacion.TipoActividadCodigo,
+                            Actividad = tempProgramacion.Actividad,
+                            EsRutaCritica = tempProgramacion.EsRutaCritica,
+                            FechaInicio = tempProgramacion.FechaInicio,
+                            FechaFin = tempProgramacion.FechaFin,
+                            Duracion = tempProgramacion.Duracion
+                            
+                        };
+
+                        _context.Programacion.Add( programacion );
+                        _context.SaveChanges();
+
+
+                        
+                        //Temporal proyecto update
+                        tempProgramacion.EstaValidado = true;
+                        tempProgramacion.FechaModificacion = DateTime.Now;
+                        tempProgramacion.UsuarioModificacion = pUsuarioModifico;
+                        _context.TempProgramacion.Update( tempProgramacion );
+                        _context.SaveChanges();
+                    }
+
+
+                    return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, "Cantidad de registros subidos : " + listTempProgramacion.Count())
+                    };
+                }
+                else
+                {
+                    return respuesta =
+                        new Respuesta
+                        {
+                            IsSuccessful = false,
+                            IsException = false,
+                            IsValidation = true,
+                            Code = GeneralCodes.OperacionExitosa,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.NoExitenArchivos, idAccion, pUsuarioModifico, "")
+                        };
+                }
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueElegibilidad.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
+                    };
+            }
 
         }
 
