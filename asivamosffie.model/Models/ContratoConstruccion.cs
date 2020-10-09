@@ -10,6 +10,10 @@ namespace asivamosffie.model.Models
             ConstruccionCargue = new HashSet<ConstruccionCargue>();
             ConstruccionObservacion = new HashSet<ConstruccionObservacion>();
             ConstruccionPerfil = new HashSet<ConstruccionPerfil>();
+            FlujoInversion = new HashSet<FlujoInversion>();
+            Programacion = new HashSet<Programacion>();
+            TempFlujoInversion = new HashSet<TempFlujoInversion>();
+            TempProgramacion = new HashSet<TempProgramacion>();
         }
 
         public int ContratoConstruccionId { get; set; }
@@ -102,5 +106,9 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ConstruccionCargue> ConstruccionCargue { get; set; }
         public virtual ICollection<ConstruccionObservacion> ConstruccionObservacion { get; set; }
         public virtual ICollection<ConstruccionPerfil> ConstruccionPerfil { get; set; }
+        public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
+        public virtual ICollection<Programacion> Programacion { get; set; }
+        public virtual ICollection<TempFlujoInversion> TempFlujoInversion { get; set; }
+        public virtual ICollection<TempProgramacion> TempProgramacion { get; set; }
     }
 }
