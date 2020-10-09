@@ -64,6 +64,7 @@ export class FormPerfilComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
+                contratoPerfilId: [ 0 ],
                 perfilCodigo: [ null ],
                 cantidadHvRequeridas: [ '' ],
                 cantidadHvRecibidas: [ '' ],
@@ -239,7 +240,7 @@ export class FormPerfilComponent implements OnInit {
         value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
         value.contratoPerfilNumeroRadicado = value.contratoPerfilNumeroRadicado;
         value.contratoPerfilObservacion    = [ { observacion: value.observacion } ];
-        value.fechaAprobacion              = new Date( value.fechaAprobacion ).toISOString()
+        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                   = this.contratoId;
         value.proyectoId                   = this.proyectoId;
       } )
@@ -256,7 +257,7 @@ export class FormPerfilComponent implements OnInit {
                                                   observacion: value.observacion 
                                                 } 
                                               ];
-        value.fechaAprobacion              = new Date( value.fechaAprobacion ).toISOString()
+        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                   = this.contratoId;
         value.proyectoId                   = this.proyectoId;
       } )
