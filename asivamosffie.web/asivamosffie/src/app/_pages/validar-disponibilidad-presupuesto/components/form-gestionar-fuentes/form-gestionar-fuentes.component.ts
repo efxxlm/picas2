@@ -74,14 +74,21 @@ export class FormGestionarFuentesComponent implements OnInit {
   }
   reste(fuente:any)
   {
+    if(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value<0)
+    {
+      let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
+      this.openDialog("","El saldo actual de la fuente <b>"+fuenteSeleccionada[0].fuente+"</b> es menor al valor solicitado de la fuente, verifique por favor.");
+      fuente.get('valorSolicitado').setValue(0);  
+    }
     fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value);
     
   }
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialog=this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+
   }
 
   get fuentes() {
@@ -116,6 +123,7 @@ export class FormGestionarFuentesComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.controls.fuentes.value);
+    let mensaje="";
     this.addressForm.controls.fuentes.value.forEach(fuente => {
       let CreateFinancialFundingGestion={
         FuenteFinanciacionId:fuente.fuentecampo,
@@ -124,8 +132,10 @@ export class FormGestionarFuentesComponent implements OnInit {
       this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result=>
         {
           console.log("Guardado");
+          mensaje=result.message
         });
-    });        
-    this.openDialog('','Guardado exitosamente');
+    });      
+    this.openDialog('','<b>La información a sido guardad exitosamente.</b>');  
+    
   }
 }

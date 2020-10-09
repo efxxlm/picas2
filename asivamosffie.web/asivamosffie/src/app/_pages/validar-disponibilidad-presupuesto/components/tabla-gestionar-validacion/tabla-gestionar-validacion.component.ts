@@ -18,6 +18,8 @@ export interface PeriodicElement {
   valorAportante: number;
   estado: boolean;
   disponibilidadPresupuestalProyectoid:number;
+  valorGestionado:number;
+  ver:boolean;
 }
 
 
@@ -36,7 +38,8 @@ export class TablaGestionarValidacionComponent implements OnInit {
     'nombreAportante',
     'valorAportante',
     'estado',
-    'id'
+    'id',
+    'ver'
   ];
   dataSource = new MatTableDataSource();
 
@@ -51,6 +54,8 @@ export class TablaGestionarValidacionComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   @Input()proyectos: any;
+  @Input()codigo: any;
+  @Input()ver: any;
   
   ngOnInit(): void {
     console.log(this.proyectos);
@@ -59,7 +64,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
       elements.push({
         llaveMen:element.llaveMen,
         departamento:element.departamento,
-        estado:element.valorGestionado==element.valorAportante,//
+        estado:element.valorGestionado>0,//
         id:element.aportanteID,//el aprotante id
         institucion:element.institucionEducativa,
         municipio:element.municipio,
@@ -67,7 +72,9 @@ export class TablaGestionarValidacionComponent implements OnInit {
         nombreAportante:element.nombreAportante,
         tipoInterventor:element.tipoIntervencion,//revisar
         valorAportante:element.valorAportante,
-        disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto
+        disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto,
+        valorGestionado:element.valorGestionado,
+        ver:this.ver
       });
   
 
@@ -107,7 +114,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
     // this.openDialog('', `El saldo actual de la fuente <b>Recursos propios</b> es menor
     // al valor solicitado de la fuente, verifique por favor.`);
     this.dialog.open(FormGestionarFuentesComponent, {
-      width: '70em', data: { elemento: id }
+      width: '70em', data: { elemento: id, codigo:this.codigo }
     });
   }
 

@@ -574,11 +574,11 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                 _context.SaveChanges();
-                //envio correo a juridica
-                var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).FirstOrDefault();
+                //envio correo a tecnico
+                var usuarioTecnico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario).FirstOrDefault();
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
                 string template = TemplateRecoveryPassword.Contenido;
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP Devuelto por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioTecnico.Usuario.Email, "SDP Devuelto por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
                 return
                 new Respuesta
                 {
@@ -621,11 +621,11 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                 _context.SaveChanges();
-                //envio correo a juridica
-                var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).FirstOrDefault();
+                //envio correo a técnico
+                var usuarioTecnico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario).FirstOrDefault();
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
                 string template = TemplateRecoveryPassword.Contenido;
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP rechazado por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioTecnico.Usuario.Email, "SDP rechazado por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
                 return
                 new Respuesta
                 {

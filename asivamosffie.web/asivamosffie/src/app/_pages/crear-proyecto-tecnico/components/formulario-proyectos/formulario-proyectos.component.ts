@@ -154,7 +154,7 @@ export class FormularioProyectosComponent implements OnInit {
         this.listadoTipoIntervencion = listas[0];
         this.listadoregion = listas[1];
         this.listadoPredios = listas[2];
-        this.listadoDocumentoAcreditacion = listas[3];
+        this.listadoDocumentoAcreditacion = listas[3];        
         this.listaTipoAportante = listas[4];
         this.listaInfraestructura = listas[5];
         this.listaCordinaciones = listas[6];
@@ -493,6 +493,48 @@ export class FormularioProyectosComponent implements OnInit {
     });
   }
 
+  openDialogSiNo(modalTitle: string, modalText: string,tipo:number,i:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        if(tipo==1)
+        {
+          if(this.proyecto.proyectoPredio[i].proyectoPredioId>0)
+          {
+            this.projectServices.deleteProyectoPredio(this.proyecto.proyectoPredio[i].proyectoPredioId).subscribe();
+          }
+          this.proyecto.proyectoPredio.splice(i,1);
+          this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
+        }
+        else{
+          if(tipo==2)
+          {
+            if(this.proyecto.proyectoAportante[i].proyectoAportanteId>0)
+          {
+            this.projectServices.deleteProyectoAportante(this.proyecto.proyectoAportante[i].proyectoAportanteId).subscribe();
+          }
+            this.proyecto.proyectoAportante.splice(i,1);
+            this.proyecto.cantidadAportantes=this.proyecto.proyectoAportante.length;
+          }
+          else{
+            if(this.proyecto.infraestructuraIntervenirProyecto[i].infraestrucutraIntervenirProyectoId>0)
+            {
+              this.projectServices.deleteProyectoInfraestructura(this.proyecto.infraestructuraIntervenirProyecto[i].infraestrucutraIntervenirProyectoId).subscribe();
+            }
+            this.proyecto.infraestructuraIntervenirProyecto.splice(i,1); 
+          }
+          
+        }
+      }           
+    });
+  }
+
+
   addInfraestructura() {
     this.proyecto.infraestructuraIntervenirProyecto.push({
       infraestrucutraIntervenirProyectoId: 0,
@@ -523,15 +565,15 @@ export class FormularioProyectosComponent implements OnInit {
           let bitesvacio=true;
           this.proyecto.proyectoPredio.forEach(element => {
           
-            if(element.Predio.numeroDocumento!="")
+            if(element.predio.numeroDocumento!="")
             {
               bitesvacio=false;
             }
-            if(element.Predio.documentoAcreditacionCodigo!="")
+            if(element.predio.documentoAcreditacionCodigo!="")
             {
               bitesvacio=false;
             }
-            if(element.Predio.cedulaCatastral!="")
+            if(element.predio.cedulaCatastral!="")
             {
               bitesvacio=false;
             }
@@ -553,8 +595,8 @@ export class FormularioProyectosComponent implements OnInit {
           if (this.proyecto.cantPrediosPostulados > this.proyecto.proyectoPredio.length+1) {            
             for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
               this.proyecto.proyectoPredio.push({
-                ProyectoPredioId: 0, UsuarioCreacion: '',
-                Predio: {
+                proyectoPredioId: 0, usuarioCreacion: '',
+                predio: {
                   cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
                   fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
                   usuarioCreacion: '', predioId: 0, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
@@ -825,13 +867,13 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   deleteAportante(i: number) {    
-    this.proyecto.proyectoPredio.splice(i,1);
-    this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
+    this.openDialogSiNo("","¿Está seguro de eliminar este  registro?",1,i);
+    
   }
 
   deleteAportanteAportante(ii:number){
-    this.proyecto.proyectoAportante.splice(ii,1);
-    this.proyecto.cantidadAportantes=this.proyecto.proyectoAportante.length;
+    this.openDialogSiNo("","¿Está seguro de eliminar este  registro?",2,ii);
+    
   }
 
   borrarArray(borrarForm: any, i: number) {
@@ -904,6 +946,7 @@ export class FormularioProyectosComponent implements OnInit {
   deleteInfraestructura(indice:number)
   {
     console.log(indice)
-    this.proyecto.infraestructuraIntervenirProyecto.splice(indice,1); 
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",3,indice);
+    //this.proyecto.infraestructuraIntervenirProyecto.splice(indice,1); 
   }
 }

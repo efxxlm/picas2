@@ -387,7 +387,7 @@
       <div *ngFor="let predios of proyecto.proyectoPredio;index as i">
         <div>
           <mat-card-title class="header-card--text sub-text">
-            Predio {{i+2}}
+            Predio {{i+2}} 
           </mat-card-title>
 
           <div class="row">
@@ -398,7 +398,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="predios.Predio.documentoAcreditacionCodigo">
+                    <mat-select required [(ngModel)]="predios.predio.documentoAcreditacionCodigo">
                       <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
@@ -416,27 +416,27 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.Predio.numeroDocumento" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.predio.numeroDocumento" maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.Predio.numeroDocumento?predios.Predio.numeroDocumento.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.predio.numeroDocumento?predios.predio.numeroDocumento.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8" [ngClass]="{'opaco': predios.Predio.documentoAcreditacionCodigo!='1'}">
+            <div class="col-md-8" [ngClass]="{'opaco': predios.predio.documentoAcreditacionCodigo!='1'}">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left">Cédula catastral del predio</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput [(ngModel)]="predios.Predio.cedulaCatastral"
-                      [disabled]="predios.Predio.documentoAcreditacionCodigo!='1'" maxlength="20" required type="text">
+                    <input matInput [(ngModel)]="predios.predio.cedulaCatastral"
+                      [disabled]="predios.predio.documentoAcreditacionCodigo!='1'" maxlength="20" required type="text">
                   </mat-form-field>
                   <span
-                    class="contador">{{20 - (predios.Predio.cedulaCatastral?predios.Predio.cedulaCatastral.toString().length:0)}}</span>
+                    class="contador">{{20 - (predios.predio.cedulaCatastral?predios.predio.cedulaCatastral.toString().length:0)}}</span>
                 </div>
               </div>
             </div>

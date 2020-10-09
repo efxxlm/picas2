@@ -27,9 +27,15 @@ export class FormularioProyectosComponent implements OnInit {
   deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
     const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
     const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
+    
     if (index2 > -1) {
+      if(this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion[index2].aportanteFuenteFinanciacionId>0)
+      {
+        this.projectServices.deleteProyectoFont(this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion[index2].aportanteFuenteFinanciacionId).subscribe();
+      }
       this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.splice(index2, 1);
     }
+    
   }
 
   onchangeFont(i: number) {

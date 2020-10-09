@@ -73,14 +73,14 @@
                     
                     <a mat-raised-button color="accent" 
                             class="btn-table" 
-                            [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId]"
+                            [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,1]"
                             *ngIf="element.disponibilidadPresupuestalId != 0">
                             Ver detalle /Editar
                     </a>
                     
                     <a mat-raised-button color="accent" 
                         class="btn-table" 
-                        [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId]"
+                        [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,1]"
                         *ngIf="element.disponibilidadPresupuestalId == 0">
                         Registrar información adicional
                     </a>
