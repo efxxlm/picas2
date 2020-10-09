@@ -10,9 +10,12 @@ import { FormGenerarActaInicioConstTecnicoComponent } from './components/form-ge
 import { QuillModule } from 'ngx-quill';
 import { DialogCargarActaSuscritaConstComponent } from './components/dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 import { VerDetalleTecnicoFdosConstrComponent } from './components/ver-detalle-tecnico-fdos-constr/ver-detalle-tecnico-fdos-constr.component';
+import { TablaContrObraFdosConstrComponent } from './components/tabla-contr-obra-fdos-constr/tabla-contr-obra-fdos-constr.component';
+import { TablaContrIntrvnFdosConstrComponent } from './components/tabla-contr-intrvn-fdos-constr/tabla-contr-intrvn-fdos-constr.component';
+import { FormValidarActaInicioConstruccionComponent } from './components/form-validar-acta-inicio-construccion/form-validar-acta-inicio-construccion.component';
 
 @NgModule({
-  declarations: [GestionarActaInicioFdosConstrComponent, TablaGeneralActaFdosConstComponent, FormGenerarActaInicioConstTecnicoComponent, DialogCargarActaSuscritaConstComponent, VerDetalleTecnicoFdosConstrComponent],
+  declarations: [GestionarActaInicioFdosConstrComponent, TablaGeneralActaFdosConstComponent, FormGenerarActaInicioConstTecnicoComponent, DialogCargarActaSuscritaConstComponent, VerDetalleTecnicoFdosConstrComponent, TablaContrObraFdosConstrComponent, TablaContrIntrvnFdosConstrComponent, FormValidarActaInicioConstruccionComponent],
   imports: [
     CommonModule,
     GestionarActaInicioFdosConstrRoutingModule,
