@@ -196,7 +196,7 @@
         </button>
       </div>
 
-      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="formContratista.get( 'observacionSupervisor' ).value !== null">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
             Observaciones del supervisor
@@ -204,10 +204,10 @@
         </mat-card-header>
         <mat-card-content>
           <b>
-            12/07/2020
+            {{ formContratista.get( 'fechaObservacion' ).value | date: 'dd/MM/yyyy' }}
           </b>
           <p>
-            Las hojas de vida del perfil 2 no cumplen con la experiencia requerida.
+            {{ textoLimpioMessage( formContratista.get( 'observacionSupervisor' ).value ) }}
           </p>
         </mat-card-content>
       </mat-card>

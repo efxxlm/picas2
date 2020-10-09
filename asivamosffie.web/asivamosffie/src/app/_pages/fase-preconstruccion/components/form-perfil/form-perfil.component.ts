@@ -41,7 +41,6 @@ export class FormPerfilComponent implements OnInit {
     this.commonSvc.listaPerfil()
       .subscribe( perfiles => {
         this.perfilesCv = perfiles;
-        console.log( this.perfilesCv );
       } );
   }
 
@@ -86,6 +85,7 @@ export class FormPerfilComponent implements OnInit {
         } );
       for ( let perfil of this.perfilProyecto ) {
         let numeroRadicados = [];
+        let observaciones = null;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push( 
             this.fb.group(
@@ -107,6 +107,17 @@ export class FormPerfilComponent implements OnInit {
               )
             );
           };
+        };
+
+        if ( perfil.contratoPerfilObservacion.length > 0 ) {
+          for ( let obs of perfil.contratoPerfilObservacion ) {
+            if ( obs.tipoObservacionCodigo === '1' ) {
+              observaciones = obs.observacion;
+            } else if ( obs.tipoObservacionCodigo === '2' ) {
+              this.formContratista.get( 'fechaObservacion' ).setValue( obs.fechaCreacion )
+              this.formContratista.get( 'observacionSupervisor' ).setValue( obs.observacion );
+            }
+          }
         }
 
         this.perfiles.push(
@@ -119,7 +130,7 @@ export class FormPerfilComponent implements OnInit {
               cantidadHvRecibidas         : [ String( perfil.cantidadHvRecibidas ) ],
               cantidadHvAprobadas         : [ String( perfil.cantidadHvAprobadas ) ],
               fechaAprobacion             : [ new Date( perfil.fechaAprobacion ) ],
-              observacion                 : [ perfil.contratoPerfilObservacion[0]?.observacion ],
+              observacion                 : [ observaciones ],
               contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
               rutaSoporte                 : [ perfil.rutaSoporte ]
             }
@@ -181,6 +192,8 @@ export class FormPerfilComponent implements OnInit {
   crearFormulario () {
     this.formContratista = this.fb.group({
       numeroPerfiles: [ '' ],
+      fechaObservacion: [ null ],
+      observacionSupervisor: [ null ],
       perfiles: this.fb.array([])
     });
   };
