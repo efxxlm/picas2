@@ -37,6 +37,7 @@ namespace asivamosffie.services
                 {
                     c.ContratoId,
                     c.FechaAprobacion,
+                    c.TipoContratoCodigo,
                     c.NumeroContrato,
                     c.CantidadProyectosAsociados,
                     c.CantidadProyectosRequisitosAprobados,

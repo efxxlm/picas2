@@ -35,6 +35,7 @@ namespace asivamosffie.services
             {
                 listaContrats.Add(new
                 {
+                    c.TipoContratoCodigo,
                     c.ContratoId,
                     c.FechaAprobacion,
                     c.NumeroContrato,

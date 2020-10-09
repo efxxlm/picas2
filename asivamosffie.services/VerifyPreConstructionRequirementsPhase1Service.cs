@@ -26,7 +26,7 @@ namespace asivamosffie.services
         { 
             List<dynamic> listaContrats = new List<dynamic>();
 
-            List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.ToListAsync();
+            List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r=> r.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria).ToListAsync();
 
             lista.ForEach(c =>
             {
@@ -35,6 +35,7 @@ namespace asivamosffie.services
                     c.ContratoId,
                     c.FechaAprobacion,
                     c.NumeroContrato,
+                    c.TipoContratoCodigo,
                     c.CantidadProyectosAsociados,
                     c.CantidadProyectosRequisitosAprobados,
                     CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
