@@ -191,13 +191,16 @@ export class FormPerfilComponent implements OnInit {
       } );
   };
 
-  deletePerfil( contratoPerfilId: number ) {
+  deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
     this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
       .subscribe( value => {
         if ( value ) {
           this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
             .subscribe( 
-              () => this.openDialog( '', 'La información se ha eliminado correctamente.' ),
+              () => {
+                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.perfiles.removeAt( numeroPerfil );
+              },
               err => this.openDialog( '', err.message )
             );
         }
@@ -212,9 +215,12 @@ export class FormPerfilComponent implements OnInit {
     this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
   };
 
-  deleteRadicado ( contratoPerfilNumeroRadicadoId: number ) {
+  deleteRadicado ( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
     this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
-      .subscribe( console.log );
+      .subscribe( () => {
+        this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+        this.openDialog( '', 'La información se ha eliminado correctamente.' );
+      } );
   }
 
   guardar () {

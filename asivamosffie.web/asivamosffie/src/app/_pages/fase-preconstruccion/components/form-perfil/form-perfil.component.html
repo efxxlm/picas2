@@ -126,7 +126,7 @@
                         color="warn"
                         type="button"
                         class="btn-eliminar"
-                        (click)="deleteRadicado( numero.get( 'contratoPerfilNumeroRadicadoId' ).value )"
+                        (click)="deleteRadicado( numero.get( 'contratoPerfilNumeroRadicadoId' ).value, i, j )"
                         *ngIf="perfilProyecto.length > 0 && numero.get( 'contratoPerfilNumeroRadicadoId' ).value !== 0">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                   Eliminar número de radicado
@@ -179,7 +179,7 @@
                 color="warn"
                 type="button"
                 class="btn-eliminar"
-                (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value )"
+                (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value, i )"
                 *ngIf="perfilProyecto.length > 0">
           <img src="assets/img/icon/menos.svg">
           Eliminar perfil
