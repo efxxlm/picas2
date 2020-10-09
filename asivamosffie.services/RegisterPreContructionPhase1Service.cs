@@ -26,34 +26,29 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListContratacion()
         {
-           
+
             List<dynamic> listaContrats = new List<dynamic>();
 
-            List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.ToListAsync();
-            //ContratoConPolizasYDRP.NumeroContrato,
-            //CantidadProyectosAsociados,
-            //ProyectosCompletos,
-            //ProyectosNoCompletos,
-            //EstadoVerificacionNombre = listEstadosVerificacionContrato.Where(r => r.Codigo.Equals(ContratoConPolizasYDRP.EstadoVerificacionCodigo)).FirstOrDefault().Nombre,
-            //idContrato = ContratoConPolizasYDRP.ContratoId,
-            //VerBotonAprobarInicio
+            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
 
             lista.ForEach(c =>
             {
                 listaContrats.Add(new
                 {
-                    FechaAprobacionPoliza = c.FechaAprobacion,
-                    c.NumeroContrato,
-                    c.CantidadProyectosAsociados,
-                    ProyectosCompletos = c.CantidadProyectosRequisitosAprobados,
-                    ProyectosNoCompletos = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoVerificacionNombre = c.EstadoNombre, 
-                    VerBotonAprobarInicio =  c.ExisteRegistro,
-                    idContrato = c.ContratoId,
+                    ContratoId = c.ContratoId,
+                    FechaAprobacion = c.FechaAprobacion,
+                    NumeroContrato = c.NumeroContrato,
+                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                    EstadoCodigo = c.EstadoCodigo,
+                    EstadoNombre = c.EstadoNombre,
+                    Existeregistro = c.ExisteRegistro,
 
                 });
-            }); 
-            return lista;
+            });
+
+            return listaContrats;
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
