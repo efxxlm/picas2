@@ -41,8 +41,8 @@
             <mat-form-field class="w-50" appearance="fill">
               <mat-select formControlName="perfilCodigo" class="padding-left">
                 <mat-option></mat-option>
-                <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.value">
-                  {{perfilCv.value}}
+                <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
+                  {{perfilCv.nombre}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -212,6 +212,22 @@
                 <img  src="assets/img/icon/guardar.svg">
         </button>
       </div>
+
+      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="formContratista.get( 'observacionSupervisor' ).value !== null">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Observaciones del supervisor
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <b style="margin-top: 0.8em;">
+            {{ formContratista.get( 'fechaObservacion' ).value | date: 'dd/MM/yyyy' }}
+          </b>
+          <p>
+            {{ textoLimpioMessage( formContratista.get( 'observacionSupervisor' ).value ) }}
+          </p>
+        </mat-card-content>
+      </mat-card>
     </mat-expansion-panel>
   </mat-accordion>
 

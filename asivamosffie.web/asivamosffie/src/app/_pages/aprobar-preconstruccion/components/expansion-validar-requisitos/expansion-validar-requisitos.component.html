@@ -114,22 +114,23 @@
             </mat-card-content>
           </mat-card>
 
-          <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card">
-              <mat-card-title class="header-card--text">
-                Verificación del apoyo a la supervisión
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <b>
-                21/06/2020
-              </b>
-              <p>
-                La hoja de vida de Natalia Aranda no cuenta con los soportes indicados, verificar la
-                información.
-              </p>
-            </mat-card-content>
-          </mat-card>
+          <section *ngFor="let obs of perfil.contratoPerfilObservacion">
+            <mat-card class="shipping-card var-main-gris" *ngIf="obs.tipoObservacionCodigo === '2'">
+              <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text">
+                  Verificación del apoyo a la supervisión
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <b>
+                  {{ obs.fechaCreacion | date: 'dd/MM/yyyy' }}
+                </b>
+                <p>
+                  {{ textoLimpioObservacion( obs.observacion ) }}
+                </p>
+              </mat-card-content>
+            </mat-card>
+          </section>
 
           <div class="row justify-content-center mb-2em">
             <div class="pr-1">

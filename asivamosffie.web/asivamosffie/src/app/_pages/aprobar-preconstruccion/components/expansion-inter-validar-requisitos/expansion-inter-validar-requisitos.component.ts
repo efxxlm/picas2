@@ -92,8 +92,8 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
       observacion: perfil[ 'verificarObservacion' ]
     };
     console.log( observacionPerfil );
-    //this.faseUnoVerificarPreconstruccionSvc.crearContratoPerfilObservacion( observacionPerfil )
-    //  .subscribe( console.log );
+    this.faseUnoVerificarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
+      .subscribe( console.log );
   }
 
 }

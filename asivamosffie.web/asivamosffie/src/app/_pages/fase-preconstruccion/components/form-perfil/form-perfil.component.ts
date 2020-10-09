@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormPerfilComponent implements OnInit {
 
   formContratista        : FormGroup;
+  minDate: Date;
   @Input() perfilProyecto: any[] = [];
   @Input() contratoId    : number;
   @Input() proyectoId    : number;
@@ -30,13 +31,17 @@ export class FormPerfilComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  perfilesCv: Dominio[] = []
+  perfilesCv: Dominio[] = [];
+  get perfiles () {
+    return this.formContratista.get( 'perfiles' ) as FormArray;
+  };
 
   constructor ( private fb                       : FormBuilder,
                 private commonSvc                : CommonService,
                 private dialog                   : MatDialog,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) 
   {
+    this.minDate = new Date();
     this.crearFormulario();
     this.commonSvc.listaPerfil()
       .subscribe( perfiles => {
@@ -50,8 +55,13 @@ export class FormPerfilComponent implements OnInit {
     }, 1000);
   };
 
-  get perfiles () {
-    return this.formContratista.get( 'perfiles' ) as FormArray;
+  crearFormulario () {
+    this.formContratista = this.fb.group({
+      numeroPerfiles: [ '' ],
+      fechaObservacion: [ null ],
+      observacionSupervisor: [ null ],
+      perfiles: this.fb.array([])
+    });
   };
 
   perfilesProyecto () {
@@ -123,16 +133,16 @@ export class FormPerfilComponent implements OnInit {
         this.perfiles.push(
           this.fb.group(
             {
-              contratoPerfilId            : [ perfil.contratoPerfilId ],
+              contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
               perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
-              perfilCodigo                : [ perfil.perfilCodigo ],
-              cantidadHvRequeridas        : [ String( perfil.cantidadHvRequeridas ) ],
-              cantidadHvRecibidas         : [ String( perfil.cantidadHvRecibidas ) ],
-              cantidadHvAprobadas         : [ String( perfil.cantidadHvAprobadas ) ],
-              fechaAprobacion             : [ new Date( perfil.fechaAprobacion ) ],
+              perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
+              cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
+              cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
+              cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
+              fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
               observacion                 : [ observaciones ],
               contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
-              rutaSoporte                 : [ perfil.rutaSoporte ]
+              rutaSoporte                 : [ perfil.rutaSoporte ? perfil.rutaSoporte : '' ]
             }
           )
         )
@@ -144,6 +154,9 @@ export class FormPerfilComponent implements OnInit {
     if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
     } else {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+    }
+    if ( cantidadHvRequeridas.length === 0 ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
     }
   };
@@ -187,15 +200,6 @@ export class FormPerfilComponent implements OnInit {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     };
-  };
-
-  crearFormulario () {
-    this.formContratista = this.fb.group({
-      numeroPerfiles: [ '' ],
-      fechaObservacion: [ null ],
-      observacionSupervisor: [ null ],
-      perfiles: this.fb.array([])
-    });
   };
 
   eliminarPerfil ( numeroPerfil: number ) {
@@ -251,8 +255,8 @@ export class FormPerfilComponent implements OnInit {
         value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    = [ { observacion: value.observacion } ];
+        value.contratoPerfilNumeroRadicado = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
+        value.contratoPerfilObservacion    = value.observacion ? [{ observacion: value.observacion }] : null;
         value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                   = this.contratoId;
         value.proyectoId                   = this.proyectoId;
@@ -262,14 +266,14 @@ export class FormPerfilComponent implements OnInit {
         value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    =  [ 
+        value.contratoPerfilNumeroRadicado = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
+        value.contratoPerfilObservacion    = value.observacion ?  [ 
                                                 { 
                                                   ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
                                                   contratoPerfilId: value.contratoPerfilId,
                                                   observacion: value.observacion 
                                                 } 
-                                              ];
+                                              ] : null;
         value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                   = this.contratoId;
         value.proyectoId                   = this.proyectoId;

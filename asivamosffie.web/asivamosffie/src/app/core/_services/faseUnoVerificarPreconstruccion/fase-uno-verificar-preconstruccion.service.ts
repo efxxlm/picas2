@@ -36,5 +36,9 @@ export class FaseUnoVerificarPreconstruccionService {
   crearContratoPerfilObservacion ( pContratoPerfilObservacion: ObservacionPerfil ) {
     return this.http.post<Respuesta>( `${ this.paramUrl( '/VerifyPreConstructionRequirementsPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );
   }
+  //servicio del 3.1.8
+  aprobarCrearContratoPerfilObservacion ( pContratoPerfilObservacion: ObservacionPerfil ) {
+    return this.http.post<Respuesta>( `${ this.paramUrl( '/ApprovePreConstructionPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );
+  }
 
 };

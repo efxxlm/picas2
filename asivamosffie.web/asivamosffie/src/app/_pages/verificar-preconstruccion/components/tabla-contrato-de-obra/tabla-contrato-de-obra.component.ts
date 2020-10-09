@@ -22,12 +22,12 @@ export interface PeriodicElement {
 export class TablaContratoDeObraComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'fechaAprobacionPoliza',
+    'fechaAprobacion',
     'numeroContrato',
     'cantidadProyectosAsociados',
-    'proyectosCompletos',
-    'proyectosNoCompletos',
-    'estadoVerificacionNombre',
+    'cantidadProyectosRequisitosAprobados',
+    'cantidadProyectosRequisitosPendientes',
+    'estadoNombre',
     'gestion'
   ];
   dataSource = new MatTableDataSource();

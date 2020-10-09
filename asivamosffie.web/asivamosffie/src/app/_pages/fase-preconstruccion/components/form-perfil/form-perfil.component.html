@@ -70,6 +70,7 @@
               <input  matInput 
                       [matDatepicker]="fechaAprobacion" 
                       formControlName="fechaAprobacion"
+                      [min]="minDate"
                       placeholder="DD/MM/AAAA"
                       [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
               <mat-datepicker #fechaAprobacion></mat-datepicker>
@@ -203,7 +204,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <b>
+          <b style="margin-top: 0.8em;">
             {{ formContratista.get( 'fechaObservacion' ).value | date: 'dd/MM/yyyy' }}
           </b>
           <p>

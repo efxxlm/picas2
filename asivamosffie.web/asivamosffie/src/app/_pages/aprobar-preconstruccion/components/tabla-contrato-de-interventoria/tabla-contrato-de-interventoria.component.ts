@@ -12,12 +12,12 @@ import { FaseUnoVerificarPreconstruccionService } from 'src/app/core/_services/f
 export class TablaContratoDeInterventoriaComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'fechaAprobacionPoliza',
+    'fechaAprobacion',
     'numeroContrato',
     'cantidadProyectosAsociados',
-    'proyectosCompletos',
-    'proyectosNoCompletos',
-    'estadoVerificacionNombre',
+    'cantidadProyectosRequisitosAprobados',
+    'cantidadProyectosRequisitosPendientes',
+    'estadoNombre',
     'gestion'
   ];
   dataSource = new MatTableDataSource();

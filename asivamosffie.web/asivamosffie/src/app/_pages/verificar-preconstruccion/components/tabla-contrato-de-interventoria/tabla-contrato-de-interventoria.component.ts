@@ -52,12 +52,12 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class TablaContratoDeInterventoriaComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'fechaAprobacionPoliza',
+    'fechaAprobacion',
     'numeroContrato',
     'cantidadProyectosAsociados',
-    'proyectosCompletos',
-    'proyectosNoCompletos',
-    'estadoVerificacionNombre',
+    'cantidadProyectosRequisitosAprobados',
+    'cantidadProyectosRequisitosPendientes',
+    'estadoNombre',
     'gestion'
   ];
   dataSource = new MatTableDataSource();
@@ -73,6 +73,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
   constructor ( private faseUnoVerificarPreConstruccionSvc: FaseUnoVerificarPreconstruccionService ) {
     this.faseUnoVerificarPreConstruccionSvc.getListContratacion()
       .subscribe( listas => {
+        console.log( listas );
         this.dataSource = new MatTableDataSource( listas );
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
