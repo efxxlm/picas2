@@ -167,7 +167,7 @@
       </mat-card-content>
     </mat-card>
     <div class="text-center">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
+      <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf="!data.ver">
         <img src="assets/img/icon/guardar.svg" alt="Regresar">
       </button>
     </div>

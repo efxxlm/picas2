@@ -38,8 +38,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
     'nombreAportante',
     'valorAportante',
     'estado',
-    'id',
-    'ver'
+    'id'
   ];
   dataSource = new MatTableDataSource();
 
@@ -58,7 +57,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
   @Input()ver: any;
   
   ngOnInit(): void {
-    console.log(this.proyectos);
+    console.log(this.ver);
     let elements:PeriodicElement[]=[];
     this.proyectos.forEach(element => {
       elements.push({
@@ -75,31 +74,28 @@ export class TablaGestionarValidacionComponent implements OnInit {
         disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto,
         valorGestionado:element.valorGestionado,
         ver:this.ver
-      });
-  
-
+      });  
     });
+    console.log(elements);
     this.dataSource = new MatTableDataSource(elements);
     this.inicializarTabla();
   }
   inicializarTabla() {
-   
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
       if (length === 0 || pageSize === 0) {
         return '0 de ' + length;
       }
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
       const endIndex = startIndex < length ?
         Math.min(startIndex + pageSize, length) :
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
-    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -114,7 +110,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
     // this.openDialog('', `El saldo actual de la fuente <b>Recursos propios</b> es menor
     // al valor solicitado de la fuente, verifique por favor.`);
     this.dialog.open(FormGestionarFuentesComponent, {
-      width: '70em', data: { elemento: id, codigo:this.codigo }
+      width: '70em', data: { elemento: id, codigo:this.codigo,ver:this.ver }
     });
   }
 

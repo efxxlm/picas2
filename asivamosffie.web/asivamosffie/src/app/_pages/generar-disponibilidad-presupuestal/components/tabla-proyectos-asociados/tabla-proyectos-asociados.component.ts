@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,32 +18,6 @@ export interface TableElement {
 }
 
 const ELEMENT_DATA: TableElement[] = [
-  {
-    id: 0,
-    llaveMen: 'LL66666',
-    tipoInterventor: 'Remodelación',
-    departamento: 'Atlántico',
-    municipio: 'Manati',
-    institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-    sede: 'Única sede',
-    tipoAportante: 'FFIE',
-    nombreAportante: 'FFIE',
-    fuente: 'Recursos propios',
-    valorDelAportante: 30000000
-  },
-  {
-    id: 1,
-    llaveMen: 'LL66666',
-    tipoInterventor: 'Remodelación',
-    departamento: 'Atlántico',
-    municipio: 'Manati',
-    institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-    sede: 'Única sede',
-    tipoAportante: 'ET',
-    nombreAportante: 'Gobernación de Atlántico',
-    fuente: 'Recursos propios',
-    valorDelAportante: 20000000
-  }
 ];
 
 @Component({
@@ -53,6 +27,10 @@ const ELEMENT_DATA: TableElement[] = [
 })
 export class TablaProyectosAsociadosComponent implements OnInit {
 
+  @Input()proyectos: any;
+  @Input()codigo: any;
+  @Input()ver: any;
+  
   displayedColumns: string[] = [
     'llaveMen',
     'tipoInterventor',
@@ -76,6 +54,34 @@ export class TablaProyectosAsociadosComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    let elements:TableElement[]=[];
+    this.proyectos.forEach(element => {
+      elements.push({
+        llaveMen:element.llaveMen,
+        departamento:element.departamento,
+        //estado:element.valorGestionado>0,//
+        id:element.aportanteID,//el aprotante id
+        institucionEducativa:element.institucionEducativa,
+        municipio:element.municipio,
+        sede:element.sede,
+        nombreAportante:element.nombreAportante,
+        tipoInterventor:element.tipoIntervencion,//revisar
+        valorDelAportante:element.valorAportante,
+        //disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto,
+        //valorGestionado:element.valorGestionado,
+        //ver:this.ver
+        fuente:"Recursos propios",
+        tipoAportante:"FFIE",
+        
+      });  
+    });
+    console.log(elements);
+    this.dataSource = new MatTableDataSource(elements);
+    this.inicializarTabla();
+    
+  }
+
+  inicializarTabla(){
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
