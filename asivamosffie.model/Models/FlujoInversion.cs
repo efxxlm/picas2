@@ -8,7 +8,7 @@ namespace asivamosffie.model.Models
         public int FlujoInversionId { get; set; }
         public int ContratoConstruccionId { get; set; }
         public string Capitulo { get; set; }
-        public int? Mes { get; set; }
+        public string Mes { get; set; }
         public decimal? Valor { get; set; }
 
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }

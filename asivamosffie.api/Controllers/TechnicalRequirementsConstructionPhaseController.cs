@@ -200,6 +200,46 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [Route("UploadFileToValidateInvestmentFlow")]
+        [HttpPost]
+        public async Task<IActionResult> UploadFileToValidateInvestmentFlow(IFormFile file, [FromQuery] int pContratoConstruccinId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (file.Length > 0 && file.FileName.Contains(".xls"))
+                {
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateInvestmentFlow(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario, pContratoConstruccinId);
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("TransferMassiveLoadInvestmentFlow")]
+        [HttpPost]
+        public async Task<IActionResult> TransferMassiveLoadInvestmentFlow([FromQuery] string pIdDocument)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.TransferMassiveLoadInvestmentFlow(pIdDocument, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
         
 
     }

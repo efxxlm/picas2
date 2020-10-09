@@ -81,5 +81,7 @@
         public const string Eliminar_Construccion_Perfil_Numero_Radicado = "105";
         public const string Validar_Excel_Programacion_Obra = "106";
         public const string Load_Data_Programacion_Obra = "107";
+        public const string Load_Data_Flujo_Inversion = "108";
+        public const string Validar_Excel_Flujo_Inversion = "109";
     } 
 }
