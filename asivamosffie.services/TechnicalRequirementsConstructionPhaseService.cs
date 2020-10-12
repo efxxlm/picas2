@@ -967,17 +967,21 @@ namespace asivamosffie.services
                     //Controlar Registros
                     //Filas <=
                     //No comienza desde 0 por lo tanto el = no es necesario
-                    for (int i = 2; i <= worksheet.Dimension.Rows; i++){
-                        for (int k = 2; k < worksheet.Dimension.Columns; k++){
-                            try
+                    for (int i = 2; i <= worksheet.Dimension.Rows; i++)
+                    {
+                        try
+                        {
+
+                            /* Columnas Obligatorias de excel
+                             2	3	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
+                            Campos Obligatorios Validos   */
+                            if (
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text)
+                               )
                             {
-                                /* Columnas Obligatorias de excel
-                                 2	3	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
-                                Campos Obligatorios Validos   */
-                                if (
-                                        !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text)
-                                   )
+                                for (int k = 2; k < worksheet.Dimension.Columns; k++)
                                 {
+
 
                                     TempFlujoInversion temp = new TempFlujoInversion();
                                     //Auditoria
@@ -1009,39 +1013,46 @@ namespace asivamosffie.services
                                     }
 
                                 }
-                                else
-                                {
-                                    //Aqui entra cuando alguno de los campos obligatorios no viene diligenciado
-                                    string strValidateCampNullsOrEmpty = "";
-                                    //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
-
-                                    for (int j = 1; j < 7; j++)
-                                    {
-                                        strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
-                                    }
-                                    if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
-                                    {
-                                        CantidadRegistrosVacios++;
-                                    }
-                                    else
-                                    {
-                                        CantidadRegistrosInvalidos++;
-                                    }
-                                }
-
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                CantidadRegistrosInvalidos++;
+                                //Aqui entra cuando alguno de los campos obligatorios no viene diligenciado
+                                //string strValidateCampNullsOrEmpty = "";
+                                //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
+
+                                for (int j = 2; j < worksheet.Dimension.Columns; j++){
+                                    CantidadRegistrosInvalidos++;
+                                }
+                        
+                                
+                                // for (int j = 1; j < 7; j++)
+                                // {
+                                //     strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
+                                // }
+                                // if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
+                                // {
+                                //     CantidadRegistrosVacios++;
+                                // }
+                                // else
+                                // {
+                                //     CantidadRegistrosInvalidos++;
+                                    
+                                // }
                             }
+
                         }
+                        catch (Exception ex)
+                        {
+                            CantidadRegistrosInvalidos++;
+                        }
+
                     }
 
                     //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
                     //-2 ya los registros comienzan desde esta fila
                     archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                     archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
+                    archivoCarge.CantidadRegistros = ((worksheet.Dimension.Rows - 1) * (worksheet.Dimension.Columns - 2) - CantidadRegistrosVacios );
                     _context.ArchivoCargue.Update(archivoCarge);
 
 
@@ -1101,48 +1112,44 @@ namespace asivamosffie.services
             {
 
 
-                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.ProgramacionObra, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.FlujoInversion, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
                 ArchivoCargue archivoCargue = _context.ArchivoCargue
-                                                .Where(r => r.OrigenId == 3 &&
+                                                .Where(r => r.OrigenId == 4 &&
                                                         r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())
                                                       )
                                                 .FirstOrDefault();
 
-                List<TempProgramacion> listTempProgramacion = await _context.TempProgramacion
+                List<TempFlujoInversion> listTempFlujoInversion = await _context.TempFlujoInversion
                                                                 .Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado)
                                                                 .ToListAsync();
 
-                if (listTempProgramacion.Count() > 0)
+                if (listTempFlujoInversion.Count() > 0)
                 {
-                    foreach (TempProgramacion tempProgramacion in listTempProgramacion)
+                    listTempFlujoInversion.ForEach( tempFlujo => 
                     {
 
-                        //ProcesoSeleccionProponente
-                        Programacion programacion = new Programacion()
+                        FlujoInversion flujo = new FlujoInversion()
                         {
-                            ContratoConstruccionId = tempProgramacion.ContratoConstruccionId,
-                            TipoActividadCodigo = tempProgramacion.TipoActividadCodigo,
-                            Actividad = tempProgramacion.Actividad,
-                            EsRutaCritica = tempProgramacion.EsRutaCritica,
-                            FechaInicio = tempProgramacion.FechaInicio,
-                            FechaFin = tempProgramacion.FechaFin,
-                            Duracion = tempProgramacion.Duracion
+                            ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
+                            Capitulo = tempFlujo.Capitulo,
+                            Mes = tempFlujo.Mes,
+                            Valor = tempFlujo.Valor,
 
                         };
 
-                        _context.Programacion.Add(programacion);
+                        _context.FlujoInversion.Add( flujo );
                         _context.SaveChanges();
 
 
 
                         //Temporal proyecto update
-                        tempProgramacion.EstaValidado = true;
-                        tempProgramacion.FechaModificacion = DateTime.Now;
-                        tempProgramacion.UsuarioModificacion = pUsuarioModifico;
-                        _context.TempProgramacion.Update(tempProgramacion);
+                        tempFlujo.EstaValidado = true;
+                        tempFlujo.FechaModificacion = DateTime.Now;
+                        tempFlujo.UsuarioModificacion = pUsuarioModifico;
+                        _context.TempFlujoInversion.Update(tempFlujo);
                         _context.SaveChanges();
-                    }
+                    });
 
 
                     return respuesta =
@@ -1152,7 +1159,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = true,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, "Cantidad de registros subidos : " + listTempProgramacion.Count())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, "Cantidad de registros subidos : " + listTempFlujoInversion.Count())
                     };
                 }
                 else
