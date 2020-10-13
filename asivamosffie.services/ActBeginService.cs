@@ -390,15 +390,8 @@ namespace asivamosffie.services
                 //{
                 //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.UsuarioInactivo };
                 //}
-                //else
-                //{
-                //string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
-                //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
-                //usuarioSolicito.CambiarContrasena = true;
-                //usuarioSolicito.Bloqueado = false;
-                //usuarioSolicito.IntentosFallidos = 0;
-                //usuarioSolicito.Ip = pUsuario.Ip;
-
+            
+            
                 //Guardar Usuario
                 //await UpdateUser(usuarioSolicito);
 
