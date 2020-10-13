@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -17,7 +18,9 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   };
   public editable: boolean;
   public title;
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder) { }
+
+  public contratoId;
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
@@ -36,6 +39,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     if(this.editable==true){
       console.log("cargar servicio");
     }
+    this.contratoId = id;
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -73,6 +77,9 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     alert("llama al servicio");
   }
   onSubmit() {
+    this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3").subscribe(resp=>{
+      
+    });
     console.log(this.addressForm.value);
     this.openDialog('La información ha sido guardada exitosamente.', "");
     this.router.navigate(['/generarActaInicioConstruccion']);
