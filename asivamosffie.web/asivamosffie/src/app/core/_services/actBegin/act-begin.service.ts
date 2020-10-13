@@ -19,6 +19,13 @@ export class ActBeginService {
   GetPlantillaActaInicio(pContratoId: number) {
     return this.http.get(`${environment.apiUrl}/actBegin/GetPlantillaActaInicio?pContratoId=${pContratoId}`, { responseType: "blob" } );
   }
+  EditCargarActaSuscritaContrato(pContratoId: number, pFechaFirmaContratista:Date, pFechaFirmaActaContratistaInterventoria:Date,pFile:File,pUsuarioModificacion:string) {
+    const formData = new FormData();
+    formData.append('pFile', pFile, pFile.name);
+    return this.http.post(`${environment.apiUrl}/actBegin/EditCargarActaSuscritaContrato?pContratoId=${pContratoId}&pFechaFirmaContratista=${pFechaFirmaContratista}
+    &pFechaFirmaActaContratistaInterventoria=${pFechaFirmaActaContratistaInterventoria}&pFile=${pFile}&pUsuarioModificacion=${pUsuarioModificacion}`,formData);
+  }
+  
 }
 export interface GetVistaGenerarActaInicio {
   departamentoYMunicipioLlaveMEN: string;

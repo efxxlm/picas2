@@ -47,85 +47,45 @@ namespace asivamosffie.services.Helpers.Enumerator
         //Es igual a estado Proyecto 
         Estado_Registro = 23,
 
-		Tipo_Proceso_Seleccion = 27,
-		Etapa_Proceso_Seleccion = 34,
+        Estado_Juridico_Predios = 25,
 
-		Tipo_Documento = 30,
-		Tipo_Proponente = 28,
-		Estado_Proceso_Seleccion = 35,
-		Estado_Juridico_Predios = 25,
+        Tipo_Proceso_Seleccion = 27,
  
-		Estado_Cronograma_Seguimiento = 40,
+        Tipo_Proponente = 28,
 
-		Estado_Contrato_Poliza = 51,  
-		Tipo_Contrato = 52,
-		Tipo_Modificacion_Contrato_Poliza = 56,
-		Tipo_Garantia_Poliza = 58, 
-		Tipo_Solicitud = 29,
         Tipo_de_Solicitud = 29,
-		Estado_Comite = 38,
-		//Estado_Cronograma_Seguimiento = 40,
+
+        Tipo_Documento = 30,
+
         //Es para proyecto ?
         Estado_Solicitud = 31,
-
-        Estado_Solicitud_Presupuestal = 33,
-        
-
-        Opcion_Por_Contratar = 37,
-
-        EstadoComite = 38,
-
-       
+ 
         // Para disponibilidad presupuestal
 
+        Etapa_Proceso_Seleccion = 34,
 
-        // Para disponibilidad presupuestal        
-        
+        Estado_Proceso_Seleccion = 35,
+
         Tipo_de_Solicitud_Obra_Interventorias = 37,
 
         Tipo_Disponibilidad_Presupuestal = 36,
-            
+        Opcion_Por_Contratar = 37,
 
+        Estado_Comite = 38,
+
+        Estado_Cronograma_Seguimiento = 40,
+ 
         Dias_Comite = 43,
 
         PlaceHolder = 44,
 
-        Estado_Compromisos = 45,
         //RESPONSABLES DE TEMAS
         Miembros_Comite_Tecnico = 46,
-        Estado_Solicitud_Disponibilidad_Presupuestal = 39,
-        Tipo_DDP_Espacial = 49,		
-	    Estado_Compromiso = 45,
-
-		EstadoAcataComiteTecnico = 47, 
-        Estados_Acta = 47, 
-        Estado_Sesion_Comite_Solicitud = 50, 
-        Estado_Proyecto = 63,
-
-		//EstadoAcataComiteTecnico = 47,
-
-     //   Estados_Acta = 47,
-
-       // Estado_Sesion_Comite_Solicitud = 50,
-
-        //Estado_Proyecto = 63,
-        
-        PlaceHolderDDP = 66,
- 
- 
+         
         Estado_Verificacion_Contrato = 53,
- 
 
-                    
-                
-        //Es para proyecto ?           
-
-                // Para disponibilidad presupuestal        
-                       
-                //RESPONSABLES DE TEMAS
-             
-      
-        Estado_Acta_Contrato = 60
-
+        Tipo_Observacion_Contrato_Perfil_Observacion = 54,
+         
+        Estado_Del_Acta_Contrato = 60
     }
 }
