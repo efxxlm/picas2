@@ -46,6 +46,8 @@
         Registros_Firmas = 34,
 
         Registros_Fuente_De_Uso = 38, 
-        Registros_Usos_Registros_Fuente_de_Uso = 39
+        Registros_Usos_Registros_Fuente_de_Uso = 39,
+
+            Acta_inicio_obra_PDF = 48
     }
 }

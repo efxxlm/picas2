@@ -92,6 +92,16 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Sesion_Comite_Solicitud = 50,
 
-        Estado_Proyecto = 63
+        Estado_Proyecto = 63,
+
+            Estado_Acta_Contrato = 60,
+
+            Estado_Contrato_Poliza = 51,
+        Tipo_Contrato = 52,
+        Tipo_Modificacion_Contrato_Poliza = 56,
+        Tipo_Garantia_Poliza = 58,
+     
+    
+
     }
 }

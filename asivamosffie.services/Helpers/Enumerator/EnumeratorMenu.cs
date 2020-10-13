@@ -25,9 +25,15 @@ namespace asivamosffie.services.Helpers.Enumerator
         RegistrarSesionComiteFiduciario = 29,
 
         GenerarDisponibilidadPresupuestal = 28,
-        
 
-        Gestionar_Procesos_Contractuales = 31
+
+        GestionarGarantias = 35,
+
+        Generar_Registro_Presupuestal = 36,
+
+
+        Gestionar_Procesos_Contractuales = 31,
+            Gestionar_acta_inicio_fase_2 = 42
     }
 
     public enum enumeratorAccion

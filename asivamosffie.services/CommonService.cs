@@ -230,6 +230,10 @@ namespace asivamosffie.services
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
         }
 
+        public async Task<ContratoPoliza> GetContratoPolizaByContratoId(int pContratoId)
+        {
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).FirstOrDefaultAsync();
+        }
         public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
         {
             return _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r => r.Descripcion).FirstOrDefault();

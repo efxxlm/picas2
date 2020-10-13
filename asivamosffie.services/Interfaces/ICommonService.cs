@@ -53,6 +53,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Localizacion> GetLocalizacionByLocalizacionId(string pLocalizacionId);
 
+        Task<ContratoPoliza> GetContratoPolizaByContratoId(int pContratoId);
+
         Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio);
 
         Task<List<Localicacion>> ListDepartamentoByRegionId(string idRegion);
