@@ -106,6 +106,8 @@ export class FormPerfilComponent implements OnInit {
       for ( let perfil of this.perfilProyecto ) {
         let numeroRadicados = [];
         let observaciones = null;
+        let fechaObservacion = null;
+        let observacionSupervisor = null;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push( 
             this.fb.group(
@@ -133,9 +135,9 @@ export class FormPerfilComponent implements OnInit {
           for ( let obs of perfil.contratoPerfilObservacion ) {
             if ( obs.tipoObservacionCodigo === '1' ) {
               observaciones = obs.observacion;
-            } else if ( obs.tipoObservacionCodigo === '2' ) {
-              this.formContratista.get( 'fechaObservacion' ).setValue( obs.fechaCreacion )
-              this.formContratista.get( 'observacionSupervisor' ).setValue( obs.observacion );
+            } else if ( obs.tipoObservacionCodigo === '3' ) {
+              fechaObservacion = obs.fechaCreacion;
+              observacionSupervisor = obs.observacion;
             }
           }
         }
@@ -151,6 +153,8 @@ export class FormPerfilComponent implements OnInit {
               cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
               fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
               observacion                 : [ observaciones ],
+              observacionSupervisor       : [ observacionSupervisor ],
+              fechaObservacion            : [ fechaObservacion ],
               contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
               rutaSoporte                 : [ perfil.rutaSoporte ? perfil.rutaSoporte : '' ]
             }
@@ -251,6 +255,10 @@ export class FormPerfilComponent implements OnInit {
   };
 
   deleteRadicado ( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
+    if ( contratoPerfilNumeroRadicadoId === 0 ) {
+      this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+      return;
+    }
     this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
       .subscribe( () => {
         this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
