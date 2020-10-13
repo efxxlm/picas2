@@ -370,7 +370,7 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        public async Task<Respuesta> EnviarCorreoGestionPoliza(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate, NotificacionMensajeGestionPoliza objNotificacionAseguradora = null)
+        public async Task<Respuesta> EnviarCorreoGestionActaIncio(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate, NotificacionMensajeGestionPoliza objNotificacionAseguradora = null)
         {
             bool blEnvioCorreo = false;
             Respuesta respuesta = new Respuesta();
@@ -384,14 +384,6 @@ namespace asivamosffie.services
             {
                 //Usuario usuarioSolicito = _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
 
-                //if (usuarioSolicito != null)
-                //{
-                //if (usuarioSolicito.Activo == false)
-                //{
-                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.UsuarioInactivo };
-                //}
-            
-            
                 //Guardar Usuario
                 //await UpdateUser(usuarioSolicito);
 
@@ -401,35 +393,42 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido;
 
                 //string urlDestino = pDominio;
-                //asent/img/logo                     
+                //asent/img/logo      
+
+                VistaGenerarActaInicioContrato pActaInicio = new VistaGenerarActaInicioContrato();
+
+                int tipoContrato = 0;
+                
+
+                Contrato contrato=null;
+                contrato = _context.Contrato.Where(r => r.NumeroContrato == pActaInicio.NumeroContrato).FirstOrDefault();
+                //template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
+                //objVistaContratoGarantiaPoliza.FEC
+
+                tipoContrato = 2;
+
+                if(contrato != null)
+                {
+                    pActaInicio = await getDataActaInicioAsync(contrato.ContratoId, tipoContrato);
+                }                
+
+                template = template.Replace("_Numero_Contrato_", pActaInicio.NumeroContrato);
+                template = template.Replace("_Fecha_Aprobacion_Poliza_", pActaInicio.FechaAprobacionGarantiaPoliza);
+
+                template = template.Replace("_Cantidad_Proyectos_Asociados_", pActaInicio.CantidadProyectosAsociados.ToString());
+
+                template = template.Replace("_Fecha_Acta_Inicio_", pActaInicio.FechaActaInicio);
+                template = template.Replace("_Fecha_Prevista_Terminacion_", pActaInicio.FechaPrevistaTerminacion);
 
                 //datos basicos generales, aplican para los 4 mensajes
-                template = template.Replace("_Tipo_Contrato_", objVistaContratoGarantiaPoliza.TipoContrato);
-                template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
-                template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/mm/aaaa)
-                template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
-                template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
-                template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
 
-                if (objNotificacionAseguradora != null)
-                {
-                    template = template.Replace("_Nombre_Aseguradora_", objNotificacionAseguradora.NombreAseguradora);
-                    template = template.Replace("_Numero_Poliza_", objNotificacionAseguradora.NumeroPoliza);
-                    template = template.Replace("_Fecha_Revision_", objNotificacionAseguradora.FechaRevision);
-                    template = template.Replace("_Estado_Revision_", objNotificacionAseguradora.EstadoRevision);
-                    template = template.Replace("_Observaciones_", objNotificacionAseguradora.Observaciones);
-
-                    if (!string.IsNullOrEmpty(objNotificacionAseguradora.NumeroDRP))
-                        template = template.Replace("_NumeroDRP_", objNotificacionAseguradora.NumeroDRP);
-
-                }
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Acta Inicio Fase II", template, pSentender, pPassword, pMailServer, pMailPort);
 
                 if (blEnvioCorreo)
-                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.CorreoEnviado };
 
                 else
-                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.ErrorEnviarCorreo };
 
                 //}
                 //}
@@ -438,7 +437,7 @@ namespace asivamosffie.services
                 //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
 
                 //}
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificacion_Gestion_Poliza), lstMails, "Gestión Pólizas");
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32( ConstantCodigoAcciones.Notificacion_Gestion_Poliza), lstMails, "Gestión Pólizas");
                 return respuesta;
 
 
@@ -447,7 +446,7 @@ namespace asivamosffie.services
             {
 
                 respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, Convert.ToInt32( ConstantCodigoAcciones.Notificacion_Gestion_Poliza), lstMails, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificacion_Gestion_Poliza), lstMails, "Gestión Acta Inicio Fase II") + ": " + ex.ToString() + ex.InnerException;
                 return respuesta;
             }
 
@@ -711,11 +710,15 @@ namespace asivamosffie.services
                 //                [DisponibilidadPresupuestalProyecto] - [ProyectoId]
                 //[ProyectoRequisitoTecnico][ProyectoId]
 
-               
+
                 //DisponibilidadPresupuestalProyecto disponibilidadPresupuestalProyecto
                 // disponibilidadPresupuestalProyecto= _context.DisponibilidadPresupuestalProyecto.Where(r => r.ProyectoId == disponibilidadPresupuestal.id).FirstOrDefault();
 
                 //contratacion.id
+
+                Int32 intCantidadProyectosAsociados = 0;
+
+                intCantidadProyectosAsociados = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).Count();
 
                 Proyecto proyecto;
                 proyecto= _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
@@ -766,6 +769,8 @@ namespace asivamosffie.services
                     LlaveMENContrato=strLlaveMENContrato,
                     DepartamentoYMunicipioLlaveMEN=strDepartamentoYMunicipioLlaveMEN,
                     InstitucionEducativaLlaveMEN=strInstitucionEducativaLlaveMEN,
+
+                    CantidadProyectosAsociados= intCantidadProyectosAsociados,
 
                     //RegistroCompleto = contrato.RegistroCompleto
 
