@@ -715,4 +715,36 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CorreoNoExiste = "106";
         #endregion
     }
+
+
+    
+
+    public class ConstantGestionarActaInicioFase2
+    {
+
+        #region Mensajes Informativos
+
+        public const string CorreoEnviado = "101";
+        public const string EditadoCorrectamente = "102";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        public const string ErrorInterno = "501";
+        public const string ErrorEnviarCorreo = "107";
+         
+
+        #endregion
+    }
 }

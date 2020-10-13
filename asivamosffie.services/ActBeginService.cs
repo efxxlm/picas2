@@ -22,7 +22,6 @@ namespace asivamosffie.services
 {
    public  class ActBeginService : IActBeginService
     {
-
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
@@ -33,11 +32,10 @@ namespace asivamosffie.services
 
         public ActBeginService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettingsService> settings, IDocumentService documentService, IConverter converter)
         {
-
             _commonService = commonService;
             _context = context;
             _settings = settings;
-        _documentService = documentService;
+            _documentService = documentService;
             _converter = converter;
         }
 
@@ -47,13 +45,13 @@ namespace asivamosffie.services
 
             //            ConObervacionesActa - Contrato
             Contrato contrato;
-            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId ).FirstOrDefault();
 
             int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.EditadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-
                 contrato.FechaModificacion = DateTime.Now;
                 contrato.UsuarioModificacion = pUsuarioModificacion;
                 contrato.ConObervacionesActa = true;
@@ -87,16 +85,15 @@ namespace asivamosffie.services
             }
         }
         //_context.Add(contratoPoliza);
-
-        
-
+                
         public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion)
         {
             Respuesta _response = new Respuesta();
 
             //            ConObervacionesActa - Contrato
             Contrato contrato;
-            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
             ContratoObservacion contratoObservacion= new ContratoObservacion();
 
@@ -104,7 +101,9 @@ namespace asivamosffie.services
 
             try
             {
-
+                contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
+                    contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
+                _context.Contrato.Update(contrato);
                 //contrato.FechaModificacion = DateTime.Now;
                 //contrato.UsuarioModificacion = pUsuarioModificacion;
                 //contrato.ConObervacionesActa = true;
@@ -116,7 +115,7 @@ namespace asivamosffie.services
                 contratoObservacion.EsActa = true;
 
                 contratoObservacion.FechaCreacion = DateTime.Now;
-                contratoObservacion.UsuarioModificacion = pUsuarioModificacion;
+                contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
 
                 //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
                 //DOM 60  1   Sin acta generada
@@ -126,7 +125,6 @@ namespace asivamosffie.services
                 _context.Add(contratoObservacion);
                 await _context.SaveChangesAsync();
 
-
                 //            Plazo de ejecución fase 1 – Preconstrucción: Meses: 4 Días: 3 - PlazoFase1PreMeses - PlazoFase1PreDias - contrato
 
                 //---- - guardar    OK
@@ -135,7 +133,7 @@ namespace asivamosffie.services
                 //Observaciones o consideraciones especiales   Observaciones - contrato
 
                 return
-   new Respuesta
+             new Respuesta
            {
                IsSuccessful = true,
                IsException = false,
@@ -154,7 +152,6 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
             }
         }
-
         
         public async Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
@@ -162,18 +159,19 @@ namespace asivamosffie.services
         {
             //            Fecha de la firma del documento por parte del contratista de obra -FechaFirmaContratista - contrato
             //Fecha de la firma del documento por parte del contratista de interventoría -FechaFirmaActaContratistaInterventoria - contrato
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contratacion, (int)EnumeratorTipoDominio.Acciones);
+                        
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Cargar_Acta_Suscrita_Contrato_Fase_2, (int)EnumeratorTipoDominio.Acciones);
 
             Contrato contrato;
-            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+
+            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId ).FirstOrDefault();
 
             try
             {
-
                 contrato.FechaFirmaContratista = pFechaFirmaContratista;
                 contrato.FechaFirmaActaContratistaInterventoriaFase2 = pFechaFirmaActaContratistaInterventoria;
                 contrato.UsuarioModificacion = pUsuarioModificacion;
-
 
                 string strFilePatch = "";
                 //Save Files  
@@ -190,7 +188,6 @@ namespace asivamosffie.services
                     }
                 }
 
-
                 //Auditoria
                 //contratacionOld.FechaModificacion = DateTime.Now;
                 //contratacionOld.UsuarioModificacion = pContratacion.UsuarioCreacion;
@@ -201,6 +198,7 @@ namespace asivamosffie.services
 
                 contrato.RutaActaSuscrita = strFilePatch + "//" + pFile.FileName;
                 //contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
+                _context.Contrato.Update(contrato);
 
                 return
                  new Respuesta
@@ -208,8 +206,8 @@ namespace asivamosffie.services
                      IsSuccessful = true,
                      IsException = false,
                      IsValidation = false,
-                     Code = ConstantGestionarProcesosContractuales.OperacionExitosa,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantGestionarProcesosContractuales.OperacionExitosa, idAccion, contrato.UsuarioModificacion, "CARGAR ACTA SUSCRITA CONTRATO")
+                     Code = ConstantGestionarActaInicioFase2.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, ConstantGestionarActaInicioFase2.OperacionExitosa, idAccion, contrato.UsuarioModificacion, "CARGAR ACTA SUSCRITA CONTRATO")
                  };
 
             }
@@ -223,7 +221,7 @@ namespace asivamosffie.services
                   IsException = true,
                   IsValidation = false,
                   Code = ConstantGestionarProcesosContractuales.Error,
-                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantGestionarProcesosContractuales.Error, idAccion, contrato.UsuarioModificacion, ex.InnerException.ToString())
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, ConstantGestionarActaInicioFase2.Error, idAccion, contrato.UsuarioModificacion, ex.InnerException.ToString())
               };
             }
         }
@@ -236,7 +234,6 @@ namespace asivamosffie.services
             }
 
             VistaGenerarActaInicioContrato actaInicio;
-
 
             int pTipoContrato = 2;
 
@@ -264,7 +261,6 @@ namespace asivamosffie.services
 
         private async Task<string> ReemplazarDatosPlantillaActaInicio(string strContenido, VistaGenerarActaInicioContrato pActaInicio, string usuario)
         {
-
             string str = "";
             string valor = "";
 
@@ -274,7 +270,6 @@ namespace asivamosffie.services
 
             strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Obra_", pActaInicio.NombreRepresentanteContratistaObra);
             strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Interventoria_", pActaInicio.NombreRepresentanteContratistaObra);
-
 
             strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra_", pActaInicio.NombreEntidadContratistaObra);
             strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Interventoria_", pActaInicio.NombreEntidadContratistaObra);
@@ -375,8 +370,6 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-
-
         public void replaceTags()
         {
             string str="";
@@ -416,8 +409,6 @@ namespace asivamosffie.services
             str = str.Replace("_Fecha_Acta_Inicio_", valor);
             str = str.Replace("_Numero_Contrato_Obra_", valor);
             str = str.Replace("", valor);
-
-
 
         }
 
@@ -707,7 +698,6 @@ namespace asivamosffie.services
                 //VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato
                  actaInicio = new VistaGenerarActaInicioContrato
                 {
-
                     //ContratoId = contrato.ContratoId,
                     //FechaFirma = e.ToString(),
                     //NumeroContrato = e.InnerException.ToString(),
@@ -719,11 +709,7 @@ namespace asivamosffie.services
                 };
             }
             return actaInicio;
-        }   
-
-        
-   
-
-     
+        }     
+                
     }
     }
