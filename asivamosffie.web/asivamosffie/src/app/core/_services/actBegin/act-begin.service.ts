@@ -25,6 +25,7 @@ export class ActBeginService {
     return this.http.post(`${environment.apiUrl}/actBegin/EditCargarActaSuscritaContrato?pContratoId=${pContratoId}&pFechaFirmaContratista=${pFechaFirmaContratista}
     &pFechaFirmaActaContratistaInterventoria=${pFechaFirmaActaContratistaInterventoria}&pFile=${pFile}&pUsuarioModificacion=${pUsuarioModificacion}`,formData);
   }
+  
 }
 export interface GetVistaGenerarActaInicio {
   departamentoYMunicipioLlaveMEN: string;
