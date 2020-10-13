@@ -41,7 +41,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
         { 
-            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Notificacion_Acta_Inicio_Fase_2, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {

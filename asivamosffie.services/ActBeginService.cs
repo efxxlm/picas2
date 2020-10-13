@@ -370,6 +370,79 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
+        public async Task<Respuesta> EnviarCorreoGestionPoliza(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate, NotificacionMensajeGestionPoliza objNotificacionAseguradora = null)
+        {
+            bool blEnvioCorreo = false;
+            Respuesta respuesta = new Respuesta();
+
+            //Si no llega Email
+            //if (string.IsNullOrEmpty(pUsuario.Email))
+            //{
+            //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.EmailObligatorio };
+            //}
+            try
+            {
+                //Usuario usuarioSolicito = _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
+                                
+                //Guardar Usuario
+                //await UpdateUser(usuarioSolicito);
+
+                //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
+
+                string template = TemplateRecoveryPassword.Contenido;
+
+                //string urlDestino = pDominio;
+                //asent/img/logo      
+
+                VistaGenerarActaInicioContrato pActaInicio = new VistaGenerarActaInicioContrato();
+
+                //template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
+                //objVistaContratoGarantiaPoliza.FEC
+
+                template = template.Replace("_Numero_Contrato_", pActaInicio.NumeroContrato);
+                template = template.Replace("_Fecha_Aprobacion_Poliza_", pActaInicio.FechaAprobacionGarantiaPoliza);
+
+                template = template.Replace("_Cantidad_Proyectos_Asociados_", "_Cantidad_Proyectos_Asociados_");
+
+                template = template.Replace("_Fecha_Acta_Inicio_", pActaInicio.FechaActaInicio);
+                template = template.Replace("_Fecha_Prevista_Terminacion_", pActaInicio.FechaPrevistaTerminacion);
+                             
+ 
+
+                //datos basicos generales, aplican para los 4 mensajes
+               
+               
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Acta Inicio Fase II", template, pSentender, pPassword, pMailServer, pMailPort);
+
+                if (blEnvioCorreo)
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.CorreoEnviado };
+
+                else
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.ErrorEnviarCorreo };
+
+                //}
+                //}
+                //else
+                //{
+                //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+                //}
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas");
+                return respuesta;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
+                return respuesta;
+            }
+
+        }
+
         public void replaceTags()
         {
             string str="";

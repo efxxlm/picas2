@@ -105,6 +105,7 @@
         public const string Editar_Plazo_Ejecucion_Fase_2 ="108";
         public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";
         public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
+        public const string Notificacion_Acta_Inicio_Fase_2 = "111";        	
 
 
     }
