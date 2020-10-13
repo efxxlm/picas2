@@ -15,9 +15,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   maxDate: Date;
   maxDate2: Date;
   public idContrato;
-  public numContrato;
-  public fechaContrato = "20/06/2020";//valor quemado
-  public fechaFirmaContrato;
   public contratacionId;
   public fechaTramite;
   public tipoContratoCodigo;
@@ -30,7 +27,30 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   public observacionesOn : boolean;
   public editable: boolean;
   public title;
-  public contratoInfo;
+
+  public contratoCode;
+  public fechaAprobacionSupervisor;
+  public cantidadProyectosAsociados;
+  public departamentoYMunicipioLlaveMEN;
+  public fechaAprobacionGarantiaPoliza;
+  public fechaFirmaContrato;
+  public fechaGeneracionDRP1;
+  public fechaGeneracionDRP2;
+  public institucionEducativaLlaveMEN;
+  public llaveMENContrato;
+  public nombreEntidadContratistaObra;
+  public nombreEntidadContratistaSupervisorInterventoria;
+  public numeroContrato;
+  public numeroDRP1;
+  public numeroDRP2;
+  public observacionOConsideracionesEspeciales;
+  public plazoInicialContratoSupervisor;
+  public valorActualContrato;
+  public valorFase1Preconstruccion;
+  public valorInicialContrato;
+  public valorfase2ConstruccionObra;
+  public vigenciaContrato;
+
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
@@ -57,9 +77,27 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   }
   loadData(id) {
       this.services.GetVistaGenerarActaInicio(id).subscribe(data=>{
-        this.contratoInfo = data;
-        
+        /*Titulo*/
+        this.contratoCode = data.numeroContrato;
+        this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
+        /*Cuadro 1*/
+        this.vigenciaContrato = data.vigenciaContrato;
+        this.fechaFirmaContrato = data.fechaFirmaContrato;
+        this.numeroDRP1 = data.numeroDRP1;
+        this.fechaGeneracionDRP1 = data.fechaGeneracionDRP1;
+        this.numeroDRP2 = data.numeroDRP2;
+        this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
+        this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
+        this.observacionOConsideracionesEspeciales = data.observacionOConsideracionesEspeciales;
+        this.valorInicialContrato = data.valorInicialContrato;
+        this.valorActualContrato = data.valorActualContrato;
+        this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
+        this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
+        this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
+        this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
+        /*Campo de texto*/
       });
+      this.idContrato = id;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -92,7 +130,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       fechaPrevistaTerminacion: [null, Validators.required],
       mesPlazoEjFase2: ["", Validators.required],
       diasPlazoEjFase2: ["", Validators.required],
-      observacionesEspeciales: [null]
+      observacionesEspeciales: [""]
     })
   }
   maxLength(e: any, n: number) {
@@ -118,8 +156,17 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     return patron.test(te);
   }
   onSubmit() {
+    this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato,this.addressForm.value.mesPlazoEjFase2,this.addressForm.value.diasPlazoEjFase2,this.addressForm.value.observacionesEspeciales,"usr2").subscribe(data1=>{
+      if(data1.code=="102"){
+        this.openDialog(data1.message,"");
+        this.router.navigate(['/generarActaInicioConstruccion']);
+      }
+      else{
+        this.openDialog(data1.message,"");
+      }
+    });
     console.log(this.addressForm.value);
-    this.openDialog('La información ha sido guardada exitosamente.', "");
+    //this.openDialog('La información ha sido guardada exitosamente.', "");
   }
 
 }
