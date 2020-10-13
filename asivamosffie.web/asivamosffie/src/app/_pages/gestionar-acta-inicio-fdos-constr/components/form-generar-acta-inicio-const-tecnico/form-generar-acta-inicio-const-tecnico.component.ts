@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -29,13 +30,14 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   public observacionesOn : boolean;
   public editable: boolean;
   public title;
+  public contratoInfo;
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
     modalText: string
   };
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -54,9 +56,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     }
   }
   loadData(id) {
-    if(this.editable==true){
-      console.log("cargar servicio");
-    }
+      this.services.GetVistaGenerarActaInicio(id).subscribe(data=>{
+        this.contratoInfo = data;
+        
+      });
   }
 
   openDialog(modalTitle: string, modalText: string) {
