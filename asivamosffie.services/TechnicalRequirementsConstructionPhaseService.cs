@@ -87,7 +87,11 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
+                Contrato contrato = await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
+
+                contrato.ContratoConstruccion = _context.ContratoConstruccion.Where( cc => cc.ContratoId == pContratoId ).ToList();
+
+                return contrato;
             }
             catch (Exception ex)
             {
