@@ -46,6 +46,3 @@ export interface GetVistaGenerarActaInicio {
 export interface GetListGrillaActaInicio {
 
 }
-export interface GetPlantillaActaInicio {
-
-}
