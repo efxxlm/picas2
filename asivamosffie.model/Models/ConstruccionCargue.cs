@@ -8,8 +8,6 @@ namespace asivamosffie.model.Models
         public ConstruccionCargue()
         {
             CargueObservacion = new HashSet<CargueObservacion>();
-            FlujoInversion = new HashSet<FlujoInversion>();
-            Programacion = new HashSet<Programacion>();
         }
 
         public int ConstruccionCargueId { get; set; }
@@ -25,7 +23,5 @@ namespace asivamosffie.model.Models
 
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }
         public virtual ICollection<CargueObservacion> CargueObservacion { get; set; }
-        public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
-        public virtual ICollection<Programacion> Programacion { get; set; }
     }
 }
