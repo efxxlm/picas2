@@ -17,7 +17,7 @@ export class ActBeginService {
     return this.http.get<GetListGrillaActaInicio>(`${environment.apiUrl}/actBegin/GetListGrillaActaInicio`);
   }
   GetPlantillaActaInicio(pContratoId: number) {
-    return this.http.get<GetPlantillaActaInicio>(`${environment.apiUrl}/actBegin/GetPlantillaActaInicio?pContratoId=${pContratoId}`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/actBegin/GetPlantillaActaInicio?pContratoId=${pContratoId}`, { responseType: "blob" } );
   }
 }
 export interface GetVistaGenerarActaInicio {
