@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
-
+/*
 export interface PeriodicElement {
   fechaAprobacionRequisitosSupervisor: string;
   numeroContrato: string;
@@ -19,13 +19,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {contratoId: 2, fechaAprobacionRequisitosSupervisor: '21/06/2020', estadoActaContrato: "Con acta preliminar generada", numeroContrato: 'A208208'},
   {contratoId: 3, fechaAprobacionRequisitosSupervisor: '22/06/2020', estadoActaContrato: "Con acta en proceso de firma", numeroContrato: 'C801801'},
 ];
+*/
 @Component({
   selector: 'app-tabla-general-acta-fdos-const',
   templateUrl: './tabla-general-acta-fdos-const.component.html',
   styleUrls: ['./tabla-general-acta-fdos-const.component.scss']
 })
 export class TablaGeneralActaFdosConstComponent implements OnInit {
-  displayedColumns: string[] = [ 'fechaAprobacionRequisitosSupervisor', 'numeroContrato', 'estadoActaContrato', 'contratoId'];
+  displayedColumns: string[] = [ 'fechaAprobacionRequisitos', 'numeroContratoObra', 'estadoActa', 'contratoId'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
