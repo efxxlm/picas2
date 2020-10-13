@@ -1,0 +1,57 @@
+<div class="container text-center" *ngIf="this.ocpion==1">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar acta de inicio para fase 2 - Construcción
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenida/o, aquí podrá gestionar las actas de inicio para la fase de construcción para los contratos de obra
+        asignados a usted, que tienen
+        aprobados los requisitos de inicio de las fases de preconstrucción y/o construcción, y que serán ejecutados en
+        el marco de la gestión del FFIE.
+    </div>
+    <app-tabla-general-acta-fdos-const></app-tabla-general-acta-fdos-const>
+</div>
+<div class="container text-center" *ngIf="this.ocpion==2">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar acta de inicio para fase 2 - Construcción
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenida/o, aquí podrá validar las actas de inicio para la fase de preconstrución para los contratos de obra y
+        gestionar las actas de inicio de los
+        contratos de interventoría asignados a usted, que tienen aprobados los requisitos de inicio para la fase de
+        construcción, y que serán ejecutados en
+        el marco de la gestión del FFIE.
+    </div>
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1">Actas de inicio de
+            obra</button>
+        <div *ngIf="this.selTab==1" class="button-activated">Actas de inicio de obra</div>
+        <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2">Actas de inicio de
+            interventoría</button>
+        <div *ngIf="this.selTab==2" class="button-activated">Actas de inicio de interventoría</div>
+    </div>
+    <div *ngIf="this.selTab==1">
+        <app-tabla-contr-obra-fdos-constr></app-tabla-contr-obra-fdos-constr>
+    </div>
+    <div *ngIf="this.selTab==2">
+        <app-tabla-contr-intrvn-fdos-constr></app-tabla-contr-intrvn-fdos-constr>
+    </div>
+</div>

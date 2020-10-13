@@ -133,7 +133,13 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
-      }
+      },
+	  {
+
+        path: 'generarActaInicioConstruccion',
+        loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
+        .then(m => m.GestionarActaInicioFdosConstrModule)
+      },
     ]
 
   },
