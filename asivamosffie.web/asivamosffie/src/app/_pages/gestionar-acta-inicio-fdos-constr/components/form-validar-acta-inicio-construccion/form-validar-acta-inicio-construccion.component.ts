@@ -78,11 +78,16 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   }
   onSubmit() {
     this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3").subscribe(resp=>{
-      
+      if(resp.code=="200"){
+        this.openDialog(resp.message, "");
+        this.router.navigate(['/generarActaInicioConstruccion']);
+      }
+      else{
+        this.openDialog(resp.message, "");
+      }
     });
     console.log(this.addressForm.value);
-    this.openDialog('La información ha sido guardada exitosamente.', "");
-    this.router.navigate(['/generarActaInicioConstruccion']);
+    //this.openDialog('La información ha sido guardada exitosamente.', "");
   }
 
 }
