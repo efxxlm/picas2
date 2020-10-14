@@ -128,9 +128,9 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     return this.fb.group({
       fechaActaInicioFDosConstruccion: [null, Validators.required],
       fechaPrevistaTerminacion: [null, Validators.required],
-      mesPlazoEjFase2: ["", Validators.required],
-      diasPlazoEjFase2: ["", Validators.required],
-      observacionesEspeciales: [""]
+      mesPlazoEjFase2: [null, Validators.required],
+      diasPlazoEjFase2: [null, Validators.required],
+      observacionesEspeciales: [null]
     })
   }
   maxLength(e: any, n: number) {
@@ -155,8 +155,18 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     const te = String.fromCharCode(tecla);
     return patron.test(te);
   }
+  removeTags(str){
+    if ((str===null) || (str==='')){
+      return false;
+    }
+    else{
+      str = str.toString();
+      return str.replace( /(<([^>]+)>)/ig, '');
+    }
+  }
   onSubmit() {
-    this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato,this.addressForm.value.mesPlazoEjFase2,this.addressForm.value.diasPlazoEjFase2,this.addressForm.value.observacionesEspeciales,"usr2").subscribe(data1=>{
+    this.removeTags(this.addressForm.value.observacionesEspeciales);
+    this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato,this.addressForm.value.mesPlazoEjFase2,this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales),"usr2").subscribe(data1=>{
       if(data1.code=="102"){
         this.openDialog(data1.message,"");
         this.router.navigate(['/generarActaInicioConstruccion']);

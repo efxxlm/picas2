@@ -122,8 +122,8 @@
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
                                         formControlName="mesPlazoEjFase2">
                                 </mat-form-field>
-                                <span
-                                    class="contador">{{3 - addressForm.get('diasPlazoEjFase2').value.length}}</span>
+                                <span class="contador" *ngIf="addressForm.get('mesPlazoEjFase2').value">{{3 - addressForm.get('mesPlazoEjFase2').value.length}}</span>
+                                <span class="contador" *ngIf="addressForm.get('mesPlazoEjFase2').value==null">3</span>
                                 <label class="label-left sub-label" for="diasPlazoEjFase2">
                                     Días
                                 </label>
@@ -132,10 +132,8 @@
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                         type="number" formControlName="diasPlazoEjFase2">
                                 </mat-form-field>
-                                <span
-                                    class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value">{{2 - addressForm.get('diasPlazoEjFase2').value.length}}</span>
-                                <span
-                                    class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value==null">2</span>
+                                <span class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value">{{2 - addressForm.get('diasPlazoEjFase2').value.length}}</span>
+                                <span class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value==null">2</span>
                             </div>
                         </div>
                     </div>
