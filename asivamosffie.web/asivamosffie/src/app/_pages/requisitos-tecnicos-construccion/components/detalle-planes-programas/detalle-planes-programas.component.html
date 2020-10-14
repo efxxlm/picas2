@@ -1,4 +1,4 @@
-<div class="w-100 table-responsive">
+<div class="w-100">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="planesProgramas">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Planes y programas </th>
@@ -49,9 +49,9 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <section style="margin-top: 30px;">
+        <div align="left">
+            <p><b>URL con soporte</b>: https://drive.google.com/drive/PlanesyProgramas123</p>
+        </div>
+    </section>
 </div>
-<section style="margin-top: 30px;">
-    <div align="left">
-        <p><b>URL con soporte</b>: https://drive.google.com/drive/PlanesyProgramas123</p>
-    </div>
-</section>

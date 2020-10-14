@@ -9,7 +9,7 @@ export class RequisitosTecnicosConstruccionComponent implements OnInit {
 
   verAyuda: boolean = false;
 
-  constructor() { }
+  constructor () { }
 
   ngOnInit(): void {
   }

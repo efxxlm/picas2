@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { RequisitosTecnicosConstruccionRoutingModule } from './requisitos-tecnicos-construccion-routing.module';
 import { RequisitosTecnicosConstruccionComponent } from './components/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.component';
@@ -26,6 +26,7 @@ import { DetalleManejoAnticipoComponent } from './components/detalle-manejo-anti
 import { DetalleHojasVidaContratistaComponent } from './components/detalle-hojas-vida-contratista/detalle-hojas-vida-contratista.component';
 import { DetalleTablaProgramacionObraComponent } from './components/detalle-tabla-programacion-obra/detalle-tabla-programacion-obra.component';
 import { DetalleTablaFlujoRecursosComponent } from './components/detalle-tabla-flujo-recursos/detalle-tabla-flujo-recursos.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,11 @@ import { DetalleTablaFlujoRecursosComponent } from './components/detalle-tabla-f
     ReactiveFormsModule,
     QuillModule.forRoot(),
     FormsModule,
+    CurrencyMaskModule,
     RequisitosTecnicosConstruccionRoutingModule
+  ],
+  providers: [
+    CurrencyPipe
   ]
 })
 export class RequisitosTecnicosConstruccionModule { }

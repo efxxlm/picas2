@@ -1,11 +1,12 @@
 export interface GrillaFaseUnoPreconstruccion {
-  cantidadProyectosAsociados: number;
-  estadoVerificacionNombre: string;
-  fechaAprobacionPoliza: string;
-  idContrato: number;
+  fechaAprobacion: string;
   numeroContrato: string;
-  proyectosCompletos: number;
-  proyectosNoCompletos: number;
+  cantidadProyectosAsociados: number;
+  cantidadProyectosRequisitosAprobados: number;
+  cantidadProyectosRequisitosPendientes: number;
+  estadoCodigo: string;
+  estadoNombre: string;
+  contratoId: number;
   verBotonAprobarInicio: boolean;
 }
 

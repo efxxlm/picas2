@@ -1,4 +1,4 @@
-<div class="w-100 table-responsive">
+<div class="w-100">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="planesProgramas">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Planes y programas </th>
@@ -11,7 +11,6 @@
         <section class="mt-1em">
           <mat-form-field class="w-50" appearance="fill">
             <mat-select [(ngModel)]="element.recibioRequisito" class="padding-left">
-              <mat-option></mat-option>
               <mat-option *ngFor="let requisito of booleanosRequisitos" [value]="requisito.value">
                 {{requisito.viewValue}}
               </mat-option>
@@ -80,7 +79,6 @@
         <section class="mt-1em">
           <mat-form-field class="w-50" appearance="fill">
             <mat-select [(ngModel)]="element.requiereObservacion" class="padding-left">
-              <mat-option></mat-option>
               <mat-option *ngFor="let requisito of booleanosObservacion" [value]="requisito.value">
                 {{requisito.viewValue}}
               </mat-option>
@@ -107,30 +105,28 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[5, 10, 15]"></mat-paginator>
-</div>
-
-<section class="text-center container w-100 mt-2em">
-  <div class="d-flex mt-1em">
-    <label class="ml-5em"><b>URL con soporte</b></label>
-    <div class="w-80">
-      <mat-form-field>
-        <input matInput type="text" [(ngModel)]="urlSoporte">
-      </mat-form-field>
+  <section class="text-center container w-100 mt-2em">
+    <div class="d-flex mt-1em">
+      <label class="ml-5em"><b>URL con soporte</b></label>
+      <div class="w-80">
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="urlSoporte">
+        </mat-form-field>
+      </div>
     </div>
-  </div>
+    
+    <div class="text-center">
+      <p><small>Indique la ruta del soporte de esta información</small></p>
+    </div>
+  </section>
   
   <div class="text-center">
-    <p><small>Indique la ruta del soporte de esta información</small></p>
+    <button mat-button 
+            color="warn" 
+            class="btn-guardar" 
+            type="button"
+            (click)="guardar()">
+            <img  src="assets/img/icon/guardar.svg">
+    </button>
   </div>
-</section>
-
-<div class="text-center">
-  <button mat-button 
-          color="warn" 
-          class="btn-guardar" 
-          type="button"
-          (click)="guardar()">
-          <img  src="assets/img/icon/guardar.svg">
-  </button>
 </div>

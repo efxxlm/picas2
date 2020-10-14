@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-diagnostico',
@@ -13,16 +14,19 @@ export class DiagnosticoComponent implements OnInit {
 
   booleanCheckbox: boolean;
   formDiagnostico: FormGroup;
+  totalConstruccion: number;
+  @Input() contratoConstruccion: any[] = [];
+  @Output() diagnostico = new EventEmitter();
   @ViewChild( 'valorTotalFaseConstruccion', { static: true } ) totalFaseConstruccion: ElementRef;
 
   solicitudesModificacion: any[] = [
     {value: 'PI_00089', viewValue: 'PI_00089'}
   ]
 
-  constructor ( private activatedRoute: ActivatedRoute,
-                private fb: FormBuilder,
-                private dialog: MatDialog ) {
-    console.log( this.activatedRoute.snapshot.params.id );
+  constructor ( private fb: FormBuilder,
+                private dialog: MatDialog,
+                private currencyPipe: CurrencyPipe ) 
+  {
     this.crearFormulario();
     this.valorTotalFaseConstruccion();
   }
@@ -32,21 +36,23 @@ export class DiagnosticoComponent implements OnInit {
 
   crearFormulario () {
     this.formDiagnostico = this.fb.group({
-      booleanCheckbox: [ null ],
-      urlSoporte: [ '' ],
-      costoDirecto: [ '' ],
-      administracion: [ '' ],
-      imprevistos: [ '' ],
-      utilidad: [ '' ],
-      valorTotalFase2Construccion: [ '' ],
-      modificacionContractual: [ null ],
+      esInformeDiagnostico: [ null ],
+      rutaInforme: [ '' ],
+      costoDirecto: [ null ],
+      administracion: [ null ],
+      imprevistos: [ null ],
+      utilidad: [ null ],
+      valorTotalFaseConstruccion: [ null ],
+      requiereModificacionContractual: [ null ],
       numeroSolicitudModificacion: [ null ]
     });
   };
 
   valorTotalFaseConstruccion () {
     this.formDiagnostico.valueChanges.subscribe( ( values: any ) => {
-      this.totalFaseConstruccion.nativeElement.value = Number( values.costoDirecto )+Number( values.administracion )+Number( values.imprevistos )+Number( values.utilidad );
+      const totalFase = Number( values.costoDirecto )+Number( values.administracion )+Number( values.imprevistos )+Number( values.utilidad );
+      this.totalConstruccion = totalFase;
+      this.totalFaseConstruccion.nativeElement.value = this.currencyPipe.transform( totalFase, 'COP', 'symbol-narrow', '.0-0' );
     } );
   };
 
@@ -59,8 +65,9 @@ export class DiagnosticoComponent implements OnInit {
 
   enviar () {
     console.log( this.formDiagnostico );
-    console.log( this.totalFaseConstruccion.nativeElement.value );
-    this.openDialog( 'La información ha sido guardada exitosamente', '' );
+    console.log( this.totalConstruccion );
+    this.formDiagnostico.get( 'valorTotalFaseConstruccion' ).setValue( this.totalConstruccion );
+    this.diagnostico.emit( this.formDiagnostico.value );
   };
 
 };

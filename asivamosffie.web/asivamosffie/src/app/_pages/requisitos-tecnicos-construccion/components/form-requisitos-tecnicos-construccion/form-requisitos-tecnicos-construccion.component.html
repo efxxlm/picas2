@@ -1,17 +1,17 @@
-<div class="text-center container">
+<div class="text-center container-table margin-auto" *ngIf="contrato" style="margin-bottom: 2em;">
   <div class="text-right">
       <a routerLink="/requisitosTecnicosConstruccion" mat-button color="primary" class="btn-regresar">
           <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
   </div>
   <h1 class="title-menu--h1">
-    Gestionar requisitos para inicio contrato C326326 fase 2 - Construcción
+    Gestionar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
   </h1>
 
   <section class="container margin-1em color-primary">
     <div class="text-center section-flex">
-      <p class="mr-1em">Fecha de aprobacion de póliza: <b>06/08/2020</b></p>
-      <p>Proyectos asociados: <b>2</b></p>
+      <p class="mr-1em">Fecha de aprobacion de póliza: <b> {{ contrato.contratoPoliza[0].fechaExpedicion | date: 'dd/MM/yyyy' }} </b></p>
+      <p>Proyectos asociados: <b> {{ contrato.contratacion.contratacionProyecto.length }} </b></p>
     </div>
   </section>
 
@@ -24,23 +24,23 @@
         </p>
     </div>
 
-    <mat-accordion>
+    <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header w-45">
           <mat-panel-title class="expansion-style--title sin-diligenciar">
-            LL457326 - I.E. Nuestra Señora Del Carmen - Única sede
+            {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
           </mat-panel-title>
         </mat-expansion-panel-header>
 
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
-              <p><b>Número de identificación (NIT/RUT)</b>: 900.675.987-4</p>
-              <p><b>Tipo de intervención</b>: Remodelación</p>
-              <p><b>Departamento</b>: Boyacá</p>
-              <p><b>Municipio</b>: Susacón</p>
-              <p><b>Valor total del proyecto</b>: $60.000.000</p>
+              <p><b>Nombre del contratista</b>: {{ contrato.contratacion.contratista.nombre }}</p>
+              <p><b>Número de identificación (NIT/RUT)</b>: {{ contrato.contratacion.contratista.numeroIdentificacion }}</p>
+              <p><b>Tipo de intervención</b>: {{ contratacion.proyecto.tipoIntervencionCodigo }}</p>
+              <p><b>Departamento</b>: {{ contratacion.proyecto.departamento }}</p>
+              <p><b>Municipio</b>: {{ contratacion.proyecto.municipio }}</p>
+              <p><b>Valor total del proyecto</b>: {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -52,7 +52,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <app-diagnostico></app-diagnostico>
+          <app-diagnostico [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" (diagnostico)="getDiagnostico( i, $event )"></app-diagnostico>
 
         </mat-expansion-panel>
 
@@ -74,7 +74,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <app-manejo-anticipo></app-manejo-anticipo>
+          <app-manejo-anticipo (manejoAnticipo)="getAnticipo( i, $event )"></app-manejo-anticipo>
 
         </mat-expansion-panel>
 
@@ -85,7 +85,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <app-hoja-vida-contratista></app-hoja-vida-contratista>
+          <app-hoja-vida-contratista [perfilProyecto]="contratacion.proyecto.contratoPerfil" [contratoId]="contrato.contratoId" [proyectoId]="contratacion.proyectoId" (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"></app-hoja-vida-contratista>
           
         </mat-expansion-panel>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -9,6 +9,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 export class ManejoAnticipoComponent implements OnInit {
 
   formAnticipo: FormGroup;
+  @Output() manejoAnticipo = new EventEmitter();
 
   constructor ( private fb: FormBuilder ) {
     this.crearFormulario();
@@ -27,7 +28,7 @@ export class ManejoAnticipoComponent implements OnInit {
   };
 
   guardar () {
-    console.log( this.formAnticipo );
+    this.manejoAnticipo.emit( this.formAnticipo.value );
   }
 
 };

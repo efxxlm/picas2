@@ -4,18 +4,18 @@
       
       <section class="example-section">
         <label class="example-margin"> <b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b> </label>
-        <mat-radio-group formControlName="booleanCheckbox">
+        <mat-radio-group formControlName="esInformeDiagnostico">
           <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
           <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
         </mat-radio-group>
       </section>
   
-      <section *ngIf="formDiagnostico.get( 'booleanCheckbox' ).value">
+      <section *ngIf="formDiagnostico.get( 'esInformeDiagnostico' ).value">
         <div class="d-flex mt-1em">
           <label class="mr-label" class="label-left"><b>Url con soporte</b></label>
         <div class="col d-flex w-80">
           <mat-form-field>
-            <input matInput type="text" formControlName="urlSoporte">
+            <input matInput type="text" formControlName="rutaInforme">
           </mat-form-field>
         </div>
       </div>
@@ -40,9 +40,18 @@
               <label class="mr-label" class="label-left"><b>a.</b> Costo directo</label>
             <div class="col d-flex w-34">
               <mat-form-field>
-                <input matInput maxlength="20" type="text" formControlName="costoDirecto">
+                <input  matInput
+                        maxlength="28"
+                        formControlName="costoDirecto"
+                        currencyMask
+                        [options]="{ prefix: '$ ', thousands: ',', precision: 0, align: 'center' }">
               </mat-form-field>
-              <span class="contador">{{20 - formDiagnostico.get( 'costoDirecto' ).value.length}}</span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'costoDirecto' ).value !== null">
+                {{20 - formDiagnostico.get( 'costoDirecto' ).value.toString().length}}
+              </span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'costoDirecto' ).value === null">
+                20
+              </span>
             </div>
           </div>
           </section>
@@ -52,9 +61,18 @@
               <label class="mr-label" class="label-left"><b>b.</b> A (administración)</label>
             <div class="col d-flex w-30">
               <mat-form-field>
-                <input matInput maxlength="20" type="text" formControlName="administracion">
+                <input  matInput
+                        maxlength="28"
+                        formControlName="administracion"
+                        currencyMask
+                        [options]="{ prefix: '$ ', thousands: ',', precision: '0', align: 'center' }">
               </mat-form-field>
-              <span class="contador">{{20 - formDiagnostico.get( 'administracion' ).value.length}}</span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'administracion' ).value !== null">
+                {{20 - formDiagnostico.get( 'administracion' ).value.toString().length}}
+              </span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'administracion' ).value === null">
+                20
+              </span>
             </div>
           </div>
           </section>
@@ -64,9 +82,18 @@
               <label class="mr-label" class="label-left"><b>c.</b> I (Imprevistos)</label>
             <div class="col d-flex w-33">
               <mat-form-field>
-                <input matInput maxlength="20" type="text" formControlName="imprevistos">
+                <input  matInput
+                        maxlength="28"
+                        formControlName="imprevistos"
+                        currencyMask
+                        [options]="{ prefix: '$ ', thousands: ',', precision: '0', align: 'center' }">
               </mat-form-field>
-              <span class="contador">{{20 - formDiagnostico.get( 'imprevistos' ).value.length}}</span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'imprevistos' ).value !== null">
+                {{20 - formDiagnostico.get( 'imprevistos' ).value.toString().length}}
+              </span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'imprevistos' ).value === null">
+                20
+              </span>
             </div>
           </div>
           </section>
@@ -76,9 +103,18 @@
               <label class="mr-label" class="label-left"><b>d.</b> U (Utilidad)</label>
             <div class="col d-flex w-35">
               <mat-form-field>
-                <input matInput maxlength="20" type="text" formControlName="utilidad">
+                <input  matInput
+                        maxlength="28"
+                        formControlName="utilidad"
+                        currencyMask
+                        [options]="{ prefix: '$ ', thousands: ',', precision: '0', align: 'center' }">
               </mat-form-field>
-              <span class="contador">{{20 - formDiagnostico.get( 'utilidad' ).value.length}}</span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'utilidad' ).value !== null">
+                {{20 - formDiagnostico.get( 'utilidad' ).value.toString().length}}
+              </span>
+              <span class="contador" *ngIf="formDiagnostico.get( 'utilidad' ).value === null">
+                20
+              </span>
             </div>
           </div>
           </section>
@@ -88,7 +124,9 @@
               <label class="mr-label" class="label-left"><b>Valor total de la fase 2 - Construcción</b></label>
             <div class="col d-flex w-17">
               <mat-form-field>
-                <input matInput type="text" formControlName="valorTotalFase2Construccion" #valorTotalFaseConstruccion>
+                <input  matInput
+                        formControlName="valorTotalFaseConstruccion"
+                        #valorTotalFaseConstruccion>
               </mat-form-field>
             </div>
           </div>
@@ -100,18 +138,18 @@
   </section>
 
   <section *ngIf="valorTotalFaseConstruccion.value.length > 0">
-    <div *ngIf="( formDiagnostico.get( 'costoDirecto' ).value.length > 0 ) && ( formDiagnostico.get( 'administracion' ).value.length > 0 )">
-      <div *ngIf="( formDiagnostico.get( 'imprevistos' ).value.length > 0 ) && ( formDiagnostico.get( 'utilidad' ).value.length > 0 )">
+    <div *ngIf="( formDiagnostico.get( 'costoDirecto' ).value !== null ) && ( formDiagnostico.get( 'administracion' ).value !== null )">
+      <div *ngIf="( formDiagnostico.get( 'imprevistos' ).value !== null ) && ( formDiagnostico.get( 'utilidad' ).value !== null )">
 
         <div class="example-section text-center">
           <label class="example-margin"> <b>¿Se requirió modificación contractual?</b> </label>
-          <mat-radio-group formControlName="modificacionContractual">
+          <mat-radio-group formControlName="requiereModificacionContractual">
             <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
             <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
           </mat-radio-group>
         </div>
 
-        <mat-card *ngIf="formDiagnostico.get( 'modificacionContractual' ).value">
+        <mat-card *ngIf="formDiagnostico.get( 'requiereModificacionContractual' ).value">
           <mat-card-content>
             <div class="example-section-left w-70 mt-min" align="left">
               <p>Número de solicitud de la modificación</p>

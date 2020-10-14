@@ -13,8 +13,7 @@ import { MatSort } from '@angular/material/sort';
 })
 export class PlanesProgramasComponent implements OnInit {
 
-  @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort          : MatSort;
+  @ViewChild( MatSort, { static: true } ) sort : MatSort;
   dataPlanesProgramas: any[] = [];
   dataSource                 = new MatTableDataSource();
   displayedColumns: string[] = [ 
@@ -42,9 +41,7 @@ export class PlanesProgramasComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource( this.dataPlanesProgramas );
-    this.dataSource.paginator              = this.paginator;
     this.dataSource.sort                   = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
 
   openDialog ( planPrograma: string, id: number ) {
