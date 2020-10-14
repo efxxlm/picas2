@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -23,7 +24,6 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
   public tipoContratoCodigo;
   public estadoDocumentoCodigo;
   public fechaEnvioFirma;
-  public fechaFirmaContratista;
   public fechaFirmaFiduciaria;
   public numContrato;
   public fechaFirmaContrato;
@@ -42,11 +42,16 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
   fechaSesionString2: string;
   fechaSesion2: Date;
 
+  public fechaFirmaContratistaObra;
+  public fechaFirmaContratistaInterventoria;
 
-  constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { 
+  constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private services: ActBeginService) { 
     this.declararInputFile();
     this.maxDate = new Date();
     this.maxDate2 = new Date();
+    if(data.id != undefined){
+      this.idContrato = data.id;
+    }
   }
 
   ngOnInit(): void {
@@ -67,7 +72,17 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     this.archivo = inputNode.files[0].name;
   }
   cargarActa(){
-
+    const inputNode: any = document.getElementById('file');
+    this.archivo = inputNode.files[0].name;
+    this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaFirmaContratistaObra,this.fechaFirmaContratistaInterventoria,inputNode.files[0],"usr3").subscribe(data=>{
+      if(data.code=="200"){
+        this.openDialog(data.message,"");
+        this.close();
+      }
+      else{
+        this.openDialog(data.message,"");
+      }
+    });
   }
   close(){
     this.matDialogRef.close('cancel');
