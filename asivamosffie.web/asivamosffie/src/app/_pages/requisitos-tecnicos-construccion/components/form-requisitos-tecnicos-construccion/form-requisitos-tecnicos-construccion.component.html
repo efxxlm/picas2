@@ -63,7 +63,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <app-planes-programas></app-planes-programas>
+          <app-planes-programas [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]" (planesProgramasForm)="getPlanesProgramas( i, $event )"></app-planes-programas>
 
         </mat-expansion-panel>
 
