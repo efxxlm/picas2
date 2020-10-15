@@ -119,6 +119,7 @@ namespace asivamosffie.services
                       .Include(r => r.SesionComiteTecnicoCompromiso)
                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
                       .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).OrderByDescending(r => r.ComiteTecnicoId)
+                      .Distinct()
                   .ToListAsync();
         }
 
