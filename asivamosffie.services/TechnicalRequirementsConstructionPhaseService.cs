@@ -154,6 +154,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
+                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -241,6 +242,7 @@ namespace asivamosffie.services
                     contratoConstruccion.ManejoAguasLluviasFechaAprobacion = pConstruccion.ManejoAguasLluviasFechaAprobacion;
                     contratoConstruccion.ManejoAguasLluviasConObservaciones = pConstruccion.ManejoAguasLluviasConObservaciones;
                     contratoConstruccion.PlanRutaSoporte = pConstruccion.PlanRutaSoporte;
+                    contratoConstruccion.LicenciaObservaciones = pConstruccion.LicenciaObservaciones;
                     contratoConstruccion.CambioObservaciones = pConstruccion.CambioObservaciones;
                     contratoConstruccion.ActaApropiacionObservaciones = pConstruccion.ActaApropiacionObservaciones;
                     contratoConstruccion.ResiduosDemolicionObservaciones = pConstruccion.ResiduosDemolicionObservaciones;
@@ -315,6 +317,7 @@ namespace asivamosffie.services
                     contratoConstruccion.ManejoAguasLluviasFechaAprobacion = pConstruccion.ManejoAguasLluviasFechaAprobacion;
                     contratoConstruccion.ManejoAguasLluviasConObservaciones = pConstruccion.ManejoAguasLluviasConObservaciones;
                     contratoConstruccion.PlanRutaSoporte = pConstruccion.PlanRutaSoporte;
+                    contratoConstruccion.LicenciaObservaciones = pConstruccion.LicenciaObservaciones;
                     contratoConstruccion.CambioObservaciones = pConstruccion.CambioObservaciones;
                     contratoConstruccion.ActaApropiacionObservaciones = pConstruccion.ActaApropiacionObservaciones;
                     contratoConstruccion.ResiduosDemolicionObservaciones = pConstruccion.ResiduosDemolicionObservaciones;
@@ -334,6 +337,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
+                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -404,6 +408,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
+                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -568,6 +573,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
+                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -944,6 +950,25 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
+        {
+            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
+
+            List<TempProgramacion>  lista = _context.TempProgramacion.Where( tp => tp.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+
+            lista.ForEach(c =>
+            {
+                ArchivoCargue archivo = _context.ArchivoCargue.Find( c.ArchivoCargueId );
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+
+
+                listaCargas.Add( archivo );
+            });
+
+            return listaCargas;
+
+        }
+
         public async Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
@@ -1191,6 +1216,25 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
                     };
             }
+
+        }
+
+        public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
+        {
+            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
+
+            List<TempFlujoInversion>  lista = _context.TempFlujoInversion.Where( tp => tp.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+
+            lista.ForEach(c =>
+            {
+                ArchivoCargue archivo = _context.ArchivoCargue.Find( c.ArchivoCargueId );
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+
+
+                listaCargas.Add( archivo );
+            });
+
+            return listaCargas;
 
         }
 

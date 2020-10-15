@@ -59,6 +59,34 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetLoadProgrammingGrid")]
+        [HttpGet]
+        public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
+        {
+            try
+            {
+                return await _technicalRequirementsConstructionPhaseService.GetLoadProgrammingGrid( pContratoConstruccionId );
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("GetLoadInvestmentFlowGrid")]
+        [HttpGet]
+        public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
+        {
+            try
+            {
+                return await _technicalRequirementsConstructionPhaseService.GetLoadInvestmentFlowGrid( pContratoConstruccionId );
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("CreateEditDiagnostico")]
         [HttpPost]
         public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
@@ -143,6 +171,8 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+        
 
         [Route("DeleteConstruccionPerfilNumeroRadicado")]
         [HttpDelete]
