@@ -72,7 +72,7 @@ export class TablaProyectosTecnicoComponent {
           }
           else
           {
-            this.openDialog('', "Hubo un error al eliminar el proyecto, por favor intenta nuevamente.");
+            this.openDialog('', "<b>El registro tiene información que depende de él no se puede eliminar.</b>");
           }
         },
           err => {
