@@ -154,7 +154,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -337,7 +337,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -408,7 +408,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -573,7 +573,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        //Data = await this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
