@@ -6,7 +6,7 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Infraestructura
+      <span *ngIf="proyecto.proyectoId">Ver detalle / Editar </span>Infraestructura
     </h1>
   </div>
 
@@ -94,7 +94,7 @@
             <div class="pr-1">
               <label class="label-left">Región</label>
             </div>
-            <div class="col">
+            <div class="col capitalize">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid">
                   <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId" class="capitalize">
@@ -112,7 +112,7 @@
             <div class="pr-1">
               <label class="label-left">Departamento</label>
             </div>
-            <div class="col">
+            <div class="col capitalize">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid">
                   <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId"
@@ -131,7 +131,7 @@
             <div class="pr-1">
               <label class="label-left">Municipio</label>
             </div>
-            <div class="col">
+            <div class="col capitalize">
               <mat-form-field class="select-width">
                 <mat-select required [(ngModel)]="proyecto.localizacionIdMunicipio"
                   (selectionChange)="getInstitucion()">

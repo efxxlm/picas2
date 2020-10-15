@@ -510,6 +510,7 @@ export class FormularioProyectosComponent implements OnInit {
           }
           this.proyecto.proyectoPredio.splice(i,1);
           this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
+          this.openDialog("","<b>La información ha sido eliminada correctamente.</b>");
         }
         else{
           if(tipo==2)
@@ -520,6 +521,7 @@ export class FormularioProyectosComponent implements OnInit {
           }
             this.proyecto.proyectoAportante.splice(i,1);
             this.proyecto.cantidadAportantes=this.proyecto.proyectoAportante.length;
+            this.openDialog("","<b>La información ha sido eliminada correctamente.</b>");
           }
           else{
             if(this.proyecto.infraestructuraIntervenirProyecto[i].infraestrucutraIntervenirProyectoId>0)
@@ -527,6 +529,7 @@ export class FormularioProyectosComponent implements OnInit {
               this.projectServices.deleteProyectoInfraestructura(this.proyecto.infraestructuraIntervenirProyecto[i].infraestrucutraIntervenirProyectoId).subscribe();
             }
             this.proyecto.infraestructuraIntervenirProyecto.splice(i,1); 
+            this.openDialog("","<b>La información ha sido eliminada correctamente.</b>");
           }
           
         }
@@ -714,15 +717,16 @@ export class FormularioProyectosComponent implements OnInit {
         {
 
           this.listaAportante[i]=respuestaok;
+          this.listaNombreAportantes[i]=[];
           respuestaok.forEach(element => {
             
             console.log("evaluo");
             console.log(element.nombre);
-            this.listaNombreAportantes[i]=[];
+            
             if(!this.listaNombreAportantes[i].includes(element.nombre))
-            {
-              console.log(this.listaAportante[i].nombre);
+            {              
               this.listaNombreAportantes[i].push(element.nombre); 
+              console.log(this.listaNombreAportantes);
             }
           });
         }  
@@ -787,17 +791,21 @@ export class FormularioProyectosComponent implements OnInit {
         {
 
           this.listaAportante[i]=respuestaok;
+          this.listaNombreAportantes[i]=[];
+          let nombreApo="";
           respuestaok.forEach(element => {
             
             console.log("evaluo");
             console.log(element.nombre);
-            this.listaNombreAportantes[i]=[];
+            
             if(!this.listaNombreAportantes[i].includes(element.nombre))
             {
-              console.log(this.listaAportante[i].nombre);
+              console.log(this.listaNombreAportantes[i]);
               this.listaNombreAportantes[i].push(element.nombre); 
+              nombreApo=element.nombre;
             }
           });
+          this.proyecto.proyectoAportante[i].nombreAportante=nombreApo;
         }  
       }             
     },
