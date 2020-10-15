@@ -19,9 +19,11 @@ export class FormPerfilComponent implements OnInit {
   @Input() contratoId        : number;
   @Input() proyectoId        : number;
   @Output() enviarPerfilesContrato     = new EventEmitter();
+  @Output() perfilesCompletados = new EventEmitter();
   tieneEstadoFase1EyD        : boolean = false;
   tieneEstadoFase1Diagnostico: boolean = false;
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
+  perfilesCompletos: number = 0;
   editorStyle = {
     height: '45px'
   };
@@ -83,20 +85,24 @@ export class FormPerfilComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
-                contratoPerfilId: [ 0 ],
-                perfilCodigo: [ null ],
-                cantidadHvRequeridas: [ '' ],
-                cantidadHvRecibidas: [ '' ],
-                cantidadHvAprobadas: [ '' ],
-                fechaAprobacion: [ null ],
-                observacion: [ null ],
+                estadoSemaforo              : [ 'sin-diligenciar' ],
+                contratoPerfilId            : [ 0 ],
+                perfilCodigo                : [ null ],
+                cantidadHvRequeridas        : [ '' ],
+                cantidadHvRecibidas         : [ '' ],
+                cantidadHvAprobadas         : [ '' ],
+                fechaAprobacion             : [ null ],
+                observacion                 : [ null ],
+                observacionSupervisor       : [ null ],
+                fechaObservacion            : [ null ],
                 contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                rutaSoporte: [ '' ]
+                rutaSoporte                 : [ '' ]
               }
             )
           );
         };
       } );
+      this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
@@ -108,6 +114,7 @@ export class FormPerfilComponent implements OnInit {
         let observaciones = null;
         let fechaObservacion = null;
         let observacionSupervisor = null;
+        let semaforo;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push( 
             this.fb.group(
@@ -142,9 +149,19 @@ export class FormPerfilComponent implements OnInit {
           }
         }
 
+        if ( perfil.registroCompleto ) {
+          this.perfilesCompletos++;
+          semaforo = 'completo';
+          console.log( semaforo );
+        }
+        if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
+          semaforo = 'en-proceso'
+        }
+
         this.perfiles.push(
           this.fb.group(
             {
+              estadoSemaforo              : [ semaforo || 'sin-diligenciar' ],
               contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
               perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
               perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
@@ -161,6 +178,12 @@ export class FormPerfilComponent implements OnInit {
           )
         )
       };
+      if ( this.perfilesCompletos === this.perfilProyecto.length ) {
+        this.perfilesCompletados.emit( 'completo' );
+      }
+      if ( this.perfilesCompletos < this.perfilProyecto.length && this.perfilesCompletos > 0 ) {
+        this.perfilesCompletados.emit( 'en-proceso' );
+      }
     };
   };
 

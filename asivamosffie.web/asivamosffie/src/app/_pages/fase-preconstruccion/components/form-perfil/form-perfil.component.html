@@ -12,7 +12,7 @@
   <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroPerfiles' ).value !== null">
     <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title sin-diligenciar">
+        <mat-panel-title class="expansion-style--title" [ngClass]="perfil.get( 'estadoSemaforo' ).value">
           Perfil {{ i+1 }}
         </mat-panel-title>
       </mat-expansion-panel-header>
@@ -37,7 +37,7 @@
               <mat-form-field>
                 <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.length}}</span>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.toString().length}}</span>
             </div>
           </section>
 
@@ -47,7 +47,7 @@
               <mat-form-field>
                 <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.length}}</span>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.toString().length}}</span>
             </div>
           </section>
 
@@ -57,7 +57,7 @@
               <mat-form-field>
                 <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.length}}</span>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.toString().length}}</span>
             </div>
           </section>
 
@@ -80,7 +80,7 @@
                       type="button" 
                       (click)="fechaAprobacion.open()" 
                       class="btn-calendario">
-              <img  class="mr-bottom-1" 
+              <img  class="mr-bottom-1"
                     src="assets/img/icon/calendarioCirculo.svg" 
                     alt="Abrir Calendario">
               </button>

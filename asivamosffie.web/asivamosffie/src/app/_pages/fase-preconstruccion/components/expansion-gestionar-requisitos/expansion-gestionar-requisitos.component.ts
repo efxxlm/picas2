@@ -18,7 +18,7 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
   constructor ( private activatedRoute: ActivatedRoute,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
                 private dialog: MatDialog ) {
-    this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id )
+    this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
   };
 
   ngOnInit(): void {
@@ -39,6 +39,10 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
       } );
   };
 
+  estadoSemaforo ( index: number, semaforo: string ) {
+    this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
+  }
+
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -54,6 +58,7 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
       .subscribe( 
         response => {
           this.openDialog( '', response.message );
+          this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
         },
         err => {
           this.openDialog( '', err.message );

@@ -66,6 +66,10 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
     this.cantidadPerfiles = new FormControl('', Validators.required);
   };
 
+  estadoSemaforo ( index: number, semaforo: string ) {
+    this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
+  }
+
   getPerfilesContrato ( index: number, evento: any ) {
     console.log( evento );
     this.contrato.contratacion.contratacionProyecto[index].proyecto[ 'tieneEstadoFase1EyD' ] = evento.tieneEstadoFase1EyD;
