@@ -4,6 +4,7 @@ import { CommonService, Dominio } from 'src/app/core/_services/common/common.ser
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
+import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 
 @Component({
   selector: 'app-hoja-vida-contratista',
@@ -37,6 +38,7 @@ export class HojaVidaContratistaComponent implements OnInit {
 
   constructor ( private fb                       : FormBuilder,
                 private commonSvc                : CommonService,
+                private faseUnoConstruccionSvc   : FaseUnoConstruccionService,
                 private dialog                   : MatDialog ) 
   {
     this.minDate = new Date();
@@ -96,7 +98,7 @@ export class HojaVidaContratistaComponent implements OnInit {
         let observaciones = null;
         let fechaObservacion = null;
         let observacionSupervisor = null;
-        if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
+        if ( perfil['construccionPerfilNumeroRadicado'].length === 0 ) {
           numeroRadicados.push( 
             this.fb.group(
               {
@@ -107,7 +109,7 @@ export class HojaVidaContratistaComponent implements OnInit {
             )
           )
         } else {
-          for ( let radicado of perfil.contratoPerfilNumeroRadicado ) {
+          for ( let radicado of perfil['construccionPerfilNumeroRadicado'] ) {
             numeroRadicados.push( 
               this.fb.group(
                 { contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0,
@@ -119,7 +121,7 @@ export class HojaVidaContratistaComponent implements OnInit {
           };
         };
 
-        if ( perfil.contratoPerfilObservacion.length > 0 ) {
+        if ( perfil['construccionPerfilObservacion'].length > 0 ) {
           for ( let obs of perfil.contratoPerfilObservacion ) {
             if ( obs.tipoObservacionCodigo === '1' ) {
               observaciones = obs.observacion;
@@ -134,7 +136,7 @@ export class HojaVidaContratistaComponent implements OnInit {
           this.fb.group(
             {
               contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
-              perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
+              perfilObservacion           : [ ( perfil['construccionPerfilObservacion'].length === 0 ) ? 0 : perfil['construccionPerfilObservacion'][0].contratoPerfilObservacionId ],
               perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
               cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
               cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
@@ -221,14 +223,14 @@ export class HojaVidaContratistaComponent implements OnInit {
     this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
       .subscribe( value => {
         if ( value ) {
-          //this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
-          //  .subscribe( 
-          //    () => {
-          //      this.openDialog( '', 'La información se ha eliminado correctamente.' );
-          //      this.perfiles.removeAt( numeroPerfil );
-          //    },
-          //    err => this.openDialog( '', err.message )
-          //  );
+          this.faseUnoConstruccionSvc.deleteConstruccionPerfil( contratoPerfilId )
+            .subscribe( 
+              () => {
+                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.perfiles.removeAt( numeroPerfil );
+              },
+              err => this.openDialog( '', err.message )
+            );
         }
       } );
   }
@@ -246,11 +248,11 @@ export class HojaVidaContratistaComponent implements OnInit {
       this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
       return;
     }
-    //this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
-    //  .subscribe( () => {
-    //    this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-    //    this.openDialog( '', 'La información se ha eliminado correctamente.' );
-    //  } );
+    this.faseUnoConstruccionSvc.deleteConstruccionPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
+      .subscribe( () => {
+        this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+        this.openDialog( '', 'La información se ha eliminado correctamente.' );
+      } );
   };
 
   guardar () {
@@ -258,31 +260,31 @@ export class HojaVidaContratistaComponent implements OnInit {
 
     if ( this.perfilProyecto.length === 0 ) {
       perfiles.forEach( value => {
-        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
-        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
-        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    = value.observacion ? [{ observacion: value.observacion }] : null;
-        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
-        value.contratoId                   = this.contratoId;
-        value.proyectoId                   = this.proyectoId;
+        value.cantidadHvAprobadas                 = Number( value.cantidadHvAprobadas );
+        value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
+        value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
+        value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
+        value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
+        value.contratoId                          = this.contratoId;
+        value.proyectoId                          = this.proyectoId;
       } )
     } else {
       perfiles.forEach( value => {
-        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
-        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
-        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    = value.observacion ?  [ 
-                                                { 
-                                                  ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
-                                                  contratoPerfilId: value.contratoPerfilId,
-                                                  observacion: value.observacion 
-                                                } 
-                                              ] : null;
-        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
-        value.contratoId                   = this.contratoId;
-        value.proyectoId                   = this.proyectoId;
+        value.cantidadHvAprobadas                 = Number( value.cantidadHvAprobadas );
+        value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
+        value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
+        value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
+        value['construccionPerfilObservacion']    = value.observacion ? [ 
+                                                                          { 
+                                                                            ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
+                                                                            contratoPerfilId: value.contratoPerfilId,
+                                                                            observacion: value.observacion 
+                                                                          } 
+                                                                        ] : null;
+        value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
+        value.contratoId                          = this.contratoId;
+        value.proyectoId                          = this.proyectoId;
       } )
     }
 

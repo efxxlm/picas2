@@ -20,6 +20,14 @@ export class FaseUnoConstruccionService {
   getContratoByContratoId ( pContratoId: number ) {
     return this.http.get<Contrato>( `${ this.urlApi }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
   };
+  //Peticiones GET Tabla Carga Masiva "Programación de obra"
+  getLoadProgrammingGrid () {
+    return this.http.get( `${ this.urlApi }/GetLoadProgrammingGrid` );
+  };
+  //Peticiones GET Tabla Carga Masiva "Flujo de inversión de recursos"
+  getLoadInvestmentFlowGrid () {
+    return this.http.get( `${ this.urlApi }/GetLoadInvestmentFlowGrid` );
+  };
   //Peticiones POST
   createEditDiagnostico ( ContratoConstruccion: any ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditDiagnostico`, ContratoConstruccion );
@@ -63,6 +71,6 @@ export class FaseUnoConstruccionService {
 
   deleteConstruccionPerfilNumeroRadicado ( pConstruccionPerfilNumeroRadicadoId: number ) {
     return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteConstruccionPerfilNumeroRadicado'pConstruccionPerfilNumeroRadicadoId=${ pConstruccionPerfilNumeroRadicadoId }` )
-  }
+  };
 
 }
