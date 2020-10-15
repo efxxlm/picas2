@@ -1,0 +1,35 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<h1 class="title-menu--h1 centerIng">
+    Cargar sitio {{this.llaveMen}}
+</h1>
+<div class="centerIng2">
+    <p>{{this.departamento}} {{this.municipio}} {{this.instEdu}} {{this.sede}}</p>
+</div>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <div class="flex-editor mt-2em">
+        <mat-card class="shipping-card w-80">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text">
+                    URL para monitoreo en línea
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <input matInput class="alignLeft" formControlName="observaciones" maxlength="300" required>
+            </mat-card-content>
+        </mat-card>
+        <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">
+            {{300 - textoLimpio(addressForm.get('observaciones').value)}}
+        </span>
+        <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
+            300
+        </span>
+    </div>
+    <div class="text-center">
+        <div class="mtop">
+            <button mat-raised-button color="accent"  type="submit">Cargar</button>
+        </div>
+    </div>
+</form>
+
