@@ -133,6 +133,11 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
+      },
+      {
+        path: 'cargarEnlaceMonitoreoEnLinea',
+        loadChildren: () => import( './_pages/cargar-enlace-sistema-monitoreo-linea/cargar-enlace-sistema-monitoreo-linea.module' )
+          .then( module => module.CargarEnlaceSistemaMonitoreoLineaModule )
       }
     ]
 

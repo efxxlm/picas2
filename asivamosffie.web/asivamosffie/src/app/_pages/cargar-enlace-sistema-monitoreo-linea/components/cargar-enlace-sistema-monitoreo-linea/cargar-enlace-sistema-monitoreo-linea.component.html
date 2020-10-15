@@ -1,0 +1,21 @@
+
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Generar acta de inicio para fase 1 - Preconstrucción
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenida/o aquí podrá gestionar las actas de inicio para la fase de Preconstrución para los contratos de obra
+        asignados a usted, que tienen aprobados los requisitos de inicio, y que serán ejecutados en el marco de la
+        gestión del FFIE
+    </div>
+</div>
