@@ -133,6 +133,11 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
+      },
+      {
+        path: 'visualizarAvanceObraTiempoReal',
+        loadChildren: () => import( './_pages/visualizar-avance-obra-tiempo-real/visualizar-avance-obra-tiempo-real.module' )
+          .then( module => module.VisualizarAvanceObraTiempoRealModule )
       }
     ]
 

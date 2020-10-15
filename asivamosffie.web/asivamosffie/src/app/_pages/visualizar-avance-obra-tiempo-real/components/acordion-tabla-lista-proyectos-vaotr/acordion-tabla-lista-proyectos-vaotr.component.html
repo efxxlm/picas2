@@ -1,0 +1,75 @@
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                C223456789
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div align="center">
+            <p class="info-sub-title">
+                <span>Nombre del contratista: <b>Constructora Colpatria S.A.</b> Proyectos asociados: <b>3</b></span>
+            </p>
+        </div>
+        <div class="busqueda">
+            <mat-form-field appearance="outline" class="busqueda--input">
+                <mat-label>Buscador / Filtro</mat-label>
+                <input matInput #filtro (keyup)="applyFilter($event)">
+            </mat-form-field>
+            <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+                <img src="assets/img/icon/lupa.svg" alt="Buscar">
+            </button>
+        </div>
+        <div >
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                <ng-container matColumnDef="llaveMen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+                    <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.llaveMen }} </b> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tipoIntervencion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="region">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Región </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.region }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departamento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.departamento }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="municipio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.municipio }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="institucionEducativa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución Educativa </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sede">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="gestion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15"> Gestión </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-raised-button color="accent" class="btn-table" (click)="this.irSitioWeb(element.sitioWeb)">
+                            Ir a sitio web de monitoreo
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
