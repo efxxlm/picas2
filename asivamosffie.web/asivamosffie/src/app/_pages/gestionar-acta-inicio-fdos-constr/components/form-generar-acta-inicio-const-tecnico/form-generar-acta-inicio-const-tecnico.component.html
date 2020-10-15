@@ -5,40 +5,37 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        {{this.title}} acta de inicio contrato C326326 fase 2 - Construcción
+        {{this.title}} acta de inicio contrato {{this.contratoCode}} fase 2 - Construcción
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de aprobación de requesitos por el supervisor: <b>{{this.fechaContrato}}</b></span>
+        <span>Fecha de aprobación de requesitos por el supervisor: <b>{{this.fechaAprobacionSupervisor}}</b></span>
     </p>
 </section>
 <section class="container">
     <mat-card class="shipping-card mainGris">
         <mat-card-content>
-            <p><strong>Vigencia del contrato: </strong>2020</p>
-            <p><strong>Fecha de firma del contrato: </strong>{{ this.fechaContrato }}</p>
-            <p><strong>Número del DRP 1. </strong>DRP_015</p>
-            <p><strong>Fecha de generación de DRP 1. </strong>28/06/2020</p>
-            <p><strong>Número del DRP 2. </strong>DRP_015</p>
-            <p><strong>Fecha de generación de DRP 2. </strong>28/06/2020</p>
-            <p><strong>Fecha de aprobación de la garantía / póliza: </strong>02/07/2020</p>
+            <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato}}</p>
+            <p><strong>Fecha de firma del contrato: </strong>{{this.fechaFirmaContrato}}</p>
+            <p><strong>Número del DRP 1. </strong>{{this.numeroDRP1}}</p>
+            <p><strong>Fecha de generación de DRP 1. </strong>{{this.fechaGeneracionDRP1}}</p>
+            <p><strong>Número del DRP 2. </strong>{{this.numeroDRP2}}</p>
+            <p><strong>Fecha de generación de DRP 2. </strong>{{this.fechaGeneracionDRP2}}</p>
+            <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobacionGarantiaPoliza}}</p>
             <p><strong>Objeto:</strong></p>
-            <p>Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
-                estudios y diseños y ejecución
-                de las obras necesarias para la adecuación y mejoramiento de las instituciones rurales.</p>
-            <p><strong>Valor inicial del contrato: </strong>$100.000.000</p>
-            <p><strong>Valor actual del contrato: </strong>$150.000.000</p>
-            <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>$32.000.000</p>
-            <p><strong>Valor fase 2 - Construcción (Obra): </strong>$118.000.000</p>
+            <p>Prueba</p>
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorInicialContrato}}</p>
+            <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato}}</p>
+            <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion}}</p>
+            <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
             <p><strong>Número de identificación del representante legal del contratista de inteventoría:
                 </strong>86.786.546</p>
-            <p><strong>Nombre del representante legal del contratista de interventoría: </strong>Juan Pablo Aparicio
-                Gómez</p>
+            <p><strong>Nombre del representante legal del contratista de interventoría: </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
             <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
             <p><strong>Nombre de la entidad contratista de interventoría: </strong>C & M Constructora Ltda.</p>
             <p><strong>Número de identificación del representante legal del contratista de obra: </strong>93.876.987</p>
             <p><strong>Nombre del representante legal del contratista de obra: </strong>María Mercedez Aristizabal</p>
             <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
-            <p><strong>Nombre entidad contratista de obra: </strong>Constructora Colpatria</p>
+            <p><strong>Nombre entidad contratista de obra: </strong>{{this.nombreEntidadContratistaObra}}</p>
         </mat-card-content>
     </mat-card>
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
@@ -125,18 +122,18 @@
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
                                         formControlName="mesPlazoEjFase2">
                                 </mat-form-field>
-                                <span
-                                    class="contador">{{3 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                <label class="label-left sub-label">
+                                <span class="contador" *ngIf="addressForm.get('mesPlazoEjFase2').value">{{3 - addressForm.get('mesPlazoEjFase2').value.length}}</span>
+                                <span class="contador" *ngIf="addressForm.get('mesPlazoEjFase2').value==null">3</span>
+                                <label class="label-left sub-label" for="diasPlazoEjFase2">
                                     Días
                                 </label>
                                 <mat-form-field class="w-8em">
                                     <input matInput maxlength="2" min="1" max="31" required (keypress)="number($event)"
-                                        onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                         type="number" formControlName="diasPlazoEjFase2">
                                 </mat-form-field>
-                                <span
-                                    class="contador">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}</span>
+                                <span class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value">{{2 - addressForm.get('diasPlazoEjFase2').value.length}}</span>
+                                <span class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value==null">2</span>
                             </div>
                         </div>
                     </div>
