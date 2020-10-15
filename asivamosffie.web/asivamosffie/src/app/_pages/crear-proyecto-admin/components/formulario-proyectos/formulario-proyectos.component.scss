@@ -40,3 +40,17 @@
     padding-right: .4em;
   }
 }
+
+.mat-card-title {
+  margin-left: -1em;
+  padding-left: 4px;
+}
+
+.col-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.select-width {
+  width: calc(100% - 5.9em);
+}

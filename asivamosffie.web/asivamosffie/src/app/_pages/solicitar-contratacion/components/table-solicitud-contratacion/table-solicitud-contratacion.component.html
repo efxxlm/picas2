@@ -81,7 +81,7 @@
                             Solicitud.</button>
                     <button mat-raised-button color="accent" class="btn-table"
                             [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
-                            *ngIf="element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto">
+                            *ngIf="(element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto)">
                             Ver detalle</button>
     
                         

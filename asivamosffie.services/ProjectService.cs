@@ -1579,7 +1579,7 @@ namespace asivamosffie.services
                        IsException = false,
                        IsValidation = false,
                        Code = ConstantMessagesProyecto.OperacionExitosa,
-                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pProyectoAdministrativo.UsuarioCreacion, " ")
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pProyectoAdministrativo.UsuarioCreacion, "PROYECTO ADMINISTRATIVO CREADO EXITOSAMENTE")
                    };
             }
             catch (Exception ex)
@@ -1651,6 +1651,12 @@ namespace asivamosffie.services
             bool retorno = true;
             try
             {
+                var disponibilidad = _context.DisponibilidadPresupuestalProyecto.Where(x => x.ProyectoAdministrativoId == pProyectoId).Count();
+                if(disponibilidad>0)
+                {
+                    _ = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pUsuario, "ELIMINACIÓN NO APLICADA, DEPENDE DE ALGUIEN.");
+                    return false;
+                }
                 ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
                 proyecto.Eliminado = true;
                 proyecto.UsuarioModificacion = pUsuario;
@@ -1685,7 +1691,7 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido.Replace("[proyecto]",proyecto.ProyectoAdministrativoId.ToString()).Replace("_LinkF_", pDominioFront).Replace("[fecha]", Convert.ToDateTime(proyecto.FechaCreado).ToString("dd/MM/yyyy"));
                 
                 //template = template.Replace("_Link_", urlDestino);                
-                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario);
+                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario).ToList();
                 foreach(var usuarioadmin in usuariosadmin)
                 {
                     bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Proyecto administrativo creado", template, pSender, pPassword, pMailServer, pMailPort);
