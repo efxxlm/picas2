@@ -51,7 +51,8 @@ namespace asivamosffie.services
 
             List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
 
-            lista.ForEach(c =>
+            lista.Where( c => c.TipoContratoCodigo == "1" ).ToList() // tipo contrato obra
+                .ForEach(c =>
             {
                 listaContrats.Add(new
                 {
@@ -89,7 +90,15 @@ namespace asivamosffie.services
             {
                 Contrato contrato = await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
 
-                contrato.ContratoConstruccion = _context.ContratoConstruccion.Where( cc => cc.ContratoId == pContratoId ).ToList();
+                contrato.ContratoConstruccion = _context.ContratoConstruccion.Where( cc => cc.ContratoId == pContratoId )
+                                                                                .Include( r => r.ConstruccionPerfil)
+                                                                                    .ThenInclude( r => r.ConstruccionPerfilObservacion )
+                                                                                .Include( r => r.ConstruccionPerfil)
+                                                                                    .ThenInclude( r => r.ConstruccionPerfilNumeroRadicado )
+                                                                                .Include( r => r.ConstruccionObservacion )
+                                                                             
+                                                                             .ToList();
+
 
                 return contrato;
             }
@@ -538,7 +547,7 @@ namespace asivamosffie.services
 
                             observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
                             observacion.FechaCreacion = DateTime.Now;
-                            observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Supervisor;
+                            observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
 
                             //perfil.ConstruccionPerfilObservacion.Add(observacion);
                         }
