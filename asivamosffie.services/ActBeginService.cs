@@ -200,6 +200,30 @@ namespace asivamosffie.services
                 //contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
                 _context.Contrato.Update(contrato);
 
+                //                notificación de alerta al interventor, al apoyo a la
+                //supervisión y al supervisor
+
+                //notificación al interventor y al apoyo a la supervisión.
+
+                int pIdTemplate = (int)enumeratorTemplate.ActaInicioFase2ObraInterventoria;
+                //perfilId = 8; //  Supervisor
+
+                VistaGenerarActaInicioContrato actaInicio;
+
+                //pTipoContrato = 2;
+                actaInicio = await getDataActaInicioAsync(pContratoId, Convert.ToInt32( contrato.TipoContratoCodigo));
+
+                //Contrato contrato = null;
+                //contrato = _context.Contrato.Where(r => r.NumeroContrato == pActaInicio.NumeroContrato).FirstOrDefault();
+
+                string correo = "cdaza@ivolucion.com";
+
+                correo = getCorreos((int)EnumeratorPerfil.Supervisor);
+
+                Task<Respuesta> result = EnviarCorreoGestionActaIncio(correo, _settings.Value.MailServer,
+             _settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
+             actaInicio, pIdTemplate);
+
                 return
                  new Respuesta
                  {
@@ -225,6 +249,34 @@ namespace asivamosffie.services
               };
             }
         }
+
+        private string getCorreos(int perfilId)
+        {
+            //[Usuario], [UsuarioPerfil] , [Perfil]
+            string lstCorreos = "";
+
+            //            1   Administrador  - //2   Técnica
+            //3   Financiera - //4   Jurídica
+            //5   Administrativa - //6   Miembros Comite
+            //7   Secretario comité - //8   Supervisor
+            List<UsuarioPerfil> lstUsuariosPerfil = new List<UsuarioPerfil>();
+
+            lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+
+            List<Usuario> lstUsuarios = new List<Usuario>();
+
+            foreach (var item in lstUsuariosPerfil)
+            {
+                lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                foreach (var usuario in lstUsuarios)
+                {
+                    lstCorreos = lstCorreos += usuario.Email + ";";
+                }
+            }
+            return lstCorreos;
+        }
+
 
         public async Task<byte[]> GetPlantillaActaInicio(int pContratoId)
         {
@@ -370,7 +422,7 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        public async Task<Respuesta> EnviarCorreoGestionActaIncio(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate, NotificacionMensajeGestionPoliza objNotificacionAseguradora = null)
+        public async Task<Respuesta> EnviarCorreoGestionActaIncio(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaGenerarActaInicioContrato pActaInicio,  int pIdTemplate)
         {
             bool blEnvioCorreo = false;
             Respuesta respuesta = new Respuesta();
@@ -395,7 +447,7 @@ namespace asivamosffie.services
                 //string urlDestino = pDominio;
                 //asent/img/logo      
 
-                VistaGenerarActaInicioContrato pActaInicio = new VistaGenerarActaInicioContrato();
+                //VistaGenerarActaInicioContrato pActaInicio = new VistaGenerarActaInicioContrato();
 
                 int tipoContrato = 0;
                 
@@ -405,15 +457,21 @@ namespace asivamosffie.services
                 //template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
                 //objVistaContratoGarantiaPoliza.FEC
 
-                tipoContrato = 2;
+                //tipoContrato = 2;
+                tipoContrato = ConstanCodigoTipoContratacion.Interventoria;
 
-                if(contrato != null)
-                {
-                    pActaInicio = await getDataActaInicioAsync(contrato.ContratoId, tipoContrato);
-                }                
+                //if (contrato != null)
+                //{
+                //    pActaInicio = await getDataActaInicioAsync(contrato.ContratoId, Convert.ToInt32( contrato.TipoContratoCodigo));
+                //}                
 
                 template = template.Replace("_Numero_Contrato_", pActaInicio.NumeroContrato);
                 template = template.Replace("_Fecha_Aprobacion_Poliza_", pActaInicio.FechaAprobacionGarantiaPoliza);
+                
+                if(Convert.ToInt32(contrato.TipoContratoCodigo)==ConstanCodigoTipoContratacion.Interventoria)
+                    template = template.Replace("_Obra_O_Interventoria_", "interventoría");
+                else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
+                    template = template.Replace("_Obra_O_Interventoria_", "obra");
 
                 template = template.Replace("_Cantidad_Proyectos_Asociados_", pActaInicio.CantidadProyectosAsociados.ToString());
 
@@ -515,8 +573,8 @@ namespace asivamosffie.services
             {
                 actaInicio = new GrillaActaInicio();
 
-                //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
-                EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActa, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+                EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+                //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActa, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
                 if (EstadoActaFase2Contrato != null)
                     strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
