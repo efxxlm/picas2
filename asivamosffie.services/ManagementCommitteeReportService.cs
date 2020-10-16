@@ -57,9 +57,7 @@ namespace asivamosffie.services
                        .ThenInclude(r => r.SesionSolicitudCompromiso)
                  .Distinct()
                  .ToListAsync();
-
-            List<Dominio> EstadoCompromisos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Estado_Compromisos);
-
+ 
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
 
@@ -78,8 +76,7 @@ namespace asivamosffie.services
                             grillaSesionComiteTecnicoCompromiso.SesionComiteTecnicoCompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId;
                             grillaSesionComiteTecnicoCompromiso.Compromiso = SesionSolicitudCompromiso.Tarea;
                             grillaSesionComiteTecnicoCompromiso.FechaCumplimiento = SesionSolicitudCompromiso.FechaCumplimiento;
-                            grillaSesionComiteTecnicoCompromiso.EstadoCodigo =  string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? "Sin iniciar" :
-                            EstadoCompromisos.Where(r=> r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).Select(r=> r.Nombre).FirstOrDefault(); 
+                            grillaSesionComiteTecnicoCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? "1" : SesionSolicitudCompromiso.EstadoCodigo;
                             grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
                        
                     } 

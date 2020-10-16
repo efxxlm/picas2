@@ -36,8 +36,9 @@ namespace asivamosffie.api.Controllers
         public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
         {
             try
-            { 
-                return await _managementCommitteeReportService.GetManagementCommitteeReport(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
+            {
+                
+                return await _managementCommitteeReportService.GetManagementCommitteeReport(Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
             }
             catch (Exception ex)
             {
