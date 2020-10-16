@@ -31,7 +31,7 @@ namespace asivamosffie.api.Controllers
 
         }
 
-        [Route("GetManagementCommitteeReport")]
+        [Route("GetListCompromisoSeguimiento")]
         [HttpGet]
         public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId)
         {
