@@ -83,5 +83,7 @@
         public const string Load_Data_Programacion_Obra = "107";
         public const string Load_Data_Flujo_Inversion = "108";
         public const string Validar_Excel_Flujo_Inversion = "109";
+        public const string Crear_Editar_Observacion_Archivo = "112";
+        public const string Eliminar_Archivo_Cargue = "113";
     } 
 }

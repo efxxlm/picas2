@@ -35,6 +35,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public int? CantidadPerfiles { get; set; }
         public string EstadoVerificacionCodigo { get; set; }
+        public string EstadoVerificacionConstruccionCodigo { get; set; }
         public bool? TieneEstudiosDisenosFase1 { get; set; }
         public string EstadoActa { get; set; }
         public DateTime? FechaActaInicioFase1 { get; set; }

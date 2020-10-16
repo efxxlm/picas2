@@ -51,7 +51,7 @@ namespace asivamosffie.services
 
             List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
 
-            lista.Where( c => c.TipoContratoCodigo == "1" ).ToList() // tipo contrato obra
+            lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
                 .ForEach(c =>
             {
                 listaContrats.Add(new
@@ -90,13 +90,13 @@ namespace asivamosffie.services
             {
                 Contrato contrato = await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
 
-                contrato.ContratoConstruccion = _context.ContratoConstruccion.Where( cc => cc.ContratoId == pContratoId )
-                                                                                .Include( r => r.ConstruccionPerfil)
-                                                                                    .ThenInclude( r => r.ConstruccionPerfilObservacion )
-                                                                                .Include( r => r.ConstruccionPerfil)
-                                                                                    .ThenInclude( r => r.ConstruccionPerfilNumeroRadicado )
-                                                                                .Include( r => r.ConstruccionObservacion )
-                                                                             
+                contrato.ContratoConstruccion = _context.ContratoConstruccion.Where(cc => cc.ContratoId == pContratoId)
+                                                                                .Include(r => r.ConstruccionPerfil)
+                                                                                    .ThenInclude(r => r.ConstruccionPerfilObservacion)
+                                                                                .Include(r => r.ConstruccionPerfil)
+                                                                                    .ThenInclude(r => r.ConstruccionPerfilNumeroRadicado)
+                                                                                .Include(r => r.ConstruccionObservacion)
+
                                                                              .ToList();
 
 
@@ -158,6 +158,10 @@ namespace asivamosffie.services
 
                     _context.ContratoConstruccion.Add(contratoConstruccion);
                 }
+
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
                 return
@@ -342,6 +346,10 @@ namespace asivamosffie.services
                     _context.ContratoConstruccion.Add(contratoConstruccion);
                 }
 
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+
                 _context.SaveChanges();
                 return
                     new Respuesta
@@ -412,6 +420,10 @@ namespace asivamosffie.services
 
                     _context.ContratoConstruccion.Add(contratoConstruccion);
                 }
+
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
                 return
@@ -566,18 +578,10 @@ namespace asivamosffie.services
                     }
                 }
 
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
-
-                // //Cambiar Estado Requisitos 
-                // if (pContrato.ContratoPerfil
-                //     .Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count()
-                //     && pContrato.ContratoPerfil.Count() > 1)
-                // {
-                //     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
-                //     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.En_proceso_de_aprobación_de_requisitos_tecnicos;
-                //     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                //     contratoOld.FechaModificacion = DateTime.Now;
-                // }
                 _context.SaveChanges();
                 return
                     new Respuesta
@@ -963,15 +967,17 @@ namespace asivamosffie.services
         {
             List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
 
-            List<TempProgramacion>  lista = _context.TempProgramacion.Where( tp => tp.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+            List<TempProgramacion> lista = _context.TempProgramacion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
             lista.ForEach(c =>
             {
-                ArchivoCargue archivo = _context.ArchivoCargue.Find( c.ArchivoCargueId );
-                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+                ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
+                if (archivo != null)
+                {
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
 
-
-                listaCargas.Add( archivo );
+                    listaCargas.Add(archivo);
+                }
             });
 
             return listaCargas;
@@ -1058,11 +1064,12 @@ namespace asivamosffie.services
                                 //string strValidateCampNullsOrEmpty = "";
                                 //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
 
-                                for (int j = 2; j < worksheet.Dimension.Columns; j++){
+                                for (int j = 2; j < worksheet.Dimension.Columns; j++)
+                                {
                                     CantidadRegistrosInvalidos++;
                                 }
-                        
-                                
+
+
                                 // for (int j = 1; j < 7; j++)
                                 // {
                                 //     strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
@@ -1074,7 +1081,7 @@ namespace asivamosffie.services
                                 // else
                                 // {
                                 //     CantidadRegistrosInvalidos++;
-                                    
+
                                 // }
                             }
 
@@ -1090,7 +1097,7 @@ namespace asivamosffie.services
                     //-2 ya los registros comienzan desde esta fila
                     archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                     archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = ((worksheet.Dimension.Rows - 1) * (worksheet.Dimension.Columns - 2) - CantidadRegistrosVacios );
+                    archivoCarge.CantidadRegistros = ((worksheet.Dimension.Rows - 1) * (worksheet.Dimension.Columns - 2) - CantidadRegistrosVacios);
                     _context.ArchivoCargue.Update(archivoCarge);
 
 
@@ -1164,30 +1171,30 @@ namespace asivamosffie.services
 
                 if (listTempFlujoInversion.Count() > 0)
                 {
-                    listTempFlujoInversion.ForEach( tempFlujo => 
-                    {
+                    listTempFlujoInversion.ForEach(tempFlujo =>
+                   {
 
-                        FlujoInversion flujo = new FlujoInversion()
-                        {
-                            ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
-                            Capitulo = tempFlujo.Capitulo,
-                            Mes = tempFlujo.Mes,
-                            Valor = tempFlujo.Valor,
+                       FlujoInversion flujo = new FlujoInversion()
+                       {
+                           ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
+                           Capitulo = tempFlujo.Capitulo,
+                           Mes = tempFlujo.Mes,
+                           Valor = tempFlujo.Valor,
 
-                        };
+                       };
 
-                        _context.FlujoInversion.Add( flujo );
-                        _context.SaveChanges();
+                       _context.FlujoInversion.Add(flujo);
+                       _context.SaveChanges();
 
 
 
                         //Temporal proyecto update
                         tempFlujo.EstaValidado = true;
-                        tempFlujo.FechaModificacion = DateTime.Now;
-                        tempFlujo.UsuarioModificacion = pUsuarioModifico;
-                        _context.TempFlujoInversion.Update(tempFlujo);
-                        _context.SaveChanges();
-                    });
+                       tempFlujo.FechaModificacion = DateTime.Now;
+                       tempFlujo.UsuarioModificacion = pUsuarioModifico;
+                       _context.TempFlujoInversion.Update(tempFlujo);
+                       _context.SaveChanges();
+                   });
 
 
                     return respuesta =
@@ -1232,21 +1239,105 @@ namespace asivamosffie.services
         {
             List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
 
-            List<TempFlujoInversion>  lista = _context.TempFlujoInversion.Where( tp => tp.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+            List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
             lista.ForEach(c =>
             {
-                ArchivoCargue archivo = _context.ArchivoCargue.Find( c.ArchivoCargueId );
-                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+                ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
+                if (archivo != null)
+                {
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
 
-
-                listaCargas.Add( archivo );
+                    listaCargas.Add(archivo);
+                }
             });
 
             return listaCargas;
 
         }
 
+        public async Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Archivo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                CreateEdit = "EDITAR OBSERVACION ARCHIVO";
+
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivoCargueId);
+
+                if (archivoCargue != null)
+                {
+                    archivoCargue.Observaciones = pObservacion;
+                }
+
+
+                _context.SaveChanges();
+                return
+                    new Respuesta
+                    {
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivocargue);
+
+                archivoCargue.UsuarioModificacion = pUsuarioModificacion;
+                archivoCargue.FechaModificacion = DateTime.Now;
+                archivoCargue.Eliminado = true;
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ARCHIVO CARGUE ELIMINADO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+        
         private bool ValidarRegistroCompletoConstruccionPerfil(ConstruccionPerfil pPerfil)
         {
             if (
@@ -1285,6 +1376,10 @@ namespace asivamosffie.services
 
             return esCompleto;
         }
+
+
+
+
 
     }
 

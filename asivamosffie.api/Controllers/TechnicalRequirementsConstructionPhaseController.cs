@@ -45,6 +45,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("GetContratoByContratoId")]
         [HttpGet]
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -59,6 +60,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("GetLoadProgrammingGrid")]
         [HttpGet]
         public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
@@ -73,6 +75,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("GetLoadInvestmentFlowGrid")]
         [HttpGet]
         public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
@@ -87,6 +90,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("CreateEditDiagnostico")]
         [HttpPost]
         public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
@@ -104,6 +108,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("CreateEditPlanesProgramas")]
         [HttpPost]
         public async Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion)
@@ -121,6 +126,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("CreateEditManejoAnticipo")]
         [HttpPost]
         public async Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion)
@@ -138,6 +144,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("CreateEditConstruccionPerfil")]
         [HttpPost]
         public async Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion)
@@ -155,6 +162,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("DeleteConstruccionPerfil")]
         [HttpDelete]
         public async Task<IActionResult> DeleteConstruccionPerfil([FromQuery]  int pConstruccioPerfilId)
@@ -173,6 +181,23 @@ namespace asivamosffie.api.Controllers
         }
 
         
+        [Route("CreateEditObservacionesCarga")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditObservacionesCarga([FromQuery]  int pArchivoCargueId, string pObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionesCarga( pArchivoCargueId, pObservacion, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
         [Route("DeleteConstruccionPerfilNumeroRadicado")]
         [HttpDelete]
@@ -191,6 +216,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [Route("DeleteArchivoCargue")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteArchivoCargue(int pArchivoCargueId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteArchivoCargue( pArchivoCargueId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        
         [Route("UploadFileToValidateProgramming")]
         [HttpPost]
         public async Task<IActionResult> UploadFileToValidateProgramming(IFormFile file, [FromQuery] int pContratoConstruccinId)
@@ -213,6 +257,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("TransferMassiveLoadProgramming")]
         [HttpPost]
         public async Task<IActionResult> TransferMassiveLoadProgramming([FromQuery] string pIdDocument)
@@ -231,6 +276,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("UploadFileToValidateInvestmentFlow")]
         [HttpPost]
         public async Task<IActionResult> UploadFileToValidateInvestmentFlow(IFormFile file, [FromQuery] int pContratoConstruccinId)
@@ -253,6 +299,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
         [Route("TransferMassiveLoadInvestmentFlow")]
         [HttpPost]
         public async Task<IActionResult> TransferMassiveLoadInvestmentFlow([FromQuery] string pIdDocument)

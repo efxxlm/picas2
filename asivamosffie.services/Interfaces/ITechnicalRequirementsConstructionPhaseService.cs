@@ -24,6 +24,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> TransferMassiveLoadInvestmentFlow(string pIdDocument, string pUsuarioModifico);
         Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId);
          Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId);
+         Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion);
+         Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, string pUsuarioModificacion);
 
     }
 }
