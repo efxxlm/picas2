@@ -36,7 +36,8 @@ namespace asivamosffie.api.Controllers
         [Route("ListMonitoreo")]
         public async Task<List<dynamic>> ListMonitoreo()
         {
-            return await _registerSessionTechnicalCommitteeService.ListMonitoreo();
+            List<dynamic> list =await _registerSessionTechnicalCommitteeService.ListMonitoreo();
+            return list;
         }
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
