@@ -46,9 +46,9 @@ namespace asivamosffie.services
         {
             List<GrillaSesionComiteTecnicoCompromiso> grillaSesionComiteTecnicoCompromisos = new List<GrillaSesionComiteTecnicoCompromiso>();
 
-            //string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
-            //List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
-            List<ComiteTecnico> ListComiteTecnico =await _context.ComiteTecnico
+            string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
+             List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
+
                 .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion
                        && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                  .Include(r => r.SesionParticipante)
@@ -72,8 +72,9 @@ namespace asivamosffie.services
                         grillaSesionComiteTecnicoCompromiso.Compromiso = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().Tarea;
                         grillaSesionComiteTecnicoCompromiso.FechaCumplimiento = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().FechaCumplimiento;
                         grillaSesionComiteTecnicoCompromiso.EstadoCodigo = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().EstadoCodigo;
-                    }
-                    grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
+
+                        grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
+                    } 
                 }
                 catch (Exception ex)
                 {
