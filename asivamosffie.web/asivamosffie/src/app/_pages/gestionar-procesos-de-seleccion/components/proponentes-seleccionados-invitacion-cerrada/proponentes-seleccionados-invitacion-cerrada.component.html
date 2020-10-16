@@ -5,14 +5,15 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el proceso?</label>
+              <label for="cuantosProponentes" class="label-left">
+                ¿Cuántos proponentes serán invitados en el proceso?
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" 
-                maxlength="2" formControlName="cuantosProponentes"
-                (keyup)="validaMinimo3()" maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  required>
+                <input matInput #cuantosProponentes type="number" maxlength="2" formControlName="cuantosProponentes"
+                  (keyup)="validaMinimo3()" maxlength="2" (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
               <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
             </div>
@@ -25,10 +26,8 @@
         </div>
         <div class="col">
           <mat-form-field class="select-width">
-            <mat-select formControlName="nombresProponentes" required
-             (selectionChange)="changeProponente()" multiple>
-              <mat-option *ngFor="let nombreProponente of nombresProponentesList" 
-                          [value]="nombreProponente" >
+            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente()" multiple>
+              <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
                 {{ nombreProponente.nombreProponente }}
               </mat-option>
               <mat-option value="Nuevo"> Nuevo </mat-option>
@@ -37,7 +36,7 @@
         </div>
       </div>
       <!-- <div *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' "> -->
-      <div class="pt-1em" *ngFor=" let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index " >
+      <div class="pt-1em" *ngFor=" let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index ">
         <mat-card-title class="header-card--text">
           Proponente {{ i + 1 }}
         </mat-card-title>
@@ -70,28 +69,19 @@
           {{ proponente.emailProponente }}
         </p>
       </div>
-    <!-- </div> -->
+      <!-- </div> -->
       <div *ngIf="nuevo">
-      <app-form-datos-proponentes-nuevo 
-                                                #proponente 
-                                                [procesoSeleccion]="procesoSeleccion" 
-                                                (guardar)="onSubmitNuevoProponente()">
-      </app-form-datos-proponentes-nuevo>
-      <button style="display: none;" 
-              type="button" 
-              (click)="proponente.cargarRegistro()" 
-              id="botonProponente"
-              >
-      </button>
-    </div>
+        <app-form-datos-proponentes-nuevo #proponente [procesoSeleccion]="procesoSeleccion"
+          (guardar)="onSubmitNuevoProponente()">
+        </app-form-datos-proponentes-nuevo>
+        <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente">
+        </button>
+      </div>
 
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" 
-            class="btn-guardar" 
-            type="submit" 
-            >
+    <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>
