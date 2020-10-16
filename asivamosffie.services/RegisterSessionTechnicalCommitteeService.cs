@@ -3887,7 +3887,7 @@ namespace asivamosffie.services
             List<ComiteTecnico> comiteTecnicos = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
                                                                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                                    .ThenInclude(r => r.SesionSolicitudCompromiso)
-                                                                       .ThenInclude(r => r.CompromisoSeguimiento).ToListAsync(); 
+                                                                       .ThenInclude(r => r.CompromisoSeguimiento).Distinct().ToListAsync(); 
 
             List<dynamic> dynamics = new List<dynamic>(); 
             foreach (var comiteTecnico in comiteTecnicos)
@@ -3899,7 +3899,7 @@ namespace asivamosffie.services
                         comiteTecnico.FechaOrdenDia,
                         comiteTecnico.NumeroComite,
                         cantidadCompromisos = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count(),
-
+                        cantidadCompromisosCumplidos = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r=> r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
                         SesionComiteSolicitudComiteTecnico.SesionComiteSolicitudId
                     });
 
