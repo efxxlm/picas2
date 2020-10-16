@@ -156,7 +156,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
     console.log(tema)
 
-    this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value ? tema.get('sesionTemaId').value.sesionTemaId : 0)
+    this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
         this.borrarArray(grupo, i)
         this.openDialog('', 'La información se ha eliminado correctamente.')
