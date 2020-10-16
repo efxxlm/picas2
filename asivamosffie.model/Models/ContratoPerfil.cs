@@ -14,14 +14,10 @@ namespace asivamosffie.model.Models
         public int ContratoPerfilId { get; set; }
         public int ContratoId { get; set; }
         public string PerfilCodigo { get; set; }
-        public int CantidadHvRequeridas { get; set; }
-        public int CantidadHvRecibidas { get; set; }
-        public int CantidadHvAprobadas { get; set; }
+        public int? CantidadHvRequeridas { get; set; }
+        public int? CantidadHvRecibidas { get; set; }
+        public int? CantidadHvAprobadas { get; set; }
         public DateTime? FechaAprobacion { get; set; }
-        public string NumeroRadicadoFfie { get; set; }
-        public string NumeroRadicadoFfie1 { get; set; }
-        public string NumeroRadicadoFfie2 { get; set; }
-        public string NumeroRadicadoFfie3 { get; set; }
         public string RutaSoporte { get; set; }
         public bool? ConObervacionesSupervision { get; set; }
         public DateTime FechaCreacion { get; set; }
