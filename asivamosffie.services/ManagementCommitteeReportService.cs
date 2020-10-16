@@ -33,9 +33,7 @@ namespace asivamosffie.services
             _context = context;
             _commonService = commonService;
         }
-
-
-
+         
         public Task<int> ExecuteSqlRawAsync(string sql, params object[] parameters)
         {
             return _context.Database.ExecuteSqlRawAsync(sql, parameters);
@@ -49,12 +47,12 @@ namespace asivamosffie.services
             string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
              List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
 
-                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion
-                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
+                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
+                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
                  .Include(r => r.SesionParticipante)
                  .Include(r => r.SesionComentario)
-                         .Distinct()
-                  .ToListAsync();
+                 .Distinct()
+                 .ToListAsync();
 
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
@@ -219,10 +217,7 @@ namespace asivamosffie.services
                 return new List<ComiteTecnico>();
             }
         }
-
-
-
-
+         
         //Reportar Avance Compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso)
         {
@@ -449,6 +444,7 @@ namespace asivamosffie.services
                     .Distinct().Count()
                 );
         }
+
         //Actualizar estado codigo de un compromiso
         public async Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status)
         {
@@ -477,8 +473,7 @@ namespace asivamosffie.services
                 throw;
             }
         }
-
-
+         
         //plantilla - Acta de comité técnico
         public async Task<HTMLContent> GetHTMLString(ActaComite obj)
         {
