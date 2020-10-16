@@ -62,15 +62,15 @@ namespace asivamosffie.model.Models
         public DateTime? ProgramaSaludFechaRadicado { get; set; }
         public DateTime? ProgramaSaludFechaAprobacion { get; set; }
         public bool? ProgramaSaludConObservaciones { get; set; }
-        public bool? PlanInventarioArboreo { get; set; }
+        public int? PlanInventarioArboreo { get; set; }
         public DateTime? InventarioArboreoFechaRadicado { get; set; }
         public DateTime? InventarioArboreoFechaAprobacion { get; set; }
         public bool? InventarioArboreoConObservaciones { get; set; }
-        public bool? PlanAprovechamientoForestal { get; set; }
+        public int? PlanAprovechamientoForestal { get; set; }
         public DateTime? AprovechamientoForestalApropiacionFechaRadicado { get; set; }
         public DateTime? AprovechamientoForestalFechaAprobacion { get; set; }
         public bool? AprovechamientoForestalConObservaciones { get; set; }
-        public bool? PlanManejoAguasLluvias { get; set; }
+        public int? PlanManejoAguasLluvias { get; set; }
         public DateTime? ManejoAguasLluviasFechaRadicado { get; set; }
         public DateTime? ManejoAguasLluviasFechaAprobacion { get; set; }
         public bool? ManejoAguasLluviasConObservaciones { get; set; }
