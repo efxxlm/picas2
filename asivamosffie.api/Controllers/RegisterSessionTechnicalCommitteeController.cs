@@ -31,7 +31,13 @@ namespace asivamosffie.api.Controllers
         {
             return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaIdComite(IdComite), "application/pdf");
         }
-         
+ 
+        [HttpGet]
+        [Route("ListMonitoreo")]
+        public async Task<dynamic> ListMonitoreo()
+        {
+            return await _registerSessionTechnicalCommitteeService.ListMonitoreo();
+        }
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
         public async Task<IActionResult> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)

@@ -1358,6 +1358,9 @@ namespace asivamosffie.services
             {
                 var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
                                                                     .Include(r => r.SesionComiteTecnicoCompromiso)
+                                                                        .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                                           .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                               .ThenInclude(r => r.CompromisoSeguimiento)
                                                                     .Select(x => new
                                                                     {
                                                                         Id = x.ComiteTecnicoId,
@@ -1442,7 +1445,6 @@ namespace asivamosffie.services
             }
             return true;
         }
-
 
         //public bool EjemploTransaction()
         //{
@@ -1638,9 +1640,9 @@ namespace asivamosffie.services
                         {
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
                             if (ct.Proyecto.EstadoProyectoCodigo != null)
-                                if ( ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico )
+                                if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
                                     proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
-                                else    
+                                else
                                     proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
                             else
                             {
@@ -1649,17 +1651,21 @@ namespace asivamosffie.services
                         });
 
                     }
-                    Contratacion contratacion = _context.Contratacion.Find( pSesionComiteSolicitud.SolicitudId );
+                    Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
 
-                    if ( contratacion != null ){
-                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico )    {
-                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.AprobadoComiteTecnico; 
+                    if (contratacion != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
+                        {
+                            contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.AprobadoComiteTecnico;
                         }
-                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico )    {
-                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteTecnico; 
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        {
+                            contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteTecnico;
                         }
-                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico )    {
-                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteTecnico; 
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                        {
+                            contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteTecnico;
                         }
                     }
                 }
@@ -3874,6 +3880,36 @@ namespace asivamosffie.services
             }
         }
 
+
+        public async Task<dynamic> ListMonitoreo()
+        {
+
+            List<ComiteTecnico> comiteTecnicos = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
+                                                                .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                                   .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                       .ThenInclude(r => r.CompromisoSeguimiento).ToListAsync(); 
+
+            List<dynamic> dynamics = new List<dynamic>(); 
+            foreach (var comiteTecnico in comiteTecnicos)
+            {
+                foreach (var SesionComiteSolicitudComiteTecnico in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+                {
+                    dynamics.Add(new
+                    {
+                        comiteTecnico.FechaOrdenDia,
+                        comiteTecnico.NumeroComite,
+                        cantidadCompromisos = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count(),
+
+                        SesionComiteSolicitudComiteTecnico.SesionComiteSolicitudId
+                    });
+
+                }
+            }
+
+
+
+            return dynamics;
+        }
 
 
     }
