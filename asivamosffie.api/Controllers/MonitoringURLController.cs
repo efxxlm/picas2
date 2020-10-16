@@ -32,5 +32,15 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _monitoringURLService.GetListProyects();
             return respuesta;
         }
+
+        [Route("GetListContratoProyectos")]
+        [HttpGet]
+        public async Task<List<VistaContratoProyectos>> GetListContratoProyectos()
+        {
+            var respuesta = await _monitoringURLService.GetListContratoProyectos();
+            return respuesta;
+        }
+
+        
     }
 }

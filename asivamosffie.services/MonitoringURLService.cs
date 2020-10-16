@@ -25,7 +25,79 @@ namespace asivamosffie.services
             
         }
 
-        public async Task<List<ProyectoGrilla>> GetListProyects()
+        public async Task<List<VistaContratoProyectos>> GetListContratoProyectos()
+        {
+
+            //número de contrato, nombre del contratista y número de proyectos asociados.
+
+            List<VistaContratoProyectos> lstVistaContratoProyectos = new List<VistaContratoProyectos>();
+            VistaContratoProyectos vistaContratoProyectos = new VistaContratoProyectos();
+
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct().ToListAsync();
+
+            foreach (var contrato in ListContratos)
+            {
+                try
+                {
+                    Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
+
+                    Contratista contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+
+                    //TipoContrato = contrato.TipoContratoCodig
+
+                    ContratacionProyecto contratacionProyecto = null;
+
+                    if (contratacion != null)
+                    {
+                        contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+
+                    }
+
+                    List<ProyectoGrilla> listProyectoGrilla = new List<ProyectoGrilla>();
+                    listProyectoGrilla = await GetListProyects();
+
+                    int NumProyectosAsociados = 0;
+
+                    if (contratacionProyecto != null)
+                    {
+                        listProyectoGrilla = listProyectoGrilla.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).ToList();
+                        NumProyectosAsociados = listProyectoGrilla.Count();
+                    }
+
+
+                    vistaContratoProyectos = new VistaContratoProyectos
+                    {
+                        NumeroContrato = contrato.NumeroContrato,
+                        NombreContratista = contratista.Nombre,
+                        ProyectoId = contratacionProyecto.ProyectoId,
+                        lstProyectoGrilla = listProyectoGrilla,
+                        NumeroProyectosAsociados = NumProyectosAsociados
+                    };
+
+                    lstVistaContratoProyectos.Add(vistaContratoProyectos);
+                }
+
+
+                catch (Exception e)
+                {
+                    //VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato
+                    vistaContratoProyectos = new VistaContratoProyectos
+                    {
+                        NumeroContrato = e.InnerException.ToString(),
+                        NombreContratista = e.ToString(),
+                        ProyectoId = 0,
+                        lstProyectoGrilla = null,
+                        NumeroProyectosAsociados = -1
+
+                    };
+                    lstVistaContratoProyectos.Add(vistaContratoProyectos);
+                }
+                
+            }
+            return lstVistaContratoProyectos;
+        }
+
+            public async Task<List<ProyectoGrilla>> GetListProyects()
         {
             //Listar Los proyecto segun caso de uso solo trae los ue estado
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
@@ -128,6 +200,7 @@ namespace asivamosffie.services
                                 InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                                 Sede = proyecto.Sede.Nombre,
                                 ProyectoId = proyecto.ProyectoId,
+                                
                                 
                             };
 
@@ -312,6 +385,66 @@ namespace asivamosffie.services
 
         //}
 
+
+
+
+        public async Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo, string UsuarioModificacion)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+            Proyecto proyecto = null;
+                       
+
+            proyecto = _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+            try
+            {
+
+                //if (string.IsNullOrEmpty(DP.DisponibilidadPresupuestalId.ToString()) || DP.DisponibilidadPresupuestalId == 0)
+                //if (string.IsNullOrEmpty(proyecto.ProyectoId.ToString()) || proyecto.ProyectoId == 0)
+                //{
+                    //Concecutivo
+                    //var LastRegister = _context.DisponibilidadPresupuestal.OrderByDescending(x => x.DisponibilidadPresupuestalId).First().DisponibilidadPresupuestalId;
+
+                    //Auditoria
+                    strCrearEditar = "EDITAR URL MONITOREO";
+                    proyecto.FechaModificacion = DateTime.Now;
+                proyecto.UsuarioModificacion = UsuarioModificacion;
+                    //DP.Eliminado = false;
+
+                    //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
+                    //DP.EstadoSolicitudCodigo = "4"; // Sin registr/*a*/r
+
+                    _context.Proyecto.Update(proyecto);
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = proyecto,
+                        Code = ConstantMessagesDisponibilidadPresupuesta.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesDisponibilidadPresupuesta.OperacionExitosa, idAccion, proyecto.UsuarioModificacion, strCrearEditar)
+                    };
+
+                //}
+               
+              
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesDisponibilidadPresupuesta.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesDisponibilidadPresupuesta.Error, idAccion, proyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
 
 
     }

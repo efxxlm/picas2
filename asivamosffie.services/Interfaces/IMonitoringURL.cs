@@ -10,5 +10,9 @@ namespace asivamosffie.services.Interfaces
     {
 
         Task<List<ProyectoGrilla>> GetListProyects();
+
+        Task<List<VistaContratoProyectos>> GetListContratoProyectos();
+        
+
     }
 }

@@ -11,6 +11,9 @@ namespace asivamosffie.model.APIModels
         public string NombreContratista { get; set; }
         public Int32 NumeroProyectosAsociados { get; set; }
 
+       public List<ProyectoGrilla> lstProyectoGrilla { get; set; }
+
+
     }
         
 
