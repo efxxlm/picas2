@@ -68,11 +68,11 @@ export class TablaProyectosTecnicoComponent {
           if(respuesta)
           {
             this.inicializar();
-            this.openDialog('', "Proyecto eliminado correctamente");
+            this.openDialog('', "<b>La información a sido eliminada correctamente.</b>");
           }
           else
           {
-            this.openDialog('', "Hubo un error al eliminar el proyecto, por favor intenta nuevamente.");
+            this.openDialog('', "<b>El registro tiene información que depende de él no se puede eliminar.</b>");
           }
         },
           err => {
@@ -140,7 +140,7 @@ export class TablaProyectosTecnicoComponent {
   {
     console.log(gestion);  
     this.proyectoid=gestion.id;
-    this.openDialogSiNo('', "Está seguro de eliminar este registro?",);  
+    this.openDialogSiNo('', "¿Está seguro de eliminar este registro?",);  
     
   }
   

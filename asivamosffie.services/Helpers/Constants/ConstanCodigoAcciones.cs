@@ -41,6 +41,17 @@
         public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
 
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
+
+        //gestion polizas y garantias
+        public const string Crear_Contrato_Poliza = "85";
+        public const string Editar_Contrato_Poliza  = "86";
+        public const string Crear_Poliza_Garantia = "87";
+        public const string Crear_Poliza_Observacion = "89";
+        public const string Notificacion_Gestion_Poliza = "90";
+
+        public const string Editar_Poliza_Garantia = "98";
+        public const string Editar_Poliza_Observacion = "97";
+
         public const string Crear_Editar_SesionComiteTema = "38";
         public const string Eliminar_Sesion_Comite_Tema = "39";
         public const string Cambiar_Estado_Comite_Sesion = "40";
@@ -87,7 +98,8 @@
         public const string Crear_Observacion_Contratacion = "69";
         public const string Cambiar_Estado_Acta = "70";
         public const string Registrar_Mienbros_Invitados = "79";
-          public const string Votacion_Solicitud_Participante = "80";
+        public const string Votacion_Solicitud_Participante = "80";
+        public const string Registrar_Tramite_Contrato = "78";
 
 
     }

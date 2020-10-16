@@ -21,6 +21,11 @@
     margin-right: 0;
 }
 
+.mat-card .mat-input-element {
+  color: $mainColor;
+  font-weight: 400;
+}
+
 .iniciarSesion,
 .recuperar-pass {
     .mat-form-field-empty.mat-form-field-label {
@@ -33,20 +38,17 @@
 
 .mat-form-field-appearance-outline .mat-form-field-outline,
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 .mat-form-field .mat-select.mat-select-invalid .mat-select-arrow,
 .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
-    color: #d21e18;
-    color: var(--secondaryColor);
+    color: $secondaryColor;
 }
 
 label.mat-form-field-label {
     font-weight: 500;
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 input.mat-input-element {
@@ -86,8 +88,7 @@ mat-form-field {
 }
 
 .mat-select-value {
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
     text-align: center;
 }
 
@@ -98,8 +99,7 @@ mat-form-field {
 }
 
 div.mat-select-arrow {
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
     border-left: .5em solid transparent;
     border-right: .5em solid transparent;
     border-top: 1em solid;
@@ -111,8 +111,7 @@ div.mat-select-arrow {
 }
 
 .contador {
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
     font-weight: 500;
     height: 2em;
     width: 2em;
@@ -141,8 +140,7 @@ div.mat-select-arrow {
 
 .sub-label {
     font-weight: 600;
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
     margin-left: 1em;
     margin-right: .5em;
 }
@@ -153,7 +151,7 @@ div.mat-select-arrow {
     right: 0;
     top: 45%;
     font-weight: 600;
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 .mat-select[required]::after {
@@ -162,7 +160,7 @@ div.mat-select-arrow {
     right: 0;
     font-weight: 600;
     top: 25%;
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 .mat-placeholder-required {
@@ -183,13 +181,11 @@ div.mat-select-arrow {
 
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background,
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
-    background-color: #174193;
-    background-color: var(--mainColor);
+    background-color: $mainColor;
 }
 
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: #174193;
-    border-color: var(--mainColor);
+    border-color: $mainColor;
 }
 
 .calendar-class .mat-form-field-appearance-legacy .mat-form-field-underline {
@@ -197,8 +193,7 @@ div.mat-select-arrow {
 }
 
 .mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
-    background: #174193 !important;
-    background: var(--mainColor) !important;
+    background: $mainColor !important;
 }
 
 .sin-contador{
@@ -213,5 +208,5 @@ div.mat-select-arrow {
 }
 
 .radio-color-detalle {
-    --mainColor: var( --fontColor ) !important;
+    $mainColor: $fontColor !important;
 }

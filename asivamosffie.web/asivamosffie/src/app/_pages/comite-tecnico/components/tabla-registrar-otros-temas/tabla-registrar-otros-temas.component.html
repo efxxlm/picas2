@@ -8,52 +8,54 @@
     </button>
 </div> -->
 
-<table mat-table [dataSource]="dataSource" matSort class="tabla text-center mat-elevation-z8">
-
-    <ng-container matColumnDef="responsable">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
-        <td mat-cell *matCellDef="let element"> <b>{{element.responsableCodigo}}</b> </td>
-    </ng-container>
-
-    <ng-container matColumnDef="tiempo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tiempo </th>
-        <td mat-cell *matCellDef="let element"> {{element.tiempoIntervencion}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="tema">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tema solicitud  </th>
-        <td mat-cell *matCellDef="let element"> {{element.tema}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="votacion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿El tema requería votación? </th>
-        <td mat-cell *matCellDef="let element">
-            <div class="col">
-                <mat-radio-group class="radioInput" [(ngModel)]="element.requiereVotacion">
-                    <mat-radio-button [value]="true" (change)="changeRequiere(true, element)">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false" (change)="changeRequiere(false, element)">No</mat-radio-button>
-                </mat-radio-group>
-                <span class="required-form-group">*</span>
-            </div>
-        </td>
-    </ng-container>
-
-    <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-        <td mat-cell *matCellDef="let element">
-            <button mat-raised-button 
-                color="accent" 
-                class="btn-table" 
-                (click)="openDialogValidacionSolicitudes( element )"
-                [class.info-button]="element.requiereVotacion"
-                [class.sin-diligenciar]="!element.completo && element.requiereVotacion"
-                [class.completo]="element.completo && element.requiereVotacion" 
-                [disabled]="!element.requiereVotacion"
-            >Votar </button>
-        </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="tabla text-center">
+    
+        <ng-container matColumnDef="responsable">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
+            <td mat-cell *matCellDef="let element"> <b>{{element.responsableCodigo}}</b> </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="tiempo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tiempo </th>
+            <td mat-cell *matCellDef="let element"> {{element.tiempoIntervencion}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="tema">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tema solicitud  </th>
+            <td mat-cell *matCellDef="let element"> {{element.tema}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="votacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿El tema requería votación? </th>
+            <td mat-cell *matCellDef="let element">
+                <div class="col">
+                    <mat-radio-group class="radioInput" [(ngModel)]="element.requiereVotacion">
+                        <mat-radio-button [value]="true" (change)="changeRequiere(true, element)">Sí</mat-radio-button>
+                        <mat-radio-button [value]="false" (change)="changeRequiere(false, element)">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group">*</span>
+                </div>
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-raised-button 
+                    color="accent" 
+                    class="btn-table" 
+                    (click)="openDialogValidacionSolicitudes( element )"
+                    [class.info-button]="element.requiereVotacion"
+                    [class.sin-diligenciar]="!element.completo && element.requiereVotacion"
+                    [class.completo]="element.completo && element.requiereVotacion" 
+                    [disabled]="!element.requiereVotacion"
+                >Votar </button>
+            </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

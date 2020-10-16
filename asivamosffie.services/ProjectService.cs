@@ -105,7 +105,7 @@ namespace asivamosffie.services
                     || string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
                     || string.IsNullOrEmpty(proyecto.SedeId.ToString())
                     || string.IsNullOrEmpty(proyecto.EnConvocatoria.ToString())
-                    || string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
+                    //|| string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
                     || string.IsNullOrEmpty(proyecto.CantPrediosPostulados.ToString())
                     || string.IsNullOrEmpty(proyecto.TipoPredioCodigo.ToString())
                     || string.IsNullOrEmpty(proyecto.PredioPrincipalId.ToString())
@@ -223,7 +223,7 @@ namespace asivamosffie.services
                   || string.IsNullOrEmpty(predio.Direccion)
                   || string.IsNullOrEmpty(predio.DocumentoAcreditacionCodigo)
                   || string.IsNullOrEmpty(predio.NumeroDocumento)
-                  || string.IsNullOrEmpty(predio.CedulaCatastral)
+                  //|| string.IsNullOrEmpty(predio.CedulaCatastral)
                     )
                 {
                     return false;
@@ -240,7 +240,7 @@ namespace asivamosffie.services
                          //|| string.IsNullOrEmpty(Predio.Predio.Direccion)
                          string.IsNullOrEmpty(Predio.Predio.DocumentoAcreditacionCodigo)
                         || string.IsNullOrEmpty(Predio.Predio.NumeroDocumento)
-                        || string.IsNullOrEmpty(Predio.Predio.CedulaCatastral)
+                        //|| string.IsNullOrEmpty(Predio.Predio.CedulaCatastral)
                        )
                     {
                         return false;
@@ -480,6 +480,8 @@ namespace asivamosffie.services
                         TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString()
                     };
                     //si el tipo de intervancion es nuevo el estado juridico es sin revision 
+                    //jflorez20201004 todos van en aprovado segun iaranda
+                    /*
                     if (proyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))
                     {
                         proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Sin_Revision;
@@ -487,7 +489,8 @@ namespace asivamosffie.services
                     else
                     {
                         proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
-                    }
+                    }*/
+                    proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                     proyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Completo;
                     proyecto.RegistroCompleto = ValidarRegistroCREAR(pProyecto, predioPrincipal);
                     _context.Proyecto.Add(proyecto);
@@ -703,7 +706,7 @@ namespace asivamosffie.services
                     //Aportantes 
                     foreach (var proyectoAportante in pProyecto.ProyectoAportante)
                     {
-                        if (proyectoAportante.AportanteId == 0)
+                        if (proyectoAportante.ProyectoAportanteId == 0)
                         {
                             ProyectoAportante proyectoAportante1 = new ProyectoAportante
                             {
@@ -753,8 +756,8 @@ namespace asivamosffie.services
                             {
                                 //InfraestructuraIntervenirProyecto Auditoria 
                                 Eliminado = false,
-                                UsuarioEliminacion = pProyecto.UsuarioCreacion,
-                                FechaEliminacion = DateTime.Now,
+                                UsuarioCreacion = pProyecto.UsuarioCreacion,
+                                FechaCreacion = DateTime.Now,
                                 //InfraestructuraIntervenirProyecto REGISTROS
                                 ProyectoId = pProyecto.ProyectoId,
                                 InfraestructuraCodigo = infraestructuraIntervenirProyecto.InfraestructuraCodigo,
@@ -1466,7 +1469,7 @@ namespace asivamosffie.services
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto)
                                                         .Include(y => y.InstitucionEducativa)
                                                         .Include( y => y.Sede )
-                                                        .Include( y => y.LocalizacionIdMunicipioNavigation )
+                                                        .Include( y => y.LocalizacionIdMunicipioNavigation )                                                                                                                
                                                         .FirstOrDefaultAsync();
 
             proyecto.ProyectoAportante = _context.ProyectoAportante.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false)
@@ -1474,30 +1477,40 @@ namespace asivamosffie.services
                                                                     .Include(z => z.CofinanciacionDocumento)
                                                                     .ToList();
 
-            proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();
+            proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();            
             List<InfraestructuraIntervenirProyecto> infraestructuras = _context.InfraestructuraIntervenirProyecto.Where(x => x.ProyectoId == proyecto.ProyectoId && x.Eliminado == false).ToList();
             foreach (var infraestructura in infraestructuras)
             {
                 infraestructura.Proyecto = null;
             }
             proyecto.InfraestructuraIntervenirProyecto = infraestructuras;
+            proyecto.ProyectoPredio = _context.ProyectoPredio.Where(x => x.Activo == true && x.ProyectoId==proyecto.ProyectoId).Include(x => x.Predio).ToList();
             //proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).ToList();
             return proyecto;
         }
 
-        public async Task<bool> DeleteProyectoByProyectoId(int idProyecto)
+        public async Task<bool> DeleteProyectoByProyectoId(int idProyecto,string usuario)
         {
             Proyecto proyecto = await _context.Proyecto.FindAsync(idProyecto);
             bool retorno = true;
-            try
-            {
-                proyecto.Eliminado = true;
-                _context.SaveChanges();
-            }
-            catch (Exception)
+            if(_context.ContratacionProyecto.Where(x=>x.ProyectoId== idProyecto && !(bool)x.Eliminado).Count()>0 || _context.DisponibilidadPresupuestalProyecto.Where(x=>x.ProyectoId==idProyecto && !(bool)x.Eliminado).Count()>0)
             {
                 return false;
             }
+            else
+            {
+                try
+                {
+                    proyecto.Eliminado = true;
+                    proyecto.UsuarioModificacion = usuario;
+                    _context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            
             return retorno;
         }
 
@@ -1566,7 +1579,7 @@ namespace asivamosffie.services
                        IsException = false,
                        IsValidation = false,
                        Code = ConstantMessagesProyecto.OperacionExitosa,
-                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pProyectoAdministrativo.UsuarioCreacion, " ")
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pProyectoAdministrativo.UsuarioCreacion, "PROYECTO ADMINISTRATIVO CREADO EXITOSAMENTE")
                    };
             }
             catch (Exception ex)
@@ -1599,7 +1612,8 @@ namespace asivamosffie.services
 
             try
             {
-                List<ProyectoAdministrativo> ListProyectosAdministrativo = await _context.ProyectoAdministrativo.Where(r => !(bool)r.Eliminado).Include(x=>x.ProyectoAdministrativoAportante).ThenInclude(x=>x.AportanteFuenteFinanciacion).ToListAsync();
+                List<ProyectoAdministrativo> ListProyectosAdministrativo = await _context.ProyectoAdministrativo.Where(r => !(bool)r.Eliminado).
+                    Include(x=>x.ProyectoAdministrativoAportante).ToListAsync();
 
                 foreach (var proyecto in ListProyectosAdministrativo)
                 {
@@ -1608,6 +1622,10 @@ namespace asivamosffie.services
                     Dominio estadoRegistro = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.EstadoProyectoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
                     // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
                     */
+                    foreach(var admin in proyecto.ProyectoAdministrativoAportante)
+                    {
+                        admin.AportanteFuenteFinanciacion = _context.AportanteFuenteFinanciacion.Where(x=>x.ProyectoAdministrativoAportanteId==admin.ProyectoAdministrativoAportanteId && !(bool)x.Eliminado).ToList();
+                    }
                     ProyectoAdministracionGrilla proyectoAdministrativoGrilla = new ProyectoAdministracionGrilla
                     {
                         ProyectoAdminitracionId = proyecto.ProyectoAdministrativoId,
@@ -1633,6 +1651,12 @@ namespace asivamosffie.services
             bool retorno = true;
             try
             {
+                var disponibilidad = _context.DisponibilidadPresupuestalProyecto.Where(x => x.ProyectoAdministrativoId == pProyectoId).Count();
+                if(disponibilidad>0)
+                {
+                    _ = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearProyectoAdministrativo, pUsuario, "ELIMINACIÓN NO APLICADA, DEPENDE DE ALGUIEN.");
+                    return false;
+                }
                 ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
                 proyecto.Eliminado = true;
                 proyecto.UsuarioModificacion = pUsuario;
@@ -1649,18 +1673,30 @@ namespace asivamosffie.services
             return retorno;
         }
 
-        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario)
+        public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccionCrearProyectoAdministrativo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Proyecto, (int)EnumeratorTipoDominio.Acciones);
             ProyectoAdministrativo proyecto = _context.ProyectoAdministrativo.Find(pProyectoId);
             bool retorno = true;
             try
             {
+                
                 proyecto.Enviado = true;
                 proyecto.UsuarioModificacion = pUsuario;
                 proyecto.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
-                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
+
+                //envio correo a administrativo
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.proyectoadministrativocreado);
+                string template = TemplateRecoveryPassword.Contenido.Replace("[proyecto]",proyecto.ProyectoAdministrativoId.ToString()).Replace("_LinkF_", pDominioFront).Replace("[fecha]", Convert.ToDateTime(proyecto.FechaCreado).ToString("dd/MM/yyyy"));
+                
+                //template = template.Replace("_Link_", urlDestino);                
+                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario).ToList();
+                foreach(var usuarioadmin in usuariosadmin)
+                {
+                    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Proyecto administrativo creado", template, pSender, pPassword, pMailServer, pMailPort);
+                    string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
+                }
             }
             catch (Exception ex)
             {
@@ -1672,12 +1708,83 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId)
         {
-            var resultado = await _context.FuenteFinanciacion.Where(x => x.Aportante.TipoAportanteId == pAportanteId && !(bool)x.Eliminado ).OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
+            var resultado = await _context.FuenteFinanciacion.
+                Where(x => x.Aportante.TipoAportanteId == pAportanteId && !(bool)x.Eliminado ).
+                Include(x=>x.CofinanciacionDocumento).
+                OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
             foreach(var res in resultado)
             {
                 res.FuenteRecursosString = _context.Dominio.Where(x => x.Codigo == res.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
             }
             return resultado;
+        }
+
+        public async Task<bool> deleteFontByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.AportanteFuenteFinanciacion.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Eliminado = true;
+                fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<bool> deletePredioByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.ProyectoPredio.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Activo = false;
+                //fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<bool> deleteAportantesByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.ProyectoAportante.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Eliminado = true;
+                //fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return retorno;
+        }
+
+        public async Task<bool> deleteInfraestructuraByID(int pAportanteProyectoId, string pUsuarioModifico)
+        {
+            bool retorno = true;
+            var fontproyecto = _context.InfraestructuraIntervenirProyecto.Find(pAportanteProyectoId);
+            try
+            {
+                fontproyecto.Eliminado = true;
+                //fontproyecto.UsuarioEdicion = pUsuarioModifico;
+                _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return retorno;
         }
     }
 }

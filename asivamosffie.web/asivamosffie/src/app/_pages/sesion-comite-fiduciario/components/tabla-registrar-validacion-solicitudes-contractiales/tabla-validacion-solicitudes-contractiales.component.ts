@@ -74,9 +74,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
             });
       }
     })
-    
-    
-          
+         
 
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
@@ -104,6 +102,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         solicitudVoto = {
           sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
           sesionParticipanteId: p.sesionParticipanteId,
+          comiteTecnicoFiduciarioId: this.ObjetoComiteTecnico.comiteTecnicoId,
           sesionSolicitudVotoId: 0,
           nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
           esAprobado: null,
@@ -113,6 +112,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         solicitudVoto.sesionComiteSolicitud = elemento;
       }
 
+      sesionComiteSolicitud.sesionSolicitudVoto.push(solicitudVoto)
 
       if (elemento.tipoSolicitudCodigo == TiposSolicitud.Contratacion) {
 
@@ -139,11 +139,8 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
             })
         })
             
-         // })
-
       }
-
-      sesionComiteSolicitud.sesionSolicitudVoto.push(solicitudVoto)
+      
     })
 
 

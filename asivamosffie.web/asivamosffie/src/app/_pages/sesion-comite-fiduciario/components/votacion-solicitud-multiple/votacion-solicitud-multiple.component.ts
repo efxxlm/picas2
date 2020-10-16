@@ -112,7 +112,9 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
 
     this.aprobaciones.clear();
 
-    this.data.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.data.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(v => {
+    console.log( this.data.sesionComiteSolicitud.sesionSolicitudVoto )
+    this.data.sesionComiteSolicitud.sesionSolicitudVoto
+                .filter(sv => sv.sesionSolicitudVotoId == 0 || sv.comiteTecnicoFiduciarioId == this.data.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(v => {
       let grupoVotacion = this.crearAprobaciones();
 
       grupoVotacion.get('nombreParticipante').setValue(v.nombreParticipante);
@@ -184,6 +186,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
         sesionComiteSolicitudId: control.get('sesionComiteSolicitudId').value,
         sesionParticipanteId: control.get('sesionParticipanteId').value,
         esAprobado: control.get('aprobacion').value,
+        comiteTecnicoFiduciarioId: this.data.sesionComiteSolicitud.comiteTecnicoFiduciarioId,
         //observacion: control.get('observaciones').value,
 
       }
@@ -213,8 +216,6 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
       if (sv.esAprobado != true)
         sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteFiduciario;
     })
-
-    console.log(sesionComiteSolicitud);
 
     this.fiduciaryCommitteeSessionService.createEditSesionSolicitudVoto(sesionComiteSolicitud)
       .subscribe(respuesta => {

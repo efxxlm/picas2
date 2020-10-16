@@ -12,7 +12,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId );
         Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto(int pSesionComiteSolicitudId, int pContratacionProyectoId);
 
-
         Task<byte[]> GetPlantillaActaIdComite( int pdComite);
 
         Task<Respuesta> CambiarEstadoActa(int pSesionComiteSolicitud, string pCodigoEstado, string pUsuarioModifica);
@@ -64,5 +63,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> AplazarSesionComite(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
 
         Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud);
+
+        Task<List<SesionComentario>> GetCometariosDelActa(int pComietTecnicoId);
     }
 }

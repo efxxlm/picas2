@@ -5,6 +5,8 @@ import { forkJoin } from 'rxjs';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { SesionComentario } from 'src/app/_interfaces/compromisos-actas-comite.interfaces';
 import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
@@ -22,6 +24,7 @@ export class CrearActaComponent implements OnInit {
   temasCompletos: boolean = false;
   proposicionesCompletos: boolean = false;
   solicitudesCompletas: boolean = false;
+  listaComentarios: SesionComentario[] = []
 
   constructor(
     public dialog: MatDialog,
@@ -29,6 +32,7 @@ export class CrearActaComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private commonService: CommonService,
     private router: Router,
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
 
   ) {
 
@@ -54,10 +58,12 @@ export class CrearActaComponent implements OnInit {
         forkJoin([
           this.fiduciaryCommitteeSessionService.getComiteTecnicoByComiteTecnicoId(parametros.id),
           this.fiduciaryCommitteeSessionService.getSesionParticipantesByIdComite(parametros.id),
+          this.technicalCommitteeSessionService.getCometariosDelActa( parametros.id ),
 
         ]).subscribe(response => {
           response[0].sesionParticipante = response[1];
           this.objetoComiteTecnico = response[0];
+          this.listaComentarios = response[2];
 
 
           this.listaTemas = this.objetoComiteTecnico.sesionComiteTema.filter(t => t.esProposicionesVarios != true)
