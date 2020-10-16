@@ -1921,13 +1921,30 @@ namespace asivamosffie.services
                         {
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
                             if (ct.Proyecto.EstadoProyectoCodigo != null)
-                                proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
+                                if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                    proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                else
+                                    proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
                             else
                             {
                                 sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
                             }
                         });
 
+                    }
+                    
+                    Contratacion contratacion = _context.Contratacion.Find( pSesionComiteSolicitud.SolicitudId );
+
+                    if ( contratacion != null ){
+                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario )    {
+                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.AprobadoComiteFiduciario; 
+                        }
+                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario )    {
+                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteFiduciario; 
+                        }
+                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario )    {
+                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario; 
+                        }
                     }
 
                 }
@@ -1952,7 +1969,8 @@ namespace asivamosffie.services
                                     break;
                             }
                         }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico){
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico)
+                        {
                             switch (sesionComiteSolicitudOld.EstadoCodigo)
                             {
                                 case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
@@ -1966,7 +1984,8 @@ namespace asivamosffie.services
                                     break;
                             }
                         }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico){
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico)
+                        {
                             switch (sesionComiteSolicitudOld.EstadoCodigo)
                             {
                                 case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
