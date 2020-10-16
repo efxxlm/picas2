@@ -30,6 +30,7 @@ import { GestionarProcesosContractualesModule } from '../gestionar-procesos-cont
 import { QuillModule } from 'ngx-quill';
 
 import es from '@angular/common/locales/es';
+import { TablaDetalleFuentesUsoComponent } from './components/tabla-detalle-fuentes-uso/tabla-detalle-fuentes-uso.component';
 registerLocaleData( es );
 
 @NgModule({
@@ -48,7 +49,8 @@ registerLocaleData( es );
     TableFuentesYUsosComponent,
     DefinirFuentesYUsosComponent,
     AsociadaComponent,
-    VerDetalleContratacionComponent
+    VerDetalleContratacionComponent,
+    TablaDetalleFuentesUsoComponent
   ],
   imports: [
     CommonModule,

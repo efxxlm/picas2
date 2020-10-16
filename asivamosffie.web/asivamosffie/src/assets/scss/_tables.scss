@@ -1,7 +1,12 @@
 th.mat-header-cell {
-    background-color: var(--mainColor);
+    background-color: $mainColor;
     color: #fff;
     text-align: center;
+    padding: 0 .6em 0 calc(.6em + 18px) !important;
+}
+
+td.mat-cell {
+    padding: 0 .6em !important;
 }
 
 .mat-sort-header-container {
@@ -17,22 +22,19 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 }
 
 th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
-    padding: 0 .8em !important;
+    border-left: solid 1px $mainColor;
 }
 
 th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
-    border-right: none;
-    padding: 0 .8em !important;
+    border-right: solid 1px $mainColor;
 }
 
 .mat-cell, .mat-footer-cell {
-    color: #174193;
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
-    border-bottom-color: #174193;
-    border-bottom-color: var(--mainColor);
+    border-bottom-color: $mainColor;
 }
 
 table {
@@ -76,6 +78,11 @@ div.mat-paginator {
     &-range-actions {
         order: 1;
         margin: auto;
+        @media screen and (min-width: 0\0) {
+          margin: 0;
+          margin-right: 20%;
+          padding: 0;
+        }
         @media only screen and (min-width: 48em) {
             padding-left: 9.6em;
         }
@@ -128,8 +135,7 @@ div.mat-paginator {
 
 %botones-paginador {
     content: "";
-    color: #174193;
-    color: var(--mainColor);
+    color: $mainColor;
     border-top: 1em solid transparent;
     border-bottom: 1em solid transparent;
     margin: 0 4px;
@@ -157,10 +163,8 @@ div.mat-paginator {
     }
 }
 .btn-table:hover {
-    background-color: #d1d1d1;
-    background-color: var(--grayColor);
-    color: #174193;;
-    color: var(--mainColor);
+    background-color: $grayColor;
+    color: $mainColor;
 }
 .mat-header-cell{
     font-style: italic;

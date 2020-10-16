@@ -87,7 +87,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
             this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
             this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
-            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo;
+            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;
           }
         })
       })
@@ -114,9 +114,11 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
 
     this.activatedroute.params.subscribe((params: Params) => {
+      console.log(params);
       this.objetoDisponibilidad.contratacionId = params.idContratacion;
       this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
-
+      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
+      console.log(this.objetoDisponibilidad);
       if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
         this.cargarDisponibilidadPre();
 
@@ -160,7 +162,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
     this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
     this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
-
+      console.log(this.objetoDisponibilidad);
     this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);

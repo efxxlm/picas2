@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { RespuestaProyecto } from 'src/app/core/_services/project/project.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-cargar-orden-de-elegibilidad',
@@ -20,7 +20,9 @@ export class CargarOrdenDeElegibilidadComponent {
   constructor(
                 private procesoSeleccionService: ProcesoSeleccionService,
                 public dialog: MatDialog,
-                
+                @Inject(MAT_DIALOG_DATA) public data: { 
+                  procesoSeleccionId: number,
+                },
              ) 
   {
     this.declararInputFile();
@@ -40,8 +42,6 @@ export class CargarOrdenDeElegibilidadComponent {
       const inputNode: any = document.getElementById('file');    
       this.procesoSeleccionService.setValidateMassiveLoadElegibilidad(inputNode.files[0]).subscribe(
         response => {
-          console.log(response);
-
           let respuestaCargue:RespuestaProyecto=response.data;
           let strOpciones ="";
           if( respuestaCargue.cantidadDeRegistrosValidos > 0 ) {
@@ -86,6 +86,7 @@ export class CargarOrdenDeElegibilidadComponent {
       dialogRef.afterClosed().subscribe(result => {
         if(result)
         {
+          location.reload();
           //this.router.navigate(["/cargarMasivamente"], {});
         }
       });
@@ -101,7 +102,7 @@ export class CargarOrdenDeElegibilidadComponent {
       console.log(`Dialog result: ${result}`);
       if(result)
       {
-        this.procesoSeleccionService.uploadMassiveLoadElegibilidad(this.idProject).subscribe(
+        this.procesoSeleccionService.uploadMassiveLoadElegibilidad(this.idProject,this.data.procesoSeleccionId).subscribe(
           response => {
             this.openDialog('', response.message,response.code=="200");
           },

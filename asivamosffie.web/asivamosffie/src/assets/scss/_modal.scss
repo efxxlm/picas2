@@ -7,8 +7,7 @@ mat-dialog-container.mat-dialog-container {
     overflow: initial;
     border-radius: 1.5em;
     padding: 1em 4em;
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
     // text-align: center;
 
     h1 {

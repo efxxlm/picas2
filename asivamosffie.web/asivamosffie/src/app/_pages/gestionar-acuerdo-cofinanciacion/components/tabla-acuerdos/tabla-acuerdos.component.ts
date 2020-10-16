@@ -35,6 +35,10 @@ export class TablaAcuerdosComponent implements OnInit {
     this.cofinanciacionService.listaAcuerdosCofinanciacion().subscribe( cof => 
       {
          this.listaCofinanciacion = cof; 
+         this.listaCofinanciacion.forEach(element => {
+          let fechaSesion = new Date(element.fechaCreacion);
+            element.fechaCreacion = `${fechaSesion.getDate()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getFullYear()}`
+         });
          this.dataSource.data = this.listaCofinanciacion;
       } );
 

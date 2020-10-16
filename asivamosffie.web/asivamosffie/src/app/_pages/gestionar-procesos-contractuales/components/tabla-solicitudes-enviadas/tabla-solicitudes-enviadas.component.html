@@ -8,8 +8,8 @@
   </button>
 </div>
 
-<div class="w-90">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<div class="w-90 table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="fechaSolicitud">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>

@@ -1,9 +1,12 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
 <div class="text-center">
     <h1 class="title-menu--h1">
         Proyectos seleccionados
     </h1>
     <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="tipoInterventor">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
@@ -56,4 +59,3 @@
         Actualizar
     </button>
 </div>
-<!-- {{ data | json}} -->

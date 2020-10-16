@@ -14,9 +14,9 @@ namespace asivamosffie.model.Models
         public int ConstruccionPerfilId { get; set; }
         public int ContratoConstruccionId { get; set; }
         public string PerfilCodigo { get; set; }
-        public int CantidadHvRequeridas { get; set; }
-        public int CantidadHvRecibidas { get; set; }
-        public int CantidadHvAprobadas { get; set; }
+        public int? CantidadHvRequeridas { get; set; }
+        public int? CantidadHvRecibidas { get; set; }
+        public int? CantidadHvAprobadas { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public string NumeroRadicadoFfie { get; set; }
         public string NumeroRadicadoFfie1 { get; set; }

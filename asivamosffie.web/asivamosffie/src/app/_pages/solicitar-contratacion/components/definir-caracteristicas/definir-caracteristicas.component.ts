@@ -27,102 +27,103 @@ export class DefinirCaracteristicasComponent implements OnInit {
     ],
     requiereLicencias: null,
     licenciaVigente: null,
-    numeroLicencia:'',
+    numeroLicencia: '',
     fechaVigencia: null
   });
 
   idSolicitud: number;
 
   constructor(
-              private fb: FormBuilder,
-              private route: ActivatedRoute,
-              private commonService: CommonService,
-              private projectContractingService: ProjectContractingService,
-              public dialog: MatDialog,    
-              private router: Router,
-              
-             ) 
-  {
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private commonService: CommonService,
+    private projectContractingService: ProjectContractingService,
+    public dialog: MatDialog,
+    private router: Router,
+
+  ) {
     this.getMunicipio();
   }
 
-    ngOnInit(): void {
-      this.route.params.subscribe((params: Params) => {
-        const id = params.id;
+  ngOnInit(): void {
+    this.route.params.subscribe((params: Params) => {
+      const id = params.id;
 
-        this.projectContractingService.getContratacionProyectoById( id ).subscribe( response => {
+      this.projectContractingService.getContratacionProyectoById(id).subscribe(response => {
 
-          this.contratacionProyecto = response;
+        this.contratacionProyecto = response;
 
-          setTimeout(() => {
-            this.commonService.listaTipoIntervencion()
-              .subscribe( ( intervenciones: any ) => {
-                console.log( intervenciones );
-                for ( let intervencion of intervenciones ) {
-                  if ( intervencion.codigo === this.contratacionProyecto.proyecto.tipoIntervencionCodigo ) {
-                    this.tipoIntervencion = intervencion.nombre;
-                    break;
-                  };
+        setTimeout(() => {
+          this.commonService.listaTipoIntervencion()
+            .subscribe((intervenciones: any) => {
+              console.log(intervenciones);
+              for (const intervencion of intervenciones) {
+                if (intervencion.codigo === this.contratacionProyecto.proyecto.tipoIntervencionCodigo) {
+                  this.tipoIntervencion = intervencion.nombre;
+                  break;
                 }
-              } );
+              }
+            });
 
-            this.addressForm.get('reasignacion').setValue( ( ( this.contratacionProyecto.esReasignacion !== null ) ? this.contratacionProyecto.esReasignacion : null ) );
-            this.addressForm.get('avanceObra').setValue( ( ( this.contratacionProyecto.esAvanceobra !== null ) ? this.contratacionProyecto.esAvanceobra : null ) );    
-            this.addressForm.get('porcentajeAvanceObra').setValue( Number( this.contratacionProyecto.porcentajeAvanceObra ) );
-            this.addressForm.get('requiereLicencias').setValue( ( ( this.contratacionProyecto.requiereLicencia !== null ) ? this.contratacionProyecto.requiereLicencia : null ) );
-            this.addressForm.get('licenciaVigente').setValue( ( ( this.contratacionProyecto.licenciaVigente !== null ) ? this.contratacionProyecto.licenciaVigente : null ) );
-            this.addressForm.get('numeroLicencia').setValue( this.contratacionProyecto.numeroLicencia );
-            this.addressForm.get('fechaVigencia').setValue( this.contratacionProyecto.fechaVigencia );
-            this.addressForm.get('completada').setValue( ( ( this.contratacionProyecto.tieneMonitoreoWeb !== null ) ? this.contratacionProyecto.tieneMonitoreoWeb : null ) );
+          this.addressForm.get('reasignacion').setValue(((this.contratacionProyecto.esReasignacion !== null) ? this.contratacionProyecto.esReasignacion : null));
+          this.addressForm.get('avanceObra').setValue(((this.contratacionProyecto.esAvanceobra !== null) ? this.contratacionProyecto.esAvanceobra : null));
+          this.addressForm.get('porcentajeAvanceObra').setValue(Number(this.contratacionProyecto.porcentajeAvanceObra));
+          this.addressForm.get('requiereLicencias').setValue(((this.contratacionProyecto.requiereLicencia !== null) ? this.contratacionProyecto.requiereLicencia : null));
+          this.addressForm.get('licenciaVigente').setValue(((this.contratacionProyecto.licenciaVigente !== null) ? this.contratacionProyecto.licenciaVigente : null));
+          this.addressForm.get('numeroLicencia').setValue(this.contratacionProyecto.numeroLicencia);
+          this.addressForm.get('fechaVigencia').setValue(this.contratacionProyecto.fechaVigencia);
+          this.addressForm.get('completada').setValue(((this.contratacionProyecto.tieneMonitoreoWeb !== null) ? this.contratacionProyecto.tieneMonitoreoWeb : null));
 
-            this.idSolicitud = this.contratacionProyecto.contratacionId;
+          this.idSolicitud = this.contratacionProyecto.contratacionId;
 
-            console.log( this.contratacionProyecto );
+          console.log(this.contratacionProyecto);
 
-          }, 1000);
-        })
-
-        
+        }, 1000);
       });
+
+
+    });
+  }
+
+  getMunicipio() {
+    if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
+      this.router.navigate(['/solicitarContratacion']);
+      return;
     }
 
-    getMunicipio () {
-      if ( this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false ) {
-        this.router.navigate( [ '/solicitarContratacion' ] );
-        return;
-      }
-      
-      this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
-      
-    }
+    this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
 
-    openDialog(modalTitle: string, modalText: string) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle, modalText }
-      });   
-    }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
 
   onSubmit() {
 
     this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;
     this.contratacionProyecto.esAvanceobra = this.addressForm.get('avanceObra').value;
-    this.contratacionProyecto.porcentajeAvanceObra = String( this.addressForm.get('porcentajeAvanceObra').value );
+    this.contratacionProyecto.porcentajeAvanceObra = String(this.addressForm.get('porcentajeAvanceObra').value);
     this.contratacionProyecto.requiereLicencia = this.addressForm.get('requiereLicencias').value;
     this.contratacionProyecto.licenciaVigente = this.addressForm.get('licenciaVigente').value;
     this.contratacionProyecto.numeroLicencia = this.addressForm.get('numeroLicencia').value;
     this.contratacionProyecto.fechaVigencia = this.addressForm.get('fechaVigencia').value;
     this.contratacionProyecto.tieneMonitoreoWeb = this.addressForm.get('completada').value;
 
-    this.projectContractingService.createEditContratacionProyecto( this.contratacionProyecto )
-      .subscribe( respuesta => {
+    this.projectContractingService.createEditContratacionProyecto(this.contratacionProyecto)
+      .subscribe(respuesta => {
 
-        this.openDialog( "Solicitud Contratación", respuesta.message )
-        console.log( respuesta );
-        if (respuesta.code == "200")
-          this.router.navigate(["/solicitarContratacion/solicitud", this.contratacionProyecto.contratacionId ]);
+        this.openDialog('', respuesta.message);
+        console.log(respuesta);
+        // tslint:disable-next-line: triple-equals
+        if (respuesta.code == '200') {
+          this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
+        }
 
-      })
+      });
 
   }
 
