@@ -31,13 +31,15 @@ namespace asivamosffie.api.Controllers
 
         }
 
+
+
         [Route("GetManagementCommitteeReport")]
         [HttpGet]
         public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport()
         {
             try
             {
-                
+
                 return await _managementCommitteeReportService.GetManagementCommitteeReport(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             }
             catch (Exception ex)
@@ -92,6 +94,30 @@ namespace asivamosffie.api.Controllers
 
 
 
+        [Route("ChangeStatusSesionComiteSolicitudCompromiso")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatusSesionComiteSolicitudCompromiso([FromBody] SesionSolicitudCompromiso pSesionSolicitudCompromiso , string pGestionRealizada)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                pSesionSolicitudCompromiso.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pSesionSolicitudCompromiso.UsuarioModificacion = HttpContext.User.FindFirst("UserId").Value;
+
+
+                respuesta = await _managementCommitteeReportService.ChangeStatusSesionComiteSolicitudCompromiso(pSesionSolicitudCompromiso , pGestionRealizada);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
         [Route("CreateOrEditReportProgress")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditReportProgress([FromBody] CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso)
@@ -121,7 +147,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-          
+
                 SesionComentario.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 SesionComentario.MiembroSesionParticipanteId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
                 respuesta = await _managementCommitteeReportService.CreateOrEditCommentReport(SesionComentario);
@@ -147,7 +173,7 @@ namespace asivamosffie.api.Controllers
                     Email = HttpContext.User.FindFirst("User").Value,
                     UsuarioId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value)
                 };
- 
+
                 respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId, pUsuario);
                 return Ok(respuesta);
 
