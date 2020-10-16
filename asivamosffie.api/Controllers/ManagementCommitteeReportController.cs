@@ -96,7 +96,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("ChangeStatusSesionComiteSolicitudCompromiso")]
         [HttpPost]
-        public async Task<IActionResult> ChangeStatusSesionComiteSolicitudCompromiso([FromBody] SesionSolicitudCompromiso pSesionSolicitudCompromiso , string pGestionRealizada)
+        public async Task<IActionResult> ChangeStatusSesionComiteSolicitudCompromiso([FromBody] SesionSolicitudCompromiso pSesionSolicitudCompromiso)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -104,9 +104,8 @@ namespace asivamosffie.api.Controllers
 
                 pSesionSolicitudCompromiso.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 pSesionSolicitudCompromiso.UsuarioModificacion = HttpContext.User.FindFirst("UserId").Value;
-
-
-                respuesta = await _managementCommitteeReportService.ChangeStatusSesionComiteSolicitudCompromiso(pSesionSolicitudCompromiso , pGestionRealizada);
+                 
+                respuesta = await _managementCommitteeReportService.ChangeStatusSesionComiteSolicitudCompromiso(pSesionSolicitudCompromiso);
                 return Ok(respuesta);
 
             }

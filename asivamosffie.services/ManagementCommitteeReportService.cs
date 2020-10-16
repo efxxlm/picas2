@@ -39,7 +39,7 @@ namespace asivamosffie.services
             return _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
 
-        public async Task<Respuesta> ChangeStatusSesionComiteSolicitudCompromiso(SesionSolicitudCompromiso pSesionSolicitudCompromiso, string pGestionRealizada)
+        public async Task<Respuesta> ChangeStatusSesionComiteSolicitudCompromiso(SesionSolicitudCompromiso pSesionSolicitudCompromiso)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
 
@@ -57,7 +57,7 @@ namespace asivamosffie.services
                     FechaCreacion = DateTime.Now,
                     Eliminado = false,
 
-                    DescripcionSeguimiento = pGestionRealizada,
+                    DescripcionSeguimiento = pSesionSolicitudCompromiso.GestionRealizada,
                     SesionParticipanteId = Int32.Parse(pSesionSolicitudCompromiso.UsuarioModificacion),
                     SesionSolicitudCompromisoId = pSesionSolicitudCompromiso.SesionSolicitudCompromisoId
 
