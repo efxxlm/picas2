@@ -88,6 +88,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
         this.openDialog('', respuesta.message)
         if (respuesta.code == "200")
           this.router.navigate(['/seleccion/invitacionCerrada',this.procesoSeleccion.procesoSeleccionId]);
+          
       })
 
     // this.procesoSeleccion.procesoSeleccionId = this.addressForm.get('procesoSeleccionId').value,
@@ -103,6 +104,12 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+    dialogRef.afterClosed().subscribe(result => {
+      //this.router.navigate(["/seleccion/invitacionCerrada", id]);
+      setTimeout(() => {
+        location.reload();  
+      }, 1000);
+    });
   }
 
   
