@@ -28,7 +28,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Componentes = 12,
 
-        //Usos_Para_Obra
+        //Usos_Para_Obra e interventoria
         Usos = 13,
 
         Opcion_por_contratar = 14,
