@@ -26,6 +26,17 @@ namespace asivamosffie.services.Helpers.Enumerator
         Preconstruccion_Fase_1 = 37,
 
         Registrar_Requisitos_Tecnicos_Construccion = 41,
+ 
+
+        DisponibilidadPresupuestal = 30,
+        SesionComiteTema = 26,
+        RegistrarSesionComiteFiduciario = 29, 
+        GenerarDisponibilidadPresupuestal = 28, 
+        
+       GestionarGarantias= 35,
+ 
+        Generar_Registro_Presupuestal=36,
+
         
     }
 
@@ -40,7 +51,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75,
         CargueOrdenesMasivos = 76,
-        DescargarExcelOrdenes = 77
+        DescargarExcelOrdenes = 77,
+        Notificacion_Gestion_Poliza = 90, 
+        Crear_Editar_ProcesoSeleccion_Grupo= 29
 
     }
 

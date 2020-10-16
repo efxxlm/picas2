@@ -7,7 +7,7 @@ import { FormularioProyectosComponent } from './components/formulario-proyectos/
 import { TablaProyectosAdminComponent } from './components/tabla-proyectos-admin/tabla-proyectos-admin.component';
 import { MaterialModule } from 'src/app/material/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [CrearProyectoAdminComponent, TablaProyectosAdminComponent, FormularioProyectosComponent],
@@ -16,7 +16,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     CrearProyectoAdminRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    CurrencyMaskModule
   ]
 })
 export class CrearProyectoAdminModule { }

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 
 @Component({
   selector: 'app-form-evaluacion',
@@ -11,6 +11,7 @@ export class FormEvaluacionComponent {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
+  estadosProcesoSeleccion = EstadosProcesoSeleccion;
 
   addressForm = this.fb.group({
     procesoSeleccionId: [],

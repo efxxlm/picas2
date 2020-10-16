@@ -1,0 +1,26 @@
+<div class="margin-90 text-center table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="fechaRegistroAvanceCompromiso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de registro </th>
+          <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaRegistroAvanceCompromiso | date: 'dd/MM/yyyy' }}</b> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descripcionSeguimiento">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión realizada </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ textoLimpioMessage( element.descripcionSeguimiento ) }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="estadoCompromiso">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del compromiso </th>
+        <td mat-cell *matCellDef="let element" align="center">
+          <span *ngIf="element.estadoCodigo === '2'">En proceso</span>
+          <span *ngIf="element.estadoCodigo === '3'">Finalizada</span>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

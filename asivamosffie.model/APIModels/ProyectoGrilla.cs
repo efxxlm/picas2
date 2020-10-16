@@ -1,10 +1,13 @@
 using AuthorizationTest.JwtHelpers;
 using asivamosffie.model.Models;
+using System.Collections.Generic;
 
 namespace asivamosffie.model.APIModels
 {
     public class ProyectoGrilla
     {
+        public List<GrillaComponentes> ComponenteGrilla;
+
         public int ProyectoId { get; set; }
         public string Departamento { get; set; }
         public string Municipio { get; set; }

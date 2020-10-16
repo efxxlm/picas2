@@ -56,7 +56,7 @@ export interface Cofinanciacion{
   cofinanciacionId: number,
   vigenciaCofinanciacionId: number,
   cofinanciacionAportante: CofinanciacionAportante[],
-  fechaCreacion?: Date,
+  fechaCreacion?: string,
   valorTotal?: number,
   estadoRegistro?: string,
   eliminado?:boolean

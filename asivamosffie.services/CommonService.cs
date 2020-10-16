@@ -217,9 +217,24 @@ namespace asivamosffie.services
             return await _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).FirstOrDefaultAsync();
         }
 
+        public async Task<ContratoPoliza> GetContratoPolizaByContratoId(int pContratoId)
+        {
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).FirstOrDefaultAsync();
+        }
+        
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        {
+            return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
+        }
+      
+        public async Task<Contratista> GetContratistaByContratistaId(int pContratistaId)
+        {
+            return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
+        }
         public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
         {
             return _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r => r.Descripcion).FirstOrDefault();
+
         }
 
         public async Task<Localizacion> GetDepartamentoByIdMunicipio(string pIdMunicipio)
@@ -290,7 +305,7 @@ namespace asivamosffie.services
              .Select(x => new Localicacion
              {
                  LocalizacionId = x.LocalizacionId,
-                 Descripcion = x.Descripcion,
+                 Descripcion = x.Descripcion.ToLower(),//jflorez lo paso a min para usar en frontedn la clase capitalize
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
@@ -306,7 +321,7 @@ namespace asivamosffie.services
              .Select(x => new Localicacion
              {
                  LocalizacionId = x.LocalizacionId,
-                 Descripcion = x.Descripcion,
+                 Descripcion = x.Descripcion.ToLower(),//jflorez lo paso a min para usar en frontedn la clase capitalize
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }

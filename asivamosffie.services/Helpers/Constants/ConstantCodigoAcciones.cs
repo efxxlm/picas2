@@ -36,6 +36,17 @@
         public const string Crear_Editar_Cofinanciacion = "31";
 
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
+
+        //gestion polizas y garantias
+        public const string Crear_Contrato_Poliza = "85";
+        public const string Editar_Contrato_Poliza  = "86";
+        public const string Crear_Poliza_Garantia = "87";
+        public const string Crear_Poliza_Observacion = "89";
+        public const string Notificacion_Gestion_Poliza = "90";
+
+        public const string Editar_Poliza_Garantia = "98";
+        public const string Editar_Poliza_Observacion = "97";
+
         public const string Crear_Editar_SesionComiteTema = "38";
         public const string Eliminar_Sesion_Comite_Tema = "39";
         public const string Cambiar_Estado_Comite_Sesion = "40"; 
@@ -70,6 +81,18 @@
         public const string Crear_Editar_Contrato_Perfil = "82";
 
         public const string Eliminar_Contrato_Perfil = "83";
+        public const string Crear_Editar_Solicitud_DDP_Especial = "44";
+        public const string Crear_Editar_Solicitud_DDP_OtrosCostosServicio = "74";
+        public const string Enviar_Solicitud_A_Disponibilidad_Presupuestal = "44";
+        public const string Crear_Editar_ProyectoAdministrativo = "44";
+        public const string Crear_Editar_Solicitud_Disponibilidad_Presupuestal = "77";
+        public const string eliminar_Solicitud_Disponibilidad_Presupuestal = "80";
+
+        public const string Crear_contratistas_desde_proponentes = "45";
+        public const string Crear_Observacion_Contratacion = "69";
+        public const string Cambiar_Estado_Acta = "70";
+        public const string Registrar_Mienbros_Invitados = "79";
+        public const string Votacion_Solicitud_Participante = "80";
 
         public const string Aprobar_Inicio_Contrato = "84";
 
@@ -85,5 +108,6 @@
         public const string Validar_Excel_Flujo_Inversion = "109";
         public const string Crear_Editar_Observacion_Archivo = "112";
         public const string Eliminar_Archivo_Cargue = "113";
-    } 
+    
+    }
 }

@@ -13,66 +13,103 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
 
   contratacion: Contratacion = {};
+  estadoSemaforos = {
+    sinDiligenciar: 'sin-diligenciar',
+    enProceso: 'en-proceso',
+    completo: 'completo'
+  };
 
   constructor(
-              private route: ActivatedRoute,
-              private projectContractingService: ProjectContractingService,
-              public dialog: MatDialog,    
-              private router: Router,
+    private route: ActivatedRoute,
+    private projectContractingService: ProjectContractingService,
+    public dialog: MatDialog,
+    private router: Router,
 
-  ) 
-  { }
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.contratacion.contratacionId = params.id;
 
-      this.projectContractingService.getContratacionByContratacionId( this.contratacion.contratacionId )
-        .subscribe( response => {
-            this.contratacion = response;
+      this.projectContractingService.getContratacionByContratacionId(this.contratacion.contratacionId)
+        .subscribe(response => {
+          this.contratacion = response;
 
-            setTimeout(() => {
+          setTimeout(() => {
 
-              let btnTablaProyectos = document.getElementById('btnTablaProyectos');
-              let btnTablaContratistas = document.getElementById('btnTablaContratistas');
-              let btnTablacaracteristicas = document.getElementById('btnTablacaracteristicas');
-              let btnconsideraciones = document.getElementById('btnconsideraciones');
-              let btnFuentesUsos = document.getElementById('btnFuentesUsos');
+            const btnTablaProyectos = document.getElementById('btnTablaProyectos');
+            const btnTablaContratistas = document.getElementById('btnTablaContratistas');
+            const btnTablacaracteristicas = document.getElementById('btnTablacaracteristicas');
+            const btnconsideraciones = document.getElementById('btnconsideraciones');
+            const btnFuentesUsos = document.getElementById('btnFuentesUsos');
 
-              btnTablaProyectos.click();
-              btnTablaContratistas.click();
-              btnTablacaracteristicas.click();
-              btnconsideraciones.click();
-              btnFuentesUsos.click();
+            btnTablaProyectos.click();
+            btnTablaContratistas.click();
+            btnTablacaracteristicas.click();
+            btnconsideraciones.click();
+            btnFuentesUsos.click();
 
-            }, 1000);
+          }, 1000);
 
-            console.log( response );
-      })
+          console.log(response);
+        });
 
     });
   }
 
-  openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText }
-    });   
+  semaforoAcordeon(acordeon: string) {
+
+    if (acordeon === 'consideracionEspecial') {
+      if (this.contratacion.esObligacionEspecial !== null) {
+        return this.estadoSemaforos.completo;
+      } else {
+        return this.estadoSemaforos.enProceso;
+      }
+    } else if (acordeon === 'datosContratista') {
+      if (this.contratacion['contratista']) {
+        return this.estadoSemaforos.completo;
+      } else {
+        return this.estadoSemaforos.enProceso;
+      }
+    } else if (acordeon === 'caracteristicasTecnicas') {
+      let contProyectos = 0;
+      if (this.contratacion.contratacionProyecto) {
+        for (const contratacionProyecto of this.contratacion.contratacionProyecto) {
+          if (contratacionProyecto.tieneMonitoreoWeb !== null) {
+            contProyectos += 1;
+          }
+        }
+        if (contProyectos === this.contratacion.contratacionProyecto.length) {
+          return this.estadoSemaforos.completo;
+        } else {
+          return this.estadoSemaforos.enProceso;
+        }
+      }
+    }
+
   }
 
-  onSubmit(){
-    console.log( this.contratacion );
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
 
-    this.projectContractingService.createEditContratacion( this.contratacion )
-      .subscribe( respuesta => {
-        this.openDialog( "Solicitud Contratación", respuesta.message )
+  onSubmit() {
+    console.log(this.contratacion);
 
-        console.log( respuesta );
+    this.projectContractingService.createEditContratacion(this.contratacion)
+      .subscribe(respuesta => {
+        this.openDialog('', respuesta.message);
 
-        if (respuesta.code == "200")
-          this.router.navigate(["/solicitarContratacion/solicitud", this.contratacion.contratacionId ]);
+        console.log(respuesta);
 
-      })
+        if (respuesta.code === '200') {
+          this.router.navigate(['/solicitarContratacion/solicitud', this.contratacion.contratacionId]);
+        }
+
+      });
 
   }
 

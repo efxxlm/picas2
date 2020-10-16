@@ -11,33 +11,27 @@ import { ContratosModificacionesContractualesService } from '../../../../core/_s
 export class FormContratacionComponent implements OnInit {
 
   form: FormGroup;
-  @Input() estadoCodigo: string;
+  estadoCodigo: string;
+  estadoCodigos = {
+    enRevision: '2',
+    enFirmaFiduciaria: '5',
+    firmado: '6'
+  }
+  contratacion: any;
+  fechaTramite: Date = new Date();
+
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private routes: Router,
                 private contratosContractualesSvc: ContratosModificacionesContractualesService ) {
+    this.crearFormulario();
     this.getContratacionId( this.activatedRoute.snapshot.params.id );
     this.getEstadoCodigo();
-    this.crearFormulario();
   };
 
   ngOnInit(): void {
-  };
-
-  getContratacionId ( id ) {
-    this.contratosContractualesSvc.getContratacionId( id )
-      .subscribe( console.log );
-  };
-
-  getEstadoCodigo () {
-    if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {
-      this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
-      return;
-    }
-    
-    this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
     console.log( this.estadoCodigo );
-  }
+  };
 
   crearFormulario () {
     this.form = this.fb.group({
@@ -48,10 +42,46 @@ export class FormContratacionComponent implements OnInit {
       fechaFirmaPorParteFiduciaria  : [ null ],
       observaciones                 : [ null ],
       documento                     : [ null ],
+      rutaDocumento                 : [ null ],
       documentoFile                 : [ null ]
     });
   };
 
+  getContratacionId ( id ) {
+    this.contratosContractualesSvc.getContratacionId( id )
+      .subscribe( ( resp: any ) => {
+        if ( resp.contrato.length === 0 ) {
+          this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
+        };
+        this.contratacion = resp;
+        console.log( resp );
+        this.form.reset({
+          numeroContrato: resp.contrato[0].numeroContrato || '',
+          fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
+          fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
+          fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
+          fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
+          observaciones: this.textoLimpioMessage( resp.contrato[0].observaciones ) || null,
+          rutaDocumento: resp.contrato[0].rutaDocumento || null
+        });
+      } );
+  };
 
+  textoLimpioMessage (texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio;
+    };
+  };
+
+  getEstadoCodigo () {
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {
+      this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
+      return;
+    }
+    
+    this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
+    
+  }
 
 };

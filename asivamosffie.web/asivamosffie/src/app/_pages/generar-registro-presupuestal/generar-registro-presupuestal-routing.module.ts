@@ -11,11 +11,11 @@ const routes: Routes = [
     component: GenerarRegistroPresupuestalComponent
   },
   {
-    path: 'verDetalle',
+    path: 'verDetalle/:id',
     component: VerDetalleRegistroPresupuestalComponent
   },
   {
-    path: 'gestionarDrp',
+    path: 'gestionarDrp/:id',
     component: GestionarDrpComponent
   },
 ];

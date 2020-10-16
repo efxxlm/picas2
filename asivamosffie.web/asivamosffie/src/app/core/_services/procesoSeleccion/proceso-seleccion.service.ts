@@ -8,6 +8,8 @@ import { pid } from 'process';
   providedIn: 'root'
 })
 export class ProcesoSeleccionService implements OnInit {
+  
+  
 
   constructor(
                private http: HttpClient
@@ -61,14 +63,33 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/setValidateMassiveLoadElegibilidad`, formData);
   }
 
-  uploadMassiveLoadElegibilidad( pId: string ){
+  uploadMassiveLoadElegibilidad( pId: string,procesoSeleccionId:number ){
     let objeto = { pIdDocument: pId }
-    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad?pIdDocument=${ pId }`, null);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/uploadMassiveLoadElegibilidad?pIdDocument=${ pId }&procesoSeleccionId=${ procesoSeleccionId }`, null);
+  }
+
+  createContractorsFromProponent( proceso: ProcesoSeleccion ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/createContractorsFromProponent`, proceso);
+  }
+
+  deleteProcesoSeleccionCotizacionByID(procesoSeleccionCotizacionId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/deleteProcesoSeleccionCotizacionByID?procesoSeleccionCotizacionId=${procesoSeleccionCotizacionId}`, null);
+  }
+  deleteProcesoSeleccionGrupoByID(procesoSeleccionCotizacionId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/deleteProcesoSeleccionGrupoByID?procesoSeleccionCotizacionId=${procesoSeleccionCotizacionId}`, null);
+  }
+  deleteProcesoSeleccionActividadesByID(procesoSeleccionCotizacionId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/deleteProcesoSeleccionActividadesByID?procesoSeleccionCotizacionId=${procesoSeleccionCotizacionId}`, null);
+  }
+
+  getObservacionesByID(id: any) {
+    return this.http.get<any[]>(`${environment.apiUrl}/SelectionProcess/getObservacionesProcesoSeleccionProponentes?id=${id}`);
   }
   
 }
 
 export interface ProcesoSeleccion{
+  listaContratistas?: any[];
   procesoSeleccionId?: number,
   numeroProceso?: string,
   objeto?: string,
@@ -98,6 +119,10 @@ export interface ProcesoSeleccion{
   evaluacionDescripcion?: string,
   urlSoporteEvaluacion?: string,
   tipoOrdenEligibilidadCodigo?: string,
+  cantidadProponentesInvitados?: number,
+
+  fechaCreacion?:Date,
+  urlSoporteProponentesSeleccionados?:string,
 
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma[],
@@ -136,6 +161,7 @@ export interface ProcesoSeleccionCotizacion {
   valorCotizacion?: number,
   descripcion?: string,
   urlSoporte?: string,
+  eliminado?:boolean,
   procesoSeleccion?: ProcesoSeleccion,
 }
 
@@ -147,6 +173,8 @@ export interface ProcesoSeleccionProponente {
   tipoIdentificacionCodigo?: string,
   numeroIdentificacion?: string,
   localizacionIdMunicipio?: string,
+  nombreMunicipio?: string,
+  nombreDepartamento?: string, 
   direccionProponente?: string,
   telefonoProponente?: string,
   emailProponente?: string,
@@ -188,18 +216,53 @@ export const TiposProcesoSeleccion: TipoProcesoSeleccion = {
 }
 
 interface EstadoProcesoSeleccion{
-  Creado: string;
-  AperturaEntramite: string;
-  DevueltaAperturaPorComiteTecnico: string;
-  EnProcesoDeSeleccion: string;
-  RechazadaSeleccionPorComiteTecnico: string;      
+  Creado: string,
+  AperturaEntramite: string,
+  AprobadaAperturaPorComiteTecnico: string,
+  AprobadaAperturaPorComiteFiduciario: string,
+  RechazadaAperturaPorComiteTecnico: string,
+  RechazadaAperturaPorComiteFiduciario: string,
+  DevueltaAperturaPorComiteTecnico: string,
+  DevueltaAperturaPorComiteFiduciario: string,
+  EnProcesoDeSeleccion: string,
+	AprobacionDeSeleccionEnTramite: string,
+	AprobadaSelecciónPorComiteTecnico: string,
+	AprobadaSelecciónPorComiteFiduciario: string,
+	RechazadaSeleccionPorComiteTecnico: string,
+	RechazadaSeleccionPorComiteFiduciario: string,
+	DevueltaSeleccionPorComiteTecnico: string,
+	DevueltaSeleccionPorComiteFiduciario: string,
+	Cerrado: string,
+	AprobadoPorComiteTecnico: string,
+	AprobadoPorComiteFiduciario: string,
+	RechazadoPorComiteTecnico: string,
+	RechazadoPorComiteFiduciario: string,
+	DevueltoPorComiteTecnico: string,
+	DevueltoPorComiteFiduciario: string,
 }
 
 export const EstadosProcesoSeleccion: EstadoProcesoSeleccion = {
   Creado: "1",
   AperturaEntramite: "2",
-  DevueltaAperturaPorComiteTecnico: "3",
-  EnProcesoDeSeleccion: "4",
-  RechazadaSeleccionPorComiteTecnico: "5",
+  AprobadaAperturaPorComiteTecnico: "3",
+  AprobadaAperturaPorComiteFiduciario: "4",
+  RechazadaAperturaPorComiteTecnico: "5",
+  RechazadaAperturaPorComiteFiduciario: "6",
+  DevueltaAperturaPorComiteTecnico: "7",
+  DevueltaAperturaPorComiteFiduciario: "8",
+  EnProcesoDeSeleccion: "9",
+  AprobacionDeSeleccionEnTramite: "10",
+  AprobadaSelecciónPorComiteTecnico: "11",
+  AprobadaSelecciónPorComiteFiduciario: "12",
+  RechazadaSeleccionPorComiteTecnico: "13",
+  RechazadaSeleccionPorComiteFiduciario: "14",
+  DevueltaSeleccionPorComiteTecnico: "15",
+  DevueltaSeleccionPorComiteFiduciario: "16",
+  Cerrado: "17",
+  AprobadoPorComiteTecnico: "18",
+  AprobadoPorComiteFiduciario: "19",
+  RechazadoPorComiteTecnico: "20",
+  RechazadoPorComiteFiduciario: "21",
+  DevueltoPorComiteTecnico: "22",
+  DevueltoPorComiteFiduciario: "23",
 }
-

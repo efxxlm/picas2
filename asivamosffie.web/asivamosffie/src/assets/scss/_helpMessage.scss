@@ -13,10 +13,8 @@
 }
 
 .text-info {
-    background-color: #EAEAEA;
-    background-color: var(--grayColor-2);
-    color: #474747;
-    color: var(--fontColor);
+    background-color: $grayColor-2;
+    color: $fontColor;
     text-align: center;
     padding: .6em .8em;
     border-radius: .8em;

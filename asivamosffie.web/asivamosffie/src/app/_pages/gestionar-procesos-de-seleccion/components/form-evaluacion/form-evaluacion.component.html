@@ -1,15 +1,15 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
   <div class="d-flex align-items-center">
     <div class="text-area-quill">
       <label for="descricion" class="text-area-quill--label">Descripción</label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="descricion"></quill-editor>
+        (onContentChanged)="maxLength($event, 3000)" formControlName="descricion" required></quill-editor>
         <input type="hidden" formControlName="procesoSeleccionId">
     </div>
-    <span class="contador" *ngIf="addressForm.get('descricion').value">
-      {{3000 - addressForm.get('descricion').value.length}}
+    <span class="contador miles" *ngIf="addressForm.get('descricion').value">
+      {{3000 - (textoLimpio(addressForm.get('descricion').value)>3000?3000:textoLimpio(addressForm.get('descricion').value))}}
     </span>
-    <span class="contador" *ngIf="addressForm.get('descricion').value">
+    <span class="contador miles" *ngIf="!addressForm.get('descricion').value">
       3000
     </span>
   </div>
@@ -22,6 +22,11 @@
       <mat-form-field class="full-width">
         <input matInput type="url" formControlName="url">
       </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="pr-1 mcenter">
+      <span class="size1">Indique la ruta del soporte de esta información</span>
     </div>
   </div>
 

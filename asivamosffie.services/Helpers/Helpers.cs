@@ -118,8 +118,9 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort)
-        {
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false)
+
+   {
             try
             {
                 MailMessage mail = new MailMessage();
@@ -130,6 +131,8 @@ namespace asivamosffie.services.Helpers
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
 
+                if(pMailHighPriority)
+                    mail.Priority = MailPriority.High;
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;
                 SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);

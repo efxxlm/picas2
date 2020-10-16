@@ -1,0 +1,122 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/validarDisponibilidadPresupuesto" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Validación presupuestal solicitud {{detailavailabilityBudget[0].numeroSolicitud}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Fecha de la solicitud: <b> {{detailavailabilityBudget[0].fechaSolicitud | date:'dd/MM/yyyy'}}</b></span>
+        <span><b>{{detailavailabilityBudget[0].tipoSolicitudText}}</b></span>
+    </p>
+
+</section>
+<section class="container">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+            <p *ngIf="detailavailabilityBudget[0].numeroDDP">
+                <strong>Número DDP:</strong>
+                {{detailavailabilityBudget[0].numeroDDP}}
+            </p>
+            <p>
+                <strong>Rubro por financiar:</strong>
+                {{detailavailabilityBudget[0].rubroPorFinanciar}}
+            </p>
+            <p>
+                <strong>Valor de la solicitud:</strong>
+                {{detailavailabilityBudget[0].valorSolicitud | currency:'':'symbol':'3.0'}}
+            </p>
+            <p>
+                <strong>Plazo:</strong>
+                {{detailavailabilityBudget[0].plazo}}
+            </p>
+            <div>
+                <strong>Objeto:</strong>                                
+                <div [innerHtml]="detailavailabilityBudget[0].objeto"></div> 
+            </div>
+            <p>
+                <strong>Número comité técnico:</strong>
+                {{detailavailabilityBudget[0].numeroComite}}
+            </p>
+            <p>
+                <strong>Fecha comité técnico:</strong>
+                {{detailavailabilityBudget[0].fechaComiteTecnico | date: 'dd/MM/yyyy' }}
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Tipo de modificación:</strong>
+                Adición y plazo
+            </p>
+            <p  *ngIf="esModificacion">
+                <strong>Valor después de la modificación:</strong>
+                $ 72.000.000
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Plazo después de la modificación:</strong>
+                12 meses / 5 días
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Detalle de la modificación:</strong>
+                Se realiza adición de recursos para contrataciones complementarias
+            </p>
+            <div *ngIf="false">
+                <h2 class="card-subTitle">Aportantes</h2>
+                <div *ngFor="let aportante of detailavailabilityBudget[0].aportantes; index as i">
+                    <mat-card-title class="header-card--text sub-text">
+                        Aportante {{i}}
+                    </mat-card-title>    
+                    <p>
+                        <strong>Tipo de aportante:</strong>
+                        {{aportante.tipoAportanteId}}
+                    </p>
+                    <p>
+                        <strong>Nombre del aportante:</strong>
+                        {{aportante.nombreAportanteId}}
+                    </p>
+                    <p>
+                        <strong>Valor del aportante al proyecto:</strong>
+                        $ {{aportante.nombreAportanteId}}
+                    </p>
+        
+                    <mat-card-title class="header-card--text sub-text">
+                        Fuente
+                    </mat-card-title>
+                    <div *ngFor="let fuente of aportante.fuenteFinanciacion;index as ii">
+                        <p>
+                            <strong>Fuente {{ii}}:</strong>
+                            {{fuente}}
+                        </p>
+                        <p>
+                            <strong>Saldo actual de la fuente:</strong>
+                            $ 70.000.000
+                        </p>
+                        <p>
+                            <strong>Valor solicitado de la fuente:</strong>
+                            $ 7.000.000
+                        </p>
+                        <p>
+                            <strong>Nuevo saldo de la fuente:</strong>
+                            $ 63.000.000
+                        </p>
+                        <p>
+                            <strong>Estado de las fuentes:</strong>
+                            Completo
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>                        
+        </mat-card-content>
+    </mat-card>
+
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="download()" *ngIf="detailavailabilityBudget[0].numeroDDP">Descargar DDP</button>
+        <button mat-raised-button color="accent" (click)="validar()">Validar solicitud</button>
+        <button mat-raised-button color="accent" (click)="openDialogDevolver(0)">Devolver por <br> validación presupuestal</button>
+        <button mat-raised-button color="accent" (click)="openDialogDevolver(1)">Rechazar por <br> validación presupuestal</button>
+    </div>
+
+    <app-tabla-gestionar-validacion [proyectos]="detailavailabilityBudget[0].proyectos" [codigo]="detailavailabilityBudget[0].numeroSolicitud"></app-tabla-gestionar-validacion>
+</section>
+

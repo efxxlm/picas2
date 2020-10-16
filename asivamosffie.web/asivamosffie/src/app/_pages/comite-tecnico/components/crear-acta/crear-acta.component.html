@@ -31,31 +31,29 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [class.en-proceso]="!solicitudesCompletas"
+                    [class.completo]="solicitudesCompletas">
                     Validación de solicitudes contractuales
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion *ngFor="let sesionComiteSolicitud of objetoComiteTecnico.sesionComiteSolicitud">
+            <mat-accordion *ngFor="let sesionComiteSolicitud of objetoComiteTecnico.sesionComiteSolicitudComiteTecnico">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
+                        <mat-panel-title class="expansion-style--title "
+                            [class.sin-diligenciar]="sesionComiteSolicitud.sesionComiteSolicitudId == 0"
+                            [class.en-proceso]="!sesionComiteSolicitud.registroCompleto"
+                            [class.completo]="sesionComiteSolicitud.registroCompleto">
                             Solicitud {{ sesionComiteSolicitud.numeroSolicitud }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <button 
-                        (click)="Solicitud.cargarRegistro()"
-                        style="display: none;"
-                        id="btnSolicitud"
-                    >
+                    <button (click)="Solicitud.cargarRegistro()" style="display: none;" id="btnSolicitud"
+                        name="btnSolicitud">
                     </button>
-                    
-                    <app-form-solicitud
-                        #Solicitud 
-                        [sesionComiteSolicitud]="sesionComiteSolicitud"
-                        [listaMiembros]="objetoComiteTecnico.sesionParticipante"
-                    >
+
+                    <app-form-solicitud #Solicitud [sesionComiteSolicitud]="sesionComiteSolicitud"
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" (validar)="habilitar($event)">
 
                     </app-form-solicitud>
                 </mat-expansion-panel>
@@ -64,66 +62,64 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-proceso">
+                <mat-panel-title class="expansion-style--title" [class.en-proceso]="!temasCompletos"
+                    [class.completo]="temasCompletos">
                     Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-accordion *ngFor="let tema of listaTemas">
+            <mat-accordion *ngFor="let tema of listaTemas; let i = index">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
-                            Tema 1
+                        <mat-panel-title class="expansion-style--title" [class.sin-diligenciar]="tema.sesionTemaId == 0"
+                            [class.en-proceso]="!tema.registroCompleto" [class.completo]="tema.registroCompleto">
+                            Tema {{ i + 1 }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <button 
-                        (click)="otros.cargarRegistro()"
-                        style="display: none;"
-                        id="btnOtros"
-                    >
+                    <button (click)="otros.cargarRegistro()" style="display: none;" id="btnOtros" name="btnOtros">
                     </button>
 
-                    <app-form-otros-temas
-                        #otros
-                        [sesionComiteTema]="tema"
-                        [listaMiembros]="objetoComiteTecnico.sesionParticipante"
-                    >
-                </app-form-otros-temas>
+                    <app-form-otros-temas #otros [sesionComiteTema]="tema"
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" (validar)="habilitar($event)">
+                    </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>
 
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [class.en-proceso]="!proposicionesCompletos"
+                    [class.completo]="proposicionesCompletos">
                     Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion *ngFor="let tema of listaProposiciones">
+            <mat-accordion *ngFor="let tema of listaProposiciones; let i = index">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
-                            Tema 1
+                        <mat-panel-title class="expansion-style--title" [class.sin-diligenciar]="tema.sesionTemaId == 0"
+                            [class.en-proceso]="!tema.registroCompleto" [class.completo]="tema.registroCompleto">
+                            Tema {{ i + 1 }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <button 
-                        (click)="proposiciones.cargarRegistro()"
-                        style="display: none;"
-                        id="btnProposiciones"
-                    >
+                    <button (click)="proposiciones.cargarRegistro()" style="display: none;" id="btnProposiciones"
+                        name="btnProposiciones">
                     </button>
-                    
-                    <app-form-otros-temas
-                        #proposiciones
-                        [sesionComiteTema]="tema"
-                        [listaMiembros]="objetoComiteTecnico.sesionParticipante"
-                    >
-                     </app-form-otros-temas>
+
+                    <app-form-otros-temas #proposiciones [sesionComiteTema]="tema"
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" (validar)="habilitar($event)">
+                    </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>
 
         </mat-expansion-panel>
     </mat-accordion>
+    <div class="d-flex align-items-center" *ngIf="objetoComiteTecnico.estadoActaCodigo == '4'">
+        <div class="text-area-quill">
+            <label class="text-area-quill--label">Comentarios al acta</label>
+            <app-tabla-comentarios-acta [data]="listaComentarios"></app-tabla-comentarios-acta>
+        </div>
+
+    </div>
 </section>

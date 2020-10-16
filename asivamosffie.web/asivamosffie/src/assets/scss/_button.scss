@@ -1,31 +1,24 @@
 .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary{
-    color: #174193;;
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
-    background-color: #174193;;
-    background-color: var(--mainColor);
+    background-color: $mainColor;
 }
 
 .mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn {
-    background-color: #d21e18;
-    background-color: var(--secondaryColor);
+    background-color: $secondaryColor;
 }
 
 .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent,
 .mat-raised-button.mat-accent[disabled],
 .mat-raised-button[disabled][disabled] {
-    background-color: #fdc101;
-    background-color: var(--tertiaryColor);
-    color: #604500;
-    color: var(--tertiaryColorFont);
+    background-color: $tertiaryColor;
+    color: $tertiaryColorFont;
 
-    &:hover {
-        background-color: #d1d1d1;
-        background-color: var(--grayColor);
-        color: #174193;;
-        color: var(--mainColor);
+    &:not([disabled]):hover {
+        background-color: $grayColor;
+        color: $mainColor;
     }
 }
 
@@ -66,7 +59,7 @@ button.mat-raised-button {
     align-items: center;
     justify-content: center;
     margin-bottom: 1em;
-    color: var(--mainColor);
+    color: $mainColor;
 
     &--text {
         border: solid .5px;
@@ -92,6 +85,9 @@ button.mat-raised-button {
 .btn-descargar-plantilla,
 .btn-eliminar {
     font-style: italic;
+    margin-top: 1em;
+    margin-bottom: .8em;
+
     img {
         height: 2em;
         margin-top: -.2em;
@@ -120,7 +116,6 @@ button.btn-calendario {
 }
 
 .mat-dialog-actions button {
-    background-color: #174193;;
-    background-color: var(--mainColor);
+    background-color: $mainColor;
     color: white;
 }

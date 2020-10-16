@@ -40,7 +40,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
-        { 
+        {
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -306,7 +306,7 @@ namespace asivamosffie.services
 
                             try
                             {
-                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante;
+                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
                             }
                             catch (Exception)
                             {
@@ -525,192 +525,207 @@ namespace asivamosffie.services
             //.ToListAsync(); 
             // 2   Aprobada por comité fiduciario
 
-
-            List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                .Where(r => !(bool)r.Eliminado
-                //TODO Filtrar por los otros parametros
-                // && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
-                //poner el id 7 y el id otro 
-                ).ToListAsync();
-
-
-
-            ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
-            || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
-            List<Dominio> ListasParametricas = _context.Dominio.ToList();
-
-            List<Contratacion> ListContratacion = _context
-                .Contratacion
-                .Where(r => !(bool)r.Eliminado)
-                //.Include(r => r.ContratacionProyecto)
-                //.ThenInclude(r => r.Proyecto)
-                //.ThenInclude(r => r.DisponibilidadPresupuestalProyecto)
-                //    .ThenInclude(r => r.Proyecto) 
-                .ToList();
-            List<Contratista> ListContratista = _context.Contratista.ToList();
-
-            foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
+            try
             {
-                switch (sesionComiteSolicitud.TipoSolicitudCodigo)
+                List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
+                            .Where(r => !(bool)r.Eliminado
+                            //TODO Filtrar por los otros parametros
+                            // && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
+                            //poner el id 7 y el id otro 
+                            ).ToListAsync();
+
+
+
+                ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+                || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
+                List<Dominio> ListasParametricas = _context.Dominio.ToList();
+
+                List<Contratacion> ListContratacion = _context
+                    .Contratacion
+                    .Where(r => !(bool)r.Eliminado)
+                    //.Include(r => r.ContratacionProyecto)
+                    //.ThenInclude(r => r.Proyecto)
+                    //.ThenInclude(r => r.DisponibilidadPresupuestalProyecto)
+                    //    .ThenInclude(r => r.Proyecto) 
+                    .ToList();
+                List<Contratista> ListContratista = _context.Contratista.ToList();
+
+                foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
                 {
-                    case ConstanCodigoTipoSolicitud.Contratacion:
-                        Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
+                    switch (sesionComiteSolicitud.TipoSolicitudCodigo)
+                    {
+                        case ConstanCodigoTipoSolicitud.Contratacion:
+                            Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
-                        // sesionComiteSolicitud.Contratacion = contratacion;
+                            // sesionComiteSolicitud.Contratacion = contratacion;
 
-                        sesionComiteSolicitud.EstaTramitado = false;
+                            sesionComiteSolicitud.EstaTramitado = false;
 
-                        if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
-                        {
-                            sesionComiteSolicitud.EstaTramitado = true;
-                        }
+                            if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
+                            {
+                                sesionComiteSolicitud.EstaTramitado = true;
+                            }
 
-                        sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
+                            sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
-                        sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
+                            sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
 
-                        sesionComiteSolicitud.TipoSolicitud = ListasParametricas
-                            .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
-                            && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
-                            ).FirstOrDefault().Nombre;
+                            sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
+                                ).FirstOrDefault().Nombre;
 
-                        if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
-                        {
-                            sesionComiteSolicitud.EstadoRegistro = false;
-                            sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
-                        }
-                        else
-                        {
-                            sesionComiteSolicitud.EstadoRegistro = true;
-                            sesionComiteSolicitud.EstadoDelRegistro = "Completo";
-                        }
+                            if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
+                            {
+                                sesionComiteSolicitud.EstadoRegistro = false;
+                                sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
+                            }
+                            else
+                            {
+                                sesionComiteSolicitud.EstadoRegistro = true;
+                                sesionComiteSolicitud.EstadoDelRegistro = "Completo";
+                            }
 
-                        break;
+                            break;
 
-                    case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
+                        case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
 
-                        sesionComiteSolicitud.TipoSolicitud = ListasParametricas
-                       .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
-                        && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
-                       .FirstOrDefault().Nombre;
-                        break;
+                            sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                           .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                            && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                           .FirstOrDefault().Nombre;
+                            break;
 
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
+                return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).ToList();
             }
-            return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).ToList();
+            catch (Exception ex)
+            {
+                return new List<SesionComiteSolicitud>();
+            }
+
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
 
             //TODO: PENDIENTE por FAber Numero comite Fiduciario Fecha Comite Fiduciario
-
-            List<Dominio> LisParametricas = _context.Dominio.ToList();
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-
-
-            Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
-                      .Include(r => r.DisponibilidadPresupuestal)
-                      .Include(r => r.Contratista)
-                      .Include(r => r.Contrato)
-                      .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                            .ThenInclude(r => r.ProyectoAportante)
-                               .ThenInclude(r => r.Aportante)
-                                 .ThenInclude(r => r.FuenteFinanciacion)
-                                    .ThenInclude(r => r.GestionFuenteFinanciacion)
-                    .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                              .ThenInclude(r => r.InstitucionEducativa)
-                 .FirstOrDefaultAsync();
-
-            SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
-                .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                .Include(r => r.ComiteTecnico).FirstOrDefault();
-
-            if (!string.IsNullOrEmpty(contratacion.TipoContratacionCodigo))
+            try
             {
-                contratacion.TipoContratacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar && r.Codigo == contratacion.TipoContratacionCodigo).FirstOrDefault().Nombre;
-            }
-            if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
-            {
-                sesionComiteSolicitud = null;
-            }
 
-            if (sesionComiteSolicitud != null)
-            {
-                if (sesionComiteSolicitud.FechaComiteFiduciario != null)
+
+                List<Dominio> LisParametricas = _context.Dominio.ToList();
+                List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+
+
+                Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
+                          .Include(r => r.DisponibilidadPresupuestal)
+                          .Include(r => r.Contratista)
+                          .Include(r => r.Contrato)
+                          .Include(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.ProyectoAportante)
+                                   .ThenInclude(r => r.Aportante)
+                                     .ThenInclude(r => r.FuenteFinanciacion)
+                                        .ThenInclude(r => r.GestionFuenteFinanciacion)
+                        .Include(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                  .ThenInclude(r => r.InstitucionEducativa)
+                     .FirstOrDefaultAsync();
+
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                    .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                    .Include(r => r.ComiteTecnico).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(contratacion.TipoContratacionCodigo))
                 {
-                    contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
+                    contratacion.TipoContratacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar && r.Codigo == contratacion.TipoContratacionCodigo).FirstOrDefault().Nombre;
                 }
-                contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
-            }
-
-            if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
-            {
-                bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
-                if (allDigits)
+                if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
                 {
-                    contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
-                }
-            }
-            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
-            {
-
-                bool allDigits = ContratacionProyecto.Proyecto.TipoIntervencionCodigo.All(char.IsDigit);
-                if (allDigits)
-                {
-                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-                }
-                bool allDigits2 = ContratacionProyecto.Proyecto.InstitucionEducativa.LocalizacionIdMunicipio.All(char.IsDigit);
-
-                if (allDigits2)
-                {
-                    ContratacionProyecto.Proyecto.InstitucionEducativa.Municipio = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.InstitucionEducativa.LocalizacionIdMunicipio).FirstOrDefault();
-                    ContratacionProyecto.Proyecto.InstitucionEducativa.Departamento = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.InstitucionEducativa.Municipio.IdPadre).FirstOrDefault();
+                    sesionComiteSolicitud = null;
                 }
 
-
-                foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+                if (sesionComiteSolicitud != null)
                 {
-                    if (ProyectoAportante.Aportante.TipoAportanteId > 0)
+                    if (sesionComiteSolicitud.FechaComiteFiduciario != null)
                     {
-                        ProyectoAportante.Aportante.TipoAportante = LisParametricas
-                            .Where(r => r.DominioId == ProyectoAportante.Aportante.TipoAportanteId)
-                            .FirstOrDefault().Nombre;
+                        //contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
                     }
-                    if (ProyectoAportante.Aportante.NombreAportanteId > 0)
+                    //contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
+                }
+                if (contratacion.Contratista != null)
+                {
+                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
                     {
-
-                        ProyectoAportante.Aportante.NombreAportante = LisParametricas
-                            .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
-                            .FirstOrDefault().Nombre;
-                    }
-
-
-                    foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
-                    {
-
-                        bool allDigits3 = FuenteFinanciacion.FuenteRecursosCodigo.All(char.IsDigit);
-
-                        if (allDigits3 && !string.IsNullOrEmpty(FuenteFinanciacion.FuenteRecursosCodigo))
+                        bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
+                        if (allDigits)
                         {
-                            FuenteFinanciacion.FuenteRecursosCodigo = LisParametricas
-                                  .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuente_de_Recurso
-                                  && r.Codigo == FuenteFinanciacion.FuenteRecursosCodigo
-                                  ).FirstOrDefault().Nombre;
+                            contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                        }
+                    }
+                }
+                foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+                {
+
+                    bool allDigits = ContratacionProyecto.Proyecto.TipoIntervencionCodigo.All(char.IsDigit);
+                    if (allDigits)
+                    {
+                        ContratacionProyecto.Proyecto.TipoIntervencionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                    }
+                    bool allDigits2 = ContratacionProyecto.Proyecto.InstitucionEducativa.LocalizacionIdMunicipio.All(char.IsDigit);
+
+                    if (allDigits2)
+                    {
+                        ContratacionProyecto.Proyecto.InstitucionEducativa.Municipio = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.InstitucionEducativa.LocalizacionIdMunicipio).FirstOrDefault();
+                        ContratacionProyecto.Proyecto.InstitucionEducativa.Departamento = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.InstitucionEducativa.Municipio.IdPadre).FirstOrDefault();
+                    }
+
+
+                    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+                    {
+                        if (ProyectoAportante.Aportante.TipoAportanteId > 0)
+                        {
+                            ProyectoAportante.Aportante.TipoAportanteString = LisParametricas
+                                .Where(r => r.DominioId == ProyectoAportante.Aportante.TipoAportanteId)
+                                .FirstOrDefault().Nombre;
+                        }
+                        if (ProyectoAportante.Aportante.NombreAportanteId > 0)
+                        {
+
+                            ProyectoAportante.Aportante.NombreAportanteString = LisParametricas
+                                .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
+                                .FirstOrDefault().Nombre;
+                        }
+
+
+                        foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
+                        {
+                            bool allDigits3 = FuenteFinanciacion.FuenteRecursosCodigo.All(char.IsDigit);
+
+                            if (allDigits3 && !string.IsNullOrEmpty(FuenteFinanciacion.FuenteRecursosCodigo))
+                            {
+
+                                FuenteFinanciacion.FuenteRecursosCodigo = LisParametricas
+                                      .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion
+                                      && r.Codigo == FuenteFinanciacion.FuenteRecursosCodigo
+                                      ).FirstOrDefault().Nombre;
+                            }
+
                         }
 
                     }
-
                 }
+                return contratacion;
             }
-
-
-            return contratacion;
+            catch (Exception ex)
+            {
+                return new Contratacion();
+            }
         }
 
         public async Task<Respuesta> RegistrarTramiteContratacion(Contratacion pContratacion, IFormFile pFile, string pDirectorioBase, string pDirectorioMinuta)

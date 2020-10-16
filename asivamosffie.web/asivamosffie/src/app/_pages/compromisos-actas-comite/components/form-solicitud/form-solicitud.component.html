@@ -1,0 +1,107 @@
+<mat-card class="shipping-card" *ngIf="solicitudes">
+    <mat-card-content>
+      <h2 class="card-subTitle">Desarrollo</h2>
+      <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Fecha de la solicitud</span>
+        </div>
+        <div class="col">
+          <b class="label-left color-blue">
+            {{ solicitudes.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}
+          </b>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Número de la solicitud</span>
+        </div>
+        <div class="col">
+          <b class="label-left color-blue">
+            {{ solicitudes.numeroSolicitud }}
+          </b>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Tipo de solicitud</span>
+        </div>
+        <div class="col">
+          <b class="label-left color-blue">
+            {{ solicitudes.tipoSolicitud }}
+          </b>
+        </div>
+      </div>
+      <h2 class="card-subTitle">Decisiones</h2>
+      <div class="reparacion-card row" *ngIf="solicitudes.requiereVotacion">
+        <div class="col-md-4">
+          Resultado de la votación <b class="color-blue"> {{ resultadoVotacion }} </b>
+        </div>
+        <div class="col-md-4 info-text completo">
+          Aprobó <b class="color-blue"> {{ totalAprobado }} </b>
+        </div>
+        <div class="col-md-4 info-text sin-diligenciar">
+          No aprobó <b class="color-blue"> {{ totalNoAprobado }} </b>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <div class="row">
+            <app-tabla-decisiones-acta [contratacionId]="solicitudes.contratacion.contratacionId"></app-tabla-decisiones-acta>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2" *ngIf="estadoSolicitud !== null">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label><b>Estado de la solicitud</b></label>
+            </div>
+            <div class="col w-50">
+              <span class="color-blue"> <b>{{ estadoSolicitud[0]?.nombre }}</b> </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label><b>Observaciones</b></label>
+        </div>
+        <div class="col w-80">
+          <span class="color-blue"> <b>{{ textoLimpioMessage( solicitudes.observaciones ) }}</b> </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label><b>URL con soporte de votación</b></label>
+        </div>
+        <div class="col w-80">
+          <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacion }}</b> </span>
+        </div>
+      </div>
+      <h2 class="card-subTitle">Decisiones</h2>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radio-color-detalle">
+                <mat-radio-button [value]="true" [checked]="true" *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0">Si</mat-radio-button>
+                <mat-radio-button [value]="false" [checked]="true" class="ml-min" *ngIf="solicitudes.sesionSolicitudCompromiso.length === 0">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0" class="margin-compromisos">
+              <div *ngFor="let sesionCompromiso of solicitudes.sesionSolicitudCompromiso;let j = index" style="margin-top: 2em;">
+                <h3><b>Compromiso {{ j+1 }} </b></h3>
+                <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
+                <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante.usuario.nombres }} {{ sesionCompromiso.responsableSesionParticipante.usuario.apellidos }} </p>
+                <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mat-card-content>
+</mat-card>

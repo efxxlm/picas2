@@ -1,16 +1,19 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán invitados en el
+              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán seleccionados en el 
                 proceso?</label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" min="1" max="99" formControlName="cuantosProponentes">
+                <input matInput #cuantosProponentes type="number" min="1" max="99" 
+                 maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                 formControlName="cuantosProponentes">
               </mat-form-field>
               <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
             </div>
@@ -20,7 +23,7 @@
       <div class="margin-tabla"
         *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
         <div class="table-responsive">
-          <table class="mat-table cdk-table mat-sort mat-table-style">
+          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
             <thead>
               <tr class="mat-header-row cdk-header-row ng-star-inserted">
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted">
@@ -32,13 +35,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionCotizacion">
+              <tr *ngFor="let proponente of procesoSeleccion.procesoSeleccionProponente">
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ proponente.nombreOrganizacion }}
+                  {{ proponente.nombreProponente }}
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <section class="example-section">
-                    <mat-checkbox></mat-checkbox>
+                    <mat-checkbox type="checkbox"
+                    [checked]="validateSel(proponente.numeroIdentificacion)"
+                     (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId" ></mat-checkbox>
                   </section>
                 </td>
               </tr>
@@ -48,12 +53,13 @@
 
         <div class="row mt-2em">
           <div class="pr-1">
-            <label for="url" class="label-left">Nombre de la organización</label>
+            <label for="url" class="label-left">Url con soporte</label>
           </div>
-          <div class="col d-flex">
+          <div class="col">
             <mat-form-field class="full-width">
               <input matInput type="url" formControlName="url">
             </mat-form-field>
+            <p class="text-center cursivayeso ">Indique la ruta del soporte de esta información</p>
           </div>
         </div>
       </div>
@@ -62,7 +68,7 @@
 
   <div class="text-center"
     *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>

@@ -21,7 +21,6 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.IO;
 using asivamosffie.api.Helpers;
-using asivamosffie.api.Controllers;
 
 namespace asivamosffie.api
 {
@@ -113,7 +112,7 @@ namespace asivamosffie.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-       
+
 
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
@@ -136,23 +135,25 @@ namespace asivamosffie.api
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();             
-            services.AddTransient<IDocumentService, DocumentService>();
-            services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
             
 
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>();
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();  
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();  
-            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>(); 
             services.AddTransient<IAvailabilityBudgetProyectService, AvailabilityBudgetProyectService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
 
            
             
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
+            services.AddTransient<IGuaranteePolicyService, GuaranteePolicyService>();
+            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
+            services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
+            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
         }
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors(MyAllowSpecificOrigins);

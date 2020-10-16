@@ -1,6 +1,6 @@
 :host {
-    animation-duration: .6s;
-    animation-name    : animatedDown;
+    animation-duration: 0.6s;
+    animation-name: animatedDown;
 }
 
 .m-1em {
@@ -18,4 +18,15 @@
 .mx-gestion {
     padding-left: 3em;
     padding-right: 3em;
+}
+
+.required {
+    &-quill {
+        position: absolute;
+        transform: translate(2em, 1.4em);
+    }
+    &-calendar {
+        position: absolute;
+        transform: translate(.3em, .8em);
+    }
 }
