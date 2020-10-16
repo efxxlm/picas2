@@ -659,11 +659,11 @@ namespace asivamosffie.services
                 switch (pSesionSolicitudCompromiso.EstadoCodigo)
                 {
                     case ConstantCodigoCompromisos.Finalizado:
-                        sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.GestionRealizada;
+                        sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
                         break;
 
                     case ConstantCodigoCompromisos.En_proceso:
-                        sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.GestionRealizada;
+                        sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
                         break;
                 }
 
