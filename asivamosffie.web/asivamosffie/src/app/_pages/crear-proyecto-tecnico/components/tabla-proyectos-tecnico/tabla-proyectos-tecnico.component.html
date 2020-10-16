@@ -56,9 +56,11 @@
       <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Gestión </th>
       <td mat-cell *matCellDef="let gestion">
         <button mat-raised-button color="accent" class="btn-table m05_important" type="button"
-          (click)="ver(gestion)">Ver detalle /<br>Editar</button>
+          (click)="ver(gestion.id)" *ngIf="gestion.estadop=='Disponible'">Ver detalle /<br>Editar</button>
+          <button mat-raised-button color="accent" class="btn-table m05_important" type="button"
+          (click)="ver(gestion.id)" *ngIf="gestion.estadop!='Disponible'">Ver detalle</button>
         <button mat-raised-button color="accent" class="btn-table m05_important" type="button"
-          (click)="eliminar(gestion)">Eliminar</button>
+          (click)="eliminar(gestion.id)"  *ngIf="gestion.estadop=='Disponible'">Eliminar</button>
       </td>
     </ng-container>
 

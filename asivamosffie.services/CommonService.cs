@@ -325,7 +325,7 @@ namespace asivamosffie.services
              .Select(x => new Localicacion
              {
                  LocalizacionId = x.LocalizacionId,
-                 Descripcion = x.Descripcion,
+                 Descripcion = x.Descripcion.ToLower(),//jflorez lo paso a min para usar en frontedn la clase capitalize
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
@@ -341,7 +341,7 @@ namespace asivamosffie.services
              .Select(x => new Localicacion
              {
                  LocalizacionId = x.LocalizacionId,
-                 Descripcion = x.Descripcion,
+                 Descripcion = x.Descripcion.ToLower(),//jflorez lo paso a min para usar en frontedn la clase capitalize
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }

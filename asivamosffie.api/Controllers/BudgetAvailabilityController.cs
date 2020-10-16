@@ -134,9 +134,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                var respuesta = await _budgetAvailabilityService.GetPDFDDP(id,UsuarioModificacion);
-                //return File(respuesta, "application/octet-stream");
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
                 return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion), "application/pdf");
             }
             catch (Exception ex)
@@ -387,6 +385,23 @@ namespace asivamosffie.api.Controllers
                 Task<Respuesta> result = _budgetAvailabilityService.CreateDRP(id, UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("GenerateDRP")]
+        [HttpGet]
+        public async Task<IActionResult> GenerateDRP(int id)
+        {
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                //return File(respuesta, "application/octet-stream");
+                return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion), "application/pdf");
             }
             catch (Exception ex)
             {

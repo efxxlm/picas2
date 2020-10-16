@@ -1,6 +1,8 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-content>
+      <div class="row">
+        <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
               <label for="cuantasCotizaciones" class="label-left">¿Cuántas cotizaciones se recibieron?</label>
@@ -12,66 +14,75 @@
                   formControlName="cuantasCotizaciones" (keyup)="CambioNumeroCotizantes()">
               </mat-form-field>
               <span class="contador">{{2 - cuantasCotizaciones.value.length}}</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div formGroupName="cotizaciones">
         <h2 class="card-subTitle" *ngIf="cotizaciones.controls.length>0">Cotizaciones</h2>
-        <div *ngFor="let cotizacion of cotizaciones.controls; let i = index">
+        <div class="animatedDown" *ngFor="let cotizacion of cotizaciones.controls; let i = index">
           <div [formGroupName]="i">
-            
+
             <mat-card-title class="header-card--text sub-text">
               Cotización {{ i + 1 }}
             </mat-card-title>
             <div class="row">
-                  <div class="pr-1">
-                    <label for="nombreOrganizacion" class="label-left ">Nombre de la organización</label>
-                  </div>
-                  <div class="col d-flex">
-                    <mat-form-field class="full-width mainColor">
-                      <input matInput #nombreOrganizacion type="text" maxlength="20"
-                        formControlName="nombreOrganizacion" required>
-                      <input type="hidden" formControlName="procesoSeleccionCotizacionId">
-                    </mat-form-field>
-                    <span class="contador">{{20 - nombreOrganizacion.value.length}}</span>
+              <div class="pr-1">
+                <label for="nombreOrganizacion" class="label-left ">Nombre de la organización</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width mainColor">
+                  <input matInput #nombreOrganizacion type="text" maxlength="20" formControlName="nombreOrganizacion"
+                    required>
+                  <input type="hidden" formControlName="procesoSeleccionCotizacionId">
+                </mat-form-field>
+                <span class="contador">{{50 - nombreOrganizacion.value.length}}</span>
               </div>
             </div>
             <div class="row">
+              <div class="col-md-8">
+                <div class="row">
                   <div class="pr-1">
                     <label for="valor" class="label-left">Valor de la cotización</label>
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width mainColor">
-                      <input matInput #valor currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20" formControlName="valor" required>
+                      <input matInput #valor currencyMask
+                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
+                        formControlName="valor" required>
                     </mat-form-field>
                     <span class="contador">{{20 - valor.value.length}}</span>
                   </div>
+                </div>
+              </div>
             </div>
             <div class="row">
-                  <div class="pr-1">
-                    <label for="descripcion" class="label-left">Descripción</label>
-                  </div>
-                  <div class="col d-flex">
-                    <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config" required
-                      (onContentChanged)="maxLength($event, 3000)" formControlName="descripcion" required></quill-editor>
-                      <div class="d-flex align-items-center">
-                        <span class="contador miles" *ngIf="cotizacion.get('descripcion').value !== null">
-                          {{3000 - (textoLimpio(cotizacion.get('descripcion').value)>3000?3000:textoLimpio(cotizacion.get('descripcion').value))}}
-                        </span>
-                        <span class="contador miles" *ngIf="cotizacion.get('descripcion').value === null">
-                          3000
-                        </span>
-                      </div>
+              <div class="pr-1">
+                <label for="descripcion" class="label-left">Descripción</label>
+              </div>
+              <div class="col d-flex">
+                <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle"
+                  [modules]="config" required (onContentChanged)="maxLength($event, 3000)" formControlName="descripcion"
+                  required></quill-editor>
+                <div class="d-flex align-items-center mt-3em">
+                  <span class="contador miles" *ngIf="cotizacion.get('descripcion').value !== null">
+                    {{3000 - (textoLimpio(cotizacion.get('descripcion').value)>3000?3000:textoLimpio(cotizacion.get('descripcion').value))}}
+                  </span>
+                  <span class="contador miles" *ngIf="cotizacion.get('descripcion').value === null">
+                    3000
+                  </span>
+                </div>
               </div>
             </div>
             <div class="row">
               <div class="pr-1">
                 <label for="url" class="label-left">Url con soporte</label>
               </div>
-              <div class="col d-flex">
+              <div class="col d-flex pr-3-3">
                 <mat-form-field class="full-width">
                   <input matInput type="url" formControlName="url">
-                </mat-form-field>                
+                </mat-form-field>
               </div>
             </div>
             <div class="row">

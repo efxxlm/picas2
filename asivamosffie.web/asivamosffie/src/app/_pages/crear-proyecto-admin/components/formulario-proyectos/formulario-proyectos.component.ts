@@ -13,7 +13,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormularioProyectosComponent implements OnInit {
 
-
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+    permiso que tenga el usuario
+    */
+  bitPuedoEditar=true;
   proyectoAdmin: ProyectoAdministrativo;
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
@@ -24,8 +27,16 @@ export class FormularioProyectosComponent implements OnInit {
     this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
   }
 
-  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
-    const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
+  openDialogSiNo(modalTitle: string, modalText: string,key: AportanteFuenteFinanciacion, aportante: Aportante) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
     const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
     
     if (index2 > -1) {
@@ -35,7 +46,12 @@ export class FormularioProyectosComponent implements OnInit {
       }
       this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.splice(index2, 1);
     }
-    
+      }
+    });
+  }
+  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
+
+    this.openDialogSiNo("","¿Está seguro de eliminar este  registro?",key,aportante);        
   }
 
   onchangeFont(i: number) {
@@ -76,12 +92,15 @@ export class FormularioProyectosComponent implements OnInit {
           this.onchangeFont(i);
           i++
         });
-        
+        if(this.proyectoAdmin.enviado)
+        {
+          this.bitPuedoEditar=false;
+        }
         console.log(this.proyectoAdmin);
       }
       else{
         let idcontador = 0;
-        idcontador = respuesta[0].proyectoAdminitracionId;
+        idcontador = respuesta?respuesta[0].proyectoAdminitracionId:1;
         this.proyectoAdmin = { identificador: (idcontador + 1).toString(), proyectoAdministrativoAportante: [{
           aportanteId: 0,
           proyectoAdminstrativoId: 0,

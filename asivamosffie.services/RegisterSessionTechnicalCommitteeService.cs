@@ -1535,7 +1535,7 @@ namespace asivamosffie.services
                         CreateEdit = "CREAR TEMA COMPROMISO";
                         TemaCompromiso.UsuarioCreacion = pSesionComiteTema.UsuarioCreacion;
                         TemaCompromiso.FechaCreacion = DateTime.Now;
-                        TemaCompromiso.Eliminado = true;
+                        TemaCompromiso.Eliminado = false;
 
                         _context.TemaCompromiso.Add(TemaCompromiso);
                     }

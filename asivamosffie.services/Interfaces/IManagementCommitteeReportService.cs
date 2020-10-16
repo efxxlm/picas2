@@ -8,8 +8,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IManagementCommitteeReportService
     {
-        Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport(int pUserId);
-
+        Task<Respuesta> ChangeStatusSesionComiteSolicitudCompromiso(SesionSolicitudCompromiso pSesionSolicitudCompromiso);
+        Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport(int pUserId); 
         Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId);
         Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento, string estadoCompromiso);
         Task<Respuesta> CreateOrEditCommentReport(SesionComentario SesionComentario);
@@ -19,5 +19,6 @@ namespace asivamosffie.services.Interfaces
         Task<bool> UpdateStatus(int sesionComiteTecnicoCompromisoId, string status);
         Task<Respuesta> AcceptReport(int comiteTecnicoId, Usuario puser);
         Task<HTMLContent> GetHTMLString(ActaComite obj);
+        Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId);
     }
 }
