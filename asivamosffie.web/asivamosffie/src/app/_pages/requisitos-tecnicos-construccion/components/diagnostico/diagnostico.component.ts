@@ -15,7 +15,7 @@ export class DiagnosticoComponent implements OnInit {
   booleanCheckbox: boolean;
   formDiagnostico: FormGroup;
   totalConstruccion: number;
-  @Input() contratoConstruccion: any[] = [];
+  @Input() contratoConstruccion;
   @Output() diagnostico = new EventEmitter();
   @ViewChild( 'valorTotalFaseConstruccion', { static: true } ) totalFaseConstruccion: ElementRef;
 
@@ -32,6 +32,26 @@ export class DiagnosticoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if ( this.contratoConstruccion ) {
+      this.formDiagnostico.setValue(
+        {
+          esInformeDiagnostico           : this.contratoConstruccion.esInformeDiagnostico !== undefined ? this.contratoConstruccion.esInformeDiagnostico : null,
+          rutaInforme                    : this.contratoConstruccion.rutaInforme !== undefined ? this.contratoConstruccion.rutaInforme : null,
+          costoDirecto                   : this.contratoConstruccion.costoDirecto !== undefined ? this.contratoConstruccion.costoDirecto : null,
+          administracion                 : this.contratoConstruccion.administracion !== undefined ? this.contratoConstruccion.administracion : null,
+          imprevistos                    : this.contratoConstruccion.imprevistos !== undefined ? this.contratoConstruccion.imprevistos : null,
+          utilidad                       : this.contratoConstruccion.utilidad !== undefined ? this.contratoConstruccion.utilidad : null,
+          valorTotalFaseConstruccion     : this.contratoConstruccion.valorTotalFaseConstruccion ? this.contratoConstruccion.valorTotalFaseConstruccion : null,
+          requiereModificacionContractual: this.contratoConstruccion.requiereModificacionContractual !== undefined ? this.contratoConstruccion.requiereModificacionContractual : null,
+          numeroSolicitudModificacion    : this.contratoConstruccion.numeroSolicitudModificacion !== undefined ? this.contratoConstruccion.numeroSolicitudModificacion : null
+        }
+      )
+      this.formDiagnostico.valueChanges.subscribe( ( values: any ) => {
+        const totalFase = Number( values.costoDirecto )+Number( values.administracion )+Number( values.imprevistos )+Number( values.utilidad );
+        this.totalConstruccion = totalFase;
+        this.totalFaseConstruccion.nativeElement.value = this.currencyPipe.transform( totalFase, 'COP', 'symbol-narrow', '.0-0' );
+      } );
+    }
   };
 
   crearFormulario () {
@@ -64,10 +84,21 @@ export class DiagnosticoComponent implements OnInit {
   };
 
   enviar () {
-    console.log( this.formDiagnostico );
-    console.log( this.totalConstruccion );
+
     this.formDiagnostico.get( 'valorTotalFaseConstruccion' ).setValue( this.totalConstruccion );
-    this.diagnostico.emit( this.formDiagnostico.value );
+    console.log( this.formDiagnostico.value.requiereModificacionContractual );
+    const diagnostico = {
+      esInformeDiagnostico: this.formDiagnostico.get( 'esInformeDiagnostico' ).value,
+      rutaInforme: this.formDiagnostico.get( 'rutaInforme' ).value,
+      costoDirecto: this.formDiagnostico.get( 'costoDirecto' ).value,
+      administracion: this.formDiagnostico.get( 'administracion' ).value,
+      imprevistos: this.formDiagnostico.get( 'imprevistos' ).value,
+      utilidad: this.formDiagnostico.get( 'utilidad' ).value,
+      valorTotalFaseConstruccion: this.formDiagnostico.get( 'valorTotalFaseConstruccion' ).value,
+      requiereModificacionContractual: this.formDiagnostico.get( 'requiereModificacionContractual' ).value,
+      numeroSolicitudModificacion: this.formDiagnostico.get( 'numeroSolicitudModificacion' ).value,
+    }
+    this.diagnostico.emit( diagnostico );
   };
 
 };

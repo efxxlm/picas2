@@ -19,7 +19,9 @@ export class HojaVidaContratistaComponent implements OnInit {
   @Input() contratoId    : number;
   @Input() proyectoId    : number;
   @Output() enviarPerfilesContrato = new EventEmitter();
+  @Output() perfilesCompletados = new EventEmitter();
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
+  perfilesCompletos: number = 0;
   editorStyle = {
     height: '45px'
   };
@@ -71,22 +73,24 @@ export class HojaVidaContratistaComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
-                contratoPerfilId: [ 0 ],
-                perfilCodigo: [ null ],
-                cantidadHvRequeridas: [ '' ],
-                cantidadHvRecibidas: [ '' ],
-                cantidadHvAprobadas: [ '' ],
-                fechaAprobacion: [ null ],
-                observacion: [ null ],
-                observacionSupervisor: [ null ],
-                fechaObservacion: [ null ],
+                estadoSemaforo              : [ 'sin-diligenciar' ],
+                contratoPerfilId            : [ 0 ],
+                perfilCodigo                : [ null ],
+                cantidadHvRequeridas        : [ '' ],
+                cantidadHvRecibidas         : [ '' ],
+                cantidadHvAprobadas         : [ '' ],
+                fechaAprobacion             : [ null ],
+                observacion                 : [ null ],
+                observacionSupervisor       : [ null ],
+                fechaObservacion            : [ null ],
                 contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                rutaSoporte: [ '' ]
+                rutaSoporte                 : [ '' ]
               }
             )
           );
         };
       } );
+      this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
@@ -98,6 +102,7 @@ export class HojaVidaContratistaComponent implements OnInit {
         let observaciones = null;
         let fechaObservacion = null;
         let observacionSupervisor = null;
+        let semaforo;
         if ( perfil['construccionPerfilNumeroRadicado'].length === 0 ) {
           numeroRadicados.push( 
             this.fb.group(
@@ -122,7 +127,7 @@ export class HojaVidaContratistaComponent implements OnInit {
         };
 
         if ( perfil['construccionPerfilObservacion'].length > 0 ) {
-          for ( let obs of perfil.contratoPerfilObservacion ) {
+          for ( let obs of perfil['construccionPerfilObservacion'] ) {
             if ( obs.tipoObservacionCodigo === '1' ) {
               observaciones = obs.observacion;
             } else if ( obs.tipoObservacionCodigo === '3' ) {
@@ -130,12 +135,21 @@ export class HojaVidaContratistaComponent implements OnInit {
               observacionSupervisor = obs.observacion;
             }
           }
+        };
+
+        if ( perfil.registroCompleto ) {
+          this.perfilesCompletos++;
+          semaforo = 'completo';
+        }
+        if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
+          semaforo = 'en-proceso'
         }
 
         this.perfiles.push(
           this.fb.group(
             {
-              contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
+              estadoSemaforo              : [ semaforo || 'sin-diligenciar' ],
+              contratoPerfilId            : [ perfil.construccionPerfilId ? perfil.construccionPerfilId : 0 ],
               perfilObservacion           : [ ( perfil['construccionPerfilObservacion'].length === 0 ) ? 0 : perfil['construccionPerfilObservacion'][0].contratoPerfilObservacionId ],
               perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
               cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
@@ -151,6 +165,15 @@ export class HojaVidaContratistaComponent implements OnInit {
           )
         )
       };
+      if ( this.perfilesCompletos === this.perfilProyecto.length ) {
+        this.perfilesCompletados.emit( 'completo' );
+      }
+      if ( this.perfilesCompletos < this.perfilProyecto.length && this.perfilesCompletos > 0 ) {
+        this.perfilesCompletados.emit( 'en-proceso' );
+      }
+      if ( this.perfilesCompletos === 0 ) {
+        this.perfilesCompletados.emit( 'sin-diligenciar' );
+      }
     };
   };
 

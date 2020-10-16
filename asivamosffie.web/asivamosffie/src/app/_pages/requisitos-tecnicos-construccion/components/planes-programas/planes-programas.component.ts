@@ -30,6 +30,11 @@ export class PlanesProgramasComponent implements OnInit {
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
   ]
+  requisitosNoSeRequire: any[] = [
+    { value: 2, viewValue: 'Si' },
+    { value: 1, viewValue: 'No' },
+    { value: 3, viewValue: 'No se requiere' }
+  ]
   require: any;
   booleanosObservacion: any[] = [
     { value: true, viewValue: 'Si' },
@@ -50,20 +55,29 @@ export class PlanesProgramasComponent implements OnInit {
     this.dataSource.sort                   = this.sort;
   }
 
-  openDialog ( planPrograma: string, id: number ) {
+  openDialog ( planPrograma: string, observacion: string, id: number ) {
     const dialogObservacion = this.dialog.open(DialogObservacionesComponent, {
       width: '60em',
-      data : { planPrograma }
+      data : { planPrograma, observacion }
     });
 
     dialogObservacion.afterClosed().subscribe( resp => {
       this.dataPlanesProgramas.forEach( data => {
         if ( data.id === id ) {
-          data.observaciones = resp.data
+          data.observaciones = resp.data;
+          return;
         }
       } )
     } );
   };
+
+  getSemaforo ( observacion: string ) {
+    if ( observacion !== null ) {
+      return 'completo';
+    } else {
+      return 'sin-diligenciar';
+    }
+  }
 
   guardar () {
     const planesProgramas = {

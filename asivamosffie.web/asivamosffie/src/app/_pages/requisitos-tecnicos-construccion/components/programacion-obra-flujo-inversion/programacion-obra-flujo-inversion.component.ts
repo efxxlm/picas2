@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { DialogCargarProgramacionComponent } from '../dialog-cargar-programacion/dialog-cargar-programacion.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -10,6 +10,10 @@ import { MatDialog } from '@angular/material/dialog';
 export class ProgramacionObraFlujoInversionComponent implements OnInit {
 
   @Input() esFlujoInversion: boolean;
+  @Input() contratoConstruccionId: number;
+  @Output() terminoCarga = new EventEmitter();
+  tieneRegistrosObra: boolean;
+  tieneRegistrosInversion: boolean;
 
   constructor ( private dialog: MatDialog ) { }
 
@@ -19,11 +23,12 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   cargarProgramacion () {
     const dialogCargarProgramacion = this.dialog.open( DialogCargarProgramacionComponent, {
       width: '75em',
-      data: { esFlujoInversion: this.esFlujoInversion }
+      data: { esFlujoInversion: this.esFlujoInversion, contratoConstruccionId: this.contratoConstruccionId }
     });
 
-    dialogCargarProgramacion.afterClosed().subscribe( resp => {
-      console.log( resp );
+    dialogCargarProgramacion.afterClosed().subscribe( response => {
+      console.log( 'termino carga masiva?', response );
+      this.terminoCarga.emit( response.terminoCarga );
     } );
   };
 

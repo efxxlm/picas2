@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -9,6 +9,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 export class ManejoAnticipoComponent implements OnInit {
 
   formAnticipo: FormGroup;
+  @Input() contratoConstruccion: any;
   @Output() manejoAnticipo = new EventEmitter();
 
   constructor ( private fb: FormBuilder ) {
@@ -16,6 +17,16 @@ export class ManejoAnticipoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if ( this.contratoConstruccion ) {
+      this.formAnticipo.setValue(
+        {
+          requiereAnticipo              : this.contratoConstruccion.manejoAnticipoRequiere !== undefined ? this.contratoConstruccion.manejoAnticipoRequiere : null,
+          planInversionAnticipo         : this.contratoConstruccion.manejoAnticipoPlanInversion !== undefined ? this.contratoConstruccion.manejoAnticipoPlanInversion : null,
+          cronogramaAmortizacionAprobado: this.contratoConstruccion.manejoAnticipoCronogramaAmortizacion !== undefined ? this.contratoConstruccion.manejoAnticipoCronogramaAmortizacion : null,
+          urlSoporte                    : this.contratoConstruccion.manejoAnticipoRutaSoporte !== undefined ? this.contratoConstruccion.manejoAnticipoRutaSoporte : null,
+        }
+      )
+    }
   }
 
   crearFormulario () {

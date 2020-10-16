@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 
@@ -16,15 +16,18 @@ export class DialogCargarProgramacionComponent implements OnInit {
   formCargarProgramacion: FormGroup;
   idProject: string;
   esFlujoInversion: boolean;
+  contratoConstruccionId: number
 
   constructor ( private fb: FormBuilder,
                 private dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data,
+                private dialogRef: MatDialogRef<DialogCargarProgramacionComponent>,
                 private faseUnoConstruccionSvc: FaseUnoConstruccionService )
   {
     this.crearFormulario();
     this.esFlujoInversion = data.esFlujoInversion;
-    console.log( this.esFlujoInversion );
+    this.contratoConstruccionId = data.contratoConstruccionId;
+    console.log( this.contratoConstruccionId );
   }
 
   ngOnInit(): void {
@@ -67,13 +70,19 @@ export class DialogCargarProgramacionComponent implements OnInit {
         if ( this.esFlujoInversion ) {
           this.faseUnoConstruccionSvc.transferMassiveLoadInvestmentFlow( this.idProject )
             .subscribe(
-              response => this.openDialogResponse( '', response.message ),
+              response => {
+                this.openDialogResponse( '', response.message );
+                this.dialogRef.close( { terminoCarga: true } );
+              },
               err => this.openDialogResponse( '', err.message )
             )
         } else {
           this.faseUnoConstruccionSvc.transferMassiveLoadProgramming( this.idProject )
           .subscribe(
-            response => this.openDialogResponse( '', response.message ),
+            response => {
+              this.openDialogResponse( '', response.message );
+              this.dialogRef.close( { terminoCarga: true } );
+            },
             err => this.openDialogResponse( '', err.message )
           )
         }
@@ -89,7 +98,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
     };
     console.log( inputNode.files[0] );
     if ( this.esFlujoInversion ) {
-      this.faseUnoConstruccionSvc.uploadFileToValidateInvestmentFlow( 28, inputNode.files[0] )
+      this.faseUnoConstruccionSvc.uploadFileToValidateInvestmentFlow( this.contratoConstruccionId, inputNode.files[0] )
       .subscribe( 
         ( response: any ) => {
           console.log( response );
@@ -112,11 +121,12 @@ export class DialogCargarProgramacionComponent implements OnInit {
                 <b>No se permite el cargue, ya que el archivo tiene registros inválidos. Ajuste el archivo y cargue de nuevo</b>
               `
             );
+            this.dialogRef.close( { terminoCarga: true } );
           }
         }
       )
     } else {
-      this.faseUnoConstruccionSvc.uploadFileToValidateProgramming( 28, inputNode.files[0] )
+      this.faseUnoConstruccionSvc.uploadFileToValidateProgramming( this.contratoConstruccionId, inputNode.files[0] )
       .subscribe( 
         ( response: any ) => {
           console.log( response );
@@ -139,6 +149,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
                 <b>No se permite el cargue, ya que el archivo tiene registros inválidos. Ajuste el archivo y cargue de nuevo</b>
               `
             );
+            this.dialogRef.close( { terminoCarga: true } );
           }
         }
       )

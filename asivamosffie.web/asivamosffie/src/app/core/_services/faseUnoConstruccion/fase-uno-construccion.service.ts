@@ -21,12 +21,12 @@ export class FaseUnoConstruccionService {
     return this.http.get<Contrato>( `${ this.urlApi }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
   };
   //Peticiones GET Tabla Carga Masiva "Programación de obra"
-  getLoadProgrammingGrid () {
-    return this.http.get( `${ this.urlApi }/GetLoadProgrammingGrid` );
+  getLoadProgrammingGrid ( pContratoConstruccionId: number ) {
+    return this.http.get( `${ this.urlApi }/GetLoadProgrammingGrid?pContratoConstruccionId=${ pContratoConstruccionId }` );
   };
   //Peticiones GET Tabla Carga Masiva "Flujo de inversión de recursos"
-  getLoadInvestmentFlowGrid () {
-    return this.http.get( `${ this.urlApi }/GetLoadInvestmentFlowGrid` );
+  getLoadInvestmentFlowGrid ( pContratoConstruccionId: number ) {
+    return this.http.get( `${ this.urlApi }/GetLoadInvestmentFlowGrid?pContratoConstruccionId=${ pContratoConstruccionId }` );
   };
   //Peticiones POST
   createEditDiagnostico ( ContratoConstruccion: any ) {
