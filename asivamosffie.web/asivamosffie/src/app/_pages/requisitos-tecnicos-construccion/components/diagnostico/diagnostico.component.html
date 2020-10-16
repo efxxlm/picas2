@@ -5,8 +5,8 @@
       <section class="example-section">
         <label class="example-margin"> <b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b> </label>
         <mat-radio-group formControlName="esInformeDiagnostico">
-          <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
-          <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
+          <mat-radio-button class="example-margin" [value]="true" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === true">Sí</mat-radio-button>
+          <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === false">No *</mat-radio-button>
         </mat-radio-group>
       </section>
   
@@ -126,6 +126,8 @@
               <mat-form-field>
                 <input  matInput
                         formControlName="valorTotalFaseConstruccion"
+                        currencyMask
+                        [options]="{ prefix: '$ ', thousands: ',', precision: '0', align: 'center' }"
                         #valorTotalFaseConstruccion>
               </mat-form-field>
             </div>
@@ -144,8 +146,8 @@
         <div class="example-section text-center">
           <label class="example-margin"> <b>¿Se requirió modificación contractual?</b> </label>
           <mat-radio-group formControlName="requiereModificacionContractual">
-            <mat-radio-button class="example-margin" [value]="true">Sí</mat-radio-button>
-            <mat-radio-button class="example-margin" [value]="false">No *</mat-radio-button>
+            <mat-radio-button class="example-margin" [value]="true" [checked]="formDiagnostico.get( 'requiereModificacionContractual' ).value">Sí</mat-radio-button>
+            <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'requiereModificacionContractual' ).value === false">No *</mat-radio-button>
           </mat-radio-group>
         </div>
 

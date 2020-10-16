@@ -40,6 +40,10 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
     });   
   };
 
+  estadoSemaforo ( index: number, semaforo: string ) {
+    this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
+  }
+
   getDiagnostico ( index: number, diagnostico: any ) {
     const diagnosticoForm: any = {
       contratoId: this.contrato.contratoId,
@@ -57,6 +61,7 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
     if ( this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoConstruccion.length > 0 ) {
       diagnosticoForm.contratoConstruccionId = this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoConstruccion[0].contratoConstruccionId;
     }
+    console.log( diagnosticoForm );
     this.faseUnoConstruccionSvc.createEditDiagnostico( diagnosticoForm )
       .subscribe( 
         response => {
@@ -196,6 +201,10 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
         err => this.openDialog( '', err.message )
       )
   };
+
+  getCargaMasiva ( terminoCarga: boolean = false ) {
+    if ( terminoCarga ) this.getContrato();
+  }
 
   getPerfilesContrato ( index: number, perfilContrato: ContratoPerfil[] ) {
 

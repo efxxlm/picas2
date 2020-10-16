@@ -33,7 +33,7 @@ export class DialogObservacionesComponent implements OnInit {
 
   crearFormulario () {
     this.formObservacion = this.fb.group({
-      observaciones: [ null ]
+      observaciones: [ this.data.observacion !== null ? this.data.observacion : null ]
     });
   };
 

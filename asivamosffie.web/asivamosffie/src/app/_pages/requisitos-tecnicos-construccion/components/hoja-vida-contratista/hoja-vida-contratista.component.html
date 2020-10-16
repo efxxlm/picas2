@@ -12,7 +12,7 @@
   <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroPerfiles' ).value !== null">
     <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title sin-diligenciar">
+        <mat-panel-title class="expansion-style--title" [ngClass]="perfil.get( 'estadoSemaforo' ).value">
           Perfil {{ i+1 }}
         </mat-panel-title>
       </mat-expansion-panel-header>

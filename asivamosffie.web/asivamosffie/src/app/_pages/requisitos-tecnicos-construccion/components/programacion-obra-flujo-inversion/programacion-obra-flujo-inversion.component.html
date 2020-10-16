@@ -23,8 +23,8 @@
 </section>
 
 <div *ngIf="!esFlujoInversion">
-        <app-tabla-programacion-obra></app-tabla-programacion-obra>
+        <app-tabla-programacion-obra [contratoConstruccionId]="contratoConstruccionId" (tieneRegistros)="tieneRegistrosObra = $event" *ngIf="tieneRegistrosObra"></app-tabla-programacion-obra>
 </div>
 <div *ngIf="esFlujoInversion">
-        <app-tabla-inversion-recursos></app-tabla-inversion-recursos>
+        <app-tabla-inversion-recursos [contratoConstruccionId]="contratoConstruccionId" (tieneRegistros)="tieneRegistrosInversion = $event" *ngIf="tieneRegistrosInversion"></app-tabla-inversion-recursos>
 </div>
