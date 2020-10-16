@@ -48,7 +48,7 @@ namespace asivamosffie.services
              List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
 
                 .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
-                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
+                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                  .Include(r => r.SesionParticipante)
                  .Include(r => r.SesionComentario)
                  .Distinct()
