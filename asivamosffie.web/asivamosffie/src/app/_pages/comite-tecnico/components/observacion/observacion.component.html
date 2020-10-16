@@ -29,14 +29,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr *ngFor="let observacion of listaObservaciones">
         <td class="mat-cell cdk-cell ng-star-inserted">
-          Juan Lizcano Carcía
+          {{ observacion.sesionParticipante.usuario.nombres }}
         </td>
         <td class="mat-cell cdk-cell ng-star-inserted">
           <p class="p-table">
-            El proyecto muestra varias inconsistencias en el área de contizaciones y el presupuesto no
-            concuerda con estas
+            {{ observacion.observacion }}
           </p>
         </td>
       </tr>
@@ -47,12 +46,12 @@
     <div class="text-area-quill">
       <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="observacion"></quill-editor>
+        (onContentChanged)="maxLength($event, 3000)" [(ngModel)]="observacion"></quill-editor>
     </div>
-    <span class="contador" *ngIf="observacion.value">
-      {{3000 - textoLimpio(observacion.value)}}
+    <span class="contador" *ngIf="observacion">
+      {{3000 - textoLimpio(observacion)}}
     </span>
-    <span class="contador" *ngIf="observacion.value">
+    <span class="contador" *ngIf="observacion">
       3000
     </span>
   </div>

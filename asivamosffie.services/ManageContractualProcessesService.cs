@@ -306,7 +306,7 @@ namespace asivamosffie.services
 
                             try
                             {
-                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
+                                //nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
                             }
                             catch (Exception)
                             {
@@ -512,9 +512,9 @@ namespace asivamosffie.services
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             // Estado de la sesionComiteSolicitud
-            //• Recibidas sin tramitar ante Fiduciaria
-            //• Enviadas a la fiduciaria
-            //• Registradas por la fiduciaria
+            //ï¿½ Recibidas sin tramitar ante Fiduciaria
+            //ï¿½ Enviadas a la fiduciaria
+            //ï¿½ Registradas por la fiduciaria
 
             //Se listan las que tengan con acta de sesion aprobada  
 
@@ -523,7 +523,7 @@ namespace asivamosffie.services
             //&& r.EstadoDelRegistro == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada
             //)
             //.ToListAsync(); 
-            // 2   Aprobada por comité fiduciario
+            // 2   Aprobada por comitï¿½ fiduciario
 
             try
             {

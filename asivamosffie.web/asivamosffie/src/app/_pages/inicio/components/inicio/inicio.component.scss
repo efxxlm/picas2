@@ -88,15 +88,3 @@
         }
     }
 }
-
-.mat-form-field-appearance-outline .mat-form-field-label {
-    top: 2.2em;
-}
-
-.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-    transform: translateY(-1.3em) scale(.82);
-}
-
-.mat-form-field input:required~.mat-form-field-label-wrapper:after {
-    display: none;
-}

@@ -107,7 +107,8 @@ namespace asivamosffie.services.Helpers.Enumerator
              
         Tipo_Modificacion_Contrato_Poliza = 56,
 
-		Tipo_Garantia_Poliza = 58, 
+		Tipo_Garantia_Poliza = 58,
+        Estado_Del_Acta_Contrato = 60,
 	   
         Estado_Proyecto = 63,
   

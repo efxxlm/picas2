@@ -65,11 +65,11 @@ export class TablaProyectosAdminComponent {
           if(respuesta)
           {
             this.inicializar();
-            this.openDialog('', "<b>La información ha sido eliminadad correctamente.</b>");
+            this.openDialog('', "Proyecto eliminado correctamente");
           }
           else
           {
-            this.openDialog('', "<b>El registro tiene información que depende de él, no se puede eliminar.</b>");
+            this.openDialog('', "Hubo un error al eliminar el proyecto, por favor intenta nuevamente.");
           }
         },
           err => {

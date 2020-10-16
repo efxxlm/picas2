@@ -6,7 +6,7 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      <span *ngIf="proyecto.proyectoId">Ver detalle / Editar </span>Infraestructura
+      Infraestructura
     </h1>
   </div>
 
@@ -94,7 +94,7 @@
             <div class="pr-1">
               <label class="label-left">Región</label>
             </div>
-            <div class="col capitalize">
+            <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid">
                   <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId" class="capitalize">
@@ -112,7 +112,7 @@
             <div class="pr-1">
               <label class="label-left">Departamento</label>
             </div>
-            <div class="col capitalize">
+            <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid">
                   <mat-option *ngFor="let listado of listadoDepartamento" [value]="listado.localizacionId"
@@ -131,7 +131,7 @@
             <div class="pr-1">
               <label class="label-left">Municipio</label>
             </div>
-            <div class="col capitalize">
+            <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required [(ngModel)]="proyecto.localizacionIdMunicipio"
                   (selectionChange)="getInstitucion()">
@@ -168,8 +168,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput maxlength="15" required type="number" value="{{CodigoDaneIE}}"
-                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                <input matInput maxlength="15" required type="number" value="{{CodigoDaneIE}}">
               </mat-form-field>
             </div>
           </div>
@@ -197,8 +196,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput value="{{codigoDaneSede}}" maxlength="15" required type="number" required
-                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                <input matInput value="{{codigoDaneSede}}" maxlength="15" required type="number" required>
               </mat-form-field>
             </div>
           </div>
@@ -389,7 +387,7 @@
       <div *ngFor="let predios of proyecto.proyectoPredio;index as i">
         <div>
           <mat-card-title class="header-card--text sub-text">
-            Predio {{i+2}}
+            Predio {{i+2}} 
           </mat-card-title>
 
           <div class="row">
@@ -581,8 +579,9 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput [(ngModel)]="aportantes.valorObra" (keyup)="valorTotal(aportantes)" maxlength="28"
-                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
+                    max="999" required currencyMask
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span class="contador">{{20 - (aportantes.valorObra?aportantes.valorObra.toString().length:0)}}</span>
               </div>
@@ -598,8 +597,8 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width">
                   <input matInput [(ngModel)]="aportantes.valorInterventoria" (keyup)="valorTotal(aportantes)"
-                    maxlength="28" (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;" required currencyMask
+                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    maxlength="28" min="1" max="999" required currencyMask
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span
@@ -616,7 +615,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="54" required
+                  <input matInput [(ngModel)]="aportantes.valorTotalAportante" maxlength="54" min="1" max="999" required
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" readonly>
                 </mat-form-field>
@@ -692,9 +691,11 @@
                   Días
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" type="number" maxlength="2" min="1"
-                    max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" type="number"
+                    maxlength="2" min="1" max="31" required (keypress)="number($event)"
+                    onkeyup="if(this.value>31) this.value = 31;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    >
                 </mat-form-field>
               </div>
             </div>
@@ -719,9 +720,11 @@
                   Días
                 </label>
                 <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" type="number" maxlength="2"
-                    min="1" max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" type="number"
+                    maxlength="2" min="1" max="31" required (keypress)="number($event)"
+                    onkeyup="if(this.value>31) this.value = 31;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    >
                 </mat-form-field>
               </div>
             </div>
@@ -757,8 +760,8 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <div class="mb-2em text-center animatedOpacity" *ngIf="formularioCompleto()">
-    <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSubmit()">
+  <div class="text-center animatedOpacity">
+    <button mat-button color="warn" class="btn-guardar" *ngIf="formularioCompleto()" type="button" (click)="onSubmit()">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>

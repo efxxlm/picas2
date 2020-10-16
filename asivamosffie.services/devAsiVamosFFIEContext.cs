@@ -267,6 +267,15 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.MunicipioId)
                     .HasConstraintName("fk_cofinanciacionMunicipio");
 
+                entity.HasOne(d => d.NombreAportante)
+                    .WithMany(p => p.CofinanciacionAportanteNombreAportante)
+                    .HasForeignKey(d => d.NombreAportanteId)
+                    .HasConstraintName("fk_cofinanciacionNombre");
+
+                entity.HasOne(d => d.TipoAportante)
+                    .WithMany(p => p.CofinanciacionAportanteTipoAportante)
+                    .HasForeignKey(d => d.TipoAportanteId)
+                    .HasConstraintName("fk_cofinanciacion_tipo");
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>

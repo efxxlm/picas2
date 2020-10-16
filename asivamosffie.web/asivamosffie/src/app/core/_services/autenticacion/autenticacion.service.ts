@@ -3,17 +3,19 @@ import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AutenticacionService {
+  
 
   private actualUserSubject: BehaviorSubject<Usuario>;
   public actualUser: Usuario;
   public actualUser$: Observable<Usuario>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.actualUserSubject = new BehaviorSubject<Usuario>(JSON.parse(localStorage.getItem('actualUser')));
     this.actualUser$ = this.actualUserSubject.asObservable();
   }
@@ -45,6 +47,28 @@ export class AutenticacionService {
   {
     return this.http.post<Respuesta>(`${environment.apiUrl}/user/emailRecover`, usuario);
   }
+  getNewRefreshToken() {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/autenticacion/IniciarSesion`, null).
+    pipe(
+      map(user => {
+      // login successful if there's a jwt token in the response                
+      console.log(user.data);
+
+      if (user && user.token) {
+              // store user details and jwt token in local storage to keep user logged in between page refreshes
+              user.data.datausuario.token = user.token;
+              let usuariocompleto=user.data.datausuario;
+              usuariocompleto.rol=user.data.dataperfiles;
+              //usuariocompleto.token=user.token;
+              localStorage.setItem('actualUser', JSON.stringify(usuariocompleto));
+              this.actualUser = usuariocompleto;
+              this.actualUserSubject.next(usuariocompleto);
+      }
+      //console.log(user);
+      return user;
+      }));
+  }
+  
 
   public get actualUserValue(): Usuario {
     return this.actualUserSubject.value;
@@ -53,14 +77,23 @@ export class AutenticacionService {
       return this.actualUserSubject.getValue();
   }
 
-  logout() {
+  seteventLogOut()
+  {    
+    return this.http.post<Respuesta>(`${environment.apiUrl}/user/CloseSesion`,null);
+  }
+
+  logout(errorLogout=false) {
     // remove user from local storage to log user out
+    console.log("va por error "+errorLogout);
+    if(!errorLogout)
+    {
+      this.seteventLogOut().subscribe();
+    }    
     localStorage.removeItem('actualUser');
-    localStorage.removeItem('actaSuscrita');
-    localStorage.removeItem('conObservaciones');
     this.actualUserSubject.next(null);
     this.actualUser = null;
-  //   this.saveCloseSesionAudit().subscribe();
+    this.router.navigate(['/inicio']);
+
   }
 
   changePass(old:string,newpass:string) {
@@ -85,7 +118,7 @@ export class AutenticacionService {
 
 export interface Usuario{
   usuarioId?: number;
-  Email: string;
+  Email?: string;
   Contrasena?: string;
   Activo?: boolean;
   Bloqueado?: boolean;

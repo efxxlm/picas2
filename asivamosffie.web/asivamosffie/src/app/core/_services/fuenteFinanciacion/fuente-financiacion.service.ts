@@ -10,6 +10,7 @@ import { mergeMap, tap, toArray } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class FuenteFinanciacionService {
+  
 
   constructor( private http:HttpClient
 
@@ -23,9 +24,17 @@ export class FuenteFinanciacionService {
     return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacion`);
 
   }
+  listaFuenteFinanciacionshort(){
+    return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionshort`);
+  }
 
   listaFuenteFinanciacionByAportante( id: number ){
     return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetFuentesFinanciacionByAportanteId?AportanteId=${id}`);
+  }
+
+  
+  GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid( id: number, idaportante:number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid?disponibilidadPresupuestalProyectoid=${id}&aportanteID=${idaportante}`);
   }
 
   registrarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){
@@ -72,9 +81,15 @@ export class FuenteFinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/ResourceControl/updateControlRecurso`, controlRecurso);
   }
 
+  DeleteResourceFundingBySourceFunding(id:number)
+  {
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ResourceControl/DeleteResourceFundingBySourceFunding?id=${id}`,null);
+  }
+
 }
 
 export interface FuenteFinanciacion{
+   cofinanciacionDocumento?: any;
    fuenteFinanciacionId?: number, 
    aportanteId: number,
    fuenteRecursosCodigo: string,
@@ -84,6 +99,7 @@ export interface FuenteFinanciacion{
    cuentaBancaria?: CuentaBancaria[],
    vigenciaAporte?: VigenciaAporte[],
    controlRecurso?: ControlRecurso[],
+   cofinanciacionDocumentoId?:number
    //DateTime FechaCreacion: Date 
    //string UsuarioCreacion: string
 }
@@ -127,6 +143,7 @@ export interface RegistroPresupuestal{
   aportanteId: number,
   numeroRp: string,
   fechaRp: Date,
+  cofinanciacionDocumentoId:number,
   fechaCreacion?: Date,
   usuarioCreacion?: string,
 }

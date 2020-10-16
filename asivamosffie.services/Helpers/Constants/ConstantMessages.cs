@@ -394,6 +394,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
 
@@ -637,6 +638,98 @@ namespace asivamosffie.services.Helpers.Constant
         public const string ErrorInterno = "501";
         public const string ErrorEnviarCorreo = "107";
         public const string CorreoNoExiste = "106";
+        #endregion
+    }
+
+    public class ConstantMessagesGenerateBudget
+    {
+
+        #region Mensajes Informativos
+        public const string CanceladoCorrrectamente = "201";
+        public const string DevueltoCorrrectamente = "202";
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesDisponibilidadPresupuesta
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantSesionComiteFiduciario
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesSesionComiteTema
+    {
+
+        #region Mensajes Informativos
+
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
         #endregion
     }
 }

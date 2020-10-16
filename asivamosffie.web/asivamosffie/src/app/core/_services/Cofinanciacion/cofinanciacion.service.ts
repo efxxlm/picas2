@@ -56,24 +56,31 @@ export interface Cofinanciacion{
   cofinanciacionId: number,
   vigenciaCofinanciacionId: number,
   cofinanciacionAportante: CofinanciacionAportante[],
-  fechaCreacion?: string,
+  fechaCreacion?: Date,
   valorTotal?: number,
   estadoRegistro?: string,
+  registroCompleto?:boolean,//segun bd este es el nombre del campo
   eliminado?:boolean
 }
 
 export interface CofinanciacionAportante{
+  municipio?: any;
+  departamento?: any;
   cofinanciacionAportanteId: number,
   cofinanciacionId: number,
   tipoAportanteId: any,
   nombreAportanteId?: any,
   municipioId: number,
+  departamentoId:number,
   cofinanciacionDocumento: CofinanciacionDocumento[],
   eliminado?:boolean,
   valortotal?:number//just for view form
   nombreAportante?: string,
   registroPresupuestal?: RegistroPresupuestal[],
-  cofinanciacion?: Cofinanciacion
+  cofinanciacion?: Cofinanciacion,
+  nombreAportanteString?:string,
+  fuenteFinanciacion?:any[],
+  cuentaConRp?:boolean
 }
 
 export interface CofinanciacionDocumento{

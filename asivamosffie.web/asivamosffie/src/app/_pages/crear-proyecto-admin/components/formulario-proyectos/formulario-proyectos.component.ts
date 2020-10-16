@@ -24,16 +24,8 @@ export class FormularioProyectosComponent implements OnInit {
     this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string,key: AportanteFuenteFinanciacion, aportante: Aportante) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText,siNoBoton:true }
-    });   
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      if(result)
-      {
-        const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
+  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
+    const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
     const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
     
     if (index2 > -1) {
@@ -43,12 +35,7 @@ export class FormularioProyectosComponent implements OnInit {
       }
       this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.splice(index2, 1);
     }
-      }
-    });
-  }
-  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
-
-    this.openDialogSiNo("","¿Está seguro de eliminar este  registro?",key,aportante);        
+    
   }
 
   onchangeFont(i: number) {

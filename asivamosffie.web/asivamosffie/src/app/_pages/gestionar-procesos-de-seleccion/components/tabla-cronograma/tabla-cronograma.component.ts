@@ -36,38 +36,39 @@ export class TablaCronogramaComponent implements OnInit {
     ]
   };
 
-
+  
 
   constructor(
-    private fb: FormBuilder,
-    private procesoSeleccionService: ProcesoSeleccionService,
-    private activatedRoute: ActivatedRoute,
-    public dialog: MatDialog,
+              private fb: FormBuilder,
+              private procesoSeleccionService: ProcesoSeleccionService,
+              private activatedRoute: ActivatedRoute,
+              public dialog: MatDialog,
 
-  ) {
+             ) 
+  {
     this.maxDate = new Date();
   }
 
   ngOnInit(): void {
 
-    this.activatedRoute.params.subscribe(parametro => {
+    this.activatedRoute.params.subscribe( parametro =>{
       this.idProcesoSeleccion = parametro['id'];
 
-      this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion(this.idProcesoSeleccion).subscribe(lista => {
+      this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion( this.idProcesoSeleccion ).subscribe( lista => {
 
         let listaActividades = this.addressForm as FormArray;
         this.listaCronograma = lista;
 
-        console.log(lista);
-
-        lista.forEach(cronograma => {
+        console.log( lista );
+        
+        lista.forEach( cronograma => {
           let grupo = this.crearActividad();
+          
+          grupo.get('procesoSeleccionCronogramaId').setValue( cronograma.procesoSeleccionCronogramaId );
+          grupo.get('descripcion').setValue( cronograma.descripcion );
+          grupo.get('fecha').setValue( cronograma.fechaMaxima );
 
-          grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
-          grupo.get('descripcion').setValue(cronograma.descripcion);
-          grupo.get('fecha').setValue(cronograma.fechaMaxima);
-
-          listaActividades.push(grupo);
+          listaActividades.push( grupo );
 
         })
 
@@ -105,8 +106,8 @@ export class TablaCronogramaComponent implements OnInit {
     let listaActividades = this.addressForm as FormArray;
     this.listaCronograma = [];
 
-    let i = 0;
-    listaActividades.controls.forEach(control => {
+    let i=0;
+    listaActividades.controls.forEach( control => {
       let procesoSeleccionCronograma: ProcesoSeleccionCronograma = {
         procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
         descripcion: control.get('descripcion').value,
@@ -115,40 +116,41 @@ export class TablaCronogramaComponent implements OnInit {
         numeroActividad: i,
 
       }
-      this.listaCronograma.push(procesoSeleccionCronograma);
+      this.listaCronograma.push( procesoSeleccionCronograma );
       i++
     })
 
-    from(this.listaCronograma)
-      .pipe(mergeMap(cronograma => this.procesoSeleccionService.createEditarProcesoSeleccionCronograma(cronograma)
-        .pipe(
-          tap()
-        )
+    from( this.listaCronograma )
+      .pipe( mergeMap(cronograma => this.procesoSeleccionService.createEditarProcesoSeleccionCronograma( cronograma )
+          .pipe(  
+              tap()
+          )
       ),
-        toArray())
-      .subscribe(respuesta => {
-        let res = respuesta[0] as Respuesta
-        if (res.code == "200")
-          this.openDialog("", res.message);
-        console.log(respuesta);
-
+    toArray())
+    .subscribe( respuesta => {
+      let res = respuesta[0] as Respuesta
+      if (res.code == "200")
+        this.openDialog("", res.message);    
+        console.log(respuesta);       
+        
         //jflorez deshabilito el modo visualización
         //this.editMode.valor = false; 
-      })
+    })
 
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });
+    });  
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if (result) {
+      if(result)
+      {
         location.reload();
       }
-    });
+    }); 
 
 
   }

@@ -39,10 +39,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required, Validators.minLength(5), Validators.maxLength(100)])
     ],
     telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
     ]
   });
 
@@ -66,10 +66,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required, Validators.minLength(5), Validators.maxLength(100)])
     ],
     telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
     ]
   });
 
@@ -97,10 +97,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required,  Validators.maxLength(100)])
     ],
     telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required,  Validators.maxLength(100)])
+      Validators.required,  Validators.maxLength(10)])
     ]
   });
   listaProponentesNombres: any[]=[];

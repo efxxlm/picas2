@@ -59,7 +59,7 @@ export class DialogTableProyectosSeleccionadosComponent implements OnInit {
     }
   }
 
-  actualizar(){
+  actualizar( ){
     this.listaEliminados.forEach( e => {
       let i = this.data.indexOf( e );
       if (i > -1){
@@ -67,7 +67,9 @@ export class DialogTableProyectosSeleccionadosComponent implements OnInit {
         console.log(e);
       }
     })
-    console.log(this.data);
+
+    console.log( this.data );
+    this.dialogRef.close({ data: this.data });
   }
 
 }
