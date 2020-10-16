@@ -17,7 +17,7 @@ using Z.EntityFramework.Plus;
 namespace asivamosffie.services
 {
 
-    public class SelectionProcessService: ISelectionProcessService
+    public class SelectionProcessService : ISelectionProcessService
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
@@ -36,7 +36,7 @@ namespace asivamosffie.services
 
             try
             {
-                var procesosSeleccion= await _context.ProcesoSeleccion
+                var procesosSeleccion = await _context.ProcesoSeleccion
                                             .Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
@@ -44,9 +44,9 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionCotizacion).Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionCronograma).Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionGrupo).Where(r => !(bool)r.Eliminado)
-                                            .OrderByDescending(x=>x.FechaCreacion)
+                                            .OrderByDescending(x => x.FechaCreacion)
                                             .ToListAsync();
-                foreach(var proceso in procesosSeleccion)
+                foreach (var proceso in procesosSeleccion)
                 {
                     proceso.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
                 }
@@ -64,14 +64,14 @@ namespace asivamosffie.services
         {
             try
             {
-                var procesoSeleccion= await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
+                var procesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
                                             .Include(r => r.ProcesoSeleccionProponente)
                                             .IncludeFilter(r => r.ProcesoSeleccionCotizacion.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
-                                            .FirstOrDefaultAsync( proceso => proceso.ProcesoSeleccionId == id );
+                                            .FirstOrDefaultAsync(proceso => proceso.ProcesoSeleccionId == id);
                 procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
                 return procesoSeleccion;
             }
@@ -107,7 +107,7 @@ namespace asivamosffie.services
                     procesoSeleccion.EtapaProcesoSeleccionCodigo = "1";
 
                     _context.ProcesoSeleccion.Add(procesoSeleccion);
-                    
+
                 }
                 else
                 {
@@ -144,7 +144,7 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
                     ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
                     ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
-                    
+
                     //ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     ProcesoSeleccionAntiguo.Eliminado = false;
                     //ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
@@ -152,67 +152,71 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 }
 
-                foreach( ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo )
+                foreach (ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo)
                 {
                     grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    await this.CreateEditarProcesoSeleccionGrupo( grupo );
+                    await this.CreateEditarProcesoSeleccionGrupo(grupo);
                 }
 
-                foreach( ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma )
+                foreach (ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma)
                 {
                     cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    await this.CreateEditarProcesoSeleccionCronograma( cronograma, true );
+                    await this.CreateEditarProcesoSeleccionCronograma(cronograma, true);
                 }
-                
-                foreach( ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion )
+
+                foreach (ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion)
                 {
                     cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion.ToUpper();
                     cotizacion.UrlSoporte = cotizacion.UrlSoporte.ToUpper();
-                    await this.CreateEditarProcesoSeleccionCotizacion( cotizacion );
+                    await this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
                 }
 
-                foreach( ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente )
+                foreach (ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente)
                 {
                     proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    proponente.NombreRepresentanteLegal = proponente.NombreRepresentanteLegal==null?"": proponente.NombreRepresentanteLegal.ToUpper();
+                    proponente.NombreRepresentanteLegal = proponente.NombreRepresentanteLegal == null ? "" : proponente.NombreRepresentanteLegal.ToUpper();
                     proponente.NombreProponente = proponente.NombreProponente.ToUpper();
                     proponente.DireccionProponente = proponente.DireccionProponente.ToUpper();
-                    proponente.EmailProponente = proponente.EmailProponente.ToUpper();                    
-                    await this.CreateEditarProcesoSeleccionProponente( proponente );
+                    proponente.EmailProponente = proponente.EmailProponente.ToUpper();
+                    await this.CreateEditarProcesoSeleccionProponente(proponente);
                 }
 
-                foreach( ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante )
+                foreach (ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante)
                 {
                     integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     integrante.NombreIntegrante = integrante.NombreIntegrante.ToUpper();
-                    await this.CreateEditarProcesoSeleccionIntegrante( integrante );
+                    await this.CreateEditarProcesoSeleccionIntegrante(integrante);
                 }
 
                 await _context.SaveChangesAsync();
 
                 return respuesta = new Respuesta
-                       {
-                           IsSuccessful = true,IsException = false,
-                           IsValidation = false, Data = procesoSeleccion,
-                           Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = procesoSeleccion,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, strCrearEditar)
 
-                       };
+                };
             }
             catch (Exception ex)
             {
                 return respuesta = new Respuesta
-                       {
-                           IsSuccessful = false, IsException = true,
-                           IsValidation = false, Data = null,
-                           Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
-                       };
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
             }
         }
 
-        public async Task<Respuesta> DeleteProcesoSeleccion( int pId, string pUsuarioModificacion )
+        public async Task<Respuesta> DeleteProcesoSeleccion(int pId, string pUsuarioModificacion)
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
@@ -220,43 +224,47 @@ namespace asivamosffie.services
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
-                    strCrearEditar = "ELIMINAR PROCESO SELECCION";
-                    ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
-                    //Auditoria
-                    //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
-                    ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+                strCrearEditar = "ELIMINAR PROCESO SELECCION";
+                ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(pId);
+                //Auditoria
+                //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
-                    //Registros
-                    ProcesoSeleccionAntiguo.Eliminado = true;
+                //Registros
+                ProcesoSeleccionAntiguo.Eliminado = true;
 
-                    _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
+                _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
 
-                
+
 
                 await _context.SaveChangesAsync();
 
                 return respuesta = new Respuesta
-                       {
-                           IsSuccessful = true,IsException = false,
-                           IsValidation = false, Data = null,
-                           Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, pUsuarioModificacion, strCrearEditar)
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, pUsuarioModificacion, strCrearEditar)
 
-                       };
+                };
             }
             catch (Exception ex)
             {
                 return respuesta = new Respuesta
-                       {
-                           IsSuccessful = false, IsException = true,
-                           IsValidation = false, Data = null,
-                           Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
-                       };
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                };
             }
         }
 
-        public async Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender )
+        public async Task<Respuesta> ChangeStateProcesoSeleccion(int pId, string pUsuarioModificacion, string pCodigoEstado, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
@@ -265,7 +273,7 @@ namespace asivamosffie.services
             try
             {
                 strCrearEditar = "CAMBIAR ESTADO PROCESO SELECCION";
-                ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
+                ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(pId);
                 //Auditoria
                 ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
                 ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
@@ -275,17 +283,17 @@ namespace asivamosffie.services
 
                 //_context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 //si el estado es apertura tramite se debe enviar un mensaje a la secretaria de comite jflorez
-                if(pCodigoEstado== ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite ||
+                if (pCodigoEstado == ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite ||
                     pCodigoEstado == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite)
                 {
                     var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
-                    foreach(var usuario in usuariosecretario)
+                    foreach (var usuario in usuariosecretario)
                     {
                         Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
-                        string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_",pDominioFront).Replace("[NumeroSol]",ProcesoSeleccionAntiguo.NumeroProceso).Replace("[FechaSol]", ProcesoSeleccionAntiguo.FechaCreacion.ToString("dd/MM/yy"));
+                        string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", pDominioFront).Replace("[NumeroSol]", ProcesoSeleccionAntiguo.NumeroProceso).Replace("[FechaSol]", ProcesoSeleccionAntiguo.FechaCreacion.ToString("dd/MM/yy"));
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Proceso de selección en tramite", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
-                    
+
 
                 }
 
@@ -297,23 +305,27 @@ namespace asivamosffie.services
                 await _context.SaveChangesAsync();
 
                 return respuesta = new Respuesta
-                       {
-                           IsSuccessful = true,IsException = false,
-                           IsValidation = false, Data = null,
-                           Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, pUsuarioModificacion, strCrearEditar)
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, pUsuarioModificacion, strCrearEditar)
 
-                       };
+                };
             }
             catch (Exception ex)
             {
                 return respuesta = new Respuesta
-                       {
-                           IsSuccessful = false, IsException = true,
-                           IsValidation = false, Data = null,
-                           Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                           Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
-                       };
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                };
             }
         }
 
@@ -358,14 +370,14 @@ namespace asivamosffie.services
                     ProcesoSeleccionId = ProcesoSeleccion.ProcesoSeleccionId,
                     FechaCreacion = ProcesoSeleccion.FechaCreacion,
                     TipoProcesoCodigo = ProcesoSeleccion.TipoProcesoCodigo,
-                    TipoProcesoCodigoText = ProcesoSeleccion.TipoProcesoCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.TipoProcesoCodigo,(int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion) : "",
+                    TipoProcesoCodigoText = ProcesoSeleccion.TipoProcesoCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.TipoProcesoCodigo, (int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion) : "",
                     NumeroProceso = ProcesoSeleccion.NumeroProceso,
                     EtapaProcesoSeleccionCodigo = ProcesoSeleccion.EtapaProcesoSeleccionCodigo,
                     EEtapaProcesoSeleccionText = ProcesoSeleccion.EtapaProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EtapaProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Etapa_Proceso_Seleccion) : "",
                     EstadoProcesoSeleccionCodigo = ProcesoSeleccion.EstadoProcesoSeleccionCodigo,
                     EstadoProcesoSeleccionText = ProcesoSeleccion.EstadoProcesoSeleccionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.EstadoProcesoSeleccionCodigo, (int)EnumeratorTipoDominio.Estado_Proceso_Seleccion) : "",
                     EsCompleto = ProcesoSeleccion.EsCompleto.HasValue ? ProcesoSeleccion.EsCompleto.Value : false,
-                    EsCompletoText = ProcesoSeleccion.EsCompleto.Value ? await  _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToInt32(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Registro) : "Incompleto",
+                    EsCompletoText = ProcesoSeleccion.EsCompleto.Value ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(Convert.ToInt32(ProcesoSeleccion.EsCompleto).ToString(), (int)EnumeratorTipoDominio.Estado_Registro) : "Incompleto",
                 };
                 ListGrillaControlCronograma.Add(ControlCronogramaGrilla);
             }
@@ -390,12 +402,12 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION CRONOGRAMA";
                     procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
                     procesoSeleccionCronograma.Eliminado = false;
-                   // procesoSeleccionCronograma.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                    // procesoSeleccionCronograma.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
 
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
-                    
-                    }
+
+                }
                 else
                 {
                     strCrearEditar = "EDIT PROCESO SELECCION CRONOGRAMA";
@@ -419,20 +431,23 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
                 }
 
-                if( esTransaccion )
+                if (esTransaccion)
                     return respuesta;
-                else{
+                else
+                {
 
                     await _context.SaveChangesAsync();
 
                     return respuesta = new Respuesta
-                        {
-                            IsSuccessful = true,IsException = false,
-                            IsValidation = false, Data = procesoSeleccionCronograma,
-                            Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = procesoSeleccionCronograma,
+                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, procesoSeleccionCronograma.UsuarioCreacion, strCrearEditar)
 
-                        };
+                    };
 
                 }
             }
@@ -470,7 +485,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION GRUPO";
                     procesoSeleccionGrupo.FechaCreacion = DateTime.Now;
                     procesoSeleccionGrupo.Eliminado = false;
-                    procesoSeleccionGrupo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo!=null?procesoSeleccionGrupo.NombreGrupo.ToUpper():"";
+                    procesoSeleccionGrupo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo != null ? procesoSeleccionGrupo.NombreGrupo.ToUpper() : "";
                     _context.ProcesoSeleccionGrupo.Add(procesoSeleccionGrupo);
                 }
                 else
@@ -479,7 +494,7 @@ namespace asivamosffie.services
                     ProcesoSeleccionGrupoAntiguo = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupo.ProcesoSeleccionGrupoId);
                     //Auditoria
                     ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = procesoSeleccionGrupo.UsuarioCreacion.ToUpper();
-                    ProcesoSeleccionGrupoAntiguo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo==null?"":procesoSeleccionGrupo.NombreGrupo.ToUpper();
+                    ProcesoSeleccionGrupoAntiguo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo == null ? "" : procesoSeleccionGrupo.NombreGrupo.ToUpper();
                     ProcesoSeleccionGrupoAntiguo.FechaModificacion = DateTime.Now;
 
 
@@ -514,7 +529,7 @@ namespace asivamosffie.services
         #endregion
 
 
-           #region Servicios Proceso Seleccion Cotizacion;
+        #region Servicios Proceso Seleccion Cotizacion;
 
 
         public async Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetProcesoSeleccionCotizacion()
@@ -567,7 +582,7 @@ namespace asivamosffie.services
                     procesoSeleccionCotizacion.FechaCreacion = DateTime.Now;
                     procesoSeleccionCotizacion.Eliminado = false;
                     _context.ProcesoSeleccionCotizacion.Add(procesoSeleccionCotizacion);
-                    
+
                 }
                 else
                 {
@@ -608,7 +623,7 @@ namespace asivamosffie.services
         #endregion
 
 
-          #region Servicios Proceso Seleccion Proponente;
+        #region Servicios Proceso Seleccion Proponente;
 
         public async Task<ProcesoSeleccionCronograma> GetProcesoSeleccionProponenteById(int id)
         {
@@ -617,17 +632,17 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes()
         {
-            return await _context.ProcesoSeleccionProponente.Where( p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId ).ToListAsync();
+            return await _context.ProcesoSeleccionProponente.Where(p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId).ToListAsync();
         }
 
         public async Task<ActionResult<List<GrillaProcesoSeleccionProponente>>> GetGridProcesoSeleccionProponente(int? procesoSeleccionId)
         {
             List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente =
-                (procesoSeleccionId != null  ? await _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccionId).ToListAsync()
+                (procesoSeleccionId != null ? await _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccionId).ToListAsync()
                 : await _context.ProcesoSeleccionProponente.ToListAsync());
 
 
-            List <GrillaProcesoSeleccionProponente> ListGrillaProcesoSeleccionProponente = new List<GrillaProcesoSeleccionProponente>();
+            List<GrillaProcesoSeleccionProponente> ListGrillaProcesoSeleccionProponente = new List<GrillaProcesoSeleccionProponente>();
 
             foreach (var PSP in ListProcesoSeleccionProponente)
             {
@@ -659,7 +674,7 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
 
             string strCrearEditar = "";
-            
+
             ProcesoSeleccionProponente ProcesoSeleccionProponenteAntiguo = _context.ProcesoSeleccionProponente.Find(procesoSeleccionProponente.ProcesoSeleccionProponenteId);
             try
             {
@@ -714,7 +729,7 @@ namespace asivamosffie.services
 
 
 
-  #region Servicios Proceso Seleccion Integrante;
+        #region Servicios Proceso Seleccion Integrante;
 
         public async Task<ProcesoSeleccionIntegrante> GetProcesoSeleccionIntegranteById(int id)
         {
@@ -806,7 +821,7 @@ namespace asivamosffie.services
         #endregion
 
 
-       //Registrar Seguimiento cronograma
+        //Registrar Seguimiento cronograma
         public async Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento)
         {
             Respuesta respuesta = new Respuesta();
@@ -897,23 +912,24 @@ namespace asivamosffie.services
             try
             {
 
-                pProcesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach( p => {
+                pProcesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(p =>
+                {
                     Contratista contratista = new Contratista();
 
-                    contratista.TipoIdentificacionCodigo =  ( p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2" ) ? "3" : "1"; //Nit - cedula
-                    contratista.NumeroIdentificacion =  string.IsNullOrEmpty( p.NumeroIdentificacion ) ? "0" : p.NumeroIdentificacion;
+                    contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
+                    contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
                     contratista.Nombre = p.NombreProponente;
-                    contratista.RepresentanteLegal = string.IsNullOrEmpty( p.NombreRepresentanteLegal ) ? p.NombreProponente : p.NombreRepresentanteLegal;
-                    contratista.RepresentanteLegalNumeroIdentificacion= string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
+                    contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
+                    contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
                     contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
                     //contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
                     contratista.Activo = true;
                     contratista.FechaCreacion = DateTime.Now;
                     contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();
-                    
-                    _context.Contratista.Add( contratista );
 
-                });                
+                    _context.Contratista.Add(contratista);
+
+                });
 
                 await _context.SaveChangesAsync();
 
@@ -940,10 +956,7 @@ namespace asivamosffie.services
                 };
             }
         }
-
-
-
-
+         
         //Grilla Seguimiento a cronograma
         // public async Task<ActionResult<List<GrillaCronogramaSeguimiento>>> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
         // {
@@ -972,10 +985,8 @@ namespace asivamosffie.services
 
         //     return ListGrillaCronogramaSeguimiento;
         // }
-
-
-
-     public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
+          
+        public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
         {
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -1144,7 +1155,7 @@ namespace asivamosffie.services
                                     int DepartamentoIdRL = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
                                     temp.MunucipioRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 14].Text, DepartamentoIdRL.ToString());//temp.Departamento.ToString()
                                 }
-                                
+
                                 //#15
                                 //Direccion Representante Legal
                                 if (!string.IsNullOrEmpty(worksheet.Cells[i, 15].Text)) { temp.DireccionRl = worksheet.Cells[i, 15].Text.ToUpper(); } else { temp.DireccionRl = string.Empty; }
@@ -1306,7 +1317,7 @@ namespace asivamosffie.services
         public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
         {
             //depende del tipo
-            if(procesoSeleccion.TipoProcesoCodigo==ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
+            if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
             {
                 if (
                  !string.IsNullOrEmpty(procesoSeleccion.Objeto)
@@ -1358,11 +1369,11 @@ namespace asivamosffie.services
                 else
                     return false;
             }
-            
+
         }
 
 
-        public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument,int procesoSeleccionId, string pUsuarioModifico)
+        public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, int procesoSeleccionId, string pUsuarioModifico)
         {
             Respuesta respuesta = new Respuesta();
 
@@ -1445,7 +1456,7 @@ namespace asivamosffie.services
                             //
                             _context.CofinanciacionAportante.Add(cofinanciacionAportante);
                             _context.SaveChanges();
-                          
+
                         }
                         //Temporal proyecto update
                         tempOrdenLegibilidad.EstaValidado = true;
@@ -1501,7 +1512,7 @@ namespace asivamosffie.services
         {
             Respuesta respuesta = new Respuesta();
             try
-            {            
+            {
                 var procesoSeleccionCot = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacionId);
                 procesoSeleccionCot.Eliminado = true;
                 procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
@@ -1517,7 +1528,7 @@ namespace asivamosffie.services
                         Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION GRUPO")
                     };
-        
+
             }
             catch (Exception ex)
             {
@@ -1528,7 +1539,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = true,
                         Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int) enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int) enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
                     };
             }
         }
