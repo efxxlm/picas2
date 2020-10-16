@@ -20,7 +20,7 @@ export interface RegistrosCargados {
     estado:string,
     estadoj:string,
     estadop:string,
-    gestion:string
+    gestion:{estadop:string,id:number}
 }
 
 @Component({
@@ -102,7 +102,9 @@ export class TablaProyectosTecnicoComponent {
         datos.push({fecha:element.fecha
           ,id:element.proyectoId,departamento:element.departamento,municipio:element.municipio,
           estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,estadop:element.estadoProyecto,
-          institucion:element.institucionEducativa,sede:element.sede,gestion:element.proyectoId});
+          institucion:element.institucionEducativa,sede:element.sede,
+          gestion:{id:element.proyectoId,estadop:element.estadoProyecto},
+        });
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;
@@ -133,13 +135,13 @@ export class TablaProyectosTecnicoComponent {
   ver(gestion:any)
   {
     console.log(gestion);    
-    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion.id}]);
+    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion}]);
   }
 
   eliminar(gestion:any)
   {
     console.log(gestion);  
-    this.proyectoid=gestion.id;
+    this.proyectoid=gestion;
     this.openDialogSiNo('', "¿Está seguro de eliminar este registro?",);  
     
   }

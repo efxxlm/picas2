@@ -443,7 +443,8 @@
               </div>
             </div>
             <div class="col-md-4 text-right">
-              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteAportante(i)">
+              <button mat-button color="warn" *ngIf="bitPuedoEditar"
+               type="button" class="btn-eliminar" (click)="deleteAportante(i)">
                 <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
                 Eliminar predio
               </button>
@@ -627,7 +628,8 @@
           </div>
         </div>
         <div class="text-right" *ngIf="proyecto.proyectoAportante.length>1">
-          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteAportanteAportante(ii)">
+          <button mat-button color="warn" type="button"  *ngIf="bitPuedoEditar"
+           class="btn-eliminar" (click)="deleteAportanteAportante(ii)">
             <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
             Eliminar aportante
           </button>
@@ -742,7 +744,8 @@
           </div>
         </div>
         <div class="text-right" *ngIf="proyecto.infraestructuraIntervenirProyecto.length>1">
-          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteInfraestructura(i)">
+          <button mat-button color="warn" type="button"  *ngIf="bitPuedoEditar"
+          class="btn-eliminar" (click)="deleteInfraestructura(i)">
             <img src="assets/img/icon/menos.svg" alt="Eliminar infraestructura">
             Eliminar infraestructura a intervenir
           </button>
@@ -750,7 +753,8 @@
       </div>
 
       <div class="text-right">
-        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="addInfraestructura()">
+        <button mat-button color="warn" type="button" class="btn-eliminar" 
+        *ngIf="bitPuedoEditar" (click)="addInfraestructura()">
           <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura">
           Agregar otra infraestructura a intervenir
         </button>
@@ -758,7 +762,8 @@
     </mat-card-content>
   </mat-card>
   <div class="mb-2em text-center animatedOpacity" *ngIf="formularioCompleto()">
-    <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSubmit()">
+    <button mat-button color="warn" class="btn-guardar" type="button"  *ngIf="bitPuedoEditar"
+     (click)="onSubmit()">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>

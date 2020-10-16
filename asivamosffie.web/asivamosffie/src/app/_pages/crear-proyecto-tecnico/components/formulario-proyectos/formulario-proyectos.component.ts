@@ -15,6 +15,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class FormularioProyectosComponent implements OnInit {
 
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+  permiso que tenga el usuario
+  */
+  bitPuedoEditar=true;
   maxDate: Date;
   tipoAportante = TiposAportante;
   listadoDocumentoAcreditacion: Dominio[];
@@ -160,11 +164,12 @@ export class FormularioProyectosComponent implements OnInit {
         this.listaCordinaciones = listas[6];
         this.listadoConvocatoria = listas[7];
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
-          console.log("este es el proyecto ");
-          console.log(respuesta);
+          
           this.proyecto = respuesta;
-          console.log(this.proyecto);
-          console.log(this.proyecto.predioPrincipal.tipoPredioCodigo);
+          if(this.proyecto.estadoProyectoCodigo!='1')
+          {
+            this.bitPuedoEditar=false;
+          }
           //this.proyecto.predioPrincipal.tipoPredioCodigo;
           // ajusto lartitud y longitud
           if (respuesta.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {

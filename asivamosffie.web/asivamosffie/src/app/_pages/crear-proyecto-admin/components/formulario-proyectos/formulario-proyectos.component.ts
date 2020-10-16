@@ -13,7 +13,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormularioProyectosComponent implements OnInit {
 
-
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+    permiso que tenga el usuario
+    */
+  bitPuedoEditar=true;
   proyectoAdmin: ProyectoAdministrativo;
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
@@ -89,7 +92,10 @@ export class FormularioProyectosComponent implements OnInit {
           this.onchangeFont(i);
           i++
         });
-        
+        if(this.proyectoAdmin.enviado)
+        {
+          this.bitPuedoEditar=false;
+        }
         console.log(this.proyectoAdmin);
       }
       else{
