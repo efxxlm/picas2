@@ -417,7 +417,7 @@ namespace asivamosffie.services
                 {
                     if (!string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo))
                     {
-                        TemaCompromiso.EstadoCodigo = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo)? ConstantStringCompromisos.Sin_Iniciar: ListEstadoReportado.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                        TemaCompromiso.EstadoCodigo = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo) ? "Sin iniciar": ListEstadoReportado.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
                     }
                     if (TemaCompromiso.Responsable != null)
                     {
@@ -435,7 +435,7 @@ namespace asivamosffie.services
                 {
                     if (!string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo))
                     {
-                        SesionSolicitudCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstantStringCompromisos.Sin_Iniciar: ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+                        SesionSolicitudCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? "Sin iniciar" : ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
                     } 
                     if (SesionSolicitudCompromiso.ResponsableSesionParticipanteId > 0)
                     {
