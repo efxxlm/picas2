@@ -318,6 +318,21 @@ namespace asivamosffie.api.Controllers
             }
         }
         
+        [Route("GenerateDRP")]
+        [HttpGet]
+        public async Task<IActionResult> GenerateDRP(int pContratoId)
+        {
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                return File(await _technicalRequirementsConstructionPhaseService.GetPDFDRP(pContratoId, UsuarioModificacion), "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }

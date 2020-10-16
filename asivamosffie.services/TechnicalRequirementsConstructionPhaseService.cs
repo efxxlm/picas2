@@ -31,18 +31,21 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         public readonly IConverter _converter;
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
+        public readonly IBudgetAvailabilityService _budgetAvailabilityService;
 
         public TechnicalRequirementsConstructionPhaseService(IConverter converter,
                                                             devAsiVamosFFIEContext context,
                                                             ICommonService commonService,
                                                             IDocumentService documentService,
-                                                            IRegisterPreContructionPhase1Service registerPreContructionPhase1Service)
+                                                            IRegisterPreContructionPhase1Service registerPreContructionPhase1Service,
+                                                            IBudgetAvailabilityService budgetAvailabilityService)
         {
             _converter = converter;
             _context = context;
             _documentService = documentService;
             _commonService = commonService;
             _registerPreContructionPhase1Service = registerPreContructionPhase1Service;
+            _budgetAvailabilityService = budgetAvailabilityService;
         }
 
         public async Task<List<dynamic>> GetContractsGrid(int pUsuarioId)
@@ -579,8 +582,14 @@ namespace asivamosffie.services
                 }
 
                 Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
-                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
-                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                
+                if ( contrato.TipoContratoCodigo == "1" ) // contrato de obra
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                
+                if ( contrato.TipoContratoCodigo == "2" ) // contrato de interventoria
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
                 return
@@ -1377,8 +1386,29 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
+        public async Task<byte[]> GetPDFDRP(int pContratoId, string usuarioModificacion)
+        {
+            if (pContratoId == 0)
+            {
+                throw new Exception("Debe enviar el id del contrato");
+            }
 
+            Contrato contrato = _context.Contrato.Where( c => c.ContratoId == pContratoId )
+                                                    .Include( r => r.Contratacion )
+                                                        .ThenInclude( r => r.DisponibilidadPresupuestal )
+                                                    .FirstOrDefault();
 
+            if ( contrato?.Contratacion?.DisponibilidadPresupuestal != null )
+                return await _budgetAvailabilityService.GetPDFDRP( contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion  );
+            else{
+                throw new Exception("El contrato no tiene DRP");
+            }
+
+        }
+
+        private string CambiarValidarEstados( string pTipoContrato, string pEstadoCodigo ){
+
+        }
 
 
     }

@@ -30,6 +30,8 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? RegistroCompleto { get; set; }
         public bool? Eliminado { get; set; }
+        public bool? TieneObservacionesApoyo { get; set;}
+        public bool? TieneObservacionesSupervisor { get; set;}
 
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }
         public virtual ICollection<ConstruccionPerfilNumeroRadicado> ConstruccionPerfilNumeroRadicado { get; set; }

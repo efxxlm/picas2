@@ -10,8 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ITechnicalRequirementsConstructionPhaseService
     {
-        Task<List<dynamic>> GetContractsGrid( int pUsuarioId );
-        Task<Contrato> GetContratoByContratoId( int pContratoId );
+        Task<List<dynamic>> GetContractsGrid(int pUsuarioId);
+        Task<Contrato> GetContratoByContratoId(int pContratoId);
         Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion);
@@ -23,9 +23,11 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId);
         Task<Respuesta> TransferMassiveLoadInvestmentFlow(string pIdDocument, string pUsuarioModifico);
         Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId);
-         Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId);
-         Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion);
-         Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, string pUsuarioModificacion);
+        Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId);
+        Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion);
+        Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, string pUsuarioModificacion);
+        Task<Byte[]> GetPDFDRP(int pContratoId, string usuarioModificacion);
+
 
     }
 }
