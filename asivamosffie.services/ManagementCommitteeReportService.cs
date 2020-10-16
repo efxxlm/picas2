@@ -78,9 +78,8 @@ namespace asivamosffie.services
                             grillaSesionComiteTecnicoCompromiso.SesionComiteTecnicoCompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId;
                             grillaSesionComiteTecnicoCompromiso.Compromiso = SesionSolicitudCompromiso.Tarea;
                             grillaSesionComiteTecnicoCompromiso.FechaCumplimiento = SesionSolicitudCompromiso.FechaCumplimiento;
-                            grillaSesionComiteTecnicoCompromiso.EstadoCodigo =  !string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? "Sin iniciar" :
-                            EstadoCompromisos.Where(r=> r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).Select(r=> r.Nombre).FirstOrDefault();
-
+                            grillaSesionComiteTecnicoCompromiso.EstadoCodigo =  string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? "Sin iniciar" :
+                            EstadoCompromisos.Where(r=> r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).Select(r=> r.Nombre).FirstOrDefault(); 
                             grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
                        
                     } 
