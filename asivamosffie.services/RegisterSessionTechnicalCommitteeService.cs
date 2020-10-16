@@ -3881,7 +3881,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<dynamic> ListMonitoreo()
+        public async Task<List<dynamic>> ListMonitoreo()
         {
 
             List<ComiteTecnico> comiteTecnicos = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
@@ -3904,10 +3904,7 @@ namespace asivamosffie.services
                     });
 
                 }
-            }
-
-
-
+            } 
             return dynamics;
         }
 

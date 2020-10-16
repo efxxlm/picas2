@@ -34,7 +34,7 @@ namespace asivamosffie.api.Controllers
  
         [HttpGet]
         [Route("ListMonitoreo")]
-        public async Task<dynamic> ListMonitoreo()
+        public async Task<List<dynamic>> ListMonitoreo()
         {
             return await _registerSessionTechnicalCommitteeService.ListMonitoreo();
         }
