@@ -7,11 +7,12 @@ import { GestionarTramiteControversiasContractualesRoutingModule } from './gesti
 import { ControlYTablaControversiasContractualesComponent } from './components/control-y-tabla-controversias-contractuales/control-y-tabla-controversias-contractuales.component';
 import { FormRegistrarControversiaContractuaComponent } from './components/form-registrar-controversia-contractua/form-registrar-controversia-contractua.component';
 import { GestionarTramiteControvrContractComponent } from './components/gestionar-tramite-controvr-contract/gestionar-tramite-controvr-contract.component';
+import { FormRegistrarControvrsAccordComponent } from './components/form-registrar-controvrs-accord/form-registrar-controvrs-accord.component';
 
 
 
 @NgModule({
-  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent],
+  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent],
   imports: [
     CommonModule,
     MaterialModule,
