@@ -17,6 +17,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     conclusionComitePretecnico: [null, Validators.required],
     procedeSolicitud: [null, Validators.required],
     requeridoComite: [null, Validators.required],
+    fechaRadicadoSAC: [null, Validators.required],
+    numeroRadicadoSAC: [null, Validators.required],
+    resumenJustificacionSolicitud: [null, Validators.required]
   });
   tipoControversiaArray = [
     { name: 'Terminación anticipada por incumplimiento (TAI)', value: '1' },
