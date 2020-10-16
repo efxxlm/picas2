@@ -3887,24 +3887,31 @@ namespace asivamosffie.services
             List<ComiteTecnico> comiteTecnicos = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
                                                                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                                    .ThenInclude(r => r.SesionSolicitudCompromiso)
-                                                                       .ThenInclude(r => r.CompromisoSeguimiento).Distinct().ToListAsync(); 
+                                                                       .ThenInclude(r => r.CompromisoSeguimiento).Distinct().ToListAsync();
 
-            List<dynamic> dynamics = new List<dynamic>(); 
+            List<dynamic> dynamics = new List<dynamic>();
             foreach (var comiteTecnico in comiteTecnicos)
             {
+                List<SesionSolicitudCompromiso> ListSesionComiteSolicitudComiteTecnico = new List<SesionSolicitudCompromiso>();
+
                 foreach (var SesionComiteSolicitudComiteTecnico in comiteTecnico.SesionComiteSolicitudComiteTecnico)
                 {
-                    dynamics.Add(new
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso)
                     {
-                        comiteTecnico.FechaOrdenDia,
-                        comiteTecnico.NumeroComite,
-                        cantidadCompromisos = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count(),
-                        cantidadCompromisosCumplidos = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r=> r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
-                        SesionComiteSolicitudComiteTecnico.SesionComiteSolicitudId
-                    });
-
+                        ListSesionComiteSolicitudComiteTecnico.Add(SesionSolicitudCompromiso);
+                    }
                 }
-            } 
+                dynamics.Add(new
+                {
+                    comiteTecnico.FechaOrdenDia,
+                    comiteTecnico.NumeroComite,
+                    cantidadCompromisos = ListSesionComiteSolicitudComiteTecnico.Count(),
+                    cantidadCompromisosCumplidos = ListSesionComiteSolicitudComiteTecnico.Where(r => r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
+                    comiteTecnico.ComiteTecnicoId
+                });
+
+
+            }
             return dynamics;
         }
 
