@@ -627,7 +627,7 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId)
         {
-            var dynamics = await _context.CompromisoSeguimiento.Where(r => r.SesionComiteTecnicoCompromisoId == SesionSolicitudCompromisoId).Select(r => new { r.FechaCreacion, r.DescripcionSeguimiento, r.EstadoCompromisoCodigo }).ToListAsync();
+            var dynamics = await _context.CompromisoSeguimiento.Where(r => r.SesionSolicitudCompromisoId == SesionSolicitudCompromisoId).Select(r => new { r.FechaCreacion, r.DescripcionSeguimiento, r.EstadoCompromisoCodigo }).ToListAsync();
             List<dynamic> ListDynamic = new List<dynamic>();
             List<Dominio> ListDominio = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
 
