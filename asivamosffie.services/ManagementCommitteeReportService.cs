@@ -51,33 +51,40 @@ namespace asivamosffie.services
                        && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                  .Include(r => r.SesionParticipante)
                  .Include(r => r.SesionComentario)
+                 .Include(r=> r.SesionComiteSolicitudComiteTecnico)
+                       .ThenInclude(r => r.SesionSolicitudCompromiso)
+                 .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                       .ThenInclude(r => r.SesionSolicitudCompromiso)
                  .Distinct()
                  .ToListAsync();
 
+            List<Dominio> EstadoCompromisos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Estado_Compromisos);
+
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
-                try
-                {
-                    GrillaSesionComiteTecnicoCompromiso grillaSesionComiteTecnicoCompromiso = new GrillaSesionComiteTecnicoCompromiso
-                    {
-                        ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId,
-                        FechaComite = ComiteTecnico.FechaOrdenDia,
-                        NumeroComite = ComiteTecnico.NumeroComite
-                    };
-                    if (ComiteTecnico.SesionComiteTecnicoCompromiso.Count() > 0)
-                    {
-                        grillaSesionComiteTecnicoCompromiso.SesionComiteTecnicoCompromisoId = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().SesionComiteTecnicoCompromisoId;
-                        grillaSesionComiteTecnicoCompromiso.Compromiso = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().Tarea;
-                        grillaSesionComiteTecnicoCompromiso.FechaCumplimiento = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().FechaCumplimiento;
-                        grillaSesionComiteTecnicoCompromiso.EstadoCodigo = ComiteTecnico.SesionComiteTecnicoCompromiso.FirstOrDefault().EstadoCodigo;
 
-                        grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico)
+                {
+
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso)
+                    {
+                        GrillaSesionComiteTecnicoCompromiso grillaSesionComiteTecnicoCompromiso = new GrillaSesionComiteTecnicoCompromiso
+                        {
+                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId,
+                            FechaComite = ComiteTecnico.FechaOrdenDia,
+                            NumeroComite = ComiteTecnico.NumeroComite
+                        };
+              
+                            grillaSesionComiteTecnicoCompromiso.SesionComiteTecnicoCompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId;
+                            grillaSesionComiteTecnicoCompromiso.Compromiso = SesionSolicitudCompromiso.Tarea;
+                            grillaSesionComiteTecnicoCompromiso.FechaCumplimiento = SesionSolicitudCompromiso.FechaCumplimiento;
+                            grillaSesionComiteTecnicoCompromiso.EstadoCodigo =  !string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? "Sin iniciar" :
+                            EstadoCompromisos.Where(r=> r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).Select(r=> r.Nombre).FirstOrDefault();
+
+                            grillaSesionComiteTecnicoCompromisos.Add(grillaSesionComiteTecnicoCompromiso);
+                       
                     } 
-                }
-                catch (Exception ex)
-                {
-
-                }
+                } 
             }
             return grillaSesionComiteTecnicoCompromisos;
         }
