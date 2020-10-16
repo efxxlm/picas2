@@ -136,9 +136,13 @@ namespace asivamosffie.services
                             foreach (var item in proyecto.ContratacionProyecto)
                             {
                                 item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
+
+                                if (item.Contratacion != null)
+                                {
+                                
                                 if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
                                 {
-                                    if (item.Contratacion.TipoSolicitudCodigo == "1" )
+                                    if (item.Contratacion.TipoSolicitudCodigo == "1")
                                     {
                                         proyectoGrilla.TieneObra = true;
                                     }
@@ -147,6 +151,7 @@ namespace asivamosffie.services
                                         proyectoGrilla.TieneInterventoria = true;
                                     }
                                 }
+                            }
                             }
                             ListProyectoGrilla.Add(proyectoGrilla);
                         }
