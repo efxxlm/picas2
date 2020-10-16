@@ -928,5 +928,25 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 };
             }
         }
+
+        public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion)
+        {
+            if (id == 0)
+            {
+                return Array.Empty<byte>();
+            }
+            DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
+                .Where(r => r.DisponibilidadPresupuestalId == id).FirstOrDefaultAsync();
+            //.Include(r => r.SesionComiteTema).FirstOrDefaultAsync();
+
+            if (disponibilidad == null)
+            {
+                return Array.Empty<byte>();
+            }
+            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_DDP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+            plantilla.Contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad);
+            return ConvertirPDF(plantilla);
+        }
     }
 }
