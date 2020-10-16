@@ -1358,6 +1358,9 @@ namespace asivamosffie.services
             {
                 var ListComiteTecnico = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
                                                                     .Include(r => r.SesionComiteTecnicoCompromiso)
+                                                                        .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                                           .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                               .ThenInclude(r => r.CompromisoSeguimiento)
                                                                     .Select(x => new
                                                                     {
                                                                         Id = x.ComiteTecnicoId,
