@@ -46,6 +46,15 @@
         Registros_Firmas = 34,
 
         Registros_Fuente_De_Uso = 38, 
-        Registros_Usos_Registros_Fuente_de_Uso = 39
+        Registros_Usos_Registros_Fuente_de_Uso = 39,
+
+        Tabla_Solicitudes_Contractuales=40,
+        Registros_Tabla_Solicitudes_Contractuales=41,
+        Tabla_Registros_Temas_Y_Proposiciones_y_Varios=42,
+
+        Titulo_solicitudes_contractuales =	43,
+        Titulo_temas_nuevos	= 44,
+        Titulo_proposicione_varios	= 45,
+        Descargar_Acta_Comite_Fiduciario = 35,
     }
 }

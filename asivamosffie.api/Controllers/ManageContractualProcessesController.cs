@@ -77,8 +77,9 @@ namespace asivamosffie.api.Controllers
                   .GetValue(src, null);
         }
 
-        [Route("RegistrarTramiteContratacion")]
+
         [HttpPost]
+        [Route("RegistrarTramiteContratacion")] 
         public async Task<IActionResult> RegistrarTramiteContratacion([FromForm] Contratacion pContratacion, string FechaEnvioDocumentacion)
         {
             Respuesta respuesta = new Respuesta(); 

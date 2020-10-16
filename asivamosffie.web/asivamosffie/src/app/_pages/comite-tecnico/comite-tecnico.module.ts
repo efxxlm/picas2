@@ -34,6 +34,7 @@ import { FormProposicionesYVariosComponent } from './components/form-proposicion
 import { TablaVerificarCumplimientoComponent } from './components/tabla-verificar-cumplimiento/tabla-verificar-cumplimiento.component';
 import { DialogVerDetalleComponent } from './components/dialog-ver-detalle/dialog-ver-detalle.component';
 import { VotacionTemaComponent } from './components/votacion-tema/votacion-tema.component'
+import { tablaComentariosActaComponent } from './components/tabla-comentarios-acta/tabla-comentarios-acta.component'
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { VotacionTemaComponent } from './components/votacion-tema/votacion-tema.
     FormProposicionesYVariosComponent,
     TablaVerificarCumplimientoComponent,
     DialogVerDetalleComponent,
-    VotacionTemaComponent
+    VotacionTemaComponent,
+    tablaComentariosActaComponent
   ],
   imports: [
     CommonModule,

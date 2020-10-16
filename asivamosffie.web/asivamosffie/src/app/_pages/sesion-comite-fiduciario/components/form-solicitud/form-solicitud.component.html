@@ -206,7 +206,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly
+                    <input matInput [max]="fechaMaxima" [matDatepicker]="picker" formControlName="fecha" readonly
                       (click)="picker.open()">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
