@@ -51,7 +51,8 @@ namespace asivamosffie.services
                 .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion
                        && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                  .Include(r => r.SesionParticipante)
-                         .Include(r => r.SesionComentario)
+                 .Include(r => r.SesionComentario)
+                         .Distinct()
                   .ToListAsync();
 
             foreach (var ComiteTecnico in ListComiteTecnico)
