@@ -3901,14 +3901,18 @@ namespace asivamosffie.services
                         ListSesionComiteSolicitudComiteTecnico.Add(SesionSolicitudCompromiso);
                     }
                 }
-                dynamics.Add(new
+
+                if (ListSesionComiteSolicitudComiteTecnico.Count() > 0)
                 {
-                    comiteTecnico.FechaOrdenDia,
-                    comiteTecnico.NumeroComite,
-                    cantidadCompromisos = ListSesionComiteSolicitudComiteTecnico.Count(),
-                    cantidadCompromisosCumplidos = ListSesionComiteSolicitudComiteTecnico.Where(r => r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
-                    comiteTecnico.ComiteTecnicoId
-                });
+                    dynamics.Add(new
+                    {
+                        comiteTecnico.FechaOrdenDia,
+                        comiteTecnico.NumeroComite,
+                        cantidadCompromisos = ListSesionComiteSolicitudComiteTecnico.Count(),
+                        cantidadCompromisosCumplidos = ListSesionComiteSolicitudComiteTecnico.Where(r => r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
+                        comiteTecnico.ComiteTecnicoId
+                    });
+                }
 
 
             }
