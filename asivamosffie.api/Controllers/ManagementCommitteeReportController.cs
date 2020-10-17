@@ -31,6 +31,13 @@ namespace asivamosffie.api.Controllers
 
         }
 
+        [Route("GetListCompromisoSeguimiento")]
+        [HttpGet]
+        public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId)
+        {
+            return await _managementCommitteeReportService.GetListCompromisoSeguimiento(SesionSolicitudCompromisoId); 
+        }
+
 
 
         [Route("GetManagementCommitteeReport")]
@@ -76,8 +83,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [Route("GetManagementCommitteeReportById")]
         [HttpGet]
         public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
@@ -92,8 +97,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [Route("ChangeStatusSesionComiteSolicitudCompromiso")]
         [HttpPost]
         public async Task<IActionResult> ChangeStatusSesionComiteSolicitudCompromiso([FromBody] SesionSolicitudCompromiso pSesionSolicitudCompromiso)
@@ -104,7 +107,7 @@ namespace asivamosffie.api.Controllers
 
                 pSesionSolicitudCompromiso.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 pSesionSolicitudCompromiso.UsuarioModificacion = HttpContext.User.FindFirst("UserId").Value;
-                 
+
                 respuesta = await _managementCommitteeReportService.ChangeStatusSesionComiteSolicitudCompromiso(pSesionSolicitudCompromiso);
                 return Ok(respuesta);
 
@@ -115,7 +118,6 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
 
         [Route("CreateOrEditReportProgress")]
         [HttpPost]

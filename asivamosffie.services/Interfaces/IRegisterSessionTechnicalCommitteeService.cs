@@ -12,6 +12,8 @@ namespace asivamosffie.services.Interfaces
         Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId );
         Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto(int pSesionComiteSolicitudId, int pContratacionProyectoId);
 
+        Task<List<dynamic>> ListMonitoreo();
+
         Task<byte[]> GetPlantillaActaIdComite( int pdComite);
 
         Task<Respuesta> CambiarEstadoActa(int pSesionComiteSolicitud, string pCodigoEstado, string pUsuarioModifica);
