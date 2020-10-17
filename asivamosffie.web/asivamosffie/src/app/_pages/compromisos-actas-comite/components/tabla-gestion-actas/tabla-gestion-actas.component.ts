@@ -16,7 +16,7 @@ export class TablaGestionActasComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
-  displayedColumns: string[] = [ 'fechaCreacion', 'numeroComite', 'estadoComiteCodigo', 'gestion' ];
+  displayedColumns: string[] = [ 'fechaOrdenDia', 'numeroComite', 'estadoComiteCodigo', 'gestion' ];
   estadoCodigo: string;
 
   constructor ( private routes: Router,

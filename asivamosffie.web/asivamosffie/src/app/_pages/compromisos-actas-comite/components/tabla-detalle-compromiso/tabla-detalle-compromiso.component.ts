@@ -15,13 +15,12 @@ export class TablaDetalleCompromisoComponent implements OnInit {
   @Input() sesionComiteTecnicoCompromisoId: number;
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
-  displayedColumns: string[] = [ 'fechaRegistroAvanceCompromiso', 'descripcionSeguimiento', 'estadoCompromiso' ];
+  displayedColumns: string[] = [ 'fechaCreacion', 'descripcionSeguimiento', 'estadoCompromiso' ];
 
   constructor ( private compromisoSvc: CompromisosActasComiteService ) {
   }
 
   ngOnInit(): void {
-    //
     this.getDataTable( this.sesionComiteTecnicoCompromisoId );
   }
 

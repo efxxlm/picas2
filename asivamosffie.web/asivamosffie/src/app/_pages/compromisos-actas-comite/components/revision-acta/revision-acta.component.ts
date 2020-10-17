@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -14,7 +14,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
   templateUrl: './revision-acta.component.html',
   styleUrls: ['./revision-acta.component.scss']
 })
-export class RevisionActaComponent implements OnInit {
+export class RevisionActaComponent implements OnInit, OnDestroy {
 
   acta: any;
   form:FormGroup;
@@ -32,6 +32,7 @@ export class RevisionActaComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  fechaComentario: Date = new Date();
   miembrosParticipantes: any[] = [];
   temas: any[] = [];
   proposicionesVarios: any[] = [];
@@ -47,7 +48,13 @@ export class RevisionActaComponent implements OnInit {
                 private comiteTecnicoSvc: TechnicalCommitteSessionService ) {
     this.getActa( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
-  };
+  }
+  
+  ngOnDestroy(): void {
+    if ( this.form.get( 'comentarioActa' ).value !== null ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' )
+    }
+  }
 
   ngOnInit(): void {
   };
@@ -56,6 +63,7 @@ export class RevisionActaComponent implements OnInit {
     this.compromisoSvc.getActa( comiteTecnicoId )
       .subscribe( ( resp: any ) => {
         this.acta = resp[0];
+        console.log( this.acta );
         this.acta.sesionComiteSolicitudComiteTecnico = null;
 
         for ( let temas of resp[0].sesionComiteTema ) {
@@ -109,6 +117,19 @@ export class RevisionActaComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
+  };
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
   };
   //Submit de la data
   onSubmit () {

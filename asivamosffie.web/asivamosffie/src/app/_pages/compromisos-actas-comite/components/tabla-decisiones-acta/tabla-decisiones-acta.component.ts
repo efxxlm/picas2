@@ -6,6 +6,7 @@ import { CommonService } from '../../../../core/_services/common/common.service'
 import { MatDialog } from '@angular/material/dialog';
 import { ObservacionDialogComponent } from '../observacion-dialog/observacion-dialog.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 
 @Component({
   selector: 'app-tabla-decisiones-acta',
@@ -15,6 +16,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaDecisionesActaComponent implements OnInit {
 
   @Input() contratacionId: number;
+  @Input() tipoSolicitudCodigo: string;
   dataSource = new MatTableDataSource();
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
   data: any[] = [];
@@ -23,6 +25,7 @@ export class TablaDecisionesActaComponent implements OnInit {
 
   constructor ( private projectContractingSvc: ProjectContractingService,
                 private commonSvc: CommonService,
+                private compromisoActaSvc: CompromisosActasComiteService,
                 private dialog: MatDialog ) {
   }
 
@@ -30,15 +33,38 @@ export class TablaDecisionesActaComponent implements OnInit {
     this.commonSvc.listaEstadoProyecto()
       .subscribe( ( resp: any ) => this.listaEstadoProyectos = resp );
 
-    if ( this.contratacionId !== null ) {
+    if ( this.contratacionId !== null && this.tipoSolicitudCodigo !== null ) {
 
-      this.projectContractingSvc.getContratacionByContratacionIdWithGrillaProyecto( this.contratacionId )
-      .subscribe( ( resp: any ) => {
-        for ( let contratacion of resp.contratacionProyecto ) {
-          this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.sesionSolicitudObservacionProyecto } )
+      this.commonSvc.listaTipoSolicitud()
+      .subscribe( ( response: any[] ) => {
+
+        const tipoSolicitud = response.filter( tipo => tipo.codigo === this.tipoSolicitudCodigo );
+
+        if ( tipoSolicitud[0].nombre === 'Apertura de proceso de selección' ) {
+          //this.compromisoActaSvc.getSelectionProcessById( this.contratacionId )
+          //  .subscribe( console.log );
+          //Por integrar
         }
-        this.dataSource = new MatTableDataSource( this.data );
-        this.dataSource.sort = this.sort;
+        if ( tipoSolicitud[0].nombre === 'Contratación' ) {
+          this.projectContractingSvc.getContratacionByContratacionIdWithGrillaProyecto( this.contratacionId )
+          .subscribe( ( resp: any ) => {
+            for ( let contratacion of resp.contratacionProyecto ) {
+              this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.sesionSolicitudObservacionProyecto } )
+            }
+            this.dataSource = new MatTableDataSource( this.data );
+            this.dataSource.sort = this.sort;
+          } )
+        }
+        if ( tipoSolicitud[0].nombre === 'Modificación contractual' ) {
+          //Por integrar
+        }
+        if ( tipoSolicitud[0].nombre === 'Controversias contractuales' ) {
+          //Por integrar
+        }
+        if ( tipoSolicitud[0].nombre === 'Defensa Judicial' ) {
+          //Por integrar
+        }
+        
       } )
 
     }

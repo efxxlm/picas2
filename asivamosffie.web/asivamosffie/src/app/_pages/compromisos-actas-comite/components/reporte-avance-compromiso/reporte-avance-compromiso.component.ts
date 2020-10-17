@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -10,13 +10,14 @@ import { CompromisosActasComiteService } from '../../../../core/_services/compro
   templateUrl: './reporte-avance-compromiso.component.html',
   styleUrls: ['./reporte-avance-compromiso.component.scss']
 })
-export class ReporteAvanceCompromisoComponent implements OnInit {
+export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
 
   reporte          :FormGroup;
   estadoBoolean    : boolean = false;
   estadoComite     : string = '';
   comite: any = {};
   estadoCodigo: string;
+  seRealizoPeticion: boolean = false;
   estados          : any[] = [
     { value: '1', viewValue: 'Sin iniciar' },
     { value: '2', viewValue: 'En proceso' },
@@ -26,12 +27,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
     height: '100px'
   };
   config = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
-    ]
+    toolbar: []
   };
 
   constructor ( private routes: Router,
@@ -40,11 +36,47 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private compromisoSvc: CompromisosActasComiteService ) {
     this.getComite();
-    //this.getCompromiso( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    if ( this.comite ) {
+      const observacion = await this.compromisoSvc.cargarObservacionGestion( this.comite.sesionComiteTecnicoCompromisoId )
+      if ( observacion !== null ) {
+        this.reporte.get( 'reporteEstado' ).setValue( observacion );
+      };
+    };
+  };
+
+  ngOnDestroy(): void {
+    if ( this.estadoCodigo === undefined && this.reporte.get( 'reporteEstado' ).value !== null ) {
+      if ( this.seRealizoPeticion === false ) {
+        this.openDialog( '', 'Debe seleccionar el estado del Compromiso' );
+        this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+      };
+    };
+    if ( this.estadoCodigo !== undefined && this.reporte.get( 'reporteEstado' ).value !== null ) {
+      if ( this.seRealizoPeticion === false ) {
+        this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+      };
+    };
+  }
+
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          if ( this.estadoCodigo === undefined && this.reporte.get( 'reporteEstado' ).value !== null ) {
+            this.openDialog( '', 'Debe seleccionar el estado del Compromiso' );
+          }
+          this.compromisoSvc.guardarObservacionStorage( this.reporte.get( 'reporteEstado' ).value, this.comite.sesionComiteTecnicoCompromisoId );
+        }
+      } );
   };
 
   getComite () {
@@ -89,16 +121,10 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
     });
   }
 
-  getEstado ( value: string ) {
-
-    console.log( value );
-    
-  };
-
   onSubmit () {
     
-    if ( this.reporte.invalid ) {
-      this.openDialog('Falta registrar información', '');
+    if ( this.reporte.invalid || this.estadoCodigo === undefined ) {
+      this.openDialog( '', 'Falta registrar información' );
       return;
     };
 
@@ -107,8 +133,9 @@ export class ReporteAvanceCompromisoComponent implements OnInit {
     this.compromisoSvc.postCompromisos( this.comite, this.estadoCodigo )
       .subscribe( 
         ( resp: any ) => {
-          console.log( resp );
-          this.openDialog( this.textoLimpioMessage( resp.message ), '');
+          this.seRealizoPeticion = true;
+          this.compromisoSvc.eliminarObservacionStorage( this.comite.sesionComiteTecnicoCompromisoId );
+          this.openDialog( '',  this.textoLimpioMessage( resp.message ) );
           this.routes.navigate( [ '/compromisosActasComite' ] )
         },
         ( error: any ) => {
