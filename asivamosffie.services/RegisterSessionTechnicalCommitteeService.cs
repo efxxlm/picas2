@@ -456,7 +456,26 @@ namespace asivamosffie.services
 
             try
             {
-                ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(pComiteTecnicoId);
+                ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico
+                                                            .Where(ct => ct.ComiteTecnicoId == pComiteTecnicoId)
+                                                            .Include(r => r.SesionComiteTema)
+                                                            .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                            .FirstOrDefault();
+
+                if (comiteTecnicoOld.SesionComiteTema.Where( t => t.Eliminado != true ).ToList().Count > 0 ||
+                     comiteTecnicoOld.SesionComiteTecnicoCompromiso.Where( c => c.Eliminado != true ).ToList().Count > 0
+                    )
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.ErrorEliminarDependencia,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.ErrorEliminarDependencia, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
+                    };
+                }
+
 
                 comiteTecnicoOld.UsuarioModificacion = pUsuarioModifico;
                 comiteTecnicoOld.FechaModificacion = DateTime.Now;
@@ -469,7 +488,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.EliminacionExitosa, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
                 };
             }
             catch (Exception ex)
@@ -483,6 +502,14 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString())
                 };
             }
+
+
+
+
+
+
+
+
 
         }
 
@@ -1069,7 +1096,7 @@ namespace asivamosffie.services
 
             //    comiteTecnico.SesionParticipante = sesionParticipantes;
 
-            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
+            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true ).ToList();
 
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)

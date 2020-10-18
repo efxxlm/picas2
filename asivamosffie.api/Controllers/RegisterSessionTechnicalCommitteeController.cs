@@ -41,18 +41,17 @@ namespace asivamosffie.api.Controllers
         }
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
-        public async Task<IActionResult> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 respuesta = await _registerSessionTechnicalCommitteeService.DeleteComiteTecnicoByComiteTecnicoId(pComiteTecnicoId, HttpContext.User.FindFirst("User").Value);
-                return Ok(respuesta);
+                return respuesta;
             }
             catch (Exception ex)
             {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
+                throw ex;
             }
         }
 
