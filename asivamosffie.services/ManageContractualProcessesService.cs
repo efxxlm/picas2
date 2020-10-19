@@ -528,12 +528,15 @@ namespace asivamosffie.services
                          ).ToListAsync();
                  
                 List<Dominio> ListasParametricas = _context.Dominio.ToList();
-             
+
+                //Listas Contratacion
+                
                 foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
                 {
                     switch (sesionComiteSolicitud.TipoSolicitudCodigo)
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
+
                             Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
                             // sesionComiteSolicitud.Contratacion = contratacion;

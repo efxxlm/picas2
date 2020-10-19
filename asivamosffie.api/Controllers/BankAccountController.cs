@@ -16,8 +16,7 @@ namespace asivamosffie.api.Controllers
     public class BankAccountController : ControllerBase
     {
         public readonly IBankAccountService _bankAccount;
-
-
+         
         public BankAccountController(IBankAccountService bankAccount)
         {
             _bankAccount = bankAccount;
