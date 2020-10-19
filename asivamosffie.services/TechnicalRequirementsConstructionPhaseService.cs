@@ -1406,9 +1406,9 @@ namespace asivamosffie.services
 
         }
 
-        private string CambiarValidarEstados( string pTipoContrato, string pEstadoCodigo ){
+        // private string CambiarValidarEstados( string pTipoContrato, string pEstadoCodigo ){
 
-        }
+        // }
 
 
     }
