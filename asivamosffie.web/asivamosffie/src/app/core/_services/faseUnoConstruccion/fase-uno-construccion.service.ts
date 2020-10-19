@@ -44,6 +44,10 @@ export class FaseUnoConstruccionService {
   createEditConstruccionPerfil ( ContratoConstruccion: any ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditConstruccionPerfil`, ContratoConstruccion );
   };
+
+  createEditObservacionesCarga ( pArchivoCargueId: number, pObservacion: string ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionesCarga?pArchivoCargueId=${ pArchivoCargueId }`, pObservacion );
+  }
   //Peticiones POST Carga Masiva "Programación de obra"
   uploadFileToValidateProgramming ( pContratoConstruccinId: number, documento: File ) {
     const formData = new FormData(); 
@@ -71,6 +75,10 @@ export class FaseUnoConstruccionService {
 
   deleteConstruccionPerfilNumeroRadicado ( pConstruccionPerfilNumeroRadicadoId: number ) {
     return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteConstruccionPerfilNumeroRadicado'pConstruccionPerfilNumeroRadicadoId=${ pConstruccionPerfilNumeroRadicadoId }` )
+  };
+
+  deleteArchivoCargue ( pArchivoCargueId: number ) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteArchivoCargue?pArchivoCargueId=${ pArchivoCargueId }` );
   };
 
 }

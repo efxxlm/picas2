@@ -62,6 +62,7 @@ export class DialogObservacionesProgramacionComponent implements OnInit {
       data : { modalTitle, modalText }
     });
   };
+  
   guardar() {
     this.dialogRef.close({ data: this.formObservacion.get('observaciones').value });
     this.openDialog("","La información ha sido guardada exitosamente");

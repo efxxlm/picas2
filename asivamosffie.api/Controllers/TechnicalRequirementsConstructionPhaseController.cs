@@ -183,7 +183,7 @@ namespace asivamosffie.api.Controllers
         
         [Route("CreateEditObservacionesCarga")]
         [HttpPost]
-        public async Task<IActionResult> CreateEditObservacionesCarga([FromQuery]  int pArchivoCargueId, string pObservacion)
+        public async Task<IActionResult> CreateEditObservacionesCarga([FromQuery]  int pArchivoCargueId,[FromBody] string pObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try

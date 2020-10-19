@@ -204,7 +204,7 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
 
   getCargaMasiva ( terminoCarga: boolean = false ) {
     if ( terminoCarga ) this.getContrato();
-  }
+  };
 
   getPerfilesContrato ( index: number, perfilContrato: ContratoPerfil[] ) {
 

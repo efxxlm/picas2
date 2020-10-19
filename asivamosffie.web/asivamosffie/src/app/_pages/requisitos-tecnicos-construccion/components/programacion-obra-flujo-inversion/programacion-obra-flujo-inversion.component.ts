@@ -12,8 +12,8 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() esFlujoInversion: boolean;
   @Input() contratoConstruccionId: number;
   @Output() terminoCarga = new EventEmitter();
-  tieneRegistrosObra: boolean;
-  tieneRegistrosInversion: boolean;
+  tieneRegistrosObra: boolean = true;
+  tieneRegistrosInversion: boolean = true;
 
   constructor ( private dialog: MatDialog ) { }
 
