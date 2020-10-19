@@ -200,8 +200,9 @@ namespace asivamosffie.services
                                 InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                                 Sede = proyecto.Sede.Nombre,
                                 ProyectoId = proyecto.ProyectoId,
-                                
-                                
+                                URLMonitoreo=proyecto.UrlMonitoreo,
+
+
                             };
 
                             //r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
