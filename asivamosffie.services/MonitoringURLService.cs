@@ -413,7 +413,11 @@ namespace asivamosffie.services
                     strCrearEditar = "EDITAR URL MONITOREO";
                     proyecto.FechaModificacion = DateTime.Now;
                 proyecto.UsuarioModificacion = pUsuarioModificacion;
-                proyecto.UrlMonitoreo = pURLMonitoreo;
+
+                proyecto.UrlMonitoreo=Helpers.Helpers.ConvertToUpercase(pURLMonitoreo).ToString();
+                proyecto.UrlMonitoreo = Helpers.Helpers.CleanStringInput(proyecto.UrlMonitoreo);
+                
+                //proyecto.UrlMonitoreo = pURLMonitoreo;
                     //DP.Eliminado = false;
 
                     //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
