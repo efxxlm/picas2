@@ -33,7 +33,9 @@ namespace asivamosffie.services.Helpers.Enumerator
  
         Generar_Registro_Presupuestal=36,
 
-        
+        Cargar_enlace_monitoreo=43,
+
+
     }
 
     public enum enumeratorAccion

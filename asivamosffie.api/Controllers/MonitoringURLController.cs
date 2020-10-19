@@ -41,6 +41,26 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
-        
+        [HttpPost]
+        [Route("EditarURLMonitoreo")]        
+        public async Task<IActionResult> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                //string UsuarioModificacion= HttpContext.User.FindFirst("User").Value;
+                string UsuarioModificacion= "user";
+                respuesta = await _monitoringURLService.EditarURLMonitoreo( pProyectoId,  URLMonitoreo,  UsuarioModificacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
     }
 }

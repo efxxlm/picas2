@@ -388,7 +388,7 @@ namespace asivamosffie.services
 
 
 
-        public async Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo, string UsuarioModificacion)
+        public async Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string pURLMonitoreo, string pUsuarioModificacion)
         {
             Respuesta respuesta = new Respuesta();
 
@@ -411,7 +411,8 @@ namespace asivamosffie.services
                     //Auditoria
                     strCrearEditar = "EDITAR URL MONITOREO";
                     proyecto.FechaModificacion = DateTime.Now;
-                proyecto.UsuarioModificacion = UsuarioModificacion;
+                proyecto.UsuarioModificacion = pUsuarioModificacion;
+                proyecto.UrlMonitoreo = pURLMonitoreo;
                     //DP.Eliminado = false;
 
                     //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
@@ -424,8 +425,8 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Data = proyecto,
-                        Code = ConstantMessagesDisponibilidadPresupuesta.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesDisponibilidadPresupuesta.OperacionExitosa, idAccion, proyecto.UsuarioModificacion, strCrearEditar)
+                        Code = ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa, idAccion, proyecto.UsuarioModificacion, strCrearEditar)
                     };
 
                 //}
@@ -440,8 +441,8 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Data = null,
-                    Code = ConstantMessagesDisponibilidadPresupuesta.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesDisponibilidadPresupuesta.Error, idAccion, proyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Code = ConstantMessagesCargarEnlaceMonitoreo.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesDisponibilidadPresupuesta.Error, idAccion, proyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
