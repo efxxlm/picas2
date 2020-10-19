@@ -55,7 +55,8 @@
               <div class="col d-flex">
                 <mat-form-field class="full-width mainColor">
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
-                    maxlength="4" min="1" max="999" required type="number"
+                     min="1" max="999" required type="number"
+                    maxlength="3" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     formControlName="numAportes" 
                     >
                 </mat-form-field>
@@ -236,12 +237,10 @@
 
           <mat-card class="shipping-card"  *ngIf="aportante.cofinanciacionDocumento.length>0">
             <div *ngFor="let documento of aportante.cofinanciacionDocumento;index as a">
-              <mat-card-header>
-                <mat-card-title class="header-card--text alineacion-titulos">
+              <mat-card-content>
+                <mat-card-title class="mat-card-title header-card--text alineacion-titulos2">
                   Documento {{a+1}}
                 </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
                 <div class="row">
                   <div class="col-md-8">
                     <div class="row">

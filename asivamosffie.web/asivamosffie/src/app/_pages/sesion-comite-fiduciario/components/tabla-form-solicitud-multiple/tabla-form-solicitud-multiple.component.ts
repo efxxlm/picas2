@@ -69,6 +69,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   cambiarEstados(estado: string) {
     
     this.onChangeEstado();
+    
     if (estado) {
       if (this.cantidadProyecto == 1) {
         switch (estado) {
@@ -76,11 +77,11 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
             this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteFiduciario);
             this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.AprobadoComiteFiduciario; })
             break;
-          case this.estadosSolicitud.RechazadaPorComiteTecnico:
+          case this.estadosSolicitud.RechazadaPorComiteFiduciario:
             this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteFiduciario);
             this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.RechazadoComiteFiduciario; })
             break;
-          case this.estadosSolicitud.DevueltaPorComiteTecnico:
+          case this.estadosSolicitud.DevueltaPorComiteFiduciario:
             this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteFiduciario);
             this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.DevueltoComiteFiduciario; })
             break;

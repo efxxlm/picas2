@@ -10,14 +10,13 @@
     <p class="info-sub-title">
         <span>Fecha de la solicitud: <b> {{detailavailabilityBudget[0].fechaSolicitud | date:'dd/MM/yyyy'}}</b></span>
         <span><b>{{detailavailabilityBudget[0].tipoSolicitudText}}</b></span>
-        <span>Estado: <b>{{detailavailabilityBudget[0].estadoStr}}</b></span>
     </p>
 
 </section>
 <section class="container">
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
-            <p>
+            <p *ngIf="detailavailabilityBudget[0].numeroDDP">
                 <strong>Número DDP:</strong>
                 {{detailavailabilityBudget[0].numeroDDP}}
             </p>
@@ -112,12 +111,12 @@
     </mat-card>
 
     <div class="botones">
-        <button mat-raised-button color="accent" (click)="download()">Descargar DDP</button>
+        <button mat-raised-button color="accent" (click)="download()" *ngIf="detailavailabilityBudget[0].numeroDDP">Descargar DDP</button>
         <button mat-raised-button color="accent" (click)="validar()">Validar solicitud</button>
         <button mat-raised-button color="accent" (click)="openDialogDevolver(0)">Devolver por <br> validación presupuestal</button>
         <button mat-raised-button color="accent" (click)="openDialogDevolver(1)">Rechazar por <br> validación presupuestal</button>
     </div>
 
-    <app-tabla-gestionar-validacion [proyectos]="detailavailabilityBudget[0].proyectos"></app-tabla-gestionar-validacion>
+    <app-tabla-gestionar-validacion [proyectos]="detailavailabilityBudget[0].proyectos" [codigo]="detailavailabilityBudget[0].numeroSolicitud"></app-tabla-gestionar-validacion>
 </section>
 

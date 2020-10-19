@@ -155,8 +155,9 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico,_settings.Value.DominioFront
+                , _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
             return respuesta;
         }
 
@@ -182,7 +183,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> DeleteProyectoByProyectoId(int pProyectoId)
         {
-            var respuesta = await _projectService.DeleteProyectoByProyectoId(pProyectoId);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.DeleteProyectoByProyectoId(pProyectoId,pUsuarioModifico);
             return respuesta;
         }
 
@@ -191,6 +193,39 @@ namespace asivamosffie.api.Controllers
         public async Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId)
         {
             var respuesta = await _projectService.GetFontsByAportantId(pAportanteId);
+            return respuesta;
+        }
+
+        [Route("deleteFontByID")]
+        [HttpPost]
+        public async Task<bool> deleteFontByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deleteFontByID(pId, pUsuarioModifico);
+            return respuesta;
+        }
+        [Route("deletePredioByID")]
+        [HttpPost]
+        public async Task<bool> deletePredioByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deletePredioByID(pId, pUsuarioModifico);
+            return respuesta;
+        }
+        [Route("deleteAportantesByID")]
+        [HttpPost]
+        public async Task<bool> deleteAportantesByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deleteAportantesByID(pId, pUsuarioModifico);
+            return respuesta;
+        }
+        [Route("deleteInfraestructuraByID")]
+        [HttpPost]
+        public async Task<bool> deleteInfraestructuraByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deleteInfraestructuraByID(pId, pUsuarioModifico);
             return respuesta;
         }
     }

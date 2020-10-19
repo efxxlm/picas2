@@ -28,6 +28,7 @@ export interface ContratacionProyecto{
     porcentajeAvanceObra?: string,
     requiereLicencia?: boolean,
     licenciaVigente?: boolean,
+    dataAportantes?: any[],
     numeroLicencia?: string,
     fechaVigencia?: Date,
     tieneMonitoreoWeb?: boolean,

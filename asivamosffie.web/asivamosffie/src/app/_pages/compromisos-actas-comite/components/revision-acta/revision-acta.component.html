@@ -37,19 +37,21 @@
             Validación de solicitudes contractuales
           </mat-panel-title>
         </mat-expansion-panel-header>
+        <section *ngIf="acta.sesionComiteSolicitudComiteTecnico !== null">
 
-        <mat-accordion *ngIf="acta.sesionComiteSolicitudComiteTecnico.length > 0 || acta.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0">
-          <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud PI0004</b>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+        </section>
+          <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnico">
+            <mat-expansion-panel class="expansion-style sub-expansion">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title sub-expansion">
+                    <b>Solicitud {{ sesionComite.contratacion.numeroSolicitud }}</b>
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+    
+              <app-form-solicitud [solicitudes]="sesionComite"></app-form-solicitud>
   
-            <app-form-solicitud></app-form-solicitud>
-
-          </mat-expansion-panel>
-        </mat-accordion>
+            </mat-expansion-panel>
+          </mat-accordion>
 
       </mat-expansion-panel>
 
@@ -175,7 +177,8 @@
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
-          (click)="aprobarActa( acta.comiteTecnicoId )">
+          (click)="aprobarActa( acta.comiteTecnicoId )"
+          [disabled]="acta.estadoActaCodigo !=='2'">
           Aprobar acta
   </button>
   <button mat-raised-button 
@@ -186,12 +189,12 @@
           Comentar y devolver acta
   </button>
   <button mat-raised-button 
-  color="accent" 
-  class="tabs--btn"
-  (click)="comentarios = !comentarios"
-  *ngIf="acta.estadoActaCodigo ==='4'">
-  Comentarios del acta
-</button>
+          color="accent" 
+          class="tabs--btn"
+          (click)="comentarios = !comentarios"
+          *ngIf="acta.estadoActaCodigo ==='4'">
+          Comentarios del acta
+  </button>
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
