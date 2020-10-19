@@ -4,7 +4,7 @@
     public static class ConstanStringRespuestasBool
     {
         public const string SI = "si";
-        public const string NO = "no";//join con dep o municipio
+        public const string NO = "no";
      
     }
 }
