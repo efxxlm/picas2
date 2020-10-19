@@ -149,6 +149,11 @@ const routes: Routes = [
         path: 'cargarEnlaceMonitoreoEnLinea',
         loadChildren: () => import( './_pages/cargar-enlace-sistema-monitoreo-linea/cargar-enlace-sistema-monitoreo-linea.module' )
           .then( module => module.CargarEnlaceSistemaMonitoreoLineaModule )
+      },
+      {    
+        path: 'visualizarAvanceObraTiempoReal',
+        loadChildren: () => import( './_pages/visualizar-avance-obra-tiempo-real/visualizar-avance-obra-tiempo-real.module' )
+          .then( module => module.VisualizarAvanceObraTiempoRealModule )
       }
     ]
 

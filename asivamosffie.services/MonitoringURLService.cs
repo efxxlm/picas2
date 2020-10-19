@@ -202,7 +202,6 @@ namespace asivamosffie.services
                                 ProyectoId = proyecto.ProyectoId,
                                 URLMonitoreo=proyecto.UrlMonitoreo,
 
-
                             };
 
                             //r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
@@ -385,7 +384,6 @@ namespace asivamosffie.services
         //    return ListContratoGrilla.OrderByDescending(r => r.TipoSolicitud).ToList();
 
         //}
-
 
 
 

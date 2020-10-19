@@ -40,7 +40,6 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _monitoringURLService.GetListContratoProyectos();
             return respuesta;
         }
-
         [HttpPost]
         [Route("EditarURLMonitoreo")]        
         public async Task<IActionResult> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo)
