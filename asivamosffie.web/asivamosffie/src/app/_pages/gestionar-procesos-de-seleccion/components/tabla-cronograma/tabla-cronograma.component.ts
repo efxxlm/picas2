@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
-import { ProcesoSeleccionService, ProcesoSeleccionCronograma } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccionService, ProcesoSeleccionCronograma, ProcesoSeleccionMonitoreo, ProcesoSeleccionCronogramaMonitoreo } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { ActivatedRoute } from '@angular/router';
 import { from } from 'rxjs';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
@@ -110,24 +110,34 @@ export class TablaCronogramaComponent implements OnInit {
   onSubmit() {
 
     let listaActividades = this.addressForm as FormArray;
-    this.listaCronograma = [];
+    let listaCronograma:ProcesoSeleccionMonitoreo={estadoActividadCodigo:null,
+      numeroProceso:null,
+      procesoSeleccionCronogramaMonitoreo:[],
+      procesoSeleccionId:null, procesoSeleccionMonitoreoId:null
+    };
 
     let i = 0;
     listaActividades.controls.forEach(control => {
-      let procesoSeleccionCronograma: ProcesoSeleccionCronograma = {
+      let procesoSeleccionCronograma: ProcesoSeleccionCronogramaMonitoreo = {
         procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
         descripcion: control.get('descripcion').value,
         fechaMaxima: control.get('fecha').value,
-        procesoSeleccionId: this.idProcesoSeleccion,
+        //procesoSeleccionId: this.idProcesoSeleccion,
         numeroActividad: i,
 
       }
-      this.listaCronograma.push(procesoSeleccionCronograma);
+      listaCronograma.procesoSeleccionCronogramaMonitoreo.push(procesoSeleccionCronograma);
+      listaCronograma.procesoSeleccionId=this.idProcesoSeleccion;
       i++
     })
+    this.procesoSeleccionService.createEditarProcesoSeleccionCronogramaMonitoreo(listaCronograma).subscribe(respuesta => {
+      let res = respuesta[0] as Respuesta
+      if (res.code == "200")
+        this.openDialog("", res.message);
+    });
 
-    from(this.listaCronograma)
-      .pipe(mergeMap(cronograma => this.procesoSeleccionService.createEditarProcesoSeleccionCronograma(cronograma)
+    /*from(this.listaCronograma)
+      .pipe(mergeMap(cronograma => this.procesoSeleccionService.createEditarProcesoSeleccionCronogramaMonitoreo(cronograma)
         .pipe(
           tap()
         )
@@ -142,7 +152,7 @@ export class TablaCronogramaComponent implements OnInit {
         //jflorez deshabilito el modo visualización
         //this.editMode.valor = false; 
       })
-
+    */
   }
 
   openDialog(modalTitle: string, modalText: string) {

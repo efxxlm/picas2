@@ -41,6 +41,14 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarProcesoSeleccionCronograma`, cronograma );
   }
 
+  createEditarProcesoSeleccionCronogramaMonitoreo( cronograma: ProcesoSeleccionMonitoreo ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcessSchedule/setProcesoSeleccionMonitoreoCronograma`, cronograma );
+  }
+
+  listaProcesoSeleccionCronogramaMonitoreo( id: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);
+  }
+
   deleteProcesoSeleccion( pId: number ){
     return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccion?pId=${ pId }`);
   }
@@ -86,6 +94,17 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.get<any[]>(`${environment.apiUrl}/SelectionProcess/getObservacionesProcesoSeleccionProponentes?id=${id}`);
   }
   
+}
+export interface ProcesoSeleccionMonitoreo{
+  procesoSeleccionMonitoreoId:number,
+  procesoSeleccionId:number,
+  numeroProceso:string,
+  estadoActividadCodigo:string,
+  fechaCreacion?:string,
+  usuarioCreacion?:string,
+  eliminado?:boolean,
+  enviadoComiteTecnico?:boolean,
+  procesoSeleccionCronogramaMonitoreo:ProcesoSeleccionCronogramaMonitoreo[]
 }
 
 export interface ProcesoSeleccion{
@@ -152,6 +171,16 @@ export interface ProcesoSeleccionCronograma{
   fechaMaxima?: Date,
   estadoActividadCodigo?: string,
   procesoSeleccion?: ProcesoSeleccion
+}
+
+export interface ProcesoSeleccionCronogramaMonitoreo{
+  procesoSeleccionCronogramaId?: number,
+  procesoSeleccionMonitoreo?: number,
+  numeroActividad?: number,
+  descripcion?: string,
+  fechaMaxima?: Date,
+  estadoActividadCodigo?: string,
+  procesoSeleccionMonitorei?: ProcesoSeleccionMonitoreo
 }
 
 export interface ProcesoSeleccionCotizacion {
