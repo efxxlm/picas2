@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public int? ProcesoSeleccionMonitoreoId { get; set; }
+        public int? ProcesoSeleccionCronogramaId { get; set; }
 
         public virtual ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
     }
