@@ -5,34 +5,38 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-control-y-tabla-controversias-contractuales',
-  templateUrl: './control-y-tabla-controversias-contractuales.component.html',
-  styleUrls: ['./control-y-tabla-controversias-contractuales.component.scss']
+  selector: 'app-control-y-tabla-actua-tramite-cc',
+  templateUrl: './control-y-tabla-actua-tramite-cc.component.html',
+  styleUrls: ['./control-y-tabla-actua-tramite-cc.component.scss']
 })
-export class ControlYTablaControversiasContractualesComponent implements OnInit {
+export class ControlYTablaActuaTramiteCcComponent implements OnInit {
+
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
-    'fechaSolicitud',
-    'numeroSolicitud',
-    'tipoControversia',
-    'estadoControversia',
+    'fechaActualizacion',
+    'actuacion',
+    'numeroActuacion',
+    'estadoRegistro',
+    'estadoActuacion',
     'gestion',
   ];
   dataTable: any[] = [
     {
-      fechaSolicitud: '20/08/2020',
-      numeroSolicitud: 'CO001',
-      tipoControversia: '1',
-      estadoControversia: '1',
+      fechaActualizacion: '20/08/2020',
+      actuacion: 'Actuación 1',
+      numeroActuacion: '0001',
+      estadoRegistro: '1',
+      estadoActuacion: '1',
       id: 1
     },
     {
-      fechaSolicitud: '10/08/2020',
-      numeroSolicitud: 'CO002',
-      tipoControversia: '1',
-      estadoControversia: '3',
+      fechaActualizacion: '21/08/2020',
+      actuacion: 'Actuación 2',
+      numeroActuacion: '0002',
+      estadoRegistro: '2',
+      estadoActuacion: '2',
       id: 2
     }
   ];  
@@ -49,12 +53,16 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
+  enviarComiteTecnicoTramAct(id){
 
-  verDetalleEditarTramiteButton(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia',id]);
   }
+  verDetalleEditarActuacion(id){
 
-  actualizarTramiteButton(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',id]);
+  }
+  eliminarActuacion(id){
+
+  }
+  verDetalleActuacion(id){
+    
   }
 }

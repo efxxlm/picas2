@@ -37,6 +37,8 @@
                     <div *ngIf="element.estadoControversia=='1'">En proceso de registro</div>
                     <div *ngIf="element.estadoControversia=='2'">Enviada a comité técnico</div>
                     <div *ngIf="element.estadoControversia=='3'">Aprobada por comité técnico</div>
+                    <div *ngIf="element.estadoControversia=='4'">En trámite</div>
+                    <div *ngIf="element.estadoControversia=='5'">Cerrada</div>
                     </td>
             </ng-container>
     
@@ -48,7 +50,8 @@
                         Enviar trámite a comité técnico
                     </button>
                     -->
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='1'">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='1'"
+                    (click)=this.verDetalleEditarTramiteButton(element.id);>
                         Ver detalle/Editar 
                     </button>
                     <!-- Cuando empiezo a integrar la tabla correspondiente

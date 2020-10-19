@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -9,6 +9,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-registrar-controvrs-accord.component.scss']
 })
 export class FormRegistrarControvrsAccordComponent implements OnInit {
+  @Input() isEditable;
+
   addressForm = this.fb.group({
     tipoControversia: [null, Validators.required],
     fechaSolicitud: [null, Validators.required],
@@ -44,6 +46,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   };
   constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
+    if(this.isEditable==true){
+      this.addressForm.get('tipoControversia').setValue('1');
+      this.addressForm.get('fechaSolicitud').setValue('20/08/2020');
+      this.addressForm.get('motivosSolicitud').setValue('1');
+      this.addressForm.get('fechaComitePretecnico').setValue('10/10/2020');
+      this.addressForm.get('conclusionComitePretecnico').setValue('No funciona la obra');
+      this.addressForm.get('procedeSolicitud').setValue(true);
+      this.addressForm.get('requeridoComite').setValue(false);
+    }
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
