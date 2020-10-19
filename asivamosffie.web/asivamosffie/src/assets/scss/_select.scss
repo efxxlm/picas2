@@ -104,7 +104,7 @@
         &-checked::after {
             content: "";
             border: 0;
-            background-image: url('assets/img/icon/checked.svg'); //URL Background-image cambiada por error de compilacion "Carlos Molero".
+            background-image: url('~src/assets/img/icon/checked.svg'); //URL Background-image cambiada por error de compilacion "Carlos Molero".
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center center;

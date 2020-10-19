@@ -1470,7 +1470,7 @@ namespace asivamosffie.services
                 comiteTecnicoOld.FechaModificacion = DateTime.Now;
                 comiteTecnicoOld.FechaOrdenDia = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.FechaAplazamiento = pComiteTecnico.FechaAplazamiento;
-                comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
+                comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Aplazada;
 
                 _context.SaveChanges();
                 //Plantilla
@@ -2385,7 +2385,7 @@ namespace asivamosffie.services
                 || string.IsNullOrEmpty(sesionComiteTemaOld.TiempoIntervencion.ToString())
                 //|| !string.IsNullOrEmpty(sesionComiteTemaOld.RutaSoporte)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.Observaciones)
-                || sesionComiteTemaOld.EsAprobado == null
+                || (sesionComiteTemaOld.RequiereVotacion == true && sesionComiteTemaOld.EsAprobado == null)
                 || sesionComiteTemaOld.RequiereVotacion == null
                 //|| sesionComiteTemaOld.EsProposicionesVarios == null
                 || sesionComiteTemaOld.GeneraCompromiso == null

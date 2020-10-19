@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -179,5 +180,63 @@ namespace asivamosffie.services
             }
         }
 
+        public Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Respuesta> setProcesoSeleccionMonitoreoCronograma(ProcesoSeleccionMonitoreo procesoSeleccionCronograma)
+        {
+            Respuesta _response = new Respuesta();
+            int IdAccionCrearCuentaBancaria = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.Crear_Cronograma_monitoreo)).Select(x => x.DominioId).First();
+            try
+            {
+                if (procesoSeleccionCronograma != null)
+                {
+                    procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
+                    procesoSeleccionCronograma.Eliminado = false;
+                    _context.Add(procesoSeleccionCronograma);
+                    await _context.SaveChangesAsync();
+
+                    return _response = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsValidation = false,
+                        Data = procesoSeleccionCronograma,
+                        Code = ConstantMessagesProcessSchedule.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesContributor.OperacionExitosa, IdAccionCrearCuentaBancaria, procesoSeleccionCronograma.UsuarioCreacion.ToString(), "CREAR EDITAR CRONOGRAMA EN MONITOREO")
+                    };
+                }
+                else
+                {
+                    return _response = new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesProcessSchedule.RecursoNoEncontrado,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesContributor.RecursoNoEncontrado, IdAccionCrearCuentaBancaria, procesoSeleccionCronograma.UsuarioCreacion.ToString(), "ERROR EN LA CREACION EDICION EN CRONOGRAMA EN MONITOREO")
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcessSchedule.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesContributor.ErrorInterno, IdAccionCrearCuentaBancaria, procesoSeleccionCronograma.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
+
+                };
+            }
+        }
+
+        public Task<ActionResult<List<ProcesoSeleccionCronogramaMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId(int pProcesoSeleccionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

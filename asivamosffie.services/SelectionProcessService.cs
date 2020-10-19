@@ -1629,5 +1629,7 @@ namespace asivamosffie.services
         {
             return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
         }
+
+
     }
 }

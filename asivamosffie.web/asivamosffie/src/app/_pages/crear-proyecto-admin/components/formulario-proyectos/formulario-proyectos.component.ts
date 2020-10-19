@@ -100,7 +100,7 @@ export class FormularioProyectosComponent implements OnInit {
       }
       else{
         let idcontador = 0;
-        idcontador = respuesta?respuesta[0].proyectoAdminitracionId:1;
+        idcontador = respuesta[0]?respuesta[0].proyectoAdminitracionId:0;
         this.proyectoAdmin = { identificador: (idcontador + 1).toString(), proyectoAdministrativoAportante: [{
           aportanteId: 0,
           proyectoAdminstrativoId: 0,
