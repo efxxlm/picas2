@@ -1470,7 +1470,7 @@ namespace asivamosffie.services
                 comiteTecnicoOld.FechaModificacion = DateTime.Now;
                 comiteTecnicoOld.FechaOrdenDia = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.FechaAplazamiento = pComiteTecnico.FechaAplazamiento;
-                comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
+                comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Aplazada;
 
                 _context.SaveChanges();
                 //Plantilla
