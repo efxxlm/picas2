@@ -101,6 +101,6 @@
         public const string Votacion_Solicitud_Participante = "80";
         public const string Registrar_Tramite_Contrato = "78";
 
-
+        public const string Crear_Cronograma_monitoreo = "114";
     }
 }

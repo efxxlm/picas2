@@ -20,5 +20,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> Insert(ProcesoSeleccionCronograma procesoSeleccionCronograma);
         Task<Respuesta> Update(ProcesoSeleccionCronograma procesoSeleccionCronograma);
         Task<bool> Delete(int id);
+        Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId);
+        Task<Respuesta> setProcesoSeleccionMonitoreoCronograma(ProcesoSeleccionMonitoreo procesoSeleccionCronograma);
+        Task<ActionResult<List<ProcesoSeleccionCronogramaMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId(int pProcesoSeleccionId);
     }
 }
