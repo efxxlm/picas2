@@ -6,7 +6,6 @@ namespace asivamosffie.model.Models
     public partial class DemandadoConvocado
     {
         public int DemandadoConvocadoId { get; set; }
-        public int DemandanteConvocadoId { get; set; }
         public bool? EsConvocado { get; set; }
         public string Nombre { get; set; }
         public string TipoIdentificacionCodigo { get; set; }
@@ -25,7 +24,8 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public int? DefensaJudicialId { get; set; }
 
-        public virtual DemandanteConvocante DemandanteConvocado { get; set; }
+        public virtual DefensaJudicial DefensaJudicial { get; set; }
     }
 }

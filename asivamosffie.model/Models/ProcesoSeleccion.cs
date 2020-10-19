@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
             ProcesoSeleccionCronograma = new HashSet<ProcesoSeleccionCronograma>();
             ProcesoSeleccionGrupo = new HashSet<ProcesoSeleccionGrupo>();
             ProcesoSeleccionIntegrante = new HashSet<ProcesoSeleccionIntegrante>();
+            ProcesoSeleccionMonitoreo = new HashSet<ProcesoSeleccionMonitoreo>();
             ProcesoSeleccionObservacion = new HashSet<ProcesoSeleccionObservacion>();
             ProcesoSeleccionProponente = new HashSet<ProcesoSeleccionProponente>();
         }
@@ -53,6 +54,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ProcesoSeleccionCronograma> ProcesoSeleccionCronograma { get; set; }
         public virtual ICollection<ProcesoSeleccionGrupo> ProcesoSeleccionGrupo { get; set; }
         public virtual ICollection<ProcesoSeleccionIntegrante> ProcesoSeleccionIntegrante { get; set; }
+        public virtual ICollection<ProcesoSeleccionMonitoreo> ProcesoSeleccionMonitoreo { get; set; }
         public virtual ICollection<ProcesoSeleccionObservacion> ProcesoSeleccionObservacion { get; set; }
         public virtual ICollection<ProcesoSeleccionProponente> ProcesoSeleccionProponente { get; set; }
     }
