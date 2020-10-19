@@ -2385,7 +2385,7 @@ namespace asivamosffie.services
                 || string.IsNullOrEmpty(sesionComiteTemaOld.TiempoIntervencion.ToString())
                 //|| !string.IsNullOrEmpty(sesionComiteTemaOld.RutaSoporte)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.Observaciones)
-                || sesionComiteTemaOld.EsAprobado == null
+                || (sesionComiteTemaOld.RequiereVotacion == true && sesionComiteTemaOld.EsAprobado == null)
                 || sesionComiteTemaOld.RequiereVotacion == null
                 //|| sesionComiteTemaOld.EsProposicionesVarios == null
                 || sesionComiteTemaOld.GeneraCompromiso == null
