@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-control-y-tabla-controversias-contractuales',
@@ -35,7 +36,7 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
       id: 2
     }
   ];  
-  constructor() {
+  constructor(private router: Router) {
    }
 
   ngOnInit(): void {
@@ -48,4 +49,8 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
+
+  actualizarTramiteButton(id){
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',id]);
+  }
 }

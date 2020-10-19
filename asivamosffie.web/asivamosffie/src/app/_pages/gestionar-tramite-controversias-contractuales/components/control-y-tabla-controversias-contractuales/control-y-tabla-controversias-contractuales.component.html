@@ -56,7 +56,8 @@
                         Eliminar 
                     </button>
                     -->
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='3'">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='3'"
+                    (click)=this.actualizarTramiteButton(element.id);>
                         Actualizar trámite
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='2' || element.estadoControversia=='3'">
