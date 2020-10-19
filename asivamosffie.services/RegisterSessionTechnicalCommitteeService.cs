@@ -306,7 +306,7 @@ namespace asivamosffie.services
                 comiteTecnicoOld.FechaModificacion = DateTime.Now;
                 comiteTecnicoOld.FechaOrdenDia = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.FechaAplazamiento = pComiteTecnico.FechaAplazamiento;
-                comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
+                comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Aplazada;
 
                 _context.SaveChanges();
                 //Plantilla
@@ -463,7 +463,7 @@ namespace asivamosffie.services
                                                             .FirstOrDefault();
 
                 if (comiteTecnicoOld.SesionComiteTema.Where( t => t.Eliminado != true ).ToList().Count > 0 ||
-                     comiteTecnicoOld.SesionComiteTecnicoCompromiso.Where( c => c.Eliminado != true ).ToList().Count > 0
+                     comiteTecnicoOld.SesionComiteSolicitudComiteTecnico.Where( c => c.Eliminado != true ).ToList().Count > 0
                     )
                 {
                     return new Respuesta
@@ -502,15 +502,6 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString())
                 };
             }
-
-
-
-
-
-
-
-
-
         }
 
         public async Task<Respuesta> ConvocarComiteTecnico(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)

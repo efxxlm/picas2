@@ -408,6 +408,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
 
@@ -417,6 +418,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region 
         public const string Error = "500";
+        public const string ErrorEliminarDependencia = "501";
         #endregion
     }
 

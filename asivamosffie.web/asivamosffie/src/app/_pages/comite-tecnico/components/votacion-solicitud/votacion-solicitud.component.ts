@@ -99,7 +99,7 @@ export class VotacionSolicitudComponent implements OnInit{
       this.listaVotacion.push( grupoVotacion )
     })
 
-    console.log( this.addressForm.value )
+    console.log( this.addressForm.value, this.data.sesionComiteSolicitud )
 
   }
 

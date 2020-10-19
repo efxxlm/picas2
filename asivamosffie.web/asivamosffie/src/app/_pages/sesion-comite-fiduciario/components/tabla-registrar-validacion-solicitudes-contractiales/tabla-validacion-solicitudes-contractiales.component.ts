@@ -81,6 +81,9 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       comiteTecnicoFiduciarioId: this.ObjetoComiteTecnico.comiteTecnicoId,
       tipoSolicitudCodigo: elemento.tipoSolicitudCodigo,
       contratacion: elemento.contratacion,
+      numeroSolicitud: elemento.numeroSolicitud,
+      fechaSolicitud: elemento.fechaSolicitud,
+      tipoSolicitud: elemento.tipoSolicitud,
 
       sesionSolicitudObservacionProyecto: [],
       sesionSolicitudVoto: [],

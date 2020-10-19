@@ -192,6 +192,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("DeleteComiteTecnicoByComiteTecnicoId")]
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _committeeSessionFiduciarioService.DeleteComiteTecnicoByComiteTecnicoId(pComiteTecnicoId, HttpContext.User.FindFirst("User").Value);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost]
         [Route("CreateEditSesionInvitadoAndParticipante")]
         public async Task<IActionResult> CreateEditSesionInvitadoAndParticipante([FromBody] ComiteTecnico pComiteTecnico)
