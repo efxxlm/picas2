@@ -65,6 +65,9 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
       tipoSolicitudCodigo: elemento.tipoSolicitudCodigo,
       contratacion: elemento.contratacion,
+      numeroSolicitud: elemento.numeroSolicitud,
+      fechaSolicitud: elemento.fechaSolicitud,
+      tipoSolicitud: elemento.tipoSolicitud,
 
 
       sesionSolicitudObservacionProyecto: [],

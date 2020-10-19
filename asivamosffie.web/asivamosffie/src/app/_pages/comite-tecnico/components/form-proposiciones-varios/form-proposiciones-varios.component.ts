@@ -65,7 +65,7 @@ export class FormProposicionesVariosComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
-  borrarArray(borrarForm: any, i: number) {
+  borrarArray (borrarForm: any, i: number) {
     borrarForm.removeAt(i);
   }
 
@@ -162,6 +162,40 @@ export class FormProposicionesVariosComponent implements OnInit {
     }
 
     console.log(cantidadIncompletos)
+  }
+
+  eliminarTema(i) {
+    let tema = this.addressForm.get('tema');
+    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number, grupo: any) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result) {
+        this.deleteTema(e)
+      }
+    });
+  }
+
+  deleteTema(i) {
+    let grupo = this.addressForm.get('tema') as FormArray;
+    let tema = grupo.controls[i];
+
+    console.log(tema)
+
+    this.technicalCommitteSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
+      .subscribe(respuesta => {
+        this.borrarArray(grupo, i)
+        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.ngOnInit();
+      })
+
   }
 
   cargarRegistros() {

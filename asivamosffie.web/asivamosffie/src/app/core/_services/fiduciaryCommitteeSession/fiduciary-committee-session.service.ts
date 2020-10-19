@@ -104,4 +104,8 @@ export class FiduciaryCommitteeSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/verificarTemasCompromisos`, comite );
    }
 
+   deleteComiteTecnicoByComiteTecnicoId( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/deleteComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
+   }
+
 }

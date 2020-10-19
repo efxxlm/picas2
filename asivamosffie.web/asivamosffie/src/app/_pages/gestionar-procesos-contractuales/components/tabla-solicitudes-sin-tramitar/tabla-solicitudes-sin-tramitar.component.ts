@@ -23,6 +23,9 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoDelRegistro', 'id' ];
   estadoCodigo: string;
   estadoCodigoFiduciaria: string = "9";
+  estadoCodigos = {
+    aprobadoCf: '13'
+  };
 
   constructor ( private routes: Router,
                 private procesosContractualesSvc: ProcesosContractualesService ) {
@@ -40,7 +43,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
       
       for ( let solicitud of resp ) {
 
-        if ( solicitud.estadoCodigo === '2' ) {
+        if ( solicitud.estadoCodigo === this.estadoCodigos.aprobadoCf ) {
 
           ( solicitud.estadoRegistro ) ? conTrue+=1 : conFalse+=1;
 

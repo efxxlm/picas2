@@ -15,6 +15,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
 
   dataSource                = new MatTableDataSource();
   @Output() sinData = new EventEmitter<boolean>();
+  @Output() estadoAcordeon = new EventEmitter<string>();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'estadoDocumento', 'id' ];
@@ -43,7 +44,10 @@ export class TablaProcesoFirmasComponent implements OnInit {
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
       .subscribe( ( resp: any ) => {     
-        
+        let conTrue = 0;
+        let conFalse = 0;
+        let enFirmaFiduciaria = 0;
+        let registrado = 0;
         for ( let contrataciones of resp ) {
           if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
             this.dataTable.push( contrataciones );
@@ -56,6 +60,13 @@ export class TablaProcesoFirmasComponent implements OnInit {
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
         }
+        if ( registrado === this.dataTable.length ) {
+          this.estadoAcordeon.emit( 'completo' );
+        } else if ( enFirmaFiduciaria === this.dataTable.length ) {
+          this.estadoAcordeon.emit( 'sin-diligenciar' );
+        } else if ( registrado < this.dataTable.length || enFirmaFiduciaria < this.dataTable.length ) {
+          this.estadoAcordeon.emit( 'en-proceso' );
+        };
         console.log( resp );
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
