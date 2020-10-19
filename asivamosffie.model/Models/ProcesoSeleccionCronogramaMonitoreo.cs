@@ -6,7 +6,6 @@ namespace asivamosffie.model.Models
     public partial class ProcesoSeleccionCronogramaMonitoreo
     {
         public int ProcesoSeleccionCronogramaMonitoreoId { get; set; }
-        public int ProcesoSeleccionMonitoreoId { get; set; }
         public int? NumeroActividad { get; set; }
         public string Descripcion { get; set; }
         public DateTime? FechaMaxima { get; set; }
@@ -16,5 +15,8 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public int? ProcesoSeleccionMonitoreoId { get; set; }
+
+        public virtual ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
     }
 }
