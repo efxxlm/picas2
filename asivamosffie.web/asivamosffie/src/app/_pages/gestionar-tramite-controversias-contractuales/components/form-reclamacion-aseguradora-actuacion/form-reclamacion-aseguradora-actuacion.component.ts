@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -9,6 +9,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-reclamacion-aseguradora-actuacion.component.scss']
 })
 export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
+  @Input() isEditable;
+
   addressForm = this.fb.group({
     requiereReclamacionAseguradora: [null, Validators.required],
     resumenReclamacionFiduciaria: [null, Validators.required],
@@ -28,6 +30,12 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   };
   constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
+    if(this.isEditable==true){
+      this.addressForm.get('requiereReclamacionAseguradora').setValue(true);
+      this.addressForm.get('resumenReclamacionFiduciaria').setValue('prueba');
+      this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
+      this.addressForm.get('definitivoyCerrado').setValue(true);
+    }
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

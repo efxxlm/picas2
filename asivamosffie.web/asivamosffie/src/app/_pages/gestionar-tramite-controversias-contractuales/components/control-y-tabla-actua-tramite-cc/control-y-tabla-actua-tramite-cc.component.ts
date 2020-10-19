@@ -57,7 +57,7 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
 
   }
   verDetalleEditarActuacion(id){
-
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarTramite',id]);
   }
   eliminarActuacion(id){
 

@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./actualizar-tramite-contvr-contrc.component.scss']
 })
 export class ActualizarTramiteContvrContrcComponent implements OnInit {
-
+  public controversiaID = localStorage.getItem("controversiaID");
   constructor() { }
 
   ngOnInit(): void {

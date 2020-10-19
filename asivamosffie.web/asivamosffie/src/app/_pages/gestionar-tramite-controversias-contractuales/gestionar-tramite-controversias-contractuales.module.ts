@@ -16,11 +16,12 @@ import { RegistrarNuevaActuacionTramiteComponent } from './components/registrar-
 import { FormDescripcionActuacionComponent } from './components/form-descripcion-actuacion/form-descripcion-actuacion.component';
 import { FormReclamacionAseguradoraActuacionComponent } from './components/form-reclamacion-aseguradora-actuacion/form-reclamacion-aseguradora-actuacion.component';
 import { FormSoporteActuacionActtramComponent } from './components/form-soporte-actuacion-acttram/form-soporte-actuacion-acttram.component';
+import { VerdetalleeditTramiteCntrvContrcComponent } from './components/verdetalleedit-tramite-cntrv-contrc/verdetalleedit-tramite-cntrv-contrc.component';
 
 
 
 @NgModule({
-  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent],
+  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent],
   imports: [
     CommonModule,
     MaterialModule,

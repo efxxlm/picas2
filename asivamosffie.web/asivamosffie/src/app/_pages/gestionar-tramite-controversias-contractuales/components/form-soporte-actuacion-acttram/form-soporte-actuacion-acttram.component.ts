@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -9,6 +9,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-soporte-actuacion-acttram.component.scss']
 })
 export class FormSoporteActuacionActtramComponent implements OnInit {
+  @Input() isEditable;
+
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });

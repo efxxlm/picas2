@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -9,6 +9,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-descripcion-actuacion.component.scss']
 })
 export class FormDescripcionActuacionComponent implements OnInit {
+  @Input() isEditable;
+ 
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -47,6 +49,15 @@ export class FormDescripcionActuacionComponent implements OnInit {
   constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    if(this.isEditable==true){
+      this.addressForm.get('estadoAvanceTramite').setValue('1');
+      this.addressForm.get('fechaActuacionAdelantada').setValue('10/10/2020');
+      this.addressForm.get('actuacionAdelantada').setValue('1');
+      this.addressForm.get('proximaActuacionRequerida').setValue('1');
+      this.addressForm.get('cualOtro').setValue('Alguna observacion');
+      this.addressForm.get('diasVencimientoTerminos').setValue('3');
+      this.addressForm.get('participacionContratista').setValue(true);
+    }
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

@@ -5,6 +5,7 @@ import { FormRegistrarControversiaContractuaComponent } from './components/form-
 import { GestionarTramiteControvrContractComponent } from './components/gestionar-tramite-controvr-contract/gestionar-tramite-controvr-contract.component';
 import { RegistrarNuevaActuacionTramiteComponent } from './components/registrar-nueva-actuacion-tramite/registrar-nueva-actuacion-tramite.component';
 import { VerDetalleditarCntrvContrcComponent } from './components/ver-detalleditar-cntrv-contrc/ver-detalleditar-cntrv-contrc.component';
+import { VerdetalleeditTramiteCntrvContrcComponent } from './components/verdetalleedit-tramite-cntrv-contrc/verdetalleedit-tramite-cntrv-contrc.component';
 
 const routes: Routes = [
   {
@@ -20,12 +21,16 @@ const routes: Routes = [
     component: VerDetalleditarCntrvContrcComponent
   },
   {
-    path: 'actualizarTramiteControversia/:id',
+    path: 'actualizarTramiteControversia',
     component: ActualizarTramiteContvrContrcComponent
   },
   {
     path: 'registrarNuevaActuacionTramite',
     component: RegistrarNuevaActuacionTramiteComponent
+  },
+  {
+    path: 'verDetalleEditarTramite/:id',
+    component: VerdetalleeditTramiteCntrvContrcComponent
   }
 ];
 @NgModule({

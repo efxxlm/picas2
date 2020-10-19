@@ -55,6 +55,7 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
   }
 
   actualizarTramiteButton(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',id]);
+    localStorage.setItem("controversiaID",id);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
   }
 }
