@@ -522,14 +522,21 @@ namespace asivamosffie.services
             {
 
                 List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
-                    .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
+                    .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ToList();
 
                 ////ListComiteTecnicos = ListComiteTecnicos.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada).ToList();
-              
+
                 List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
                 //Listas Contratacion
+
+
+
+                List<SesionComiteSolicitud> ListSesionComiteSolicitud = new List<SesionComiteSolicitud>();
+
+           
+
 
                 foreach (var comiteTecnico in ListComiteTecnicos)
                 {
@@ -544,7 +551,18 @@ namespace asivamosffie.services
                             case ConstanCodigoTipoSolicitud.Contratacion:
 
                                 Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
-
+                                 
+                                if (contratacion.DisponibilidadPresupuestal.Count() == 0)
+                                {
+                                    break; 
+                                }
+                                foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
+                                {
+                                    if (string.IsNullOrEmpty(DisponibilidadPresupuestal.NumeroDdp.ToString()))
+                                    {
+                                        break;
+                                    }
+                                }
                                 // sesionComiteSolicitud.Contratacion = contratacion;
 
                                 sesionComiteSolicitud.EstaTramitado = false;
@@ -572,7 +590,9 @@ namespace asivamosffie.services
                                 {
                                     sesionComiteSolicitud.EstadoRegistro = true;
                                     sesionComiteSolicitud.EstadoDelRegistro = "Completo";
-                                } 
+                                }
+
+                                ListSesionComiteSolicitud.Add(sesionComiteSolicitud);
                                 break;
 
                             case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
@@ -581,24 +601,14 @@ namespace asivamosffie.services
                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
                                 && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
                                .FirstOrDefault().Nombre;
-                                break; 
+                                break;
+
                             default:
                                 break;
                         }
 
                     }
 
-                }
-
-                List<SesionComiteSolicitud> ListSesionComiteSolicitud = new List<SesionComiteSolicitud>();
-
-                foreach (var comiteTecnico1 in ListComiteTecnicos)
-                {
-                    ListSesionComiteSolicitud.AddRange(comiteTecnico1.SesionComiteSolicitudComiteTecnicoFiduciario.Where(
-                              r => !(bool)r.Eliminado
-                         && (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
-                         || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual) 
-                        ));
                 }
 
 
