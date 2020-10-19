@@ -624,8 +624,9 @@ namespace asivamosffie.services
 
             VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
+            actaInicioConsolidado = actaInicioObra;
             //interventoria
-            actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaInterventoria = "";// Contratista . numeroIdentificaionRepresentante
+            actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaInterventoria = actaInicioInterventoria.NumeroIdentificacionRepresentanteContratistaInterventoria;// Contratista . numeroIdentificaionRepresentante
             actaInicioConsolidado.NombreRepresentanteContratistaInterventoria = actaInicioInterventoria.NombreRepresentanteContratistaInterventoria;
 
             //obra
@@ -814,7 +815,7 @@ namespace asivamosffie.services
                     ValorInicialContrato = contrato.Valor.ToString(),
                     ValorActualContrato = " PENDIENTE",
                     ValorFase1Preconstruccion = " PENDIENTE",
-                    Valorfase2ConstruccionObra = " PENDIENTE" ,
+                    Valorfase2ConstruccionObra = " PENDIENTE",
                     PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
 
                     NombreEntidadContratistaObra = contratista.Nombre,
@@ -824,11 +825,12 @@ namespace asivamosffie.services
                     FechaPrevistaTerminacion = strFechaPrevistaTerminacion,
                     ObservacionOConsideracionesEspeciales = strContratoObservacion,
 
-                    LlaveMENContrato=strLlaveMENContrato,
-                    DepartamentoYMunicipioLlaveMEN=strDepartamentoYMunicipioLlaveMEN,
-                    InstitucionEducativaLlaveMEN=strInstitucionEducativaLlaveMEN,
+                    LlaveMENContrato = strLlaveMENContrato,
+                    DepartamentoYMunicipioLlaveMEN = strDepartamentoYMunicipioLlaveMEN,
+                    InstitucionEducativaLlaveMEN = strInstitucionEducativaLlaveMEN,
 
-                    CantidadProyectosAsociados= intCantidadProyectosAsociados,
+                    CantidadProyectosAsociados = intCantidadProyectosAsociados,
+                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion;
 
                     //RegistroCompleto = contrato.RegistroCompleto
 
