@@ -16,13 +16,13 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <input matInput class="alignLeft" formControlName="observaciones" maxlength="300" required>
+                <input matInput class="alignLeft" formControlName="urlMonitoreo" maxlength="300" required>
             </mat-card-content>
         </mat-card>
-        <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">
-            {{300 - textoLimpio(addressForm.get('observaciones').value)}}
+        <span class="contador miles mb-2em" *ngIf="addressForm.value.urlMonitoreo !== null">
+            {{300 - textoLimpio(addressForm.get('urlMonitoreo').value)}}
         </span>
-        <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
+        <span class="contador miles mb-2em" *ngIf="addressForm.value.urlMonitoreo === null">
             300
         </span>
     </div>

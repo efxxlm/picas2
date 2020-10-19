@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MonitoringURLService } from 'src/app/core/_services/monitoringURL/monitoring-url.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -17,10 +18,10 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
   public sede;
 
   addressForm = this.fb.group({
-    observaciones: [null, Validators.required]
+    urlMonitoreo: [null, Validators.required]
   });
 
-  constructor(private fb: FormBuilder, public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarSitioWebCesmlComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { 
+  constructor(private services: MonitoringURLService, private fb: FormBuilder, public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarSitioWebCesmlComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { 
     if (data.id != undefined) {
       this.idProyecto = data.id;
     }
@@ -42,6 +43,7 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.idProyecto;
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -60,6 +62,13 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
     });
   };
   onSubmit(){
-    this.openDialog('La información ha sido guardada exitosamente.', '');
+    this.services.EditarURLMonitoreo(this.idProyecto,this.addressForm.value.urlMonitoreo).subscribe(resp=>{
+      if(resp.code=="200"){
+        this.openDialog(resp.message, '');
+      }
+      else{
+        this.openDialog(resp.message, '');
+      }
+    });
   }
 }

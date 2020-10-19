@@ -48,12 +48,12 @@
                 <ng-container matColumnDef="gestion">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                     <td mat-cell *matCellDef="let element">
-                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.sitioWeb==''" 
-                        (click)="this.configuracionSitioWeb(element.id,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede)">
+                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.sitioWeb==null || element.sitioWeb==undefined" 
+                        (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede)">
                             Cargar sitio web 
                         </button>
                         <button mat-raised-button color="accent" class="btn-table" *ngIf="element.sitioWeb!=''"  
-                        (click)="this.configuracionSitioWeb(element.id,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede)">
+                        (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede)">
                             Ver detalle/Editar
                         </button>
                     </td>

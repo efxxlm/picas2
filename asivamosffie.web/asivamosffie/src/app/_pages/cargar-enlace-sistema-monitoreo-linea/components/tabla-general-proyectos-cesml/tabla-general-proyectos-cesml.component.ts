@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +11,7 @@ import { DialogCargarSitioWebCesmlComponent } from '../dialog-cargar-sitio-web-c
   styleUrls: ['./tabla-general-proyectos-cesml.component.scss']
 })
 export class TablaGeneralProyectosCesmlComponent implements OnInit {
+  @Input () dataTableServ:any;
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -62,7 +63,7 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
+    this.dataSource = new MatTableDataSource(this.dataTableServ);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

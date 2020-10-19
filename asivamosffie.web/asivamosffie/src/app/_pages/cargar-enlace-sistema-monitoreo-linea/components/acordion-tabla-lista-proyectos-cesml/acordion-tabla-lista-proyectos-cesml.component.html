@@ -16,6 +16,6 @@
                 <span>Nombre del contratista: <b>{{cont.nombreContratista}}</b> Proyectos asociados: <b>{{cont.numeroProyectosAsociados}}</b></span>
             </p>
         </div>
-        <app-tabla-general-proyectos-cesml></app-tabla-general-proyectos-cesml>
+        <app-tabla-general-proyectos-cesml [dataTableServ]="cont.lstProyectoGrilla"></app-tabla-general-proyectos-cesml>
     </mat-expansion-panel>
 </mat-accordion>
