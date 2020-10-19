@@ -48,14 +48,15 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table sin-diligenciar"
-                (click)="this.addObservaciones()">
+                (click)="this.addObservaciones( element.archivoCargueId )">
                 Observaciones
         </button>
 
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoCargue=='Validos'">
+                *ngIf="element.estadoCargue=='Validos'"
+                (click)="deleteArchivoCargue( element.archivoCargueId )">
                 Eliminar
         </button>
 

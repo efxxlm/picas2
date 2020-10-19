@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { DialogObservacionesProgramacionComponent } from '../dialog-observaciones-programacion/dialog-observaciones-programacion.component';
 import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-programacion-obra',
@@ -39,8 +40,9 @@ export class TablaProgramacionObraComponent implements OnInit {
         if ( response.length === 0 ) {
           this.tieneRegistros.emit( false );
           return;
-        }
+        };
         this.tieneRegistros.emit( true );
+        console.log( response );
         this.dataSource                        = new MatTableDataSource( response );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;
@@ -53,14 +55,27 @@ export class TablaProgramacionObraComponent implements OnInit {
     const filterValue      = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  
-  addObservaciones(){
-    const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
-      width: '75em'
-    });
 
-    dialogCargarProgramacion.afterClosed().subscribe( resp => {
-      console.log( resp );
-    } );
-  }
+  openDialog (modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
+  addObservaciones( pArchivoCargueId: number ){
+    const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
+      width: '75em',
+      data: { pArchivoCargueId }
+    });
+  };
+
+  deleteArchivoCargue( pArchivoCargueId: number ){
+    this.faseUnoConstruccionSvc.deleteArchivoCargue( pArchivoCargueId )
+      .subscribe(
+        response => console.log( response ),
+        err => this.openDialog( '', err.message )
+      )
+  };
+
 };
