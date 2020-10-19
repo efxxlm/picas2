@@ -352,15 +352,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
-        {
-            return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
-        }
-
-        public async Task<Contratista> GetContratistaByContratistaId(int pContratistaId)
-        {
-            return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
-        }
+      
 
 
     }

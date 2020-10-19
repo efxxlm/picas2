@@ -82,8 +82,6 @@ namespace asivamosffie.services.Interfaces
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
         Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
 
-        Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);
-
-        Task<Contratista> GetContratistaByContratistaId(int pContratistaId);
+      
     }
 }
