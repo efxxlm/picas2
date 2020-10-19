@@ -520,69 +520,98 @@ namespace asivamosffie.services
 
             try
             {
-                List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                         .Where(r => !(bool)r.Eliminado 
-                             && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
-                             &&(r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
-                             || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
-                         ).ToListAsync();
-                 
+
+                List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
+                    .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ToList();
+
+                ////ListComiteTecnicos = ListComiteTecnicos.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada).ToList();
+
                 List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
                 //Listas Contratacion
-                
-                foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
+
+
+
+                List<SesionComiteSolicitud> ListSesionComiteSolicitud = new List<SesionComiteSolicitud>();
+
+           
+
+
+                foreach (var comiteTecnico in ListComiteTecnicos)
                 {
-                    switch (sesionComiteSolicitud.TipoSolicitudCodigo)
+                    foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(
+                          r => !(bool)r.Eliminado
+                         && (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+                         || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                        ))
                     {
-                        case ConstanCodigoTipoSolicitud.Contratacion:
+                        switch (sesionComiteSolicitud.TipoSolicitudCodigo)
+                        {
+                            case ConstanCodigoTipoSolicitud.Contratacion:
 
-                            Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
+                                Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
+                                 
+                                if (contratacion.DisponibilidadPresupuestal.Count() == 0)
+                                {
+                                    break; 
+                                }
+                                foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
+                                {
+                                    if (string.IsNullOrEmpty(DisponibilidadPresupuestal.NumeroDdp.ToString()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                // sesionComiteSolicitud.Contratacion = contratacion;
 
-                            // sesionComiteSolicitud.Contratacion = contratacion;
+                                sesionComiteSolicitud.EstaTramitado = false;
 
-                            sesionComiteSolicitud.EstaTramitado = false;
+                                if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
+                                {
+                                    sesionComiteSolicitud.EstaTramitado = true;
+                                }
 
-                            if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
-                            {
-                                sesionComiteSolicitud.EstaTramitado = true;
-                            }
+                                sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
 
-                            sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
+                                sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
 
-                            sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
+                                sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                    && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
+                                    ).FirstOrDefault().Nombre;
 
-                            sesionComiteSolicitud.TipoSolicitud = ListasParametricas
-                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
-                                && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
-                                ).FirstOrDefault().Nombre;
+                                if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
+                                {
+                                    sesionComiteSolicitud.EstadoRegistro = false;
+                                    sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
+                                }
+                                else
+                                {
+                                    sesionComiteSolicitud.EstadoRegistro = true;
+                                    sesionComiteSolicitud.EstadoDelRegistro = "Completo";
+                                }
 
-                            if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
-                            {
-                                sesionComiteSolicitud.EstadoRegistro = false;
-                                sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
-                            }
-                            else
-                            {
-                                sesionComiteSolicitud.EstadoRegistro = true;
-                                sesionComiteSolicitud.EstadoDelRegistro = "Completo";
-                            }
+                                ListSesionComiteSolicitud.Add(sesionComiteSolicitud);
+                                break;
 
-                            break;
+                            case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
 
-                        case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
+                                sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                               .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                               .FirstOrDefault().Nombre;
+                                break;
 
-                            sesionComiteSolicitud.TipoSolicitud = ListasParametricas
-                           .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
-                            && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
-                           .FirstOrDefault().Nombre;
-                            break;
+                            default:
+                                break;
+                        }
 
-
-                        default:
-                            break;
                     }
+
                 }
+
+
                 return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).ToList();
             }
             catch (Exception ex)
