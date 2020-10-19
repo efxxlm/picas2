@@ -17,8 +17,6 @@ namespace asivamosffie.model.Models
         public int? SesionParticipanteId { get; set; }
         public string EstadoCompromisoCodigo { get; set; }
 
-
-
         public virtual SesionComiteTecnicoCompromiso SesionComiteTecnicoCompromiso { get; set; }
         public virtual Usuario SesionParticipante { get; set; }
         public virtual SesionSolicitudCompromiso SesionSolicitudCompromiso { get; set; }
