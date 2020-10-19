@@ -7,11 +7,12 @@ import { CargarEnlaceSistemaMonitoreoLineaComponent } from './components/cargar-
 import { CargarEnlaceSistemaMonitoreoLineaRoutingModule } from './cargar-enlace-sistema-monitoreo-linea-routing.module';
 import { AcordionTablaListaProyectosCesmlComponent } from './components/acordion-tabla-lista-proyectos-cesml/acordion-tabla-lista-proyectos-cesml.component';
 import { DialogCargarSitioWebCesmlComponent } from './components/dialog-cargar-sitio-web-cesml/dialog-cargar-sitio-web-cesml.component';
+import { TablaGeneralProyectosCesmlComponent } from './components/tabla-general-proyectos-cesml/tabla-general-proyectos-cesml.component';
 
 
 
 @NgModule({
-  declarations: [CargarEnlaceSistemaMonitoreoLineaComponent, AcordionTablaListaProyectosCesmlComponent, DialogCargarSitioWebCesmlComponent],
+  declarations: [CargarEnlaceSistemaMonitoreoLineaComponent, AcordionTablaListaProyectosCesmlComponent, DialogCargarSitioWebCesmlComponent, TablaGeneralProyectosCesmlComponent],
   imports: [
     CommonModule,
     MaterialModule,
