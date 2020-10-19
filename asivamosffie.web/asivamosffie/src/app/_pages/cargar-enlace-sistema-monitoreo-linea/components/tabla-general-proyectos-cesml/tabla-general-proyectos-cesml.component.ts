@@ -72,11 +72,11 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  configuracionSitioWeb(id, llaveMen, departamento, municipio, instEdu, sede){
+  configuracionSitioWeb(id, llaveMen, departamento, municipio, instEdu, sede, web){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = {id:id, llaveMen:llaveMen, departamento:departamento, municipio:municipio, instEdu:instEdu, sede:sede};
+    dialogConfig.data = {id:id, llaveMen:llaveMen, departamento:departamento, municipio:municipio, instEdu:instEdu, sede:sede, web:web};
     const dialogRef = this.dialog.open(DialogCargarSitioWebCesmlComponent, dialogConfig);
   }
 }

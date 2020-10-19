@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 import { MonitoringURLService } from 'src/app/core/_services/monitoringURL/monitoring-url.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -10,12 +11,14 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./dialog-cargar-sitio-web-cesml.component.scss']
 })
 export class DialogCargarSitioWebCesmlComponent implements OnInit {
+
   public idProyecto;
   public llaveMen;
   public departamento;
   public municipio;
   public instEdu;
   public sede;
+  public web;
 
   addressForm = this.fb.group({
     urlMonitoreo: [null, Validators.required]
@@ -40,10 +43,13 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
     if(data.sede !=undefined){
       this.sede = data.sede;
     }
+    if(data.web !=undefined){
+      this.web = data.web;
+    }
   }
 
   ngOnInit(): void {
-    this.idProyecto;
+    this.addressForm.get('urlMonitoreo').setValue(this.web);
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -64,11 +70,18 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
   onSubmit(){
     this.services.EditarURLMonitoreo(this.idProyecto,this.addressForm.value.urlMonitoreo).subscribe(resp=>{
       if(resp.code=="200"){
+        this.services.GetListContratoProyectos().subscribe(data=>{
+          this.services.loadDataItems.next(data);
+        });
         this.openDialog(resp.message, '');
+        this.close();
       }
       else{
         this.openDialog(resp.message, '');
       }
     });
+  }
+  close(){
+    this.matDialogRef.close('cancel');
   }
 }

@@ -42,18 +42,18 @@
 
                 <ng-container matColumnDef="sede">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="gestion">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                     <td mat-cell *matCellDef="let element">
-                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.sitioWeb==null || element.sitioWeb==undefined" 
-                        (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede)">
+                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.urlMonitoreo==null || element.urlMonitoreo==undefined" 
+                        (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede, element.urlMonitoreo)">
                             Cargar sitio web 
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.sitioWeb!=''"  
-                        (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede)">
+                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.urlMonitoreo!=null || element.urlMonitoreo!=undefined"
+                        (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede, element.urlMonitoreo)">
                             Ver detalle/Editar
                         </button>
                     </td>
