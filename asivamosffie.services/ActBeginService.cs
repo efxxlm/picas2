@@ -614,8 +614,8 @@ namespace asivamosffie.services
 
             actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioInterventoria);
 
-            return actaInicioObra;
-            //return actaInicioConsolidado;
+            //return actaInicioObra;
+            return actaInicioConsolidado;
 
         }
 
