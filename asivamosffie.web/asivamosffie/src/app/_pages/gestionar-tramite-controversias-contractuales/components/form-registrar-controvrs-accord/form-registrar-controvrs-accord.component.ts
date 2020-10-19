@@ -44,9 +44,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
-    if(this.isEditable==true){
+    if (this.isEditable == true) {
       this.addressForm.get('tipoControversia').setValue('1');
       this.addressForm.get('fechaSolicitud').setValue('20/08/2020');
       this.addressForm.get('motivosSolicitud').setValue('1');
