@@ -22,8 +22,8 @@
 }
 
 .mat-card .mat-input-element {
-  color: $mainColor;
-  font-weight: 400;
+    color: $mainColor;
+    font-weight: 400;
 }
 
 .iniciarSesion,
@@ -63,7 +63,7 @@ mat-form-field {
         height: 2.2em;
         img {
             height: 1.2em;
-            margin-top: -.5em;
+            margin-top: -0.5em;
         }
     }
 
@@ -80,7 +80,7 @@ mat-form-field {
 .label-left {
     font-weight: 500;
     display: inline-block;
-    margin-top: .5em;
+    margin-top: 0.5em;
 }
 
 .mat-form-field-infix {
@@ -95,13 +95,13 @@ mat-form-field {
 .mat-select-arrow-wrapper {
     position: relative;
     right: -2.7em;
-    top: .3em
+    top: 0.3em;
 }
 
 div.mat-select-arrow {
     color: $mainColor;
-    border-left: .5em solid transparent;
-    border-right: .5em solid transparent;
+    border-left: 0.5em solid transparent;
+    border-right: 0.5em solid transparent;
     border-top: 1em solid;
     margin: 0 4px;
 }
@@ -121,7 +121,7 @@ div.mat-select-arrow {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: .8em;
+    margin-left: 0.8em;
 
     &.miles {
         height: 2.4em;
@@ -130,22 +130,22 @@ div.mat-select-arrow {
 }
 
 .mat-form-field-appearance-legacy .mat-form-field-wrapper {
-    margin-bottom: -.8em;
+    margin-bottom: -0.8em;
 }
 
 .radioInput > .mat-radio-button {
     display: inline-block;
-    margin: 5px .5em;
+    margin: 5px 0.5em;
 }
 
 .sub-label {
     font-weight: 600;
     color: $mainColor;
     margin-left: 1em;
-    margin-right: .5em;
+    margin-right: 0.5em;
 }
 
-.mat-form-field input:required ~ .mat-form-field-label-wrapper::after{
+.mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
     content: "*";
     position: absolute;
     right: 0;
@@ -176,11 +176,15 @@ div.mat-select-arrow {
 
 .required-form-group {
     font-weight: 600;
-    margin-left: -.5em;
+    margin-left: -0.5em;
 }
 
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background,
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
+.mat-radio-button.mat-accent .mat-radio-inner-circle,
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
+.mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
     background-color: $mainColor;
 }
 
@@ -192,11 +196,12 @@ div.mat-select-arrow {
     background-color: transparent !important;
 }
 
-.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
+.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
+.mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
     background: $mainColor !important;
 }
 
-.sin-contador{
+.sin-contador {
     padding-right: 2.9em;
 }
 /* lo vole jflorez
@@ -204,9 +209,29 @@ div.mat-select-arrow {
     content: '';
 }*/
 .mat-form-field.nocontent input:required ~ .mat-form-field-label-wrapper::after {
-    content: '';
+    content: "";
 }
 
 .radio-color-detalle {
     $mainColor: $fontColor !important;
+}
+
+.required {
+    &-quill {
+        position: absolute;
+        transform: translate(2em, 1.4em);
+    }
+    &-calendar {
+        position: absolute;
+        transform: translate(.3em, .8em);
+    }
+}
+
+.select-table {
+    position: relative;
+    width: 6.5em;
+    .mat-select-arrow-wrapper {
+        right: 2.5em;
+        top: -4em;
+    }
 }

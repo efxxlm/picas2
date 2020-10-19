@@ -193,7 +193,8 @@ div.mat-paginator {
         background-color: transparent;
     }
     th.mat-header-cell {
-        padding: 1em;
+        padding: 1em !important;
+        text-align: center;
     }
 
     .mat-form-field {
@@ -229,4 +230,8 @@ div.mat-paginator {
     height: 2em;
     margin-bottom: -.65em;
     margin-right: .5em;
+}
+
+.table-responsive {
+    overflow: auto;
 }

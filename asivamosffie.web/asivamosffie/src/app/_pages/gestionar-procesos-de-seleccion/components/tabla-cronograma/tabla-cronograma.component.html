@@ -1,4 +1,4 @@
-<div class="text-center mt-1em">
+<div class="text-center mt-1em mb-1em">
     <h1 class="title-menu--h1 mb-1em">
         Cronograma
     </h1>
@@ -29,7 +29,7 @@
                     <td class="mat-cell cdk-cell ng-star-inserted">
                         <div class="d-flex justify-content-center">
                             <span class="contador mt-1em" *ngIf="addressForm.controls[i].get('descripcion').value">
-                                {{500 - addressForm.controls[i].get('descripcion').value.length}}
+                                {{500 - textoLimpio(addressForm.controls[i].get('descripcion').value)}}
                             </span>
                             <span class="contador mt-1em" *ngIf="!addressForm.controls[i].get('descripcion').value">
                                 500

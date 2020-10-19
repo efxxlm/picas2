@@ -518,43 +518,25 @@ namespace asivamosffie.services
 
             //Se listan las que tengan con acta de sesion aprobada  
 
-            //    List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-            //.Where(r => r.TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion
-            //&& r.EstadoDelRegistro == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada
-            //)
-            //.ToListAsync(); 
-            // 2   Aprobada por comité fiduciario
-
             try
             {
                 List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                            .Where(r => !(bool)r.Eliminado
-                            //TODO Filtrar por los otros parametros
-                            // && r.EstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Aprobada_comite_fiduciario
-                            //poner el id 7 y el id otro 
-                            ).ToListAsync();
-
-
-
-                ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
-                || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual).ToList();
+                         .Where(r => !(bool)r.Eliminado 
+                             && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
+                             &&(r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+                             || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                         ).ToListAsync();
+                 
                 List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
-                List<Contratacion> ListContratacion = _context
-                    .Contratacion
-                    .Where(r => !(bool)r.Eliminado)
-                    //.Include(r => r.ContratacionProyecto)
-                    //.ThenInclude(r => r.Proyecto)
-                    //.ThenInclude(r => r.DisponibilidadPresupuestalProyecto)
-                    //    .ThenInclude(r => r.Proyecto) 
-                    .ToList();
-                List<Contratista> ListContratista = _context.Contratista.ToList();
-
+                //Listas Contratacion
+                
                 foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
                 {
                     switch (sesionComiteSolicitud.TipoSolicitudCodigo)
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
+
                             Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
                             // sesionComiteSolicitud.Contratacion = contratacion;
@@ -612,8 +594,6 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
-
-            //TODO: PENDIENTE por FAber Numero comite Fiduciario Fecha Comite Fiduciario
             try
             {
 

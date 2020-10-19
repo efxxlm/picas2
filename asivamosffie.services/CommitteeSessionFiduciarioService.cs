@@ -1543,6 +1543,61 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId, string pUsuarioModifico)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico
+                                                            .Where(ct => ct.ComiteTecnicoId == pComiteTecnicoId)
+                                                            .Include(r => r.SesionComiteTema)
+                                                            .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                                                            .FirstOrDefault();
+
+                if (comiteTecnicoOld.SesionComiteTema.Where( t => t.Eliminado != true ).ToList().Count > 0 ||
+                     comiteTecnicoOld.SesionComiteSolicitudComiteTecnicoFiduciario.Where( c => c.Eliminado != true ).ToList().Count > 0
+                    )
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.ErrorEliminarDependencia,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.ErrorEliminarDependencia, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
+                    };
+                }
+
+
+                comiteTecnicoOld.UsuarioModificacion = pUsuarioModifico;
+                comiteTecnicoOld.FechaModificacion = DateTime.Now;
+                comiteTecnicoOld.Eliminado = true;
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.EliminacionExitosa, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
 
         public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId)
         {
@@ -1921,13 +1976,30 @@ namespace asivamosffie.services
                         {
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
                             if (ct.Proyecto.EstadoProyectoCodigo != null)
-                                proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
+                                if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                    proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                else
+                                    proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
                             else
                             {
                                 sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
                             }
                         });
 
+                    }
+                    
+                    Contratacion contratacion = _context.Contratacion.Find( pSesionComiteSolicitud.SolicitudId );
+
+                    if ( contratacion != null ){
+                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario )    {
+                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.AprobadoComiteFiduciario; 
+                        }
+                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario )    {
+                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteFiduciario; 
+                        }
+                        if ( sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario )    {
+                          contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario; 
+                        }
                     }
 
                 }
@@ -1952,7 +2024,8 @@ namespace asivamosffie.services
                                     break;
                             }
                         }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico){
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico)
+                        {
                             switch (sesionComiteSolicitudOld.EstadoCodigo)
                             {
                                 case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
@@ -1966,7 +2039,8 @@ namespace asivamosffie.services
                                     break;
                             }
                         }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico){
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico)
+                        {
                             switch (sesionComiteSolicitudOld.EstadoCodigo)
                             {
                                 case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:

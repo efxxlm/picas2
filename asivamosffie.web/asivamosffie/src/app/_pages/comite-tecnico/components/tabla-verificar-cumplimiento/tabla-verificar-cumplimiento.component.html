@@ -57,13 +57,16 @@
 
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-        <td mat-cell *matCellDef="let element"> 
-          <mat-select required [(ngModel)]="element.estadoCodigo" (selectionChange)="onChange(element.sesionSolicitudCompromisoId, element.estado)">
-            <mat-option *ngFor="let estado of estadosArray" [value]="estado.codigo">
-              {{ estado.nombre }}
-            </mat-option>
-          </mat-select> 
-      </td>
+        <td mat-cell *matCellDef="let element">
+          <section style="display: flex;">
+            <mat-select [(ngModel)]="element.estadoCodigo" (selectionChange)="onChange(element.sesionSolicitudCompromisoId, element.estado)" style="width: 30%;margin: 0px 30px;">
+              <mat-option *ngFor="let estado of estadosArray" [value]="estado.codigo">
+                {{ estado.nombre }}
+              </mat-option>
+            </mat-select>
+            <span style="margin-left: 1em;">*</span>
+          </section>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -71,8 +74,10 @@
     </table>
   </div>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-  <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSave()">
-    <img src="assets/img/icon/guardar.svg" alt="guardar">
-  </button>
+  <section class="flex-center-btn">
+    <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSave()">
+      <img src="assets/img/icon/guardar.svg" alt="guardar">
+    </button>
+  </section>
 </section>
 

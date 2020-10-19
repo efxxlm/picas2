@@ -55,11 +55,8 @@
             <tbody *ngIf="actividades.length > 0">
               <tr *ngFor="let form of actividades.controls; let i = index" [formGroupName]="i">
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  <p>
-                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                      formControlName="descripcion" readOnly="true">
-                    </quill-editor>
-                  </p>
+                  <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" formControlName="descripcion" readOnly="true">
+                  </quill-editor>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <p>
@@ -67,8 +64,7 @@
                   </p>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  <button mat-button color="primary" (click)="picker.open()" class="btn-calendario"
-                  type="button">
+                  <button mat-button color="primary" (click)="picker.open()" class="btn-calendario" type="button">
                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                   </button>
                   <mat-form-field class="example-full-width calendar-class">
@@ -81,25 +77,25 @@
                   </mat-form-field>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  <p>
+                  <div class="select-table">
                     <mat-select formControlName="estadoActividad" required>
                       <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
                         {{ tipo.nombre }}
                       </mat-option>
                     </mat-select>
-                  </p>
+                  </div>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <div class="d-flex justify-content-center">
-                    <!-- <span class="contador" *ngIf="addressForm.get(i).get('descripcion').value">
-                              {{500 - addressForm.get(i).get('descripcion').value.length}}
-                          </span>
-                          <span class="contador" *ngIf="addressForm.get(i).get('descripcion').value">
-                              500
-                          </span> -->
+                    <span class="contador mt-1em" *ngIf="form.get('observacion').value">
+                      {{800 - textoLimpio(form.get('observacion').value)}}
+                    </span>
+                    <span class="contador mt-1em" *ngIf="!form.get('observacion').value">
+                      800
+                    </span>
                   </div>
                   <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                    (onContentChanged)="maxLength($event, 500)" formControlName="observacion"></quill-editor>
+                    (onContentChanged)="maxLength($event, 800)" formControlName="observacion"></quill-editor>
                 </td>
               </tr>
             </tbody>

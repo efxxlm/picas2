@@ -28,21 +28,23 @@ export class FormSolicitudComponent implements OnInit {
       value: 'devueltoComite' 
     }
   ];
+  tipoSolicitud: any[] = [];
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
   };
 
-  constructor ( private fb: FormBuilder,
+  constructor ( private fb       : FormBuilder,
                 private commonSvc: CommonService ) 
   {
   };
 
   ngOnInit(): void {
+    //console.log( this.tipoSolicitud );
     this.resultadosVotaciones( this.solicitudes )
     this.commonSvc.listaEstadoSolicitud()
     .subscribe( ( resp: any[] ) => {
-      this.estadoSolicitud = resp.filter( estado => this.solicitudes.contratacion.estadoSolicitudCodigo === estado.codigo );
+      this.estadoSolicitud = resp.filter( estado => this.solicitudes.estadoCodigo === estado.codigo );
     } );
   };
 

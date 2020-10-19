@@ -7,7 +7,7 @@
         </div>
         <div class="col">
           <b class="label-left color-blue">
-            {{ solicitudes.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}
+            {{ solicitudes.fechaSolicitud | date: 'dd/MM/yyyy' }}
           </b>
         </div>
       </div>
@@ -46,7 +46,7 @@
       <div class="row mt-2">
         <div class="col-md-12">
           <div class="row">
-            <app-tabla-decisiones-acta [contratacionId]="solicitudes.contratacion.contratacionId"></app-tabla-decisiones-acta>
+            <app-tabla-decisiones-acta [contratacionId]="solicitudes.solicitudId" [tipoSolicitudCodigo]="solicitudes.tipoSolicitudCodigo"></app-tabla-decisiones-acta>
           </div>
         </div>
       </div>

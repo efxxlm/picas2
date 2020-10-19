@@ -44,7 +44,7 @@
             <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header class="expansion-style--header">
                   <mat-panel-title class="expansion-style--title sub-expansion">
-                    <b>Solicitud {{ sesionComite.contratacion.numeroSolicitud }}</b>
+                    <b>Solicitud {{ sesionComite.numeroSolicitud }}</b>
                   </mat-panel-title>
               </mat-expansion-panel-header>
     
@@ -209,7 +209,7 @@
     <div class="d-flex align-items-center">
       <div class="text-area-quill">
         <label class="text-area-quill--label">Comentarios al acta</label>
-        <p class="padding-p">Fecha: <b class="text-color"></b></p>
+        <p class="padding-p">Fecha: <b class="text-color"> {{ acta.sesionComentario.length > 0 ? ( acta.sesionComentario[0].fecha | date: 'dd/MM/yyyy' ) : ( fechaComentario | date: 'dd/MM/yyyy' ) }} </b></p>
         <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 1000)" formControlName="comentarioActa" required></quill-editor>
       </div>

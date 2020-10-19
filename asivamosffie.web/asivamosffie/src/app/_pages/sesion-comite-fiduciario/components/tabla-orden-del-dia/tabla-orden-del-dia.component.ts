@@ -90,7 +90,24 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       })
   }
 
-  OnDelete(e: number){
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+      {
+        this.OnDelete(e)
+      }           
+    });
+  }
 
+  OnDelete(e: number){
+    this.fiduciaryCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId( e )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message)
+        this.ngOnInit();
+      })
   }
 }

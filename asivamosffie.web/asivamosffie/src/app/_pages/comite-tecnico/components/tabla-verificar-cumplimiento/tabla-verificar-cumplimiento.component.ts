@@ -84,7 +84,6 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
         }
 
         this.estadosArray = respuesta[1];
-
         this.dataSource = new MatTableDataSource(this.listaCompromisos);
 
       })

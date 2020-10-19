@@ -31,21 +31,27 @@ namespace asivamosffie.api.Controllers
         {
             return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaIdComite(IdComite), "application/pdf");
         }
-         
+ 
+        [HttpGet]
+        [Route("ListMonitoreo")]
+        public async Task<List<dynamic>> ListMonitoreo()
+        {
+            List<dynamic> list =await _registerSessionTechnicalCommitteeService.ListMonitoreo();
+            return list;
+        }
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
-        public async Task<IActionResult> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 respuesta = await _registerSessionTechnicalCommitteeService.DeleteComiteTecnicoByComiteTecnicoId(pComiteTecnicoId, HttpContext.User.FindFirst("User").Value);
-                return Ok(respuesta);
+                return respuesta;
             }
             catch (Exception ex)
             {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
+                throw ex;
             }
         }
 

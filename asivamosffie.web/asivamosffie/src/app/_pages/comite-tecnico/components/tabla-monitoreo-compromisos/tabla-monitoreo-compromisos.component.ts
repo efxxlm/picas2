@@ -12,7 +12,7 @@ import { EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 })
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id'];
+  displayedColumns: string[] = ['fechaOrdenDia', 'numero', 'cantidadCompromisos', 'nivelCumplimiento', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -33,15 +33,15 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
 
   ngOnInit(): void {
 
-      this.technicalCommitteeSessionService.getListComiteGrilla()
+      this.technicalCommitteeSessionService.getListComite()
         .subscribe( response => {
-          response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
+          //response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
+          console.log( response );
           this.dataSource = new MatTableDataSource( response );
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       })
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
       if (length === 0 || pageSize === 0) {
         return '0 de ' + length;

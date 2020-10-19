@@ -125,6 +125,13 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
     }
   }
 
+  textoLimpio(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    }
+  }
+
   onSubmit() {
 
     let listaActividades = this.addressForm.get('actividades') as FormArray;
