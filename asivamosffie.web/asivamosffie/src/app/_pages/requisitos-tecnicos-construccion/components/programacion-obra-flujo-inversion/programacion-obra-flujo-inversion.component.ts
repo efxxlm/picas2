@@ -12,6 +12,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() esFlujoInversion: boolean;
   @Input() contratoConstruccionId: number;
   @Output() terminoCarga = new EventEmitter();
+  @Output() realizoObservacion = new EventEmitter();
   tieneRegistrosObra: boolean = true;
   tieneRegistrosInversion: boolean = true;
 
@@ -30,6 +31,12 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
       console.log( 'termino carga masiva?', response );
       this.terminoCarga.emit( response.terminoCarga );
     } );
+  };
+
+  esObservacion ( realizoObservacion: boolean ) {
+    if ( realizoObservacion === true ) {
+      this.realizoObservacion.emit( realizoObservacion );
+    };
   };
 
 }

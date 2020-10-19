@@ -7,9 +7,11 @@
         Observaciones Programacion
     </h1>
     
-    <p class="p mt-1em">
-        <span><strong>10/08/2020</strong></span> <span class="sin-diligenciar">  Fallido</span>
-    </p>
+    <section class="flex-center">
+        <span><strong>10/08/2020</strong></span>
+        <span class="info-text sin-diligenciar" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Fallido'">Fallido</span>
+        <span class="info-text completo" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Validos'">Valido</span>
+    </section>
     
     <form autocomplete="off" [formGroup]="formObservacion" (ngSubmit)="guardar()">
         <div class="flex-editor mt-2em">

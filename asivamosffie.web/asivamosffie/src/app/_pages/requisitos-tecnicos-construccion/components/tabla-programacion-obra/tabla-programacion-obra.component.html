@@ -32,7 +32,13 @@
 
     <ng-container matColumnDef="estadoCargue">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del cargue </th>
-      <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoCargue }} </td>
+      <td mat-cell *matCellDef="let element" align="center">
+        <section class="flex-center">
+          <span class="info-text sin-diligenciar" style="margin-right: 0em;" *ngIf="element.estadoCargue === 'Fallido'"></span>
+          <span class="info-text completo" style="margin-right: 0em;" *ngIf="element.estadoCargue === 'Validos'"></span>
+          {{ element.estadoCargue }}
+        </section>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="gestion">
@@ -47,8 +53,9 @@
 
         <button mat-raised-button
                 color="accent" 
-                class="btn-table sin-diligenciar"
-                (click)="this.addObservaciones( element.archivoCargueId )">
+                class="btn-table expansion-style--title btn-color h-2em"
+                [ngClass]="getSemaforo( element.observaciones ? element.observaciones : null )"
+                (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.observaciones ? element.observaciones : null )">
                 Observaciones
         </button>
 

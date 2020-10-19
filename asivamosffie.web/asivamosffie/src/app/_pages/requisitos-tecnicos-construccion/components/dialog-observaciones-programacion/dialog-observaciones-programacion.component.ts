@@ -32,6 +32,7 @@ export class DialogObservacionesProgramacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.formObservacion.get( 'observaciones' ).setValue( this.data.observaciones !== null ? this.data.observaciones : null )
   }
   crearFormulario() {
     this.formObservacion = this.fb.group({
@@ -72,7 +73,10 @@ export class DialogObservacionesProgramacionComponent implements OnInit {
     };
     this.faseUnoConstruccionSvc.createEditObservacionesCarga( this.data.pArchivoCargueId, this.formObservacion.get( 'observaciones' ).value )
     .subscribe(
-      response => console.log( response ),
+      response => {
+        this.openDialog( '', response.message );
+        this.dialogRef.close({ realizoObservacion: true });
+      },
       err => this.openDialog( '', err.message )
     )
     //this.dialogRef.close();

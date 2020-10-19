@@ -134,7 +134,8 @@
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
             <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true" 
                                                     [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
-                                                    (terminoCarga)="getCargaMasiva( $event )">
+                                                    (terminoCarga)="getCargaMasiva( $event )"
+                                                    (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
           </section>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">

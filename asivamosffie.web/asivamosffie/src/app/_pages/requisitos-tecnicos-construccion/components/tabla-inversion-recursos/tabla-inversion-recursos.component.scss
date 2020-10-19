@@ -1,7 +1,21 @@
 .w-90 {
     width: 90%;
-  }
+}
   
-  .mt-2em {
-    margin-top: 2em;
-  }
+.mt-2em {
+  margin-top: 2em;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+}
+
+.btn-color {
+  background-color: #fdc101 !important;
+}
+
+.h-2em {
+  height: 2em;
+}

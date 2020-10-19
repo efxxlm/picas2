@@ -47,7 +47,7 @@ export class FaseUnoConstruccionService {
 
   createEditObservacionesCarga ( pArchivoCargueId: number, pObservacion: string ) {
     console.log( pArchivoCargueId, pObservacion );
-    return this.http.post( `${ this.urlApi }/CreateEditObservacionesCarga?pArchivoCargueId=${ pArchivoCargueId }&pObservacion=${ pObservacion }`, '' );
+    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionesCarga?pArchivoCargueId=${ pArchivoCargueId }&pObservacion=${ pObservacion }`, '' );
   }
   //Peticiones POST Carga Masiva "Programación de obra"
   uploadFileToValidateProgramming ( pContratoConstruccinId: number, documento: File ) {

@@ -12,3 +12,17 @@
   margin-top: 1em;
   color: var(--mainColor);
 }
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+}
+
+.btn-color {
+  background-color: #fdc101 !important;
+}
+
+.h-2em {
+  height: 2em;
+}

@@ -18,6 +18,7 @@ export class TablaProgramacionObraComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @Input() contratoConstruccionId: number;
   @Output() tieneRegistros = new EventEmitter();
+  @Output() realizoObservacion = new EventEmitter();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 
@@ -34,6 +35,10 @@ export class TablaProgramacionObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getData();
+  };
+
+  getData () {
     if ( this.contratoConstruccionId !== 0 ) {
       this.faseUnoConstruccionSvc.getLoadProgrammingGrid( this.contratoConstruccionId )
       .subscribe( ( response: any[] ) => {
@@ -63,17 +68,36 @@ export class TablaProgramacionObraComponent implements OnInit {
     });   
   };
 
-  addObservaciones( pArchivoCargueId: number ){
+  getSemaforo ( observacion: string ) {
+    if ( observacion !== null ) {
+      return 'completo';
+    } else {
+      return 'sin-diligenciar';
+    }
+  }
+
+  addObservaciones( pArchivoCargueId: number, estadoCargue: string, observaciones?: string ){
     const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
       width: '75em',
-      data: { pArchivoCargueId }
+      data: { pArchivoCargueId, observaciones, estadoCargue }
     });
+    dialogCargarProgramacion.afterClosed()
+      .subscribe( response => {
+        if ( response.realizoObservacion ) {
+          this.dataSource = new MatTableDataSource();
+          this.getData();
+        };
+      } )
   };
 
   deleteArchivoCargue( pArchivoCargueId: number ){
     this.faseUnoConstruccionSvc.deleteArchivoCargue( pArchivoCargueId )
       .subscribe(
-        response => console.log( response ),
+        response => {
+          this.openDialog( '', response.message );
+          this.dataSource = new MatTableDataSource();
+          this.getData();
+        },
         err => this.openDialog( '', err.message )
       )
   };
