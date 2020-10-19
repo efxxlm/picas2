@@ -3,11 +3,12 @@
 </button>
 
 <h1 class="title-menu--h1">
-  Votación solicitud PI0004
+  Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}
 </h1>
 
 <p>
-  <span class="mx-1em">23/06/2020</span> <span class="mx-1em">Apertura de proceso de selección</span>
+  <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span>
+  <span class="mx-1em">{{ data.sesionComiteSolicitud.tipoSolicitud }}</span>
 </p>
 
 <mat-dialog-content>

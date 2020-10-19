@@ -6,6 +6,7 @@ import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCo
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { Router } from '@angular/router';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-form-proposiciones-varios',
@@ -34,7 +35,8 @@ export class FormProposicionesVariosComponent {
               public dialog: MatDialog,
               private commonService: CommonService,
               private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
-              private router: Router
+              private router: Router,
+              private techicalCommitteeSessionService: TechnicalCommitteSessionService,
 
              ) 
   {
@@ -159,6 +161,40 @@ export class FormProposicionesVariosComponent {
     }
 
     console.log(cantidadIncompletos)
+  }
+
+  eliminarTema(i) {
+    let tema = this.addressForm.get('tema');
+    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number, grupo: any) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result) {
+        this.deleteTema(e)
+      }
+    });
+  }
+
+  deleteTema(i) {
+    let grupo = this.addressForm.get('tema') as FormArray;
+    let tema = grupo.controls[i];
+
+    console.log(tema)
+
+    this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
+      .subscribe(respuesta => {
+        this.borrarArray(grupo, i)
+        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.ngOnInit();
+      })
+
   }
 
   cargarRegistros(){

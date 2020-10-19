@@ -34,39 +34,9 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema);
         Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId);
         Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico);
+        Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId, string pUsuarioModifico);
 
-        // Task<Respuesta> CreateOrEditTema(SesionComiteTema sesionComiteTema, DateTime fechaComite);
-        // Task<List<SesionComiteTema>> GetCommitteeSessionByComiteTecnicoId(int comiteTecnicoId);
-        
-
-        // Task<Respuesta> CallCommitteeSession(int comiteTecnicoId, string user);
-        // Task<bool> DeleteTema(int sesionTemaId, string user);
         #endregion
-
-
-
-        // #region "SESIONES DE COMITE FIDUCIARIO";
-        // Task<List<ComiteTecnico>> GetConvokeSessionFiduciario(int? estadoComiteCodigo);
-        // Task<List<Usuario>> GetListParticipantes();
-        // #endregion
-
-
-
-        
-        // Task<Respuesta> CreateOrEditGuest(SesionInvitado sesionInvitado);
-        // Task<Respuesta> CreateOrEditSesioncomment(SesionComentario sesionComentario);
-        // Task<Respuesta> CreateOrEditSubjects(TemaCompromiso temaCompromiso);
-        
-        // Task<SesionInvitado> GetSesionGuesById(int sesionInvitadoId);
-        // Task<List<ComiteTecnico>> GetSesionSinActa();
-        
-        // Task<IEnumerable<GridCommitteeSession>> GetCommitteeSessionTemaById(int sessionTemaId);
-        // Task<bool> SessionPostpone(int ComiteTecnicoId, DateTime newDate, string usuarioModifico);
-        // Task<bool> SessionDeclaredFailed(int ComiteTecnicoId, string usuarioModifico);
-        //  Task<List<GridValidationRequests>> GetValidationRequests();
-        // Task<Respuesta> CreateOrEditVotacionSolicitud(List<SesionSolicitudVoto> listSolicitudVoto);
-        // Task<Respuesta> CreateOrEditInvitedMembers(SesionParticipante sesionParticipante);
-        // Task<List<GridComiteTecnicoCompromiso>> GetCompromisosSolicitud();
 
     }
 }
