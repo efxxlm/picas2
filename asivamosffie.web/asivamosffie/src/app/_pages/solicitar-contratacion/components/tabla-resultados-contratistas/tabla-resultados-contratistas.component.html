@@ -26,7 +26,7 @@
             </div>
             <div class="col d-flex">
                 <mat-form-field class="full-width">
-                    <input matInput type="text" [formControl]="nombreContratista">
+                    <input matInput type="text" [formControl]="nombreContratista" [value]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ]?.nombre : ''">
                 </mat-form-field>
             </div>
             <button mat-button color="primary" class="btn-guardar" type="submit" (click)="buscar()">

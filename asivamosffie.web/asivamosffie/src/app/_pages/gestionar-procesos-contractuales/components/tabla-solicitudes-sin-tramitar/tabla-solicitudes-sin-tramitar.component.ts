@@ -24,7 +24,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   estadoCodigo: string;
   estadoCodigoFiduciaria: string = "9";
   estadoCodigos = {
-    aprobadoCf: '13'
+    aprobadoCf: '2'
   };
 
   constructor ( private routes: Router,
