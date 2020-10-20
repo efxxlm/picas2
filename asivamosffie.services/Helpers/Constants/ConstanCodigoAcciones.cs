@@ -104,18 +104,7 @@
         //Acta inicio contrato Fase 2     
         public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
         public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";
-        public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
-
-
-        //gestion polizas y garantias
-        public const string Crear_Contrato_Poliza = "85";
-        public const string Editar_Contrato_Poliza = "86";
-        public const string Crear_Poliza_Garantia = "87";
-        public const string Crear_Poliza_Observacion = "89";
-        public const string Notificacion_Gestion_Poliza = "90";
-
-        public const string Editar_Poliza_Garantia = "98";
-        public const string Editar_Poliza_Observacion = "97";
+        public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";    
 
 
     }
