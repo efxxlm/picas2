@@ -36,6 +36,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   miembrosParticipantes: any[] = [];
   temas: any[] = [];
   proposicionesVarios: any[] = [];
+  seRealizoPeticion: boolean = false;
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
@@ -51,7 +52,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
-    if ( this.form.get( 'comentarioActa' ).value !== null ) {
+    if ( this.form.get( 'comentarioActa' ).value !== null && this.seRealizoPeticion === false ) {
       this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' )
     }
   }
@@ -147,7 +148,8 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
 
     this.compromisoSvc.postComentariosActa( observaciones )
       .subscribe( ( resp: any ) => {
-        this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+        this.seRealizoPeticion = true;
+        this.openDialog( '', this.textoLimpioMessage( resp.message ) );
         this.routes.navigate( ['/compromisosActasComite'] );
       } );
 
@@ -157,6 +159,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     //Al aprobar acta redirige al componente principal
     this.compromisoSvc.aprobarActa( comiteTecnicoId )
       .subscribe( ( resp: any ) => {
+        this.seRealizoPeticion = true;
         this.openDialog( this.textoLimpioMessage( resp.message ), '' );
         this.routes.navigate( ['/compromisosActasComite'] );
       } )

@@ -65,9 +65,6 @@ registerLocaleData( es );
     GestionarProcesosContractualesModule,
     ReactiveFormsModule,
     CurrencyMaskModule
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: "es-ES" }
   ]
 })
 export class SolicitarContratacionModule { }
