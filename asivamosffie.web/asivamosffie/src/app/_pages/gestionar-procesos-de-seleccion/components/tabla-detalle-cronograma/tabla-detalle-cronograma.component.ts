@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ProcesoSeleccionService, ProcesoSeleccion, EstadosProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccionService, ProcesoSeleccion, EstadosProcesoSeleccion, EstadosProcesoSeleccionMonitoreo, ProcesoSeleccionMonitoreo } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Respuesta, CommonService } from 'src/app/core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { forkJoin } from 'rxjs';
 
 export interface ProcesosElement {
-  id: number;
+  id: any;
   tipo: string;
   numero: string;
   fechaSolicitud: string;
@@ -29,6 +29,7 @@ export class TablaDetalleCronogramaComponent implements OnInit {
   @Input() editMode: any = {};
   idProcesoseleccion: number = 0;
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
+  estadosProcesoSeleccionMonitoreo = EstadosProcesoSeleccionMonitoreo;
 
 
   displayedColumns: string[] = [ 'tipo', 'numero', 'fechaSolicitud', 'numeroSolicitud', 'estadoDelSolicitud', 'id'];
@@ -72,7 +73,7 @@ export class TablaDetalleCronogramaComponent implements OnInit {
             console.log("proceso");
             console.log(proceso);
             let nombreTipo = respuesta[1].find( p => p.codigo == proceso.procesoSeleccion.tipoProcesoCodigo )
-            let nombreEstado = respuesta[2].find( p => p.codigo == proceso.procesoSeleccion.estadoProcesoSeleccionCodigo )
+            let nombreEstado = respuesta[2].find( p => p.codigo == proceso.estadoActividadCodigo )
             let nombreEtapa = respuesta[3].find( p => p.codigo == proceso.estadoActividadCodigo )
             
             /*if (nombreTipo)   proceso.procesoSeleccion.tipoProcesoNombre = nombreTipo.nombre;
@@ -81,7 +82,16 @@ export class TablaDetalleCronogramaComponent implements OnInit {
 */
             listaProcesos.push( {estadoDelSolicitud:nombreEstado.nombre,
               fechaSolicitud:proceso.fechaCreacion,
-              id:proceso.procesoSeleccionMonitoreoId,
+              id:{estadoActividadCodigo:proceso.estadoActividadCodigo,
+                numeroProceso:proceso.numeroProceso,
+                procesoSeleccionCronogramaMonitoreo:proceso.procesoSeleccionCronogramaMonitoreo,
+                procesoSeleccionId:proceso.procesoSeleccionId, 
+                procesoSeleccionMonitoreoId:proceso.procesoSeleccionMonitoreoId,
+                fechaCreacion:proceso.fechaCreacion,
+                usuarioCreacion:proceso.usuarioCreacion,
+                eliminado:proceso.eliminado,
+                enviadoComiteTecnico:proceso.enviadoComiteTecnico
+              },
               numero:proceso.procesoSeleccion.numeroProceso,
               numeroSolicitud:proceso.numeroProceso,tipo:nombreTipo.nombre} );
           });
@@ -98,25 +108,21 @@ export class TablaDetalleCronogramaComponent implements OnInit {
     })
   }
 
-  onDetalle(){
+  onDetalle(id:number){
     this.editMode.valor = !this.editMode.valor;
     console.log( this.editMode.valor );
   }
 
-  onEnviarSolicitud(  ){
-    let proceso: ProcesoSeleccion = {
-      procesoSeleccionId: this.idProcesoseleccion,
-      estadoProcesoSeleccionCodigo: this.estadosProcesoSeleccion.AperturaEntramite
-    }
-
-    this.procesoSeleccionService.changeStateProcesoSeleccion( proceso ).subscribe( respuesta => {
-      this.openDialog("Proceso Seleccion", respuesta.message);
+  onEnviarSolicitud(id:any){
+    id.enviadoComiteTecnico=true;
+    this.procesoSeleccionService.createEditarProcesoSeleccionCronogramaMonitoreo( id ).subscribe( respuesta => {
+      this.openDialog("", respuesta.message);
       if ( respuesta.code == "200" )
         this.ngOnInit();
     })
   }
 
-  onEliminar(){
+  onEliminar(id:number){
 
     this.openDialogSiNo('','¿Está seguro de eliminar este registro?')
   }

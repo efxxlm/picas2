@@ -193,20 +193,34 @@ namespace asivamosffie.services
             {
                 if (procesoSeleccionCronograma != null)
                 {
-                    procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
-                    procesoSeleccionCronograma.Eliminado = false;
-                    procesoSeleccionCronograma.NumeroProceso = "ACTCRONO" + _context.ProcesoSeleccionMonitoreo.Count().ToString();
-                    procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.Creado;
-                    foreach(var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
+                    if(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
                     {
-                        proceso.FechaCreacion = DateTime.Now;
-                        proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
+                        procesoSeleccionCronograma.FechaModificacion = DateTime.Now;
+                        _context.Update(procesoSeleccionCronograma);
                     }
-                    _context.Add(procesoSeleccionCronograma);
+                    else
+                    {
+                        
+                        procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
+                        procesoSeleccionCronograma.Eliminado = false;
+                        procesoSeleccionCronograma.NumeroProceso = "ACTCRONO" + _context.ProcesoSeleccionMonitoreo.Count().ToString();
+                        procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.Creado;
+                        foreach (var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
+                        {
+                            proceso.FechaCreacion = DateTime.Now;
+                            proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
+                        }
+                        _context.Add(procesoSeleccionCronograma);
+                    }
+                    
 
-                    //por aqui actualizo el estado de la solicitud
-                    var solicitud = _context.ProcesoSeleccion.Find(procesoSeleccionCronograma.ProcesoSeleccionId);
-                    solicitud.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite;
+                    //por aqui actualizo el estado de la solicitud si lo estoy envaiando a comite
+                    if(procesoSeleccionCronograma.EnviadoComiteTecnico==true)
+                    {
+                        var solicitud = _context.ProcesoSeleccion.Find(procesoSeleccionCronograma.ProcesoSeleccionId);
+                        solicitud.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite;
+                    }
+                    
 
                     await _context.SaveChangesAsync();
 
