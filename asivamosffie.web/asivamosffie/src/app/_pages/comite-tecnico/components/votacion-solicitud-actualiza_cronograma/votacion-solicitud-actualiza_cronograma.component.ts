@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SesionComiteSolicitud, ComiteTecnico, SesionSolicitudVoto, SesionSolicitudObservacionProyecto } from 'src/app/_interfaces/technicalCommitteSession';
+import { SesionComiteSolicitud, ComiteTecnico, SesionSolicitudVoto, SesionSolicitudObservacionProyecto, SesionSolicitudObservacionActualizacionCronograma } from 'src/app/_interfaces/technicalCommitteSession';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { Router } from '@angular/router';
 import { ProjectService } from 'src/app/core/_services/project/project.service';
@@ -82,10 +82,10 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
   crearObservaciones() {
     return this.fb.group({
       nombreParticipante: [],
-      sesionSolicitudObservacionProyectoId: [],
+      sesionSolicitudObservacionActualizacionCronogramaId: [],
       sesionComiteSolicitudId: [],
       sesionParticipanteId: [],
-      contratacionProyectoId: [],
+      procesoSeleccionCronogramaMonitoreoId: [],
       observacion: [null, Validators.required]
 
     });
@@ -144,8 +144,6 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
           let listaObservaciones = grupoProyecto.get('observaciones') as FormArray;
 
           grupoProyecto.get('llaveMen').setValue(cp.numeroActividad);
-          grupoProyecto.get('nombreInstitucion').setValue(''/*response.institucionEducativa.nombre*/);
-          grupoProyecto.get('nombreSede').setValue(''/*response.sede.nombre*/);
 
           this.data.sesionComiteSolicitud.sesionSolicitudObservacionActualizacionCronograma
             .filter(o => o.procesoSeleccionCronogramaMonitoreoId == cp.procesoSeleccionCronogramaMonitoreoId)
@@ -154,10 +152,10 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
               let grupoObservacion = this.crearObservaciones();
 
               grupoObservacion.get('nombreParticipante').setValue(op.nombreParticipante);
-              grupoObservacion.get('sesionSolicitudObservacionProyectoId').setValue(op.sesionSolicitudObservacionActualizacionCronogramaId);
+              grupoObservacion.get('sesionSolicitudObservacionActualizacionCronogramaId').setValue(op.sesionSolicitudObservacionActualizacionCronogramaId);
               grupoObservacion.get('sesionComiteSolicitudId').setValue(op.sesionComiteSolicitudId);
               grupoObservacion.get('sesionParticipanteId').setValue(op.sesionParticipanteId);
-              grupoObservacion.get('contratacionProyectoId').setValue(op.procesoSeleccionCronogramaMonitoreoId);
+              grupoObservacion.get('procesoSeleccionCronogramaMonitoreoId').setValue(op.procesoSeleccionCronogramaMonitoreoId);
               grupoObservacion.get('observacion').setValue(op.observacion);
 
               listaObservaciones.push(grupoObservacion);
@@ -181,7 +179,9 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,
       sesionSolicitudVoto: [],
-      sesionSolicitudObservacionProyecto: []
+      sesionSolicitudObservacionProyecto: [],
+      sesionSolicitudObservacionActualizacionCronograma: [],
+      
     }
 
     this.aprobaciones.controls.forEach(control => {
@@ -201,15 +201,16 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
       let listaObservaciones = controlProyecto.get('observaciones') as FormArray;
 
       listaObservaciones.controls.forEach(control => {
-        let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
-          sesionSolicitudObservacionProyectoId: control.get('sesionSolicitudObservacionProyectoId').value,
+        let observacionActualizarCronograma: SesionSolicitudObservacionActualizacionCronograma = {
+          sesionSolicitudObservacionActualizacionCronogramaId: control.get('sesionSolicitudObservacionActualizacionCronogramaId').value,
           sesionComiteSolicitudId: control.get('sesionComiteSolicitudId').value,
           sesionParticipanteId: control.get('sesionParticipanteId').value,
-          contratacionProyectoId: control.get('contratacionProyectoId').value,
+          procesoSeleccionCronogramaMonitoreoId: control.get('procesoSeleccionCronogramaMonitoreoId').value,
           observacion: control.get('observacion').value,
-        }
 
-        sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto);
+        }
+        
+        sesionComiteSolicitud.sesionSolicitudObservacionActualizacionCronograma.push( observacionActualizarCronograma );
       })
 
     })

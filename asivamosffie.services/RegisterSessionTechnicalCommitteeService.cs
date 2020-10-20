@@ -93,6 +93,26 @@ namespace asivamosffie.services
                         SesionSolicitudObservacionProyectoOld.FechaModificacion = DateTime.Now;
                     }
                 }
+
+                foreach (var observacionActualizacionCronograma in pSesionComiteSolicitud.SesionSolicitudObservacionActualizacionCronograma)
+                {
+                    if (observacionActualizacionCronograma.SesionSolicitudObservacionActualizacionCronogramaId == 0)
+                    {
+                        observacionActualizacionCronograma.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        observacionActualizacionCronograma.FechaCreacion = DateTime.Now;
+                        observacionActualizacionCronograma.Eliminado = false;
+                        _context.SesionSolicitudObservacionActualizacionCronograma.Add( observacionActualizacionCronograma );
+                        //sesionComiteSolicitudOld.SesionSolicitudObservacionProyecto.Add( SesionSolicitudObservacionProyecto );
+                    }
+                    else
+                    {
+                        SesionSolicitudObservacionActualizacionCronograma observacionActualizacionCronogramaOld = _context.SesionSolicitudObservacionActualizacionCronograma.Find(observacionActualizacionCronograma.SesionSolicitudObservacionActualizacionCronogramaId);
+                        observacionActualizacionCronogramaOld.Observacion = observacionActualizacionCronograma.Observacion;
+                        observacionActualizacionCronogramaOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        observacionActualizacionCronogramaOld.FechaModificacion = DateTime.Now;
+                    }
+                }
+
                 _context.SaveChanges();
                 return
                 new Respuesta
@@ -746,12 +766,19 @@ namespace asivamosffie.services
         }
 
         public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId ){
-            ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo
+            ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = await _context.ProcesoSeleccionMonitoreo
                                                                     .Where( r => r.ProcesoSeleccionMonitoreoId == pProcesoSeleccionMonitoreoId &&
                                                                             r.Eliminado != true       
                                                                      )
                                                                      .Include( r => r.ProcesoSeleccionCronogramaMonitoreo )
-                                                                     .FirstOrDefault();            
+                                                                        .ThenInclude( r => r.SesionSolicitudObservacionActualizacionCronograma )
+                                                                     .FirstOrDefaultAsync();            
+                                                                    
+            procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.ToList().RemoveAll( r => r.Eliminado == true );
+
+            procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.ToList().ForEach( p => {
+                p.SesionSolicitudObservacionActualizacionCronograma.ToList().RemoveAll( r => r.Eliminado == true );
+            });
 
             return procesoSeleccionMonitoreo;
         } 

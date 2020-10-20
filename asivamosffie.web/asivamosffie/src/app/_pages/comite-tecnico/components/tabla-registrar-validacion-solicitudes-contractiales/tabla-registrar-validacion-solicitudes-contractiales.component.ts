@@ -147,8 +147,8 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
           //console.log(elemento.procesoSeleccionMonitoreo)
           elemento.procesoSeleccionMonitoreo.procesoSeleccionCronogramaMonitoreo.forEach(c => {
 
-            let observacion = p.sesionSolicitudObservacionActualizacionCronograma
-              .find(o => o.procesoSeleccionCronogramaMonitoreoId == c.procesoSeleccionCronogramaMonitoreoId
+            let observacion = c.sesionSolicitudObservacionActualizacionCronograma
+              .find(o => p.sesionParticipanteId == o.sesionParticipanteId
                 && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
 
             let sesionSolicitudObservacionActualizacionCronograma: SesionSolicitudObservacionActualizacionCronograma = {
@@ -174,7 +174,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     })
 
 
-    //console.log(sesionComiteSolicitud)
+    console.log(sesionComiteSolicitud)
 
     this.abrirPopupVotacion(sesionComiteSolicitud);
   }

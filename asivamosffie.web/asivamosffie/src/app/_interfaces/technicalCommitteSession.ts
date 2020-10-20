@@ -168,7 +168,7 @@ export interface SesionSolicitudObservacionActualizacionCronograma{
     eliminado?: boolean,
 
     nombreParticipante?: string,
-    procesoSeleccionCronograma: ProcesoSeleccionCronograma
+    procesoSeleccionCronograma?: ProcesoSeleccionCronograma
     procesoSeleccionCronogramaMonitoreo?: ProcesoSeleccionCronogramaMonitoreo,
 }
 
