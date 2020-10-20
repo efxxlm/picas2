@@ -21,7 +21,7 @@ namespace asivamosffie.model.Models
         public int? Activo { get; set; }
         public string FaseCodigo { get; set; }
         public bool? RegistroCompleto { get; set; }
-         
+
         public virtual ContratacionProyectoAportante ContratacionProyectoAportante { get; set; }
         public virtual ICollection<ComponenteUso> ComponenteUso { get; set; }
     }
