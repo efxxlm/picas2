@@ -81,10 +81,10 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             cantidadProyectosSinDiligenciar++;
           }
           if ( contratacionProyecto[ 'registroCompleto' ] === true ) {
-            cantProyectosEnProceso++;
+            cantProyectosCompletos++;
           } 
           if ( contratacionProyecto[ 'registroCompleto' ] === false ) {
-            cantProyectosCompletos++;
+            cantProyectosEnProceso++;
           }
         }
         if ( cantidadProyectosSinDiligenciar === this.contratacion.contratacionProyecto.length ) {

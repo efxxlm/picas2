@@ -52,6 +52,7 @@ export class TablaResultadosContratistasComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log( this.contratacion[ 'contratista' ] );
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -64,8 +65,6 @@ export class TablaResultadosContratistasComponent implements OnInit {
       idContratista: elemento.idContratista,
 
     }
-
-
   }
 
   buscar(){
