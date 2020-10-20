@@ -830,7 +830,7 @@ namespace asivamosffie.services
                     InstitucionEducativaLlaveMEN = strInstitucionEducativaLlaveMEN,
 
                     CantidadProyectosAsociados = intCantidadProyectosAsociados,
-                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion;
+                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion,
 
                     //RegistroCompleto = contrato.RegistroCompleto
 
