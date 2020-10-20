@@ -25,6 +25,10 @@ namespace asivamosffie.model.APIModels
         public string NumeroIdentificacionContratistaInterventoria { get; set; }
         public string NombreEntidadContratistaSupervisorInterventoria { get; set; }
         public string? PlazoInicialContratoSupervisor { get; set; }
+
+        public Int32? PlazoFase1PreMeses { get; set; }
+        public Int32? PlazoFase2ConstruccionDias { get; set; }
+        
         public string NumeroIdentificacionRepresentanteContratistaObraInterventoria { get; set; }
         public string NombreRepresentanteContratistaObra { get; set; }
         public string NumeroIdentificacionEntidadContratistaObra { get; set; }

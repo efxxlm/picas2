@@ -660,50 +660,50 @@ namespace asivamosffie.services
             try
             {
                 //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-                Contrato contrato = _context.Contrato.Where(r => !(bool)r.Estado && r.ContratoId == pContratoId && r.TipoContratoCodigo==pTipoContrato.ToString()).FirstOrDefault();
+                Contrato contrato = _context.Contrato.Where(r => !(bool)r.Estado && r.ContratoId == pContratoId && r.TipoContratoCodigo == pTipoContrato.ToString()).FirstOrDefault();
                 //cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
                 string strFechaPrevistaTerminacion = "";
                 string strFechaActaInicio = "";
 
                 string strContratoObservacion = "";
 
-                Contratacion contratacion=null;
+                Contratacion contratacion = null;
 
-                ContratoObservacion contratoObservacion=null;
+                ContratoObservacion contratoObservacion = null;
 
-                if (contrato!= null)
+                if (contrato != null)
                 {
                     //contratacion = _context.Contratacion.Where(r => !(bool)r.Estado && r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
                     contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
                     //strFechaActaInicio = contrato.FechaActaInicioFase2.ToString("dd/MM/yyyy");
 
-                    strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();                                                           
+                    strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
                     strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
                     contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
-                   
-                    if(contratoObservacion != null)
+
+                    if (contratoObservacion != null)
                     {
                         strContratoObservacion = contratoObservacion.Observaciones;
                     }
-                        
+
                 }
 
                 string strTipoContratacion = "sin definir";
                 //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                 Dominio TipoContratacionCodigo;
 
-                ContratacionProyecto contratacionProyecto=null;
-                string strLlaveMENContrato="";
-                string strInstitucionEducativaLlaveMEN="";
-                string strDepartamentoYMunicipioLlaveMEN="";
+                ContratacionProyecto contratacionProyecto = null;
+                string strLlaveMENContrato = "";
+                string strInstitucionEducativaLlaveMEN = "";
+                string strDepartamentoYMunicipioLlaveMEN = "";
 
                 if (contratacion != null)
                 {
                     TipoContratacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
                     if (TipoContratacionCodigo != null)
                         strTipoContratacion = TipoContratacionCodigo.Nombre;
-                                        
+
                     contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
 
                 }
@@ -759,7 +759,7 @@ namespace asivamosffie.services
                 string strNumeroDRP1 = "sin definir";
                 string strFechaGeneracionDRP = "sin definir";
 
-                if (disponibilidadPresupuestal!=null)
+                if (disponibilidadPresupuestal != null)
                 {
                     strNumeroDRP1 = disponibilidadPresupuestal.NumeroDrp;
                     //strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDdp.ToString("dd/MM/yyyy");
@@ -780,16 +780,18 @@ namespace asivamosffie.services
                 intCantidadProyectosAsociados = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).Count();
 
                 Proyecto proyecto;
-                proyecto= _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
+                proyecto = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
                 string InstitucionEducativaId = proyecto.InstitucionEducativaId.ToString();
 
-                proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById( Convert.ToInt32( InstitucionEducativaId));
+                if (InstitucionEducativaId != null)
+                   proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById( Convert.ToInt32( InstitucionEducativaId));
                          
                                 
                 if (proyecto!= null)
                 {
                      strLlaveMENContrato =proyecto.LlaveMen;
-                     strInstitucionEducativaLlaveMEN = proyecto.InstitucionEducativa.Nombre;
+                    if (InstitucionEducativaId != null)
+                        strInstitucionEducativaLlaveMEN = proyecto.InstitucionEducativa.Nombre;
                     //[LocalizacionIdMunicipio] [InstitucionEducativaId]
                      strDepartamentoYMunicipioLlaveMEN =_commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     
@@ -817,6 +819,9 @@ namespace asivamosffie.services
                     ValorFase1Preconstruccion = " PENDIENTE",
                     Valorfase2ConstruccionObra = " PENDIENTE",
                     PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
+
+                    PlazoFase1PreMeses = contrato.PlazoFase1PreMeses,
+                    PlazoFase2ConstruccionDias = contrato.PlazoFase2ConstruccionDias,
 
                     NombreEntidadContratistaObra = contratista.Nombre,
                     NombreEntidadContratistaSupervisorInterventoria = contratista.Nombre,
@@ -848,15 +853,15 @@ namespace asivamosffie.services
                 //VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato
                  actaInicio = new VistaGenerarActaInicioContrato
                 {
-                    //ContratoId = contrato.ContratoId,
-                    //FechaFirma = e.ToString(),
-                    //NumeroContrato = e.InnerException.ToString(),
 
-                    //TipoSolicitud = "ERROR"
-                    //,
-                    //RegistroCompleto = false
+                     NumeroContrato = e.ToString(),
+                     VigenciaContrato = e.ToString(), // "2021 PENDIENTE",
+                     FechaFirmaContrato = e.InnerException.ToString(),
+                     NumeroDRP1 =  "ERROR",
+                     //,
+                     //RegistroCompleto = false
 
-                };
+                 };
             }
             return actaInicio;
         }     
