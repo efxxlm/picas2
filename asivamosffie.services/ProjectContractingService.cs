@@ -577,7 +577,8 @@ namespace asivamosffie.services
                 }
 
                 //Contratista 
-                await CreateEditContratista(Pcontratacion.Contratista, true);
+                if(Pcontratacion.Contratista != null)
+                    await CreateEditContratista(Pcontratacion.Contratista, true);
 
                 //ContratacionProyecto 
                 foreach (var ContratacionProyecto in Pcontratacion.ContratacionProyecto)
