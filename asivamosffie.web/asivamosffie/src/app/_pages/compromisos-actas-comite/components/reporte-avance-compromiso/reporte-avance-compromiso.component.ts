@@ -50,13 +50,12 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if ( this.estadoCodigo === undefined && this.reporte.get( 'reporteEstado' ).value !== null ) {
-      if ( this.seRealizoPeticion === false ) {
-        this.openDialog( '', 'Debe seleccionar el estado del Compromiso' );
+      if ( this.seRealizoPeticion === false && this.comite.estadoCodigo !== '3' ) {
         this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
       };
     };
     if ( this.estadoCodigo !== undefined && this.reporte.get( 'reporteEstado' ).value !== null ) {
-      if ( this.seRealizoPeticion === false ) {
+      if ( this.seRealizoPeticion === false && this.comite.estadoCodigo !== '3' ) {
         this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
       };
     };
@@ -65,7 +64,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   openDialogConfirmar(modalTitle: string, modalText: string) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, {
       width: '30em',
-      data: { modalTitle, modalText, siNoBoton:true }
+      data: { modalTitle, modalText, siNoBoton: true }
     });
 
     confirmarDialog.afterClosed()

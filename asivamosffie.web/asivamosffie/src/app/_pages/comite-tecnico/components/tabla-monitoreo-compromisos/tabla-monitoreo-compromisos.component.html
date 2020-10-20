@@ -30,7 +30,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nivel de cumplimiento </th>
             <td mat-cell *matCellDef="let element"> 
                 <section class="flex-center">
-                    <span style="margin-right: 0em;" class="info-text sin-diligenciar" *ngIf="element.cantidadCompromisosCumplidos == 0"></span>
+                    <span style="margin-right: 0em;" class="info-text sin-diligenciar" *ngIf="element.cantidadCompromisosCumplidos === 0"></span>
                     <span style="margin-right: 0em;" class="info-text en-proceso" *ngIf="element.cantidadCompromisosCumplidos != element.cantidadCompromisos"></span>
                     <span style="margin-right: 0em;" class="info-text completo" *ngIf="element.cantidadCompromisosCumplidos == element.cantidadCompromisos"></span>
                     {{element.cantidadCompromisosCumplidos}}
