@@ -31,6 +31,13 @@ namespace asivamosffie.api.Controllers
         {
             return File(await _registerSessionTechnicalCommitteeService.GetPlantillaActaIdComite(IdComite), "application/pdf");
         }
+
+        [HttpGet]
+        [Route("GetPlantillaActaIdComite")]
+        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId )
+        {
+            return await _registerSessionTechnicalCommitteeService.GetProcesoSeleccionMonitoreo( pProcesoSeleccionMonitoreoId );
+        }
  
         [HttpGet]
         [Route("ListMonitoreo")]
@@ -39,7 +46,7 @@ namespace asivamosffie.api.Controllers
             List<dynamic> list =await _registerSessionTechnicalCommitteeService.ListMonitoreo();
             return list;
         }
-        
+
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
         public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)

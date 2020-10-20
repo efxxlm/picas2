@@ -54,6 +54,14 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
         this.projectContractingService.getContratacionByContratacionId(elemento.contratacion.contratacionId)
           .subscribe(respuesta => {
+            elemento.contratacion = respuesta;
+            resolve();
+          });
+      }
+
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion) {
+        this.technicalCommitteSessionService.getProcesoSeleccionMonitoreo(elemento.procesoSeleccionMonitoreo.procesoSeleccionMonitoreoId)
+          .subscribe(respuesta => {
             console.log(respuesta);
             elemento.contratacion = respuesta;
             resolve();
@@ -64,11 +72,12 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
       tipoSolicitudCodigo: elemento.tipoSolicitudCodigo,
-      contratacion: elemento.contratacion,
       numeroSolicitud: elemento.numeroSolicitud,
       fechaSolicitud: elemento.fechaSolicitud,
       tipoSolicitud: elemento.tipoSolicitud,
 
+      contratacion: elemento.contratacion,
+      procesoSeleccionMonitoreo: elemento.procesoSeleccionMonitoreo,
 
       sesionSolicitudObservacionProyecto: [],
       sesionSolicitudVoto: [],
@@ -104,7 +113,33 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         //solicitudVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
       }
 
-      if (elemento.contratacion && elemento.contratacion.contratacionProyecto) {
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
+
+        promesa.then(() => {
+          console.log(elemento.contratacion)
+          elemento.contratacion.contratacionProyecto.forEach(c => {
+
+            let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
+              .find(o => o.contratacionProyectoId == c.contratacionProyectoId
+                && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+
+            let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
+              sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
+              sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+              sesionParticipanteId: p.sesionParticipanteId,
+              contratacionProyectoId: c.contratacionProyectoId,
+              observacion: observacion ? observacion.observacion : null,
+              nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+
+              proyecto: c.proyecto,
+            }
+
+            sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+          })
+        })
+      }
+
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion) {
 
         promesa.then(() => {
           console.log(elemento.contratacion)
@@ -160,6 +195,28 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
     console.log(elemento.tipoSolicitudCodigo)
     if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
+
+      const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
+        width: '70em',
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        maxHeight: '90em',
+
+      });
+
+
+
+      dialog.afterClosed().subscribe(c => {
+        if (c && c.comiteTecnicoId) {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+            .subscribe(response => {
+              this.ObjetoComiteTecnico = response;
+              this.validarRegistros();
+              this.validar.emit(null);
+            })
+        }
+      })
+
+    } else if ( elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion ){
 
       const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
         width: '70em',

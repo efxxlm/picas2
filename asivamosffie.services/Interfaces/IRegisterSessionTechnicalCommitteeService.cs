@@ -67,5 +67,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud);
 
         Task<List<SesionComentario>> GetCometariosDelActa(int pComietTecnicoId);
+
+        Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId );
     }
 }
