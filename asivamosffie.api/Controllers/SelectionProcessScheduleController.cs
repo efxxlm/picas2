@@ -151,7 +151,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                string usermodified = HttpContext.User.FindFirst("User").Value;
+                string usermodified = HttpContext.User.FindFirst("User").Value.ToUpper();
                 procesoSeleccionCronograma.UsuarioCreacion = usermodified;
                 _response = await _selectionProcessScheduleService.setProcesoSeleccionMonitoreoCronograma(procesoSeleccionCronograma);
                 return Ok(_response);

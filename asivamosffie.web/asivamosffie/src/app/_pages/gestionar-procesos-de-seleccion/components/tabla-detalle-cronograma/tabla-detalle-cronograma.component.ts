@@ -57,30 +57,35 @@ export class TablaDetalleCronogramaComponent implements OnInit {
     this.activatedRoute.params.subscribe( parametros => {
       this.idProcesoseleccion = parametros['id'];
 
-      let listaProcesos: ProcesoSeleccion[] = []; 
+      let listaProcesos: ProcesosElement[] = []; 
 
       forkJoin([
 
-        this.procesoSeleccionService.getProcesoSeleccionById( this.idProcesoseleccion ),
+        this.procesoSeleccionService.listaProcesoSeleccionCronogramaMonitoreo( this.idProcesoseleccion ),
         this.commonService.listaTipoProcesoSeleccion(),
-        this.commonService.listaEstadoProcesoSeleccion(),
+        this.commonService.listaEstadoProcesoSeleccionMonitoreo(),
         this.commonService.listaEtapaProcesoSeleccion(),
 
       ]).subscribe( respuesta => {
 
-
-          let proceso = respuesta[0]
-          console.log("proceso");
-          console.log(proceso);
-          let nombreTipo = respuesta[1].find( p => p.codigo == proceso.tipoProcesoCodigo )
-          let nombreEstado = respuesta[2].find( p => p.codigo == proceso.estadoProcesoSeleccionCodigo )
-          let nombreEtapa = respuesta[3].find( p => p.codigo == proceso.etapaProcesoSeleccionCodigo )
+          respuesta[0].forEach(proceso => {
+            console.log("proceso");
+            console.log(proceso);
+            let nombreTipo = respuesta[1].find( p => p.codigo == proceso.procesoSeleccion.tipoProcesoCodigo )
+            let nombreEstado = respuesta[2].find( p => p.codigo == proceso.procesoSeleccion.estadoProcesoSeleccionCodigo )
+            let nombreEtapa = respuesta[3].find( p => p.codigo == proceso.estadoActividadCodigo )
+            
+            /*if (nombreTipo)   proceso.procesoSeleccion.tipoProcesoNombre = nombreTipo.nombre;
+            if (nombreEstado) proceso.procesoSeleccion.estadoProcesoSeleccionNombre = nombreEstado.nombre;
+            if (nombreEtapa)  proceso.procesoSeleccion.etapaProcesoSeleccionNombre = nombreTipo.nombre;
+*/
+            listaProcesos.push( {estadoDelSolicitud:nombreEstado.nombre,
+              fechaSolicitud:proceso.fechaCreacion,
+              id:proceso.procesoSeleccionMonitoreoId,
+              numero:proceso.procesoSeleccion.numeroProceso,
+              numeroSolicitud:proceso.numeroProceso,tipo:nombreTipo.nombre} );
+          });
           
-          if (nombreTipo)   proceso.tipoProcesoNombre = nombreTipo.nombre;
-          if (nombreEstado) proceso.estadoProcesoSeleccionNombre = nombreEstado.nombre;
-          if (nombreEtapa)  proceso.etapaProcesoSeleccionNombre = nombreTipo.nombre;
-
-          listaProcesos.push( proceso );
           this.dataSource = new MatTableDataSource( listaProcesos );
 
           this.dataSource.sort = this.sort;

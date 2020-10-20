@@ -132,6 +132,9 @@ export class CommonService {
   listaEstadoProcesoSeleccion(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
   }
+  listaEstadoProcesoSeleccionMonitoreo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=79`);
+  }
 
   listaTipoDisponibilidadPresupuestal(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);

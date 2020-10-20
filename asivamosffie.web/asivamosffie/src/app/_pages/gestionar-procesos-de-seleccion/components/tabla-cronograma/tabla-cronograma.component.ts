@@ -53,25 +53,53 @@ export class TablaCronogramaComponent implements OnInit {
     this.activatedRoute.params.subscribe(parametro => {
       this.idProcesoSeleccion = parametro['id'];
 
-      this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion(this.idProcesoSeleccion).subscribe(lista => {
+      this.procesoSeleccionService.listaProcesoSeleccionCronogramaMonitoreo(this.idProcesoSeleccion).subscribe(monitoreo => {
+        if(monitoreo.length==0)
+        {
+          this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion(this.idProcesoSeleccion).subscribe(lista => {
 
-        let listaActividades = this.addressForm as FormArray;
-        this.listaCronograma = lista;
-
-        console.log(lista);
-
-        lista.forEach(cronograma => {
-          let grupo = this.crearActividad();
-
-          grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
-          grupo.get('descripcion').setValue(cronograma.descripcion);
-          grupo.get('fecha').setValue(cronograma.fechaMaxima);
-
-          listaActividades.push(grupo);
-
-        })
-
-      })
+            let listaActividades = this.addressForm as FormArray;
+            this.listaCronograma = lista;
+    
+            console.log(lista);
+    
+            lista.forEach(cronograma => {
+              let grupo = this.crearActividad();
+    
+              grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
+              grupo.get('descripcion').setValue(cronograma.descripcion);
+              grupo.get('fecha').setValue(cronograma.fechaMaxima);
+    
+              listaActividades.push(grupo);
+    
+            })
+    
+          })
+        }
+        else{
+          let listaActividades = this.addressForm as FormArray;
+          console.log(monitoreo);  
+          console.log(monitoreo.length);
+          this.listaCronograma = monitoreo[monitoreo.length-1].procesoSeleccionCronogramaMonitoreo;
+    
+            
+            if(this.listaCronograma)
+            {
+              this.listaCronograma.forEach(cronograma => {
+                let grupo = this.crearActividad();
+      
+                grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
+                grupo.get('descripcion').setValue(cronograma.descripcion);
+                grupo.get('fecha').setValue(cronograma.fechaMaxima);
+      
+                listaActividades.push(grupo);
+      
+              })
+            }
+            
+        }
+      });
+      
 
     })
   }
@@ -131,9 +159,9 @@ export class TablaCronogramaComponent implements OnInit {
       i++
     })
     this.procesoSeleccionService.createEditarProcesoSeleccionCronogramaMonitoreo(listaCronograma).subscribe(respuesta => {
-      let res = respuesta[0] as Respuesta
-      if (res.code == "200")
-        this.openDialog("", res.message);
+     
+      if (respuesta.code == "200")
+        this.openDialog("", respuesta.message);
     });
 
     /*from(this.listaCronograma)
