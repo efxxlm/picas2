@@ -292,7 +292,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   onSubmit() {
 
-    console.log(this.addressForm);
+    console.log(this.solicitudesSeleccionadas);
     if (this.addressForm.invalid) {
       this.openDialog('Falta registrar información', '');
 

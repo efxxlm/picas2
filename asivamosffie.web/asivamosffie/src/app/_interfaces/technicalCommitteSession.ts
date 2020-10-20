@@ -110,6 +110,7 @@ export interface SesionComiteSolicitud {
     numeroSolicitud?: string,
     fechaSolicitud?: Date, 
     completo?: boolean,
+    numeroHijo?: string,
 
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],

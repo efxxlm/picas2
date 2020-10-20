@@ -67,7 +67,7 @@ import { VotacionSolicitudActualizaCronogramaComponent } from './components/vota
     DialogVerDetalleComponent,
     VotacionTemaComponent,
     tablaComentariosActaComponent,
-    VotacionSolicitudActualizaCronogramaComponent
+    VotacionSolicitudActualizaCronogramaComponent,
   ],
   imports: [
     CommonModule,
