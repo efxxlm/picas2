@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin, timer } from 'rxjs';
-import { ProcesoSeleccion, ProcesoSeleccionGrupo, ProcesoSeleccionCronograma, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionGrupo, ProcesoSeleccionCronograma, ProcesoSeleccionService, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { delay } from 'rxjs/operators';
 import { promise } from 'protractor';
 import { resolve } from 'dns';
@@ -27,6 +27,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   listatipoPresupuesto: Dominio[];
   listaResponsables: Usuario[];
   addressForm = this.fb.group({});
+  tiposProceso=TiposProcesoSeleccion;
 
   editorStyle = {
     height: '100px',
@@ -43,11 +44,13 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   };
   listaLimite: Dominio[]=[];
   listaSalarioMinimo: Dominio[]=[];
+  
 
   constructor(
               private fb: FormBuilder,
               private commonService: CommonService,
-              public dialog: MatDialog,    
+              public dialog: MatDialog,
+              private procesoSeleccionService: ProcesoSeleccionService,    
   ) { }
 
   ngOnInit() {
@@ -70,8 +73,12 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.listaTipoAlcance = respuesta[1];
         this.listatipoPresupuesto = respuesta[2];
         this.listaResponsables = respuesta[3];
-        this.listaLimite = respuesta[4];
+        this.listaLimite = respuesta[4].filter(x=>x.codigo==this.procesoSeleccion.tipoProcesoCodigo);
         this.listaSalarioMinimo = respuesta[5];
+        console.log("ha ver, reviso el salario minimo");
+        console.log(this.listaLimite);
+
+        
 
         this.listaTipoAlcance = this.listaTipoAlcance.filter( t => t.codigo == "1" || t.codigo == "2" || t.codigo == "3" )
 
@@ -131,11 +138,15 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   CambioNumeroMeses(i:number)
   {
     console.log(this.addressForm.controls.grupos.value[i]);
-    if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
+    if(this.addressForm.controls.grupos.value[i].plazoMeses!="")
     {
-      this.openDialog("","<b>La cantidad de meses no puede ser 0.</b>");
-      return;
+      if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
+      {
+        this.openDialog("","<b>La cantidad de meses no puede ser 0.</b>");
+        return;
+      }
     }
+    
   }
 
   CambioNumeroAportantes() {
@@ -190,9 +201,26 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   borrarArray(borrarForm: any, i: number) {
     
     borrarForm.removeAt(i);
+    //si tiene id lo envio al servicio de eliminar
+    console.log(borrarForm);
 
+    if(borrarForm.value[0].procesoSeleccionGrupoId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionGrupoByID(borrarForm.value[0].procesoSeleccionGrupoId).subscribe();
+    }
     this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
 
+  }
+
+  borrarActividades(borrarForm: any, i: number) {
+    
+    borrarForm.removeAt(i);
+    //si tiene id lo envio al servicio de eliminar
+
+    if(borrarForm.value[0].procesoSeleccionCronogramaId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(borrarForm.value[0].procesoSeleccionCronogramaId).subscribe();
+    }    
   }
 
   agregarActividad() {
@@ -207,7 +235,12 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
   }
 
-  borrarCronograma( i: number ){
+  borrarCronograma( i: number ){    
+    console.log(this.cronogramas[i].value);
+    if(this.cronogramas[i].value.procesoSeleccionCronogramaId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(this.cronogramas[i].value.procesoSeleccionCronogramaId).subscribe();
+    }
     this.cronogramas.removeAt(i);
   }
 
@@ -226,6 +259,10 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       ],
       responsableEquipoTecnico: [],
       responsableEquipoestructurado: [],
+      condicionesFinancieras: [null, Validators.required],
+      condicionesTecnicas: [null, Validators.required],
+      condicionesJuridicas: [null, Validators.required],
+      condicionesAsignacion: [null, Validators.required],
       grupos: this.fb.array([
         this.fb.group({
           procesoSeleccionGrupoId: [],
@@ -276,11 +313,17 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.procesoSeleccion.criteriosSeleccion = this.addressForm.get('criterios').value,
       this.procesoSeleccion.tipoIntervencionCodigo = this.addressForm.get('tipoIntervencion').value ? this.addressForm.get('tipoIntervencion').value.codigo : null,
       this.procesoSeleccion.tipoAlcanceCodigo = this.addressForm.get('tipoAlcance').value ? this.addressForm.get('tipoAlcance').value.codigo : null,
-      this.procesoSeleccion.esDistribucionGrupos = this.addressForm.get('distribucionEnGrupos').value ? this.addressForm.get('distribucionEnGrupos').value.codigo : null,
+      this.procesoSeleccion.esDistribucionGrupos = this.addressForm.get('distribucionEnGrupos').value ? this.addressForm.get('distribucionEnGrupos').value : null,
       this.procesoSeleccion.responsableTecnicoUsuarioId = this.addressForm.get('responsableEquipoTecnico').value ? this.addressForm.get('responsableEquipoTecnico').value.usuarioId : null,
       this.procesoSeleccion.responsableEstructuradorUsuarioid = this.addressForm.get('responsableEquipoestructurado').value ? this.addressForm.get('responsableEquipoestructurado').value.usuarioId : null,
+      this.procesoSeleccion.cantGrupos = this.addressForm.get('cuantosGrupos').value ? this.addressForm.get('cuantosGrupos').value : null,
       this.procesoSeleccion.procesoSeleccionGrupo = [],
       this.procesoSeleccion.procesoSeleccionCronograma = [];
+      //para invitacion abierta
+      this.procesoSeleccion.condicionesAsignacionPuntaje=this.addressForm.get('condicionesAsignacion').value?this.addressForm.get('condicionesAsignacion').value:null;
+      this.procesoSeleccion.condicionesFinancierasHabilitantes=this.addressForm.get('condicionesFinancieras').value?this.addressForm.get('condicionesFinancieras').value:null;
+      this.procesoSeleccion.condicionesJuridicasHabilitantes=this.addressForm.get('condicionesJuridicas').value?this.addressForm.get('condicionesJuridicas').value:null;
+      this.procesoSeleccion.condicionesTecnicasHabilitantes=this.addressForm.get('condicionesTecnicas').value?this.addressForm.get('condicionesTecnicas').value:null;
 
     this.procesoSeleccion.procesoSeleccionGrupo = [];
 
@@ -339,8 +382,12 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.addressForm.get('criterios').setValue(this.procesoSeleccion.criteriosSeleccion);
       this.addressForm.get('tipoIntervencion').setValue(tipoIntervencion);
       this.addressForm.get('tipoAlcance').setValue(tipoAlcance);
-      this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos ? this.procesoSeleccion.esDistribucionGrupos.toString() : null);
-
+      this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos?"true":"false");
+      this.addressForm.get('cuantosGrupos').setValue(this.procesoSeleccion.cantGrupos);
+      this.addressForm.get('condicionesJuridicas').setValue(this.procesoSeleccion.condicionesJuridicasHabilitantes);
+      this.addressForm.get('condicionesFinancieras').setValue(this.procesoSeleccion.condicionesFinancierasHabilitantes);
+      this.addressForm.get('condicionesTecnicas').setValue(this.procesoSeleccion.condicionesTecnicasHabilitantes);
+      this.addressForm.get('condicionesAsignacion').setValue(this.procesoSeleccion.condicionesAsignacionPuntaje);      
       this.addressForm.get('responsableEquipoTecnico').setValue(responsableEquipoTecnico);
       this.addressForm.get('responsableEquipoestructurado').setValue(responsableEquipoestructurado);
 
@@ -378,25 +425,40 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   nosuperarlimite(i:number,caso:number)
   {
-    let maximo=parseInt(this.listaLimite[0].descripcion)*parseInt(this.listaSalarioMinimo[0].descripcion);
+    let limite=this.listaLimite[0].nombre.split(",");
+    console.log(limite[1]);
+    let maximo=parseInt(limite[1])*parseInt(this.listaSalarioMinimo[0].descripcion);
+    let minimo=parseInt(limite[0])*parseInt(this.listaSalarioMinimo[0].descripcion);
+    const listaGrupo = this.addressForm.get('grupos') as FormArray;
     if(caso==1)
     {
-      if(this.addressForm.controls.grupos.value[i].valor>maximo)
-      {
-        this.openDialog("","<b>El monto digitado supera el monto limite de salarios mínimos legales vigentes.</b>");
-      }
+      if(this.addressForm.controls.grupos.value[i].valor>maximo
+        ||
+        this.addressForm.controls.grupos.value[i].valor<minimo)
+      {        
+        
+        console.log(listaGrupo.controls[i]);
+        listaGrupo.controls[i].get("valor").setValue(0);
+        this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+      }      
     }
     else if(caso==2)
     {
-      if(this.addressForm.controls.grupos.value[i].valorMaximoCategoria>maximo)
+      if(this.addressForm.controls.grupos.value[i].valorMaximoCategoria>maximo
+        ||
+        this.addressForm.controls.grupos.value[i].valorMaximoCategoria<minimo)
       {
-        this.openDialog("","<b>El monto digitado supera el monto limite de salarios mínimos legales vigentes.</b>");
+        listaGrupo.controls[i].get("valorMaximoCategoria").setValue(0);
+        this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
       }
     }
     else{
-      if(this.addressForm.controls.grupos.value[i].valorMinimoCategoria>maximo)
+      if(this.addressForm.controls.grupos.value[i].valorMinimoCategoria > maximo
+        ||
+        this.addressForm.controls.grupos.value[i].valorMinimoCategoria < minimo)
       {
-        this.openDialog("","<b>El monto digitado supera el monto limite de salarios mínimos legales vigentes.</b>");
+        listaGrupo.controls[i].get("valorMinimoCategoria").setValue(0);
+        this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
       }
     }
   }

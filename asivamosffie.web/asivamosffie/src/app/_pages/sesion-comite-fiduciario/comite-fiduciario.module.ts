@@ -37,6 +37,7 @@ import { VerDetallesComponent } from './components/ver-detalles/ver-detalles.com
 import { FormOtrosTemasComponent } from './components/form-otros-temas/form-otros-temas.component';
 import { TablaFormSolicitudMultipleComponent } from './components/tabla-form-solicitud-multiple/tabla-form-solicitud-multiple.component';
 import { VotacionSolicitudMultipleComponent } from './components/votacion-solicitud-multiple/votacion-solicitud-multiple.component';
+import { tablaComentariosActaComponent } from './components/tabla-comentarios-acta/tabla-comentarios-acta.component'
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { VotacionSolicitudMultipleComponent } from './components/votacion-solici
     VerDetallesComponent,
     FormOtrosTemasComponent,
     TablaFormSolicitudMultipleComponent,
-    VotacionSolicitudMultipleComponent
+    VotacionSolicitudMultipleComponent,
+    tablaComentariosActaComponent
   ],
   imports: [
     CommonModule,

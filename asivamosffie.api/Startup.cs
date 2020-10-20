@@ -113,14 +113,14 @@ namespace asivamosffie.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-       
+
 
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
-          //Agregar Interfaces y clases
+            //Agregar Interfaces y clases
 
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
@@ -132,13 +132,14 @@ namespace asivamosffie.api
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
-            services.AddTransient<IProjectContractingService, ProjectContractingService>();            
-            services.AddTransient<ISelectionProcessService, SelectionProcessService>(); 
-            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();      
+            services.AddTransient<IProjectContractingService, ProjectContractingService>();
+            services.AddTransient<ISelectionProcessService, SelectionProcessService>();
+            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
+            services.AddTransient<IGuaranteePolicyService, GuaranteePolicyService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
             services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
-            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();             
+            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
@@ -148,6 +149,7 @@ namespace asivamosffie.api
 
             // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors(MyAllowSpecificOrigins);

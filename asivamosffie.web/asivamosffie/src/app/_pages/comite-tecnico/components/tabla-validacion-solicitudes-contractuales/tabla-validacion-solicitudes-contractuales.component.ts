@@ -54,7 +54,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
       .subscribe(resp => {
         console.log(resp);
-        const documento = `DDP ${pRegistroId}.pdf`;
+        const documento = `FichaSolicitud ${pRegistroId}.pdf`;
         const text = documento,
           blob = new Blob([resp], { type: 'application/pdf' }),
           anchor = document.createElement('a');

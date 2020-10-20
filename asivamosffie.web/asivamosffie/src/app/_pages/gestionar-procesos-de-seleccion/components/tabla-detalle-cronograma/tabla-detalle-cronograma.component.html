@@ -9,7 +9,7 @@
         </button>
     </div>
     <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="tipo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de proceso </th>
@@ -41,7 +41,7 @@
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table" (click)="onDetalle()"
                         *ngIf=" element.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.Creado ">Ver detalle/
-                        Edita</button>
+                        Editar</button>
 
                     <button mat-raised-button color="accent" class="btn-table" (click)="onEnviarSolicitud()"
                         *ngIf=" element.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.Creado ">Enviar

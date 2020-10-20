@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ProcesoSeleccionService, ProcesoSeleccionProponente, ProcesoSeleccion, ProcesoSeleccionIntegrante } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-form-datos-proponentes-seleccionados-invitacion-cerrada',
@@ -52,15 +54,30 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
       Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
     ]],
   });
+  nuevo: boolean=false;
 
   constructor(
               private fb: FormBuilder,
               private procesoSeleccionService: ProcesoSeleccionService,
               private commonService: CommonService,
-
+              private dialog: MatDialog, 
              ) 
   {
 
+  }
+
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+  validaMinimo3()
+  {
+    if(this.addressForm.get("cuantosProponentes").value!="" && this.addressForm.get("cuantosProponentes").value!=null &&
+    this.addressForm.get("cuantosProponentes").value!= undefined && this.addressForm.get("cuantosProponentes").value<3)
+    {
+      this.openDialog("","<b>La cantidad de proponentes debe ser mayor o igual al 3</b>");
+    }
   }
   ngOnInit(){
     return new Promise( resolve => {
@@ -109,23 +126,52 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   changeProponente(){
     console.log(this.addressForm.get('nombresProponentes').value);
     
-    if (!this.procesoSeleccion.procesoSeleccionProponente)
-      this.procesoSeleccion.procesoSeleccionProponente = [];
+    if(this.addressForm.get('cuantosProponentes').value>0)
+    {
+      if(this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
+      {
+        this.addressForm.get('nombresProponentes').value.forEach(element => {
+          if ( element != 'Nuevo' ){
+            let elemento: ProcesoSeleccionProponente = element;
+            elemento.procesoSeleccionProponenteId = "0";
+            elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;
+            if(!this.procesoSeleccion.procesoSeleccionProponente.includes(elemento))
+            {
+              this.procesoSeleccion.procesoSeleccionProponente.push( elemento );    
+            }
+            
+            this.idProponenteExistente = element.procesoSeleccionProponenteId; 
+          }
+          else{
+            this.nuevo=true;
+          }
+        });
+      }
+      else
+      {
+        this.openDialog("","<b>Ya completo los "+this.addressForm.get('cuantosProponentes').value+" proponentes indicados.</b>");        
+        this.addressForm.get('nombresProponentes').setValue(this.procesoSeleccion.procesoSeleccionProponente);
+        return;
+      }
+    }
     
-    for( let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++)
+    
+    
+    /*for( let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++)
     {
       if ( this.procesoSeleccion.procesoSeleccionProponente[i].procesoSeleccionProponenteId == "0" )
         this.procesoSeleccion.procesoSeleccionProponente.splice( i, 1);    
         
-    }
+    }*/
 
-    if ( this.addressForm.get('nombresProponentes').value != 'Nuevo' ){
-      let elemento: ProcesoSeleccionProponente = this.addressForm.get('nombresProponentes').value;
-      elemento.procesoSeleccionProponenteId = "0";
-      elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;
-      this.procesoSeleccion.procesoSeleccionProponente.push( elemento );    
-      this.idProponenteExistente = this.addressForm.get('nombresProponentes').value.procesoSeleccionProponenteId; 
-    }
+    
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   }
 
   cargarRegistro(){
@@ -134,6 +180,20 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     this.ngOnInit().then(() =>       
         { 
           this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
+          let proceso:ProcesoSeleccionProponente[]=[];
+          this.procesoSeleccion.procesoSeleccionProponente.forEach(element => {
+            proceso.push({direccionProponente: element.direccionProponente,
+            emailProponente: element.emailProponente,
+            localizacionIdMunicipio: element.localizacionIdMunicipio,
+            nombreProponente: element.nombreProponente,
+            numeroIdentificacion: element.numeroIdentificacion,
+            procesoSeleccionId: element.procesoSeleccionId,
+            procesoSeleccionProponenteId: element.procesoSeleccionProponenteId,
+            telefonoProponente: element.telefonoProponente,
+            tipoProponenteCodigo: element.tipoProponenteCodigo})
+          });
+          this.addressForm.get('nombresProponentes').setValue(proceso);
+          console.log(proceso);
         });
   }
 
@@ -141,6 +201,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     
     this.addressForm.get('nombresProponentes').setValue( null );
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
+    console.log(this.procesoSeleccion);
     this.guardar.emit(null);
   }
 

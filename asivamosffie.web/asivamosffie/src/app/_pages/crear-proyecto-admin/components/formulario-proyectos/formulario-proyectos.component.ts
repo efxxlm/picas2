@@ -18,16 +18,37 @@ export class FormularioProyectosComponent implements OnInit {
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
 
-  addFont(aportante: Aportante) {
-    aportante.fuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '' });
+  addFont(index: number) {
+    console.log("push");
+    console.log(index);
+    this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
   }
 
-  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
-    const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
+  openDialogSiNo(modalTitle: string, modalText: string,key: AportanteFuenteFinanciacion, aportante: Aportante) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
     const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
+    
     if (index2 > -1) {
+      if(this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion[index2].aportanteFuenteFinanciacionId>0)
+      {
+        this.projectServices.deleteProyectoFont(this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion[index2].aportanteFuenteFinanciacionId).subscribe();
+      }
       this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.splice(index2, 1);
     }
+      }
+    });
+  }
+  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
+
+    this.openDialogSiNo("","¿Está seguro de eliminar este  registro?",key,aportante);        
   }
 
   onchangeFont(i: number) {

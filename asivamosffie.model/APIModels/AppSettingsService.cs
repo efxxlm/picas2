@@ -6,6 +6,7 @@
 
         public string DominioFront { get; set; }
         
+
         public string MailServer { get; set; }
 
         public int MailPort { get; set; }
@@ -30,6 +31,7 @@
 
         public string DirectoryBaseProyectos { get; set; }
          
+
         public string YearVigente { get; set; }
 
         public bool YearSiguienteEsVigente { get; set; }

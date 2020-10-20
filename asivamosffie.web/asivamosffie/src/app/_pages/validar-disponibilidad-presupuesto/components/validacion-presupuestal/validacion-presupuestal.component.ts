@@ -32,9 +32,10 @@ export class ValidacionPresupuestalComponent implements OnInit {
   }
   download()
   {
-    this.disponibilidadServices.StartDownloadPDF(this.detailavailabilityBudget).subscribe((listas:any) => {
+    console.log(this.detailavailabilityBudget);
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget[0].id).subscribe((listas:any) => {
       console.log(listas);
-      const documento = `DDP ${ this.detailavailabilityBudget }.pdf`;
+      const documento = `DDP ${ this.detailavailabilityBudget[0].id }.pdf`;
         const text = documento,
           blob = new Blob([listas], { type: 'application/pdf' }),
           anchor = document.createElement('a');

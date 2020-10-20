@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { min } from 'rxjs/operators';
-import { ProcesoSeleccion, ProcesoSeleccionProponente, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { EstadosProcesoSeleccion, ProcesoSeleccion, ProcesoSeleccionProponente, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { $ } from 'protractor';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -17,6 +17,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   @Input() procesoSeleccion: ProcesoSeleccion;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
   listaProponentes: ProcesoSeleccionProponente[] = [];
+  estadosProcesoSeleccion = EstadosProcesoSeleccion;
 
   addressForm = this.fb.group({
     cuantosProponentes: [null, Validators.compose([
@@ -39,8 +40,36 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-    
+  ngOnInit(){
+    return new Promise(resolve => {
+    resolve();
+    });
+  }
+
+  cargarRegistro() {
+    this.ngOnInit().then(() => {
+      console.log(this.procesoSeleccion.listaContratistas.length);
+      this.addressForm.get("cuantosProponentes").setValue(this.procesoSeleccion.listaContratistas.length);
+      this.addressForm.get("url").setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
+    });
+  }
+  
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+ 
+  //no sirvio, ni con este ciclo ni con .include
+  validateSel(numeroid:string)
+  {   
+   this.procesoSeleccion.listaContratistas.forEach(element => {    
+     if(element.numeroIdentificacion==numeroid)     
+     {
+       return true;
+     }
+   });
+    return this.procesoSeleccion.listaContratistas.includes(x=>x.numeroIdentificacion.toString()==numeroid.toString());
   }
 
   onSaveContractors() {
@@ -48,7 +77,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     let proceso: ProcesoSeleccion = {
       numeroProceso: this.procesoSeleccion.numeroProceso,
       procesoSeleccionProponente: this.listaProponentes,
-
+      urlSoporteProponentesSeleccionados:this.addressForm.get("url").value
     }
 
     console.log(this.listaProponentes);
@@ -56,7 +85,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
     this.procesoSeleccionService.createContractorsFromProponent( proceso )
       .subscribe( respuesta => {
-        this.openDialog('Proceso Selección', respuesta.message)
+        this.openDialog('', respuesta.message)
         if (respuesta.code == "200")
           this.router.navigate(['/seleccion/invitacionCerrada',this.procesoSeleccion.procesoSeleccionId]);
       })
@@ -76,13 +105,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     });   
   }
 
-  cargarRegistro(){
-
-    // this.addressForm.get('procesoSeleccionId').setValue( this.procesoSeleccion.procesoSeleccionId );
-    // this.addressForm.get('descricion').setValue( this.procesoSeleccion.evaluacionDescripcion );
-    // this.addressForm.get('url').setValue( this.procesoSeleccion.urlSoporteEvaluacion );
-
-  }
+  
 
   onSubmit(){
 

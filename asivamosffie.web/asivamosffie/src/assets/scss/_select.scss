@@ -2,26 +2,32 @@
     border-radius: 2em !important;
     // border: solid 1px var(--mainColor);
     padding: 0 1em !important;
-    box-shadow: 0 0 0 1.2em #fff,
-                0 0 0 calc(1.2em + 1px) var(--mainColor) !important;
+    box-shadow: 0 0 0 1.2em #fff, 0 0 0 calc(1.2em + 1px) $mainColor !important;
+    box-shadow: 0 0 0 1.2em #fff, 0 0 0 calc(1.2em + 1px) var(--mainColor) !important;
     overflow: auto;
     --thumb-color: var(--mainColor);
     --thumb-color-hover: var(--mainColor);
     --track-color: #e8e8e8;
 
     &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
         width: var(--scroll-size);
         height: var(--scroll-size);
         &-thumb {
+            background: $mainColor;
             background: var(--thumb-color);
+            border-radius: 5px;
             border-radius: var(--scroll-radius);
             &:hover,
             &:active {
-                background: var(--thumb-color-hover);
+                background: #acacac;
             }
         }
         &-track {
+            background: #e8e8e8;
             background: var(--track-color);
+            border-radius: 5px;
             border-radius: var(--scroll-radius);
         }
     }
@@ -31,6 +37,7 @@
     position: relative;
 
     &-text {
+        color: $mainColor;
         color: var(--mainColor);
         // border-bottom: solid 1px;
         position: relative;
@@ -38,18 +45,20 @@
         &::after {
             content: "";
             display: block;
+            background-color: $mainColor;
             background-color: var(--mainColor);
             height: 1px;
             width: 100%;
             position: absolute;
             left: 0;
-            top: calc(50% + .5em);
+            top: calc(50% + 0.5em);
         }
     }
 
-    &::before {
+    &:not(.mat-option-multiple)::before {
         content: "";
         display: inline-block;
+        border: solid 1px $mainColor;
         border: solid 1px var(--mainColor);
         border-radius: 50%;
         height: 1.5em;
@@ -57,35 +66,71 @@
         margin-right: 1em;
         background-color: #fff;
     }
-    &::after {
+    &:not(.mat-option-multiple)::after {
         content: "";
         display: block;
+        background-color: $mainColor;
         background-color: var(--mainColor);
         border-radius: 50%;
-        height: 16px;
-        width: 16px;
+        height: 1.5em;
+        min-width: 1.5em;
+        left: 17px;
+        top: 7px;
         position: absolute;
-        left: 18px;
         transition: transform 0.3s;
         transform: scale(0);
     }
 
     &:hover::after,
     .mat-option:focus::after {
-        transform: scale(1);
+        transform: scale(.8);
+    }
+
+    .mat-pseudo-checkbox {
+        display: inline-block;
+        border: solid 1px $mainColor;
+        border: solid 1px var(--mainColor);
+        border-radius: 0.4em;
+        height: 1.5em;
+        min-width: 1.5em;
+        margin-right: 1em;
+        background-color: #fff;
+
+        &::after {
+            transform: rotate(-45deg) scale(.5);
+            transition: all 0.3s;
+        }
+
+        &-checked::after {
+            content: "";
+            border: 0;
+            background-image: url('../img/icon/checked.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 1.9em;
+            width: 1.9em;
+            transform: translate(-.1em, -.8em);
+        }
+    }
+
+    .mat-primary .mat-pseudo-checkbox-checked {
+        background-color: #fff;
+    }
+
+    .mat-pseudo-checkbox.mat-pseudo-checkbox-checked {
+        border-color: $mainColor;
+        border-color: var(--mainColor);
     }
 }
 
 .mat-option.mat-active,
 .mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple),
-.mat-option:hover:not(.mat-option-disabled), .mat-option:focus:not(.mat-option-disabled) {
+.mat-option:hover:not(.mat-option-disabled),
+.mat-option:focus:not(.mat-option-disabled) {
     background-color: transparent;
 }
 
-.mat-pseudo-checkbox { 
-    display: none !important; 
-}
-
 .mat-select-panel .mat-optgroup-label, .mat-select-panel .mat-option {
-    height: 2.2em !important;
+    height: 2.5em !important;
 }
