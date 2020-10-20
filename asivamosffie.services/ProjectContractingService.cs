@@ -169,8 +169,6 @@ namespace asivamosffie.services
                 .ThenInclude(r => r.ContratacionProyectoAportante)
                  .ThenInclude(r => r.CofinanciacionAportante)
                    .ThenInclude(r => r.ProyectoAportante)
-
-
                  .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                    .ThenInclude(r => r.ProyectoAportante)
@@ -770,11 +768,11 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoComponenteUso(ComponenteUso pComponenteUsoOld)
         {
-            if (!string.IsNullOrEmpty(pComponenteUsoOld.TipoUsoCodigo.ToString()) && pComponenteUsoOld.ValorUso > 0)
+            if (string.IsNullOrEmpty(pComponenteUsoOld.TipoUsoCodigo.ToString()) && pComponenteUsoOld.ValorUso == 0)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true; 
         }
 
         public async Task<Respuesta> CreateEditContratacionProyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
