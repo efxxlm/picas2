@@ -180,9 +180,9 @@ namespace asivamosffie.services
             }
         }
 
-        public Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
+        public async Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
         {
-            throw new NotImplementedException();
+            return await _context.ProcesoSeleccionMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.ProcesoSeleccionCronogramaMonitoreo).ToListAsync();
         }
 
         public async Task<Respuesta> setProcesoSeleccionMonitoreoCronograma(ProcesoSeleccionMonitoreo procesoSeleccionCronograma)
@@ -234,9 +234,9 @@ namespace asivamosffie.services
             }
         }
 
-        public Task<ActionResult<List<ProcesoSeleccionCronogramaMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId(int pProcesoSeleccionId)
+        public async Task<ActionResult<List<ProcesoSeleccionCronogramaMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId(int pProcesoSeleccionId)
         {
-            throw new NotImplementedException();
+            return await _context.ProcesoSeleccionCronogramaMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionMonitoreoId == pProcesoSeleccionId).ToListAsync();
         }
     }
 }
