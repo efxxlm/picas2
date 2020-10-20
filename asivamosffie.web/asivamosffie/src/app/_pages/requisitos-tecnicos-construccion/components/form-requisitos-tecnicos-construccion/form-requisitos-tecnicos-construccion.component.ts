@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoConstruccion/fase-uno-construccion.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Contrato, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -14,12 +14,21 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
 
   probBoolean: boolean = false;
   contrato: Contrato;
+  fechaPoliza: string;
 
   constructor ( private dialog: MatDialog,
                 private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+                private router: Router,
                 private activatedRoute: ActivatedRoute )
   {
     this.getContrato();
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/requisitosTecnicosConstruccion');
+      return;
+    };
+
+    if (this.router.getCurrentNavigation().extras.state)
+      this.fechaPoliza = this.router.getCurrentNavigation().extras.state.fechaPoliza;
   }
 
   ngOnInit(): void {

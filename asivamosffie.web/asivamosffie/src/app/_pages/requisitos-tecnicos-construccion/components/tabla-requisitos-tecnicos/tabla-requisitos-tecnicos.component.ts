@@ -45,8 +45,8 @@ export class TablaRequisitosTecnicosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  getForm ( id: number ) {
-    this.routes.navigate( [ '/requisitosTecnicosConstruccion/gestionarInicioContrato', id ] )
+  getForm ( id: number, fechaPoliza: string ) {
+    this.routes.navigate( [ '/requisitosTecnicosConstruccion/gestionarInicioContrato', id ], { state: { fechaPoliza } } )
   };
 
   aprobarInicio ( id: number ) {

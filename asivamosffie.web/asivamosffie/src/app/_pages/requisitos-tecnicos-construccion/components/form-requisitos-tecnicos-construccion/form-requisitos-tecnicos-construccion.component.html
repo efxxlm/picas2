@@ -10,7 +10,7 @@
 
   <section class="container margin-1em color-primary">
     <div class="text-center section-flex">
-      <p class="mr-1em">Fecha de aprobacion de póliza: <b> {{ contrato.contratoPoliza[0].fechaExpedicion | date: 'dd/MM/yyyy' }} </b></p>
+      <p class="mr-1em">Fecha de aprobacion de póliza: <b> {{ fechaPoliza | date: 'dd/MM/yyyy' }} </b></p>
       <p>Proyectos asociados: <b> {{ contrato.contratacion.contratacionProyecto.length }} </b></p>
     </div>
   </section>

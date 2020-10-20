@@ -47,7 +47,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                (click)="getForm( element.contratoId )">
+                (click)="getForm( element.contratoId, element.fechaAprobacion )">
                 Gestionar requisitos de inicio
         </button>
 
@@ -63,7 +63,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
-                (click)="getForm( element.contratoId )">
+                (click)="getForm( element.contratoId, element.fechaAprobacion )">
                 Ver detalle / Editar
         </button>
 
