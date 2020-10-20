@@ -122,8 +122,8 @@
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
                                         formControlName="mesPlazoEjFase2">
                                 </mat-form-field>
-                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2 !== null">{{3 - textoLimpio(addressForm.get('mesPlazoEjFase2').value)}}</span>
-                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2==null">3</span>
+                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2 !== null">{{2 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase2').value.toString().length:0)}}</span>
+                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2==null">2</span>
                                 <label class="label-left sub-label" for="diasPlazoEjFase2">
                                     Días
                                 </label>
@@ -132,7 +132,7 @@
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                         type="number" formControlName="diasPlazoEjFase2">
                                 </mat-form-field>
-                                <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 !== null">{{2 - textoLimpio(addressForm.get('diasPlazoEjFase2').value)}}</span>
+                                <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 !== null">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}</span>
                                 <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 == null">2</span>
                             </div>
                         </div>
