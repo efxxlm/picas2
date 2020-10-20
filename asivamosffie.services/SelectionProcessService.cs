@@ -922,7 +922,7 @@ namespace asivamosffie.services
                     contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
                     contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
                     contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
-                    //contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
+                    contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
                     contratista.Activo = true;
                     contratista.FechaCreacion = DateTime.Now;
                     contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();

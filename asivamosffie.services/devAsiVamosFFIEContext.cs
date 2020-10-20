@@ -122,7 +122,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -884,6 +883,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoIdentificacionCodigo)
                     .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoProponenteCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
