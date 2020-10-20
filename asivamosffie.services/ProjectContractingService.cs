@@ -768,11 +768,11 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoComponenteUso(ComponenteUso pComponenteUsoOld)
         {
-            if (string.IsNullOrEmpty(pComponenteUsoOld.TipoUsoCodigo.ToString()) && pComponenteUsoOld.ValorUso == 0)
+            if (pComponenteUsoOld.TipoUsoCodigo == null && pComponenteUsoOld.ValorUso == 0)
             {
                 return false;
             }
-            return true; 
+            return true;
         }
 
         public async Task<Respuesta> CreateEditContratacionProyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
