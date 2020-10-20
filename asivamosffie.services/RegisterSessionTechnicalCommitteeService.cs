@@ -830,6 +830,7 @@ namespace asivamosffie.services
 
             List<int> ListIdActualizacionCronograma = _context.SesionComiteSolicitud
                                                         .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+                                                        .Include( r => r.ProcesoSeleccion )
                                                         .Select(r => r.SolicitudId).Distinct().ToList();
 
             //Se comentan ya que no esta listo el caso de uso
@@ -876,7 +877,7 @@ namespace asivamosffie.services
                     {
                         Id = Actualizacion.ProcesoSeleccionMonitoreoId,
                         FechaSolicitud = Convert.ToDateTime(Actualizacion.FechaCreacion.ToString("yyyy-MM-dd")),
-                        NumeroSolicitud = Actualizacion.NumeroProceso,
+                        NumeroSolicitud = Actualizacion.ProcesoSeleccion.NumeroProceso,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion
                     });
@@ -899,16 +900,16 @@ namespace asivamosffie.services
                 if (pComiteTecnico.ComiteTecnicoId == 0)
                 {
                     //Agregar Tema Proposiciones y Varios
-                    pComiteTecnico.SesionComiteTema.Add(
-                           new SesionComiteTema
-                           {
-                               Eliminado = false,
-                               UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
-                               FechaCreacion = DateTime.Now,
-                               EsProposicionesVarios = true,
-                               Tema = "",
+                    // pComiteTecnico.SesionComiteTema.Add(
+                    //        new SesionComiteTema
+                    //        {
+                    //            Eliminado = false,
+                    //            UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                    //            FechaCreacion = DateTime.Now,
+                    //            EsProposicionesVarios = true,
+                    //            Tema = "",
 
-                           });
+                    //        });
 
                     strCreateEdit = "CREAR COMITE TECNICO  + SESIÓN COMITE SOLICITUD + SESIÓN COMITE TEMA";
                     //Auditoria
@@ -1208,13 +1209,18 @@ namespace asivamosffie.services
 
                     case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
 
-                        ProcesoSeleccionMonitoreo actualizacionCronograma = _context.ProcesoSeleccionMonitoreo.Where( r => r.ProcesoSeleccionMonitoreoId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+                        ProcesoSeleccionMonitoreo actualizacionCronograma = _context.ProcesoSeleccionMonitoreo
+                                                                                .Where( r => r.ProcesoSeleccionMonitoreoId == sesionComiteSolicitud.SolicitudId)
+                                                                                .Include( r => r.ProcesoSeleccion )
+                                                                                .FirstOrDefault();
 
                         sesionComiteSolicitud.FechaSolicitud = actualizacionCronograma.FechaCreacion;
 
-                        sesionComiteSolicitud.NumeroSolicitud = actualizacionCronograma.NumeroProceso;
+                        sesionComiteSolicitud.NumeroSolicitud = actualizacionCronograma.ProcesoSeleccion.NumeroProceso;
 
                         sesionComiteSolicitud.ProcesoSeleccionMonitoreo = actualizacionCronograma;
+
+                        sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
 
                         break;
 

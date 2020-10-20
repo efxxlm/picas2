@@ -90,12 +90,15 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     else
       return 'none';
   }
+
+  getMostrarActulizacionCronograma(){
+    if ( this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion )
+      return 'block';
+    else
+      return 'none';
+  }
+
   ngOnInit(): void {
-
-    
-
-    
-
   }
 
   maxLength(e: any, n: number) {

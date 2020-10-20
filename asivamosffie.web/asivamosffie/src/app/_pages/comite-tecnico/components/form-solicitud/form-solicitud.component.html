@@ -32,13 +32,23 @@
           </b>
         </div>
       </div>
-      <div class="row" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo != tiposSolicitud.Contratacion">
+      <div class="row" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.AperturaDeProcesoDeSeleccion">
         <div class="pr-1">
           <span class="label-left">Justificación</span>
         </div>
         <div class="col">
           <p class="label-left colorMainColor pt-1 font-weight-lighter">
             {{ justificacion }}
+          </p>
+        </div>
+      </div>
+      <div class="row" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.ActualizacionCronogramaProcesoseleccion">
+        <div class="pr-1">
+          <span class="label-left">Número actualización</span>
+        </div>
+        <div class="col">
+          <p class="label-left colorMainColor pt-1 font-weight-lighter">
+            {{ sesionComiteSolicitud.numeroHijo }}
           </p>
         </div>
       </div>
@@ -74,14 +84,14 @@
       >
       </button>
 
-      <app-tabla-form-solicitud-multiple
+      <app-tabla-form-solicitud-multiple 
         #solicitudMultiple
         [sesionComiteSolicitud]="sesionComiteSolicitud"
         [style.display]="getMostrarProyectos()"
         [Estadosolicitud]="getObservableEstadoSolicitud()"
         (ActualizarProyectos)="ActualizarProyectos($event)"
       >
-      </app-tabla-form-solicitud-multiple>
+    </app-tabla-form-solicitud-multiple>
 
       <div class="row">
         <div class="col-md-8">
