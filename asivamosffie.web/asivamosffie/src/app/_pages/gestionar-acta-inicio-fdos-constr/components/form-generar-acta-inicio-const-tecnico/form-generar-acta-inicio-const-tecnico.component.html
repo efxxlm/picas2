@@ -122,8 +122,8 @@
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
                                         formControlName="mesPlazoEjFase2">
                                 </mat-form-field>
-                                <span class="contador" *ngIf="addressForm.get('mesPlazoEjFase2').value">{{3 - addressForm.get('mesPlazoEjFase2').value.length}}</span>
-                                <span class="contador" *ngIf="addressForm.get('mesPlazoEjFase2').value==null">3</span>
+                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2 !== null">{{3 - textoLimpio(addressForm.get('mesPlazoEjFase2').value)}}</span>
+                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2==null">3</span>
                                 <label class="label-left sub-label" for="diasPlazoEjFase2">
                                     Días
                                 </label>
@@ -132,8 +132,8 @@
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                         type="number" formControlName="diasPlazoEjFase2">
                                 </mat-form-field>
-                                <span class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value">{{2 - addressForm.get('diasPlazoEjFase2').value.length}}</span>
-                                <span class="contador" *ngIf="addressForm.get('diasPlazoEjFase2').value==null">2</span>
+                                <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 !== null">{{2 - textoLimpio(addressForm.get('diasPlazoEjFase2').value)}}</span>
+                                <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 == null">2</span>
                             </div>
                         </div>
                     </div>
@@ -144,20 +144,17 @@
                       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
                         (onContentChanged)="maxLength($event, 500)" formControlName="observacionesEspeciales"></quill-editor>
                     </div>
-                    <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
-                      {{500 - addressForm.get('observacionesEspeciales').value.length}}
+                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales !== null">
+                      {{500 - textoLimpio(addressForm.get('observacionesEspeciales').value)}}
                     </span>
-                    <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
+                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales === null">
                       500
                     </span>
                   </div>
             </mat-card-content>
         </mat-card>
         <div class="text-center">
-            <button mat-button color="warn" [disabled]="true" *ngIf="addressForm.get('fechaActaInicioFDosConstruccion').value === null" class="btn-guardar" type="submit">
-                <img src="assets/img/icon/guardar.svg" alt="Guardar">
-            </button>
-            <button mat-button color="warn" class="btn-guardar"  *ngIf="addressForm.get('fechaActaInicioFDosConstruccion').value"  type="submit">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </div>

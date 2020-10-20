@@ -138,6 +138,11 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       e.editor.deleteText(n, e.editor.getLength());
     }
   }
+
+  textoLimpio(texto: string) {
+    const textolimpio = texto.replace(/<[^>]*>/g, '');
+    return textolimpio.length;
+  }
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
     if (tecla === 8) { return true; } // Tecla de retroceso (para poder borrar)
@@ -165,7 +170,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     }
   }
   onSubmit() {
-    this.removeTags(this.addressForm.value.observacionesEspeciales);
     this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato,this.addressForm.value.mesPlazoEjFase2,this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales),"usr2").subscribe(data1=>{
       if(data1.code=="102"){
         this.openDialog(data1.message,"");
