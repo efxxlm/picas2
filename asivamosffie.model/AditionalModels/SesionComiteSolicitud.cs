@@ -23,6 +23,8 @@ namespace asivamosffie.model.Models
         public bool EstadoRegistro { get; set; }
         [NotMapped]
         public bool EstaTramitado { get; set; }
+        [NotMapped]
+        public ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
     }
 
 }

@@ -68,11 +68,17 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion){
         this.projectContractingService.getContratacionByContratacionId(elemento.contratacion.contratacionId)
             .subscribe(respuesta => {
-              console.log( respuesta );
              elemento.contratacion = respuesta;
              resolve();
             });
       }
+      // if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion){
+      //   this..GetProce(elemento.contratacion.contratacionId)
+      //       .subscribe(respuesta => {
+      //        elemento.contratacion = respuesta;
+      //        resolve();
+      //       });
+      // }
     })
          
 
@@ -80,10 +86,12 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
       comiteTecnicoFiduciarioId: this.ObjetoComiteTecnico.comiteTecnicoId,
       tipoSolicitudCodigo: elemento.tipoSolicitudCodigo,
-      contratacion: elemento.contratacion,
       numeroSolicitud: elemento.numeroSolicitud,
       fechaSolicitud: elemento.fechaSolicitud,
       tipoSolicitud: elemento.tipoSolicitud,
+
+      contratacion: elemento.contratacion,
+      procesoSeleccionMonitoreo: elemento.procesoSeleccionMonitoreo,
 
       sesionSolicitudObservacionProyecto: [],
       sesionSolicitudVoto: [],
@@ -191,13 +199,31 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         }
       })
 
+    } else if ( elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion ){
+    
+      const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
+        width: '70em',
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        maxHeight: '90em',
+
+      });
+
+      dialog.afterClosed().subscribe(c => {
+        if (c && c.comiteTecnicoId) {
+          this.fiduciaryCommitteeSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+            .subscribe(response => {
+              this.ObjetoComiteTecnico = response;
+              this.validarRegistros();
+              this.validar.emit(null);
+            })
+        }
+      })
+
     } else {
 
       const dialog = this.dialog.open(VotacionSolicitudComponent, {
         width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
       });
-
-
 
       dialog.afterClosed().subscribe(c => {
         if (c && c.comiteTecnicoId) {

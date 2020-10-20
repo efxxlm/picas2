@@ -116,8 +116,39 @@ export interface SesionComiteSolicitud {
     sesionSolicitudCompromiso?: SesionSolicitudCompromiso[],
     contratacion?: Contratacion,
     procesoSeleccion?: ProcesoSeleccion,
+    procesoSeleccionMonitoreo?: ProcesoSeleccionMonitoreo,
 
 
+}
+
+export interface ProcesoSeleccionMonitoreo{
+    procesoSeleccionMonitoreoId?: number,
+    procesoSeleccionId?: number,
+    numeroProceso?: string,
+    estadoActividadCodigo?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    enviadoComiteTecnico?: boolean,
+
+    procesoSeleccionCronogramaMonitoreo?: ProcesoSeleccionCronogramaMonitoreo[],
+}
+
+export interface ProcesoSeleccionCronogramaMonitoreo{
+    procesoSeleccionCronogramaMonitoreoId?: number,
+    numeroActividad?: number,
+    descripcion?: string,
+    fechaMaxima?: Date,
+    estadoActividadCodigo?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    procesoSeleccionMonitoreoId?: number,
+    procesoSeleccionCronogramaId?: number,
 }
 
 export interface SesionParticipante{
@@ -284,13 +315,14 @@ interface EstadoComite{
     AperturaDeProcesoDeSeleccion?: string,
     Contratacion?: string,
     ModificacionContractual?: string,
-    
+    ActualizacionCronogramaProcesoseleccion?: string,
   }
   
   export const TiposSolicitud: TipoSolicitud = {
     AperturaDeProcesoDeSeleccion: "1",
     Contratacion: "2",
     ModificacionContractual: "3",
+    ActualizacionCronogramaProcesoseleccion: "6",
 
   }
 
