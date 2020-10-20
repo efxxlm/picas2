@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public ContratacionProyecto()
         {
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
+            DefensaJudicialContratacionProyecto = new HashSet<DefensaJudicialContratacionProyecto>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
         }
 
@@ -30,10 +31,12 @@ namespace asivamosffie.model.Models
         public bool? TieneMonitoreoWeb { get; set; }
         public string EstadoRequisitosVerificacionCodigo { get; set; }
         public DateTime? FechaAprobacionRequisitos { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
+        public virtual ICollection<DefensaJudicialContratacionProyecto> DefensaJudicialContratacionProyecto { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
     }
 }
