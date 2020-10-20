@@ -5,13 +5,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
-import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud, SesionSolicitudObservacionProyecto, SesionParticipante } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud, SesionSolicitudObservacionProyecto, SesionParticipante, SesionSolicitudObservacionActualizacionCronograma } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ProjectService, Proyecto } from 'src/app/core/_services/project/project.service';
 import { forkJoin } from 'rxjs';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { VotacionSolicitudActualizaCronogramaComponent } from '../votacion-solicitud-actualiza_cronograma/votacion-solicitud-actualiza_cronograma.component';
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
@@ -63,7 +64,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         this.technicalCommitteSessionService.getProcesoSeleccionMonitoreo(elemento.procesoSeleccionMonitoreo.procesoSeleccionMonitoreoId)
           .subscribe(respuesta => {
             console.log(respuesta);
-            elemento.contratacion = respuesta;
+            elemento.procesoSeleccionMonitoreo = respuesta;
             resolve();
           });
       }
@@ -81,6 +82,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
       sesionSolicitudObservacionProyecto: [],
       sesionSolicitudVoto: [],
+      sesionSolicitudObservacionActualizacionCronograma: [],
     }
 
     console.log(elemento)
@@ -142,25 +144,27 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
       if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion) {
 
         promesa.then(() => {
-          console.log(elemento.contratacion)
-          elemento.contratacion.contratacionProyecto.forEach(c => {
+          //console.log(elemento.procesoSeleccionMonitoreo)
+          elemento.procesoSeleccionMonitoreo.procesoSeleccionCronogramaMonitoreo.forEach(c => {
 
-            let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
-              .find(o => o.contratacionProyectoId == c.contratacionProyectoId
+            let observacion = p.sesionSolicitudObservacionActualizacionCronograma
+              .find(o => o.procesoSeleccionCronogramaMonitoreoId == c.procesoSeleccionCronogramaMonitoreoId
                 && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
 
-            let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
-              sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
+            let sesionSolicitudObservacionActualizacionCronograma: SesionSolicitudObservacionActualizacionCronograma = {
+              sesionSolicitudObservacionActualizacionCronogramaId: observacion ? observacion.sesionSolicitudObservacionActualizacionCronogramaId : 0,
               sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
               sesionParticipanteId: p.sesionParticipanteId,
-              contratacionProyectoId: c.contratacionProyectoId,
+              procesoSeleccionCronogramaMonitoreoId: c.procesoSeleccionCronogramaMonitoreoId,
               observacion: observacion ? observacion.observacion : null,
               nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
 
-              proyecto: c.proyecto,
-            }
+              procesoSeleccionCronograma: c.procesoSeleccionCronograma,
 
-            sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+            }    
+            
+            sesionComiteSolicitud.sesionSolicitudObservacionActualizacionCronograma.push( sesionSolicitudObservacionActualizacionCronograma );
+            //console.log( sesionComiteSolicitud.sesionSolicitudObservacionActualizacionCronograma )
           })
         })
       }
@@ -170,7 +174,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     })
 
 
-    //console.log(elemento)
+    //console.log(sesionComiteSolicitud)
 
     this.abrirPopupVotacion(sesionComiteSolicitud);
   }
@@ -218,7 +222,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
     } else if ( elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion ){
 
-      const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
+      const dialog = this.dialog.open(VotacionSolicitudActualizaCronogramaComponent, {
         width: '70em',
         data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
         maxHeight: '90em',
