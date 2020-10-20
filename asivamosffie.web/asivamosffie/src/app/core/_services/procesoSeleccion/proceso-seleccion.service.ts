@@ -296,3 +296,21 @@ export const EstadosProcesoSeleccion: EstadoProcesoSeleccion = {
   DevueltoPorComiteTecnico: "22",
   DevueltoPorComiteFiduciario: "23",
 }
+interface EstadoProcesoSeleccionMonitoreo{
+  Creada: string,
+	AprobadoPorComiteTecnico: string,
+	AprobadoPorComiteFiduciario: string,
+	RechazadoPorComiteTecnico: string,
+	RechazadoPorComiteFiduciario: string,
+	DevueltoPorComiteTecnico: string,
+	DevueltoPorComiteFiduciario: string,
+}
+export const EstadosProcesoSeleccionMonitoreo: EstadoProcesoSeleccionMonitoreo = {
+  Creada: "1",  
+  AprobadoPorComiteTecnico: "2",
+  AprobadoPorComiteFiduciario: "3",
+  RechazadoPorComiteTecnico: "4",
+  RechazadoPorComiteFiduciario: "5",
+  DevueltoPorComiteTecnico: "6",
+  DevueltoPorComiteFiduciario: "7",
+}

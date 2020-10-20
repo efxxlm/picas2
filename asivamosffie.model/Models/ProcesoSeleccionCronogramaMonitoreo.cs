@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class ProcesoSeleccionCronogramaMonitoreo
     {
+        public ProcesoSeleccionCronogramaMonitoreo()
+        {
+            SesionSolicitudObservacionActualizacionCronograma = new HashSet<SesionSolicitudObservacionActualizacionCronograma>();
+        }
+
         public int ProcesoSeleccionCronogramaMonitoreoId { get; set; }
         public int? NumeroActividad { get; set; }
         public string Descripcion { get; set; }
@@ -19,5 +24,6 @@ namespace asivamosffie.model.Models
         public int? ProcesoSeleccionCronogramaId { get; set; }
 
         public virtual ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
+        public virtual ICollection<SesionSolicitudObservacionActualizacionCronograma> SesionSolicitudObservacionActualizacionCronograma { get; set; }
     }
 }

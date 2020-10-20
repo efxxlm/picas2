@@ -35,6 +35,7 @@ import { TablaVerificarCumplimientoComponent } from './components/tabla-verifica
 import { DialogVerDetalleComponent } from './components/dialog-ver-detalle/dialog-ver-detalle.component';
 import { VotacionTemaComponent } from './components/votacion-tema/votacion-tema.component'
 import { tablaComentariosActaComponent } from './components/tabla-comentarios-acta/tabla-comentarios-acta.component'
+import { VotacionSolicitudActualizaCronogramaComponent } from './components/votacion-solicitud-actualiza_cronograma/votacion-solicitud-actualiza_cronograma.component'
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { tablaComentariosActaComponent } from './components/tabla-comentarios-ac
     TablaVerificarCumplimientoComponent,
     DialogVerDetalleComponent,
     VotacionTemaComponent,
-    tablaComentariosActaComponent
+    tablaComentariosActaComponent,
+    VotacionSolicitudActualizaCronogramaComponent
   ],
   imports: [
     CommonModule,

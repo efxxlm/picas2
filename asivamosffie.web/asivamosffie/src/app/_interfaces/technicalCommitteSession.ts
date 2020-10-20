@@ -2,7 +2,7 @@ import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
 import { Contratacion } from './project-contracting';
 import { Proyecto } from '../core/_services/project/project.service';
 import { dashCaseToCamelCase } from '@angular/compiler/src/util';
-import { ProcesoSeleccion } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionCronograma } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface SolicitudesContractuales{
     id?: number,
@@ -117,6 +117,7 @@ export interface SesionComiteSolicitud {
     contratacion?: Contratacion,
     procesoSeleccion?: ProcesoSeleccion,
     procesoSeleccionMonitoreo?: ProcesoSeleccionMonitoreo,
+    sesionSolicitudObservacionActualizacionCronograma?: SesionSolicitudObservacionActualizacionCronograma[],
 
 
 }
@@ -149,6 +150,26 @@ export interface ProcesoSeleccionCronogramaMonitoreo{
     usuarioModificacion?: string,
     procesoSeleccionMonitoreoId?: number,
     procesoSeleccionCronogramaId?: number,
+
+    sesionSolicitudObservacionActualizacionCronograma?: SesionSolicitudObservacionActualizacionCronograma[],
+    procesoSeleccionCronograma: ProcesoSeleccionCronograma,
+}
+
+export interface SesionSolicitudObservacionActualizacionCronograma{
+    sesionSolicitudObservacionActualizacionCronogramaId?: number,
+    sesionComiteSolicitudId?: number,
+    procesoSeleccionCronogramaMonitoreoId?: number,
+    sesionParticipanteId?: number,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    usuarioModificacion?: string,
+    fechaModificacion?: Date,
+    eliminado?: boolean,
+
+    nombreParticipante?: string,
+    procesoSeleccionCronograma?: ProcesoSeleccionCronograma
+    procesoSeleccionCronogramaMonitoreo?: ProcesoSeleccionCronogramaMonitoreo,
 }
 
 export interface SesionParticipante{
@@ -165,6 +186,7 @@ export interface SesionParticipante{
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionTemaVoto?: SesionTemaVoto[],
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
+    sesionSolicitudObservacionActualizacionCronograma?: SesionSolicitudObservacionActualizacionCronograma[],
 
 }
 
