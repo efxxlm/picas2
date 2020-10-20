@@ -251,7 +251,8 @@
                       <span class="contador mt-1em"
                         *ngIf="cronograma.get('descripcion').value === null || cronograma.get('descripcion').value == null">
                         500
-                      </span><span class="required-form-group required-calendar" style="margin-top: 1.5em;">*</span>
+                      </span>
+                      <span class="required-quill">*</span>
                     </div>
                     <input type="hidden" formControlName="procesoSeleccionCronogramaId">
                     <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
@@ -259,10 +260,10 @@
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted position-relative">
                     <div class="d-flex justify-content-center btn-calendario-container toptd">
-                      <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario ">
+                      <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
-                      <span class="required-form-group required-calendar" style="margin-top: 1.5em;">*</span>
+                      <span class="required-form-group required-calendar">*</span>
                     </div>
                     <mat-form-field class="example-full-width">
                       <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA" class="mainColor"
@@ -330,7 +331,7 @@
             </div>
           </div>
           <div *ngIf="addressForm.get('responsableEquipoestructurado')!=null &&
-          addressForm.get('responsableEquipoestructurado')!=null && 
+          addressForm.get('responsableEquipoestructurado')!=null &&
           procesoSeleccion.tipoProcesoCodigo==tiposProceso.Abierta"><br>
             <div class="d-flex align-items-center">
               <div class="text-area-quill">

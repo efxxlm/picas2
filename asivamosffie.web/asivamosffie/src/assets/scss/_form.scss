@@ -220,10 +220,12 @@ div.mat-select-arrow {
     &-quill {
         position: absolute;
         transform: translate(2em, 1.4em);
+        font-weight: 600;
     }
     &-calendar {
         position: absolute;
         transform: translate(.3em, .8em);
+        font-weight: 600;
     }
 }
 

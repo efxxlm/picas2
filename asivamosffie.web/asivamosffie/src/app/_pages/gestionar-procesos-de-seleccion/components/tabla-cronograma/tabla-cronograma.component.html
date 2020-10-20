@@ -1,79 +1,80 @@
 <div class="text-center mt-1em mb-1em">
-    <h1 class="title-menu--h1 mb-1em">
-        Cronograma
-    </h1>
+  <h1 class="title-menu--h1 mb-1em">
+    Cronograma
+  </h1>
 
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
-            <thead>
-                <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                        Actividad
-                    </th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                        Descripción
-                    </th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                        Fecha máxima
-                    </th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
-                        Gestión
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let form of addressForm.controls; let i = index" [formGroupName]="i">
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                        <b class="m-1em">{{ i + 1 }}</b>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                        <div class="d-flex justify-content-center">
-                            <span class="contador mt-1em" *ngIf="addressForm.controls[i].get('descripcion').value">
-                                {{500 - textoLimpio(addressForm.controls[i].get('descripcion').value)}}
-                            </span>
-                            <span class="contador mt-1em" *ngIf="!addressForm.controls[i].get('descripcion').value">
-                                500
-                            </span>
-                            <span class="required-quill">*</span>
-                        </div>
-                        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                            (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"
-                            [readOnly]="!editMode.valor"></quill-editor>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                        <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario"
-                            [disabled]="!editMode.valor">
-                            <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                        </button>
-                        <span class="required-calendar">*</span>
-                        <mat-form-field class="example-full-width calendar-class">
-                            <input matInput [matDatepicker]="picker" readonly (click)="picker.open()"
-                                placeholder="DD/MM/AAAA" formControlName="fecha" [disabled]="!editMode.valor">
-                            <input type="hidden" formControlName="procesoSeleccionCronogramaId">
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                        <button mat-raised-button color="accent" class="btn-table"
-                            (click)="borrarArray(addressForm, i)">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="text-right">
-            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaFuente()"
-                *ngIf="editMode.valor">
-                <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria">
-                Agregar otra actividad
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Actividad
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Descripción
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Fecha máxima
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
+            Gestión
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let form of addressForm.controls; let i = index" [formGroupName]="i">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <b class="m-1em">{{ i + 1 }}</b>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <div class="d-flex justify-content-center">
+              <span class="contador mt-1em" *ngIf="addressForm.controls[i].get('descripcion').value">
+                {{500 - textoLimpio(addressForm.controls[i].get('descripcion').value)}}
+              </span>
+              <span class="contador mt-1em" *ngIf="!addressForm.controls[i].get('descripcion').value">
+                500
+              </span>
+              <span class="required-quill">*</span>
+            </div>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="descripcion" [readOnly]="!editMode.valor">
+            </quill-editor>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted position-relative">
+            <div class="d-flex justify-content-center btn-calendario-container toptd">
+              <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario"
+                [disabled]="!editMode.valor">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              </button>
+              <span class="required-calendar">*</span>
+            </div>
+            <mat-form-field class="example-full-width calendar-class">
+              <input matInput [matDatepicker]="picker" readonly (click)="picker.open()" placeholder="DD/MM/AAAA"
+                formControlName="fecha" [disabled]="!editMode.valor">
+              <input type="hidden" formControlName="procesoSeleccionCronogramaId">
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <button mat-raised-button color="accent" class="btn-table" (click)="borrarArray(addressForm, i)">
+              Eliminar
             </button>
-        </div>
-        <div class="text-center">
-            <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf="editMode.valor">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
-            </button>
-        </div>
-    </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-right">
+      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaFuente()"
+        *ngIf="editMode.valor">
+        <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria">
+        Agregar otra actividad
+      </button>
+    </div>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf="editMode.valor">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
 
 </div>

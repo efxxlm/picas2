@@ -22,19 +22,25 @@
 }
 
 .required-calendar {
-  margin-left: .2em;
+  margin-left: 0.2em;
 }
 
-.mainColor{
+.mainColor {
   color: var(--mainColor);
 }
-.toptd{
+
+.toptd {
   position: absolute;
-    top: 0.8em;
-    left: 3em;
-    display: block;
+  top: 0.8em;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+
+  button.btn-calendario {
+    margin-left: 0;
+  }
 }
 
-.mlmenor{
+.mlmenor {
   margin-left: -1em;
 }
