@@ -83,7 +83,7 @@ namespace asivamosffie.services
                     }
                 }
             }
-            return grillaSesionComiteTecnicoCompromisos;
+            return grillaSesionComiteTecnicoCompromisos.OrderByDescending(r=> r.ComiteTecnicoId).ToList();
         }
 
         //Detalle gestion compromisos
@@ -125,6 +125,7 @@ namespace asivamosffie.services
                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
                       .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).OrderByDescending(r => r.ComiteTecnicoId)
                       .Distinct()
+                      .OrderByDescending(r=> r.ComiteTecnicoId)
                   .ToListAsync();
         }
 
