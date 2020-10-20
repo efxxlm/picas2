@@ -608,9 +608,6 @@ namespace asivamosffie.services
                         //ComponenteAportante
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                         {
-                            ComponenteAportante.UsuarioCreacion = Pcontratacion.UsuarioCreacion;
-                            await CreateEditComponenteAportante(ComponenteAportante, true);
-
 
                             //Componente Uso
                             foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
@@ -618,6 +615,10 @@ namespace asivamosffie.services
                                 ComponenteUso.UsuarioCreacion = Pcontratacion.UsuarioCreacion;
                                 await CreateEditComponenteUso(ComponenteUso, true);
                             }
+
+                            ComponenteAportante.UsuarioCreacion = Pcontratacion.UsuarioCreacion;
+                            await CreateEditComponenteAportante(ComponenteAportante, true);
+
                         }
                     }
                 }
@@ -698,6 +699,7 @@ namespace asivamosffie.services
                 {
                     pComponenteAportante.FechaCreacion = DateTime.Now;
                     pComponenteAportante.Eliminado = false;
+                    pComponenteAportante.RegistroCompleto = ValidarRegistroCompletoComponenteAportante(pComponenteAportante);
                     _context.ComponenteAportante.Add(pComponenteAportante);
                 }
                 else
@@ -706,6 +708,7 @@ namespace asivamosffie.services
                     componenteAportanteOld.UsuarioModificacion = pComponenteAportante.UsuarioCreacion;
                     componenteAportanteOld.FechaModificacion = DateTime.Now;
                     //Esto es lo unico que puede cambiar en esta tabla
+                    componenteAportanteOld.RegistroCompleto = ValidarRegistroCompletoComponenteAportante(pComponenteAportante);
                     componenteAportanteOld.TipoComponenteCodigo = pComponenteAportante.TipoComponenteCodigo;
                     componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
                 }
@@ -722,6 +725,25 @@ namespace asivamosffie.services
             }
         }
 
+        private bool? ValidarRegistroCompletoComponenteAportante(ComponenteAportante pComponenteAportante)
+        {
+            bool RegistroCompletoHijo = true;
+
+            foreach (var ComponenteUso in pComponenteAportante.ComponenteUso)
+            {
+                if (!(bool)ComponenteUso.RegistroCompleto)
+                {
+                    RegistroCompletoHijo = false;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && RegistroCompletoHijo)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<Respuesta> CreateEditComponenteUso(ComponenteUso pComponenteUso, bool esTransaccion)
         {
             Respuesta Respuesta = new Respuesta();
@@ -732,6 +754,7 @@ namespace asivamosffie.services
                 {
                     pComponenteUso.FechaCreacion = DateTime.Now;
                     pComponenteUso.Eliminado = false;
+                    pComponenteUso.RegistroCompleto = ValidarRegistroCompletoComponenteUso(pComponenteUso);
                     _context.ComponenteUso.Add(pComponenteUso);
                 }
                 else
@@ -742,6 +765,7 @@ namespace asivamosffie.services
                     //Esto es lo unico que puede cambiar en esta tabla
                     pComponenteUsoOld.TipoUsoCodigo = pComponenteUso.TipoUsoCodigo;
                     pComponenteUsoOld.ValorUso = pComponenteUso.ValorUso;
+                    pComponenteUsoOld.RegistroCompleto = ValidarRegistroCompletoComponenteUso(pComponenteUsoOld);
                 }
                 if (esTransaccion)
                 {
@@ -756,15 +780,24 @@ namespace asivamosffie.services
             }
         }
 
+        private bool? ValidarRegistroCompletoComponenteUso(ComponenteUso pComponenteUsoOld)
+        {
+            if (!string.IsNullOrEmpty(pComponenteUsoOld.TipoUsoCodigo.ToString()) && pComponenteUsoOld.ValorUso > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<Respuesta> CreateEditContratacionProyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
-         
+
 
             try
             {
-                string strAccion   ;
+                string strAccion;
                 if (pContratacionProyecto.ContratacionProyectoId == 0)
                 {
                     strAccion = "CREAR CONTRATACION PROYECTO";
@@ -878,9 +911,9 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
         {
-          
+
             int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
-         
+
             try
             {
                 string strAccion = string.Empty;
@@ -893,16 +926,19 @@ namespace asivamosffie.services
                     //ComponenteAportante
                     foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                     {
-                        ComponenteAportante.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
-                        await CreateEditComponenteAportante(ComponenteAportante, true);
-
-
                         //Componente Uso
                         foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                         {
                             ComponenteUso.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
                             await CreateEditComponenteUso(ComponenteUso, true);
                         }
+
+
+                        ComponenteAportante.UsuarioCreacion = pContratacionProyecto.UsuarioCreacion;
+                        await CreateEditComponenteAportante(ComponenteAportante, true);
+
+
+
                     }
                 }
                 _context.SaveChanges();
@@ -933,7 +969,7 @@ namespace asivamosffie.services
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearContratacionContrataicionProyectoAportante = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto_Aportante, (int)EnumeratorTipoDominio.Acciones);
-         
+
             try
             {
                 string strAccion;
@@ -1034,12 +1070,12 @@ namespace asivamosffie.services
                                 foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                                 {
                                     if (string.IsNullOrEmpty(ComponenteUso.ComponenteUsoId.ToString()))
-                                    { 
+                                    {
                                         return false;
                                     }
                                 }
                             }
-                        } 
+                        }
                     }
                 }
             }
