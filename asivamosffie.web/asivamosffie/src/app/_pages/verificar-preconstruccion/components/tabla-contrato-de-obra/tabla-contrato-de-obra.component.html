@@ -44,7 +44,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
             <a [routerLink]="['obraVerDetalle', element.contratoId]" mat-raised-button color="accent" class="btn-table">Ver detalle</a>
-            <a [routerLink]="['obraGestionarRequisitos', element.contratoId]" mat-raised-button color="accent" class="btn-table">Gestionar requisitos para inicio</a>
+            <a (click)="getForm( element.contratoId, element.fechaAprobacion )" mat-raised-button color="accent" class="btn-table">Gestionar requisitos para inicio</a>
         </td>
     </ng-container>
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { ContratoModificado, Contrato, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,11 +14,19 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class ExpansionGestionarRequisitosComponent implements OnInit {
 
   contrato: Contrato;
+  fechaPoliza: string;
 
   constructor ( private activatedRoute: ActivatedRoute,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private dialog: MatDialog ) {
+                private dialog: MatDialog,
+                private routes: Router ) {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+    if (this.routes.getCurrentNavigation().extras.replaceUrl) {
+      this.routes.navigateByUrl('/preconstruccion');
+      return;
+    };
+    if (this.routes.getCurrentNavigation().extras.state)
+      this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
   };
 
   ngOnInit(): void {
@@ -57,7 +65,7 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
       .subscribe( 
         response => {
-          this.openDialog( '', response.message );
+          this.openDialog( '', response['message'] );
           this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
         },
         err => {

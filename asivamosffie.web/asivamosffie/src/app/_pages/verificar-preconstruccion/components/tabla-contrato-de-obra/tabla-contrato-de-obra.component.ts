@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { Router } from '@angular/router';
 
 export interface PeriodicElement {
   id: number;
@@ -40,7 +41,9 @@ export class TablaContratoDeObraComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
+  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+                private routes: Router ) 
+  {
     this.faseUnoPreconstruccionSvc.getListContratacion()
       .subscribe( listas => {
         console.log( listas );
@@ -65,5 +68,9 @@ export class TablaContratoDeObraComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  getForm ( id: number, fechaPoliza: string ) {
+    this.routes.navigate( [ '/verificarPreconstruccion/obraGestionarRequisitos', id ], { state: { fechaPoliza } } )
+  };
 
 }

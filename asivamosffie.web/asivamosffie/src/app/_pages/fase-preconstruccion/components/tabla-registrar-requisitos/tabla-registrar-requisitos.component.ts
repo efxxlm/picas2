@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { CommonService } from '../../../../core/_services/common/common.service';
+import { Router } from '@angular/router';
 
 export interface PeriodicElement {
   id: number;
@@ -43,7 +44,8 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
   }
 
   constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private commonSvc: CommonService ) 
+                private commonSvc: CommonService,
+                private routes: Router ) 
   {
     commonSvc.listaEstadosVerificacionContrato()
       .subscribe( console.log )
@@ -75,5 +77,9 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
   aprobarInicio () {
     console.log( 'Aprobando Inicio' );
   }
+
+  getForm ( id: number, fechaPoliza: string ) {
+    this.routes.navigate( [ '/preconstruccion/gestionarRequisitos', id ], { state: { fechaPoliza } } )
+  };
 
 }

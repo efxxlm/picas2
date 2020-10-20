@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +17,7 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
   contrato: Contrato;
   estado: FormControl;
   cantidadPerfiles: FormControl;
+  fechaPoliza: string;
 
   estadoProyectoArray = [
     {
@@ -32,9 +33,16 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
   constructor ( private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
                 private activatedRoute: ActivatedRoute,
                 private dialog: MatDialog,
+                private routes: Router,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.declararEstado();
-    this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id )
+    this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+    if (this.routes.getCurrentNavigation().extras.replaceUrl) {
+      this.routes.navigateByUrl('/verificarPreconstruccion');
+      return;
+    };
+    if (this.routes.getCurrentNavigation().extras.state)
+      this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
   }
 
   ngOnInit(): void {
@@ -81,7 +89,7 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
       .subscribe( 
         response => {
-          this.openDialog( '', response.message );
+          this.openDialog( '', response['message'] );
         },
         err => {
           this.openDialog( '', err.message );

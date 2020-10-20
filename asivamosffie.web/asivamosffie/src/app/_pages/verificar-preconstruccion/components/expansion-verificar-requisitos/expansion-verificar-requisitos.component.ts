@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { ObservacionPerfil } from '../../../../_interfaces/faseUnoVerificarPreconstruccion.interface';
@@ -17,6 +17,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class ExpansionVerificarRequisitosComponent implements OnInit {
 
   contrato: Contrato;
+  fechaPoliza: string;
   addressForm = this.fb.group({
     tieneObservacion: [null, Validators.required],
     observacion: [null, Validators.required]
@@ -39,10 +40,17 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private dialog: MatDialog,
+                private routes: Router,
                 private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) 
   {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+    if (this.routes.getCurrentNavigation().extras.replaceUrl) {
+      this.routes.navigateByUrl('/verificarPreconstruccion');
+      return;
+    };
+    if (this.routes.getCurrentNavigation().extras.state)
+      this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
   }
 
   ngOnInit(): void {
