@@ -104,6 +104,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SesionParticipante> SesionParticipante { get; set; }
         public virtual DbSet<SesionParticipanteVoto> SesionParticipanteVoto { get; set; }
         public virtual DbSet<SesionSolicitudCompromiso> SesionSolicitudCompromiso { get; set; }
+        public virtual DbSet<SesionSolicitudObservacionActualizacionCronograma> SesionSolicitudObservacionActualizacionCronograma { get; set; }
         public virtual DbSet<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
         public virtual DbSet<SesionSolicitudVoto> SesionSolicitudVoto { get; set; }
         public virtual DbSet<SesionTemaVoto> SesionTemaVoto { get; set; }
@@ -3718,6 +3719,43 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SesionComiteSolicitudId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SesionSolicitudCompromiso_SesionComiteSolicitud");
+            });
+
+            modelBuilder.Entity<SesionSolicitudObservacionActualizacionCronograma>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ProcesoSeleccionCronogramaMonitoreo)
+                    .WithMany(p => p.SesionSolicitudObservacionActualizacionCronograma)
+                    .HasForeignKey(d => d.ProcesoSeleccionCronogramaMonitoreoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudObservacionActualizacionCronograma_ProcesoSeleccionCronogramaMonitoreo");
+
+                entity.HasOne(d => d.SesionComiteSolicitud)
+                    .WithMany(p => p.SesionSolicitudObservacionActualizacionCronograma)
+                    .HasForeignKey(d => d.SesionComiteSolicitudId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionSolicitudObservacionActualizacionCronograma_SesionComiteSolicitud");
+
+                entity.HasOne(d => d.SesionParticipante)
+                    .WithMany(p => p.SesionSolicitudObservacionActualizacionCronograma)
+                    .HasForeignKey(d => d.SesionParticipanteId)
+                    .HasConstraintName("FK_SesionSolicitudObservacionActualizacionCronograma_SesionParticipante");
             });
 
             modelBuilder.Entity<SesionSolicitudObservacionProyecto>(entity =>
