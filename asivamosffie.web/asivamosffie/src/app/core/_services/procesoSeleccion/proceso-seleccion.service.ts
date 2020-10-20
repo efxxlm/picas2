@@ -46,7 +46,7 @@ export class ProcesoSeleccionService implements OnInit {
   }
 
   listaProcesoSeleccionCronogramaMonitoreo( id: number ){
-    return this.http.get<any[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);
+    return this.http.get<ProcesoSeleccionMonitoreo[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);
   }
 
   deleteProcesoSeleccion( pId: number ){
@@ -104,7 +104,8 @@ export interface ProcesoSeleccionMonitoreo{
   usuarioCreacion?:string,
   eliminado?:boolean,
   enviadoComiteTecnico?:boolean,
-  procesoSeleccionCronogramaMonitoreo:ProcesoSeleccionCronogramaMonitoreo[]
+  procesoSeleccionCronogramaMonitoreo?:ProcesoSeleccionCronogramaMonitoreo[]
+  procesoSeleccion?:ProcesoSeleccion
 }
 
 export interface ProcesoSeleccion{

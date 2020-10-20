@@ -182,7 +182,7 @@ namespace asivamosffie.services
 
         public async Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
         {
-            return await _context.ProcesoSeleccionMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.ProcesoSeleccionCronogramaMonitoreo).ToListAsync();
+            return await _context.ProcesoSeleccionMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.ProcesoSeleccionCronogramaMonitoreo).Include(x=>x.ProcesoSeleccion).ToListAsync();
         }
 
         public async Task<Respuesta> setProcesoSeleccionMonitoreoCronograma(ProcesoSeleccionMonitoreo procesoSeleccionCronograma)
@@ -195,7 +195,19 @@ namespace asivamosffie.services
                 {
                     procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
                     procesoSeleccionCronograma.Eliminado = false;
+                    procesoSeleccionCronograma.NumeroProceso = "ACTCRONO" + _context.ProcesoSeleccionMonitoreo.Count().ToString();
+                    procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.Creado;
+                    foreach(var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
+                    {
+                        proceso.FechaCreacion = DateTime.Now;
+                        proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
+                    }
                     _context.Add(procesoSeleccionCronograma);
+
+                    //por aqui actualizo el estado de la solicitud
+                    var solicitud = _context.ProcesoSeleccion.Find(procesoSeleccionCronograma.ProcesoSeleccionId);
+                    solicitud.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite;
+
                     await _context.SaveChangesAsync();
 
                     return _response = new Respuesta
