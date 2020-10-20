@@ -132,6 +132,13 @@ namespace asivamosffie.api.Controllers
             return File(await _committeeSessionFiduciarioService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
         }
 
+        [HttpGet]
+        [Route("GetProcesoSeleccionMonitoreo")]
+        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId )
+        {
+            return await _committeeSessionFiduciarioService.GetProcesoSeleccionMonitoreo( pProcesoSeleccionMonitoreoId );
+        }
+
         [HttpPost]
         [Route("CreateEditSesionComiteTema")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionComiteTema, SesionParticipante, SesionSolicitudCompromiso, SesionTemaVoto, SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteGrilla, ComiteTecnico, ProcesoSeleccionMonitoreo, SesionComiteSolicitud, SesionComiteTema, SesionParticipante, SesionSolicitudCompromiso, SesionTemaVoto, SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
 
@@ -106,6 +106,10 @@ export class FiduciaryCommitteeSessionService {
 
    deleteComiteTecnicoByComiteTecnicoId( id: number ){
     return this.http.delete<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/deleteComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
+   }
+
+   getProcesoSeleccionMonitoreo( id: number ){
+    return this.http.get<ProcesoSeleccionMonitoreo>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getProcesoSeleccionMonitoreo?pProcesoSeleccionMonitoreoId=${ id }`);
    }
 
 }
