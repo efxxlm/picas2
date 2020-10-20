@@ -737,7 +737,7 @@ namespace asivamosffie.services
                 }
             }
 
-            if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && RegistroCompletoHijo)
+            if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && !string.IsNullOrEmpty(pComponenteAportante.FaseCodigo) && RegistroCompletoHijo)
             {
                 return true;
             }
