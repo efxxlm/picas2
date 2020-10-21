@@ -100,7 +100,6 @@ namespace asivamosffie.model.Models
         public string InventarioArboreoObservaciones { get; set; }
         public string AprovechamientoForestalObservaciones { get; set; }
         public string ManejoAguasLluviasObservaciones { get; set; }
-
         public bool? TieneObservacionesDiagnosticoApoyo { get; set; }
         public bool? TieneObservacionesDiagnosticoSupervisor { get; set; }
         public bool? TieneObservacionesPlanesProgramasApoyo { get; set; }
@@ -111,7 +110,7 @@ namespace asivamosffie.model.Models
         public bool? TieneObservacionesProgramacionObraSupervisor { get; set; }
         public bool? TieneObservacionesFlujoInversionApoyo { get; set; }
         public bool? TieneObservacionesFlujoInversionSupervisor { get; set; }
-        public bool? RegistroCompleto { get; set;}
+        public bool? RegistroCompleto { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }

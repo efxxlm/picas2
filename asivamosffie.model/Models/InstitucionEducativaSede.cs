@@ -15,7 +15,7 @@ namespace asivamosffie.model.Models
         public int InstitucionEducativaSedeId { get; set; }
         public int? PadreId { get; set; }
         public string Nombre { get; set; }
-        public int? CodigoDane { get; set; }
+        public string CodigoDane { get; set; }
         public string LocalizacionIdMunicipio { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }

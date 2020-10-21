@@ -91,7 +91,21 @@ namespace asivamosffie.services
         {
             try
             {
-                Contrato contrato = await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
+                List<Dominio> ListParametricas = _context.Dominio.ToList();
+                List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
+                Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                     .Include(r => r.ContratoPoliza)
+                     .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                 .ThenInclude(r => r.InstitucionEducativa)
+                    .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                  .ThenInclude(r => r.Sede)
+                     .Include(r => r.Contratacion)
+                         .ThenInclude(r => r.Contratista)
+                    .FirstOrDefaultAsync();
 
                 contrato.ContratoConstruccion = _context.ContratoConstruccion.Where(cc => cc.ContratoId == pContratoId)
                                                                                 .Include(r => r.ConstruccionPerfil)
@@ -99,9 +113,29 @@ namespace asivamosffie.services
                                                                                 .Include(r => r.ConstruccionPerfil)
                                                                                     .ThenInclude(r => r.ConstruccionPerfilNumeroRadicado)
                                                                                 .Include(r => r.ConstruccionObservacion)
+                                                                                .ToList();
 
-                                                                             .ToList();
+                //contrato.ContratoConstruccion.ToList().RemoveAll( r => r.eliminado == true )
 
+                contrato.ContratoConstruccion.ToList().ForEach( cc => {
+                    cc.ConstruccionPerfil.ToList().RemoveAll( cp => cp.Eliminado == true );
+
+                    cc.ConstruccionPerfil.ToList().ForEach( cp => {
+                        cp.ConstruccionPerfilObservacion.ToList().RemoveAll( cpo => cpo.Eliminado == true );
+                        cp.ConstruccionPerfilNumeroRadicado.ToList().RemoveAll( cpr => cpr.Eliminado == true );
+
+                    });
+
+                });
+
+                
+                foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
+                {
+                    Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                    ContratacionProyecto.Proyecto.Departamento = Listlocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault().Descripcion;
+                    ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
+                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                }
 
                 return contrato;
             }
