@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
@@ -14,21 +14,19 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./definir-fuentes-y-usos.component.scss']
 })
 
-export class DefinirFuentesYUsosComponent implements OnInit {
+export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   idSolicitud: number;
   contratacionProyecto: ContratacionProyecto;
   municipio: string;
   tipoIntervencion: string;
-
   addressForm = this.fb.group([]);
-
   fasesSelect: Dominio[] = [];
-
+  listaUsos: any[] = [];
+  listaComponentes: any[] = [];
   componentesSelect: Dominio[] = [];
-
   usosSelect: Dominio[] = [];
-
+  realizoPeticion: boolean = false;
 
   createFormulario() {
     return this.fb.group({
@@ -62,6 +60,26 @@ export class DefinirFuentesYUsosComponent implements OnInit {
     this.getMunicipio();
   }
 
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty && this.realizoPeticion === false ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
+  };
+
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
+
   createAportante() {
     return this.fb.group({
       nombreAportante: [],
@@ -73,7 +91,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
       ],
       componentes: this.fb.array([])
     });
-  }
+  };
 
   ngOnInit(): void {
 
@@ -95,8 +113,13 @@ export class DefinirFuentesYUsosComponent implements OnInit {
           this.componentesSelect = response[1];
           this.usosSelect = response[2];
           this.contratacionProyecto = response[3];
-
           setTimeout(() => {
+
+            if ( this.componentesSelect.length > 0 ) {
+              this.listaComponentes = this.componentesSelect.filter( value => this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === value.codigo );
+            };
+
+            this.idSolicitud = this.contratacionProyecto.contratacionId;
 
             this.commonService.listaTipoIntervencion()
               .subscribe((intervenciones: any) => {
@@ -114,7 +137,12 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
               grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.contratacionProyectoAportanteId);
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
-              grupoAportante.get('valorAportanteProyecto').setValue(apo.valorAporte);
+              grupoAportante.get('valorAportanteProyecto')
+              .setValue(
+                apo.valorAporte ? 
+                apo.valorAporte : 
+                ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' ? this.contratacionProyecto.proyecto.valorInterventoria : this.contratacionProyecto.proyecto.valorObra ) 
+              );
 
               if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');
@@ -175,8 +203,6 @@ export class DefinirFuentesYUsosComponent implements OnInit {
               this.aportantes.push(grupoAportante);
             });
 
-            this.idSolicitud = this.contratacionProyecto.contratacionId;
-
             console.log(this.contratacionProyecto);
 
           }, 1000);
@@ -187,9 +213,25 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
   }
 
+  getlistaUsos ( fase?: string, componente?: string ) {
+    if ( fase !== undefined && componente !== undefined ) {
+      const descripcionLista = `${fase}-${componente}`;
+      if ( this.usosSelect.length > 0 ) {
+        const listaDeUsos = this.usosSelect.filter( uso => uso.descripcion === descripcionLista );
+        this.listaUsos = listaDeUsos;
+      };
+    };
+  };
+
+  deleteUsoSeleccionado ( usoCodigo: any ) {
+    console.log( usoCodigo );
+    this.listaUsos = this.listaUsos.filter( uso => uso.codigo !== usoCodigo );
+  };
+
   getMunicipio() {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
-      this.router.navigate(['/solicitarContratacion']);
+      //this.router.navigate(['/solicitarContratacion']);
+      this.municipio = 'Acomodar este campo antes de subir versión';
       return;
     }
 
@@ -199,8 +241,16 @@ export class DefinirFuentesYUsosComponent implements OnInit {
 
 
   addUso(j: number, i: number) {
+    if ( this.listaUsos.length === 0 ) {
+      this.openDialog( '', 'No se encuentran usos disponibles para el respectivo componente.' );
+      return;
+    };
     const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
     listaUsos.push(this.createUso());
+  }
+
+  deleteUso ( borrarForm: any, i: number ) {
+    borrarForm.removeAt(i);
   }
 
   createUso(): FormGroup {
@@ -232,8 +282,8 @@ export class DefinirFuentesYUsosComponent implements OnInit {
     });
   }
 
-  borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+  borrarArray(j: number, i: number) {
+    this.componentes(i).removeAt( j );
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -310,11 +360,11 @@ export class DefinirFuentesYUsosComponent implements OnInit {
       this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto(this.contratacionProyecto)
         .subscribe(
           respuesta => {
-          this.openDialog('', respuesta.message);
-
-          if (respuesta.code === '200') {
-            this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
-          }
+            this.openDialog('', respuesta.message);
+            this.realizoPeticion = true;
+            if (respuesta.code === '200') {
+              this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
+            }
           },
           err => this.openDialog('', err.message)
         );
