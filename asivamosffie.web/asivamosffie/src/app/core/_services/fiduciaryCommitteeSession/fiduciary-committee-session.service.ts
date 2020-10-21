@@ -109,7 +109,7 @@ export class FiduciaryCommitteeSessionService {
    }
 
    getProcesoSeleccionMonitoreo( id: number ){
-    return this.http.get<ProcesoSeleccionMonitoreo>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getProcesoSeleccionMonitoreo?pProcesoSeleccionMonitoreoId=${ id }`);
+    return this.http.get<ProcesoSeleccionMonitoreo>(`${environment.apiUrl}/CommitteeSessionFiduciario/getProcesoSeleccionMonitoreo?pProcesoSeleccionMonitoreoId=${ id }`);
    }
 
 }

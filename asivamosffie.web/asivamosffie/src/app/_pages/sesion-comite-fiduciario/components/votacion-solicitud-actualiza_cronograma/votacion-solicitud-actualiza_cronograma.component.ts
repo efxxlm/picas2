@@ -219,10 +219,10 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
 
     })
 
-    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
+    sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteFiduciario;
     sesionComiteSolicitud.sesionSolicitudVoto.forEach(sv => {
       if (sv.esAprobado != true)
-        sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
+        sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteFiduciario;
     })
 
     console.log(sesionComiteSolicitud);
