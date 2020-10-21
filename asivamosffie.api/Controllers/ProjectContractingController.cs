@@ -27,7 +27,7 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
- 
+
         [Route("ChangeStateContratacionByIdContratacion")]
         [HttpPost]
         public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado)
@@ -35,7 +35,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _projectContractingService.ChangeStateContratacionByIdContratacion(idContratacion,PCodigoEstado,HttpContext.User.FindFirst("User").Value);
+                respuesta = await _projectContractingService.ChangeStateContratacionByIdContratacion(idContratacion, PCodigoEstado, HttpContext.User.FindFirst("User").Value);
                 return respuesta;
             }
             catch (Exception ex)
@@ -51,8 +51,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _projectContractingService.DeleteContratacionByIdContratacion(idContratacion, HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _projectContractingService.DeleteContratacionByIdContratacion(idContratacion, HttpContext.User.FindFirst("User").Value.ToUpper());
                 return respuesta;
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratacionByContratacionId")]
         [HttpGet]
-        public async Task<Contratacion> GetContratacionByContratacionId (int pContratacionId)
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
             return await _projectContractingService.GetContratacionByContratacionId(pContratacionId);
         }
@@ -79,7 +79,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListProyectsByFilters")]
         [HttpGet]
-        public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen,string pRegion ,string pDepartamento, string pMunicipio, int pIdInstitucionEducativa, int pIdSede)
+        public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pRegion, string pDepartamento, string pMunicipio, int pIdInstitucionEducativa, int pIdSede)
         {
             var respuesta = await _projectContractingService.GetListProyectsByFilters(pTipoIntervencion, pLlaveMen, pRegion, pDepartamento, pMunicipio, pIdInstitucionEducativa, pIdSede);
             return respuesta;
@@ -108,10 +108,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //string pUsuarioModifico = " ";
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
-                pContratacion.UsuarioCreacion = pUsuarioModifico;
-                respuesta = await _projectContractingService.CreateContratacionProyecto(pContratacion, pUsuarioModifico);
+                respuesta = await _projectContractingService.CreateContratacionProyecto(pContratacion, HttpContext.User.FindFirst("User").Value.ToUpper());
                 return respuesta;
             }
             catch (Exception ex)
@@ -128,7 +125,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectContractingService.GetListContratacionProyectoByContratacionId(idContratacion);
             return respuesta;
         }
-         
+
         [Route("CreateEditContratacion")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratacion(Contratacion pContratacion)
@@ -136,9 +133,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
-                pContratacion.UsuarioCreacion = pUsuarioModifico;
+                pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _projectContractingService.CreateEditContratacion(pContratacion);
                 return Ok(respuesta);
             }
@@ -155,10 +150,9 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-              //  pContratacionProyecto.PorcentajeAvanceObra = decimal.Parse(pContratacionProyecto.PorcentajeAvanceObraString);
-                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto , false);
+            {
+                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _projectContractingService.CreateEditContratacionProyecto(pContratacionProyecto, false);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -174,10 +168,9 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
-                pContratacionProyecto.UsuarioCreacion = pUsuarioModifico;
-                respuesta = await _projectContractingService.CreateEditContratacionProyectoAportanteByContratacionproyecto(pContratacionProyecto , false);
+            { 
+                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _projectContractingService.CreateEditContratacionProyectoAportanteByContratacionproyecto(pContratacionProyecto, false);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -186,18 +179,16 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
-         
+
         [Route("CreateEditContratacionProyectoAportante")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratacionProyectoAportante(ContratacionProyectoAportante pContratacionProyectoAportante)
         {
             Respuesta respuesta = new Respuesta();
             try
-            {
-                string pUsuarioModifico = " ";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value; 
-                pContratacionProyectoAportante.UsuarioCreacion = pUsuarioModifico;
-                respuesta = await _projectContractingService.CreateEditContratacionProyectoAportante(pContratacionProyectoAportante , false);
+            { 
+                pContratacionProyectoAportante.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _projectContractingService.CreateEditContratacionProyectoAportante(pContratacionProyectoAportante, false);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -209,9 +200,10 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratacionProyectoById")]
         [HttpGet]
-        public async Task<ContratacionProyecto> GetContratacionProyectoById(int idContratacionProyecto){
+        public async Task<ContratacionProyecto> GetContratacionProyectoById(int idContratacionProyecto)
+        {
             var respuesta = await _projectContractingService.GetContratacionProyectoById(idContratacionProyecto);
-            return respuesta;            
+            return respuesta;
         }
     }
 }
