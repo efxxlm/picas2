@@ -28,7 +28,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         GenerarDisponibilidadPresupuestal = 28, 
         Gestionar_Procesos_Contractuales = 31,
 
-        GenerarDisponibilidadPresupuestal = 28,
+        //GenerarDisponibilidadPresupuestal = 28,
 
 
         GestionarGarantias = 35,
@@ -36,7 +36,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Generar_Registro_Presupuestal = 36,
 
 
-        Gestionar_Procesos_Contractuales = 31,
+        //Gestionar_Procesos_Contractuales = 31,
             Gestionar_acta_inicio_fase_2 = 42
     }
 

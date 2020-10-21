@@ -113,7 +113,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     });
   }
   editorStyle = {
-    height: '50%'
+    height: '45px'
   };
 
   config = {
