@@ -12,7 +12,6 @@ namespace asivamosffie.model.Models
             ContratoPerfil = new HashSet<ContratoPerfil>();
             ContratoPoliza = new HashSet<ContratoPoliza>();
             ControversiaContractual = new HashSet<ControversiaContractual>();
-            DefensaJudicialContrato = new HashSet<DefensaJudicialContrato>();
         }
 
         public int ContratacionId { get; set; }
@@ -68,6 +67,7 @@ namespace asivamosffie.model.Models
         public bool? EstadoFase1EyD { get; set; }
         public bool? EstadoFase1Diagnostico { get; set; }
         public string EstadoVerificacionConstruccionCodigo { get; set; }
+        public bool? RegistroCompleto1 { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
@@ -75,6 +75,5 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
         public virtual ICollection<ContratoPoliza> ContratoPoliza { get; set; }
         public virtual ICollection<ControversiaContractual> ControversiaContractual { get; set; }
-        public virtual ICollection<DefensaJudicialContrato> DefensaJudicialContrato { get; set; }
     }
 }
