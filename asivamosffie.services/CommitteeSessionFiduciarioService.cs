@@ -2037,7 +2037,7 @@ namespace asivamosffie.services
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
 
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
-                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioModificacion;
+                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.GeneraCompromisoFiduciario = pSesionComiteSolicitud.GeneraCompromisoFiduciario;
                 sesionComiteSolicitudOld.DesarrolloSolicitudFiduciario = pSesionComiteSolicitud.DesarrolloSolicitudFiduciario;
@@ -2163,6 +2163,48 @@ namespace asivamosffie.services
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
                         {
                             procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.AprobadoPorComiteFiduciario;
+
+                            List<ProcesoSeleccionCronogramaMonitoreo> listaCronograma = _context.ProcesoSeleccionCronogramaMonitoreo
+                                                                                        .Where(r => r.ProcesoSeleccionMonitoreoId == procesoSeleccionMonitoreo.ProcesoSeleccionMonitoreoId)
+                                                                                        .ToList();
+
+
+                            listaCronograma.ForEach(crono =>
+                                {
+                                    if (crono.ProcesoSeleccionCronogramaId > 0)
+                                    {
+                                        ProcesoSeleccionCronograma cronograma = _context.ProcesoSeleccionCronograma.Find(crono.ProcesoSeleccionCronogramaId);
+                                        if (cronograma != null)
+                                        {
+                                            cronograma.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                                            cronograma.FechaModificacion = DateTime.Now;
+
+                                            cronograma.NumeroActividad = crono.NumeroActividad;
+                                            cronograma.Descripcion = crono.Descripcion;
+                                            cronograma.FechaMaxima = crono.FechaMaxima;
+                                            cronograma.EstadoActividadCodigo = crono.EstadoActividadCodigo;
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ProcesoSeleccionCronograma cronograma = new ProcesoSeleccionCronograma(){
+
+                                        UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion,
+                                        FechaCreacion = DateTime.Now,
+
+                                        ProcesoSeleccionId = procesoSeleccionMonitoreo.ProcesoSeleccionId,
+                                        Eliminado = false,
+                                        NumeroActividad = crono.NumeroActividad,
+                                        Descripcion = crono.Descripcion,
+                                        FechaMaxima = crono.FechaMaxima,
+                                        EstadoActividadCodigo = crono.EstadoActividadCodigo,
+                                        };
+
+                                        _context.ProcesoSeleccionCronograma.Add( cronograma );
+                                    }
+                                });
+
                         }
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
                         {
@@ -2173,32 +2215,8 @@ namespace asivamosffie.services
                             procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.DevueltoPorComiteFiduciario;
                         }
 
-                        List<ProcesoSeleccionCronogramaMonitoreo> listaCronograma = _context.ProcesoSeleccionCronogramaMonitoreo
-                                                                                        .Where(r => r.ProcesoSeleccionMonitoreoId == procesoSeleccionMonitoreo.ProcesoSeleccionMonitoreoId)
-                                                                                        .ToList();
 
-                        listaCronograma.ForEach(crono =>
-                        {
-                            if (crono.ProcesoSeleccionCronogramaId > 0)
-                            {
-                                ProcesoSeleccionCronograma cronograma = _context.ProcesoSeleccionCronograma.Find(crono.ProcesoSeleccionCronogramaId);
-                                if (cronograma != null)
-                                {
-                                    cronograma.UsuarioModificacion = pSesionComiteSolicitud.UsuarioModificacion;
-                                    cronograma.FechaModificacion = DateTime.Now;
 
-                                    cronograma.NumeroActividad = crono.NumeroActividad;
-                                    cronograma.Descripcion = crono.Descripcion;
-                                    cronograma.FechaMaxima = crono.FechaMaxima;
-                                    cronograma.EstadoActividadCodigo = crono.EstadoActividadCodigo;
-
-                                }
-                            }
-                            else
-                            {
-
-                            }
-                        });
 
 
                     }
