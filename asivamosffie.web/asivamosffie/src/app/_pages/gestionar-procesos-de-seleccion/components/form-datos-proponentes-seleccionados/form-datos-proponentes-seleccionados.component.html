@@ -2,7 +2,7 @@
   <div class="pr-1">
     <label class="label-left">Tipos de proponente</label>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-4">
     <mat-form-field class="select-width">
       <mat-select [formControl]="tipoProponente" (selectionChange)="limpiarForms()" required>
         <mat-option *ngFor="let proponente of listaProponentes" [value]="proponente">
@@ -50,7 +50,9 @@
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input matInput #numeroIdentificacion type="number" maxlength="12"
-                  formControlName="numeroIdentificacion" required>
+                  formControlName="numeroIdentificacion"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
               <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
             </div>
@@ -99,9 +101,9 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #direccion type="text" maxlength="100" formControlName="direccion" required>
+            <input matInput #direccion type="text" maxlength="500" formControlName="direccion" required>
           </mat-form-field>
-          <span class="contador">{{100 - direccion.value.length}}</span>
+          <span class="contador">{{500 - direccion.value.length}}</span>
         </div>
       </div>
       <div class="row">
@@ -127,10 +129,10 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #correoElectronico type="email" maxlength="100" formControlName="correoElectronico"
+            <input matInput #correoElectronico type="email" maxlength="1000" formControlName="correoElectronico"
               required>
           </mat-form-field>
-          <span class="contador">{{100 - correoElectronico.value.length}}</span>
+          <span class="contador miles">{{1000 - correoElectronico.value.length}}</span>
         </div>
       </div>
     </mat-card-content>
@@ -179,7 +181,9 @@
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input matInput #numeroIdentificacion2 type="number" maxlength="12"
-                  formControlName="numeroIdentificacion" required>
+                  formControlName="numeroIdentificacion"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
               <span class="contador">{{12 - numeroIdentificacion2.value.length}}</span>
             </div>
@@ -269,9 +273,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #direccion2 type="text" maxlength="100" formControlName="direccion" required>
+                <input matInput #direccion2 type="text" maxlength="500" formControlName="direccion" required>
               </mat-form-field>
-              <span class="contador">{{100 - direccion2.value.length}}</span>
+              <span class="contador">{{500 - direccion2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -301,10 +305,10 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #correoElectronico2 type="email" maxlength="100" formControlName="correoElectronico"
+                <input matInput #correoElectronico2 type="email" maxlength="1000" formControlName="correoElectronico"
                   required>
               </mat-form-field>
-              <span class="contador">{{100 - correoElectronico2.value.length}}</span>
+              <span class="contador miles">{{1000 - correoElectronico2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -352,9 +356,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #nombre3 type="text" maxlength="100" formControlName="nombreConsorcio" required>
+                  <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombreConsorcio" required>
                 </mat-form-field>
-                <span class="contador">{{100 - nombre3.value.length}}</span>
+                <span class="contador miles">{{1000 - nombre3.value.length}}</span>
               </div>
             </div>
           </div>
@@ -374,9 +378,9 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required>
+                        <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombre" required>
                       </mat-form-field>
-                      <span class="contador">{{100 - nombre3.value.length}}</span>
+                      <span class="contador miles">{{1000 - nombre3.value.length}}</span>
                     </div>
                   </div>
                 </div>
@@ -511,9 +515,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #direccion3 type="text" maxlength="100" formControlName="direccion" required>
+                  <input matInput #direccion3 type="text" maxlength="500" formControlName="direccion" required>
                 </mat-form-field>
-                <span class="contador">{{100 - direccion3.value.length}}</span>
+                <span class="contador">{{500 - direccion3.value.length}}</span>
               </div>
             </div>
           </div>
@@ -546,7 +550,7 @@
                   <input matInput #correoElectronico3 type="email" maxlength="100" formControlName="correoElectronico"
                     required>
                 </mat-form-field>
-                <span class="contador">{{100 - correoElectronico3.value.length}}</span>
+                <span class="contador miles">{{1000 - correoElectronico3.value.length}}</span>
               </div>
             </div>
           </div>

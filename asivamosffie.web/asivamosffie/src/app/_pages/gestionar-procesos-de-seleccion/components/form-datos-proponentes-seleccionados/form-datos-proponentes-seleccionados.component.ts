@@ -37,14 +37,18 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
-    ]
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(100),
+      Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])]
   });
 
   personaJuridicaIndividualForm = this.fb.group({
@@ -64,14 +68,18 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
-    ]
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])]
   });
 
   unionTemporalForm = this.fb.group({
@@ -80,7 +88,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required,])
     ],
     nombreConsorcio: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     entidades: this.fb.array([]),
     nombre: [null, Validators.compose([
@@ -95,14 +103,18 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.maxLength(100)])
-    ]
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])]
   });
   listaProponentesNombres: any[] = [];
   nombresapo: string[] = [];
@@ -337,7 +349,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionIntegranteId: [],
       nombre: [null, Validators.compose([
-        Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
       ],
       porcentaje: [null, Validators.compose([
         Validators.required, Validators.min(1), Validators.max(100), Validators.maxLength(2)])

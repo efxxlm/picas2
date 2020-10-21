@@ -1,6 +1,6 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
-    <mat-card-header class="header-card">
+    <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Proposiciones y varios
       </mat-card-title>
@@ -9,7 +9,7 @@
       <div formGroupName="tema">
         <div *ngFor="let temas of tema.controls; let i = index">
           <div [formGroupName]="i">
-            <mat-card-title class="header-card--text alineacion-titulos2">
+            <mat-card-title class="header-card--text pl-0 alineacion-titulos2">
               Tema {{ i + 1 }}
             </mat-card-title>
             <div class="row">
@@ -63,7 +63,7 @@
               <div class="pr-1">
                 <label class="label-left">Url con soporte</label>
               </div>
-              <div class="col">
+              <div class="col pr-3em">
                 <mat-form-field class="full-width">
                   <input matInput type="text" formControlName="url" maxlength="100">
                 </mat-form-field>

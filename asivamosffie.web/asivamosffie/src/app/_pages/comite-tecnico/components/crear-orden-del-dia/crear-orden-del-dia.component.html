@@ -11,24 +11,22 @@
   </div>
 
   <mat-card class="shipping-card">
-    <mat-card-header class="header-card">
+    <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Validación de solicitudes contractuales
       </mat-card-title>
     </mat-card-header>
     <mat-card-content class="text-center">
-      <button type="button" style="display: none;" (click)="tablaSolicitudes.ngOnInit()" id="btnTablaSolicitudes" ></button>
-      <app-tabla-solicitudes-contractuales
-        #tablaSolicitudes 
-        [solicitudesContractuales]="solicitudesContractuales"
-      >
-    </app-tabla-solicitudes-contractuales>
+      <button type="button" style="display: none;" (click)="tablaSolicitudes.ngOnInit()"
+        id="btnTablaSolicitudes"></button>
+      <app-tabla-solicitudes-contractuales #tablaSolicitudes [solicitudesContractuales]="solicitudesContractuales">
+      </app-tabla-solicitudes-contractuales>
     </mat-card-content>
   </mat-card>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" [style.pointer-events]="getStyle()" >
-    <mat-card class="shipping-card" >
-      <mat-card-header class="header-card">
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" [style.pointer-events]="getStyle()">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
           Nuevo tema
         </mat-card-title>
@@ -37,7 +35,7 @@
         <div formGroupName="tema">
           <div *ngFor="let registroPresupuestal of tema.controls; let i = index">
             <div [formGroupName]="i">
-              <mat-card-title class="header-card--text alineacion-titulos2">
+              <mat-card-title class="header-card--text pl-0">
                 Tema {{ i + 1 }}
               </mat-card-title>
               <div class="row">
@@ -49,7 +47,7 @@
                     <input matInput #temaInput type="text" formControlName="tema" maxlength="100" required>
                     <input type="hidden" formControlName="sesionTemaId">
                   </mat-form-field>
-                  <span class="contador">{{50 - temaInput.value.length}}</span>
+                  <span class="contador">{{100 - temaInput.value.length}}</span>
                 </div>
               </div>
               <div class="row">
@@ -91,7 +89,7 @@
                 <div class="pr-1">
                   <label class="label-left">Url con soporte</label>
                 </div>
-                <div class="col">
+                <div class="col pr-3em">
                   <mat-form-field class="full-width">
                     <input matInput type="text" formControlName="url" maxlength="100">
                   </mat-form-field>
@@ -117,7 +115,7 @@
     </div>
 
     <mat-card class="shipping-card">
-      <mat-card-header class="header-card">
+      <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
           Proposiciones y varios
         </mat-card-title>
@@ -128,11 +126,8 @@
     </mat-card>
     <div class="text-center">
 
-      <button mat-button 
-        color="warn" 
-        class="btn-guardar" 
-        *ngIf="estadosComite.sinConvocatoria == objetoComiteTecnico.estadoComiteCodigo"
-        type="submit">
+      <button mat-button color="warn" class="btn-guardar"
+        *ngIf="estadosComite.sinConvocatoria == objetoComiteTecnico.estadoComiteCodigo" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar">
       </button>
     </div>

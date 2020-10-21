@@ -24,24 +24,23 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
   }
 
   constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-
-             ) 
-  {
-
-  }
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+  ) { }
 
   ngOnInit(): void {
 
-      this.technicalCommitteeSessionService.getListComite()
-        .subscribe( response => {
-          //response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
-          console.log( response );
-          this.dataSource = new MatTableDataSource( response );
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      })
+    this.technicalCommitteeSessionService.getListComite()
+      .subscribe(response => {
+        // esponse = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
+        // console.log(response);
+        this.dataSource = new MatTableDataSource(response);
+        this.initPaginator();
+      });
+    }
+    initPaginator() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
       if (length === 0 || pageSize === 0) {
         return '0 de ' + length;

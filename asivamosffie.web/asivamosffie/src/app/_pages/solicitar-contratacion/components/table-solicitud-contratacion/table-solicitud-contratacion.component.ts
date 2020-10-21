@@ -41,19 +41,15 @@ export class TableSolicitudContratacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.projectContractingService.getListContratacion().subscribe(response => {
-
       this.dataSource = new MatTableDataSource(response);
-      console.log(response);
+      // console.log(response);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-    })
-
-
+    });
   }
 
   detallarSolicitud(id: number) {
@@ -61,16 +57,15 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   onDelete(id: number) {
-    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', id)
+    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', id);
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-
       if (result) {
         this.eliminarSolicitud(e);
       }
@@ -78,7 +73,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
@@ -88,19 +83,16 @@ export class TableSolicitudContratacionComponent implements OnInit {
     console.log(id);
     this.projectContractingService.eliminarContratacion(id)
       .subscribe(respuesta => {
-
-        this.openDialog('', 'La información se ha eliminado correctamente')
+        this.openDialog('', 'La información se ha eliminado correctamente');
         this.ngOnInit();
-
       });
   }
 
   enviarSolicitud(id: number) {
     this.projectContractingService.changeStateContratacionByIdContratacion(id, this.estadosSolicitud.RechazadaPorComiteTecnico)
       .subscribe(respuesta => {
-        this.openDialog('Solicitud Contratacion', respuesta.message)
+        this.openDialog('Solicitud Contratacion', respuesta.message);
         this.ngOnInit();
-
       });
   }
 

@@ -28,39 +28,39 @@ export class TablaGestionActasComponent implements OnInit {
   }
 
   constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-                public dialog: MatDialog,
-                
-             ) 
-  {
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+    public dialog: MatDialog,
+  ) {
 
   }
 
   ngOnInit(): void {
 
     this.technicalCommitteeSessionService.getListComiteGrilla()
-      .subscribe( response => {
-        let lista: ComiteGrilla[] = response.filter( c => [EstadosComite.desarrolladaSinActa, 
-                                                          EstadosComite.conActaDeSesionEnviada,
-                                                          EstadosComite.conActaDeSesionAprobada].includes( c.estadoComiteCodigo ) )
-        this.dataSource = new MatTableDataSource( lista );
-      })
-
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-        if (length === 0 || pageSize === 0) {
-          return '0 de ' + length;
-        }
-        length = Math.max(length, 0);
-        const startIndex = page * pageSize;
-        // If the start index exceeds the list length, do not try and fix the end index to the end.
-        const endIndex = startIndex < length ?
-          Math.min(startIndex + pageSize, length) :
-          startIndex + pageSize;
-        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-      };
+      .subscribe(response => {
+        const lista: ComiteGrilla[] = response.filter(c => [EstadosComite.desarrolladaSinActa,
+        EstadosComite.conActaDeSesionEnviada,
+        EstadosComite.conActaDeSesionAprobada].includes(c.estadoComiteCodigo));
+        this.dataSource = new MatTableDataSource(lista);
+        this.initPaginator();
+      });
+  }
+  initPaginator() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+      if (length === 0 || pageSize === 0) {
+        return '0 de ' + length;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+    };
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -70,25 +70,26 @@ export class TablaGestionActasComponent implements OnInit {
     });
   }
 
-  enviarSolicitud( id: number ){
-    let comite: ComiteTecnico = {
+  enviarSolicitud(id: number) {
+    const comite: ComiteTecnico = {
       comiteTecnicoId: id,
       estadoComiteCodigo: EstadosComite.conActaDeSesionEnviada,
 
-    }
-    this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
-    .subscribe( respuesta => {
-      this.openDialog( '', respuesta.message);
-      if ( respuesta.code == "200" )
-        this.ngOnInit();  
-    })
+    };
+    this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico(comite)
+      .subscribe(respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code === '200') {
+          this.ngOnInit();
+        }
+      });
   }
 
-  descargarActa( id: number ){
+  descargarActa(id: number) {
     this.technicalCommitteeSessionService.getPlantillaActaBySesionComiteSolicitudId(id)
       .subscribe(resp => {
         console.log(resp);
-        const documento = `ActaComiteTecnico ${ id }.pdf`;
+        const documento = `ActaComiteTecnico ${id}.pdf`;
         const text = documento,
           blob = new Blob([resp], { type: 'application/pdf' }),
           anchor = document.createElement('a');

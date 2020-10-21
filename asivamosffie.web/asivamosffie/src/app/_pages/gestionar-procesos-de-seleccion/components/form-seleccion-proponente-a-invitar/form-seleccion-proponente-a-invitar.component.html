@@ -6,12 +6,12 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán seleccionados en el 
+              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán seleccionados en el
                 proceso?</label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" min="1" max="99" 
+                <input matInput #cuantosProponentes type="number" min="1" max="99"
                  maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                  formControlName="cuantosProponentes">
               </mat-form-field>
@@ -55,7 +55,7 @@
           <div class="pr-1">
             <label for="url" class="label-left">Url con soporte</label>
           </div>
-          <div class="col">
+          <div class="col pr-3em">
             <mat-form-field class="full-width">
               <input matInput type="url" formControlName="url">
             </mat-form-field>

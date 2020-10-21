@@ -48,8 +48,8 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-tabla-sesiones 
-            (sesionesSeleccionadas)="getSesionesSeleccionada( $event )" 
+        <app-tabla-sesiones
+            (sesionesSeleccionadas)="getSesionesSeleccionada( $event )"
             [dataSolicitud]="datasolicitud">
         </app-tabla-sesiones>
 
@@ -124,7 +124,7 @@
                 <div class="pr-1">
                   <label class="label-left">Url con soporte</label>
                 </div>
-                <div class="col">
+                <div class="col pr-3em">
                   <mat-form-field class="full-width">
                     <input matInput type="text" formControlName="url" maxlength="100">
                   </mat-form-field>
@@ -162,9 +162,9 @@
   </form>
   <div class="text-center">
 
-    <button mat-button 
-      color="warn" 
-      class="btn-guardar" 
+    <button mat-button
+      color="warn"
+      class="btn-guardar"
       *ngIf="estadosComite.sinConvocatoria == objetoSesion.estadoComiteCodigo"
       type="button"
       (click)="onSubmit()">
