@@ -76,7 +76,7 @@ export class TablaResultadosComponent implements OnInit {
   openPopup() {
 
     this.dialog.open(AsociadaComponent, {
-      data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto}
+      data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto }
     });
 
   }

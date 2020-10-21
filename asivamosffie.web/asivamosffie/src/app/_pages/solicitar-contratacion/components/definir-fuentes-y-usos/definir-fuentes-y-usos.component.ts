@@ -232,10 +232,9 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
       this.router.navigate(['/solicitarContratacion']);
       return;
-    }
+    };
     this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
-  }
-
+  };
 
   addUso(j: number, i: number) {
     if ( this.listaUsos.length === 0 ) {
