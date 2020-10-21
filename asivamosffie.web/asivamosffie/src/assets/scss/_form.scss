@@ -108,6 +108,10 @@ div.mat-select-arrow {
 
 .select-width {
     width: calc(100% - 2.9em);
+
+    td & {
+      padding-right: 3em;
+    }
 }
 
 .contador {
