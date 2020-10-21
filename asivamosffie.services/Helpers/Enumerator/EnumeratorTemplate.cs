@@ -5,7 +5,7 @@ namespace asivamosffie.services.Helpers.Enumerator
     {
          RecuperarClave = 2,
                  
-        ActaInicioFase2ObraInterventoria=13
+        ActaInicioFase2ObraInterventoria=13,
  
          DisponibilidadPresupuestalGenerada=4,
          MsjSupervisorGestionPoliza=5,

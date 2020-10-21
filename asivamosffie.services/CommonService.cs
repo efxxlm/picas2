@@ -349,7 +349,7 @@ namespace asivamosffie.services
         public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
         {
             //return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
-            return  _context.InstitucionEducativaSede.Where(r=>r.InstitucionEducativaSedeId==InstitucionEducativaById).FirstOrDefault();
+            return _context.InstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == InstitucionEducativaById).FirstOrDefault();
         }
  
     }

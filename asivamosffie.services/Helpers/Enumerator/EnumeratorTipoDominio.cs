@@ -107,8 +107,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipo_Contrato = 52,
         Tipo_Modificacion_Contrato_Poliza = 56,
         Tipo_Garantia_Poliza = 58,
-            
-		Tipo_Contrato = 52,
+           
+		
         Estado_Verificacion_Contrato = 53,       
         PlaceHolderDDP = 66,         
         Responsable_Equipo_Tecnico = 71,
