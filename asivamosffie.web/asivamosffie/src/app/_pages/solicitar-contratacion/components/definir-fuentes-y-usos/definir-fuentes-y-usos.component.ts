@@ -230,13 +230,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   getMunicipio() {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
-      //this.router.navigate(['/solicitarContratacion']);
-      this.municipio = 'Acomodar este campo antes de subir versión';
+      this.router.navigate(['/solicitarContratacion']);
       return;
     }
-
     this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
-
   }
 
 
