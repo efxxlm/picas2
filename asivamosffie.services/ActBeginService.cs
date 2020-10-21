@@ -787,14 +787,14 @@ namespace asivamosffie.services
 
                 //if (InstitucionEducativaId != null)
                 //proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById( Convert.ToInt32( InstitucionEducativaId));
-                proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById(InstitucionEducativaIdInt);
+                //proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById(InstitucionEducativaIdInt);
 
 
                 if (proyecto!= null)
                 {
                      strLlaveMENContrato =proyecto.LlaveMen;
-                    if (InstitucionEducativaId != null)
-                        strInstitucionEducativaLlaveMEN = proyecto.InstitucionEducativa.Nombre;
+                    //if (InstitucionEducativaId != null)
+                    //    strInstitucionEducativaLlaveMEN = proyecto.InstitucionEducativa.Nombre;
                     //[LocalizacionIdMunicipio] [InstitucionEducativaId]
                      strDepartamentoYMunicipioLlaveMEN =_commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     

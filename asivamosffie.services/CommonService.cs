@@ -348,10 +348,20 @@ namespace asivamosffie.services
          
         public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
         {
-            //return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
-            return _context.InstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == InstitucionEducativaById).FirstOrDefault();
+            return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
+
+            //int InstitucionEducativaSedeById = InstitucionEducativaById;
+            //return _context.InstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == InstitucionEducativaById).FirstOrDefault();
         }
- 
+
+        //public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
+        //{
+        //    //return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
+        //    return _context.InstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == InstitucionEducativaById).FirstOrDefault();
+        //}
+
+        
+
     }
 
 }
