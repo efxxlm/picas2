@@ -302,12 +302,7 @@ namespace asivamosffie.services
                              .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
-                    .ThenInclude(r => r.NombreAportante)
-                .Include(r => r.ContratacionProyectoAportante)
-                    .ThenInclude(r => r.ComponenteAportante) 
-                .Include(r => r.ContratacionProyectoAportante)
-                    .ThenInclude(r => r.ComponenteAportante)
-                        .ThenInclude(r => r.ComponenteUso)
+                    .ThenInclude(r => r.NombreAportante) 
                 .Include(r => r.Proyecto)
                     .ThenInclude(r => r.InstitucionEducativa)
                  .Include(r => r.Proyecto)
@@ -317,8 +312,8 @@ namespace asivamosffie.services
                      .Include(r=> r.Contratacion)
                      .ThenInclude(r=> r.ContratacionProyecto)
                         .ThenInclude(r=> r.ContratacionProyectoAportante)
-                        .ThenInclude(r => r.ComponenteAportante)
-
+                             .ThenInclude(r => r.ComponenteAportante)
+                                  .ThenInclude(r => r.ComponenteUso) 
                 .FirstOrDefaultAsync();
 
             return contratacionProyecto;
