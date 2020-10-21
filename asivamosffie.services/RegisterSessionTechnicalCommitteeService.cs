@@ -101,7 +101,7 @@ namespace asivamosffie.services
                         observacionActualizacionCronograma.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                         observacionActualizacionCronograma.FechaCreacion = DateTime.Now;
                         observacionActualizacionCronograma.Eliminado = false;
-                        _context.SesionSolicitudObservacionActualizacionCronograma.Add( observacionActualizacionCronograma );
+                        _context.SesionSolicitudObservacionActualizacionCronograma.Add(observacionActualizacionCronograma);
                         //sesionComiteSolicitudOld.SesionSolicitudObservacionProyecto.Add( SesionSolicitudObservacionProyecto );
                     }
                     else
@@ -482,8 +482,8 @@ namespace asivamosffie.services
                                                             .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                             .FirstOrDefault();
 
-                if (comiteTecnicoOld.SesionComiteTema.Where( t => t.Eliminado != true ).ToList().Count > 0 ||
-                     comiteTecnicoOld.SesionComiteSolicitudComiteTecnico.Where( c => c.Eliminado != true ).ToList().Count > 0
+                if (comiteTecnicoOld.SesionComiteTema.Where(t => t.Eliminado != true).ToList().Count > 0 ||
+                     comiteTecnicoOld.SesionComiteSolicitudComiteTecnico.Where(c => c.Eliminado != true).ToList().Count > 0
                     )
                 {
                     return new Respuesta
@@ -765,86 +765,89 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId ){
+        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo(int pProcesoSeleccionMonitoreoId)
+        {
             ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = await _context.ProcesoSeleccionMonitoreo
-                                                                    .Where( r => r.ProcesoSeleccionMonitoreoId == pProcesoSeleccionMonitoreoId &&
-                                                                            r.Eliminado != true       
+                                                                    .Where(r => r.ProcesoSeleccionMonitoreoId == pProcesoSeleccionMonitoreoId &&
+                                                                           r.Eliminado != true
                                                                      )
-                                                                     .Include( r => r.ProcesoSeleccionCronogramaMonitoreo )
-                                                                        .ThenInclude( r => r.SesionSolicitudObservacionActualizacionCronograma )
-                                                                     .FirstOrDefaultAsync();            
-                                                                    
-            procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.ToList().RemoveAll( r => r.Eliminado == true );
+                                                                     .Include(r => r.ProcesoSeleccionCronogramaMonitoreo)
+                                                                        .ThenInclude(r => r.SesionSolicitudObservacionActualizacionCronograma)
+                                                                     .FirstOrDefaultAsync();
 
-            procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.ToList().ForEach( p => {
-                p.SesionSolicitudObservacionActualizacionCronograma.ToList().RemoveAll( r => r.Eliminado == true );
+            procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.ToList().RemoveAll(r => r.Eliminado == true);
+
+            procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.ToList().ForEach(p =>
+            {
+                p.SesionSolicitudObservacionActualizacionCronograma.ToList().RemoveAll(r => r.Eliminado == true);
             });
 
             return procesoSeleccionMonitoreo;
-        } 
+        }
         public async Task<List<dynamic>> GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime pFechaOrdenDelDia)
         {
             List<dynamic> ListValidacionSolicitudesContractualesGrilla = new List<dynamic>();
 
-            int CantidadDiasComite = Int32.Parse(await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Dias_Comite && (bool)r.Activo).Select(r => r.Descripcion).FirstOrDefaultAsync());
-            /*Procesos de Seleccion Estado Apertura tramite  , Contratación Estado En tramite 
-            “Apertura de proceso de selección”, 
-            “Evaluación de proceso de selección”,
-            “Contratación”,
-            “Modificación contractual por novedad”, 
-            “Controversia contractual”,
-             “Procesos de defensa judicial”. */
-            pFechaOrdenDelDia = pFechaOrdenDelDia.AddDays(-CantidadDiasComite);
-
-            List<ProcesoSeleccion> ListProcesoSeleccion =
-                _context.ProcesoSeleccion
-                .Where(r => !(bool)r.Eliminado
-                 && r.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite
-                 && r.FechaCreacion < pFechaOrdenDelDia
-                 )
-                .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
-
-            List<Contratacion> ListContratacion = _context.Contratacion
-                .Where(r => !(bool)r.Eliminado
-                && r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_tramite
-                && r.FechaTramite < pFechaOrdenDelDia
-                )
-                .OrderByDescending(r => r.ContratacionId).ToList();
-
-            List<ProcesoSeleccionMonitoreo> ListActualizacionCronograma = _context.ProcesoSeleccionMonitoreo
-                .Where(r => !(bool)r.Eliminado
-                && r.EnviadoComiteTecnico == true
-                && r.FechaCreacion < pFechaOrdenDelDia
-                )
-                .OrderByDescending( r => r.ProcesoSeleccionMonitoreoId ).ToList();
-
-            //Quitar los que ya estan en sesionComiteSolicitud
-
-            List<int> LisIdContratacion = _context.SesionComiteSolicitud
-                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString())
-                                            .Select(r => r.SolicitudId).Distinct().ToList();
-
-            List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud
-                                                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
-                                                    .Select(r => r.SolicitudId).Distinct().ToList();
-
-            List<int> ListIdActualizacionCronograma = _context.SesionComiteSolicitud
-                                                        .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
-                                                        .Include( r => r.ProcesoSeleccion )
-                                                        .Select(r => r.SolicitudId).Distinct().ToList();
-
-            //Se comentan ya que no esta listo el caso de uso
-            //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
-            //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
-
-            //a1.RemoveAll(a => !b1.Exists(b => a.number == b.number));
-
-            ListContratacion.RemoveAll(item => LisIdContratacion.Contains(item.ContratacionId));
-            ListProcesoSeleccion.RemoveAll(item => ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
-            ListActualizacionCronograma.RemoveAll(item => ListIdActualizacionCronograma.Contains(item.ProcesoSeleccionMonitoreoId));
-
             try
             {
+                int CantidadDiasComite = Int32.Parse(await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Dias_Comite && (bool)r.Activo).Select(r => r.Descripcion).FirstOrDefaultAsync());
+                /*Procesos de Seleccion Estado Apertura tramite  , Contratación Estado En tramite 
+                “Apertura de proceso de selección”, 
+                “Evaluación de proceso de selección”,
+                “Contratación”,
+                “Modificación contractual por novedad”, 
+                “Controversia contractual”,
+                 “Procesos de defensa judicial”. */
+                pFechaOrdenDelDia = pFechaOrdenDelDia.AddDays(-CantidadDiasComite);
+
+                List<ProcesoSeleccion> ListProcesoSeleccion =
+                    _context.ProcesoSeleccion
+                    .Where(r => !(bool)r.Eliminado
+                     && r.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite
+                     && r.FechaCreacion < pFechaOrdenDelDia
+                     )
+                    .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
+
+                List<Contratacion> ListContratacion = _context.Contratacion
+                    .Where(r => !(bool)r.Eliminado
+                    && r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_tramite
+                    && r.FechaTramite < pFechaOrdenDelDia
+                    )
+                    .OrderByDescending(r => r.ContratacionId).ToList();
+
+                List<ProcesoSeleccionMonitoreo> ListActualizacionCronograma = _context.ProcesoSeleccionMonitoreo
+                    .Where(r => !(bool)r.Eliminado
+                    && r.EnviadoComiteTecnico == true
+                    && r.FechaCreacion < pFechaOrdenDelDia
+                    )
+                    .Include(r => r.ProcesoSeleccion)
+                    .OrderByDescending(r => r.ProcesoSeleccionMonitoreoId).ToList();
+
+                //Quitar los que ya estan en sesionComiteSolicitud
+
+                List<int> LisIdContratacion = _context.SesionComiteSolicitud
+                                                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString())
+                                                .Select(r => r.SolicitudId).Distinct().ToList();
+
+                List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud
+                                                        .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                                                        .Select(r => r.SolicitudId).Distinct().ToList();
+
+                List<int> ListIdActualizacionCronograma = _context.SesionComiteSolicitud
+                                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+                                                            .Select(r => r.SolicitudId).Distinct().ToList();
+
+                //Se comentan ya que no esta listo el caso de uso
+                //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
+                //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
+
+                //a1.RemoveAll(a => !b1.Exists(b => a.number == b.number));
+
+                ListContratacion.RemoveAll(item => LisIdContratacion.Contains(item.ContratacionId));
+                ListProcesoSeleccion.RemoveAll(item => ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
+                ListActualizacionCronograma.RemoveAll(item => ListIdActualizacionCronograma.Contains(item.ProcesoSeleccionMonitoreoId));
+
+
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
                 foreach (var ProcesoSeleccion in ListProcesoSeleccion)
@@ -1154,7 +1157,7 @@ namespace asivamosffie.services
 
             //    comiteTecnico.SesionParticipante = sesionParticipantes;
 
-            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true ).ToList();
+            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
@@ -1210,8 +1213,8 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
 
                         ProcesoSeleccionMonitoreo actualizacionCronograma = _context.ProcesoSeleccionMonitoreo
-                                                                                .Where( r => r.ProcesoSeleccionMonitoreoId == sesionComiteSolicitud.SolicitudId)
-                                                                                .Include( r => r.ProcesoSeleccion )
+                                                                                .Where(r => r.ProcesoSeleccionMonitoreoId == sesionComiteSolicitud.SolicitudId)
+                                                                                .Include(r => r.ProcesoSeleccion)
                                                                                 .FirstOrDefault();
 
                         sesionComiteSolicitud.FechaSolicitud = actualizacionCronograma.FechaCreacion;
