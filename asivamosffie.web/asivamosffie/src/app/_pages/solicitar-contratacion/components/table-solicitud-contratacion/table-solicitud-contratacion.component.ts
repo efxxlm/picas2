@@ -45,7 +45,6 @@ export class TableSolicitudContratacionComponent implements OnInit {
     this.projectContractingService.getListContratacion().subscribe(response => {
 
       this.dataSource = new MatTableDataSource(response);
-      console.log(response);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

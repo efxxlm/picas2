@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
 import { ProjectService, InstitucionEducativa, ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 import { forkJoin } from 'rxjs';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-form-solicitar-contratacion',
@@ -43,7 +45,7 @@ export class FormSolicitarContratacionComponent implements OnInit {
                 private fb: FormBuilder,
                 private commonService: CommonService,
                 private projectService: ProjectService,
-
+                private dialog: MatDialog
               ) 
   {
     this.declararEsMultiple();
@@ -60,6 +62,13 @@ export class FormSolicitarContratacionComponent implements OnInit {
       this.selectTipoInterventor = response[0];
       this.selectRegion = response[1]
     })
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 
   reiniciarFiltro () {
@@ -138,7 +147,10 @@ export class FormSolicitarContratacionComponent implements OnInit {
 
                                                ).subscribe( proyectos => {
                                                   this.listaResultado = proyectos;
-
+                                                  if ( proyectos.length === 0 ) {
+                                                    this.openDialog( '', 'No se encontraron registros asociados a los criterios de búsqueda.' );
+                                                    return;
+                                                  };
                                                   setTimeout(() => { 
                                                                       let btnListaResultado = document.getElementById('btnListaResultado');
                                                                       btnListaResultado.click(); 
