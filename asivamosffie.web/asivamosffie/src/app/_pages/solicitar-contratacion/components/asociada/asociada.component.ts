@@ -94,10 +94,8 @@ export class AsociadaComponent implements OnInit {
 
     this.projectContactingService.createContratacionProyecto( contratacion ).subscribe( respuesta => {
       if ( respuesta.code == "200" )
-        if ( this.solicitudAsociada.value.length ) {
-          this.openDialog( "", respuesta.message )
-          this.router.navigate(["/solicitarContratacion"]);
-        };
+        this.openDialog( "", respuesta.message )
+        this.router.navigate(["/solicitarContratacion"]);
     });
 
   }
