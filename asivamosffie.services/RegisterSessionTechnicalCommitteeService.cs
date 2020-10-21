@@ -797,7 +797,7 @@ namespace asivamosffie.services
                 “Contratación”,
                 “Modificación contractual por novedad”, 
                 “Controversia contractual”,
-                 “Procesos de defensa judicial”. */
+                 “Procesos de defensa judicial”. */ 
                 pFechaOrdenDelDia = pFechaOrdenDelDia.AddDays(-CantidadDiasComite);
 
                 List<ProcesoSeleccion> ListProcesoSeleccion =
