@@ -789,10 +789,11 @@ namespace asivamosffie.services
 
                     contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
 
-                    if (contratoObservacion != null)
-                    {
-                        strContratoObservacion = contratoObservacion.Observaciones;
-                    }
+                    //if (contratoObservacion != null)
+                    //{
+                    //strContratoObservacion = contratoObservacion.Observaciones;
+                    //}
+                    strContratoObservacion = contrato.Observaciones;
 
                 }
 
