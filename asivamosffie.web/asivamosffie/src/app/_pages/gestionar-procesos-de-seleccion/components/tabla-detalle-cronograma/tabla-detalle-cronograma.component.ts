@@ -18,16 +18,6 @@ export interface ProcesosElement {
   estadoDelSolicitud: string;
 }
 
-const ELEMENT_DATA: ProcesosElement[] = [
-  {
-    id: 1,
-    tipo: 'Selección privada',
-    numero: 'SP 0007-2020',
-    fechaSolicitud: '01/06/2020',
-    numeroSolicitud: '0001',
-    estadoDelSolicitud: 'Creada',
-  }
-];
 
 @Component({
   selector: 'app-tabla-detalle-cronograma',
@@ -78,8 +68,10 @@ export class TablaDetalleCronogramaComponent implements OnInit {
 
       ]).subscribe( respuesta => {
 
-          let proceso = respuesta[0]
 
+          let proceso = respuesta[0]
+          console.log("proceso");
+          console.log(proceso);
           let nombreTipo = respuesta[1].find( p => p.codigo == proceso.tipoProcesoCodigo )
           let nombreEstado = respuesta[2].find( p => p.codigo == proceso.estadoProcesoSeleccionCodigo )
           let nombreEtapa = respuesta[3].find( p => p.codigo == proceso.etapaProcesoSeleccionCodigo )

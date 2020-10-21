@@ -18,6 +18,8 @@ export interface PeriodicElement {
   valorAportante: number;
   estado: boolean;
   disponibilidadPresupuestalProyectoid:number;
+  valorGestionado:number;
+  ver:boolean;
 }
 
 
@@ -51,15 +53,17 @@ export class TablaGestionarValidacionComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   @Input()proyectos: any;
+  @Input()codigo: any;
+  @Input()ver: any;
   
   ngOnInit(): void {
-    console.log(this.proyectos);
+    console.log(this.ver);
     let elements:PeriodicElement[]=[];
     this.proyectos.forEach(element => {
       elements.push({
         llaveMen:element.llaveMen,
         departamento:element.departamento,
-        estado:element.valorGestionado==element.valorAportante,//
+        estado:element.valorGestionado>0,//
         id:element.aportanteID,//el aprotante id
         institucion:element.institucionEducativa,
         municipio:element.municipio,
@@ -67,32 +71,31 @@ export class TablaGestionarValidacionComponent implements OnInit {
         nombreAportante:element.nombreAportante,
         tipoInterventor:element.tipoIntervencion,//revisar
         valorAportante:element.valorAportante,
-        disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto
-      });
-  
-
+        disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto,
+        valorGestionado:element.valorGestionado,
+        ver:this.ver
+      });  
     });
+    console.log(elements);
     this.dataSource = new MatTableDataSource(elements);
     this.inicializarTabla();
   }
   inicializarTabla() {
-   
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
       if (length === 0 || pageSize === 0) {
         return '0 de ' + length;
       }
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
       const endIndex = startIndex < length ?
         Math.min(startIndex + pageSize, length) :
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
-    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -107,7 +110,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
     // this.openDialog('', `El saldo actual de la fuente <b>Recursos propios</b> es menor
     // al valor solicitado de la fuente, verifique por favor.`);
     this.dialog.open(FormGestionarFuentesComponent, {
-      width: '70em', data: { elemento: id }
+      width: '70em', data: { elemento: id, codigo:this.codigo,ver:this.ver }
     });
   }
 

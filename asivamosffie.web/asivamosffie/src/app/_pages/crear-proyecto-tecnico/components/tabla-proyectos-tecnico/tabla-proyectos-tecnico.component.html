@@ -10,11 +10,11 @@
 </div>
 
 <div class="table-responsive">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="fecha">
       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Fecha </th>
-      <td mat-cell *matCellDef="let element"> {{ element.fecha | date: 'dd/MM/yyyy' }} </td>
+      <td mat-cell *matCellDef="let element"> <b>{{ element.fecha | date: 'dd/MM/yyyy' }}</b> </td>
     </ng-container>
 
     <ng-container matColumnDef="departamento">
@@ -41,7 +41,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Estado del registro </th>
       <td mat-cell *matCellDef="let element"> {{ element.estado }} </td>
     </ng-container>
-<!---No  se va a usar para nada
+<!---No  se va a usar para nada jflorez
     <ng-container matColumnDef="estadoj">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado jurídico de los predios </th>
       <td mat-cell *matCellDef="let element"> {{ element.estadoj }} </td>

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,6 +6,7 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface RegistrosCargados {
   id: number;
@@ -16,6 +17,7 @@ export interface RegistrosCargados {
   gestion:string;
 }
 
+
 @Component({
   selector: 'app-tabla-orden-de-elegibilidad',
   templateUrl: './tabla-orden-de-elegibilidad.component.html',
@@ -25,6 +27,9 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
 
   displayedColumns: string[] = ['fechaCargue', 'totalRegistros', 'registrosValidos', 'registrosInvalidos','gestion'];
   dataSource = new MatTableDataSource();
+  @Input() procesoSeleccion: ProcesoSeleccion;
+  estadosProcesoSeleccion = EstadosProcesoSeleccion;
+  //@Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
   columnas = [
     { titulo: 'Fecha de cargue', name: 'fechaCargue' },

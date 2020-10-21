@@ -38,12 +38,33 @@ export class GestionarDdpComponent implements OnInit {
         }
         
       });
-    }
+    }    
   }
   generarddp(){
-    this.disponibilidadServices.CreateDDP(this.detailavailabilityBudget[0].id).subscribe(listas => {
+    this.disponibilidadServices.CreateDDP(this.detailavailabilityBudget.id).subscribe(listas => {
       console.log(listas);
-      this.detailavailabilityBudget=listas;
+      //this.detailavailabilityBudget=listas;
+      this.openDialog("",listas.message);
+      if(listas.code=="200")
+      {
+        this.download();
+      } 
+    });
+  }
+
+  download()
+  {
+    console.log(this.detailavailabilityBudget);
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
+      console.log(listas);
+      const documento = `DDP ${ this.detailavailabilityBudget.id }.pdf`;
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
     });
   }
 
@@ -51,7 +72,7 @@ export class GestionarDdpComponent implements OnInit {
     let dialogRef = this.dialog.open(DevolverPorValidacionComponent, {
       width: '70em'
     });
-    dialogRef.componentInstance.id = this.detailavailabilityBudget[0].id;
+    dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
     
   }
 
@@ -59,7 +80,7 @@ export class GestionarDdpComponent implements OnInit {
     let dialogRef = this.dialog.open(CancelarDdpComponent, {
       width: '70em'
     });
-    dialogRef.componentInstance.id = this.detailavailabilityBudget[0].id;
+    dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
   }
 
 }

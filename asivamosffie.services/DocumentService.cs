@@ -97,7 +97,7 @@ namespace asivamosffie.services
 
         public async  Task <List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1")
         {
-            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
         }
 
         public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser) {

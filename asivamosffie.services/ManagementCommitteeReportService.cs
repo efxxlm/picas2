@@ -319,6 +319,7 @@ namespace asivamosffie.services
                 if ((bool)ValidarTodosVotacion(comiteTecnicoOld))
                 {
                     comiteTecnicoOld.EstadoActaCodigo = ValidarEstadoActaVotacion(comiteTecnicoOld);
+                    comiteTecnicoOld.EsCompleto = false;
                     //Validar sesionComentario 
                     foreach (var SesionComentarios in comiteTecnicoOld.SesionComentario)
                     {

@@ -38,6 +38,7 @@ namespace asivamosffie.model.Models
         public string NumeroContrato { get; set; }
         public string LimitacionEspecial { get; set; }
         public string NumeroRadicadoSolicitud { get; set; }
+        public DateTime? FechaDrp { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }

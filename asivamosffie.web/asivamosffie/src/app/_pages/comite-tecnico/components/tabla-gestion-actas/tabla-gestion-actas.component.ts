@@ -88,7 +88,7 @@ export class TablaGestionActasComponent implements OnInit {
     this.technicalCommitteeSessionService.getPlantillaActaBySesionComiteSolicitudId(id)
       .subscribe(resp => {
         console.log(resp);
-        const documento = `DDP ${ id }.pdf`;
+        const documento = `ActaComiteTecnico ${ id }.pdf`;
         const text = documento,
           blob = new Blob([resp], { type: 'application/pdf' }),
           anchor = document.createElement('a');

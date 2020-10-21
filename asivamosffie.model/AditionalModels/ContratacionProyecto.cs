@@ -9,9 +9,6 @@ namespace asivamosffie.model.Models
     public partial class ContratacionProyecto
     {
         [NotMapped]
-        public ProyectoGrilla ProyectoGrilla { get; set; }
-
-        [NotMapped]
-        public string PorcentajeAvanceObraString { get; set; }
+        public ProyectoGrilla ProyectoGrilla { get; set; } 
     }
 }

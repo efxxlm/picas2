@@ -1,0 +1,37 @@
+<section *ngIf="!esFlujoInversion">
+  <button mat-raised-button 
+          color="accent" 
+          type="submit"
+          (click)="cargarProgramacion()">
+          Cargar programación
+  </button>
+</section>
+<section *ngIf="esFlujoInversion" class="mt-2em">
+  <button mat-raised-button 
+          color="accent" 
+          type="submit"
+          class="mr-2em">
+          Ver documento de registro presupuestal
+  </button>
+
+  <button mat-raised-button
+          color="accent" 
+          type="submit"
+          (click)="cargarProgramacion()">
+          Cargar flujo de inversión de recursos
+  </button>
+</section>
+
+<div *ngIf="!esFlujoInversion">
+        <app-tabla-programacion-obra  [contratoConstruccionId]="contratoConstruccionId"
+                                      (tieneRegistros)="tieneRegistrosObra = $event"
+                                      (realizoObservacion)="esObservacion( $event )"
+                                      *ngIf="tieneRegistrosObra">
+        </app-tabla-programacion-obra>
+</div>
+<div *ngIf="esFlujoInversion">
+        <app-tabla-inversion-recursos [contratoConstruccionId]="contratoConstruccionId"
+                                      (tieneRegistros)="tieneRegistrosInversion = $event"
+                                      *ngIf="tieneRegistrosInversion">
+        </app-tabla-inversion-recursos>
+</div>

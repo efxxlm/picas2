@@ -70,7 +70,7 @@ export class FormOtrosTemasComponent implements OnInit {
   ngOnInit(): void 
   {
 
-    let estados: string[] = ['1', '3', '5', '8']
+    let estados: string[] = ['2', '4', '6', '8']
 
     forkJoin([
       this.commonService.listaEstadoSolicitud(),
@@ -176,7 +176,7 @@ export class FormOtrosTemasComponent implements OnInit {
         this.validar.emit( respuesta.data );
         
         if (respuesta.code == "200" && !respuesta.data)
-          this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteTema.comiteTecnicoId])
+          this.router.navigate(['/comiteFiduciario/crearActa', this.sesionComiteTema.comiteTecnicoId])
       })
   }
 

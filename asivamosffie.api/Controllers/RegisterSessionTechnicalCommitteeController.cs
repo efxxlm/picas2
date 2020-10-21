@@ -424,5 +424,14 @@ namespace asivamosffie.api.Controllers
             return await _registerSessionTechnicalCommitteeService.GetListSesionComiteTemaByComiteTecnicoId(pComiteTecnicoId);
         }
 
+        [HttpGet]
+        [Route("GetCometariosDelActa")]
+        public async Task<List<SesionComentario>> GetCometariosDelActa(int pComietTecnicoId)
+        {
+            return await _registerSessionTechnicalCommitteeService.GetCometariosDelActa( pComietTecnicoId );
+        }
+
+        
+
     }
 }

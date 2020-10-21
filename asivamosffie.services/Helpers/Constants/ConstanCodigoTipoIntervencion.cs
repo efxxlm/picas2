@@ -1,6 +1,6 @@
 ﻿namespace asivamosffie.services.Helpers.Constant
 {
-    public static class ConstantCodigoTipoIntervencion
+    public class ConstantCodigoTipoIntervencion
     {
         public const string Nuevo = "1";
         public const string Ampliacion = "2";

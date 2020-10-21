@@ -39,11 +39,14 @@
                             (onContentChanged)="maxLength($event, 500)" formControlName="descripcion" [readOnly]="!editMode.valor" ></quill-editor>
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted" >
-                        <button mat-button color="primary" (click)="picker.open()" class="btn-calendario" [disabled]="!editMode.valor">
+                        <button mat-button color="primary" type="button"
+                         (click)="picker.open()" class="btn-calendario" [disabled]="!editMode.valor">
                             <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                         </button>
                         <mat-form-field class="example-full-width calendar-class">
-                            <input matInput [matDatepicker]="picker" [max]="maxDate" readonly (click)="picker.open()" formControlName="fecha" [disabled]="!editMode.valor">
+                            <input matInput [matDatepicker]="picker"
+                              readonly (click)="picker.open()" placeholder="DD/MM/AAAA"
+                             formControlName="fecha" [disabled]="!editMode.valor">
                             <input type="hidden" formControlName="procesoSeleccionCronogramaId">
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>

@@ -19,5 +19,8 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public IFormFile? pFile { get; set; }
+
+        [NotMapped]
+        public List<SesionComiteSolicitud> sesionComiteSolicitud { get; set; }
     }
 }

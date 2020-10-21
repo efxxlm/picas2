@@ -13,5 +13,11 @@
         public const string No_aplica = "9";
         public const string En_Firma_Del_Contratista ="10";
         public const string Rechazado = "11";
+        public const string AprobadoComiteTecnico = "12";
+        public const string AprobadoComiteFiduciario = "13";
+        public const string RechazadoComiteTecnico = "14";
+        public const string RechazadoComiteFiduciario = "15";
+        public const string DevueltoComiteTecnico = "16";
+        public const string DevueltoComiteFiduciario = "17";
     }
 }

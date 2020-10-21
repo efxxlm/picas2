@@ -343,10 +343,11 @@ namespace asivamosffie.services
             //jflorez, cambio esto para tener el retorno con todas las variables
 
             var retorno = await _context.FuenteFinanciacion.
-                Where(r => !(bool)r.Eliminado).Include(r => r.ControlRecurso).
+                Where(r => !(bool)r.Eliminado).
                 Include(r => r.Aportante).ToListAsync();
             foreach (var ret in retorno)
             {
+                ret.ControlRecurso = _context.ControlRecurso.Where(x=>x.FuenteFinanciacionId==ret.FuenteFinanciacionId && !(bool)x.Eliminado).ToList();
                 ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
                 if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                 {
@@ -471,6 +472,56 @@ namespace asivamosffie.services
                 });
             }
             return ListaRetorno;
+        }
+
+        public async Task GetConsignationValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var fuentes = _context.FuenteFinanciacion.Where(x => (bool)x.RegistroCompleto).Include(x=>x.ControlRecurso).Include(x=>x.Aportante).ThenInclude(x=>x.Cofinanciacion).ToList();
+            foreach(var fuente in fuentes)
+            {
+                decimal valoracompara = 0;
+                foreach(var control in fuente.ControlRecurso)
+                {
+                    valoracompara += control.ValorConsignacion;
+                }
+                if (valoracompara != fuente.ValorFuente)
+                {
+                    //envio correo a cordinandor de financiera
+                    var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera).Include(y => y.Usuario);
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjCoordinadorFuentes);
+                    string nombre = getNameAportante(fuente.Aportante);
+                    string template = TemplateRecoveryPassword.Contenido.Replace("[vigencia]", fuente.Aportante.Cofinanciacion.VigenciaCofinanciacionId.ToString()).Replace("_LinkF_", pDominioFront).Replace("[aportante]", nombre).Replace("[valor1]", string.Format("{0:c}", valoracompara.ToString())).Replace("[valor2]", string.Format("{0:c}", fuente.ValorFuente.ToString()));
+                    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuariosadmin.FirstOrDefault().Usuario.Email, "Fuentes de financiación", template, pSender, pPassword, pMailServer, pMailPort);
+                }       
+            }
+        }
+
+        private string getNameAportante(CofinanciacionAportante aportante)
+        {
+            string nombre = "";
+            if (aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+            {
+                nombre = ConstanStringTipoAportante.Ffie;
+            }
+            else if (aportante.TipoAportanteId == ConstanTipoAportante.ET)
+            {
+                //verifico si tiene municipio
+                if (aportante.MunicipioId != null)
+                {
+                    nombre = aportante.MunicipioId == null ?
+                        "Error" : "Alcaldía de " + _context.Localizacion.Find(aportante.MunicipioId).Descripcion;
+                }
+                else//solo departamento
+                {
+                    nombre = aportante.DepartamentoId == null ?
+                        "Error" : "Gobernación de " + _context.Localizacion.Find(aportante.DepartamentoId).Descripcion;
+                }
+            }
+            else
+            {
+                nombre = _context.Dominio.Find(aportante.NombreAportanteId).Nombre;
+            }
+            return nombre;
         }
     }
 }

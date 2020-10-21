@@ -68,7 +68,7 @@ export class TablaProyectosTecnicoComponent {
           if(respuesta)
           {
             this.inicializar();
-            this.openDialog('', "Proyecto eliminado correctamente");
+            this.openDialog('', "<b>La información a sido eliminada correctamente.</b>");
           }
           else
           {
@@ -140,7 +140,7 @@ export class TablaProyectosTecnicoComponent {
   {
     console.log(gestion);  
     this.proyectoid=gestion.id;
-    this.openDialogSiNo('', "Está seguro de eliminar este registro?",);  
+    this.openDialogSiNo('', "¿Está seguro de eliminar este registro?",);  
     
   }
   

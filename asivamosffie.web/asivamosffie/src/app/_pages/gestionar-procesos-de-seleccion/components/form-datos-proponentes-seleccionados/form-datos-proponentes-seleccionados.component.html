@@ -62,9 +62,9 @@
               <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                  <mat-option *ngFor="let departamento of listaDepartamentos" [value]="departamento">
+                  <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
                     {{ departamento.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -80,9 +80,9 @@
               <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="municipio" required>
-                  <mat-option *ngFor="let municipio of listaMunicipios" [value]="municipio">
+                  <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
                     {{ municipio.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -186,7 +186,12 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #representanteLegal2 type="text" maxlength="100" formControlName="representanteLegal" required>
+                <input matInput #representanteLegal2 type="text" maxlength="100" [formControl]="representanteLegal" required [matAutocomplete]="auto4">
+                <mat-autocomplete #auto4="matAutocomplete">
+                  <mat-option (click)="seleccionAutocomplete2(nombres)" *ngFor="let nombres of filteredNameJuridicaName  | async" [value]="nombres">
+                    {{nombres}}
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
               <span class="contador">{{100 - representanteLegal2.value.length}}</span>
             </div>
@@ -215,9 +220,9 @@
               <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                  <mat-option *ngFor="let departamento of listaDepartamentos" [value]="departamento">
+                  <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
                     {{ departamento.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -233,9 +238,9 @@
               <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width capitalize">
                 <mat-select formControlName="municipio" required>
-                  <mat-option *ngFor="let municipio of listaMunicipios" [value]="municipio">
+                  <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
                     {{ municipio.descripcion }}
                   </mat-option>
                 </mat-select>
@@ -311,7 +316,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantasEntidades type="number" min="1" formControlName="cuantasEntidades" (keyup)="CambioNumeroCotizantes()"
+                <input matInput #cuantasEntidades type="number" min="1" max="99" formControlName="cuantasEntidades" (keyup)="CambioNumeroCotizantes()"
                 maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                  required>
                 <input type="hidden" formControlName="procesoSeleccionProponenteId" >
@@ -412,7 +417,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #nombre type="text" maxlength="100" [formControl]="myJuridica2" required [matAutocomplete]="auto3">
                   <mat-autocomplete #auto3="matAutocomplete">
-                    <mat-option (click)="seleccionAutocomplete2(nombres)" *ngFor="let nombres of filteredNameJuridica2  | async" [value]="nombres">
+                    <mat-option (click)="seleccionAutocomplete3(nombres)" *ngFor="let nombres of filteredNameJuridica2  | async" [value]="nombres">
                       {{nombres}}
                     </mat-option>
                   </mat-autocomplete>
@@ -444,9 +449,9 @@
                 <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
               </div>
               <div class="col">
-                <mat-form-field class="select-width">
+                <mat-form-field class="select-width capitalize">
                   <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                    <mat-option *ngFor="let departamento of listaDepartamentos" [value]="departamento">
+                    <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
                       {{ departamento.descripcion }}
                     </mat-option>
                   </mat-select>
@@ -462,9 +467,9 @@
                 <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
               </div>
               <div class="col">
-                <mat-form-field class="select-width">
+                <mat-form-field class="select-width capitalize">
                   <mat-select formControlName="municipio" required>
-                    <mat-option *ngFor="let municipio of listaMunicipios" [value]="municipio">
+                    <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
                       {{ municipio.descripcion }}
                     </mat-option>
                   </mat-select>
