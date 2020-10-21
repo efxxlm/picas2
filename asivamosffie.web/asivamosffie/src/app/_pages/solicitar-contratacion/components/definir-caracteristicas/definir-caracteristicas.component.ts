@@ -83,7 +83,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
 
     });
-  }
+  };
 
   getMunicipio() {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {

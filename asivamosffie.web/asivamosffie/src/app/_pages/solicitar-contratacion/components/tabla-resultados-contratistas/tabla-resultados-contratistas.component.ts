@@ -46,7 +46,7 @@ export class TablaResultadosContratistasComponent implements OnInit {
   }
 
   private declararUnionTemporal() {
-    this.unionTemporal = new FormControl(false, Validators.required);
+    this.unionTemporal = new FormControl(null, Validators.required);
     this.nombreContratista = new FormControl('', Validators.required);
     this.numeroDocumento = new FormControl('', Validators.required);
   }

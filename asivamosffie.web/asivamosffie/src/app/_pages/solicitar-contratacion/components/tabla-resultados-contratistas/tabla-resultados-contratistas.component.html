@@ -3,13 +3,13 @@
         <label class="label-left" for="unionTemporal">¿El contratista es una unión temporal o consorcio? </label>
     </div>
     <mat-radio-group class="radioInput" [formControl]="unionTemporal">
-        <mat-radio-button value="true">Sí</mat-radio-button>
-        <mat-radio-button value="false">No</mat-radio-button>
+        <mat-radio-button [value]="true" [checked]="contratacion[ 'contratista' ]?.tipoProponenteCodigo === '4'">Sí</mat-radio-button>
+        <mat-radio-button [value]="false" [checked]="contratacion[ 'contratista' ]?.tipoProponenteCodigo !== '4'">No</mat-radio-button>
     </mat-radio-group>
 </div>
 <mat-card class="shipping-card">
     <mat-card-content>
-        <div class="row mt-1em" *ngIf="unionTemporal.value == 'false'" >
+        <div class="row mt-1em" *ngIf="unionTemporal.value == false" >
             <div class="pr-1">
                 <label class="label-left" for="numeroDocumento">Número de documento del contratista (NIT/RUT/CC)</label>
             </div>
@@ -29,7 +29,7 @@
                     <input matInput type="text" [formControl]="nombreContratista" [value]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ]?.nombre : ''">
                 </mat-form-field>
             </div>
-            <button mat-button color="primary" class="btn-guardar" type="submit" (click)="buscar()">
+            <button mat-button color="primary" class="btn-guardar" type="submit" (click)="buscar()" [disabled]="unionTemporal.value === null">
                 <img src="assets/img/icon/lupa.svg" alt="Regresar" > <strong>Buscar</strong>
             </button>
         </div>

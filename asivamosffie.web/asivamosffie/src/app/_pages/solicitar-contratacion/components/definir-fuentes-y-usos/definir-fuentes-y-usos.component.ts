@@ -65,6 +65,7 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   createAportante() {
     return this.fb.group({
       nombreAportante: [],
+      estadoSemaforo: [ null ],
       contratacionProyectoAportanteId: [],
       proyectoAportanteId: [],
       valorAportanteProyecto: [null, Validators.compose([
@@ -130,6 +131,13 @@ export class DefinirFuentesYUsosComponent implements OnInit {
                   const faseSeleccionada = this.fasesSelect.find(f => f.codigo == compoApo.faseCodigo);
                   const componenteSeleccionado = this.componentesSelect.find(c => c.codigo == compoApo.tipoComponenteCodigo);
 
+                  if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === true ) {
+                    grupoAportante.get( 'estadoSemaforo' ).setValue( 'completo' )
+                  };
+                  if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === false ) {
+                    grupoAportante.get( 'estadoSemaforo' ).setValue( 'en-proceso' )
+                  };
+
                   grupoComponente.get('componenteAportanteId').setValue(compoApo.componenteAportanteId);
                   grupoComponente.get('contratacionProyectoAportanteId').setValue(compoApo.contratacionProyectoAportanteId);
                   grupoComponente.get('fase').setValue(faseSeleccionada);
@@ -143,6 +151,10 @@ export class DefinirFuentesYUsosComponent implements OnInit {
                     grupoUso.get('componenteAportanteId').setValue(uso.componenteAportanteId);
                     grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
                     grupoUso.get('valorUso').setValue(uso.valorUso);
+
+                    if ( grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0 ) {
+                      grupoAportante.get( 'estadoSemaforo' ).setValue( 'sin-diligenciar' )
+                    } 
 
                     listaUsos.push(grupoUso);
                   });
@@ -296,13 +308,16 @@ export class DefinirFuentesYUsosComponent implements OnInit {
     if (valoresCorrectos) {
 
       this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto(this.contratacionProyecto)
-        .subscribe(respuesta => {
+        .subscribe(
+          respuesta => {
           this.openDialog('', respuesta.message);
 
           if (respuesta.code === '200') {
             this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
           }
-        });
+          },
+          err => this.openDialog('', err.message)
+        );
 
     } else {
       this.openDialog('', 'El valor total es diferente a la suma del valor de los componentes');
