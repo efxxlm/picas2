@@ -1,4 +1,5 @@
 ﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -28,11 +29,13 @@ namespace asivamosffie.services.Interfaces
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
             );
 
+        Task<Respuesta> EditarContratoObservacion(ContratoObservacion contratoObservacion);
+
         //  FechaFirmaContratista - contrato
         //FechaFirmaActaContratistaInterventoria  - contrato
         //----cargar archivo pdf VALIDAR FORMATO PDF?? NATALIA   - julian cargar archivo ???
 
-        Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion);
+        Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1 , DateTime pFechaTerminacionFase2);
         //:  Meses: xx Días: xx   - PlazoFase2PreMeses  - PlazoFase2PreDias - contrato
         //ObservacionesConsideracionesEspeciales Observaciones  - contrato
 

@@ -86,7 +86,7 @@ namespace asivamosffie.services
         }
         //_context.Add(contratoPoliza);
                 
-        public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion)
+        public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1 , DateTime pFechaTerminacionFase2)
         {
             Respuesta _response = new Respuesta();
 
@@ -102,8 +102,12 @@ namespace asivamosffie.services
             try
             {
                 contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
-                    contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
+                contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
                 contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();
+
+                contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
+                 contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;                                  
+
                 _context.Contrato.Update(contrato);
                 //contrato.FechaModificacion = DateTime.Now;
                 //contrato.UsuarioModificacion = pUsuarioModificacion;
@@ -153,7 +157,96 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
             }
         }
-        
+
+
+        public async Task<Respuesta> EditarContratoObservacion( ContratoObservacion contratoObservacion)
+        {
+            Respuesta _response = new Respuesta();
+
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.EditadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+
+            //try
+            //{
+            //    Respuesta respuesta = new Respuesta();
+            //    string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            //    respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
+
+            //    return Ok(respuesta);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.ToString());
+            //}
+
+
+            try
+            {
+                if (contratoObservacion != null)
+                {
+                    
+                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                    //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                    //_context.Add(contratoPoliza);
+
+                    //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+
+                    //contratoObservacion.Observaciones = contratoObservacion.Observaciones;
+
+                    contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(contratoObservacion.Observaciones);
+                    //contratoObservacion.Observaciones = Helpers.Helpers.ConvertToUpercase(contratoObservacion.Observaciones).ToString();
+                    
+                    //contratoObservacion.ContratoId = contratoObservacion.ContratoId;}
+                    if(contratoObservacion.EsActaFase2==null)
+                    contratoObservacion.EsActaFase2 = true;
+
+                    if (contratoObservacion.EsActa == null)
+                        contratoObservacion.EsActa = true;
+
+                    contratoObservacion.FechaCreacion = DateTime.Now;
+                    //contratoObservacion.UsuarioModificacion = contratoObservacion.UsuarioModificacion;                                       
+
+                    //_context.ContratoPoliza.Add(contratoPoliza);
+                    _context.ContratoObservacion.Update(contratoObservacion);
+                    //await _context.SaveChangesAsync();
+
+                    return
+                        new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
+                            Message =
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
+                            ConstantMessagesActaInicio.EditadoCorrrectamente,
+                            //contratoPoliza
+                            idAccionCrearContratoPoliza
+                            , contratoObservacion.UsuarioModificacion
+                            //"UsuarioCreacion"
+                            , "EDITAR CONTRATO OBSERVACION"
+                            //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
+                            )
+                        };
+
+                    //return _response = new Respuesta { IsSuccessful = true,
+                    //    IsValidation = false, Data = cuentaBancaria,
+                    //    Code = ConstantMessagesBankAccount.OperacionExitosa };
+                }
+                else
+                {
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.RecursoNoEncontrado }; 
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno };
+            }
+
+        }
+
+
         public async Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
             )

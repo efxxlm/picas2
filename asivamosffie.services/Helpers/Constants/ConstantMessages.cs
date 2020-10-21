@@ -664,6 +664,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region Mensajes Informativos
 
+        public const string RecursoNoEncontrado = "104";
 
         #endregion Mensajes Informativos
 

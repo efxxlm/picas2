@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -89,14 +90,13 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CreatePlazoEjecucionFase2Construccion")]
         
-        public async Task<IActionResult> CreatePlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion
-          )
+        public async Task<IActionResult> CreatePlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2    )
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.GuardarPlazoEjecucionFase2Construccion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacionesConsideracionesEspeciales,  pUsuarioModificacion);
+                respuesta = await _ActBegin.GuardarPlazoEjecucionFase2Construccion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacionesConsideracionesEspeciales,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -128,6 +128,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("EditarContratoObservacion")]        
+        public async Task<IActionResult> EditarContratoObservacion(ContratoObservacion contratoObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _ActBegin.EditarContratoObservacion(contratoObservacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
 
     }
