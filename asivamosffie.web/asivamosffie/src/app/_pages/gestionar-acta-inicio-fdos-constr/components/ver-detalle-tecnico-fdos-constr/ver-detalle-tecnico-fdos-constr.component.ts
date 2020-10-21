@@ -33,6 +33,8 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   plazoActualContratoDias: number;
   plazoEjecucionPreConstruccionMeses: number;
   plazoEjecucionPreConstruccionDias: number;
+  fechaActaInicioConstruccion: Date;
+  fechaPrevistaTerminacion: Date;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -73,22 +75,14 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
       this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
       /*Campo de texto no editable*/
-      /*Campo de texto editable*/
-      if(this.editable == true){
-        let fechaActaInicioFDosConstruccion = new Date(data.fechaActaInicio); // para detectar la fecha
-        let fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
-        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
-        this.addressForm.get('fechaPrevistaTerminacion').setValue(fechaPrevistaTerminacion);
-        this.addressForm.get('mesPlazoEjFase2').setValue(8);
-        this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
-        this.addressForm.get('observacionesEspeciales').setValue(data.observacionOConsideracionesEspeciales);
-      }
+      this.fechaActaInicioConstruccion = data.fechaActaInicio;
+      this.fechaPrevistaTerminacion = data.fechaPrevistaTerminacion;
+      this.plazoActualContratoMeses = 12;
+      this.plazoActualContratoDias = 26;
+      this.plazoEjecucionPreConstruccionMeses = 4;
+      this.plazoEjecucionPreConstruccionDias = data.plazoFase2ConstruccionDias;
     });
     this.idContrato = id;
-    this.plazoActualContratoMeses = 12;
-    this.plazoActualContratoDias = 26;
-    this.plazoEjecucionPreConstruccionMeses = 4;
-    this.plazoEjecucionPreConstruccionDias = 3;
   }
   descargarActaSuscrita(){
     this.services.GetPlantillaActaInicio(this.idContrato).subscribe(resp=>{
