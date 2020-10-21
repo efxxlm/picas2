@@ -59,7 +59,7 @@ export class ConsideracionesEspecialesComponent implements OnInit {
   cargarRegistros(){
 
     this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial !== undefined ? this.contratacion.esObligacionEspecial : '' );
-    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion );
+    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion ? this.contratacion.consideracionDescripcion : null );
 
   }
 

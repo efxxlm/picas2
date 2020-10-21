@@ -797,7 +797,7 @@ namespace asivamosffie.services
                 “Contratación”,
                 “Modificación contractual por novedad”, 
                 “Controversia contractual”,
-                 “Procesos de defensa judicial”. */
+                 “Procesos de defensa judicial”. */ 
                 pFechaOrdenDelDia = pFechaOrdenDelDia.AddDays(-CantidadDiasComite);
 
                 List<ProcesoSeleccion> ListProcesoSeleccion =
@@ -1187,7 +1187,7 @@ namespace asivamosffie.services
 
                         Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
-                        sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaCreacion;
+                        sesionComiteSolicitud.FechaSolicitud = contratacion.FechaCreacion;
 
                         sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
 
@@ -1725,6 +1725,8 @@ namespace asivamosffie.services
 
                 sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld);
 
+                #region Contratacion
+
                 if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion)
                 {
                     if (pSesionComiteSolicitud.Contratacion.ContratacionProyecto != null)
@@ -1762,6 +1764,10 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
+                #endregion Contratacion
+
+                #region  Inicio Proceso Seleccion   
 
                 if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
                 {
@@ -1819,6 +1825,34 @@ namespace asivamosffie.services
 
                 }
 
+                #endregion Inicio Proceso Seleccion
+
+                #region Actualizacion Cronograma
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+                {
+                    ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (procesoSeleccionMonitoreo != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
+                        {
+                            procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.AprobadoPorComiteTecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                        {
+                            procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.RechazadoPorComiteTecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        {
+                            procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.DevueltoPorComiteTecnico;
+                        }
+
+                    }
+
+                }
+
+                #endregion
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
