@@ -291,10 +291,9 @@ namespace asivamosffie.services
                 .Where(r => !(bool)r.Eliminado && r.ContratacionProyectoId == idContratacionProyecto)
                 .Include(r => r.Proyecto).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.Contratacion).Where(r => !(bool)r.Eliminado)
-                .Include(r => r.ContratacionProyectoAportante).Where(r => !(bool)r.Eliminado)
+                .Include(r => r.ContratacionProyectoAportante)
                 .Include(r => r.Proyecto)
-
-                    .ThenInclude(r => r.ProyectoAportante).Where(r => !(bool)r.Eliminado)
+                    .ThenInclude(r => r.ProyectoAportante)
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
@@ -304,16 +303,21 @@ namespace asivamosffie.services
                          .ThenInclude(r => r.Aportante)
                     .ThenInclude(r => r.NombreAportante)
                 .Include(r => r.ContratacionProyectoAportante)
-                    .ThenInclude(r => r.ComponenteAportante).Where(r => !(bool)r.Eliminado)
+                    .ThenInclude(r => r.ComponenteAportante) 
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante)
-                        .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
+                        .ThenInclude(r => r.ComponenteUso)
                 .Include(r => r.Proyecto)
                     .ThenInclude(r => r.InstitucionEducativa)
                  .Include(r => r.Proyecto)
                      .ThenInclude(r => r.Sede)
                  .Include(r => r.Proyecto)
                      .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)
+                     .Include(r=> r.Contratacion)
+                     .ThenInclude(r=> r.ContratacionProyecto)
+                        .ThenInclude(r=> r.ContratacionProyectoAportante)
+                        .ThenInclude(r => r.ComponenteAportante)
+
                 .FirstOrDefaultAsync();
 
             return contratacionProyecto;
