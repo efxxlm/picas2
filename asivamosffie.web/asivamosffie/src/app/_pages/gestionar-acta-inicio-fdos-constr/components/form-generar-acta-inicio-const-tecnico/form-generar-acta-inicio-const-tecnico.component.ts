@@ -24,7 +24,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   public fechaFirmaFiduciaria;
   public mesPlazoIni: number = 10;
   public diasPlazoIni: number = 25;
-  public observacionesOn : boolean;
+  public observacionesOn: boolean;
   public editable: boolean;
   public title;
 
@@ -50,6 +50,11 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   public valorInicialContrato;
   public valorfase2ConstruccionObra;
   public vigenciaContrato;
+  public plazoActualContratoMeses;
+  public plazoActualContratoDias;
+  public plazoEjecucionPreConstruccionMeses;
+  public plazoEjecucionPreConstruccionDias;
+
 
   addressForm = this.fb.group({});
   dataDialog: {
@@ -66,38 +71,42 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
-    if(localStorage.getItem("editable")=="true"){
-      this.editable=true;
-      this.title='Ver detalle/Editar';
+    if (localStorage.getItem("editable") == "true") {
+      this.editable = true;
+      this.title = 'Ver detalle/Editar';
     }
-    else{
-      this.editable=false;
-      this.title='Generar';
+    else {
+      this.editable = false;
+      this.title = 'Generar';
     }
   }
   loadData(id) {
-      this.services.GetVistaGenerarActaInicio(id).subscribe(data=>{
-        /*Titulo*/
-        this.contratoCode = data.numeroContrato;
-        this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
-        /*Cuadro 1*/
-        this.vigenciaContrato = data.vigenciaContrato;
-        this.fechaFirmaContrato = data.fechaFirmaContrato;
-        this.numeroDRP1 = data.numeroDRP1;
-        this.fechaGeneracionDRP1 = data.fechaGeneracionDRP1;
-        this.numeroDRP2 = data.numeroDRP2;
-        this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
-        this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
-        this.observacionOConsideracionesEspeciales = data.observacionOConsideracionesEspeciales;
-        this.valorInicialContrato = data.valorInicialContrato;
-        this.valorActualContrato = data.valorActualContrato;
-        this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
-        this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
-        this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
-        this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
-        /*Campo de texto*/
-      });
-      this.idContrato = id;
+    this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
+      /*Titulo*/
+      this.contratoCode = data.numeroContrato;
+      this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
+      /*Cuadro 1*/
+      this.vigenciaContrato = data.vigenciaContrato;
+      this.fechaFirmaContrato = data.fechaFirmaContrato;
+      this.numeroDRP1 = data.numeroDRP1;
+      this.fechaGeneracionDRP1 = data.fechaGeneracionDRP1;
+      this.numeroDRP2 = data.numeroDRP2;
+      this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
+      this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
+      this.observacionOConsideracionesEspeciales = data.observacionOConsideracionesEspeciales;
+      this.valorInicialContrato = data.valorInicialContrato;
+      this.valorActualContrato = data.valorActualContrato;
+      this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
+      this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
+      this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
+      this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
+      /*Campo de texto*/
+    });
+    this.idContrato = id;
+    this.plazoActualContratoMeses = 12;
+    this.plazoActualContratoDias = 26;
+    this.plazoEjecucionPreConstruccionMeses = 4;
+    this.plazoEjecucionPreConstruccionDias = 3;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -160,25 +169,38 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     const te = String.fromCharCode(tecla);
     return patron.test(te);
   }
-  removeTags(str){
-    if ((str===null) || (str==='')){
+  removeTags(str) {
+    if ((str === null) || (str === '')) {
       return false;
     }
-    else{
+    else {
       str = str.toString();
-      return str.replace( /(<([^>]+)>)/ig, '');
+      return str.replace(/(<([^>]+)>)/ig, '');
     }
   }
   onSubmit() {
-    this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato,this.addressForm.value.mesPlazoEjFase2,this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales),"usr2").subscribe(data1=>{
-      if(data1.code=="102"){
-        this.openDialog(data1.message,"");
-        this.router.navigate(['/generarActaInicioConstruccion']);
-      }
-      else{
-        this.openDialog(data1.message,"");
-      }
-    });
+    //compara los meses
+    var sumaMeses;
+    var sumaDias;
+    sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
+    sumaDias = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.diasPlazoEjFase2);
+    if (sumaMeses > this.plazoActualContratoMeses) {
+      this.openDialog('Debe verificar la información ingresada en el campo Meses, dado que no coincide con la información inicial registrada para el contrato', "");
+    }
+    else if (sumaDias > this.plazoActualContratoDias){
+      this.openDialog('Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato', "");
+    }
+    else{
+      this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2").subscribe(data1 => {
+        if (data1.code == "102") {
+          this.openDialog(data1.message, "");
+          this.router.navigate(['/generarActaInicioConstruccion']);
+        }
+        else {
+          this.openDialog(data1.message, "");
+        }
+      });
+    }
     console.log(this.addressForm.value);
     //this.openDialog('La información ha sido guardada exitosamente.', "");
   }
