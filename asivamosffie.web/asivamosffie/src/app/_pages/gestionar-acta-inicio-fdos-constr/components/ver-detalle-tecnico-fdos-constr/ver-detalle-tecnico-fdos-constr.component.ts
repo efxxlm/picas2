@@ -11,6 +11,28 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   public rolAsignado;
   public opcion;
   public idContrato;
+  contratoCode: string;
+  fechaAprobacionSupervisor: Date;
+  vigenciaContrato: Date;
+  fechaFirmaContrato: Date;
+  numeroDRP1: string;
+  fechaGeneracionDRP1: Date;
+  numeroDRP2: string;
+  fechaGeneracionDRP2: Date;
+  fechaAprobacionGarantiaPoliza: Date;
+  observacionOConsideracionesEspeciales: string;
+  valorInicialContrato: string;
+  valorActualContrato: string;
+  valorFase1Preconstruccion: string;
+  valorfase2ConstruccionObra: string;
+  nombreEntidadContratistaSupervisorInterventoria: string;
+  nombreEntidadContratistaObra: string;
+  editable: boolean;
+  addressForm: any;
+  plazoActualContratoMeses: number;
+  plazoActualContratoDias: number;
+  plazoEjecucionPreConstruccionMeses: number;
+  plazoEjecucionPreConstruccionDias: number;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -30,9 +52,43 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
     }
   }
 
-  loadData(id){
+  loadData(id) {
+    this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
+      /*Titulo*/
+      this.contratoCode = data.numeroContrato;
+      this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
+      /*Cuadro 1*/
+      this.vigenciaContrato = data.vigenciaContrato;
+      this.fechaFirmaContrato = data.fechaFirmaContrato;
+      this.numeroDRP1 = data.numeroDRP1;
+      this.fechaGeneracionDRP1 = data.fechaGeneracionDRP1;
+      this.numeroDRP2 = data.numeroDRP2;
+      this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
+      this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
+      this.observacionOConsideracionesEspeciales = data.objeto;
+      this.valorInicialContrato = data.valorInicialContrato;
+      this.valorActualContrato = data.valorActualContrato;
+      this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
+      this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
+      this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
+      this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
+      /*Campo de texto no editable*/
+      /*Campo de texto editable*/
+      if(this.editable == true){
+        let fechaActaInicioFDosConstruccion = new Date(data.fechaActaInicio); // para detectar la fecha
+        let fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
+        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
+        this.addressForm.get('fechaPrevistaTerminacion').setValue(fechaPrevistaTerminacion);
+        this.addressForm.get('mesPlazoEjFase2').setValue(8);
+        this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
+        this.addressForm.get('observacionesEspeciales').setValue(data.observacionOConsideracionesEspeciales);
+      }
+    });
     this.idContrato = id;
-    alert(this.idContrato);
+    this.plazoActualContratoMeses = 12;
+    this.plazoActualContratoDias = 26;
+    this.plazoEjecucionPreConstruccionMeses = 4;
+    this.plazoEjecucionPreConstruccionDias = 3;
   }
   descargarActaSuscrita(){
     this.services.GetPlantillaActaInicio(this.idContrato).subscribe(resp=>{

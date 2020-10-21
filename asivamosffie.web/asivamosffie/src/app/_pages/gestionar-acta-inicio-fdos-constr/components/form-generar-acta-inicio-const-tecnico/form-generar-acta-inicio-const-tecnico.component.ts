@@ -103,7 +103,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
       /*Campo de texto no editable*/
       /*Campo de texto editable*/
-      if(this.editable != true){
+      if(this.editable == true){
         let fechaActaInicioFDosConstruccion = new Date(data.fechaActaInicio); // para detectar la fecha
         let fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
