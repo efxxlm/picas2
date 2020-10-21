@@ -39,7 +39,6 @@
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element">       
-                    {{element.id | json}}            
                     <button mat-raised-button color="accent" class="btn-table" (click)="onDetalle(element.id)"
                         *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true">Ver detalle/
                         Editar</button>

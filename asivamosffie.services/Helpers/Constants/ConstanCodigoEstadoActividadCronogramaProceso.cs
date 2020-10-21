@@ -3,6 +3,7 @@
     public static class ConstanCodigoEstadoActividadCronogramaProcesoSeleccion
     { 
         public const string Creado = "1";
+        public const string EnTramite = "8";
         public const string AprobadoPorComiteTecnico = "2";
         public const string AprobadoPorComiteFiduciario = "3";
         public const string RechazadoPorComiteTecnico = "4";

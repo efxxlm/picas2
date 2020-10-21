@@ -123,9 +123,10 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     })
   }
 
-  changeProponente(){
-    console.log(this.addressForm.get('nombresProponentes').value);
+  changeProponente($event:any){
     
+    console.log(this.addressForm.get('nombresProponentes').value);
+    this.procesoSeleccion.procesoSeleccionProponente=[];
     if(this.addressForm.get('cuantosProponentes').value>0)
     {
       if(this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
