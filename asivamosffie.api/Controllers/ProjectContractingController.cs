@@ -35,7 +35,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _projectContractingService.ChangeStateContratacionByIdContratacion(idContratacion, PCodigoEstado, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _projectContractingService.ChangeStateContratacionByIdContratacion(idContratacion, PCodigoEstado, HttpContext.User.FindFirst("User").Value.ToUpper());
                 return respuesta;
             }
             catch (Exception ex)
