@@ -1004,7 +1004,7 @@ namespace asivamosffie.services
         //     return ListGrillaCronogramaSeguimiento;
         // }
           
-        public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
+        public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pProcesoSeleccion)
         {
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -1015,7 +1015,7 @@ namespace asivamosffie.services
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
             DocumentService _documentService = new DocumentService(_context, _commonService);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad));
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad),pProcesoSeleccion);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)

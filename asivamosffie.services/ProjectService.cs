@@ -834,7 +834,7 @@ namespace asivamosffie.services
 
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.Proyecto));
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.Proyecto),0);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)

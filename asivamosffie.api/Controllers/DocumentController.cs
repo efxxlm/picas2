@@ -35,6 +35,14 @@ namespace asivamosffie.api.Controllers
             var result = await _documentService.GetListloadedDocuments(pOrigenId);
             return result;
         }
+        
+        [HttpGet]
+        [Route("GetListloadedDocumentsByRelacion")]
+        public async Task<ActionResult<List<ArchivoCargue>>> GetListloadedDocumentsByRelacion(string pOrigenId = "1", int pRelacionId=0)
+        {
+            var result = await _documentService.GetListloadedDocumentsByRelacionId(pOrigenId,pRelacionId);
+            return result;
+        }
 
 
         [HttpGet]

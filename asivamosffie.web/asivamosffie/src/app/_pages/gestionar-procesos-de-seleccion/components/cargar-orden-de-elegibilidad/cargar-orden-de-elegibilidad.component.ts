@@ -40,7 +40,7 @@ export class CargarOrdenDeElegibilidadComponent {
     onSubmit(): void {
       this.boton="Aguarde un momento, estamos procesando el archivo";
       const inputNode: any = document.getElementById('file');    
-      this.procesoSeleccionService.setValidateMassiveLoadElegibilidad(inputNode.files[0]).subscribe(
+      this.procesoSeleccionService.setValidateMassiveLoadElegibilidad(inputNode.files[0],this.data.procesoSeleccionId).subscribe(
         response => {
           let respuestaCargue:RespuestaProyecto=response.data;
           let strOpciones ="";
