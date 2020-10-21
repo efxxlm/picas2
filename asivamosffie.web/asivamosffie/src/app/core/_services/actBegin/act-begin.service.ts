@@ -34,12 +34,12 @@ export class ActBeginService {
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;
   departamentoYMunicipioLlaveMEN: string;
-  fechaActaInicio: any;
-  fechaAprobacionGarantiaPoliza: any;
-  fechaFirmaContrato: any;
-  fechaGeneracionDRP1: any;
-  fechaGeneracionDRP2: any;
-  fechaPrevistaTerminacion: any;
+  fechaActaInicio: Date;
+  fechaAprobacionGarantiaPoliza: Date;
+  fechaFirmaContrato: Date;
+  fechaGeneracionDRP1: Date;
+  fechaGeneracionDRP2: Date;
+  fechaPrevistaTerminacion: Date;
   institucionEducativaLlaveMEN: string;
   llaveMENContrato: string;
   nombreEntidadContratistaObra: string;
@@ -47,6 +47,7 @@ export interface GetVistaGenerarActaInicio {
   numeroContrato: string;
   numeroDRP1: string;
   numeroDRP2: string;
+  objeto: string;
   observacionOConsideracionesEspeciales: string;
   plazoInicialContratoSupervisor: Date;
   valorActualContrato: string;
@@ -54,6 +55,7 @@ export interface GetVistaGenerarActaInicio {
   valorInicialContrato: string;
   valorfase2ConstruccionObra: string;
   vigenciaContrato: Date;
+  plazoFase2ConstruccionDias: number;
 }
 export interface GetListGrillaActaInicio {
 
