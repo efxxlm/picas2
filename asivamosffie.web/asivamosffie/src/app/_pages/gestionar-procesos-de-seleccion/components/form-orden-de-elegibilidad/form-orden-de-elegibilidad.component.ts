@@ -31,11 +31,13 @@ export class FormOrdenDeElegibilidadComponent {
   }
 
   openCargarElegibilidad() {
-    const dialog = this.dialog.open(CargarOrdenDeElegibilidadComponent, {
+    const dialogRef = this.dialog.open(CargarOrdenDeElegibilidadComponent, {
       width: '70em',
       data: { procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId },
       maxHeight: '90em',
-
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      location.reload();
     });
   }
   descargaPlantilla()

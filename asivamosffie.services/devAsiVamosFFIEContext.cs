@@ -120,7 +120,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -217,6 +217,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones).IsUnicode(false);
+
+                entity.Property(e => e.ReferenciaId).HasColumnName("ReferenciaID");
 
                 entity.Property(e => e.Ruta)
                     .HasMaxLength(255)

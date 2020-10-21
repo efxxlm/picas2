@@ -36,7 +36,7 @@ namespace asivamosffie.services
             _context = context;
         }
          
-        public async Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch , int OrigenId)
+        public async Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch , int OrigenId, int idrelacion=0)
         {
             try
             {
@@ -49,7 +49,8 @@ namespace asivamosffie.services
                     FechaCreacion = DateTime.Now,
                     Ruta = pFilePatch,
                     Nombre = g.ToString(),
-                    Tamano = pFile.Length.ToString()
+                    Tamano = pFile.Length.ToString(),
+                    ReferenciaId=idrelacion
                 };
                 if (!Directory.Exists(pFilePatch))
                 {
@@ -144,6 +145,11 @@ namespace asivamosffie.services
                 };
                 return archivoCargue;
             }
-        } 
+        }
+
+        public async Task<List<ArchivoCargue>> GetListloadedDocumentsByRelacionId(string pOrigenId, int pRelacionId)
+        {
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals(pOrigenId) && r.ReferenciaId==pRelacionId && (bool)r.Activo).OrderByDescending(r => r.ArchivoCargueId).OrderByDescending(r => r.ArchivoCargueId).ToListAsync();
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string Observaciones { get; set; }
         public bool? Eliminado { get; set; }
+        public int? ReferenciaId { get; set; }
 
         public virtual ICollection<TempFlujoInversion> TempFlujoInversion { get; set; }
         public virtual ICollection<TempOrdenLegibilidad> TempOrdenLegibilidad { get; set; }
