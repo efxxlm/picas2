@@ -106,29 +106,30 @@ namespace asivamosffie.services
                 contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();
 
                 contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
-                 contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;                                  
-
+                 contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
+                //contrato.ContratoObservacion = pObservacionesConsideracionesEspeciales;
+                contrato.Observaciones = Helpers.Helpers.CleanStringInput( pObservacionesConsideracionesEspeciales);
                 _context.Contrato.Update(contrato);
                 //contrato.FechaModificacion = DateTime.Now;
                 //contrato.UsuarioModificacion = pUsuarioModificacion;
                 //contrato.ConObervacionesActa = true;
                 //contrato.Observaciones = pObservacionesConsideracionesEspeciales;
 
-                contratoObservacion.Observaciones=pObservacionesConsideracionesEspeciales;
-                contratoObservacion.ContratoId = contrato.ContratoId;
-                contratoObservacion.EsActaFase2 = true;
-                contratoObservacion.EsActa = true;
+                //contratoObservacion.Observaciones=pObservacionesConsideracionesEspeciales;
+                //contratoObservacion.ContratoId = contrato.ContratoId;
+                //contratoObservacion.EsActaFase2 = true;
+                //contratoObservacion.EsActa = true;
 
-                contratoObservacion.FechaCreacion = DateTime.Now;
-                contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
+                //contratoObservacion.FechaCreacion = DateTime.Now;
+                //contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
 
                 //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
                 //DOM 60  1   Sin acta generada
                 //DOM 60  3   Con acta generada
                 //contrato.EstadoActa = "3";                
 
-                _context.Add(contratoObservacion);
-                await _context.SaveChangesAsync();
+                //_context.Add(contratoObservacion);
+                //await _context.SaveChangesAsync();
 
                 //            Plazo de ejecución fase 1 – Preconstrucción: Meses: 4 Días: 3 - PlazoFase1PreMeses - PlazoFase1PreDias - contrato
 
@@ -159,7 +160,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> EditarContratoObservacion( ContratoObservacion contratoObservacion)
+        public async Task<Respuesta> EditarContratoObservacion( int pContratoId, string pObservacion, string pUsuarioModificacion)
         {
             Respuesta _response = new Respuesta();
 
@@ -181,33 +182,44 @@ namespace asivamosffie.services
 
             try
             {
-                if (contratoObservacion != null)
+                //if (contratoObservacion != null)
+                //{
+
+                //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                //_context.Add(contratoPoliza);
+
+                //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+
+                //contratoObservacion.Observaciones = contratoObservacion.Observaciones;
+                Contrato contrato=null;
+                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+                if(contrato!= null)
                 {
-                    
-                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                    //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                    contrato.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
+                    contrato.UsuarioCreacion = pUsuarioModificacion;
+                    contrato.FechaModificacion = DateTime.Now;
 
-                    //_context.Add(contratoPoliza);
+                    _context.Contrato.Update(contrato);
 
-                    //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
-
-                    //contratoObservacion.Observaciones = contratoObservacion.Observaciones;
-
-                    contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(contratoObservacion.Observaciones);
+                }
+                    //contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(contratoObservacion.Observaciones);
                     //contratoObservacion.Observaciones = Helpers.Helpers.ConvertToUpercase(contratoObservacion.Observaciones).ToString();
                     
                     //contratoObservacion.ContratoId = contratoObservacion.ContratoId;}
-                    if(contratoObservacion.EsActaFase2==null)
-                    contratoObservacion.EsActaFase2 = true;
+                    //if(contratoObservacion.EsActaFase2==null)
+                    //contratoObservacion.EsActaFase2 = true;
 
-                    if (contratoObservacion.EsActa == null)
-                        contratoObservacion.EsActa = true;
+                    //if (contratoObservacion.EsActa == null)
+                    //    contratoObservacion.EsActa = true;
 
-                    contratoObservacion.FechaCreacion = DateTime.Now;
+                    //contratoObservacion.FechaCreacion = DateTime.Now;
                     //contratoObservacion.UsuarioModificacion = contratoObservacion.UsuarioModificacion;                                       
 
                     //_context.ContratoPoliza.Add(contratoPoliza);
-                    _context.ContratoObservacion.Update(contratoObservacion);
+                    //_context.ContratoObservacion.Update(contratoObservacion);
                     //await _context.SaveChangesAsync();
 
                     return
@@ -222,7 +234,7 @@ namespace asivamosffie.services
                             ConstantMessagesActaInicio.EditadoCorrrectamente,
                             //contratoPoliza
                             idAccionCrearContratoPoliza
-                            , contratoObservacion.UsuarioModificacion
+                            , contrato.UsuarioModificacion
                             //"UsuarioCreacion"
                             , "EDITAR CONTRATO OBSERVACION"
                             //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
@@ -232,11 +244,11 @@ namespace asivamosffie.services
                     //return _response = new Respuesta { IsSuccessful = true,
                     //    IsValidation = false, Data = cuentaBancaria,
                     //    Code = ConstantMessagesBankAccount.OperacionExitosa };
-                }
-                else
-                {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.RecursoNoEncontrado }; 
-                }
+                //}
+                //else
+                //{
+                //    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.RecursoNoEncontrado }; 
+                //}
 
             }
             catch (Exception ex)
@@ -708,7 +720,7 @@ namespace asivamosffie.services
             actaInicioInterventoria = await getDataActaInicioAsync(pContratoId, pTipoContrato);
 
             actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioInterventoria);
-
+            
             //return actaInicioObra;
             return actaInicioConsolidado;
 
