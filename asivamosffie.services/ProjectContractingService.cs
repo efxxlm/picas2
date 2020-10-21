@@ -292,7 +292,6 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.Contratacion).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.ContratacionProyectoAportante)
-                    .ThenInclude(r=> r.ContratacionProyecto)
                 .Include(r => r.Proyecto)
                     .ThenInclude(r => r.ProyectoAportante)
                 .Include(r => r.Proyecto)
@@ -302,7 +301,12 @@ namespace asivamosffie.services
                              .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
-                    .ThenInclude(r => r.NombreAportante) 
+                    .ThenInclude(r => r.NombreAportante)
+                .Include(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante) 
+                .Include(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r => r.ComponenteAportante)
+                        .ThenInclude(r => r.ComponenteUso)
                 .Include(r => r.Proyecto)
                     .ThenInclude(r => r.InstitucionEducativa)
                  .Include(r => r.Proyecto)
@@ -312,8 +316,8 @@ namespace asivamosffie.services
                      .Include(r=> r.Contratacion)
                      .ThenInclude(r=> r.ContratacionProyecto)
                         .ThenInclude(r=> r.ContratacionProyectoAportante)
-                             .ThenInclude(r => r.ComponenteAportante)
-                                  .ThenInclude(r => r.ComponenteUso) 
+                        .ThenInclude(r => r.CofinanciacionAportante)
+
                 .FirstOrDefaultAsync();
 
             return contratacionProyecto;
@@ -695,9 +699,10 @@ namespace asivamosffie.services
                     componenteAportanteOld.UsuarioModificacion = pComponenteAportante.UsuarioCreacion;
                     componenteAportanteOld.FechaModificacion = DateTime.Now;
                     //Esto es lo unico que puede cambiar en esta tabla
-                    componenteAportanteOld.RegistroCompleto = ValidarRegistroCompletoComponenteAportante(pComponenteAportante);
                     componenteAportanteOld.TipoComponenteCodigo = pComponenteAportante.TipoComponenteCodigo;
                     componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
+                    componenteAportanteOld.RegistroCompleto = ValidarRegistroCompletoComponenteAportante(pComponenteAportante);
+
                 }
                 if (esTransaccion)
                 {
@@ -718,10 +723,10 @@ namespace asivamosffie.services
 
             foreach (var ComponenteUso in pComponenteAportante.ComponenteUso)
             {
-                if (!(bool)ComponenteUso.RegistroCompleto)
-                {
+                if (ComponenteUso.RegistroCompleto == null)
+                    RegistroCompletoHijo = false; 
+                else if (!(bool)ComponenteUso.RegistroCompleto)
                     RegistroCompletoHijo = false;
-                }
             }
 
             if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && !string.IsNullOrEmpty(pComponenteAportante.FaseCodigo) && RegistroCompletoHijo)
