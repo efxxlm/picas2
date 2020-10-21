@@ -292,6 +292,7 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.Contratacion).Where(r => !(bool)r.Eliminado)
                 .Include(r => r.ContratacionProyectoAportante)
+                    .ThenInclude(r=> r.ContratacionProyecto)
                 .Include(r => r.Proyecto)
                     .ThenInclude(r => r.ProyectoAportante)
                 .Include(r => r.Proyecto)
