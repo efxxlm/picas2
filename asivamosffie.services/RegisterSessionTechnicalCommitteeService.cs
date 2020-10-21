@@ -1746,7 +1746,7 @@ namespace asivamosffie.services
                         });
 
                     }
-                    Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
+                    Contratacion contratacion = _context.Contratacion.Find(sesionComiteSolicitudOld.SolicitudId);
 
                     if (contratacion != null)
                     {
