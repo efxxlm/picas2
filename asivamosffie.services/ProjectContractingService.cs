@@ -1093,11 +1093,9 @@ namespace asivamosffie.services
                     //ConsideracionDescripcion = "" 
                 };
                 contratacion.RegistroCompleto = ValidarEstado(contratacion);
+
                 //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
-
-
-
-
+                 
                 foreach (ContratacionProyecto c in pContratacion.ContratacionProyecto)
                 {
                     //Crear contratacionProyecto
@@ -1113,6 +1111,13 @@ namespace asivamosffie.services
                         ProyectoId = c.ProyectoId,
                     };
 
+                    //Se cambia el estado del proyecto cuando se asigna a una contratación
+
+                    Proyecto proyectoCambiarEstado = _context.Proyecto.Find(c.ProyectoId);
+                    proyectoCambiarEstado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.AsignadoSolicitudContratacion;
+                    proyectoCambiarEstado.FechaModificacion = DateTime.Now;
+                    proyectoCambiarEstado.UsuarioModificacion = usuarioCreacion;
+                     
                     List<ProyectoAportante> listaAportantes = _context.ProyectoAportante.Where(a => !(bool)a.Eliminado && a.ProyectoId == c.ProyectoId).ToList();
 
                     listaAportantes.ForEach(apo =>
@@ -1127,7 +1132,7 @@ namespace asivamosffie.services
                     });
 
                     contratacion.ContratacionProyecto.Add(contratacionProyecto);
-                    //_context.ContratacionProyecto.Add(contratacionProyecto);
+                 
 
                 }
 
