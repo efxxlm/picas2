@@ -879,8 +879,8 @@ namespace asivamosffie.services
                 string InstitucionEducativaId = proyecto.InstitucionEducativaId.ToString();
                 int InstitucionEducativaIdInt = Convert.ToInt32( proyecto.InstitucionEducativaId);
 
-                //if (InstitucionEducativaId != null)
-                //    proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById( Convert.ToInt32( InstitucionEducativaId));
+                if (InstitucionEducativaId != null)
+                    proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById( Convert.ToInt32( InstitucionEducativaId));
                 //proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById(InstitucionEducativaIdInt);
 
                 if (proyecto!= null)
