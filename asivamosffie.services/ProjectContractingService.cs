@@ -303,7 +303,7 @@ namespace asivamosffie.services
                          .ThenInclude(r => r.Aportante)
                     .ThenInclude(r => r.NombreAportante)
                 .Include(r => r.ContratacionProyectoAportante)
-                    .ThenInclude(r => r.ComponenteAportante) 
+                    .ThenInclude(r => r.ComponenteAportante)
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante)
                         .ThenInclude(r => r.ComponenteUso)
@@ -313,9 +313,9 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.Sede)
                  .Include(r => r.Proyecto)
                      .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)
-                     .Include(r=> r.Contratacion)
-                     .ThenInclude(r=> r.ContratacionProyecto)
-                        .ThenInclude(r=> r.ContratacionProyectoAportante)
+                     .Include(r => r.Contratacion)
+                     .ThenInclude(r => r.ContratacionProyecto)
+                        .ThenInclude(r => r.ContratacionProyectoAportante)
                         .ThenInclude(r => r.CofinanciacionAportante)
 
                 .FirstOrDefaultAsync();
@@ -372,11 +372,11 @@ namespace asivamosffie.services
             {
                 contratistas = contratistas.Where(r => r.Nombre.ToUpper().Contains(pNombre.ToUpper()));
             }
-            // TODO:Se daño por la Modificacion de comite sesion arquitecto y mergue 25/08/2020
-            //if (EsConsorcio != null)
-            //{
-            //    contratistas = contratistas.Where(r => r.EsConsorcio == EsConsorcio);
-            //}
+
+            if (EsConsorcio != null)
+                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio);
+            else
+                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural || r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual);
 
             foreach (var contratista in contratistas)
             {
@@ -581,7 +581,7 @@ namespace asivamosffie.services
                 }
 
                 //Contratista 
-                if(Pcontratacion.Contratista != null)
+                if (Pcontratacion.Contratista != null)
                     await CreateEditContratista(Pcontratacion.Contratista, true);
 
                 //ContratacionProyecto 
@@ -721,13 +721,13 @@ namespace asivamosffie.services
         {
             bool RegistroCompletoHijo = true;
 
-           
+
             foreach (var ComponenteUso in pComponenteAportante.ComponenteUso)
             {
                 if (ComponenteUso.ValorUso == null || string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo))
-                        return  false;  
-            } 
-            if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && !string.IsNullOrEmpty(pComponenteAportante.FaseCodigo) && RegistroCompletoHijo) 
+                    return false;
+            }
+            if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && !string.IsNullOrEmpty(pComponenteAportante.FaseCodigo) && RegistroCompletoHijo)
                 return true;
             return false;
 
@@ -1097,7 +1097,7 @@ namespace asivamosffie.services
                 contratacion.RegistroCompleto = ValidarEstado(contratacion);
 
                 //Se guarda para tener idContratacion y relacionarlo con la tabla contratacionProyecto
-                 
+
                 foreach (ContratacionProyecto c in pContratacion.ContratacionProyecto)
                 {
                     //Crear contratacionProyecto
@@ -1119,7 +1119,7 @@ namespace asivamosffie.services
                     proyectoCambiarEstado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.AsignadoSolicitudContratacion;
                     proyectoCambiarEstado.FechaModificacion = DateTime.Now;
                     proyectoCambiarEstado.UsuarioModificacion = usuarioCreacion;
-                     
+
                     List<ProyectoAportante> listaAportantes = _context.ProyectoAportante.Where(a => !(bool)a.Eliminado && a.ProyectoId == c.ProyectoId).ToList();
 
                     listaAportantes.ForEach(apo =>
@@ -1134,7 +1134,7 @@ namespace asivamosffie.services
                     });
 
                     contratacion.ContratacionProyecto.Add(contratacionProyecto);
-                 
+
 
                 }
 
