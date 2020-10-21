@@ -37,7 +37,7 @@
                         *ngIf="element.estadoActa=='Con acta preliminar generada'">Enviar para revisión y aprobacion</button>-->
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita(element.contratoId)"
                         *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Cargar Acta Suscrita</button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="descargarActaDesdeTabla()"
+                    <button mat-raised-button color="accent" class="btn-table" (click)="descargarActaDesdeTabla(element.contratoId)"
                         *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Descargar Acta</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.generarActaFDos(element.contratoId)"
                     *ngIf="element.estadoActa=='Sin acta generada'">Generar Acta</button>

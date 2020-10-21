@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { parse } from 'path';
 import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -93,14 +94,24 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.numeroDRP2 = data.numeroDRP2;
       this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
       this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
-      this.observacionOConsideracionesEspeciales = data.observacionOConsideracionesEspeciales;
+      this.observacionOConsideracionesEspeciales = data.objeto;
       this.valorInicialContrato = data.valorInicialContrato;
       this.valorActualContrato = data.valorActualContrato;
       this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
       this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
       this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
       this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
-      /*Campo de texto*/
+      /*Campo de texto no editable*/
+      /*Campo de texto editable*/
+      if(this.editable == true){
+        let fechaActaInicioFDosConstruccion = new Date(data.fechaActaInicio); // para detectar la fecha
+        let fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
+        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
+        this.addressForm.get('fechaPrevistaTerminacion').setValue(fechaPrevistaTerminacion);
+        this.addressForm.get('mesPlazoEjFase2').setValue(8);
+        this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
+        this.addressForm.get('observacionesEspeciales').setValue(data.observacionOConsideracionesEspeciales);
+      }
     });
     this.idContrato = id;
     this.plazoActualContratoMeses = 12;
@@ -139,7 +150,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       fechaPrevistaTerminacion: [null, Validators.required],
       mesPlazoEjFase2: [null, Validators.required],
       diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: [null]
+      observacionesEspeciales: [""]
     })
   }
   maxLength(e: any, n: number) {
@@ -183,7 +194,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     var sumaMeses;
     var sumaDias;
     sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
-    sumaDias = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.diasPlazoEjFase2);
+    sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
+    console.log(sumaDias);
     if (sumaMeses > this.plazoActualContratoMeses) {
       this.openDialog('Debe verificar la información ingresada en el campo Meses, dado que no coincide con la información inicial registrada para el contrato', "");
     }

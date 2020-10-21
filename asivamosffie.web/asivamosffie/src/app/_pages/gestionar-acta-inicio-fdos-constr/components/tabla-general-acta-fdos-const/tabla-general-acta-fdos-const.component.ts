@@ -80,7 +80,16 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     dialogConfig.data = {id:id};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
   }
-  descargarActaDesdeTabla(){
-    alert("llama al servicio");
+  descargarActaDesdeTabla(id){
+    this.services.GetPlantillaActaInicio(id).subscribe(resp=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 }
