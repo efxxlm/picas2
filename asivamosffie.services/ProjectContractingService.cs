@@ -86,7 +86,19 @@ namespace asivamosffie.services
 
             try
             {
-                Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
+                Contratacion contratacionOld = _context.Contratacion.Where(r => r.ContratacionId == idContratacion)
+                    .Include(r => r.ContratacionProyecto).FirstOrDefault();
+
+
+
+                foreach (var ContratacionProyecto in contratacionOld.ContratacionProyecto)
+                {
+                    Proyecto proyectoCambiarEstadoEliminado = _context.Proyecto.Find(ContratacionProyecto.ProyectoId); 
+                    proyectoCambiarEstadoEliminado.UsuarioCreacion = pUsusarioElimino;
+                    proyectoCambiarEstadoEliminado.FechaModificacion = DateTime.Now;
+
+                    proyectoCambiarEstadoEliminado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                }
                 contratacionOld.Eliminado = true;
                 contratacionOld.UsuarioModificacion = pUsusarioElimino;
                 contratacionOld.FechaModificacion = DateTime.Now;

@@ -37,12 +37,13 @@
         </ng-container>
 
         <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 21%;"> Gestión </th>
             <td mat-cell *matCellDef="let element">
                 <a  (click)="definirCaracteristicas( element.contratacionProyectoId, element.proyecto.localizacionIdMunicipio )"
                     mat-raised-button
                     color="accent"
-                    class="btn-table">
+                    class="btn-table expansion-style--title btn-color h-2em"
+                    [ngClass]="getSemaforo( element.registroCompleto )">
                     Definir características
                 </a>
             </td>
