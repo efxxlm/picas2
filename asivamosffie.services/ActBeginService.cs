@@ -103,7 +103,7 @@ namespace asivamosffie.services
             {
                 contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                     contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
-                contrato.EstadoActaFase2 = EnumeratorEstadoActa.Con_acta_preliminar_generada.ToString();
+                contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();
                 _context.Contrato.Update(contrato);
                 //contrato.FechaModificacion = DateTime.Now;
                 //contrato.UsuarioModificacion = pUsuarioModificacion;
@@ -786,10 +786,9 @@ namespace asivamosffie.services
                 string InstitucionEducativaId = proyecto.InstitucionEducativaId.ToString();
                 int InstitucionEducativaIdInt = Convert.ToInt32( proyecto.InstitucionEducativaId);
 
-                //if (InstitucionEducativaId != null)
-                //proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById( Convert.ToInt32( InstitucionEducativaId));
+                if (InstitucionEducativaId != null)
+                    proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById( Convert.ToInt32( InstitucionEducativaId));
                 //proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById(InstitucionEducativaIdInt);
-
 
                 if (proyecto!= null)
                 {
