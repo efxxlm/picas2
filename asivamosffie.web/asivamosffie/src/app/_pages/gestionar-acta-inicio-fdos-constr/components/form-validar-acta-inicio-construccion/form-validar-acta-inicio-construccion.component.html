@@ -87,7 +87,7 @@
         <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
             <div class="text-area-quill izqTitle">
                 <label for="observaciones" class="text-area-quill--label">Observaciones al acta de inicio</label>
-                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                     (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
             </div>
             <span class="contador" *ngIf="addressForm.get('observaciones').value">

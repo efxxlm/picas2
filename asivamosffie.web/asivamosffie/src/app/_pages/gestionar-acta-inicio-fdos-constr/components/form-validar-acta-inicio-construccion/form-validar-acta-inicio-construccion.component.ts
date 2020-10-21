@@ -48,7 +48,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     });   
   }
   editorStyle = {
-    height: '100px',
+    height: '45px',
     overflow: 'auto'
   };
 
