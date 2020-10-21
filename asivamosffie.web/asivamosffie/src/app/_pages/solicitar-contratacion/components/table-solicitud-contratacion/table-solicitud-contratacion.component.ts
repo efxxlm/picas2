@@ -69,9 +69,9 @@ export class TableSolicitudContratacionComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
 
-      if (result) {
+      if (result === true) {
         this.eliminarSolicitud(e);
-      }
+      };
     });
   }
 
