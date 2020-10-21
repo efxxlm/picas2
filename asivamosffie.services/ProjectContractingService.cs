@@ -16,12 +16,12 @@ namespace asivamosffie.services
     public class ProjectContractingService : IProjectContractingService
     {
 
-        private readonly ICommonService _commonService; 
+        private readonly ICommonService _commonService;
         private readonly IProjectService _projectService;
         private readonly devAsiVamosFFIEContext _context;
 
         public ProjectContractingService(devAsiVamosFFIEContext context, ICommonService commonService, IProjectService projectService)
-        { 
+        {
             _commonService = commonService;
             _projectService = projectService;
             _context = context;
@@ -75,8 +75,16 @@ namespace asivamosffie.services
 
                 foreach (var ContratacionProyecto in contratacionOld.ContratacionProyecto)
                 {
+                    //Eliminar Relacion ContratacionProyecto cuando se elimina
+                    ContratacionProyecto contratacionProyectoEliminar = _context.ContratacionProyecto.Find(ContratacionProyecto.ContratacionProyectoId);
+                    contratacionProyectoEliminar.Eliminado = true;
+                    contratacionProyectoEliminar.UsuarioModificacion = pUsusarioElimino;
+                    contratacionProyectoEliminar.FechaModificacion = DateTime.Now;
+
+
+                    //Cambiar estado Proyecto cuando se elimina
                     Proyecto proyectoCambiarEstadoEliminado = _context.Proyecto.Find(ContratacionProyecto.ProyectoId);
-                    proyectoCambiarEstadoEliminado.UsuarioCreacion = pUsusarioElimino;
+                    proyectoCambiarEstadoEliminado.UsuarioModificacion = pUsusarioElimino;
                     proyectoCambiarEstadoEliminado.FechaModificacion = DateTime.Now;
 
                     proyectoCambiarEstadoEliminado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
@@ -394,7 +402,7 @@ namespace asivamosffie.services
                 List<Proyecto> ListaProyectosRemover = new List<Proyecto>();
                 foreach (var Proyecto in ListProyectos)
                 {
-                    foreach (var ContratacionProyecto in Proyecto.ContratacionProyecto)
+                    foreach (var ContratacionProyecto in Proyecto.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                     {
                         if (ContratacionProyecto.Contratacion.EstadoSolicitudCodigo != ConstanCodigoEstadoSolicitudContratacion.Rechazado)
                             ListaProyectosRemover.Add(Proyecto);
@@ -439,7 +447,7 @@ namespace asivamosffie.services
                                 Sede = proyecto.Sede.Nombre,
                                 ProyectoId = proyecto.ProyectoId,
                             };
-                            foreach (var item in proyecto.ContratacionProyecto)
+                            foreach (var item in proyecto.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                             {
                                 item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
                                 if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
@@ -466,7 +474,7 @@ namespace asivamosffie.services
             }
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
-         
+
         public async Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion)
         {
             int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
@@ -976,9 +984,10 @@ namespace asivamosffie.services
                 };
                 contratacion.RegistroCompleto = ValidarEstado(contratacion);
 
-                foreach (ContratacionProyecto c in pContratacion.ContratacionProyecto)
+                foreach (ContratacionProyecto c in pContratacion.ContratacionProyecto.Distinct())
                 {
                     //Crear contratacionProyecto
+                    if(contratacion.TipoContratacionCodigo)
                     ContratacionProyecto contratacionProyecto = new ContratacionProyecto
                     {
                         //Auditoria
