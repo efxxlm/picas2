@@ -182,7 +182,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   }
   removeTags(str) {
     if ((str === null) || (str === '')) {
-      return false;
+      return '';
     }
     else {
       str = str.toString();
