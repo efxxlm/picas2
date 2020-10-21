@@ -150,7 +150,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       fechaPrevistaTerminacion: [null, Validators.required],
       mesPlazoEjFase2: [null, Validators.required],
       diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: [null]
+      observacionesEspeciales: [""]
     })
   }
   maxLength(e: any, n: number) {
