@@ -191,28 +191,42 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   }
   onSubmit() {
     //compara los meses
-    var sumaMeses;
-    var sumaDias;
-    sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
-    sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
-    console.log(sumaDias);
-    if (sumaMeses > this.plazoActualContratoMeses) {
-      this.openDialog('Debe verificar la información ingresada en el campo Meses, dado que no coincide con la información inicial registrada para el contrato', "");
-    }
-    else if (sumaDias > this.plazoActualContratoDias){
-      this.openDialog('Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato', "");
+    if(this.editable==false){
+      var sumaMeses;
+      var sumaDias;
+      sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
+      sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
+      console.log(sumaDias);
+      if (sumaMeses > this.plazoActualContratoMeses) {
+        this.openDialog('Debe verificar la información ingresada en el campo Meses, dado que no coincide con la información inicial registrada para el contrato', "");
+      }
+      else if (sumaDias > this.plazoActualContratoDias){
+        this.openDialog('Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato', "");
+      }
+      else{
+        this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2").subscribe(data1 => {
+          if (data1.code == "102") {
+            this.openDialog(data1.message, "");
+            this.router.navigate(['/generarActaInicioConstruccion']);
+          }
+          else {
+            this.openDialog(data1.message, "");
+          }
+        });
+      }
     }
     else{
-      this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2").subscribe(data1 => {
-        if (data1.code == "102") {
-          this.openDialog(data1.message, "");
+      this.services.EditarContratoObservacion(this.idContrato,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2").subscribe(resp=>{
+        if (resp.code == "102") {
+          this.openDialog(resp.message, "");
           this.router.navigate(['/generarActaInicioConstruccion']);
         }
         else {
-          this.openDialog(data1.message, "");
+          this.openDialog(resp.message, "");
         }
-      });
+      })
     }
+  
     console.log(this.addressForm.value);
     //this.openDialog('La información ha sido guardada exitosamente.', "");
   }

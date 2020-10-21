@@ -30,6 +30,9 @@ export class ActBeginService {
   CreateTieneObservacionesActaInicio(pContratoId:number, pObservacionesActa:string, pUsuarioModificacion: string){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateTieneObservacionesActaInicio?pContratoId=${pContratoId}&pObservacionesActa=${pObservacionesActa}&pUsuarioModificacion=${pUsuarioModificacion}`, "");
   }
+  EditarContratoObservacion(pContratoId: number, pObservacion:string, pUsuarioModificacion:string){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditarContratoObservacion?pContratoId=${pContratoId}&pObservacion=${pObservacion}&pUsuarioModificacion=${pUsuarioModificacion}`, "");
+  }
 }
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;

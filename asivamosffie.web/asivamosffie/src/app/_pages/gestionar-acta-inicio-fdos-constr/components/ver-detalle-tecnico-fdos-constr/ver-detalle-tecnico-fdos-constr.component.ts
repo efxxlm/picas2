@@ -35,6 +35,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   plazoEjecucionPreConstruccionDias: number;
   fechaActaInicioConstruccion: Date;
   fechaPrevistaTerminacion: Date;
+  obsConEspeciales: string;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -77,6 +78,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       /*Campo de texto no editable*/
       this.fechaActaInicioConstruccion = data.fechaActaInicio;
       this.fechaPrevistaTerminacion = data.fechaPrevistaTerminacion;
+      this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
       this.plazoActualContratoMeses = 12;
       this.plazoActualContratoDias = 26;
       this.plazoEjecucionPreConstruccionMeses = 4;
