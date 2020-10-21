@@ -721,19 +721,16 @@ namespace asivamosffie.services
         {
             bool RegistroCompletoHijo = true;
 
+           
             foreach (var ComponenteUso in pComponenteAportante.ComponenteUso)
             {
-                if (ComponenteUso.RegistroCompleto == null)
-                    RegistroCompletoHijo = false; 
-                else if (!(bool)ComponenteUso.RegistroCompleto)
-                    RegistroCompletoHijo = false;
-            }
-
-            if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && !string.IsNullOrEmpty(pComponenteAportante.FaseCodigo) && RegistroCompletoHijo)
-            {
+                if (ComponenteUso.ValorUso == null || string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo))
+                        return  false;  
+            } 
+            if (!string.IsNullOrEmpty(pComponenteAportante.TipoComponenteCodigo) && !string.IsNullOrEmpty(pComponenteAportante.FaseCodigo) && RegistroCompletoHijo) 
                 return true;
-            }
             return false;
+
         }
 
         public async Task<Respuesta> CreateEditComponenteUso(ComponenteUso pComponenteUso, bool esTransaccion)
