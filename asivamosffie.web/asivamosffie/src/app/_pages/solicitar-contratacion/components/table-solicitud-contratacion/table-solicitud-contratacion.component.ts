@@ -43,7 +43,6 @@ export class TableSolicitudContratacionComponent implements OnInit {
   ngOnInit(): void {
     this.projectContractingService.getListContratacion().subscribe(response => {
       this.dataSource = new MatTableDataSource(response);
-      // console.log(response);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -66,9 +65,10 @@ export class TableSolicitudContratacionComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+
+      if (result === true) {
         this.eliminarSolicitud(e);
-      }
+      };
     });
   }
 

@@ -42,4 +42,16 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
     this.routes.navigate( [ '/solicitarContratacion/definir-caracteristicas', id ], { state: {municipio: municipio} } )
   }
 
+  getSemaforo ( elemento: any ) {
+    if ( elemento === undefined ) {
+      return 'sin-diligenciar';
+    }; 
+    if ( elemento === true ) {
+      return 'completo';
+    };
+    if ( elemento === false ) {
+      return 'en-proceso';
+    }
+  };
+
 }

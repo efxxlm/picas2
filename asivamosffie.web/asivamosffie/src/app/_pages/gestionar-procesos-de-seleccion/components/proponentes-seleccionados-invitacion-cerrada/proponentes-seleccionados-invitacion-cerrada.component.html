@@ -26,7 +26,7 @@
         </div>
         <div class="col">
           <mat-form-field class="select-width">
-            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente()" multiple>
+            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente($event)" multiple>
               <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
                 {{ nombreProponente.nombreProponente }}
               </mat-option>
@@ -50,11 +50,11 @@
         </p>
         <p>
           <strong>Departamento del domicilio del proponente:</strong>
-          {{ proponente.nombreDepartamento }}
+          {{ proponente.departamentoString }}
         </p>
         <p>
           <strong>Municipio del domicilio del proponente:</strong>
-          {{ proponente.nombreMunicipio }}
+          {{ proponente.municipioString }}
         </p>
         <p>
           <strong>Dirección del proponente:</strong>

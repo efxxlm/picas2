@@ -30,14 +30,42 @@ export class TableFuentesYUsosComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
-  }
+  };
 
   cargarRegistros(){
     this.dataSource = new MatTableDataSource( this.contratacion.contratacionProyecto );
-  }
+  };
 
   definirFuentes ( id: number, municipio: any ) {
     this.routes.navigate( [ '/solicitarContratacion/definir-fuentes', id ], { state: {municipio: municipio} } )
-  }
+  };
+
+  getSemaforo ( elemento: any[] ) {
+    let registroCompletos = 0;
+    let registroEnProceso = 0;
+    let registroSinDiligenciar = 0;
+    elemento.forEach( value => {
+      value.componenteAportante.forEach( componente => {
+        if ( componente.registroCompleto === undefined ) {
+          registroSinDiligenciar++;
+        };
+        if ( componente.registroCompleto === false ) {
+          registroEnProceso++;
+        };
+        if ( componente.registroCompleto === true ) {
+          registroCompletos++;
+        };
+      } );
+    } );
+    if ( registroCompletos === elemento.length ) {
+      return 'completo';
+    };
+    if ( registroSinDiligenciar === elemento.length ) {
+      return 'sin-diligenciar';
+    };
+    if ( registroEnProceso > registroSinDiligenciar && registroEnProceso < elemento.length ) {
+      return 'en-proceso';
+    };
+  };
 
 }

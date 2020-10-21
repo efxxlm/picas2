@@ -394,9 +394,9 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-        [Route("SetValidateMassiveLoadElegibilidad")]
+        [Route("SetValidateMassiveLoadElegibilidad/{procesoSeleccionId}")]
         [HttpPost]
-        public async Task<IActionResult> SetValidateMassiveLoadElegibilidad(IFormFile file)
+        public async Task<IActionResult> SetValidateMassiveLoadElegibilidad(IFormFile file, [FromRoute] int procesoSeleccionId)
         {
             try
             {
@@ -406,7 +406,7 @@ namespace asivamosffie.api.Controllers
                 {
                     //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _selectionProcessService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario);
+                    respuesta = await _selectionProcessService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario,procesoSeleccionId);
                 }
                 return Ok(respuesta);
             }

@@ -632,7 +632,25 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes()
         {
-            return await _context.ProcesoSeleccionProponente.Where(p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId).ToListAsync();
+            var proceso= await _context.ProcesoSeleccionProponente.Where(p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId && !(bool)p.Eliminado).ToListAsync();
+            foreach(var proces in proceso)
+            {
+                if(proces.LocalizacionIdMunicipio==null)
+                {
+                    proces.municipioString = "Error municipio";
+                    proces.departamentoString = "Error departamento";
+                }
+                else
+                {
+                    var municipio = _context.Localizacion.Find(proces.LocalizacionIdMunicipio);
+                    var departamento = _context.Localizacion.Find(municipio.IdPadre);
+                    proces.municipioString = municipio.Descripcion;
+                    proces.departamentoString = departamento.Descripcion;
+                }
+                
+            }
+            return proceso;
+
         }
 
         public async Task<ActionResult<List<GrillaProcesoSeleccionProponente>>> GetGridProcesoSeleccionProponente(int? procesoSeleccionId)
@@ -922,7 +940,7 @@ namespace asivamosffie.services
                     contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
                     contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
                     contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
-                    //contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
+                    contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
                     contratista.Activo = true;
                     contratista.FechaCreacion = DateTime.Now;
                     contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();
@@ -986,7 +1004,7 @@ namespace asivamosffie.services
         //     return ListGrillaCronogramaSeguimiento;
         // }
           
-        public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo)
+        public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pProcesoSeleccion)
         {
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -997,7 +1015,7 @@ namespace asivamosffie.services
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
             DocumentService _documentService = new DocumentService(_context, _commonService);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad));
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad),pProcesoSeleccion);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)
@@ -1007,7 +1025,7 @@ namespace asivamosffie.services
                     await pFile.CopyToAsync(stream);
 
                     using var package = new ExcelPackage(stream);
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.LastOrDefault();
                     //Controlar Registros
                     //Filas <=
                     //No comienza desde 0 por lo tanto el = no es necesario
@@ -1018,38 +1036,43 @@ namespace asivamosffie.services
                             /* Columnas Obligatorias de excel
                              2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
                             Campos Obligatorios Validos   */
-                            if (
+                            if ((worksheet.Cells[i, 1].Text== "Persona Natural" && (
                                  !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 7].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 8].Text) |
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) )
+                                    ||
+                                (worksheet.Cells[i, 1].Text == "Persona Jurídica" && (
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 9].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 10].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 11].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 23].Text) |
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 12].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 13].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 14].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 15].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 16].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 17].Text) |
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)))
+                                    ||
+                                (worksheet.Cells[i, 1].Text == "Unión Temporal/Consorcio" && (
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 18].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 19].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 20].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 21].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 22].Text) |
-
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 23].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 24].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 25].Text) |
+                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text) |
+                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text) |
+                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text) |
+                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 26].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 27].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 28].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 29].Text) |
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 30].Text) |
+                                    !string.IsNullOrEmpty(worksheet.Cells[i, 31].Text) |
                                     !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
-
+                                    ))
                                 )
                             {
 
@@ -1273,10 +1296,10 @@ namespace asivamosffie.services
                     }
 
                     //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
-                    //-2 ya los registros comienzan desde esta fila
+                    //-1 ya los registros comienzan desde esta fila
                     archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                     archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
+                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
                     _context.ArchivoCargue.Update(archivoCarge);
 
 

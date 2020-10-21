@@ -71,18 +71,18 @@ export class AsociadaComponent implements OnInit {
   onSave(){
 
     let contratacion: Contratacion = {
-      tipoSolicitudCodigo: this.solicitudAsociada.value,
+      tipoSolicitudCodigo: this.solicitudAsociada.value.length > 1 ? '3' : this.solicitudAsociada.value[0],
       contratacionProyecto: []
-    }
-    
+    };
+      
     let mensajeValidaciones = this.validaciones();
-
+  
     if ( mensajeValidaciones.length > 0 )
     {
       this.openDialog('', mensajeValidaciones)
       return false;
-    }
-
+    };
+  
     this.data.data.forEach( e => {
       
       let contratacionProyecto: ContratacionProyecto = {
@@ -90,13 +90,14 @@ export class AsociadaComponent implements OnInit {
       }
 
       contratacion.contratacionProyecto.push( contratacionProyecto )
-    })
+    });
 
     this.projectContactingService.createContratacionProyecto( contratacion ).subscribe( respuesta => {
-      this.openDialog( "Proceso seleccion", respuesta.message )
       if ( respuesta.code == "200" )
+        this.openDialog( "", respuesta.message )
         this.router.navigate(["/solicitarContratacion"]);
-    })
+    });
+
   }
 
 }

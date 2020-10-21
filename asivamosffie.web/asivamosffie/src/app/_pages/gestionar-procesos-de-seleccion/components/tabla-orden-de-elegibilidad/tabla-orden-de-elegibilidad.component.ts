@@ -54,7 +54,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.projectService.getListProjectsFileProjectByOrigenId( "2" ).subscribe(respuesta => {
+    this.projectService.getListProjectsFileProjectByOrigenIdAndRelacionID( "2",this.procesoSeleccion.procesoSeleccionId).subscribe(respuesta => {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
 

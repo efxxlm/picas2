@@ -11,6 +11,7 @@ import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-
 })
 export class ProjectService {
   
+  
 
   constructor(private http: HttpClient) {  }
 
@@ -35,6 +36,11 @@ export class ProjectService {
 
   public getListProjectsFileProjectByOrigenId( pOrigenId: string ) {   
     const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocuments?pOrigenId=${ pOrigenId }`);
+    return retorno;
+  }
+
+  public getListProjectsFileProjectByOrigenIdAndRelacionID(pOrigenId: string,idRelacion:number) {
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocumentsByRelacion?pOrigenId=${ pOrigenId }&pRelacionId=${idRelacion}`);
     return retorno;
   }
 
