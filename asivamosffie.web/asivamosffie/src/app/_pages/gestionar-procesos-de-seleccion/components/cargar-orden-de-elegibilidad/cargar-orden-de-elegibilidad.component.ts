@@ -44,21 +44,24 @@ export class CargarOrdenDeElegibilidadComponent {
         response => {
           let respuestaCargue:RespuestaProyecto=response.data;
           let strOpciones ="";
-          if( respuestaCargue.cantidadDeRegistrosValidos > 0 ) {
+          if( respuestaCargue.cantidadDeRegistrosValidos == respuestaCargue.cantidadDeRegistros ) {
             strOpciones="<br><b>¿Desea realizar el cargue de los proyectos validos?</b><br>";
             this.idProject=respuestaCargue.llaveConsulta;
             this.openDialogSiNo('Validación de registro', 
-          "<br>Número de registros en el archivo:<b>"+respuestaCargue.cantidadDeRegistros+"</b><br>"+
+          "<br>Número de registros en el archivo: <b>"+respuestaCargue.cantidadDeRegistros+"</b><br>"+
           "Número de registros validos: <b>"+respuestaCargue.cantidadDeRegistrosValidos+"</b><br>"+
           "Número de registros inválidos: <b>"+respuestaCargue.cantidadDeRegistrosInvalidos+"</b><br>"+
           strOpciones
           );
           }
-          this.openDialog('Validación de registro', 
-          "<br>Número de registros en el archivo:<b>"+respuestaCargue.cantidadDeRegistros+"</b><br>"+
-          "Número de registros validos: <b>"+respuestaCargue.cantidadDeRegistrosValidos+"</b><br>"+
-          "Número de registros inválidos: <b>"+respuestaCargue.cantidadDeRegistrosInvalidos+"</b><br>"
-          );  
+          else{
+            this.openDialog('Validación de registro', 
+            "<br>Número de registros en el archivo:<b>"+respuestaCargue.cantidadDeRegistros+"</b><br>"+
+            "Número de registros validos: <b>"+respuestaCargue.cantidadDeRegistrosValidos+"</b><br>"+
+            "Número de registros inválidos: <b>"+respuestaCargue.cantidadDeRegistrosInvalidos+"</b><br>"
+            );
+          }
+            
         },
         error => {
           console.log(<any>error);
@@ -95,7 +98,7 @@ export class CargarOrdenDeElegibilidadComponent {
 
   openDialogSiNo(modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
-      width: '28em',
+      width: '35em',
       data: { modalTitle, modalText,siNoBoton:true }
     });   
     dialogRef.afterClosed().subscribe(result => {

@@ -127,6 +127,12 @@ namespace asivamosffie.services.Helpers
                 return $"{(number).ToString("D4")}";
             }
 
+            //Concecutivo actualizacion de conograma proceso de seleccion 3.1.3
+            if (input == "ACTCRONO")
+            {
+                return $"{"ACTCRONO"}{(number).ToString("D4")}";
+            }
+
 
             //Invitacion Abierta SA
             else

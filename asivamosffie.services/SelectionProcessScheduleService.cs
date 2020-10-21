@@ -196,6 +196,10 @@ namespace asivamosffie.services
                     if(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
                     {
                         procesoSeleccionCronograma.FechaModificacion = DateTime.Now;
+                        if (procesoSeleccionCronograma.EnviadoComiteTecnico == true)
+                        {
+                            procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.EnTramite;
+                        }
                         _context.Update(procesoSeleccionCronograma);
                     }
                     else
@@ -203,10 +207,10 @@ namespace asivamosffie.services
                         
                         procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
                         procesoSeleccionCronograma.Eliminado = false;
-                        procesoSeleccionCronograma.NumeroProceso = "ACTCRONO" + _context.ProcesoSeleccionMonitoreo.Count().ToString();
+                        procesoSeleccionCronograma.NumeroProceso = Helpers.Helpers.Consecutive("ACTCRONO", _context.ProcesoSeleccionMonitoreo.Count());
                         procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.Creado;
                         foreach (var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
-                        {
+                        {                            
                             proceso.FechaCreacion = DateTime.Now;
                             proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
                         }
