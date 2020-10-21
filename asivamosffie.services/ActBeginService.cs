@@ -103,6 +103,7 @@ namespace asivamosffie.services
             {
                 contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                     contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
+                contrato.EstadoActaFase2 = EnumeratorEstadoActa.Con_acta_preliminar_generada.ToString();
                 _context.Contrato.Update(contrato);
                 //contrato.FechaModificacion = DateTime.Now;
                 //contrato.UsuarioModificacion = pUsuarioModificacion;
@@ -329,8 +330,8 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", pActaInicio.NumeroIdentificacionEntidadContratistaObra);
             strContenido = strContenido.Replace(" _Fecha_Prevista_Terminacion_", pActaInicio.FechaPrevistaTerminacion);
             strContenido = strContenido.Replace("_OBSERVACION_O_CONSIDERACIONES_ESPECIALES_", pActaInicio.ObservacionOConsideracionesEspeciales);
-            strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_1_Preconstruccion_", "");
-            strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_2_Construccion_", valor);
+            strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_1_Preconstruccion_", pActaInicio.PlazoFase1PreMeses.ToString());
+            strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_2_Construccion_", pActaInicio.PlazoFase2ConstruccionMeses.ToString());
             strContenido = strContenido.Replace("_Valor_Actual_Contrato_", pActaInicio.ValorActualContrato);
             strContenido = strContenido.Replace("_Plazo_Inicial_Contrato_", pActaInicio.PlazoInicialContratoSupervisor);
             strContenido = strContenido.Replace("_Valor_Fase_1_preconstruccion_", pActaInicio.ValorFase1Preconstruccion);
@@ -825,6 +826,9 @@ namespace asivamosffie.services
 
                     PlazoFase1PreMeses = contrato.PlazoFase1PreMeses,
                     PlazoFase2ConstruccionDias = contrato.PlazoFase2ConstruccionDias,
+
+                    PlazoFase1PreDias = contrato.PlazoFase1PreDias,
+                    PlazoFase2ConstruccionMeses = contrato.PlazoFase2ConstruccionMeses,
 
                     NombreEntidadContratistaObra = contratista.Nombre,
                     NombreEntidadContratistaSupervisorInterventoria = contratista.Nombre,
