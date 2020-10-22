@@ -100,7 +100,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
   enviarSolicitud(id: number) {
     this.projectContractingService.changeStateContratacionByIdContratacion(id, this.estadosSolicitud.RechazadaPorComiteTecnico)
       .subscribe(respuesta => {
-        this.openDialog('Solicitud Contratacion', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         this.ngOnInit();
       });
   }
