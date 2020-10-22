@@ -40,7 +40,9 @@ namespace asivamosffie.services
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id)
         {
             DisponibilidadPresupuestal disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal
-                .Where(r => r.DisponibilidadPresupuestalId == id).FirstOrDefaultAsync();
+                .Where(r => r.DisponibilidadPresupuestalId == id)
+                   .Include(r=> r.DisponibilidadPresupuestalObservacion)
+                .FirstOrDefaultAsync();
              
             return disponibilidadPresupuestal;
         }

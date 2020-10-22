@@ -638,10 +638,10 @@ namespace asivamosffie.services
                                    .ThenInclude(r => r.Aportante)
                                      .ThenInclude(r => r.FuenteFinanciacion)
                                         .ThenInclude(r => r.GestionFuenteFinanciacion)
-                        .Include(r => r.ContratacionProyecto)
+                          .Include(r => r.ContratacionProyecto)
                               .ThenInclude(r => r.Proyecto)
                                   .ThenInclude(r => r.InstitucionEducativa)
-                        .Include(r => r.ContratacionProyecto)
+                          .Include(r => r.ContratacionProyecto)
                               .ThenInclude(r => r.Proyecto)
                                    .ThenInclude(r => r.Sede)
                      .FirstOrDefaultAsync();
@@ -651,8 +651,7 @@ namespace asivamosffie.services
                     .Include(r => r.ComiteTecnico)
                     .Include(r=> r.ComiteTecnicoFiduciario)
                     .ToList();
-
-                contratacion.sesionComiteSolicitud = sesionComiteSolicitud;
+ 
 
                 if (!string.IsNullOrEmpty(contratacion.TipoContratacionCodigo))
                 {
