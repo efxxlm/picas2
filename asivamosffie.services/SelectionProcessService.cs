@@ -1663,9 +1663,10 @@ namespace asivamosffie.services
         /*jflorez
          impacto: 3.1.3
          resumen: trae listado de  observaciones*/
-        public async Task<List<ProcesoSeleccionObservacion>> getObservacionesProcesoSeleccionProponentes(int id)
+        public async Task<List<string>> getObservacionesProcesoSeleccionProponentes(int id)
         {
-            return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
+            //  return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
+            return _context.SesionComiteSolicitud.Where(x=>x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Contratacion && !(bool)x.Eliminado && x.SolicitudId==id).Select(y=>y.Observaciones).ToList();
         }
 
         public async Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion)
