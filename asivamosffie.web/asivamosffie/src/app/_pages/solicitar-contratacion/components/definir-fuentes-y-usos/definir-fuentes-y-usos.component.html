@@ -74,7 +74,8 @@
                               maxLength="20"
                               onKeyPress="if(this.value.length>=this.maxLength) return false;"
                               [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
-                              formControlName="valorAportanteProyecto">
+                              formControlName="valorAportanteProyecto"
+                              (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value )">
                         <input type="hidden" formControlName="contratacionProyectoAportanteId" >
                         <input type="hidden" formControlName="proyectoAportanteId" >
 
@@ -202,7 +203,7 @@
                         Eliminar componente
                       </button>
                       <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length === i + 1"
-                        (click)="addComponent( i )">
+                        (click)="addComponent( j )">
                         <img src="assets/img/icon/mas.svg" alt="Agregar otro componente">
                         Agregar otro componente
                       </button>

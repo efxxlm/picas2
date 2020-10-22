@@ -111,39 +111,38 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             let sinDiligenciar = 0;
             if ( contratacionProyectoAportante.componenteAportante.length === 0 ) {
               sinDiligenciar++;
-            }
-            for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
-              if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
-                sinDiligenciar++;
+            } else {
+              for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
+                if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
+                  sinDiligenciar++;
+                }
+                if ( componenteAportante[ 'registroCompleto' ] === false ) {
+                  enProceso++;
+                }
+                if ( componenteAportante[ 'registroCompleto' ] === true ) {
+                  completos++;
+                }
+              };
+              if ( enProceso < completos || enProceso > sinDiligenciar ) {
+                aportanteEnProceso++;
               }
-              if ( componenteAportante[ 'registroCompleto' ] === false ) {
-                enProceso++;
+              if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
+                aportanteSinDiligenciar++;
               }
-              if ( componenteAportante[ 'registroCompleto' ] === true ) {
-                completos++;
-              }
-            };
-
-            if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
-              aportanteCompleto++;
-            };
-            if ( enProceso < completos || enProceso > sinDiligenciar ) {
-              aportanteEnProceso++;
-            }
-            if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
-              aportanteSinDiligenciar++;
-            }
+              if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
+                aportanteCompleto++;
+              };
+            } 
           }
 
           if ( aportanteSinDiligenciar === contratacionProyecto.contratacionProyectoAportante.length ) {
             contratacionProyectoAportanteSinDiligenciar++;
           };
-          if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
-            console.log( aportanteCompleto, contratacionProyecto.contratacionProyectoAportante.length );
-            contratacionProyectoAportanteCompleto++;
-          };
           if ( aportanteEnProceso < aportanteCompleto || aportanteEnProceso > aportanteSinDiligenciar ) {
             contratacionProyectoAportanteEnProceso++;
+          };
+          if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
+            contratacionProyectoAportanteCompleto++;
           };
         }
 

@@ -84,6 +84,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     return this.fb.group({
       nombreAportante: [],
       estadoSemaforo: [ null ],
+      saldoDisponible: [ null ],
       contratacionProyectoAportanteId: [],
       proyectoAportanteId: [],
       valorAportanteProyecto: [null, Validators.compose([
@@ -113,6 +114,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           this.componentesSelect = response[1];
           this.usosSelect = response[2];
           this.contratacionProyecto = response[3];
+          console.log( this.contratacionProyecto );
           setTimeout(() => {
 
             if ( this.componentesSelect.length > 0 ) {
@@ -137,8 +139,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
               grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.contratacionProyectoAportanteId);
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
-              grupoAportante.get('valorAportanteProyecto')
-              .setValue( apo.valorAporte );
+              grupoAportante.get('valorAportanteProyecto').setValue( apo.valorAporte );
               console.log( apo );
               if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');
@@ -159,6 +160,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                   const listaUsos = grupoComponente.get('usos') as FormArray;
                   const faseSeleccionada = this.fasesSelect.find(f => f.codigo == compoApo.faseCodigo);
                   const componenteSeleccionado = this.componentesSelect.find(c => c.codigo == compoApo.tipoComponenteCodigo);
+                  grupoAportante.get( 'saldoDisponible' ).setValue( compoApo['saldoDisponible'] ? compoApo['saldoDisponible'] : 0 );
 
                   if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === true ) {
                     grupoAportante.get( 'estadoSemaforo' ).setValue( 'completo' )
@@ -182,7 +184,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                     grupoUso.get('valorUso').setValue(uso.valorUso);
 
                     if ( grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0 ) {
-                      grupoAportante.get( 'estadoSemaforo' ).setValue( 'sin-diligenciar' )
+                      grupoAportante.get( 'estadoSemaforo' ).setValue( 'sin-diligenciar' );
                     } 
 
                     listaUsos.push(grupoUso);
@@ -204,8 +206,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               this.aportantes.push(grupoAportante);
             });
 
-            console.log(this.contratacionProyecto);
-
           }, 1000);
         });
 
@@ -224,6 +224,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     };
   };
 
+  validarSaldoDisponible ( saldoIngresado: any, saldoDisponible: string ) {
+    console.log( `${saldoIngresado}`, saldoDisponible );
+    if (  `${saldoIngresado}` > saldoDisponible ) {
+      console.log( 'Cumple validacion-mayor' );
+    } else if ( `${saldoIngresado}` <= saldoDisponible ) {
+      console.log( 'Cumple validacion-menor' );
+    }
+  }
+
   deleteUsoSeleccionado ( usoCodigo: any ) {
     console.log( usoCodigo );
     this.listaUsos = this.listaUsos.filter( uso => uso.codigo !== usoCodigo );
@@ -231,7 +240,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   getMunicipio() {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
-      this.router.navigate(['/solicitarContratacion']);
+      //this.router.navigate(['/solicitarContratacion']);
+      this.municipio = 'Campo quemado fix antes de subir version!!!!!!!!!!!!!!!!'
       return;
     };
     this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
@@ -280,7 +290,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   borrarArray(j: number, i: number) {
-    this.componentes(i).removeAt( j );
+    this.componentes(j).removeAt( i );
   }
 
   openDialog(modalTitle: string, modalText: string) {

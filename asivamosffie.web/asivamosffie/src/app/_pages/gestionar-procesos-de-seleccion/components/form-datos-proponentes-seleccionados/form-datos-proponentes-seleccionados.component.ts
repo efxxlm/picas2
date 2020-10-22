@@ -282,10 +282,15 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     return value.toLowerCase().replace(/\s/g, '');
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string,refresh:boolean=false) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (refresh == true) {
+        location.reload();
+      };
     });
   }
 
@@ -363,6 +368,21 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     this.unionTemporalForm.get("cuantasEntidades").setValue(borrarForm.length);
   }
 
+  borrarIntegrante(borrarForm: any, i: number) {
+    if(borrarForm.value[i].procesoSeleccionIntegranteId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionIntegranteByID(borrarForm.value[i].procesoSeleccionIntegranteId).subscribe(
+        respuesta=>
+        {
+          this.openDialog("","<b>La información se ha eliminado correctamente.</b>",true);
+        }
+      );
+    }
+    console.log(borrarForm);
+    /*borrarForm.removeAt(i);
+    this.unionTemporalForm.get("cuantasEntidades").setValue(borrarForm.length);*/
+  }
+
   onSubmitPersonaNatural() {
 
     this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -396,7 +416,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
       nombreProponente: this.personaJuridicaIndividualForm.get('nombre').value ? this.personaJuridicaIndividualForm.get('nombre').value : this.myJuridica.value,
       numeroIdentificacion: this.personaJuridicaIndividualForm.get('numeroIdentificacion').value,
-      nombreRepresentanteLegal: this.personaJuridicaIndividualForm.get('representanteLegal').value,
+      nombreRepresentanteLegal: this.personaJuridicaIndividualForm.get('representanteLegal').value?this.personaJuridicaIndividualForm.get('representanteLegal').value:this.representanteLegal.value,
       cedulaRepresentanteLegal: this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').value,
       localizacionIdMunicipio: this.personaJuridicaIndividualForm.get('municipio').value ? this.personaJuridicaIndividualForm.get('municipio').value.localizacionId : null,
       direccionProponente: this.personaJuridicaIndividualForm.get('direccion').value,
@@ -480,6 +500,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   cargarRegistro() {
 
     this.ngOnInit().then(() => {
+      
       this.procesoSeleccion.procesoSeleccionProponente.forEach(proponente => {
         let tipoProponente = this.listaProponentes.find(p => p.codigo == proponente.tipoProponenteCodigo)
         if (tipoProponente) this.tipoProponente.setValue(tipoProponente);
@@ -524,7 +545,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
               this.personaJuridicaIndividualForm.get('correoElectronico').setValue(proponente.emailProponente);
             }
             case "4": {
-
+              (<FormArray>this.unionTemporalForm.get('entidades')).clear();
               let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
 
               this.unionTemporalForm.get('depaetamento').setValue(departamentoSeleccionado);
@@ -538,7 +559,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
               this.unionTemporalForm.get('direccion').setValue(proponente.direccionProponente);
               this.unionTemporalForm.get('telefono').setValue(proponente.telefonoProponente);
               this.unionTemporalForm.get('correoElectronico').setValue(proponente.emailProponente);
-
+              
               this.procesoSeleccion.procesoSeleccionIntegrante.forEach(integrante => {
                 let control = this.createIntegrante();
                 control.get('nombre').setValue(integrante.nombreIntegrante);

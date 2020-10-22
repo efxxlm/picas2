@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Dominio, CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProcesoSeleccion, ProcesoSeleccionService, CronogramaSeguimiento } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionService, CronogramaSeguimiento, ProcesoSeleccionCronograma } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { forkJoin, from } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
@@ -52,7 +52,8 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   maxDate: Date;
   idProcesoSeleccion: number = 0;
   listaCronograma: CronogramaSeguimiento[];
-  listaCronogramaActividades: import("src/app/core/_services/procesoSeleccion/proceso-seleccion.service").ProcesoSeleccionCronograma[];
+  listaCronogramaActividades: ProcesoSeleccionCronograma[];
+  
 
   constructor(
               private fb: FormBuilder,
@@ -192,11 +193,12 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
 
   onChangeEstado()
   {
-    console.log(this.addressForm.value.tipoIntervencion); 
-    //this.addressForm.get('actividades').setValue([]);
+    console.log(this.addressForm.value.tipoIntervencion.codigo); 
+    (<FormArray>this.addressForm.get('actividades')).clear();
     let listaActividades = this.addressForm.get('actividades') as FormArray;
-    let lista=this.listaCronogramaActividades.filter(x=>x.estadoActividadCodigo==this.addressForm.value.tipoIntervencion.codigo);
-    
+    console.log(this.listaCronogramaActividades); 
+    let lista=this.listaCronogramaActividades.filter(x=>x.etapaActualProcesoCodigo==this.addressForm.value.tipoIntervencion.codigo);
+    console.log(lista); 
       lista.forEach( cronograma => {
         let grupo = this.createActividad();
         const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);

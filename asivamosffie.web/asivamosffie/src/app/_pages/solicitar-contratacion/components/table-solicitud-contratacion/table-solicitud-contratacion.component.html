@@ -68,8 +68,9 @@
             Ver detalle / Editar
           </a>
           <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element.contratacionId)"
-            *ngIf="element.estadoSolicitudCodigo === 'Sin registro' && element.registroCompleto">Enviar
-            Solicitud.</button>
+            *ngIf="element.estadoSolicitudCodigo === 'Sin registro' && element.registroCompleto">
+            Enviar Solicitud
+          </button>
           <button mat-raised-button color="accent" class="btn-table"
                   [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
                   *ngIf=" (element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto)
