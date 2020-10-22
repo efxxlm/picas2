@@ -4,7 +4,7 @@ import { ProcesoSeleccionService, ProcesoSeleccionCronograma, ProcesoSeleccionMo
 import { ActivatedRoute } from '@angular/router';
 import { from } from 'rxjs';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
-import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { CommonService, Dominio, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -21,6 +21,7 @@ export class TablaCronogramaComponent implements OnInit {
   maxDate: Date;
   listaCronograma: ProcesoSeleccionCronograma[] = [];
   idProcesoSeleccion: number = 0;
+  listaetapaActualProceso: Dominio[]=[];
 
   editorStyle = {
     height: '100px',
@@ -43,6 +44,7 @@ export class TablaCronogramaComponent implements OnInit {
     private procesoSeleccionService: ProcesoSeleccionService,
     private activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
+    private commonService:CommonService
 
   ) {
     this.maxDate = new Date();
@@ -50,6 +52,9 @@ export class TablaCronogramaComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.commonService.listaEtapaActualProceso().subscribe(result=>{
+      this.listaetapaActualProceso=result; 
+    });
     this.activatedRoute.params.subscribe(parametro => {
       this.idProcesoSeleccion = parametro['id'];
 
@@ -59,17 +64,15 @@ export class TablaCronogramaComponent implements OnInit {
           this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion(this.idProcesoSeleccion).subscribe(lista => {
 
             let listaActividades = this.addressForm as FormArray;
-            this.listaCronograma = lista;
-    
-            console.log(lista);
+            this.listaCronograma = lista;            
     
             lista.forEach(cronograma => {
               let grupo = this.crearActividad();
-    
+              const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
               grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
               grupo.get('descripcion').setValue(cronograma.descripcion);
               grupo.get('fecha').setValue(cronograma.fechaMaxima);
-    
+              grupo.get('etapaActualProceso').setValue(etapaActualproceso),
               listaActividades.push(grupo);
     
             })
@@ -78,25 +81,19 @@ export class TablaCronogramaComponent implements OnInit {
         }
         else{
           let listaActividades = this.addressForm as FormArray;
-          console.log(monitoreo);  
-          console.log(monitoreo.length);
-          this.listaCronograma = monitoreo[monitoreo.length-1].procesoSeleccionCronogramaMonitoreo;
-    
-            
-            if(this.listaCronograma)
-            {
-              this.listaCronograma.forEach(cronograma => {
-                let grupo = this.crearActividad();
-      
-                grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
-                grupo.get('descripcion').setValue(cronograma.descripcion);
-                grupo.get('fecha').setValue(cronograma.fechaMaxima);
-      
-                listaActividades.push(grupo);
-      
-              })
-            }
-            
+          this.listaCronograma = monitoreo[monitoreo.length-1].procesoSeleccionCronogramaMonitoreo;                
+          if(this.listaCronograma)
+          {
+            this.listaCronograma.forEach(cronograma => {
+              let grupo = this.crearActividad();
+              const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
+              grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
+              grupo.get('descripcion').setValue(cronograma.descripcion);
+              grupo.get('fecha').setValue(cronograma.fechaMaxima);
+              grupo.get('etapaActualProceso').setValue(etapaActualproceso),    
+              listaActividades.push(grupo);    
+            })
+          }            
         }
       });
       
@@ -114,7 +111,8 @@ export class TablaCronogramaComponent implements OnInit {
       descripcion: [null, Validators.compose([
         Validators.required, Validators.minLength(5), Validators.maxLength(500)
       ])],
-      fecha: [null, Validators.required]
+      fecha: [null, Validators.required],
+      etapaActualProceso: [null, Validators.required],
     });
   }
 
@@ -150,6 +148,7 @@ export class TablaCronogramaComponent implements OnInit {
         procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
         descripcion: control.get('descripcion').value,
         fechaMaxima: control.get('fecha').value,
+        etapaActualProcesoCodigo: control.get('etapaActualProceso').value?control.get('etapaActualProceso').value.codigo:null,
         //procesoSeleccionId: this.idProcesoSeleccion,
         numeroActividad: i,
 
@@ -190,9 +189,9 @@ export class TablaCronogramaComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if (result) {
+      //if (result) {
         location.reload();
-      }
+      //}
     });
 
 

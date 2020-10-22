@@ -92,7 +92,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
     console.log(id);
     this.projectContractingService.eliminarContratacion(id)
       .subscribe(respuesta => {
-        this.openDialog('', 'La información se ha eliminado correctamente');
+        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
         this.ngOnInit();
       });
   }
@@ -100,7 +100,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
   enviarSolicitud(id: number) {
     this.projectContractingService.changeStateContratacionByIdContratacion(id, this.estadosSolicitud.RechazadaPorComiteTecnico)
       .subscribe(respuesta => {
-        this.openDialog('Solicitud Contratacion', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         this.ngOnInit();
       });
   }

@@ -17,9 +17,9 @@
   </p>
 
   <div class="container-valor" *ngIf="contratacionProyecto" style="margin: 1em;">
-    <p><b>Valor total del proyecto</b> <b style="margin-left: .2em;"> ${{ ( contratacionProyecto.proyecto.valorObra + contratacionProyecto.proyecto.valorInterventoria ) | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
-    <p><b>Valor obra</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
-    <p><b>Valor interventoría</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b class="var-main-gris">Valor total del proyecto</b> <b style="margin-left: .2em;"> ${{ ( contratacionProyecto.proyecto.valorObra + contratacionProyecto.proyecto.valorInterventoria ) | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b class="var-main-gris">Valor obra</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b class="var-main-gris">Valor interventoría</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
   </div>
 
   <div class="text-center mb-2em">
@@ -74,7 +74,8 @@
                               maxLength="20"
                               onKeyPress="if(this.value.length>=this.maxLength) return false;"
                               [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
-                              formControlName="valorAportanteProyecto">
+                              formControlName="valorAportanteProyecto"
+                              (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value )">
                         <input type="hidden" formControlName="contratacionProyectoAportanteId" >
                         <input type="hidden" formControlName="proyectoAportanteId" >
 
@@ -202,7 +203,7 @@
                         Eliminar componente
                       </button>
                       <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length === i + 1"
-                        (click)="addComponent( i )">
+                        (click)="addComponent( j )">
                         <img src="assets/img/icon/mas.svg" alt="Agregar otro componente">
                         Agregar otro componente
                       </button>

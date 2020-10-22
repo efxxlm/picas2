@@ -5,11 +5,11 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="tipoIntervencion" class="label-left">Tipo de Intervención</label>
+              <label for="tipoIntervencion" class="label-left">Etapa actual del proceso</label>
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="tipoIntervencion" required>
+                <mat-select formControlName="tipoIntervencion" (selectionChange)="onChangeEstado()" required>
                   <mat-option *ngFor="let tipo of listaTipoIntervencion" [value]="tipo">
                     {{ tipo.nombre }}
                   </mat-option>
@@ -42,6 +42,9 @@
                   Fecha máxima
                 </th>
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Etapa actual del proceso
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                   Fecha de monitoreo
                 </th>
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
@@ -60,7 +63,12 @@
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <p>
-                    <input type="text" formControlName="fechaMaxima" readonly style="border:0">
+                    <input type="text" formControlName="fechaMaxima"  readonly style="border:0">
+                  </p>
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  <p>
+                    <input type="text" formControlName="etapaActualProceso"  readonly style="border:0">
                   </p>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">

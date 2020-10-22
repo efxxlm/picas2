@@ -46,6 +46,10 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
   activarBotones()
   {
     this.editarVerDetalle=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+      ((this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Abierta||
+        this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Cerrada) &&
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)||
+
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||

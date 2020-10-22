@@ -26,13 +26,6 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     private router: Router,
 
   ) {
-    this.getSolicitud();
-  }
-
-  ngOnInit(): void {
-  }
-
-  getSolicitud () {
     this.route.params.subscribe((params: Params) => {
       this.projectContractingService.getContratacionByContratacionId(params.id)
         .subscribe(response => {
@@ -60,6 +53,9 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     });
   }
 
+  ngOnInit(): void {
+  }
+
   semaforoAcordeon(acordeon: string) {
 
     if ( acordeon === 'consideracionEspecial' ) {
@@ -85,7 +81,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
           }
           if ( contratacionProyecto[ 'registroCompleto' ] === true ) {
             cantProyectosCompletos++;
-          } 
+          }
           if ( contratacionProyecto[ 'registroCompleto' ] === false ) {
             cantProyectosEnProceso++;
           }
@@ -114,7 +110,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             let enProceso = 0;
             let sinDiligenciar = 0;
             if ( contratacionProyectoAportante.componenteAportante.length === 0 ) {
-              aportanteSinDiligenciar++;
+              sinDiligenciar++;
             } else {
               for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
                 if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
@@ -122,13 +118,10 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
                 }
                 if ( componenteAportante[ 'registroCompleto' ] === false ) {
                   enProceso++;
-                } 
+                }
                 if ( componenteAportante[ 'registroCompleto' ] === true ) {
                   completos++;
                 }
-              };
-              if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
-                aportanteCompleto++;
               };
               if ( enProceso < completos || enProceso > sinDiligenciar ) {
                 aportanteEnProceso++;
@@ -136,16 +129,20 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
               if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
                 aportanteSinDiligenciar++;
               }
-            }
+              if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
+                aportanteCompleto++;
+              };
+            } 
           }
+
           if ( aportanteSinDiligenciar === contratacionProyecto.contratacionProyectoAportante.length ) {
             contratacionProyectoAportanteSinDiligenciar++;
           };
-          if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
-            contratacionProyectoAportanteCompleto++;
-          };
           if ( aportanteEnProceso < aportanteCompleto || aportanteEnProceso > aportanteSinDiligenciar ) {
             contratacionProyectoAportanteEnProceso++;
+          };
+          if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
+            contratacionProyectoAportanteCompleto++;
           };
         }
 
@@ -175,16 +172,12 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
 
     this.projectContractingService.createEditContratacion(this.contratacion)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
 
         console.log(respuesta);
 
         if (respuesta.code === '200') {
-          this.contratacion = null;
-          this.getSolicitud();
-          if ( this.contratacion !== null ) {
-            this.router.navigate(['/solicitarContratacion/solicitud/', this.contratacion.contratacionId]);
-          }
+          this.router.navigate(['/solicitarContratacion/solicitud', this.contratacion.contratacionId]);
         }
 
       });

@@ -40,19 +40,24 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element">       
                     <button mat-raised-button color="accent" class="btn-table" (click)="onDetalle(element.id)"
-                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true">Ver detalle/
-                        Editar</button>
+                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true">
+                        Ver detalle/ Editar
+                        </button>
 
                     <button mat-raised-button color="accent" class="btn-table" (click)="onEnviarSolicitud(element.id)"
-                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">Enviar
-                        solicitud a comité</button>
+                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">
+                        Enviar solicitud a comité
+                        </button>
 
                     <button mat-raised-button color="accent" class="btn-table" (click)="onEliminar(element.id)"
-                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">Eliminar</button>
+                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">
+                        Eliminar
+                        </button>
 
                     <button mat-raised-button color="accent" class="btn-table"  (click)="onDetalle(element.id)"
-                        *ngIf=" element.id.estadoActividadCodigo != estadosProcesoSeleccionMonitoreo.Creada   ">Ver
-                        detalle</button>
+                        *ngIf=" element.id.estadoActividadCodigo != estadosProcesoSeleccionMonitoreo.Creada   ">
+                        Ver detalle
+                        </button>
                 </td>
             </ng-container>
 

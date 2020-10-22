@@ -214,7 +214,6 @@
           </div>
         </div>
       </div>
-
       <div formGroupName="cronogramas" *ngIf="addressForm.get('grupos').status=='VALID'">
         <div>
           <h2 class="card-subTitle">Cronograma</h2>
@@ -230,6 +229,9 @@
                   </th>
                   <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                     Fecha máxima
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Etapa actual del proceso
                   </th>
                   <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                     Gestión
@@ -269,6 +271,15 @@
                       <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA" class="mainColor"
                         formControlName="fechaMaxima" (click)="picker.open()" readonly>
                       <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="etapaActualProceso" required>
+                        <mat-option *ngFor="let tipoPresupuesto of listaetapaActualProceso" [value]="tipoPresupuesto">
+                          {{ tipoPresupuesto.nombre }}
+                        </mat-option>
+                      </mat-select>
                     </mat-form-field>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">

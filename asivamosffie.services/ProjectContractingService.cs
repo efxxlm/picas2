@@ -27,10 +27,12 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico)
+        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico
+            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender
+            )
         {
             int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contratacion, (int)EnumeratorTipoDominio.Acciones);
-
+             
             try
             {
                 Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
@@ -40,6 +42,26 @@ namespace asivamosffie.services
 
                 contratacionOld.EstadoSolicitudCodigo = PCodigoEstado;
                 _context.SaveChanges();
+                 
+                List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
+                string strTipoObraIntervencion = TipoObraIntervencion.Where(r => r.Codigo == contratacionOld.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+             
+                if (PCodigoEstado == ConstanCodigoEstadoSolicitudContratacion.En_tramite.ToString())
+                {
+                    var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+                    foreach (var usuario in usuariosecretario)
+                    {
+                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
+                        string template =
+                            TemplateRecoveryPassword.Contenido
+                            .Replace("_LinkF_", pDominioFront)
+                            .Replace("[NUMERO_SOLICITUD]", contratacionOld.NumeroSolicitud)
+                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-mm-yy"))
+                            .Replace("[OBRA_INTERVENTORIA]", contratacionOld.TipoSolicitudCodigo);
+                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
+                    }
+                }
+                  
 
                 return new Respuesta
                 {
@@ -293,7 +315,7 @@ namespace asivamosffie.services
                 {
                     ValorDisponibleAportante = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
 
-                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante).ToString();
+                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante);
                 }
 
 
@@ -307,7 +329,18 @@ namespace asivamosffie.services
 
             try
             {
-                ListContratacion = await _context.Contratacion.Where(r => !(bool)r.Eliminado).Include(r => r.Contratista).ToListAsync();
+                ListContratacion = await _context.Contratacion
+                    .Where(r => !(bool)r.Eliminado)
+                    .Include(r => r.Contratista)
+                    .Include(r=> r.ContratacionProyecto)
+                        .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
+                     .Include(r => r.ContratacionProyecto)
+                        .ThenInclude(r => r.Proyecto)
+                             .ThenInclude(r => r.Sede)
+                    .Include(r => r.ContratacionProyecto)
+                        .ThenInclude(r => r.Proyecto)
+                                 .ThenInclude(r => r.InstitucionEducativa)
+                    .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
 
@@ -331,21 +364,21 @@ namespace asivamosffie.services
         {
             List<ContratistaGrilla> ListContratistaGrillas = new List<ContratistaGrilla>();
 
-            IQueryable<Contratista> contratistas = _context.Contratista.Where(r => (bool)r.Activo);
+            List<Contratista> contratistas = _context.Contratista.Where(r => (bool)r.Activo).ToList();
 
             if (!string.IsNullOrEmpty(pTipoIdentificacionCodigo))
-                contratistas = contratistas.Where(r => r.TipoIdentificacionCodigo.Equals(pTipoIdentificacionCodigo));
+                contratistas = contratistas.Where(r => r.TipoIdentificacionCodigo.Equals(pTipoIdentificacionCodigo)).ToList();
 
             if (!string.IsNullOrEmpty(pNumeroIdentidicacion))
-                contratistas = contratistas.Where(r => r.NumeroIdentificacion.Contains(pNumeroIdentidicacion));
+                contratistas = contratistas.Where(r => r.NumeroIdentificacion.Contains(pNumeroIdentidicacion)).ToList();
 
             if (!string.IsNullOrEmpty(pNombre))
-                contratistas = contratistas.Where(r => r.Nombre.ToUpper().Contains(pNombre.ToUpper()));
+                contratistas = contratistas.Where(r => r.Nombre.ToUpper().Contains(pNombre.ToUpper())).ToList();
 
             if ((bool)EsConsorcio)
-                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio);
+                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio).ToList();
             else
-                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural || r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual);
+                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural || r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual).ToList();
 
             foreach (var contratista in contratistas)
             {
@@ -711,7 +744,6 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyecto.ContratacionProyectoId == 0)
                 {
-
                     pContratacionProyecto.FechaCreacion = DateTime.Now;
                     pContratacionProyecto.Eliminado = false;
                     pContratacionProyecto.RegistroCompleto = ValidarRegistroCompletoContratacionProyecto(pContratacionProyecto);
@@ -824,9 +856,11 @@ namespace asivamosffie.services
 
             try
             {
-                string strAccion = string.Empty;
-                pContratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
-                pContratacionProyecto.FechaModificacion = DateTime.Now;
+                if (pContratacionProyecto.ContratacionId > 0)
+                {
+                    pContratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
+                    pContratacionProyecto.FechaModificacion = DateTime.Now;
+                }
 
                 foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)
                 {
@@ -853,7 +887,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesProyecto.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, strAccion)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, "CREAR CONTRATACION PROYECTO APORTANTE")
                 };
             }
             catch (Exception ex)
