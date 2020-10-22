@@ -54,7 +54,7 @@
         <td mat-cell *matCellDef="let element">
           <a mat-raised-button color="accent" class="btn-table"
             [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
-            *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && element.registroCompleto === undefined">
+            *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && element.usuarioModificacion === undefined">
             Detallar la solicitud
           </a>
           <button mat-raised-button color="accent" class="btn-table" (click)="onDelete(element.contratacionId)"
@@ -63,7 +63,7 @@
           </button>
           <a mat-raised-button color="accent" class="btn-table"
             [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
-            *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && element.registroCompleto === false">
+            *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && element.usuarioModificacion !== undefined">
             Ver detalle / Editar
           </a>
           <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element.contratacionId)"

@@ -139,7 +139,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
               grupoAportante.get('valorAportanteProyecto')
               .setValue( apo.valorAporte );
-
+              console.log( apo );
               if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {

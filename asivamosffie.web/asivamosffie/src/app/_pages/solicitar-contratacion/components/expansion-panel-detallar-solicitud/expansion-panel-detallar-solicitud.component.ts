@@ -110,31 +110,30 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             let enProceso = 0;
             let sinDiligenciar = 0;
             if ( contratacionProyectoAportante.componenteAportante.length === 0 ) {
-              sinDiligenciar++;
-            }
-            for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
-              if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
-                sinDiligenciar++;
-              }
-              if ( componenteAportante[ 'registroCompleto' ] === false ) {
-                enProceso++;
-              } 
-              if ( componenteAportante[ 'registroCompleto' ] === true ) {
-                completos++;
-              }
-            };
-
-            if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
-              aportanteCompleto++;
-            };
-            if ( enProceso < completos || enProceso > sinDiligenciar ) {
-              aportanteEnProceso++;
-            }
-            if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
               aportanteSinDiligenciar++;
+            } else {
+              for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
+                if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
+                  sinDiligenciar++;
+                }
+                if ( componenteAportante[ 'registroCompleto' ] === false ) {
+                  enProceso++;
+                } 
+                if ( componenteAportante[ 'registroCompleto' ] === true ) {
+                  completos++;
+                }
+              };
+              if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
+                aportanteCompleto++;
+              };
+              if ( enProceso < completos || enProceso > sinDiligenciar ) {
+                aportanteEnProceso++;
+              }
+              if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
+                aportanteSinDiligenciar++;
+              }
             }
           }
-
           if ( aportanteSinDiligenciar === contratacionProyecto.contratacionProyectoAportante.length ) {
             contratacionProyectoAportanteSinDiligenciar++;
           };

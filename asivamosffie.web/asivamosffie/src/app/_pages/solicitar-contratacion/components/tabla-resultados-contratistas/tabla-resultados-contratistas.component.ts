@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ContratistaGrilla, Contratacion } from 'src/app/_interfaces/project-contracting';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 @Component({
@@ -39,7 +41,7 @@ export class TablaResultadosContratistasComponent implements OnInit {
 
   constructor(
                 private projectContractingService: ProjectContractingService,
-
+                private dialog: MatDialog
              ) 
   {
     this.declararUnionTemporal();
@@ -82,6 +84,13 @@ export class TablaResultadosContratistasComponent implements OnInit {
     }
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   buscar(){
     let nombre = this.nombreContratista.value;
     let numero = this.numeroDocumento.value;
@@ -89,6 +98,10 @@ export class TablaResultadosContratistasComponent implements OnInit {
     this.dataSource = new MatTableDataSource();
     this.projectContractingService.getListContractingByFilters( numero, nombre, esConsorcio )
       .subscribe( response => {
+        if ( response.length === 0 ) {
+          this.openDialog( '', 'No se encontraron registros asociados al criterio de búsqueda seleccionado.' );
+          return;
+        }
         this.dataSource = new MatTableDataSource(response);
       })
 
