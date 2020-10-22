@@ -54,7 +54,6 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.budgetAvailabilityService.getDisponibilidadPresupuestalById(this.objetoDisponibilidad.disponibilidadPresupuestalId)
       .subscribe(response => {
         this.objetoDisponibilidad = response;
-        console.log(response);
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
@@ -63,12 +62,10 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
           this.projectService.getProjectById(dp.proyectoId)
             .subscribe(proyecto => {
               dp.proyecto = proyecto;
-              
-
               this.listaProyectos.push(proyecto);
-
             })
         });
+        console.log( this.objetoDisponibilidad );
       })
 
   }
