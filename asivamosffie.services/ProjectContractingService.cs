@@ -711,7 +711,6 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyecto.ContratacionProyectoId == 0)
                 {
-
                     pContratacionProyecto.FechaCreacion = DateTime.Now;
                     pContratacionProyecto.Eliminado = false;
                     pContratacionProyecto.RegistroCompleto = ValidarRegistroCompletoContratacionProyecto(pContratacionProyecto);
@@ -824,9 +823,11 @@ namespace asivamosffie.services
 
             try
             {
-                string strAccion = string.Empty;
-                pContratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
-                pContratacionProyecto.FechaModificacion = DateTime.Now;
+                if (pContratacionProyecto.ContratacionId > 0)
+                {
+                    pContratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
+                    pContratacionProyecto.FechaModificacion = DateTime.Now;
+                }
 
                 foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)
                 {
@@ -853,7 +854,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesProyecto.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, strAccion)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionContrataicionProyecto, pContratacionProyecto.UsuarioCreacion, "CREAR CONTRATACION PROYECTO APORTANTE")
                 };
             }
             catch (Exception ex)
