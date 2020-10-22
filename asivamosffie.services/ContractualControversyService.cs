@@ -13,7 +13,7 @@ using asivamosffie.services.Helpers.Constant;
 
 namespace asivamosffie.services
 {
-   public  class ContractualControversyService /* :IContractualControversy*/
+   public  class ContractualControversyService  :IContractualControversy
     {
 
         private readonly ICommonService _commonService;
@@ -106,7 +106,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaContratoGarantiaPoliza()
+        public async Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual()
         {
             //await AprobarContratoByIdContrato(1);
 
