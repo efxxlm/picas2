@@ -27,10 +27,12 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico)
+        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico
+            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender
+            )
         {
             int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contratacion, (int)EnumeratorTipoDominio.Acciones);
-
+             
             try
             {
                 Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
@@ -40,6 +42,26 @@ namespace asivamosffie.services
 
                 contratacionOld.EstadoSolicitudCodigo = PCodigoEstado;
                 _context.SaveChanges();
+                 
+                List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
+                string strTipoObraIntervencion = TipoObraIntervencion.Where(r => r.Codigo == contratacionOld.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+             
+                if (PCodigoEstado == ConstanCodigoEstadoSolicitudContratacion.En_tramite.ToString())
+                {
+                    var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+                    foreach (var usuario in usuariosecretario)
+                    {
+                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
+                        string template =
+                            TemplateRecoveryPassword.Contenido
+                            .Replace("_LinkF_", pDominioFront)
+                            .Replace("[NUMERO_SOLICITUD]", contratacionOld.NumeroSolicitud)
+                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-mm-yy"))
+                            .Replace("[OBRA_INTERVENTORIA]", contratacionOld.TipoSolicitudCodigo);
+                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
+                    }
+                }
+                  
 
                 return new Respuesta
                 {
