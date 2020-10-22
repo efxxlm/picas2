@@ -225,7 +225,7 @@ namespace asivamosffie.services
             try
             {
                 //si tiene relacion con algo, no lo dejo eliminar
-                var comite = _context.SesionComiteSolicitud.Where(x=>x.SolicitudId==pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Contratacion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
+                var comite = _context.SesionComiteSolicitud.Where(x=>x.SolicitudId==pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
                 if(comite>0)
                 {
                     return respuesta = new Respuesta
@@ -1666,7 +1666,7 @@ namespace asivamosffie.services
         public async Task<List<string>> getObservacionesProcesoSeleccionProponentes(int id)
         {
             //  return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
-            return _context.SesionComiteSolicitud.Where(x=>x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Contratacion && !(bool)x.Eliminado && x.SolicitudId==id).Select(y=>y.Observaciones).ToList();
+            return _context.SesionComiteSolicitud.Where(x=>x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion && !(bool)x.Eliminado && x.SolicitudId==id).Select(y=>y.Observaciones).ToList();
         }
 
         public async Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion)
