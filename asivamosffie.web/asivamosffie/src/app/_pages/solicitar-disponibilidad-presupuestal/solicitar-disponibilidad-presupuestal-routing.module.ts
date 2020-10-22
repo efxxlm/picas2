@@ -6,6 +6,7 @@ import { RegistrarInformacionAdicionalComponent } from './components/registrar-i
 import { CrearSolicitudEspecialComponent } from './components/crear-solicitud-especial/crear-solicitud-especial.component';
 import { NuevaSolicitudEspecialComponent } from './components/nueva-solicitud-especial/nueva-solicitud-especial.component';
 import { CrearDisponibilidadPresupuestalAdministrativoComponent } from './components/crear-disponibilidad-presupuestal-administrativo/crear-administrativo.component';
+import { DetalleDisponibilidadPresupuestalComponent } from './components/detalle-disponibilidad-presupuestal/detalle-disponibilidad-presupuestal.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
   {
     path: 'crearSolicitudTradicional/registrar/:idContratacion/:idDisponibilidadPresupuestal/:idTipoSolicitud',
     component: RegistrarInformacionAdicionalComponent
+  },
+  {
+    path: 'verDetalle/:idDisponibilidadPresupuestal/:idTipoSolicitud',
+    component: DetalleDisponibilidadPresupuestalComponent
   },
   {
     path: 'crearSolicitudEspecial',

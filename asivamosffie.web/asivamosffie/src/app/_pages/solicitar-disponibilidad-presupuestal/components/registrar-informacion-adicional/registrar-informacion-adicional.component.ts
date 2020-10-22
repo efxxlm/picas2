@@ -47,7 +47,23 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     private projectContractingService: ProjectContractingService,
     private projectService: ProjectService,
 
-  ) { }
+  ) {
+    this.activatedroute.params.subscribe((params: Params) => {
+      console.log(params);
+      this.objetoDisponibilidad.contratacionId = params.idContratacion;
+      this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
+      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
+      console.log(this.objetoDisponibilidad);
+      if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
+        this.cargarDisponibilidadPre();
+
+      } else {
+        this.cargarDisponibilidadNueva();
+      }
+
+
+    });
+  }
 
   cargarDisponibilidadPre() {
 
@@ -107,24 +123,6 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
-
-    this.activatedroute.params.subscribe((params: Params) => {
-      console.log(params);
-      this.objetoDisponibilidad.contratacionId = params.idContratacion;
-      this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
-      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
-      console.log(this.objetoDisponibilidad);
-      if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
-        this.cargarDisponibilidadPre();
-
-      } else {
-        this.cargarDisponibilidadNueva();
-      }
-
-
-    });
   }
 
   // evalua tecla a tecla
