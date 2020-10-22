@@ -443,12 +443,14 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_OBSERVACION_O_CONSIDERACIONES_ESPECIALES_", pActaInicio.ObservacionOConsideracionesEspeciales);
             strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_1_Preconstruccion_", pActaInicio.PlazoFase1PreMeses.ToString());
             strContenido = strContenido.Replace("_Plazo_Ejecucion_Fase_2_Construccion_", pActaInicio.PlazoFase2ConstruccionMeses.ToString());
-            strContenido = strContenido.Replace("_Valor_Actual_Contrato_", pActaInicio.ValorActualContrato);
-            strContenido = strContenido.Replace("_Plazo_Inicial_Contrato_", pActaInicio.PlazoInicialContratoSupervisor);
+                       
+            strContenido = strContenido.Replace("_Valor_Actual_Contrato_", formatValor(pActaInicio.ValorActualContrato) );
+            
+            strContenido = strContenido.Replace("_Plazo_Inicial_Contrato_", formatValor( pActaInicio.PlazoInicialContratoSupervisor));
             strContenido = strContenido.Replace("_Valor_Fase_1_preconstruccion_", pActaInicio.ValorFase1Preconstruccion);
             strContenido = strContenido.Replace("_Valor_Fase_2_Construccion_Obra_", pActaInicio.Valorfase2ConstruccionObra);
             strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra_", pActaInicio.NombreEntidadContratistaObra);
-            strContenido = strContenido.Replace("_Valor_Inicial_Contrato_", pActaInicio.ValorInicialContrato);
+            strContenido = strContenido.Replace("_Valor_Inicial_Contrato_", formatValor(pActaInicio.ValorInicialContrato));
             strContenido = strContenido.Replace("_Fecha_Aprobacion_Garantia_Poliza_", pActaInicio.FechaAprobacionGarantiaPoliza);
             strContenido = strContenido.Replace("_Objeto_", pActaInicio.Objeto);
             strContenido = strContenido.Replace("_Numero_DRP_", pActaInicio.NumeroDRP1);
@@ -484,6 +486,18 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Nombre_Supervisor_", "_Nombre_Supervisor_");          
 
             return strContenido;
+
+        }
+
+        private string formatValor(string valor)
+        {
+            if (valor != null)
+            {
+                valor = valor.Remove(valor.Length - 3);            
+            return valor;
+
+            }
+            return string.Empty;           
 
         }
 
@@ -622,47 +636,7 @@ namespace asivamosffie.services
 
         }
 
-        public void replaceTags()
-        {
-            string str="";
-            string valor="";
-
-            str = str.Replace("_Numero_Identificacion_Entidad_Contratista_Interventoria_", valor);
-            str = str.Replace("_Nombre_Representante_Contratista_Interventoria_", valor);
-            str = str.Replace("_Nombre_Entidad_Contratista_Interventoria_", valor);
-            str = str.Replace("_Nombre_Representante_Contratista_Obra_", valor);
-            str = str.Replace("_Nombre_Entidad_Contratista_Obra _", valor);
-            str = str.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", valor);
-            str = str.Replace(" _Fecha_Prevista_Terminacion_", valor);
-            str = str.Replace("_OBSERVACION_O_CONSIDERACIONES_ESPECIALES_", valor);
-            str = str.Replace("_Plazo_Ejecucion_Fase_1_Preconstruccion_", valor);
-            str = str.Replace("_Plazo_Ejecucion_Fase_2_Construccion_", valor);
-            str = str.Replace("_Valor_Actual_Contrato_", valor);
-            str = str.Replace("_Plazo_Inicial_Contrato_", valor);
-            str = str.Replace("_Valor_Fase_1_preconstruccion_", valor);
-            str = str.Replace("_Valor_Fase_2_Construccion_Obra_", valor);
-            str = str.Replace("_Nombre_Entidad_Contratista_Obra_", valor);
-            str = str.Replace("_Valor_Inicial_Contrato_", valor);
-            str = str.Replace("_Fecha_Aprobacion_Garantia_Poliza_", valor);
-            str = str.Replace("_Objeto_", valor);
-            str = str.Replace("_Numero_DRP_", valor);
-            str = str.Replace("_Fecha_Generación_DRP_", valor);
-            str = str.Replace("_Institucion_Educativa_Llave_MEN_", valor);
-            str = str.Replace("_Departamento_y_Municipio_Llave_MEN_", valor);
-            str = str.Replace("_Fecha_Acta_Inicio_", valor);
-            str = str.Replace("_Llave_MEN_Contrato_", valor);
-            str = str.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", valor);
-            str = str.Replace("_Numero_Contrato_Obra_ ", valor);
-            str = str.Replace("_Nombre_Entidad_Contratista_Obra_", valor);
-            str = str.Replace("_Numero_Identificacion_Contratista_Interventoria_", valor);
-            str = str.Replace("_Nombre_Representante_Contratista_Obra_", valor);
-            str = str.Replace("_Nombre_Representante_Contratista_Interventoria_", valor);
-            str = str.Replace("_Nombre_Entidad_Contratista_Interventoria_", valor);
-            str = str.Replace("_Fecha_Acta_Inicio_", valor);
-            str = str.Replace("_Numero_Contrato_Obra_", valor);
-            str = str.Replace("", valor);
-
-        }
+       
 
         //Task<ActionResult<VistaGenerarActaInicioContrato>> GetListVistaGenerarActaInicio(int pContratoId);
         //GetListVistaGenerarActaInicio
@@ -748,11 +722,15 @@ namespace asivamosffie.services
 
             actaInicioConsolidado.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
             actaInicioConsolidado.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;
+                       
 
-            actaInicioConsolidado.ValorFase1Preconstruccion = actaInicioInterventoria.ValorFase1Preconstruccion;
-            actaInicioConsolidado.Valorfase2ConstruccionObra = actaInicioObra.Valorfase2ConstruccionObra;
+            actaInicioConsolidado.ValorFase1Preconstruccion = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion) ;
 
-            actaInicioConsolidado.ValorActualContrato = actaInicioInterventoria.ValorFase1Preconstruccion;
+
+            actaInicioConsolidado.Valorfase2ConstruccionObra = formatValor(actaInicioInterventoria.Valorfase2ConstruccionObra) ;
+
+     
+            actaInicioConsolidado.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion) ;
             //actaInicioConsolidado.Valorfase2ConstruccionObra = actaInicioConsolidado.Valorfase2ConstruccionObra + actaInicioConsolidado.ValorFase1Preconstruccion;
 
         //    Proyecto   ????
@@ -864,7 +842,9 @@ namespace asivamosffie.services
                     if (EstadoSolicitudCodigoContratoPoliza != null)
                         strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
-                    strVigencia = contratoPoliza.Vigencia.ToString();
+                    //strVigencia = contratoPoliza.Vigencia.ToString();                    
+
+                        strVigencia = contratoPoliza.Vigencia != null ? Convert.ToDateTime(contratoPoliza.Vigencia).ToString("yyyy") : contratoPoliza.Vigencia.ToString();
                 }
 
                 DisponibilidadPresupuestal disponibilidadPresupuestal;
@@ -913,6 +893,11 @@ namespace asivamosffie.services
                 }
                 //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                 //VistaGenerarActaInicioContrato
+
+                string strValor = contrato.Valor.ToString();
+                if(strValor.Length>3)
+                    strValor = strValor.Remove(strValor.Length - 3);                
+
                 actaInicio = new VistaGenerarActaInicioContrato
                 {
                     //FechaAprobacionRequisitos="[FechaAprobacionRequisitos] [contrato] FechaAprobacionRequisitos",
@@ -929,7 +914,7 @@ namespace asivamosffie.services
                     //FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
                     FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString(),
                     Objeto = contrato.Objeto,
-                    ValorInicialContrato = contrato.Valor.ToString(),
+                    ValorInicialContrato = strValor,
                     ValorActualContrato = " PENDIENTE",
                     ValorFase1Preconstruccion = " PENDIENTE",
                     Valorfase2ConstruccionObra = " PENDIENTE",
