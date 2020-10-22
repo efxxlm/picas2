@@ -142,7 +142,6 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             contratacionProyectoAportanteSinDiligenciar++;
           };
           if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
-            console.log( aportanteCompleto, contratacionProyecto.contratacionProyectoAportante.length );
             contratacionProyectoAportanteCompleto++;
           };
           if ( aportanteEnProceso < aportanteCompleto || aportanteEnProceso > aportanteSinDiligenciar ) {
