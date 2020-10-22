@@ -61,7 +61,7 @@ export class TablaProyectosTecnicoComponent {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.projectService.deleteProjectById(this.proyectoid).subscribe(respuesta => {
           let proyecto = respuesta;

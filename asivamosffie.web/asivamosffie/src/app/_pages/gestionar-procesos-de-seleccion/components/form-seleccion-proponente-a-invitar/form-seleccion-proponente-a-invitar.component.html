@@ -68,8 +68,9 @@
 
   <div class="text-center"
     *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
-    <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    <button  *ngIf="editar"
+    mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>
 </form>

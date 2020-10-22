@@ -15,6 +15,7 @@ import { startWith, map } from 'rxjs/operators';
 export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   listaDepartamentos: Localizacion[] = [];

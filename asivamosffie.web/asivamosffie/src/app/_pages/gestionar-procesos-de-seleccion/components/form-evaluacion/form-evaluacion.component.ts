@@ -10,6 +10,7 @@ import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_service
 export class FormEvaluacionComponent {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
 

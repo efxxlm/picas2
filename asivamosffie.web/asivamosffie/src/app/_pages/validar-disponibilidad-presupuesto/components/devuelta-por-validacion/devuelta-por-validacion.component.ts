@@ -51,7 +51,7 @@ export class DevueltaPorValidacionComponent implements OnInit {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(result)
+      if(result === true)
       {
         this.router.navigate(['/validarDisponibilidadPresupuesto']);
       }

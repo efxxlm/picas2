@@ -91,7 +91,7 @@
               </div>
             </div>
             <div class="text-right" *ngIf="addressForm.value.cotizaciones.length > 1">
-              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(cotizaciones, i)">
+              <button *ngIf="editar" mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(cotizaciones, i)">
                 <img src="assets/img/icon/menos.svg" alt="Eliminar cotización">
                 Eliminar cotización
               </button>
@@ -103,8 +103,8 @@
   </mat-card>
 
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>
 </form>

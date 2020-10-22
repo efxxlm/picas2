@@ -13,6 +13,11 @@ import { timeout } from 'rxjs/operators';
 })
 export class InvitacionCerradaComponent implements OnInit {
 
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+    permiso que tenga el usuario
+    */
+   bitPuedoEditar=true;
+
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
 
@@ -56,7 +61,7 @@ export class InvitacionCerradaComponent implements OnInit {
 
       if (this.procesoSeleccion.procesoSeleccionId > 0)
         this.editMode();
-
+        
     })
 
   }
@@ -111,6 +116,22 @@ export class InvitacionCerradaComponent implements OnInit {
         botonProponente.click();
         botonevaluacion.click();
         botonProponenteInvitar.click();
+
+        //confirmo si tiene el estado para editar
+        if(this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico)
+        {
+          this.bitPuedoEditar=true;
+        }
+        else{
+          this.bitPuedoEditar=false;
+        }
+
     });
 
   }
