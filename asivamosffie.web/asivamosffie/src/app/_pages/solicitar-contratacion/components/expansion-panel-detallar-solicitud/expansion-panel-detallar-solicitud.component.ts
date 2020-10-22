@@ -110,6 +110,9 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             let completos = 0;
             let enProceso = 0;
             let sinDiligenciar = 0;
+            if ( contratacionProyectoAportante.componenteAportante.length === 0 ) {
+              sinDiligenciar++;
+            }
             for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
               if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
                 sinDiligenciar++;

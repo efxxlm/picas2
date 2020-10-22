@@ -81,7 +81,7 @@
                     <a mat-raised-button color="accent" 
                             class="btn-table" 
                             [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,1]"
-                            *ngIf="element.disponibilidadPresupuestalId != 0">
+                            *ngIf="element.disponibilidadPresupuestalId != 0 && element.estadoSolicitudText == ''">
                             Ver detalle /Editar
                     </a>
                     
@@ -95,7 +95,7 @@
                     <a  mat-raised-button color="accent" 
                         class="btn-table" 
                         [routerLink]="['solicitarDisponibilidadPresupuestal/crearSolicitudTradicional/verDetalle', element.contratacionId, element.disponibilidadPresupuestalId,1]"
-                        *ngIf="element.disponibilidadPresupuestalId != 0">
+                        *ngIf="element.disponibilidadPresupuestalId != 0 && element.estadoSolicitudText == 'Con validación presupuestal'">
                         Ver detalle
                     </a>
     
