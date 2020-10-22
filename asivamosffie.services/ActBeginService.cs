@@ -48,7 +48,7 @@ namespace asivamosffie.services
             //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId ).FirstOrDefault();
 
-            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Tiene_Observaciones_Acta_Inicio_Fase2, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -97,7 +97,7 @@ namespace asivamosffie.services
 
             ContratoObservacion contratoObservacion= new ContratoObservacion();
 
-            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Plazo_Ejecucion_Fase_2, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -164,7 +164,7 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta();
 
-            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Plazo_Ejecucion_Fase_2, (int)EnumeratorTipoDominio.Acciones);
 
             //try
             //{
