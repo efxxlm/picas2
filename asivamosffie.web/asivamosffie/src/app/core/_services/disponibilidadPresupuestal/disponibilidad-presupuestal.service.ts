@@ -22,7 +22,10 @@ export class DisponibilidadPresupuestalService {
     return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarRegistroPresupuestal`);
   }
 
-  
+  GetDisponibilidadPresupuestalByID(id) {
+    return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetDisponibilidadPresupuestalByID?DisponibilidadPresupuestalId=${id}`);
+  }
+
   GetDetailAvailabilityBudgetProyect(id)
   {
     return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyect?disponibilidadPresupuestalId=${id}`);
