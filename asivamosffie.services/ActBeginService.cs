@@ -102,7 +102,7 @@ namespace asivamosffie.services
             try
             {
                 contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
-                contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
+                contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
                 contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();
 
                 contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
@@ -205,7 +205,7 @@ namespace asivamosffie.services
                     contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
                     contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
 
-                    contrato.PlazoFase1PreDias = pPlazoFase2PreDias;
+                    contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                     contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
 
                     _context.Contrato.Update(contrato);
