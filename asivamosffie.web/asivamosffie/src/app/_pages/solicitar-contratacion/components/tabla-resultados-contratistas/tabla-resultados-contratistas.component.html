@@ -67,7 +67,7 @@
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Seleccionar </th>
                 <td mat-cell *matCellDef="let element">
-                    <mat-radio-button class="example-margin" (change)="selectElement(element)"></mat-radio-button>
+                    <mat-radio-button class="example-margin" (change)="selectElement(element)" [checked]="this.contratacion[ 'contratista' ] !== undefined ? true: null"></mat-radio-button>
                 </td>
             </ng-container>
 

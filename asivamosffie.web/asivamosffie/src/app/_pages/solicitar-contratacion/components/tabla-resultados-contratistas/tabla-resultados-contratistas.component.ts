@@ -52,7 +52,22 @@ export class TablaResultadosContratistasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log( this.contratacion[ 'contratista' ] );
+  
+    setTimeout(() => {
+      if ( this.contratacion[ 'contratista' ] !== undefined ) {
+        this.contratista = {
+          idContratista: this.contratacion.contratistaId,
+    
+        }
+        this.dataSource = new MatTableDataSource( [ this.contratacion[ 'contratista' ] ] );
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      }
+    }, 2000);
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -71,7 +86,7 @@ export class TablaResultadosContratistasComponent implements OnInit {
     let nombre = this.nombreContratista.value;
     let numero = this.numeroDocumento.value;
     let esConsorcio = this.unionTemporal.value;
-
+    this.dataSource = new MatTableDataSource();
     this.projectContractingService.getListContractingByFilters( numero, nombre, esConsorcio )
       .subscribe( response => {
         this.dataSource = new MatTableDataSource(response);
@@ -87,6 +102,5 @@ export class TablaResultadosContratistasComponent implements OnInit {
     this.contratacion.contratistaId = this.contratista.idContratista;
     this.guardar.emit(null);
   }
-  
 
 }

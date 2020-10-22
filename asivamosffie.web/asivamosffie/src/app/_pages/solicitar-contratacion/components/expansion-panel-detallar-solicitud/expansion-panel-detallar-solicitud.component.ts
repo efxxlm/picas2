@@ -25,13 +25,9 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
 
-  ) { }
-
-  ngOnInit(): void {
+  ) {
     this.route.params.subscribe((params: Params) => {
-      this.contratacion.contratacionId = params.id;
-
-      this.projectContractingService.getContratacionByContratacionId(this.contratacion.contratacionId)
+      this.projectContractingService.getContratacionByContratacionId(params.id)
         .subscribe(response => {
           this.contratacion = response;
 
@@ -55,6 +51,9 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
         });
 
     });
+  }
+
+  ngOnInit(): void {
   }
 
   semaforoAcordeon(acordeon: string) {
@@ -140,6 +139,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             contratacionProyectoAportanteSinDiligenciar++;
           };
           if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
+            console.log( aportanteCompleto, contratacionProyecto.contratacionProyectoAportante.length );
             contratacionProyectoAportanteCompleto++;
           };
           if ( aportanteEnProceso < aportanteCompleto || aportanteEnProceso > aportanteSinDiligenciar ) {
