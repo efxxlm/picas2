@@ -284,7 +284,7 @@ export class FormRegistrarParticipantesComponent {
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
     this.fiduciaryCommitteeSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
-        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>')
         this.borrarArray(this.invitados, i)
       })
 

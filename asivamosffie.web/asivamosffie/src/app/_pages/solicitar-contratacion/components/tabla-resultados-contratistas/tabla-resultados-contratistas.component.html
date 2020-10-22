@@ -14,7 +14,7 @@
             <div class="pr-1">
                 <label class="label-left" for="numeroDocumento">Número de documento del contratista (NIT/RUT/CC)</label>
             </div>
-            <div class="col d-flex">
+            <div class="col d-flex pr-7-8">
                 <mat-form-field class="full-width">
                     <input matInput type="text" [formControl]="numeroDocumento" required>
                 </mat-form-field>
@@ -30,7 +30,7 @@
                     <input matInput type="text" [formControl]="nombreContratista" [value]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ]?.nombre : ''" required>
                 </mat-form-field>
             </div>
-            <button mat-button color="primary" class="btn-guardar" type="submit" (click)="buscar()" [disabled]="unionTemporal.value === null">
+            <button mat-button color="primary" class="btn-guardar guardar-transform" type="submit" (click)="buscar()" [disabled]="unionTemporal.value === null">
                 <img src="assets/img/icon/lupa.svg" alt="Regresar" > <strong>Buscar</strong>
             </button>
         </div>

@@ -82,7 +82,7 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="region" (selectionChange)="changeRegion()">
-                      <mat-option *ngFor="let region of selectRegion" [value]="region">
+                      <mat-option class="capitalize" *ngFor="let region of selectRegion" [value]="region">
                         {{ region.descripcion }}
                       </mat-option>
                     </mat-select>
@@ -100,7 +100,7 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()">
-                      <mat-option *ngFor="let departamento of selectDepartamento" [value]="departamento">
+                      <mat-option class="capitalize" *ngFor="let departamento of selectDepartamento" [value]="departamento">
                         {{ departamento.descripcion }}
                       </mat-option>
                     </mat-select>

@@ -207,11 +207,9 @@ input[type="number"]::-webkit-outer-spin-button {
   position: relative;
 }
 
-.capitalize {
-  text-transform: capitalize;
-}
-
-.capitalize option {
+.capitalize,
+.capitalize option,
+.capitalize .mat-option-text {
   text-transform: capitalize;
 }
 
