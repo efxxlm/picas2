@@ -48,7 +48,7 @@ namespace asivamosffie.services
             //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId ).FirstOrDefault();
 
-            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.EditadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -70,10 +70,10 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
+                    Code = ConstantMessagesActaInicio.OperacionExitosa,
                     Message =
                     await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
-                    ConstantMessagesActaInicio.EditadoCorrrectamente, idAccionCrearActaInicio
+                    ConstantMessagesActaInicio.OperacionExitosa, idAccionCrearActaInicio
                     , contrato.UsuarioModificacion, " GUARDAR OBSERVACION CONTRATO ACTA"
                     )
                 };
@@ -97,7 +97,7 @@ namespace asivamosffie.services
 
             ContratoObservacion contratoObservacion= new ContratoObservacion();
 
-            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.EditadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -144,10 +144,10 @@ namespace asivamosffie.services
                IsSuccessful = true,
                IsException = false,
                IsValidation = false,
-               Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
+               Code = ConstantMessagesActaInicio.OperacionExitosa,
                Message =
                await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
-               ConstantMessagesActaInicio.EditadoCorrrectamente, idAccionCrearActaInicio
+               ConstantMessagesActaInicio.OperacionExitosa, idAccionCrearActaInicio
                , contrato.UsuarioModificacion, " GUARDAR OBSERVACION CONTRATO ACTA"
                )
            };
@@ -164,7 +164,7 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta();
 
-            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.EditadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesActaInicio.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
 
             //try
             //{
@@ -205,8 +205,8 @@ namespace asivamosffie.services
                     contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
                     contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
 
-                    contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
-                    contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
+                    contrato.PlazoFase1PreDias = pPlazoFase2PreDias;
+                    contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
 
                     _context.Contrato.Update(contrato);
 
@@ -234,10 +234,10 @@ namespace asivamosffie.services
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
-                            Code = ConstantMessagesActaInicio.EditadoCorrrectamente,
+                            Code = ConstantMessagesActaInicio.OperacionExitosa,
                             Message =
                             await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
-                            ConstantMessagesActaInicio.EditadoCorrrectamente,
+                            ConstantMessagesActaInicio.OperacionExitosa,
                             //contratoPoliza
                             idAccionCrearContratoPoliza
                             , contrato.UsuarioModificacion
