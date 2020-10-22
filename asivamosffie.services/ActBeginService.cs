@@ -447,8 +447,8 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Valor_Actual_Contrato_", formatValor(pActaInicio.ValorActualContrato) );
             
             strContenido = strContenido.Replace("_Plazo_Inicial_Contrato_", formatValor( pActaInicio.PlazoInicialContratoSupervisor));
-            strContenido = strContenido.Replace("_Valor_Fase_1_preconstruccion_", pActaInicio.ValorFase1Preconstruccion);
-            strContenido = strContenido.Replace("_Valor_Fase_2_Construccion_Obra_", pActaInicio.Valorfase2ConstruccionObra);
+            strContenido = strContenido.Replace("_Valor_Fase_1_preconstruccion_", formatValor(pActaInicio.ValorFase1Preconstruccion));
+            strContenido = strContenido.Replace("_Valor_Fase_2_Construccion_Obra_", formatValor(pActaInicio.Valorfase2ConstruccionObra));
             strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra_", pActaInicio.NombreEntidadContratistaObra);
             strContenido = strContenido.Replace("_Valor_Inicial_Contrato_", formatValor(pActaInicio.ValorInicialContrato));
             strContenido = strContenido.Replace("_Fecha_Aprobacion_Garantia_Poliza_", pActaInicio.FechaAprobacionGarantiaPoliza);
@@ -918,7 +918,8 @@ namespace asivamosffie.services
                     ValorActualContrato = " PENDIENTE",
                     ValorFase1Preconstruccion = " PENDIENTE",
                     Valorfase2ConstruccionObra = " PENDIENTE",
-                    PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
+                    //PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
+                    PlazoInicialContratoSupervisor = contrato.Plazo != null ? Convert.ToDateTime(contrato.Plazo).ToString("dd/MM/yyyy") : contrato.Plazo.ToString(),
 
                     PlazoFase1PreMeses = contrato.PlazoFase1PreMeses,
                     PlazoFase2ConstruccionDias = contrato.PlazoFase2ConstruccionDias,
