@@ -18,6 +18,7 @@ namespace asivamosffie.api.Controllers
         private readonly IDocumentService _documentService;
         private readonly IProjectContractingService _projectContractingService;
         private readonly IOptions<AppSettings> _settings;
+  
 
 
         public ProjectContractingController(IDocumentService documentService, IOptions<AppSettings> settings, IProjectContractingService projectContractingService)
@@ -35,7 +36,9 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _projectContractingService.ChangeStateContratacionByIdContratacion(idContratacion, PCodigoEstado, HttpContext.User.FindFirst("User").Value.ToUpper());
+                respuesta = await _projectContractingService.ChangeStateContratacionByIdContratacion(idContratacion, PCodigoEstado, HttpContext.User.FindFirst("User").Value.ToUpper()
+                , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender
+                    );
                 return respuesta;
             }
             catch (Exception ex)
