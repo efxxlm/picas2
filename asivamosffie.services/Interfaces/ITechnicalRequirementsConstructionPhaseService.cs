@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     public interface ITechnicalRequirementsConstructionPhaseService
     {
         Task<List<dynamic>> GetContractsGrid(int pUsuarioId);
-        Task<Contrato> GetContratoByContratoId(int pContratoId);
+        Task<Contrato> GetContratoByContratoId(int pContratoId, string pUsuarioCreacion);
         Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion);
         Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion);
@@ -27,6 +27,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion);
         Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, string pUsuarioModificacion);
         Task<Byte[]> GetPDFDRP(int pContratoId, string usuarioModificacion);
+        Task<Respuesta> CreateEditObservacionConstruccion(ConstruccionObservacion pObservacion);
 
 
     }

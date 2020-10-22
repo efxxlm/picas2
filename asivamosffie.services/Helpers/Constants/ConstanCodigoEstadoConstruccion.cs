@@ -14,4 +14,16 @@
         public const string	Enviado_al_interventor = "10";
         public const string	Enviado_al_apoyo = "11";
     }
+
+    public static class ConstanCodigoTipoObservacionConstruccion
+    { 
+        public const string	Sin_aprobacion_de_requisitos_tecnicos = "1";
+
+        public const string Diagnostico = "1";
+        public const string PlanesProgramas = "2";
+        public const string ManejoAnticipo = "3";
+        public const string ProgramacionObra = "4";
+        public const string FlujoInversion = "5";
+        
+    }
 }

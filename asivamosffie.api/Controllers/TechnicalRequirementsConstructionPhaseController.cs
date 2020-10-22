@@ -52,7 +52,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetContratoByContratoId( pContratoId );
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                return await _technicalRequirementsConstructionPhaseService.GetContratoByContratoId( pContratoId, usuarioCreacion );
             }
             catch (Exception ex)
             {
@@ -100,6 +101,23 @@ namespace asivamosffie.api.Controllers
             {
                 pConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditDiagnostico(pConstruccion);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("CreateEditObservacionConstruccion")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacionConstruccion(ConstruccionObservacion pObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionConstruccion(pObservacion);
                 return respuesta;
             }
             catch (Exception ex)

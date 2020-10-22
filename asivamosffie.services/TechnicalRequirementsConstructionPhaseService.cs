@@ -87,7 +87,17 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        private bool VerificarEsSupervisor( string pUsuarioCreacion ){
+            List<UsuarioPerfil> usuarioPerfil =  _context.UsuarioPerfil.Where( r => r.PerfilId == 8 )
+            .Include( r => r.Usuario ).ToList();
+
+            if ( usuarioPerfil.Where( r => r.Usuario.Email == pUsuarioCreacion ).ToList().Count > 0 )
+                return true;
+            else
+                return false;
+        }
+
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId, string pUsuarioCreacion)
         {
             try
             {
@@ -126,8 +136,11 @@ namespace asivamosffie.services
 
                     });
 
+                    cc.ObservacionDiagnostico = getObservacion( cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, VerificarEsSupervisor(pUsuarioCreacion));
+
                 });
 
+                
                 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
@@ -143,6 +156,19 @@ namespace asivamosffie.services
             {
                 return new Contrato();
             }
+        }
+
+        private ConstruccionObservacion getObservacion( ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion ){
+            ConstruccionObservacion observacion = new ConstruccionObservacion();
+
+            ConstruccionObservacion construccionObservacion = pContratoConstruccion.ConstruccionObservacion.ToList()
+                        .Where( r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico )
+                        .OrderByDescending( o => o.FechaCreacion ).FirstOrDefault();
+
+            if ( construccionObservacion != null )
+                observacion = construccionObservacion;
+
+            return construccionObservacion;
         }
 
         public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
@@ -223,6 +249,70 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Code = GeneralCodes.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditObservacionConstruccion(ConstruccionObservacion pObservacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pObservacion.ConstruccionObservacionId > 0)
+                {
+                    CreateEdit = "EDITAR CONSTRUCCION OBSERVACION";
+
+                    ConstruccionObservacion construccionObservacion = _context.ConstruccionObservacion.Find(pObservacion.ConstruccionObservacionId);
+
+                    construccionObservacion.FechaModificacion = DateTime.Now;
+                    construccionObservacion.UsuarioModificacion = pObservacion.UsuarioCreacion;
+
+                    construccionObservacion.Observaciones = pObservacion.Observaciones;
+
+                }
+                else
+                {
+                    CreateEdit = "CREAR CONSTRUCCION OBSERVACION";
+
+                    ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
+
+                    construccionObservacion.FechaCreacion = DateTime.Now;
+                    construccionObservacion.UsuarioCreacion = pObservacion.UsuarioCreacion;
+
+                    construccionObservacion.ContratoConstruccionId = pObservacion.ContratoConstruccionId;
+                    construccionObservacion.TipoObservacionConstruccion = pObservacion.TipoObservacionConstruccion;
+                    construccionObservacion.Observaciones = pObservacion.Observaciones;
+                    construccionObservacion.EsSupervision = pObservacion.EsSupervision;
+                    construccionObservacion.EsActa = pObservacion.EsActa;
+
+                    _context.ConstruccionObservacion.Add(construccionObservacion);
+                }
+
+                _context.SaveChanges();
+                return
+                    new Respuesta
+                    {
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pObservacion.UsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
         }
