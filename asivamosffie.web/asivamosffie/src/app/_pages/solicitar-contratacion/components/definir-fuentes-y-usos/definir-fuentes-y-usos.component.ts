@@ -367,7 +367,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         );
 
     } else {
-      this.openDialog('', 'La sumatoria de los componentes, no es igual el valor total del aporte.');
+      this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
     }
 
     console.log(this.contratacionProyecto);

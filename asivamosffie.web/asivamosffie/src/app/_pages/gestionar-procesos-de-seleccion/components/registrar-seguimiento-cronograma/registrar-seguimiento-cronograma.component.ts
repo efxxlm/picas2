@@ -52,7 +52,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   maxDate: Date;
   idProcesoSeleccion: number = 0;
   listaCronograma: CronogramaSeguimiento[];
-  listaCronogramaActividades: import("c:/Repositorios/GIT/AsiVamosFFIE/asivamosffie.web/asivamosffie/src/app/core/_services/procesoSeleccion/proceso-seleccion.service").ProcesoSeleccionCronograma[];
+  listaCronogramaActividades: import("src/app/core/_services/procesoSeleccion/proceso-seleccion.service").ProcesoSeleccionCronograma[];
 
   constructor(
               private fb: FormBuilder,
