@@ -129,9 +129,7 @@ namespace asivamosffie.services
                     numeroContrato = DisponibilidadPresupuestal.NumeroContrato != null ?
                          DisponibilidadPresupuestal.NumeroContrato : "";
                 }
-
-
-
+                 
                 DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
                 {
 
