@@ -45,6 +45,34 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetContractsGridApoyoObra")]
+        [HttpGet]
+        public async Task<List<dynamic>> GetContractsGridApoyoObra()
+        {
+            try
+            {
+                return await _technicalRequirementsConstructionPhaseService.GetContractsGridApoyoObra( );
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("GetContractsGridApoyoInterventoria")]
+        [HttpGet]
+        public async Task<List<dynamic>> GetContractsGridApoyoInterventoria()
+        {
+            try
+            {
+                return await _technicalRequirementsConstructionPhaseService.GetContractsGridApoyoInterventoria( );
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         
         [Route("GetContratoByContratoId")]
         [HttpGet]
@@ -109,15 +137,15 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("CreateEditObservacionConstruccion")]
+        [Route("CreateEditObservacionDiagnostico")]
         [HttpPost]
-        public async Task<Respuesta> CreateEditObservacionConstruccion(ConstruccionObservacion pObservacion)
+        public async Task<Respuesta> CreateEditObservacionDiagnostico(ContratoConstruccion pContratoConstruccion, bool esSupervisor)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionConstruccion(pObservacion);
+                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionDiagnostico(pContratoConstruccion, esSupervisor);
                 return respuesta;
             }
             catch (Exception ex)
