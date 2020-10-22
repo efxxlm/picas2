@@ -161,7 +161,9 @@ namespace asivamosffie.api.Controllers
                     procesoSeleccionCronograma.UsuarioCreacion = usermodified;
                 }
                 
-                _response = await _selectionProcessScheduleService.setProcesoSeleccionMonitoreoCronograma(procesoSeleccionCronograma);
+                _response = await _selectionProcessScheduleService.setProcesoSeleccionMonitoreoCronograma(procesoSeleccionCronograma,
+                     _settings.Value.DominioFront,
+                    _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(_response);
             }
             catch (Exception ex)
