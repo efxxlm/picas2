@@ -160,7 +160,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> EditarContratoObservacion( int pContratoId, string pObservacion, string pUsuarioModificacion)
+        public async Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2)
         {
             Respuesta _response = new Respuesta();
 
@@ -201,6 +201,12 @@ namespace asivamosffie.services
                     contrato.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
                     contrato.UsuarioCreacion = pUsuarioModificacion;
                     contrato.FechaModificacion = DateTime.Now;
+
+                    contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
+                    contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
+
+                    contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
+                    contrato.PlazoFase1PreMeses = pPlazoFase2PreMeses;
 
                     _context.Contrato.Update(contrato);
 

@@ -29,7 +29,7 @@ namespace asivamosffie.services.Interfaces
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
             );
 
-        Task<Respuesta> EditarContratoObservacion(int pContratoId, string pObservacion, string pUsuarioModificacion);
+        Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2);
 
         //  FechaFirmaContratista - contrato
         //FechaFirmaActaContratistaInterventoria  - contrato
