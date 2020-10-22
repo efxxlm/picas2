@@ -49,5 +49,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> deleteProcesoSeleccionActividadesByID(int procesoSeleccionCotizacionId, string usuarioModificacion);
         Task<List<ProcesoSeleccionObservacion>> getObservacionesProcesoSeleccionProponentes(int id);
         Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion);
+        Task<Respuesta> DeleteProcesoSeleccionIntegrante(int pId, string usuarioCreacion);
     }
 }

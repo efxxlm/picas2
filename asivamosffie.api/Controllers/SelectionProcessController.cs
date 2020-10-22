@@ -53,9 +53,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
-
+         
         [Route("GetSelectionProcessById")]
         public async Task<ProcesoSeleccion> GetSelectionProcessById(int id)
         {
@@ -73,8 +71,8 @@ namespace asivamosffie.api.Controllers
             {
                 string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId,
-                    usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo, _settings.Value.DominioFront,
-                    _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                    usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo, 
+                    _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return respuesta;
             }
             catch (Exception ex)
@@ -111,6 +109,26 @@ namespace asivamosffie.api.Controllers
             {
                 string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.DeleteProcesoSeleccionCronogramaMonitoreo(pId, usuarioCreacion);
+                return respuesta;
+                //
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+
+        
+        [Route("DeleteProcesoSeleccionIntegrante")]
+        [HttpDelete]
+        public async Task<Respuesta> DeleteProcesoSeleccionIntegrante(Int32 pId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _selectionProcessService.DeleteProcesoSeleccionIntegrante(pId, usuarioCreacion);
                 return respuesta;
                 //
             }

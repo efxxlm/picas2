@@ -273,8 +273,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   addComponent(i: number) {
-    const grupoComponente = this.createComponente();
-    const listaUsos = grupoComponente.get('usos') as FormArray;
+    let grupoComponente = this.createComponente();
+    let listaUsos = grupoComponente.get('usos') as FormArray;
     listaUsos.push(this.createUso());
     this.componentes(i).push(grupoComponente);
   }

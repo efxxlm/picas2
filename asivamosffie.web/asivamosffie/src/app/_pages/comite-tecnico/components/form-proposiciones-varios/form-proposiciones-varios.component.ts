@@ -192,7 +192,7 @@ export class FormProposicionesVariosComponent implements OnInit {
     this.technicalCommitteSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
         this.borrarArray(grupo, i)
-        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>')
         this.ngOnInit();
       })
 

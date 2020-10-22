@@ -122,8 +122,7 @@ export class SeccionPrivadaComponent implements OnInit {
     if ( redirect )
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result === true)
-        {
+        
           if(id.esCompleto)
           {
             this.router.navigate([`/seleccion/`]);            
@@ -134,7 +133,7 @@ export class SeccionPrivadaComponent implements OnInit {
               location.reload();  
             }, 1000);
           }                    
-        }
+        
       });
     }
   }

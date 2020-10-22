@@ -42,6 +42,10 @@
         // border-bottom: solid 1px;
         position: relative;
 
+        .capitalize & {
+          text-transform: capitalize;
+        }
+
         &::after {
             content: "";
             display: block;

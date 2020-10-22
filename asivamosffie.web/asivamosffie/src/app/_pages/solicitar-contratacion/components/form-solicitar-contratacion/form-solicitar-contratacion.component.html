@@ -32,7 +32,7 @@
         <button type="button" mat-icon-button (click)="verBusqueda = false" class="text-info--close">
           <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar">
         </button>
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
           <mat-card-title class="header-card--text">
             Filtro de busqueda
           </mat-card-title>
@@ -64,11 +64,11 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #llaveMEN type="number" maxlength="12" formControlName="llaveMEN"
+                    <input matInput #llaveMEN type="number" maxlength="8" formControlName="llaveMEN"
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{12 - llaveMEN.value.length}}</span>
+                  <span class="contador">{{8 - llaveMEN.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="region" (selectionChange)="changeRegion()">
-                      <mat-option *ngFor="let region of selectRegion" [value]="region">
+                      <mat-option class="capitalize" *ngFor="let region of selectRegion" [value]="region">
                         {{ region.descripcion }}
                       </mat-option>
                     </mat-select>
@@ -100,7 +100,7 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()">
-                      <mat-option *ngFor="let departamento of selectDepartamento" [value]="departamento">
+                      <mat-option class="capitalize" *ngFor="let departamento of selectDepartamento" [value]="departamento">
                         {{ departamento.descripcion }}
                       </mat-option>
                     </mat-select>
