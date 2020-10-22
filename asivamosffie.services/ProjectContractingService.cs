@@ -58,7 +58,7 @@ namespace asivamosffie.services
                             .Replace("[NUMERO_SOLICITUD]", contratacionOld.NumeroSolicitud)
                             .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-mm-yy"))
                             .Replace("[OBRA_INTERVENTORIA]", contratacionOld.TipoSolicitudCodigo);
-                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Proceso de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
+                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
                   
