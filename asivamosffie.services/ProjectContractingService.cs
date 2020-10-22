@@ -284,6 +284,19 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.CofinanciacionAportante)
                 .FirstOrDefaultAsync();
 
+            foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante.Where(r => !(bool)r.Eliminado))
+            {
+                decimal ValorDisponibleAportante = 0;
+               
+                foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante.Where(r => !(bool)r.Eliminado))
+                {
+                    ValorDisponibleAportante = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
+                  
+                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante).ToString(); 
+                }
+
+
+            }
             return contratacionProyecto;
         }
 
@@ -328,7 +341,7 @@ namespace asivamosffie.services
             if (!string.IsNullOrEmpty(pNombre))
                 contratistas = contratistas.Where(r => r.Nombre.ToUpper().Contains(pNombre.ToUpper()));
 
-            if ((bool)EsConsorcio)
+            if (!(bool)EsConsorcio)
                 contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio);
             else
                 contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural || r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual);
@@ -1064,7 +1077,7 @@ namespace asivamosffie.services
                     Contratacion contratacionInterventoria = await CreateContratacion(pContratacion, usuarioCreacion);
 
 
-                    return  
+                    return
                   new Respuesta
                   {
                       IsSuccessful = true,
