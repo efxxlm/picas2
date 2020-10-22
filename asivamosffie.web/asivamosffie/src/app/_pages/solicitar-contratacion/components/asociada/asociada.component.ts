@@ -36,7 +36,8 @@ export class AsociadaComponent implements OnInit {
   constructor(
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private projectContactingService: ProjectContractingService,
-                public dialog: MatDialog,    
+                private dialogRef: MatDialogRef<AsociadaComponent>,
+                public dialog: MatDialog,
                 public router: Router      
              ) 
   {
@@ -92,11 +93,15 @@ export class AsociadaComponent implements OnInit {
       contratacion.contratacionProyecto.push( contratacionProyecto )
     });
 
-    this.projectContactingService.createContratacionProyecto( contratacion ).subscribe( respuesta => {
-      if ( respuesta.code == "200" )
-        this.openDialog( "", respuesta.message )
-        this.router.navigate(["/solicitarContratacion"]);
-    });
+    this.projectContactingService.createContratacionProyecto( contratacion ).subscribe( 
+      respuesta => {
+        this.dialogRef.close();
+        if ( respuesta.code == "200" )
+          this.openDialog( "", respuesta.message );
+          this.router.navigate(["/solicitarContratacion"]);
+      }, 
+      err => this.openDialog( "", err.message )
+    );
 
   }
 

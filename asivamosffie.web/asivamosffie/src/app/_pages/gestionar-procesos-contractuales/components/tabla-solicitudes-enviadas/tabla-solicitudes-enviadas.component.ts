@@ -20,59 +20,22 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoDelRegistro', 'id' ];
   estadoCodigo: string;
+  estadoCodigos = {
+    enviadaFiduciaria: '9'
+  }
 
   constructor ( private routes: Router ) {
   }
 
   ngOnInit() {
-    this.$data.subscribe( resp => {
+    this.$data.subscribe( ( response: any[] ) => {
       let dataTable = [];
-      dataTable.push(
-        {
-          "numeroSolicitud": "CO_003",
-          "fechaSolicitud": "2020-08-19T22:47:16",
-          "tipoSolicitud": "Modificación contractual",
-          "estadoDelRegistro": "Completo",
-          "estadoRegistro": true,
-          "sesionComiteSolicitudId": 14,
-          "tipoSolicitudCodigo": "2",
-          "solicitudId": 6,
-          "fechaCreacion": "2020-09-01T18:15:13.377",
-          "usuarioCreacion": "diegoaes@yopmail.com",
-          "fechaModificacion": "2020-09-04T11:29:02.81",
-          "comiteTecnicoId": 18,
-          "estadoCodigo": "9",
-          "generaCompromiso": true,
-          "cantCompromisos": 1,
-          "eliminado": false,
-          "requiereVotacion": true,
-          "sesionSolicitudCompromiso": [],
-          "sesionSolicitudObservacionProyecto": [],
-          "sesionSolicitudVoto": []
-        },
-        {
-          "numeroSolicitud": "CO_013",
-          "fechaSolicitud": "2020-08-19T22:47:16",
-          "tipoSolicitud": "Liquidación",
-          "estadoDelRegistro": "Completo",
-          "estadoRegistro": true,
-          "sesionComiteSolicitudId": 14,
-          "tipoSolicitudCodigo": "2",
-          "solicitudId": 6,
-          "fechaCreacion": "2020-09-01T18:15:13.377",
-          "usuarioCreacion": "diegoaes@yopmail.com",
-          "fechaModificacion": "2020-09-04T11:29:02.81",
-          "comiteTecnicoId": 18,
-          "estadoCodigo": "9",
-          "generaCompromiso": true,
-          "cantCompromisos": 1,
-          "eliminado": false,
-          "requiereVotacion": true,
-          "sesionSolicitudCompromiso": [],
-          "sesionSolicitudObservacionProyecto": [],
-          "sesionSolicitudVoto": []
-        }
-      )
+
+      response.forEach( lista => {
+         if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
+           dataTable.push( lista );
+         };
+      } );
 
       this.dataSource = new MatTableDataSource( dataTable );
       this.dataSource.paginator              = this.paginator;

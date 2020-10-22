@@ -36,9 +36,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestal();
             return respuesta;
         }
-
-        
-
+         
         [Route("GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud")]
         [HttpGet]
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
@@ -125,8 +123,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-
-
+         
         [Route("GenerateDDP")]
         [HttpGet]
         public async Task<IActionResult> GenerateDDP(int id)
@@ -157,9 +154,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-        
-
+         
         [Route("GetGridBudgetAvailability")]
         public async Task<IActionResult> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId)
         {

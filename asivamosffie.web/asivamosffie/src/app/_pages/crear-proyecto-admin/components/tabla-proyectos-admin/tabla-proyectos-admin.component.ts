@@ -58,7 +58,7 @@ export class TablaProyectosAdminComponent {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.projectService.DeleteProyectoAdministrativoByProyectoId(this.proyectoid).subscribe(respuesta => {
           let proyecto = respuesta;

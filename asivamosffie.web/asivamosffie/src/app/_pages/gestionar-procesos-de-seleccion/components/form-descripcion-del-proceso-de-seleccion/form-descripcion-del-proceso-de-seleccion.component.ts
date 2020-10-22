@@ -20,6 +20,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   listaTipoIntervencion: Dominio[];
@@ -54,9 +55,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    
     this.addressForm = this.crearFormulario();
-    console.log(this.addressForm.get("grupos"));
     return new Promise(resolve => {
       forkJoin([
 

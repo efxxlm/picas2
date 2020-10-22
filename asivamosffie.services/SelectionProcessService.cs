@@ -224,6 +224,21 @@ namespace asivamosffie.services
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
+                //si tiene relacion con algo, no lo dejo eliminar
+                var comite = _context.SesionComiteSolicitud.Where(x=>x.SolicitudId==pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Contratacion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
+                if(comite>0)
+                {
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion,"ELIMINACIÓN CON DEPENDENCIA.")
+                    };
+                }
+
                 strCrearEditar = "ELIMINAR PROCESO SELECCION";
                 ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(pId);
                 //Auditoria

@@ -42,7 +42,7 @@ export class CargarListadoDeProyectosComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
+        if(result === true)
         {
           this.router.navigate(["/cargarMasivamente"], {});
         }
@@ -56,7 +56,7 @@ export class CargarListadoDeProyectosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.projectService.uploadOkProjectsFileProject(this.idProject).subscribe(
           response => {

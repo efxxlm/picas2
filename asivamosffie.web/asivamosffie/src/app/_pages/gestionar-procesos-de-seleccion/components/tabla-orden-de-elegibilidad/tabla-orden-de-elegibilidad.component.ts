@@ -28,6 +28,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
   displayedColumns: string[] = ['fechaCargue', 'totalRegistros', 'registrosValidos', 'registrosInvalidos','gestion'];
   dataSource = new MatTableDataSource();
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
   //@Output() guardar: EventEmitter<any> = new EventEmitter(); 
 

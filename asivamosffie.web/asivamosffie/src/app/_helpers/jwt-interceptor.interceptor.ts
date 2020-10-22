@@ -155,11 +155,7 @@ export class JwtInterceptorInterceptor implements HttpInterceptor {
         data: { modalTitle, modalText }
       });
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
-        {
-          console.log("sesion cerrada.");
-          this.authenticationService.logout();
-        }
+       this.authenticationService.logout();
       });
     }
   // Global error handler method 

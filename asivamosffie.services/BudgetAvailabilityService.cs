@@ -39,7 +39,7 @@ namespace asivamosffie.services
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).ToListAsync();
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
-             
+
             foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
             {
                 string strEstadoRegistro = "";
@@ -70,22 +70,20 @@ namespace asivamosffie.services
 
             return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.EstadoRegistro).ToList();
         }
-
-
+         
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int pDisponibilidadPresupuestalId)
         {
             //las tabla DisponibilidadPresupuestalProyecto no tiene campos de auditoria
             return await _context.DisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == pDisponibilidadPresupuestalId).Include(r => r.DisponibilidadPresupuestalProyecto).FirstOrDefaultAsync();
 
         }
-
-
+         
         public async Task<DisponibilidadPresupuestal> GetBudgetAvailabilityById(int id)
         {
             try
             {
-                return await _context.DisponibilidadPresupuestal.Where( d => d.DisponibilidadPresupuestalId == id) 
-                                    .Include( r => r.DisponibilidadPresupuestalProyecto )
+                return await _context.DisponibilidadPresupuestal.Where(d => d.DisponibilidadPresupuestalId == id)
+                                    .Include(r => r.DisponibilidadPresupuestalProyecto)
                                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -94,9 +92,9 @@ namespace asivamosffie.services
                 throw ex;
             }
         }
-
-
-        public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud) {
+         
+        public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
+        {
 
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado && r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud)).ToListAsync();
 
@@ -105,7 +103,7 @@ namespace asivamosffie.services
             foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
             {
                 string strEstadoRegistro = "";
-                string strTipoSolicitud = ""; 
+                string strTipoSolicitud = "";
                 if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.EstadoSolicitudCodigo))
                 {
                     strEstadoRegistro = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
@@ -121,18 +119,18 @@ namespace asivamosffie.services
                 if (DisponibilidadPresupuestal.ContratacionId != null)
                 {
                     var contrato = _context.Contrato.Find(DisponibilidadPresupuestal.ContratacionId);
-                    fechaContrato = contrato != null? contrato.FechaFirmaContrato: null;
+                    fechaContrato = contrato != null ? contrato.FechaFirmaContrato : null;
                     numeroContrato = DisponibilidadPresupuestal.NumeroContrato == null ?
-                        contrato!=null? contrato.NumeroContrato:""
+                        contrato != null ? contrato.NumeroContrato : ""
                         : DisponibilidadPresupuestal.NumeroContrato;
                 }
                 else
                 {
                     numeroContrato = DisponibilidadPresupuestal.NumeroContrato != null ?
-                         DisponibilidadPresupuestal.NumeroContrato:"";
+                         DisponibilidadPresupuestal.NumeroContrato : "";
                 }
 
-                
+
 
                 DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
                 {
@@ -142,17 +140,16 @@ namespace asivamosffie.services
                     TipoSolicitud = strTipoSolicitud,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
-                    FechaFirmaContrato = fechaContrato==null?"":Convert.ToDateTime(fechaContrato).ToString("yy-MM-dd"),
-                    NumeroContrato=numeroContrato,
+                    FechaFirmaContrato = fechaContrato == null ? "" : Convert.ToDateTime(fechaContrato).ToString("yy-MM-dd"),
+                    NumeroContrato = numeroContrato,
 
-                }; 
+                };
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
-            } 
+            }
             return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.DisponibilidadPresupuestalId).ToList();
 
         }
-
-        
+         
         /*autor: jflorez
             descripción: objeto para entregar a front los datos ordenados de disponibilidades
         impacto: CU 3.3.3*/
@@ -161,8 +158,8 @@ namespace asivamosffie.services
             List<EstadosDisponibilidad> estadosdisponibles = new List<EstadosDisponibilidad>();
             var estados = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal && x.Activo == true).ToList();
             foreach (var estado in estados)
-            {                
-                estadosdisponibles.Add(new EstadosDisponibilidad{DominioId=estado.DominioId,NombreEstado=estado.Nombre,DisponibilidadPresupuestal=await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(estado.Codigo)});
+            {
+                estadosdisponibles.Add(new EstadosDisponibilidad { DominioId = estado.DominioId, NombreEstado = estado.Nombre, DisponibilidadPresupuestal = await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(estado.Codigo) });
             }
             return estadosdisponibles;
         }
@@ -214,7 +211,7 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDdp != null).Count();
             /*busco usuario Juridico*/
-            var usuarioJuridico = _context.UsuarioPerfil.Where(x=>x.PerfilId==(int)EnumeratorPerfil.Juridica).Include(y=>y.Usuario).FirstOrDefault();
+            var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).FirstOrDefault();
             try
             {
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_validacion_presupuestal;
@@ -226,7 +223,7 @@ namespace asivamosffie.services
                 {
                     tipo = "PI";
                 }
-                else if(DisponibilidadCancelar.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
+                else if (DisponibilidadCancelar.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
                 {
                     tipo = "PA";
                 }
@@ -234,12 +231,12 @@ namespace asivamosffie.services
                 {
                     tipo = "ES";
                 }
-                DisponibilidadCancelar.NumeroDdp = "DDP_"+ tipo + "_" + consecutivo.ToString();
+                DisponibilidadCancelar.NumeroDdp = "DDP_" + tipo + "_" + consecutivo.ToString();
                 //
                 //guardar el tema de platas
                 //
 
-                Dictionary<int, List<decimal>> fuente =new Dictionary<int, List<decimal>>();
+                Dictionary<int, List<decimal>> fuente = new Dictionary<int, List<decimal>>();
                 //var contratacionproyecto = DisponibilidadCancelar.Contratacion.ContratacionProyecto;
                 var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId);
                 foreach (var gestion in gestionfuentes)
@@ -261,7 +258,7 @@ namespace asivamosffie.services
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "DDP Generado", template, pSentender, pPassword, pMailServer, pMailPort);
                 if (blEnvioCorreo)
                 {
-                   return new Respuesta
+                    return new Respuesta
                     {
                         IsSuccessful = true,
                         IsException = false,
@@ -336,7 +333,7 @@ namespace asivamosffie.services
             }
         }
 
-public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(DisponibilidadPresupuestal DP)
+        public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(DisponibilidadPresupuestal DP)
         {
             Respuesta respuesta = new Respuesta();
 
@@ -350,14 +347,14 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 if (string.IsNullOrEmpty(DP.DisponibilidadPresupuestalId.ToString()) || DP.DisponibilidadPresupuestalId == 0)
                 {
                     //Concecutivo
-                     var LastRegister = _context.DisponibilidadPresupuestal.OrderByDescending(x => x.DisponibilidadPresupuestalId).First().DisponibilidadPresupuestalId;
+                    var LastRegister = _context.DisponibilidadPresupuestal.OrderByDescending(x => x.DisponibilidadPresupuestalId).First().DisponibilidadPresupuestalId;
 
 
                     //Auditoria
                     strCrearEditar = "CREAR DISPONIBILIDAD PRESUPUESTAL";
                     DP.FechaCreacion = DateTime.Now;
                     DP.Eliminado = false;
-                    
+
                     //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
                     DP.EstadoSolicitudCodigo = "4"; // Sin registrar
 
@@ -426,8 +423,8 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
 
         public async Task<List<GrillaDisponibilidadPresupuestal>> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId)
         {
-            
-            List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = 
+
+            List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal =
                DisponibilidadPresupuestalId != null ? await _context.DisponibilidadPresupuestal.Where(x => x.DisponibilidadPresupuestalId == DisponibilidadPresupuestalId).ToListAsync()
                : await _context.DisponibilidadPresupuestal.OrderByDescending(a => a.FechaSolicitud).ToListAsync();
 
@@ -456,8 +453,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
 
             return ListGrillaControlCronograma;
         }
-
-
+         
         public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero)
         {
             if (id == 0)
@@ -466,7 +462,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
             }
             DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                 .Where(r => r.DisponibilidadPresupuestalId == id).FirstOrDefaultAsync();
-                    //.Include(r => r.SesionComiteTema).FirstOrDefaultAsync();
+            //.Include(r => r.SesionComiteTema).FirstOrDefaultAsync();
 
             if (disponibilidad == null)
             {
@@ -524,41 +520,43 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
         private string ReemplazarDatosDDP(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad)
         {
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolderDDP).ToList();
-            foreach(var place in placeholders)
+            foreach (var place in placeholders)
             {
                 switch (place.Codigo)
                 {
                     case ConstanCodigoVariablesPlaceHolders.DDP_FECHA:
                         pStrContenido = pStrContenido
                             .Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("dd/MM/yyy"));
-                    break;                                        
-                    case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_SOLICITUD: 
+                        break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_SOLICITUD:
                         pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_NO: pStrContenido = 
-                            pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroDdp); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_RUBRO_POR_FINANCIAR: 
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NO:
+                        pStrContenido =
+pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroDdp); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_RUBRO_POR_FINANCIAR:
                         pStrContenido = pStrContenido.Replace(place.Nombre, _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
                                 && r.Codigo == pDisponibilidad.TipoSolicitudCodigo).FirstOrDefault().Descripcion); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_TIPO_SOLICITUD: pStrContenido = 
-                            pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudCodigo != null ? _context.Dominio.Where(r=>r.Codigo==pDisponibilidad.TipoSolicitudCodigo && r.TipoDominioId==(int)EnumeratorTipoDominio.Tipo_de_Solicitud).FirstOrDefault().Nombre : ""); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TIPO_SOLICITUD:
+                        pStrContenido =
+pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudCodigo != null ? _context.Dominio.Where(r => r.Codigo == pDisponibilidad.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).FirstOrDefault().Nombre : ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_OPCION_CONTRATAR: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.OpcionContratarCodigo); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_FECHA_COMITE_TECNICO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("dd/MM/yyyy")); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_COMITE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.Objeto); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLAAPORTANTES: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOSLETRAS: pStrContenido = pStrContenido.Replace(place.Nombre,""); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOSLETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLA_PROYECTOS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_LIMITACION_ESPECIAL: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.LimitacionEspecial); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NOMBRE_APORTANTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_FUENTE_APORTANTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_NUMERO: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_LETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
-                                        
+
                     case ConstanCodigoVariablesPlaceHolders.DDP_LLAVE_MEN: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_INSTITUCION_EDUCATIVA: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_SEDE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre,""); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_SALDO_ACTUAL_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_SOLICITADO_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NUEVO_SALDO_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
@@ -667,7 +665,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
         /*autor: jflorez
             descripción: valida disponibilidad por validacion pres
         impacto: CU 3.3.2*/
-        public async Task<Respuesta> SetValidarValidacionDDP(int id,string usuariomod, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> SetValidarValidacionDDP(int id, string usuariomod, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(id);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
@@ -716,14 +714,14 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             try
             {
-                
-                var valoresSolicitados= _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
+
+                var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
                 var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
                 pDisponibilidadPresObservacion.SaldoActual = fuente.ValorFuente - valoresSolicitados;
                 pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
                 int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
-                pDisponibilidadPresObservacion.EstadoCodigo= estado.ToString();
+                pDisponibilidadPresObservacion.EstadoCodigo = estado.ToString();
                 pDisponibilidadPresObservacion.Eliminado = false;
                 _context.GestionFuenteFinanciacion.Add(pDisponibilidadPresObservacion);
                 _context.SaveChanges();
@@ -756,7 +754,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             try
             {
-                
+
                 var pDisponibilidadPresObservacion = _context.GestionFuenteFinanciacion.Find(pIdDisponibilidadPresObservacion);
                 pDisponibilidadPresObservacion.FechaModificacion = DateTime.Now;
                 pDisponibilidadPresObservacion.UsuarioModificacion = usuarioModificacion;
@@ -796,7 +794,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 IsValidation = false,
                 Code = ConstantMessagesGenerateBudget.Error,
                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.Error, idAccion, usuarioModificacion, "TRAER FUENTES GESTIONADAS"),
-                Data = _context.GestionFuenteFinanciacion.Where(x=>x.DisponibilidadPresupuestalProyectoId==pIdDisponibilidadPresupuestalProyecto).Include(x=>x.FuenteFinanciacion).Include(x=>x.DisponibilidadPresupuestalProyecto).ThenInclude(x=>x.Proyecto).ToList()
+                Data = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyectoId == pIdDisponibilidadPresupuestalProyecto).Include(x => x.FuenteFinanciacion).Include(x => x.DisponibilidadPresupuestalProyecto).ThenInclude(x => x.Proyecto).ToList()
             };
         }
 
@@ -805,8 +803,8 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
         impacto: CU 3.3.4*/
         public async Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal()
         {
-           EstadosDisponibilidad estadosdisponibles =
-                new EstadosDisponibilidad { DominioId = Convert.ToInt32(ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal), NombreEstado = "", DisponibilidadPresupuestal = await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal) };
+            EstadosDisponibilidad estadosdisponibles =
+                 new EstadosDisponibilidad { DominioId = Convert.ToInt32(ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal), NombreEstado = "", DisponibilidadPresupuestal = await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal) };
             return estadosdisponibles;
         }
         /*autor: jflorez
@@ -816,14 +814,14 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
-            
+
             try
             {
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Sin_registro_presupuestal;
                 DisponibilidadCancelar.FechaModificacion = DateTime.Now;
                 DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
                 DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
-                              
+
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
@@ -877,7 +875,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 //guardar el tema de platas
                 //
                 var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId);
-                foreach(var gestion in gestionfuentes)
+                foreach (var gestion in gestionfuentes)
                 {
                     gestion.EstadoCodigo = EnumeratorEstadoGestionFuenteFinanciacion.Gestionado_en_DRP.ToString();
                     gestion.FechaModificacion = DateTime.Now;

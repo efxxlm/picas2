@@ -47,14 +47,29 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     private projectContractingService: ProjectContractingService,
     private projectService: ProjectService,
 
-  ) { }
+  ) {
+    this.activatedroute.params.subscribe((params: Params) => {
+      console.log(params);
+      this.objetoDisponibilidad.contratacionId = params.idContratacion;
+      this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
+      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
+      console.log(this.objetoDisponibilidad);
+      if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
+        this.cargarDisponibilidadPre();
+
+      } else {
+        this.cargarDisponibilidadNueva();
+      }
+
+
+    });
+  }
 
   cargarDisponibilidadPre() {
 
     this.budgetAvailabilityService.getDisponibilidadPresupuestalById(this.objetoDisponibilidad.disponibilidadPresupuestalId)
       .subscribe(response => {
         this.objetoDisponibilidad = response;
-        console.log(response);
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
@@ -63,12 +78,10 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
           this.projectService.getProjectById(dp.proyectoId)
             .subscribe(proyecto => {
               dp.proyecto = proyecto;
-              
-
               this.listaProyectos.push(proyecto);
-
             })
         });
+        console.log( this.objetoDisponibilidad );
       })
 
   }
@@ -110,24 +123,6 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
-
-    this.activatedroute.params.subscribe((params: Params) => {
-      console.log(params);
-      this.objetoDisponibilidad.contratacionId = params.idContratacion;
-      this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
-      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
-      console.log(this.objetoDisponibilidad);
-      if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
-        this.cargarDisponibilidadPre();
-
-      } else {
-        this.cargarDisponibilidadNueva();
-      }
-
-
-    });
   }
 
   // evalua tecla a tecla

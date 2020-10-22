@@ -65,6 +65,11 @@ export class FormContratacionComponent implements OnInit {
   ngOnInit(): void {
   };
 
+  innerObservacion ( observacion: string ) {
+    const observacionHtml = observacion.replace( '"', '' );
+    return observacionHtml
+  }
+
   crearFormulario () {
     this.form = this.fb.group({
       fechaEnvioTramite: [ null, Validators.required ],
@@ -90,11 +95,8 @@ export class FormContratacionComponent implements OnInit {
         });
 
         for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
-          if ( contratacionProyecto.proyecto.institucionEducativa.proyectoInstitucionEducativa[0]?.proyectoAportante !== undefined ) {
-            if ( contratacionProyecto.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].valorTotal !== undefined ) {
-              this.valorTotalDdp += contratacionProyecto.proyecto.institucionEducativa.proyectoInstitucionEducativa[0].valorTotal;
-            };
-          };
+          this.valorTotalDdp += contratacionProyecto.proyecto.valorObra;
+          this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
         };
 
       } );

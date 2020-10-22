@@ -102,7 +102,7 @@ export class TablaFuentesComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.eliminarRegistro(e);
       }           
