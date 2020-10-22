@@ -7,7 +7,7 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar información adicional solucitud CO_001
+            Registrar información adicional solicitud CO_001
         </h1>
     </div>
 
@@ -39,40 +39,38 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <p class="text-center color-mainColor departamento">Atlántico/
-                {{ proyecto.localizacionIdMunicipioNavigation.descripcion }}</p>
-            <mat-card class="shipping-card var-main-gris sub-card">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text">
-                        Aportantes
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="row">
-                        <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante ">
-                            <p class="mb1-em"><b>Aportante 1</b></p>
-
-                            <p>
-                                <b>Tipo de aportante:</b>
-                                {{ aportante.aportante.tipoAportanteId }}
-                            </p>
-                            <p>
-                                <b>Aportante:</b>
-                                {{ aportante.aportante.nombreAportanteId }}
-                            </p>
-                            <p>
-                                <b>Valor del aportante:</b>
-                                {{ aportante.valorTotalAportante | currency }}
-
-                            </p>
+            <section style="width: 80%;margin: auto;">
+                <p class="text-center color-mainColor departamento">Atlántico/
+                    {{ proyecto.localizacionIdMunicipioNavigation['descripcion'] }}</p>
+                <mat-card class="shipping-card var-main-gris sub-card">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text">
+                            Aportantes
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="row">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante; index as i">
+                                <p class="mb1-em"><b>Aportante {{ i+1 }} </b></p>
+    
+                                <p>
+                                    <b>Tipo de aportante:</b>
+                                    {{ aportante.aportante.tipoAportanteId }}
+                                </p>
+                                <p>
+                                    <b>Aportante:</b>
+                                    {{ aportante.aportante.nombreAportanteId }}
+                                </p>
+                                <p>
+                                    <b>Valor del aportante:</b>
+                                    {{ aportante.valorTotalAportante | currency }}
+    
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-
-
-
-
+                    </mat-card-content>
+                </mat-card>
+            </section>
 
         </mat-expansion-panel>
 
