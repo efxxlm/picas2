@@ -45,12 +45,13 @@ export class TableFuentesYUsosComponent implements OnInit {
     let registroEnProceso = 0;
     let registroSinDiligenciar = 0;
     elemento.forEach( value => {
-      if ( value.componenteAportante.length === 0 ) {
-        registroSinDiligenciar++;
-      };
+
       value.componenteAportante.forEach( componente => {
         if ( componente.registroCompleto === undefined ) {
           registroSinDiligenciar++;
+        };
+        if ( componente.componenteUso.length === 0 ) {
+          registroSinDiligenciar++
         };
         if ( componente.registroCompleto === false ) {
           registroEnProceso++;
@@ -60,14 +61,14 @@ export class TableFuentesYUsosComponent implements OnInit {
         };
       } );
     } );
-    if ( registroCompletos === elemento.length ) {
-      return 'completo';
-    };
     if ( registroSinDiligenciar === elemento.length ) {
       return 'sin-diligenciar';
     };
-    if ( registroEnProceso > registroSinDiligenciar ) {
+    if ( registroEnProceso > registroSinDiligenciar || registroEnProceso < registroCompletos ) {
       return 'en-proceso';
+    };
+    if ( registroCompletos === elemento.length ) {
+      return 'completo';
     };
   };
 
