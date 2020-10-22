@@ -123,8 +123,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       if(this.editable == true){
         var year1 = data.fechaActaInicio.toString();
         var year2 = data.fechaPrevistaTerminacion.toString();
-        var fechaActaInicioFDosConstruccion = new Date(year1.slice(6,10)+"-"+year1.slice(3,5)+"-"+year1.slice(0,2)).getTimezoneOffset(); // para detectar la fecha
-        var fechaPrevistaTerminacion = new Date(year2.slice(6,10)+"-"+year2.slice(3,5)+"-"+year2.slice(0,2)).getTimezoneOffset(); // para detectar la fecha
+        var fechaActaInicioFDosConstruccion = new Date(year1.slice(6,10)+"-"+year1.slice(3,5)+"-"+year1.slice(0,2)); // para detectar la fecha
+        var fechaPrevistaTerminacion = new Date(year2.slice(6,10)+"-"+year2.slice(3,5)+"-"+year2.slice(0,2)); // para detectar la fecha
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(fechaPrevistaTerminacion);
         this.addressForm.get('mesPlazoEjFase2').setValue(8);
