@@ -19,6 +19,7 @@ export class VerObservacionesComponent implements OnInit{
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
   observaciones: any[];
+  procesoseleccion: ProcesoSeleccion;
   
   constructor(
               public dialogRef: MatDialogRef<VerObservacionesComponent>,
@@ -30,13 +31,14 @@ export class VerObservacionesComponent implements OnInit{
   {
 
   }
-  ngOnInit(): void {
-    //this.activarBotones();
-    console.log(this.data);
+  ngOnInit(): void {    
     this.procesoseleccionService.getObservacionesByID(this.data.id).subscribe(result=>
       {
         this.observaciones=result;
       });
+    this.procesoseleccionService.getProcesoSeleccionById(this.data.id).subscribe(result=>{
+      this.procesoseleccion=result;
+    })
   }
 
   

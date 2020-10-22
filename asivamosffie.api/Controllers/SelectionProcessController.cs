@@ -102,6 +102,24 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
+        [Route("DeleteProcesoSeleccionCronogramaMonitoreo")]
+        [HttpDelete]
+        public async Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(Int32 pId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _selectionProcessService.DeleteProcesoSeleccionCronogramaMonitoreo(pId, usuarioCreacion);
+                return respuesta;
+                //
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
 
         [Route("CreateEditarProcesoSeleccionCronograma")]
         [HttpPost]

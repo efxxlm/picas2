@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ProcesoSeleccionService, ProcesoSeleccion, EstadosProcesoSeleccion, EstadosProcesoSeleccionMonitoreo, ProcesoSeleccionMonitoreo } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccionService, ProcesoSeleccion, EstadosProcesoSeleccion, EstadosProcesoSeleccionMonitoreo, ProcesoSeleccionMonitoreo, ProcesoSeleccionCronogramaMonitoreo } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Respuesta, CommonService } from 'src/app/core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -110,7 +110,7 @@ export class TablaDetalleCronogramaComponent implements OnInit {
 
   onDetalle(id:number){
     this.editMode.valor = !this.editMode.valor;
-    console.log( this.editMode.valor );
+    location.reload();
   }
 
   onEnviarSolicitud(id:any){
@@ -122,13 +122,13 @@ export class TablaDetalleCronogramaComponent implements OnInit {
     })
   }
 
-  onEliminar(id:number){
+  onEliminar(id:any){
 
-    this.openDialogSiNo('','¿Está seguro de eliminar este registro?')
+    this.openDialogSiNo('','¿Está seguro de eliminar este registro?',id)
   }
 
-  eliminarRegistro( ){
-    this.procesoSeleccionService.deleteProcesoSeleccion( this.idProcesoseleccion ).subscribe( respuesta => {
+  eliminarRegistro(id:ProcesoSeleccionCronogramaMonitoreo ){    
+    this.procesoSeleccionService.deleteProcesoSeleccionCronogramaMonitoreo( id.procesoSeleccionCronogramaId ).subscribe( respuesta => {
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
@@ -146,7 +146,7 @@ export class TablaDetalleCronogramaComponent implements OnInit {
     });   
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string ) {
+  openDialogSiNo(modalTitle: string, modalText: string , id:any) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton:true }
@@ -155,7 +155,7 @@ export class TablaDetalleCronogramaComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
       if(result === true)
       {
-        this.eliminarRegistro();
+        this.eliminarRegistro(id);
       }           
     });
   }

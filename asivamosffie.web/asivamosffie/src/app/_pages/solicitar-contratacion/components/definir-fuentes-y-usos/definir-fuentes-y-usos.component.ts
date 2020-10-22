@@ -139,11 +139,16 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
               grupoAportante.get('valorAportanteProyecto')
               .setValue( apo.valorAporte );
-
+              console.log( apo );
               if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {
-                grupoAportante.get('nombreAportante').setValue(`${apo['cofinanciacionAportante'].departamento.descripcion} / ${apo['cofinanciacionAportante'].municipio.descripcion}`);
+                if ( apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio === undefined ) {
+                  grupoAportante.get('nombreAportante').setValue(`Gobernación de ${apo['cofinanciacionAportante'].departamento.descripcion}`);
+                };
+                if ( apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio !== undefined ) {
+                  grupoAportante.get('nombreAportante').setValue(`Alcaldía de ${apo['cofinanciacionAportante'].municipio.descripcion}`);
+                };
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 10) {
                 grupoAportante.get('nombreAportante').setValue(`${apo['cofinanciacionAportante'].nombreAportante.nombre}`);
               }
@@ -234,7 +239,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   addUso(j: number, i: number) {
     if ( this.listaUsos.length === 0 ) {
-      this.openDialog( '', 'No se encuentran usos disponibles para el respectivo componente.' );
+      this.openDialog( '', `<b>No se encuentran usos disponibles para el componente de ${ this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }.</b>` );
       return;
     };
     const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
@@ -362,7 +367,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         );
 
     } else {
-      this.openDialog('', 'El valor total es diferente a la suma del valor de los componentes');
+      this.openDialog('', 'La sumatoria de los componentes, no es igual el valor total del aporte.');
     }
 
     console.log(this.contratacionProyecto);

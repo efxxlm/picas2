@@ -26,6 +26,13 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     private router: Router,
 
   ) {
+    this.getSolicitud();
+  }
+
+  ngOnInit(): void {
+  }
+
+  getSolicitud () {
     this.route.params.subscribe((params: Params) => {
       this.projectContractingService.getContratacionByContratacionId(params.id)
         .subscribe(response => {
@@ -51,9 +58,6 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
         });
 
     });
-  }
-
-  ngOnInit(): void {
   }
 
   semaforoAcordeon(acordeon: string) {
@@ -110,36 +114,34 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             let enProceso = 0;
             let sinDiligenciar = 0;
             if ( contratacionProyectoAportante.componenteAportante.length === 0 ) {
-              sinDiligenciar++;
-            }
-            for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
-              if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
-                sinDiligenciar++;
-              }
-              if ( componenteAportante[ 'registroCompleto' ] === false ) {
-                enProceso++;
-              } 
-              if ( componenteAportante[ 'registroCompleto' ] === true ) {
-                completos++;
-              }
-            };
-
-            if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
-              aportanteCompleto++;
-            };
-            if ( enProceso < completos || enProceso > sinDiligenciar ) {
-              aportanteEnProceso++;
-            }
-            if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
               aportanteSinDiligenciar++;
+            } else {
+              for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
+                if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
+                  sinDiligenciar++;
+                }
+                if ( componenteAportante[ 'registroCompleto' ] === false ) {
+                  enProceso++;
+                } 
+                if ( componenteAportante[ 'registroCompleto' ] === true ) {
+                  completos++;
+                }
+              };
+              if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
+                aportanteCompleto++;
+              };
+              if ( enProceso < completos || enProceso > sinDiligenciar ) {
+                aportanteEnProceso++;
+              }
+              if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
+                aportanteSinDiligenciar++;
+              }
             }
           }
-
           if ( aportanteSinDiligenciar === contratacionProyecto.contratacionProyectoAportante.length ) {
             contratacionProyectoAportanteSinDiligenciar++;
           };
           if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
-            console.log( aportanteCompleto, contratacionProyecto.contratacionProyectoAportante.length );
             contratacionProyectoAportanteCompleto++;
           };
           if ( aportanteEnProceso < aportanteCompleto || aportanteEnProceso > aportanteSinDiligenciar ) {
@@ -178,7 +180,11 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
         console.log(respuesta);
 
         if (respuesta.code === '200') {
-          this.router.navigate(['/solicitarContratacion/solicitud', this.contratacion.contratacionId]);
+          this.contratacion = null;
+          this.getSolicitud();
+          if ( this.contratacion !== null ) {
+            this.router.navigate(['/solicitarContratacion/solicitud/', this.contratacion.contratacionId]);
+          }
         }
 
       });

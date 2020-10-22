@@ -282,8 +282,22 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.ContratacionProyecto)
                         .ThenInclude(r => r.ContratacionProyectoAportante)
                             .ThenInclude(r => r.CofinanciacionAportante)
+                              .ThenInclude(r => r.FuenteFinanciacion)
                 .FirstOrDefaultAsync();
 
+            foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
+            {
+                decimal ValorDisponibleAportante = 0;
+
+                foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                {
+                    ValorDisponibleAportante = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
+
+                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante).ToString();
+                }
+
+
+            }
             return contratacionProyecto;
         }
 
@@ -496,6 +510,9 @@ namespace asivamosffie.services
                 else
                 {
                     Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
+                    contratacionVieja.UsuarioModificacion = Pcontratacion.UsuarioCreacion;
+                    contratacionVieja.FechaModificacion = DateTime.Now;
+
                     contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
                     contratacionVieja.EsObligacionEspecial = Pcontratacion.EsObligacionEspecial;
                     contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
@@ -808,6 +825,8 @@ namespace asivamosffie.services
             try
             {
                 string strAccion = string.Empty;
+                pContratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
+                pContratacionProyecto.FechaModificacion = DateTime.Now;
 
                 foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)
                 {
@@ -1064,7 +1083,7 @@ namespace asivamosffie.services
                     Contratacion contratacionInterventoria = await CreateContratacion(pContratacion, usuarioCreacion);
 
 
-                    return  
+                    return
                   new Respuesta
                   {
                       IsSuccessful = true,
