@@ -624,13 +624,10 @@ namespace asivamosffie.services
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
             try
-            {
-
-
+            { 
                 List<Dominio> LisParametricas = _context.Dominio.ToList();
                 List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-
-
+                 
                 Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                           .Include(r => r.DisponibilidadPresupuestal)
                           .Include(r => r.Contratista)
@@ -644,29 +641,24 @@ namespace asivamosffie.services
                         .Include(r => r.ContratacionProyecto)
                               .ThenInclude(r => r.Proyecto)
                                   .ThenInclude(r => r.InstitucionEducativa)
+                        .Include(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.Sede)
                      .FirstOrDefaultAsync();
 
-                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+               List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                    .Include(r => r.ComiteTecnico).FirstOrDefault();
+                    .Include(r => r.ComiteTecnico)
+                    .Include(r=> r.ComiteTecnicoFiduciario)
+                    .ToList();
+
+                contratacion.sesionComiteSolicitud = sesionComiteSolicitud;
 
                 if (!string.IsNullOrEmpty(contratacion.TipoContratacionCodigo))
                 {
                     contratacion.TipoContratacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar && r.Codigo == contratacion.TipoContratacionCodigo).FirstOrDefault().Nombre;
                 }
-                if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
-                {
-                    sesionComiteSolicitud = null;
-                }
-
-                if (sesionComiteSolicitud != null)
-                {
-                    if (sesionComiteSolicitud.FechaComiteFiduciario != null)
-                    {
-                        //contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
-                    }
-                    //contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
-                }
+           
                 if (contratacion.Contratista != null)
                 {
                     if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))

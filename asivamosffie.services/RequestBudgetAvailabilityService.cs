@@ -33,7 +33,10 @@ namespace asivamosffie.services
             _commonService = commonService;
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
-
+        //
+        //
+        //
+        //
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id)
         {
             DisponibilidadPresupuestal disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal
