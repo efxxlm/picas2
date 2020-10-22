@@ -122,9 +122,9 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       /*Campo de texto editable*/
       if(this.editable == true){
         var year1 = data.fechaActaInicio.toString();
-        var fechaActaInicioFDosConstruccion = new Date(year1.slice(8,11)+"-"+year1.slice(4,6)+"-"+year1.slice(0,2)); // para detectar la fecha
-        console.log(year1.slice(8,11)+"-"+year1.slice(4,6)+"-"+year1.slice(0,2));
-        var fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
+        var year2 = data.fechaPrevistaTerminacion.toString();
+        var fechaActaInicioFDosConstruccion = new Date(year1.slice(6,10)+"-"+year1.slice(3,5)+"-"+year1.slice(0,2)); // para detectar la fecha
+        var fechaPrevistaTerminacion = new Date(year2.slice(6,10)+"-"+year2.slice(3,5)+"-"+year2.slice(0,2)); // para detectar la fecha
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(fechaPrevistaTerminacion);
         this.addressForm.get('mesPlazoEjFase2').setValue(8);
@@ -223,7 +223,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       }
       else{
         this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(data1 => {
-          if (data1.code == "102") {
+          if (data1.code == "200") {
             this.openDialog('La información ha sido guardada exitosamente.', "");
             this.router.navigate(['/generarActaInicioConstruccion']);
           }
@@ -235,7 +235,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     }
     else{
       this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(resp=>{
-        if (resp.code == "102") {
+        if (resp.code == "200") {
           this.openDialog('La información ha sido guardada exitosamente.', "");
           this.router.navigate(['/generarActaInicioConstruccion']);
         }
