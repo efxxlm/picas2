@@ -11,6 +11,7 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
 export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   numeroSolicitud: any;
   objeto: any;
+  observaciones: any;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private budgetAvailabilityService: DisponibilidadPresupuestalService) { }
 
@@ -25,6 +26,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
     this.budgetAvailabilityService.GetDisponibilidadPresupuestalByID(id).subscribe(data=>{
       this.numeroSolicitud = data.numeroSolicitud;
       this.objeto = data.objeto;
+      this.observaciones = data.observaciones;
     });
   }
 }
