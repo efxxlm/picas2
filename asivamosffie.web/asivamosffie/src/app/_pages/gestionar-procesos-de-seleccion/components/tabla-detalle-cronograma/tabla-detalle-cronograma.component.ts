@@ -132,7 +132,7 @@ export class TablaDetalleCronogramaComponent implements OnInit {
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
-         this.openDialog("Proceso Seleccion", "La información se ha eliminado correctamente,");
+         this.openDialog("Proceso Seleccion", "<b>La información se ha eliminado correctamente.</b>");
          this.router.navigate(['/seleccion']);
        }else
         this.openDialog("Proceso Seleccion", r.message);
