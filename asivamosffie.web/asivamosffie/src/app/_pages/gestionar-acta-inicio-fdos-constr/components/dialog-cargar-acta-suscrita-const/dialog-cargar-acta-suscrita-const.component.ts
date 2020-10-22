@@ -77,7 +77,7 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     this.fechaSesion = new Date(this.fechaFirmaContratistaObra);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     this.fechaSesion2 = new Date(this.fechaFirmaContratistaInterventoria);
-    this.fechaSesionString2 = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
+    this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
     this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaSesionString,this.fechaSesionString2,inputNode.files[0],"usr3").subscribe(data=>{
       if(data.code=="200"){
         this.openDialog(data.message,"");
