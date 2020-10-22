@@ -60,7 +60,7 @@ export class TableFuentesYUsosComponent implements OnInit {
             registroCompletos++;
           };
         } );
-      }
+      };
     } );
     if ( registroSinDiligenciar === elemento.length ) {
       return 'sin-diligenciar';
