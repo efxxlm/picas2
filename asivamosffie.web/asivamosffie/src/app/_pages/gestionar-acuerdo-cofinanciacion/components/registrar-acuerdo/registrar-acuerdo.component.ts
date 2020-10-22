@@ -286,10 +286,18 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
 
   borrarAportante(borrarForm: any, i: number) {
+    //antes de borrar reviso si tiene id, pues se debe borrar de manera logica    
+    if(borrarForm.value[i].cofinanciacionAportanteId>0)
+    {
+        this.cofinanciacionService.EliminarCofinanciacionAportanteByCofinanciacionAportanteId(borrarForm.value[i].cofinanciacionAportanteId).subscribe(
+          result=>{location.reload();}          
+        );
+    }
+
     borrarForm.removeAt(i);
     const index = this.listaCofinancAportantes.indexOf(this.listaCofinancAportantes[i]);
     this.listaCofinancAportantes.splice(index, 1);
-    this.datosAportantes.controls.numAportes.setValue(this.aportantes.length);   
+    this.datosAportantes.controls.numAportes.setValue(this.aportantes.length);
   }
 
   listaAportantes() {
@@ -312,8 +320,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         cofinanciacionAportanteId: control.get('cofinanciacionAportanteId').value,
         cofinanciacionDocumento
       };
-console.log("recorro para generar el objeto");
-console.log(cofiApo);
+
       listaAportantesTemp.push(cofiApo);      
       i++;
     });
@@ -336,8 +343,7 @@ console.log(cofiApo);
       cofinanciacionId: this.id
     };
 
-    console.log(cofinanciacion);
-
+    
     this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
       respuesta => {
         this.verificarRespuesta(respuesta, parcial);

@@ -1668,6 +1668,67 @@ namespace asivamosffie.services
             return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
         }
 
+        public async Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "";
+            ProcesoSeleccionCronogramaMonitoreo ProcesoSeleccionAntiguo = null;
+            try
+            {
+                //si tiene relacion con algo, no lo dejo eliminar
+                /*var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
+                if (comite > 0)
+                {
+                    return respuesta = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion, "ELIMINACIÓN CON DEPENDENCIA.")
+                    };
+                }
+                */
+                strCrearEditar = "ELIMINAR PROCESO SELECCION CRONOGRAMA";
+                ProcesoSeleccionAntiguo = _context.ProcesoSeleccionCronogramaMonitoreo.Find(pId);
+                //Auditoria
+                //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+                ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
+                //Registros
+                ProcesoSeleccionAntiguo.Eliminado = true;
+
+                _context.ProcesoSeleccionCronogramaMonitoreo.Update(ProcesoSeleccionAntiguo);
+
+
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, usuarioCreacion, strCrearEditar)
+
+                };
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, usuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
     }
 }
