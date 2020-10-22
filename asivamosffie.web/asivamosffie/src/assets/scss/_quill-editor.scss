@@ -28,6 +28,7 @@
         border: 0;
     }
     .ql-editor {
+      color: $mainColor !important;
         &::before {
             content: '';
         }

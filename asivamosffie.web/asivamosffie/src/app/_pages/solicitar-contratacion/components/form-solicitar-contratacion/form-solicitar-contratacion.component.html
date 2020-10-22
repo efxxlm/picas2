@@ -18,15 +18,12 @@
       <mat-radio-button value="true">Sí</mat-radio-button>
       <mat-radio-button value="false">No</mat-radio-button>
     </mat-radio-group>
+    <span class="required-form-group">*</span>
   </div>
 
   <div class="text-center">
-    <button mat-raised-button
-            color="primary"
-            class="btn-cargar-proyecto"
-            (click)="verBusqueda = !verBusqueda"
-            [disabled]="esMultiple.value == 'free'"
-            >Gestionar busqueda de proyectos</button>
+    <button mat-raised-button color="primary" class="btn-cargar-proyecto" (click)="verBusqueda = !verBusqueda"
+      [disabled]="esMultiple.value == 'free'">Gestionar busqueda de proyectos</button>
   </div>
 
   <div class="animatedDown" *ngIf="verBusqueda">
@@ -85,7 +82,7 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="region" (selectionChange)="changeRegion()">
-                      <mat-option *ngFor="let region of selectRegion" [value]="region" >
+                      <mat-option *ngFor="let region of selectRegion" [value]="region">
                         {{ region.descripcion }}
                       </mat-option>
                     </mat-select>
@@ -157,7 +154,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="sede" >
+                    <mat-select formControlName="sede">
                       <mat-option *ngFor="let sede of selectSede" [value]="sede">
                         {{ sede.nombre }}
                       </mat-option>
@@ -169,29 +166,21 @@
           </div>
         </mat-card-content>
         <mat-card-actions class="text-center">
-          <button mat-button color="primary" class="btn-buscar" type="submit" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
+          <button mat-button color="primary" class="btn-buscar btn-borrar" type="button"
+            (click)="reiniciarFiltro()" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
+            <img src="assets/img/icon/borrar.svg" alt="buscar">
+          </button>
+
+          <button mat-button color="primary" class="btn-buscar" type="submit"
+            [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
             <img src="assets/img/icon/lupa.svg" alt="buscar"> Buscar
           </button>
 
-          <button *ngIf="addressForm.dirty"
-                  mat-button
-                  color="primary"
-                  class="btn-buscar"
-                  type="button"
-                  style="font-size: 70%;"
-                  (click)="reiniciarFiltro()"
-                  [disabled]="!addressForm.dirty">
-            <img src="assets/img/icon/borrar.svg" alt="buscar">
-          </button>
         </mat-card-actions>
       </mat-card>
     </form>
   </div>
 </div>
-<button style="display: none;" (click)="tablaResultados.ngOnInit()" id="btnListaResultado" ></button>
-<app-tabla-resultados
-    [listaResultados]="listaResultado"
-    [esMultiproyecto]="esMultiple.value"
-    #tablaResultados
->
+<button style="display: none;" (click)="tablaResultados.ngOnInit()" id="btnListaResultado"></button>
+<app-tabla-resultados [listaResultados]="listaResultado" [esMultiproyecto]="esMultiple.value" #tablaResultados>
 </app-tabla-resultados>

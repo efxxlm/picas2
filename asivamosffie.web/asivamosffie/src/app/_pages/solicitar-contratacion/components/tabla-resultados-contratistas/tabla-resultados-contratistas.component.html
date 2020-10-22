@@ -2,10 +2,11 @@
     <div class="pr-1">
         <label class="label-left" for="unionTemporal">¿El contratista es una unión temporal o consorcio? </label>
     </div>
-    <mat-radio-group class="radioInput" [formControl]="unionTemporal">
+    <mat-radio-group class="radioInput" [formControl]="unionTemporal" required>
         <mat-radio-button [value]="true" [checked]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ].tipoProponenteCodigo === '4' : null">Sí</mat-radio-button>
         <mat-radio-button [value]="false" [checked]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ].tipoProponenteCodigo !== '4' : null">No</mat-radio-button>
     </mat-radio-group>
+    <span class="required-form-group">*</span>
 </div>
 <mat-card class="shipping-card">
     <mat-card-content>
@@ -15,10 +16,10 @@
             </div>
             <div class="col d-flex">
                 <mat-form-field class="full-width">
-                    <input matInput type="text" [formControl]="numeroDocumento">
+                    <input matInput type="text" [formControl]="numeroDocumento" required>
                 </mat-form-field>
             </div>
-            
+
         </div>
         <div class="row mt-1em">
             <div class="pr-1">
@@ -26,7 +27,7 @@
             </div>
             <div class="col d-flex">
                 <mat-form-field class="full-width">
-                    <input matInput type="text" [formControl]="nombreContratista" [value]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ]?.nombre : ''">
+                    <input matInput type="text" [formControl]="nombreContratista" [value]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ]?.nombre : ''" required>
                 </mat-form-field>
             </div>
             <button mat-button color="primary" class="btn-guardar" type="submit" (click)="buscar()" [disabled]="unionTemporal.value === null">

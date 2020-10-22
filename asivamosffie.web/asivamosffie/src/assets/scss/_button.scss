@@ -22,10 +22,15 @@
     }
 }
 
+.mat-button.mat-primary[disabled],
 .mat-raised-button[disabled][disabled],
 .mat-raised-button.mat-accent[disabled],
 .mat-button:hover .mat-button-focus-overlay {
     opacity: .8;
+}
+
+.mat-button.mat-primary[disabled] {
+  color: $mainColor;
 }
 
 button.mat-raised-button {
