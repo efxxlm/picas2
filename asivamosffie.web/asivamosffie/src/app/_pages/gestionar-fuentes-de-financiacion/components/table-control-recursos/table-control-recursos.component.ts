@@ -93,7 +93,7 @@ export class TableControlRecursosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.fuenteFinanciacionServices.DeleteResourceFundingBySourceFunding(borrarForm).subscribe(res=>{
           console.log(res);
@@ -109,7 +109,7 @@ export class TableControlRecursosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])   
         setTimeout(() => {

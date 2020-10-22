@@ -138,7 +138,7 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>
@@ -316,7 +316,7 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>
@@ -404,7 +404,7 @@
                   </div>
                 </div>
                 <div class="col-md-4 text-right" *ngIf="unionTemporalForm.value.entidades.length > 1">
-                  <button mat-button color="warn" type="button" class="btn-eliminar"
+                  <button *ngIf="editar" mat-button color="warn" type="button" class="btn-eliminar"
                     (click)="borrarArray(entidades, i)">
                     <img src="assets/img/icon/menos.svg" alt="Eliminar integrante">
                     Eliminar integrante
@@ -559,8 +559,8 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>
 </form>

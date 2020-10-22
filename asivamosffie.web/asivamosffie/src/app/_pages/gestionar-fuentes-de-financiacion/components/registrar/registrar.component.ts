@@ -67,7 +67,7 @@ export class RegistrarComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
+        if(result === true)
         {
           this.router.navigate(["/gestionarFuentes"], {});
         }
@@ -81,7 +81,7 @@ export class RegistrarComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         if(event==1)
         {

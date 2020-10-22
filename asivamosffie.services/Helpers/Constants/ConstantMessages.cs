@@ -582,6 +582,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string EditadoCorrrectamente = "102";
         public const string CreadoCorrrectamente = "103";
         public const string RecursoNoEncontrado = "104";
+        public const string DependenciaEnEliminacion = "105";
 
 
 

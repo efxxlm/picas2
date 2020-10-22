@@ -87,7 +87,7 @@ export class CargarOrdenDeElegibilidadComponent {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
+        if(result === true)
         {
           location.reload();
           //this.router.navigate(["/cargarMasivamente"], {});
@@ -103,7 +103,7 @@ export class CargarOrdenDeElegibilidadComponent {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.procesoSeleccionService.uploadMassiveLoadElegibilidad(this.idProject,this.data.procesoSeleccionId).subscribe(
           response => {

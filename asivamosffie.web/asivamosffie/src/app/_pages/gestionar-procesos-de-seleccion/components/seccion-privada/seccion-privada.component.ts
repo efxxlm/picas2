@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
-import { ProcesoSeleccionService, ProcesoSeleccion, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccionService, ProcesoSeleccion, TiposProcesoSeleccion, EstadosProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { FormDescripcionDelProcesoDeSeleccionComponent } from '../form-descripcion-del-proceso-de-seleccion/form-descripcion-del-proceso-de-seleccion.component';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,8 +15,13 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SeccionPrivadaComponent implements OnInit {
 
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+    permiso que tenga el usuario
+    */
+  bitPuedoEditar=true;
   listaTipoIntervencion: Dominio[] = [];
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
+  estadosProcesoSeleccion = EstadosProcesoSeleccion;
   descripcion_class:number=0;
   estudio_class:number=0;
   datos_class:number=0;
@@ -91,6 +96,19 @@ export class SeccionPrivadaComponent implements OnInit {
         botonDescripcion.click();
         botonEstudio.click();
         botonProponente.click();
+        if(this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico)
+        {
+          this.bitPuedoEditar=true;
+        }
+        else{
+          this.bitPuedoEditar=false;
+        }
     });
 
   }
@@ -104,7 +122,7 @@ export class SeccionPrivadaComponent implements OnInit {
     if ( redirect )
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
+        if(result === true)
         {
           if(id.esCompleto)
           {

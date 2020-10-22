@@ -15,6 +15,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
   listaProponentes: ProcesoSeleccionProponente[] = [];
   estadosProcesoSeleccion = EstadosProcesoSeleccion;

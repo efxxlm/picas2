@@ -505,7 +505,7 @@ export class FormularioProyectosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         if(tipo==1)
         {

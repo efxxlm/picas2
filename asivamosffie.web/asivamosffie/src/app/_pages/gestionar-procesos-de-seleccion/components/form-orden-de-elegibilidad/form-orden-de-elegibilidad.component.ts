@@ -14,6 +14,7 @@ export class FormOrdenDeElegibilidadComponent {
   selectTipoProceso: FormControl;
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   //@Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
   ValueTiposProceso = [

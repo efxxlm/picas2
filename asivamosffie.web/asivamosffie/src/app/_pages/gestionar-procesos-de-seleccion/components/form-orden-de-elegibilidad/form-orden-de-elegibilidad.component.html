@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="text-center">
-      <button mat-raised-button color="accent" class="btn-cargar-elegibilidad"
+      <button mat-raised-button  *ngIf="editar" color="accent" class="btn-cargar-elegibilidad"
         [disabled]="selectTipoProceso.invalid" (click)="openCargarElegibilidad()">
         Cargar orden de elegibilidad
       </button><br>

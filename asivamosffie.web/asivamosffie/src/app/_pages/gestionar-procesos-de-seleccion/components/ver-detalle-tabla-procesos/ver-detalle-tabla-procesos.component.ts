@@ -72,13 +72,13 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
         this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Cerrada)
       && this.data.procesoSeleccionProponente.length>0;
 
-    this.eliminar=this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
+    this.eliminar=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado;/*this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
-      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite;
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite;*/
 
     this.monitorear=this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
@@ -131,9 +131,9 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
-         this.openDialog("", "La información se ha eliminado correctamente,",true);         
+         this.openDialog("", "<b>La información se ha eliminado correctamente.</b>",true);         
        }else
-        this.openDialog("Proceso Seleccion", r.message,false);
+        this.openDialog("", r.message,false);
     })
   }
 
@@ -202,7 +202,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.eliminarRegistro(e);
       }           

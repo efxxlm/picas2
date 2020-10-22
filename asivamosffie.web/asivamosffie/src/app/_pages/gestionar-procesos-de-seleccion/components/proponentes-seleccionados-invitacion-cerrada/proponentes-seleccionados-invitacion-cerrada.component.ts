@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
   nombresProponentesList: ProcesoSeleccionProponente[] = [];
