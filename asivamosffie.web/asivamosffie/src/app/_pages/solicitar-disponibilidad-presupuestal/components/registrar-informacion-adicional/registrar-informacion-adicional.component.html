@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="objetoDisponibilidad">
     <div class="text-right">
         <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional" mat-button color="primary"
             class="btn-regresar">
@@ -7,18 +7,22 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar información adicional solicitud CO_001
+            Registrar información adicional solicitud {{ objetoDisponibilidad.numeroSolicitud }}
         </h1>
     </div>
 
     <div class="d-flex justify-content-center">
-        <p class="solicitud">
+        <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1'">
             <strong>Tipo de solicitud: </strong>
-            Modificación contractual
+            Contratación
         </p>
-        <p class="solicitud">
+        <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '3'">
+            <strong>Tipo de solicitud: </strong>
+            Modificación Contractual
+        </p>
+        <p class="solicitud" *ngIf="objetoDisponibilidad.disponibilidadPresupuestalProyecto !== undefined && objetoDisponibilidad.disponibilidadPresupuestalProyecto[0].proyecto !== undefined">
             <strong>Fecha de comité técnico:</strong>
-            24/06/2020
+            {{ objetoDisponibilidad.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'] | date: 'dd/MM/yyyy' }}
         </p>
     </div>
 
@@ -40,9 +44,9 @@
             </mat-expansion-panel-header>
 
             <section style="width: 80%;margin: auto;">
-                <p class="text-center color-mainColor departamento">Atlántico/
-                    {{ proyecto.localizacionIdMunicipioNavigation['descripcion'] }}</p>
-                <mat-card class="shipping-card var-main-gris sub-card">
+                <p class="text-center color-mainColor departamento">
+                    {{ proyecto['departamento'] }}/{{ proyecto['municipio'] }}</p>
+                <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em;">
                     <mat-card-header class="header-card">
                         <mat-card-title class="header-card--text">
                             Aportantes
@@ -50,16 +54,23 @@
                     </mat-card-header>
                     <mat-card-content>
                         <div class="row">
-                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante; index as i">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante; index as i" style="margin-top: .5em;">
                                 <p class="mb1-em"><b>Aportante {{ i+1 }} </b></p>
     
-                                <p>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 6" style="margin-top: .5em;">
                                     <b>Tipo de aportante:</b>
-                                    {{ aportante.aportante.tipoAportanteId }}
+                                    FFIE
                                 </p>
-                                <p>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 6">
+                                    <b>Aportante:</b> FFIE
+                                </p>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 9" style="margin-top: .5em;">
+                                    <b>Tipo de aportante:</b>
+                                    ET
+                                </p>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 9">
                                     <b>Aportante:</b>
-                                    {{ aportante.aportante.nombreAportanteId }}
+                                    {{ aportante['tipoAportanteNombre'] }} de {{ aportante['nombreAportante'] }}
                                 </p>
                                 <p>
                                     <b>Valor del aportante:</b>
@@ -113,7 +124,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" style="margin: auto;width: 85%;">
             <div class="text-area-quill">
                 <label for="objeto" class="text-area-quill--label">Objeto</label>
                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"

@@ -45,6 +45,9 @@ export class TableFuentesYUsosComponent implements OnInit {
     let registroEnProceso = 0;
     let registroSinDiligenciar = 0;
     elemento.forEach( value => {
+      if ( value.componenteAportante.length === 0 ) {
+        registroSinDiligenciar++;
+      };
       value.componenteAportante.forEach( componente => {
         if ( componente.registroCompleto === undefined ) {
           registroSinDiligenciar++;
