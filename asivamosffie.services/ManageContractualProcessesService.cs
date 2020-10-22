@@ -306,7 +306,7 @@ namespace asivamosffie.services
 
                             try
                             {
-                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
+                               // nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
                             }
                             catch (Exception)
                             {
@@ -551,10 +551,10 @@ namespace asivamosffie.services
                             case ConstanCodigoTipoSolicitud.Contratacion:
 
                                 Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
-                                 
+
                                 if (contratacion.DisponibilidadPresupuestal.Count() == 0)
                                 {
-                                    break; 
+                                    break;
                                 }
                                 foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
                                 {
@@ -564,7 +564,8 @@ namespace asivamosffie.services
                                     }
                                 }
                                 // sesionComiteSolicitud.Contratacion = contratacion;
-
+                                sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
+                     
                                 sesionComiteSolicitud.EstaTramitado = false;
 
                                 if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
