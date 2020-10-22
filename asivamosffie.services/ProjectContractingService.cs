@@ -334,9 +334,12 @@ namespace asivamosffie.services
                     .Include(r => r.Contratista)
                     .Include(r=> r.ContratacionProyecto)
                         .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
-                          .Include(r => r.ContratacionProyecto)
+                     .Include(r => r.ContratacionProyecto)
                         .ThenInclude(r => r.Proyecto)
-                                .ThenInclude(r => r.Sede)
+                             .ThenInclude(r => r.Sede)
+                    .Include(r => r.ContratacionProyecto)
+                        .ThenInclude(r => r.Proyecto)
+                                 .ThenInclude(r => r.InstitucionEducativa)
                     .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
