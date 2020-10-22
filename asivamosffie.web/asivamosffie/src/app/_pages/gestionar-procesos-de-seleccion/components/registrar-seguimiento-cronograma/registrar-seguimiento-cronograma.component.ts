@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Dominio, CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProcesoSeleccion, ProcesoSeleccionService, CronogramaSeguimiento } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionService, CronogramaSeguimiento, ProcesoSeleccionCronograma } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { forkJoin, from } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
@@ -52,7 +52,8 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   maxDate: Date;
   idProcesoSeleccion: number = 0;
   listaCronograma: CronogramaSeguimiento[];
-  listaCronogramaActividades: import("c:/Repositorios/GIT/AsiVamosFFIE/asivamosffie.web/asivamosffie/src/app/core/_services/procesoSeleccion/proceso-seleccion.service").ProcesoSeleccionCronograma[];
+  listaCronogramaActividades: ProcesoSeleccionCronograma[];
+  
 
   constructor(
               private fb: FormBuilder,
