@@ -9,7 +9,10 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public string NombreAportante { get; set; }
-      
+
+        [NotMapped]
+        public string TipoAportanteNombre { get; set; }
+
     }
 
 }

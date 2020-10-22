@@ -13,4 +13,11 @@
         public const string ET = "";//join con dep o municipio
         public const string Tercero = "";//join con dominio nombredominioid
     }
+
+    public static class ConstanStringTipoAportanteNombre
+    {
+        public const string Ffie = "FFIE";
+        public const string Departamento = "Gobernación";//join con dep o municipio
+        public const string Municipio = "Alcaldia";//join con dominio nombredominioid
+    }
 }

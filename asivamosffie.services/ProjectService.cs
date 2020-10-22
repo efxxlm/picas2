@@ -1490,13 +1490,23 @@ namespace asivamosffie.services
                     ProyectoAportante.NombreAportante = ProyectoAportante.Aportante.Municipio.Descripcion;
 
                 if (ProyectoAportante.Aportante.Departamento != null && ProyectoAportante.Aportante.Departamento == null)
+                {
                     ProyectoAportante.NombreAportante = ProyectoAportante.Aportante.Departamento.Descripcion;
-                 
-                if (ProyectoAportante.Aportante.NombreAportante != null)
-                    ProyectoAportante.NombreAportante = ProyectoAportante.Aportante.NombreAportante.Nombre;
+                    ProyectoAportante.TipoAportanteNombre = ConstanStringTipoAportanteNombre.Departamento;
+                }
 
-                if(string.IsNullOrEmpty(ProyectoAportante.NombreAportante))   
+
+                if (ProyectoAportante.Aportante.NombreAportante != null)
+                {
+                    ProyectoAportante.NombreAportante = ProyectoAportante.Aportante.NombreAportante.Nombre;
+                    ProyectoAportante.TipoAportanteNombre = ConstanStringTipoAportanteNombre.Departamento;
+                }
+
+                if (string.IsNullOrEmpty(ProyectoAportante.NombreAportante))
+                {
                     ProyectoAportante.NombreAportante = ConstanStringTipoAportante.Ffie;
+                    ProyectoAportante.TipoAportanteNombre = ConstanStringTipoAportanteNombre.Ffie;
+                }
             }
 
             proyecto.PredioPrincipal = _context.Predio.Where(x => x.PredioId == proyecto.PredioPrincipalId && x.Activo == true).FirstOrDefault();
