@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle disponibilidad presupuestal solicitud PA_001
+        Ver detalle disponibilidad presupuestal solicitud {{this.numeroSolicitud}}
     </h1>
     <div style="margin-top: 2em;">
         <p><b>Consecutivo proyecto administrativo:</b> 0001</p>
@@ -42,10 +42,10 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content align="left">
-            Contratación de vigilancia para las tres sedes de la UG FFIE.
+            <div [innerHtml]="this.objeto"></div>
           </mat-card-content>
     </mat-card>
-    <mat-card class="shipping-card mainGris">
+    <mat-card class="shipping-card mainGris" *ngIf="this.observaciones !== null">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text textoGris">
               Observaciones
