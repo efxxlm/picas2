@@ -65,7 +65,7 @@ export class TableFuentesYUsosComponent implements OnInit {
     if ( registroSinDiligenciar === elemento.length ) {
       return 'sin-diligenciar';
     };
-    if ( registroEnProceso > registroSinDiligenciar && registroEnProceso < registroCompletos ) {
+    if ( registroEnProceso > registroSinDiligenciar && registroEnProceso < elemento.length || registroEnProceso === elemento.length ) {
       return 'en-proceso';
     };
     if ( registroCompletos === elemento.length ) {

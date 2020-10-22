@@ -290,7 +290,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   borrarArray(j: number, i: number) {
-    this.componentes(i).removeAt( j );
+    this.componentes(j).removeAt( i );
   }
 
   openDialog(modalTitle: string, modalText: string) {
