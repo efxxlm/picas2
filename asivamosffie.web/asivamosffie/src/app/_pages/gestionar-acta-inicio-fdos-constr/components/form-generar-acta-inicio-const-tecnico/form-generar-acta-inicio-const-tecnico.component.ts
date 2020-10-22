@@ -56,7 +56,11 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   public plazoEjecucionPreConstruccionMeses;
   public plazoEjecucionPreConstruccionDias;
 
+  fechaSesionString: string;
+  fechaSesion: Date;
 
+  fechaSesionString2: string;
+  fechaSesion2: Date;
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
@@ -81,6 +85,15 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.title = 'Generar';
     }
   }
+  crearFormulario() {
+    return this.fb.group({
+      fechaActaInicioFDosConstruccion: [Date(), Validators.required],
+      fechaPrevistaTerminacion: [Date(), Validators.required],
+      mesPlazoEjFase2: [null, Validators.required],
+      diasPlazoEjFase2: [null, Validators.required],
+      observacionesEspeciales: [""]
+    })
+  }
   loadData(id) {
     this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
       /*Titulo*/
@@ -104,8 +117,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       /*Campo de texto no editable*/
       /*Campo de texto editable*/
       if(this.editable == true){
-        let fechaActaInicioFDosConstruccion = new Date(data.fechaActaInicio); // para detectar la fecha
-        let fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
+        var fechaActaInicioFDosConstruccion = new Date(data.fechaActaInicio); // para detectar la fecha
+        var fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(fechaPrevistaTerminacion);
         this.addressForm.get('mesPlazoEjFase2').setValue(8);
@@ -144,15 +157,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  crearFormulario() {
-    return this.fb.group({
-      fechaActaInicioFDosConstruccion: [null, Validators.required],
-      fechaPrevistaTerminacion: [null, Validators.required],
-      mesPlazoEjFase2: [null, Validators.required],
-      diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: [""]
-    })
-  }
+
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
@@ -190,6 +195,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.fechaSesion = new Date(this.addressForm.value.fechaActaInicioFDosConstruccion);
+    this.fechaSesionString = `${this.fechaSesion.getFullYear()}/${this.fechaSesion.getMonth() + 1}/${this.fechaSesion.getDate()}`;
+    this.fechaSesion2 = new Date(this.addressForm.value.fechaPrevistaTerminacion);
+    this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}/${this.fechaSesion2.getMonth() + 1}/${this.fechaSesion2.getDate()}`;
     //compara los meses
     if(this.editable==false){
       var sumaMeses;
@@ -204,7 +213,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
         this.openDialog('Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato', "");
       }
       else{
-        this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2").subscribe(data1 => {
+        this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(data1 => {
           if (data1.code == "102") {
             this.openDialog(data1.message, "");
             this.router.navigate(['/generarActaInicioConstruccion']);
@@ -216,7 +225,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       }
     }
     else{
-      this.services.EditarContratoObservacion(this.idContrato,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2").subscribe(resp=>{
+      this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(resp=>{
         if (resp.code == "102") {
           this.openDialog(resp.message, "");
           this.router.navigate(['/generarActaInicioConstruccion']);

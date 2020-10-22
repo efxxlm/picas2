@@ -24,14 +24,14 @@ export class ActBeginService {
     formData.append('pFile', pFile, pFile.name);
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditCargarActaSuscritaContrato?pContratoId=${pContratoId}&pFechaFirmaContratista=${pFechaFirmaContratista}&pFechaFirmaActaContratistaInterventoria=${pFechaFirmaActaContratistaInterventoria}&pUsuarioModificacion=${pUsuarioModificacion}`, formData);
   }
-  CreatePlazoEjecucionFase2Construccion(pContratoId: number, pPlazoFase2PreMeses: number, pPlazoFase2PreDias: number, pObservacionesConsideracionesEspeciales: string, pUsuarioModificacion: string) {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreatePlazoEjecucionFase2Construccion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacionesConsideracionesEspeciales=${pObservacionesConsideracionesEspeciales}&pUsuarioModificacion=${pUsuarioModificacion}`, "");
+  CreatePlazoEjecucionFase2Construccion(pContratoId: number, pPlazoFase2PreMeses: number, pPlazoFase2PreDias: number, pObservacionesConsideracionesEspeciales: string, pUsuarioModificacion: string, pFechaActaInicioFase1: string, pFechaTerminacionFase2: string) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreatePlazoEjecucionFase2Construccion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacionesConsideracionesEspeciales=${pObservacionesConsideracionesEspeciales}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}`, "");
   }
   CreateTieneObservacionesActaInicio(pContratoId:number, pObservacionesActa:string, pUsuarioModificacion: string){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateTieneObservacionesActaInicio?pContratoId=${pContratoId}&pObservacionesActa=${pObservacionesActa}&pUsuarioModificacion=${pUsuarioModificacion}`, "");
   }
-  EditarContratoObservacion(pContratoId: number, pObservacion:string, pUsuarioModificacion:string){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditarContratoObservacion?pContratoId=${pContratoId}&pObservacion=${pObservacion}&pUsuarioModificacion=${pUsuarioModificacion}`, "");
+  EditarContratoObservacion(pContratoId: number,  pPlazoFase2PreMeses:number , pPlazoFase2PreDias:number, pObservacion:string, pUsuarioModificacion:string,pFechaActaInicioFase1:string,pFechaTerminacionFase2:string){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditarContratoObservacion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacion=${pObservacion}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}`, "");
   }
 }
 export interface GetVistaGenerarActaInicio {
