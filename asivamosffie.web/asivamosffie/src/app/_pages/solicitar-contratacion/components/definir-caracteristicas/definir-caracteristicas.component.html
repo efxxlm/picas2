@@ -11,10 +11,11 @@
     </h1>
   </div>
 
-  <p class="text-detalle flex-center" *ngIf="contratacionProyecto" style="margin-top: 1em;">
-    <span style="margin-right: 2em"><b>{{ tipoIntervencion }}</b></span>
+  <p class="text-detalle flex-center colorMainColor" *ngIf="contratacionProyecto" style="margin-top: 1em;">
+    <span style="margin-right: 2em">{{ tipoIntervencion }}</span>
     <span style="margin-right: 2em">{{ contratacionProyecto.tipoIntervencionCodigo }}</span>
-    <span style="margin-right: 2em"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span style="margin-right: 2em"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} -
+        {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
     <span> {{ municipio }} </span>
   </p>
 
@@ -23,13 +24,17 @@
       <mat-card-content>
         <div class="row" style="margin-left: .7em;">
           <div class="pr-1">
-            <label class="label-left" for="reasignacion">¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web? </label>
+            <label class="label-left" for="reasignacion">
+              ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través
+              de cámaras con acceso web?
+            </label>
           </div>
           <div class="col">
             <mat-radio-group class="radioInput d-flex" formControlName="completada">
               <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
               <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
+            <span class="required-form-group">*</span>
           </div>
         </div>
         <div class="row">
@@ -43,6 +48,7 @@
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
@@ -58,6 +64,7 @@
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
@@ -70,7 +77,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput type="number" min="1" max="100" formControlName="porcentajeAvanceObra">
+                  <input matInput type="number" min="1" max="100" formControlName="porcentajeAvanceObra" required>
                 </mat-form-field>
                 <span class="contador">%</span>
               </div>
@@ -91,6 +98,7 @@
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
@@ -106,6 +114,7 @@
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
@@ -118,7 +127,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numeroLicencia type="text" maxlength="12" formControlName="numeroLicencia">
+                  <input matInput #numeroLicencia type="text" maxlength="12" formControlName="numeroLicencia" required>
                 </mat-form-field>
                 <span class="contador">{{12 - numeroLicencia.value.length}}</span>
               </div>
@@ -134,7 +143,7 @@
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
                   <input matInput [matDatepicker]="picker" formControlName="fechaVigencia" readonly
-                    (click)="picker.open()">
+                    (click)="picker.open()" required>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
@@ -146,7 +155,7 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <div class="text-center animatedDown" >
+    <div class="text-center animatedDown">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="guardar">
       </button>

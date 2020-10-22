@@ -10,13 +10,13 @@
     </div>
     <div class="animatedDown d-flex w-center" *ngIf="addressForm.controls.reasignacion.value === true">
         <mat-card style="width: 70%;">
-            <mat-card-title class="text-area-quill--label">Observaciones</mat-card-title>
+            <mat-card-title class="text-area-quill--label">Descripcción</mat-card-title>
             <mat-card-content>
-                <quill-editor class="quill-editor-style" 
+                <quill-editor class="quill-editor-style"
                               [styles]="editorStyle"
                               [modules]="config"
-                              (onContentChanged)="maxLength($event, 2000)" 
-                              formControlName="descripcion">
+                              (onContentChanged)="maxLength($event, 2000)"
+                              formControlName="descripcion" required>
                 </quill-editor>
             </mat-card-content>
         </mat-card>
