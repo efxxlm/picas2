@@ -225,7 +225,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
   onObservaciones(id)
   {
     let dialogRef =this.dialog.open(VerObservacionesComponent, {
-      width: '28em',
+      width: '50em',
       data: { id }
     });   
     dialogRef.afterClosed().subscribe(result => {

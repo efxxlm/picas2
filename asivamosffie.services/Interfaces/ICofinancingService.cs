@@ -28,6 +28,6 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID);
 
         Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID);
-
+        Task<Respuesta> EliminarCofinanciacionAportanteByCofinanciacionAportanteId(int pCofinancicacionId, string pUsuarioModifico);
     }
 }

@@ -106,6 +106,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("EliminarCofinanciacionAportanteByCofinanciacionAportanteId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarCofinanciacionAportanteByCofinanciacionAportanteId(int pCofinancicacionId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _Cofinancing.EliminarCofinanciacionAportanteByCofinanciacionAportanteId(pCofinancicacionId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
         [Route("GetListDocumentoByAportanteId")]
         [HttpGet]
         public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)

@@ -44,6 +44,10 @@ export class ProcesoSeleccionService implements OnInit {
   createEditarProcesoSeleccionCronogramaMonitoreo( cronograma: ProcesoSeleccionMonitoreo ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcessSchedule/setProcesoSeleccionMonitoreoCronograma`, cronograma );
   }
+  deleteProcesoSeleccionCronogramaMonitoreo(pId:number)
+  {
+    return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccionCronogramaMonitoreo?pId=${ pId }`);
+  }
 
   listaProcesoSeleccionCronogramaMonitoreo( id: number ){
     return this.http.get<ProcesoSeleccionMonitoreo[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);
@@ -181,6 +185,7 @@ export interface ProcesoSeleccionCronogramaMonitoreo{
   descripcion?: string,
   fechaMaxima?: Date,
   estadoActividadCodigo?: string,
+  eliminado?:boolean,
   procesoSeleccionMonitorei?: ProcesoSeleccionMonitoreo
 }
 
