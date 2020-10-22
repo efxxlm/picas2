@@ -331,21 +331,21 @@ namespace asivamosffie.services
         {
             List<ContratistaGrilla> ListContratistaGrillas = new List<ContratistaGrilla>();
 
-            IQueryable<Contratista> contratistas = _context.Contratista.Where(r => (bool)r.Activo);
+            List<Contratista> contratistas = _context.Contratista.Where(r => (bool)r.Activo).ToList();
 
             if (!string.IsNullOrEmpty(pTipoIdentificacionCodigo))
-                contratistas = contratistas.Where(r => r.TipoIdentificacionCodigo.Equals(pTipoIdentificacionCodigo));
+                contratistas = contratistas.Where(r => r.TipoIdentificacionCodigo.Equals(pTipoIdentificacionCodigo)).ToList();
 
             if (!string.IsNullOrEmpty(pNumeroIdentidicacion))
-                contratistas = contratistas.Where(r => r.NumeroIdentificacion.Contains(pNumeroIdentidicacion));
+                contratistas = contratistas.Where(r => r.NumeroIdentificacion.Contains(pNumeroIdentidicacion)).ToList();
 
             if (!string.IsNullOrEmpty(pNombre))
-                contratistas = contratistas.Where(r => r.Nombre.ToUpper().Contains(pNombre.ToUpper()));
+                contratistas = contratistas.Where(r => r.Nombre.ToUpper().Contains(pNombre.ToUpper())).ToList();
 
             if ((bool)EsConsorcio)
-                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio);
+                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio).ToList();
             else
-                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural || r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual);
+                contratistas = contratistas.Where(r => r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural || r.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual).ToList();
 
             foreach (var contratista in contratistas)
             {

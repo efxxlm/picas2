@@ -175,18 +175,20 @@ export interface ProcesoSeleccionCronograma{
   descripcion?: string,
   fechaMaxima?: Date,
   estadoActividadCodigo?: string,
+  etapaActualProcesoCodigo?:string,
   procesoSeleccion?: ProcesoSeleccion
 }
 
 export interface ProcesoSeleccionCronogramaMonitoreo{
   procesoSeleccionCronogramaId?: number,
-  procesoSeleccionMonitoreo?: number,
+  procesoSeleccionMonitoreoId?: number,
   numeroActividad?: number,
   descripcion?: string,
   fechaMaxima?: Date,
   estadoActividadCodigo?: string,
+  etapaActualProcesoCodigo?:string,
   eliminado?:boolean,
-  procesoSeleccionMonitorei?: ProcesoSeleccionMonitoreo
+  procesoSeleccionMonitoreo?: ProcesoSeleccionMonitoreo
 }
 
 export interface ProcesoSeleccionCotizacion {

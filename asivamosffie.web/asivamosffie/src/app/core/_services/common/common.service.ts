@@ -10,10 +10,7 @@ import { promise } from 'protractor';
   providedIn: 'root'
 })
 export class CommonService {
-  
-  
-  
-
+    
   constructor(private http: HttpClient) { }
 
   public loadProfiles() {
@@ -29,6 +26,7 @@ export class CommonService {
   listaTipoAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
+  
 
   listaNombreAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=4`);
@@ -145,7 +143,7 @@ export class CommonService {
   }
 
   getUsuariosByPerfil( pIdPerfil: number ){
-    return this.http.get<Usuario[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
   }
 
   listaFases(){
@@ -153,6 +151,9 @@ export class CommonService {
   }
   listaSalarios(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=64`);
+  }
+  listaEtapaActualProceso(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=83`);
   }
   listaLimiteSalarios(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=65`);

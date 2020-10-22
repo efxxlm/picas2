@@ -221,6 +221,7 @@ namespace asivamosffie.services
                         }
                     }
                     _context.Cofinanciacion.Add(cofinanciacion);
+                    _context.SaveChanges();
                 }
                 else
                 {
@@ -284,7 +285,7 @@ namespace asivamosffie.services
                             cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
                             cofinancicacionDocumento.FechaCreacion = DateTime.Now;
                             cofinancicacionDocumento.Eliminado = false;
-
+                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId;
                         }
                     }
                 }
