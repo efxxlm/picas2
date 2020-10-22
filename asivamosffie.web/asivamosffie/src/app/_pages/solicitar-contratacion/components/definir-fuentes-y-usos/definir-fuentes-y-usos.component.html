@@ -17,9 +17,9 @@
   </p>
 
   <div class="container-valor" *ngIf="contratacionProyecto" style="margin: 1em;">
-    <p><b>Valor total del proyecto</b> <b> ${{ ( contratacionProyecto.proyecto.valorObra + contratacionProyecto.proyecto.valorInterventoria ) | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
-    <p><b>Valor obra</b> <b>${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
-    <p><b>Valor interventoría</b> <b>${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b>Valor total del proyecto</b> <b style="margin-left: .2em;"> ${{ ( contratacionProyecto.proyecto.valorObra + contratacionProyecto.proyecto.valorInterventoria ) | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b>Valor obra</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b>Valor interventoría</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
   </div>
 
   <div class="text-center mb-2em">

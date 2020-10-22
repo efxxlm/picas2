@@ -26,6 +26,13 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     private router: Router,
 
   ) {
+    this.getSolicitud();
+  }
+
+  ngOnInit(): void {
+  }
+
+  getSolicitud () {
     this.route.params.subscribe((params: Params) => {
       this.projectContractingService.getContratacionByContratacionId(params.id)
         .subscribe(response => {
@@ -51,9 +58,6 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
         });
 
     });
-  }
-
-  ngOnInit(): void {
   }
 
   semaforoAcordeon(acordeon: string) {
@@ -177,7 +181,11 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
         console.log(respuesta);
 
         if (respuesta.code === '200') {
-          this.router.navigate(['/solicitarContratacion/solicitud', this.contratacion.contratacionId]);
+          this.contratacion = null;
+          this.getSolicitud();
+          if ( this.contratacion !== null ) {
+            this.router.navigate(['/solicitarContratacion/solicitud/', this.contratacion.contratacionId]);
+          }
         }
 
       });
