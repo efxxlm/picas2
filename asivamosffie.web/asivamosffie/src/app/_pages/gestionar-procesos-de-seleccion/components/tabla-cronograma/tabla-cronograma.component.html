@@ -16,6 +16,9 @@
           <th class="mat-header-cell cdk-header-cell ng-star-inserted">
             Fecha máxima
           </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Etapa actual del proceso
+          </th>
           <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
             Gestión
           </th>
@@ -53,6 +56,15 @@
                 formControlName="fecha" [disabled]="!editMode.valor">
               <input type="hidden" formControlName="procesoSeleccionCronogramaId">
               <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="etapaActualProceso" required>
+                <mat-option *ngFor="let tipoPresupuesto of listaetapaActualProceso" [value]="tipoPresupuesto">
+                  {{ tipoPresupuesto.nombre }}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">

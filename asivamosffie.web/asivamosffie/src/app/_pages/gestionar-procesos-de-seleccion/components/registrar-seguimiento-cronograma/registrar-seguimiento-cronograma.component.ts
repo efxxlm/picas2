@@ -52,6 +52,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   maxDate: Date;
   idProcesoSeleccion: number = 0;
   listaCronograma: CronogramaSeguimiento[];
+  listaCronogramaActividades: import("c:/Repositorios/GIT/AsiVamosFFIE/asivamosffie.web/asivamosffie/src/app/core/_services/procesoSeleccion/proceso-seleccion.service").ProcesoSeleccionCronograma[];
 
   constructor(
               private fb: FormBuilder,
@@ -70,6 +71,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionCronogramaId: [],
       fechaMaxima: [null, Validators.required],
+      etapaActualProceso:[null, Validators.required],
       fechaMonitoreo: [null, Validators.required],
       estadoActividad: [null, Validators.required],
       observacion: [null, Validators.required],
@@ -81,7 +83,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   ngOnInit(): void {
 
     forkJoin([
-      this.commonService.listaTipoIntervencion(),
+      this.commonService.listaEtapaActualProceso(),
       this.commonService.listaEstadoCronogramaSeguimiento()
     ]).subscribe( respuesta => {
 
@@ -95,15 +97,23 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
       this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion( this.idProcesoSeleccion ).subscribe( lista => {
 
         let listaActividades = this.addressForm.get('actividades') as FormArray;
-
-        console.log( lista );
+        this.listaCronogramaActividades=lista;
+        //console.log( lista );
         
         lista.forEach( cronograma => {
           let grupo = this.createActividad();
-          
+          const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
+          console.log("busco "+ cronograma.etapaActualProcesoCodigo);
+          console.log(etapaActualproceso.nombre);
           grupo.get('procesoSeleccionCronogramaId').setValue( cronograma.procesoSeleccionCronogramaId );
-          grupo.get('fechaMaxima').setValue( cronograma.fechaMaxima );
+          //formato fecha
+          //let fecha = Date.parse(cronograma.fechaMaxima);
+          let fechaSesion = new Date(cronograma.fechaMaxima);
+        
+          grupo.get('fechaMaxima').setValue( `${fechaSesion.getFullYear()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getDate()}`);
           grupo.get('descripcion').setValue( cronograma.descripcion );
+          grupo.get('descripcion').setValue( cronograma.descripcion );
+          grupo.get('etapaActualProceso').setValue(etapaActualproceso?.nombre),
 
           listaActividades.push( grupo );
 
@@ -178,6 +188,32 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+  }
+
+  onChangeEstado()
+  {
+    console.log(this.addressForm.value.tipoIntervencion); 
+    //this.addressForm.get('actividades').setValue([]);
+    let listaActividades = this.addressForm.get('actividades') as FormArray;
+    let lista=this.listaCronogramaActividades.filter(x=>x.estadoActividadCodigo==this.addressForm.value.tipoIntervencion.codigo);
+    
+      lista.forEach( cronograma => {
+        let grupo = this.createActividad();
+        const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
+        grupo.get('procesoSeleccionCronogramaId').setValue( cronograma.procesoSeleccionCronogramaId );
+        //formato fecha
+        //let fecha = Date.parse(cronograma.fechaMaxima);
+        let fechaSesion = new Date(cronograma.fechaMaxima);
+      
+        grupo.get('fechaMaxima').setValue( `${fechaSesion.getFullYear()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getDate()}`);
+        grupo.get('descripcion').setValue( cronograma.descripcion );
+        grupo.get('descripcion').setValue( cronograma.descripcion );
+        grupo.get('etapaActualProceso').setValue(etapaActualproceso?.nombre),
+
+        listaActividades.push( grupo );
+
+      })
+
   }
 
 }

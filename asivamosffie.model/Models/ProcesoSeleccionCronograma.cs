@@ -21,6 +21,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string EtapaActualProcesoCodigo { get; set; }
 
         public virtual ProcesoSeleccion ProcesoSeleccion { get; set; }
         public virtual ICollection<CronogramaSeguimiento> CronogramaSeguimiento { get; set; }
