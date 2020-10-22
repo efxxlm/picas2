@@ -59,6 +59,7 @@ export interface GetVistaGenerarActaInicio {
   valorfase2ConstruccionObra: string;
   vigenciaContrato: Date;
   plazoFase2ConstruccionDias: number;
+  plazoFase2ConstruccionMeses: number;
 }
 export interface GetListGrillaActaInicio {
 
