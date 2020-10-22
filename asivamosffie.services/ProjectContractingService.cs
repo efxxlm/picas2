@@ -315,7 +315,7 @@ namespace asivamosffie.services
                 {
                     ValorDisponibleAportante = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
 
-                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante).ToString();
+                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante);
                 }
 
 
@@ -336,6 +336,7 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
                           .Include(r => r.ContratacionProyecto)
                         .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.Sede)
                     .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
