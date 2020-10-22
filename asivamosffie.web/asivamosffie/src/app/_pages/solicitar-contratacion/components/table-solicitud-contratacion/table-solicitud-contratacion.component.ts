@@ -6,6 +6,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 
 @Component({
@@ -77,6 +78,13 @@ export class TableSolicitudContratacionComponent implements OnInit {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+  }
+
+  observacionesDialog ( numeroSolicitud: string, observacion: string ) {
+    const dialogRef = this.dialog.open(DialogObservacionesComponent, {
+      width: '60em',
+      data: { numeroSolicitud, observacion: "<p>Test observaciones</p>" }
     });
   }
 

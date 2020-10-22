@@ -63,17 +63,25 @@
           </button>
           <a mat-raised-button color="accent" class="btn-table"
             [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
-            *ngIf="element.estadoSolicitudCodigo == 'Sin registro' && element.usuarioModificacion !== undefined">
+            *ngIf=" (element.estadoSolicitudCodigo == 'Sin registro' && element.usuarioModificacion !== undefined)
+                    || (element.estadoSolicitudCodigo === 'Devuelto por comité técnico' && element.registroCompleto)">
             Ver detalle / Editar
           </a>
           <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element.contratacionId)"
             *ngIf="element.estadoSolicitudCodigo === 'Sin registro' && element.registroCompleto">Enviar
             Solicitud.</button>
           <button mat-raised-button color="accent" class="btn-table"
-            [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
-            *ngIf="(element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto)">
-            Ver detalle</button>
-
+                  [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
+                  *ngIf=" (element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto)
+                          || (element.estadoSolicitudCodigo === 'Rechazado por comité técnico' && element.registroCompleto)">
+                  Ver detalle
+          </button>
+          <button mat-raised-button color="accent" class="btn-table"
+                  (click)="observacionesDialog( element.numeroSolicitud, '' )"
+                  *ngIf=" (element.estadoSolicitudCodigo === 'Devuelto por comité técnico' && element.registroCompleto)
+                          || (element.estadoSolicitudCodigo === 'Rechazado por comité técnico' && element.registroCompleto)">
+                  Observaciones
+          </button>
         </td>
       </ng-container>
 
