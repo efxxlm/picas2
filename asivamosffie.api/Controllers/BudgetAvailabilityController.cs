@@ -28,6 +28,14 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Route("GetDisponibilidadPresupuestalByID")]
+        [HttpGet]
+        public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int DisponibilidadPresupuestalId)
+        {
+            var respuesta = await _budgetAvailabilityService.GetDisponibilidadPresupuestalByID(DisponibilidadPresupuestalId);
+            return respuesta;
+        }
+
         [Route("ListAdministrativeProject")]
         [HttpGet]
         public async Task<List<DisponibilidadPresupuestalGrilla>> ListAdministrativeProjects()
@@ -36,7 +44,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestal();
             return respuesta;
         }
-         
+
         [Route("GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud")]
         [HttpGet]
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
@@ -123,7 +131,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-         
+
         [Route("GenerateDDP")]
         [HttpGet]
         public async Task<IActionResult> GenerateDDP(int id)
@@ -131,7 +139,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion), "application/pdf");
             }
             catch (Exception ex)
@@ -154,7 +162,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("GetGridBudgetAvailability")]
         public async Task<IActionResult> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId)
         {
@@ -248,7 +256,7 @@ namespace asivamosffie.api.Controllers
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.SetValidarValidacionDDP(id,UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Task<Respuesta> result = _budgetAvailabilityService.SetValidarValidacionDDP(id, UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -292,7 +300,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 Task<Respuesta> result = _budgetAvailabilityService.DeleteFinancialFundingGestion(pIdDisponibilidadPresObservacion, UsuarioModificacion);
                 object respuesta = await result;
                 return Ok(respuesta);
@@ -394,7 +402,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 //return File(respuesta, "application/octet-stream");
                 return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion), "application/pdf");
             }
