@@ -121,6 +121,26 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [Route("DeleteProcesoSeleccionIntegrante")]
+        [HttpDelete]
+        public async Task<Respuesta> DeleteProcesoSeleccionIntegrante(Int32 pId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _selectionProcessService.DeleteProcesoSeleccionIntegrante(pId, usuarioCreacion);
+                return respuesta;
+                //
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+
         [Route("CreateEditarProcesoSeleccionCronograma")]
         [HttpPost]
         public async Task<Respuesta> CreateEditarProcesoSeleccionCronograma([FromBody] ProcesoSeleccionCronograma procesoSeleccionCronograma)

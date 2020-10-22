@@ -8,7 +8,7 @@ import { pid } from 'process';
   providedIn: 'root'
 })
 export class ProcesoSeleccionService implements OnInit {
-  
+    
   
 
   constructor(
@@ -48,6 +48,11 @@ export class ProcesoSeleccionService implements OnInit {
   {
     return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccionCronogramaMonitoreo?pId=${ pId }`);
   }
+
+  deleteProcesoSeleccionIntegranteByID(procesoSeleccionIntegranteId: any) {
+    return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccionIntegrante?pId=${ procesoSeleccionIntegranteId }`);
+  }
+
 
   listaProcesoSeleccionCronogramaMonitoreo( id: number ){
     return this.http.get<ProcesoSeleccionMonitoreo[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);

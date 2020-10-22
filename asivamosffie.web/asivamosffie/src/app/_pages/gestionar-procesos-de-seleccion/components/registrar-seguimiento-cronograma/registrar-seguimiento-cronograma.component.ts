@@ -192,11 +192,12 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
 
   onChangeEstado()
   {
-    console.log(this.addressForm.value.tipoIntervencion); 
-    //this.addressForm.get('actividades').setValue([]);
+    console.log(this.addressForm.value.tipoIntervencion.codigo); 
+    (<FormArray>this.addressForm.get('actividades')).clear();
     let listaActividades = this.addressForm.get('actividades') as FormArray;
-    let lista=this.listaCronogramaActividades.filter(x=>x.estadoActividadCodigo==this.addressForm.value.tipoIntervencion.codigo);
-    
+    console.log(this.listaCronogramaActividades); 
+    let lista=this.listaCronogramaActividades.filter(x=>x.etapaActualProcesoCodigo==this.addressForm.value.tipoIntervencion.codigo);
+    console.log(lista); 
       lista.forEach( cronograma => {
         let grupo = this.createActividad();
         const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
