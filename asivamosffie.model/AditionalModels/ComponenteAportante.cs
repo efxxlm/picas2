@@ -7,11 +7,9 @@ namespace asivamosffie.model.Models
 {
     public partial class ComponenteAportante
     {
-        [NotMapped]
-        public string SaldoDisponible { get; set; }
-
-        
-
+        [NotMapped] 
+        public decimal SaldoDisponible { get; set; }
+         
     }
 
 }

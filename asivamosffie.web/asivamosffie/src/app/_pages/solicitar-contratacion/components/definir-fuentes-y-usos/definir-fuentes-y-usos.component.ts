@@ -290,7 +290,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   borrarArray(j: number, i: number) {
-    this.componentes(i).removeAt( j );
+    this.componentes(j).removeAt( i );
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -377,7 +377,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         );
 
     } else {
-      this.openDialog('', 'La sumatoria de los componentes, no es igual el valor total del aporte.');
+      this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
     }
 
     console.log(this.contratacionProyecto);
