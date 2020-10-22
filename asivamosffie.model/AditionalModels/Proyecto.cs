@@ -15,6 +15,9 @@ namespace asivamosffie.model.Models
         public DateTime? FechaComite { get; set; }
 
         [NotMapped]
+        public string NumeroSolicitud { get; set; }
+
+        [NotMapped]
         public string Departamento { get; set; }
 
         [NotMapped]
