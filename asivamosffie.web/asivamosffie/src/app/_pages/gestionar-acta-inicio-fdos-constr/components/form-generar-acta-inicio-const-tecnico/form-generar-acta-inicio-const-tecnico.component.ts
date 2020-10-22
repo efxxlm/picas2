@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { parse } from 'path';
 import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DatePipe } from '@angular/common';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   selector: 'app-form-generar-acta-inicio-const-tecnico',
@@ -61,13 +63,14 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
 
   fechaSesionString2: string;
   fechaSesion2: Date;
+  
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
     modalText: string
   };
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -98,6 +101,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
+      console.log(data.plazoInicialContratoSupervisor);
       this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
       /*Cuadro 1*/
       this.vigenciaContrato = data.vigenciaContrato;
@@ -117,7 +121,9 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       /*Campo de texto no editable*/
       /*Campo de texto editable*/
       if(this.editable == true){
-        var fechaActaInicioFDosConstruccion = new Date(data.fechaActaInicio); // para detectar la fecha
+        var year1 = data.fechaActaInicio.toString();
+        var fechaActaInicioFDosConstruccion = new Date(year1.slice(8,11)+"-"+year1.slice(4,6)+"-"+year1.slice(0,2)); // para detectar la fecha
+        console.log(year1.slice(8,11)+"-"+year1.slice(4,6)+"-"+year1.slice(0,2));
         var fechaPrevistaTerminacion = new Date(data.fechaPrevistaTerminacion); // para detectar la fecha
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(fechaActaInicioFDosConstruccion);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(fechaPrevistaTerminacion);
@@ -195,9 +201,12 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     }
   }
   onSubmit() {
-    this.fechaSesion = new Date(this.addressForm.value.fechaActaInicioFDosConstruccion);
+    let fecha = Date.parse(this.addressForm.get( 'fechaActaInicioFDosConstruccion' ).value);
+    this.fechaSesion = new Date(fecha);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}/${this.fechaSesion.getMonth() + 1}/${this.fechaSesion.getDate()}`;
-    this.fechaSesion2 = new Date(this.addressForm.value.fechaPrevistaTerminacion);
+
+    let fecha2 = Date.parse(this.addressForm.get( 'fechaPrevistaTerminacion' ).value);
+    this.fechaSesion2 = new Date(fecha2);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}/${this.fechaSesion2.getMonth() + 1}/${this.fechaSesion2.getDate()}`;
     //compara los meses
     if(this.editable==false){
@@ -215,7 +224,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       else{
         this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(data1 => {
           if (data1.code == "102") {
-            this.openDialog(data1.message, "");
+            this.openDialog('La información ha sido guardada exitosamente.', "");
             this.router.navigate(['/generarActaInicioConstruccion']);
           }
           else {
@@ -227,7 +236,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     else{
       this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(resp=>{
         if (resp.code == "102") {
-          this.openDialog(resp.message, "");
+          this.openDialog('La información ha sido guardada exitosamente.', "");
           this.router.navigate(['/generarActaInicioConstruccion']);
         }
         else {
@@ -237,7 +246,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     }
   
     console.log(this.addressForm.value);
-    //this.openDialog('La información ha sido guardada exitosamente.', "");
+
   }
 
 }
