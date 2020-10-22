@@ -17,7 +17,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaResultadosContratistasComponent implements OnInit {
 
   @Input() contratacion: Contratacion;
-  @Output() guardar: EventEmitter<any> = new EventEmitter(); 
+  @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   contratista: ContratistaGrilla;
 
@@ -42,7 +42,7 @@ export class TablaResultadosContratistasComponent implements OnInit {
   constructor(
                 private projectContractingService: ProjectContractingService,
                 private dialog: MatDialog
-             ) 
+             )
   {
     this.declararUnionTemporal();
   }
@@ -54,12 +54,12 @@ export class TablaResultadosContratistasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  
+
     setTimeout(() => {
       if ( this.contratacion[ 'contratista' ] !== undefined ) {
         this.contratista = {
           idContratista: this.contratacion.contratistaId,
-    
+
         }
         this.dataSource = new MatTableDataSource( [ this.contratacion[ 'contratista' ] ] );
         this.dataSource.sort = this.sort;
@@ -99,7 +99,7 @@ export class TablaResultadosContratistasComponent implements OnInit {
     this.projectContractingService.getListContractingByFilters( numero, nombre, esConsorcio )
       .subscribe( response => {
         if ( response.length === 0 ) {
-          this.openDialog( '', 'No se encontraron registros asociados al criterio de búsqueda seleccionado.' );
+          this.openDialog( '', '<b>No se encontraron registros asociados al criterio de búsqueda seleccionado.</b>' );
           return;
         }
         this.dataSource = new MatTableDataSource(response);
