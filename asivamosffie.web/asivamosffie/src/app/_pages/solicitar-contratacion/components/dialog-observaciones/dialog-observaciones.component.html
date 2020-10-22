@@ -3,20 +3,40 @@
 </button>
 
 <div class="text-center">
-  <h1 class="title-menu--h1">
+  <h1 class="title-menu--h1" style="margin-bottom: 1em;">
     Observaciones de la solicitud {{ data.numeroSolicitud }}
   </h1>
 
-  <mat-card class="shipping-card w-80">
-    <mat-card-header class="header-card">
-      <mat-card-title class="text-area-quill--label" style="color: #174193;">Proyecto 8888</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style" *ngFor="let contratacion of data.contratacionProyecto">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto.institucionEducativa.nombre }} - {{ contratacion.proyecto.sede.nombre }}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
 
-      <section [innerHTML]="innerObservacion( data.observacion )" align="left" class="padding-section">
-      </section>
+        <section *ngIf="contratacion.sesionSolicitudObservacionProyecto.length === 0">
+          <mat-card class="shipping-card w-80">
+            <mat-card-content>
+              <p style="color: #174193;">El proyecto no recibio observaciones.</p>
+            </mat-card-content>
+          </mat-card>
+        </section>
+          
+        <section *ngIf="contratacion.sesionSolicitudObservacionProyecto.length > 0">
+          <mat-card class="shipping-card w-80" *ngFor="let observacionesProyecto of contratacion.sesionSolicitudObservacionProyecto; index as i">
+            <mat-card-header class="header-card">
+              <mat-card-title class="text-area-quill--label" style="color: #174193;">Observación {{ i+1 }} </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+        
+              <section [innerHTML]="innerObservacion( observacionesProyecto.observacion )" align="left" class="padding-section">
+              </section>
+        
+            </mat-card-content>
+          </mat-card>
+        </section>
 
-    </mat-card-content>
-  </mat-card>
-
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

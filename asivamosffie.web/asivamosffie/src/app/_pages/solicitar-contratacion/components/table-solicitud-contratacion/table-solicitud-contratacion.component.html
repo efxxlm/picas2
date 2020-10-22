@@ -78,7 +78,7 @@
                   Ver detalle
           </button>
           <button mat-raised-button color="accent" class="btn-table"
-                  (click)="observacionesDialog( element.numeroSolicitud, '' )"
+                  (click)="observacionesDialog( element.numeroSolicitud, element.contratacionProyecto )"
                   *ngIf=" (element.estadoSolicitudCodigo === 'Devuelto por comité técnico' && element.registroCompleto)
                           || (element.estadoSolicitudCodigo === 'Rechazado por comité técnico' && element.registroCompleto)">
                   Observaciones
