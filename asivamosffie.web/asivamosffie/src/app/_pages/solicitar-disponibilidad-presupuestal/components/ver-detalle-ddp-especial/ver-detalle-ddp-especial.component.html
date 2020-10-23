@@ -4,60 +4,154 @@
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">
-        Ver detalle disponibilidad presupuestal solicitud {{this.numeroSolicitud}}
-    </h1>
-    <div style="margin-top: 2em;">
-        <p><b>Consecutivo proyecto administrativo:</b> 0001</p>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Ver Detalle solicitud DDP especial
+        </h1>
     </div>
     <mat-card class="shipping-card mainGris">
-        <div *ngFor="let aportante of this.aportantesList; let i = index">
-            <mat-card-content align="left">
-
-                <mat-card-title class="header-card--text textoGris">
-                    Aportante {{i+1}}
-                </mat-card-title>
-
-                <p>
-                    <strong>Valor del aportante al proyecto:</strong>
-                    {{aportante.valorAportanteAlProyecto}}
-                </p>
-                <p>
-                    <strong>Nombre del aportante:</strong>
-                    {{aportante.nombre}}
-                </p>
-                <!--Pendiente de mapeo-->
-                <div *ngFor="let fuentes of aportante.fuentesFinanciacion; let j = index">
-                    <p>
-                        <strong>Fuente {{j+1}}:</strong>
-                        {{fuentes.estado_de_las_fuentes}}
-                    </p>
-                    <p>
-                        <strong>Valor fuente {{j+1}}:</strong>
-                        {{fuentes.valor_solicitado_de_la_fuente | currency:'COP':'symbol-narrow':'.0-0'}}
-                    </p>
-                </div>
-            </mat-card-content>
-        </div>
-    </mat-card>
-    <mat-card class="shipping-card mainGris">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text textoGris">
-                Objeto
+                DDP especial
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
+            <p *ngIf="this.tipoSolicitudCodigo=='1'">
+                <strong>Tipo de solicitud DDP especial:</strong>
+                Expensas
+            </p>
+            <p *ngIf="this.tipoSolicitudCodigo=='2'">
+                <strong>Tipo de solicitud DDP especial:</strong>
+                Otros costos/Servicios
+            </p>
+            <p>
+                <strong>Objeto:</strong>
+            </p>
             <div [innerHtml]="this.objeto"></div>
+            <p>
+                <strong>Número de radicado de la solicitud:</strong>
+                {{this.numeroRadicadoSolicitud}}
+            </p>
+            <div *ngIf="this.tipoSolicitudCodigo=='1'">
+                <h2 class="card-subTitle backgrondGris">Expensas</h2>
+                <p>
+                    <strong>¿Cuenta con carta de autorización de la ET?:</strong>
+                    {{this.cartaAutorizacionString}}
+                </p>
+                <p>
+                    <strong>Departamento:</strong>
+                    Antioquia
+                </p>
+                <p>
+                    <strong>Municipio:</strong>
+                    Abejorral
+                </p>
+                <p>
+                    <strong>Llave MEN:</strong>
+                    LL45231
+                </p>
+            </div>
+            <div *ngIf="this.tipoSolicitudCodigo=='2'">
+                <h2 class="card-subTitle backgrondGris">Otros costos/Servicios</h2>
+                <p>
+                    <strong>Número de contrato:</strong>
+                    1381
+                </p>
+            </div>
         </mat-card-content>
     </mat-card>
-    <mat-card class="shipping-card mainGris">
-        <mat-card-header class="header-card">
-            <mat-card-title class="header-card--text textoGris">
-                Observaciones
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content align="left">
-            Pruebas
-        </mat-card-content>
-    </mat-card>
+    <div *ngIf="this.tipoSolicitudCodigo=='1'">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    LL45231
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Tipo de intervención:</b>
+                    Reconstrucción
+                </p>
+                <p>
+                    <b>Nombre de la I.E:</b>
+                    Colegio Juan XXIII
+                </p>
+                <p>
+                    <b>Sede:</b>
+                    Única sede
+                </p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Aportante
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Nombre del aportante:</b>
+                    Alacladia
+                </p>
+                <p>
+                    <b>Valor:</b>
+                    $ 23.000
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div *ngIf="this.tipoSolicitudCodigo=='2'">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    1381
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Nombre de la entidad contratista:</b>
+                    Constructora Colpatria
+                </p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Limitación especial
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                1. Los especialistas en el tema informan que las raices de estos árboles son aproximadamente de7 metros
+                de profundidad lo cual hace que la
+                extracción sea más complicada y requieren maquinaria especial.
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Aportante
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Tipo de aportante:</b>
+                    FFIE
+                </p>
+                <p>
+                    <b>Nombre del aportante:</b>
+                    Alacladia
+                </p>
+                <p>
+                    <b>Valor:</b>
+                    $ 23.000
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div align="left">
+        <p>
+            <b>Url con soporte:</b>
+            http://www.ffie.com
+        </p>
+    </div>
 </div>

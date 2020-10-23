@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { Dominio } from 'src/app/core/_services/common/common.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 
 @Component({
@@ -8,24 +10,32 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
   styleUrls: ['./ver-detalle-ddp-especial.component.scss']
 })
 export class VerDetalleDdpEspecialComponent implements OnInit {
-  aportantesList: any;
-  numeroSolicitud: any;
-  objeto: any;
-
-  constructor(private activatedRoute: ActivatedRoute, private budgetAvailabilityService: DisponibilidadPresupuestalService) { }
+  tipoSolicitudCodigo: string;
+  objeto: string;
+  numeroRadicadoSolicitud: string;
+  cuentaCartaAutorizacion: boolean;
+  cartaAutorizacionString: string;
+  constructor(private activatedRoute: ActivatedRoute, private budgetAvailabilityService: BudgetAvailabilityService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      console.log(param);
-      //this.cargarServicio(param.id);
+      this.cargarRegistro( param.id );
     });
   }
-  /*cargarServicio(id){
-    this.budgetAvailabilityService.GetDetailAvailabilityBudgetProyect(id).subscribe(data=>{
-      this.aportantesList = data[0].aportantes;
-      this.numeroSolicitud = data[0].numeroSolicitud;
-      this.objeto = data[0].objeto;
-
-    });
-  }*/
+  cargarRegistro( id: number )
+  {
+    this.budgetAvailabilityService.getDetailInfoAdditionalById( id )
+      .subscribe( disponibilidad => {
+        this.tipoSolicitudCodigo = disponibilidad.tipoSolicitudCodigo;
+        this.objeto = disponibilidad.objeto;
+        this.numeroRadicadoSolicitud = disponibilidad.numeroRadicadoSolicitud;
+        this.cuentaCartaAutorizacion = disponibilidad.cuentaCartaAutorizacion;
+        if(this.cuentaCartaAutorizacion==true){
+          this.cartaAutorizacionString="Sí";
+        }
+        else{
+          this.cartaAutorizacionString="No";
+        }
+      })
+  }
 }
