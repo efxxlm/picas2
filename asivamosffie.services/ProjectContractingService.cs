@@ -307,20 +307,19 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.FuenteFinanciacion)
                 .FirstOrDefaultAsync();
 
-            foreach (var ContratacionProyecto in contratacionProyecto.Contratacion.ContratacionProyecto)
+            foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
             {
-                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
-                {
+ 
                     decimal ValorGastado = 0;
-                    decimal ValorDisponible = 0;
+                    decimal ValorDisponible = ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
+
                     foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                     {
                         ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
-                        ValorDisponible =
-                     ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
-                        ComponenteAportante.SaldoDisponible = (ValorDisponible - ValorGastado);
                     }
-                }
+
+                    ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado ;
+             
             }
 
             return contratacionProyecto;
