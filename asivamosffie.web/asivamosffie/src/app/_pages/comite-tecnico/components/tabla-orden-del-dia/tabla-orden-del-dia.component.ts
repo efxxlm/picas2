@@ -105,7 +105,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result===true) {
         this.OnDelete(e);
       }
     });

@@ -228,10 +228,9 @@ export class FormularioProyectosComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result === true)
-        {
+        
           this.router.navigate(["/crearProyectoAdministrativo"], {});
-        }
+        
       });
     }
   }

@@ -296,7 +296,7 @@ export class FormRegistrarParticipantesComponent {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result===true) {
         this.onDelete(e)
       }
     });

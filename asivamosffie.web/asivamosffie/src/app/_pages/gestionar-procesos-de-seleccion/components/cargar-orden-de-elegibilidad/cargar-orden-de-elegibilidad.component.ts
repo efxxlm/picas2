@@ -87,11 +87,10 @@ export class CargarOrdenDeElegibilidadComponent {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result === true)
-        {
+        
           location.reload();
           //this.router.navigate(["/cargarMasivamente"], {});
-        }
+        
       });
     }
   }
