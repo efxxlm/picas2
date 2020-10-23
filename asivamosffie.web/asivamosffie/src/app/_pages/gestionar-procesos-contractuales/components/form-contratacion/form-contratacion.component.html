@@ -21,8 +21,8 @@
         <section>
           <b>Objeto</b>: <div [innerHTML]="innerObservacion( dataContratacion.disponibilidadPresupuestal[0].objeto )"></div>
         </section>
-        <p><b>Número de comité fiduciario</b>: {{ dataContratacion.disponibilidadPresupuestal[0].numeroComiteFiduciario }}</p>
-        <p><b>Fecha de comité fiduciario</b>: {{ dataContratacion.disponibilidadPresupuestal[0].fechaComiteFiduciario }}</p>
+        <p><b>Número de comité fiduciario</b>: {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
+        <p><b>Fecha de comité fiduciario</b>: {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
       </mat-card-content>
   </mat-card>
   </div>
@@ -38,7 +38,7 @@
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let data of dataContratacion.contratacionProyecto">
             <mat-expansion-panel-header class="expansion-style--header w-45">
               <mat-panel-title class="expansion-style--title">
-                {{ data.proyecto.llaveMen }} - {{ data.proyecto.institucionEducativa.nombre }} - Pendiente por mostrar "Sede"
+                {{ data.proyecto.llaveMen }} - {{ data.proyecto.institucionEducativa.nombre }} - {{ data.proyecto['sede'].nombre }}
               </mat-panel-title>
             </mat-expansion-panel-header>
   
@@ -249,7 +249,7 @@
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
         <p>Fecha del trámite <b class="color-titulo">{{ dataContratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
-        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="dataContratacion"></app-form-registro-tramite>
+        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="dataContratacion" [minDate]="dataContratacion.fechaTramite"></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

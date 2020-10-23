@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -11,12 +11,14 @@ import { Router } from '@angular/router';
   templateUrl: './form-registro-tramite.component.html',
   styleUrls: ['./form-registro-tramite.component.scss']
 })
-export class FormRegistroTramiteComponent implements OnInit {
+export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   fechaSesionString: string;
   fechaSesion: Date;
+  @Input() minDate: Date;
   archivo                : string;
   @Input() dataFormulario: FormGroup;
   @Input() contratacion  : DataSolicitud;
+  seRealizoPeticion: boolean = false;
   editorStyle = {
     height: '45px'
   };
@@ -31,12 +33,33 @@ export class FormRegistroTramiteComponent implements OnInit {
 
   constructor ( private dialog: MatDialog,
                 private procesosContractualesSvc: ProcesosContractualesService,
-                private routes: Router ) {
+                private routes: Router ) 
+  {
   }
+
+  ngOnDestroy(): void {
+    if ( this.dataFormulario.dirty === true && this.seRealizoPeticion === false ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    };
+  };
 
   ngOnInit(): void {
     this.archivo = this.dataFormulario.get( 'minutaName' ).value;
   }
+
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.guardar();
+        }
+      } );
+  };
 
   fileName ( event: any ) {
     
@@ -73,11 +96,6 @@ export class FormRegistroTramiteComponent implements OnInit {
   guardar () {
     console.log( this.dataFormulario );
 
-    if ( this.dataFormulario.invalid ) {
-      this.openDialog( 'Falta registrar información.', '' );
-      return;
-    };
-
     this.contratacion.observaciones = this.dataFormulario.get( 'observaciones' ).value;
 
     let fecha = Date.parse(this.dataFormulario.get( 'fechaEnvioTramite' ).value);
@@ -85,19 +103,28 @@ export class FormRegistroTramiteComponent implements OnInit {
     this.fechaSesionString = `${ this.fechaSesion.getFullYear() }/${ this.fechaSesion.getMonth() + 1 }/${ this.fechaSesion.getDate() }` 
     this.contratacion.fechaEnvioDocumentacion =   this.fechaSesionString 
     let documento: any = document.getElementById('file');
-
-    this.procesosContractualesSvc.sendTramite( this.contratacion, documento.files[0] )
+    if ( documento !== null ) {
+      this.procesosContractualesSvc.sendTramite( this.contratacion, documento.files[0] )
       .subscribe( 
-        () => {
-        this.openDialog( 'La información ha sido guardada exitosamente.', '' );
-        this.routes.navigate( [ '/procesosContractuales' ] );
+        response => {
+          this.seRealizoPeticion = true;
+          this.openDialog( '' , response.message );
+          this.routes.navigate( [ '/procesosContractuales' ] );
         },
-        () => {
-          this.openDialog( 'Ha ocurrido un error.', '' );
-        } 
+        err => this.openDialog( '' , err.message )
       );
+    } else {
+      this.procesosContractualesSvc.sendTramite( this.contratacion, undefined )
+      .subscribe( 
+        response => {
+          this.seRealizoPeticion = true;
+          this.openDialog( '' , response.message );
+          this.routes.navigate( [ '/procesosContractuales' ] );
+        },
+        err => this.openDialog( '' , err.message )
+      );
+    }
 
-    //
   };
 
 };

@@ -1,11 +1,13 @@
 <form autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
-  <div class="container">
+  <div align="left">
     <div class="d-flex mt-1em">
       <label class="mr-label">Fecha de envío de documentación física para el trámite</label>
       <mat-form-field class="w-20" 
                       appearance="fill">
         <input  matInput 
-                [matDatepicker]="picker" 
+                [matDatepicker]="picker"
+                required
+                [min]="minDate"
                 formControlName="fechaEnvioTramite">
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -22,19 +24,20 @@
 
     <div class="d-flex mt-1em">
       <label class="mr-label">Observaciones</label>
-      <quill-editor class="quill-editor-style w-60 card" 
+      <quill-editor class="quill-editor-style card" 
                     [styles]="editorStyle"
+                    style="width: 85%"
                     [modules]="config"
+                    required
                     (onContentChanged)="maxLength($event, 2000)" 
                     formControlName="observaciones"></quill-editor>
-      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null">
-        {{2000 - textoLimpio(dataFormulario.get('observaciones').value)}}
+      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 2.5em;">
+        {{2000 - textoLimpio(dataFormulario.get('observaciones').value )}}
       </span>
-      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null">
+      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null" style="margin-top: 2.5em;">
         2000
       </span>
     </div>
-
     <div class="d-flex">
       <label class="mr-3em">Minuta adjunta</label>
       <div class="input w-80">

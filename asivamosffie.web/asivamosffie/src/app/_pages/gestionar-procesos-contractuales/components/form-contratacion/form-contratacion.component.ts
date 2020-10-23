@@ -87,10 +87,15 @@ export class FormContratacionComponent implements OnInit {
 
         console.log( contratacion );
         this.dataContratacion = contratacion;
-        const rutaDocumento = contratacion.rutaMinuta.split( '/' );
+        let rutaDocumento;
+        if ( contratacion.rutaMinuta !== undefined ) {
+          rutaDocumento = contratacion.rutaMinuta.split( '/' );
+        } else {
+          rutaDocumento = null;
+        };
         this.form.reset({
           fechaEnvioTramite: contratacion.fechaEnvioDocumentacion,
-          observaciones: contratacion.observaciones,
+          observaciones: contratacion.observaciones ? ( contratacion.observaciones.length > 0 ? contratacion.observaciones : null ) : null,
           minutaName: rutaDocumento[ rutaDocumento.length-1 ]
         });
 

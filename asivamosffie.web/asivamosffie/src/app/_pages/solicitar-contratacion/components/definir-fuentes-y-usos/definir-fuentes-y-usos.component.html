@@ -75,7 +75,7 @@
                               onKeyPress="if(this.value.length>=this.maxLength) return false;"
                               [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                               formControlName="valorAportanteProyecto"
-                              (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value )">
+                              (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value, aportante.get( 'nombreAportante' ).value )">
                         <input type="hidden" formControlName="contratacionProyectoAportanteId" >
                         <input type="hidden" formControlName="proyectoAportanteId" >
 

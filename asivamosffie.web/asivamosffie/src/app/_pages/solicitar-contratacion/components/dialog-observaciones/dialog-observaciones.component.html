@@ -25,9 +25,6 @@
           
         <section *ngIf="contratacion.sesionSolicitudObservacionProyecto.length > 0">
           <mat-card class="shipping-card w-80" *ngFor="let observacionesProyecto of contratacion.sesionSolicitudObservacionProyecto; index as i">
-            <mat-card-header class="header-card">
-              <mat-card-title class="text-area-quill--label" style="color: #174193;">Observación {{ i+1 }} </mat-card-title>
-            </mat-card-header>
             <mat-card-content>
         
               <section [innerHTML]="innerObservacion( observacionesProyecto.observacion )" align="left" class="padding-section">

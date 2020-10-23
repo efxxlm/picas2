@@ -1,6 +1,6 @@
 <div align="left" *ngIf="institucionesEducativa.length > 0">
   <mat-card class="border" *ngFor="let institucion of institucionesEducativa">
-    <mat-card-title class="text-area-quill--label"> {{ institucion.llaveMen }} - {{ institucion.institucionEducativa.nombre }} - integrar "Sede" </mat-card-title>
+    <mat-card-title class="text-area-quill--label"> {{ institucion.llaveMen }} - {{ institucion.institucionEducativa.nombre }} - {{ institucion.sede.nombre }} </mat-card-title>
     <mat-card-content style="margin-top: .5em;">
       <p><b>Tipo de intervención</b>: {{ institucion.tipoIntervencionCodigo }}</p>
       <p><b>Departamento</b>: {{ institucion.institucionEducativa.departamento.descripcion }}</p>
