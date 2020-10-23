@@ -267,12 +267,13 @@ namespace asivamosffie.services
             //Registros Proyectos
             foreach (var ContratacionProyecto in pContratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
             {
+                InstitucionEducativaSede Sede = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
+                InstitucionEducativaSede institucionEducativa = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
+
+
                 TotalRegistrosContratacionProyectos += PlantillaRegistrosProyectosContratacion;
                 foreach (Dominio placeholderDominio in placeholders)
                 {
-                    InstitucionEducativaSede Sede = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
-                    InstitucionEducativaSede institucionEducativa = ListInstitucionEducativas.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
-
 
                     switch (placeholderDominio.Codigo)
                     {
@@ -340,10 +341,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SALDO_ACTUAL_FUENTE:
-
-
-                            try
-                            {
+                             
                                 if (ContratacionProyecto.Proyecto.ProyectoAportante
                                                       .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
                                 {
@@ -359,48 +357,46 @@ namespace asivamosffie.services
                                     TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
                                      .Replace(placeholderDominio.Nombre, " ");
 
-                                }
-
-                            }
-                            catch (Exception e)
-                            {
-                            }
-
-
+                                } 
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.VALOR_SOLICITADO_FUENTE:
-                            try
-                            {
-                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                             
+                                if (ContratacionProyecto.Proyecto.ProyectoAportante
+                                                    .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
+                                {
+                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
                                                     .Replace(placeholderDominio.Nombre, string
                                                     .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
                                                     .FirstOrDefault().Aportante.FuenteFinanciacion
                                                     .FirstOrDefault().GestionFuenteFinanciacion
                                                     .Sum(r => r.ValorSolicitado)));
-                            }
-                            catch (Exception)
-                            {
-                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                             .Replace(placeholderDominio.Nombre, " ");
-                            }
+                                }
+                                else
+                                {
+                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                                .Replace(placeholderDominio.Nombre, " ");
+                                } 
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.NUEVO_SALDO_FUENTE:
-                            try
-                            {
-                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                           
+                                if (ContratacionProyecto.Proyecto.ProyectoAportante
+                                                 .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
+                                {
+                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
                                                      .Replace(placeholderDominio.Nombre, string
                                                      .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
                                                      .FirstOrDefault().Aportante.FuenteFinanciacion
                                                      .FirstOrDefault().GestionFuenteFinanciacion
                                                      .Sum(r => r.NuevoSaldo)));
-                            }
-                            catch (Exception)
-                            {
-                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                          .Replace(placeholderDominio.Nombre, " ");
-                            }
+                                }
+                                else
+                                {
+                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                               .Replace(placeholderDominio.Nombre, " ");
+
+                                } 
                             break;
                     }
                 }
