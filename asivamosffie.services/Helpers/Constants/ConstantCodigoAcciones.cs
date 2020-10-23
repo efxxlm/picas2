@@ -120,6 +120,12 @@ public const string Inicio_de_sesion = "1";
         public const string Validar_Excel_Flujo_Inversion = "109";
         public const string Crear_Editar_Observacion_Archivo = "112";
         public const string Eliminar_Archivo_Cargue = "113";
+        public const string Crear_Editar_Observacion_Construccion = "115";
+        public const string Crear_Editar_Observacion_Construccion_Diagnostico = "116";
+        public const string Crear_Editar_Observacion_Construccion_PlanesProgramas = "117";
+        public const string Crear_Editar_Observacion_Construccion_ManejoAnticipo = "118";
+        public const string Crear_Editar_Observacion_Construccion_ProgramacionObra = "119";
+        public const string Crear_Editar_Observacion_Construccion_FlujoInversion = "120";
     
     }
 }

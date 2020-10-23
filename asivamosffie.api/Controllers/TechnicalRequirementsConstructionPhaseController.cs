@@ -154,6 +154,74 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateEditObservacionPlanesProgramas")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacionPlanesProgramas(ContratoConstruccion pContratoConstruccion, bool esSupervisor)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionPlanesProgramas(pContratoConstruccion, esSupervisor);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("CreateEditObservacionManejoAnticipo")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacionManejoAnticipo(ContratoConstruccion pContratoConstruccion, bool esSupervisor)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionManejoAnticipo(pContratoConstruccion, esSupervisor);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("CreateEditObservacionProgramacionObra")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacionProgramacionObra(ContratoConstruccion pContratoConstruccion, bool esSupervisor)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionProgramacionObra(pContratoConstruccion, esSupervisor);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("CreateEditObservacionFlujoInversion")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacionFlujoInversion(ContratoConstruccion pContratoConstruccion, bool esSupervisor)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionFlujoInversion(pContratoConstruccion, esSupervisor);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         
         [Route("CreateEditPlanesProgramas")]
         [HttpPost]

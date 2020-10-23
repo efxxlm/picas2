@@ -30,6 +30,10 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditObservacionDiagnostico(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
         Task<List<dynamic>> GetContractsGridApoyoObra();
         Task<List<dynamic>> GetContractsGridApoyoInterventoria();
+        Task<Respuesta> CreateEditObservacionPlanesProgramas(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
+        Task<Respuesta> CreateEditObservacionManejoAnticipo(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
+        Task<Respuesta> CreateEditObservacionProgramacionObra(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
+        Task<Respuesta> CreateEditObservacionFlujoInversion(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
 
 
     }

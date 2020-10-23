@@ -37,6 +37,8 @@ namespace asivamosffie.services.Helpers.Enumerator
  
         Generar_Registro_Presupuestal=36,
 
+        Verificar_Requisitos_Tecnicos_Construccion = 45,
+
         
     }
 
