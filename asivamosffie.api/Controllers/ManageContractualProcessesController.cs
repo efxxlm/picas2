@@ -59,7 +59,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                pSesionComiteSolicitud.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
+                pSesionComiteSolicitud.UsuarioCreacion =  HttpContext.User.FindFirst("User").Value;
                 respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud);
                 return Ok(respuesta);
             }
@@ -89,8 +89,7 @@ namespace asivamosffie.api.Controllers
                     pContratacion.FechaEnvioDocumentacion = DateTime.Parse(FechaEnvioDocumentacion);
                     }
         
-                pContratacion.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
-
+               pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
                   , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
 

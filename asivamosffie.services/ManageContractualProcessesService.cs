@@ -341,62 +341,62 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SALDO_ACTUAL_FUENTE:
-                             
-                                if (ContratacionProyecto.Proyecto.ProyectoAportante
-                                                      .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
-                                {
-                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                        .Replace(placeholderDominio.Nombre, string
-                                        .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
-                                        .FirstOrDefault().Aportante.FuenteFinanciacion
-                                        .FirstOrDefault().GestionFuenteFinanciacion
-                                        .Sum(r => r.SaldoActual)));
-                                }
-                                else
-                                {
-                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                     .Replace(placeholderDominio.Nombre, " ");
 
-                                } 
+                            if (ContratacionProyecto.Proyecto.ProyectoAportante
+                                                  .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
+                            {
+                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                    .Replace(placeholderDominio.Nombre, string
+                                    .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
+                                    .FirstOrDefault().Aportante.FuenteFinanciacion
+                                    .FirstOrDefault().GestionFuenteFinanciacion
+                                    .Sum(r => r.SaldoActual)));
+                            }
+                            else
+                            {
+                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                 .Replace(placeholderDominio.Nombre, " ");
+
+                            }
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.VALOR_SOLICITADO_FUENTE:
-                             
-                                if (ContratacionProyecto.Proyecto.ProyectoAportante
-                                                    .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
-                                {
-                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                                    .Replace(placeholderDominio.Nombre, string
-                                                    .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
-                                                    .FirstOrDefault().Aportante.FuenteFinanciacion
-                                                    .FirstOrDefault().GestionFuenteFinanciacion
-                                                    .Sum(r => r.ValorSolicitado)));
-                                }
-                                else
-                                {
-                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                                .Replace(placeholderDominio.Nombre, " ");
-                                } 
+
+                            if (ContratacionProyecto.Proyecto.ProyectoAportante
+                                                .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
+                            {
+                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                                .Replace(placeholderDominio.Nombre, string
+                                                .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
+                                                .FirstOrDefault().Aportante.FuenteFinanciacion
+                                                .FirstOrDefault().GestionFuenteFinanciacion
+                                                .Sum(r => r.ValorSolicitado)));
+                            }
+                            else
+                            {
+                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                            .Replace(placeholderDominio.Nombre, " ");
+                            }
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.NUEVO_SALDO_FUENTE:
-                           
-                                if (ContratacionProyecto.Proyecto.ProyectoAportante
-                                                 .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
-                                {
-                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                                     .Replace(placeholderDominio.Nombre, string
-                                                     .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
-                                                     .FirstOrDefault().Aportante.FuenteFinanciacion
-                                                     .FirstOrDefault().GestionFuenteFinanciacion
-                                                     .Sum(r => r.NuevoSaldo)));
-                                }
-                                else
-                                {
-                                    TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
-                                               .Replace(placeholderDominio.Nombre, " ");
 
-                                } 
+                            if (ContratacionProyecto.Proyecto.ProyectoAportante
+                                             .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
+                            {
+                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                                 .Replace(placeholderDominio.Nombre, string
+                                                 .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
+                                                 .FirstOrDefault().Aportante.FuenteFinanciacion
+                                                 .FirstOrDefault().GestionFuenteFinanciacion
+                                                 .Sum(r => r.NuevoSaldo)));
+                            }
+                            else
+                            {
+                                TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
+                                           .Replace(placeholderDominio.Nombre, " ");
+
+                            }
                             break;
                     }
                 }
@@ -572,14 +572,19 @@ namespace asivamosffie.services
                                 {
                                     break;
                                 }
-                                foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
-                                {
-                                    //jflorez, pequeño ajsute porque toteaba                                    
-                                    if (DisponibilidadPresupuestal.NumeroDdp == null || string.IsNullOrEmpty(DisponibilidadPresupuestal.NumeroDdp))
-                                    {
-                                        break;
-                                    }
+                                //Jmartinez Si llegan dos Disponibilidad presupuestal error
+
+                                if (contratacion.DisponibilidadPresupuestal.Count() > 1)
+                                { 
+                                    break;
                                 }
+                              
+                                    //jflorez, pequeño ajsute porque toteaba                                    
+                                    if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp))
+                                    {
+
+                                    }
+                               
                                 // sesionComiteSolicitud.Contratacion = contratacion;
                                 sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
 
