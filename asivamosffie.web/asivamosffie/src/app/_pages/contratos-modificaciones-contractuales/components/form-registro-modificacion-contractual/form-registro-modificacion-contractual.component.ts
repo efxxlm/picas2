@@ -32,7 +32,7 @@ export class FormRegistroModificacionContractualComponent implements OnInit {
   };
 
   fileName ( event: any ) {
-    
+
     if ( event.target.files.length > 0) {
       const file   = event.target.files[0];
       this.archivo = event.target.files[0].name;
@@ -71,7 +71,7 @@ export class FormRegistroModificacionContractualComponent implements OnInit {
       return;
     };
 
-    this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+    this.openDialog( '<b>La información ha sido guardada exitosamente.</b>', '' );
     this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
   };
 

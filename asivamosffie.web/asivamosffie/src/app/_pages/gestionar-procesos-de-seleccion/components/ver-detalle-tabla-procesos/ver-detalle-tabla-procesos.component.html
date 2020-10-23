@@ -37,9 +37,11 @@
     (click)="onObservaciones( data.procesoSeleccionId )" *ngIf="obervaciones">
     Observaciones</button>
   <br>
-  <div class="d-flex align-items-center solbloq info-text en-alertaLibre mr-0" *ngIf="data.esCompleto &&
-    data.estadoProcesoSeleccionCodigo === estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+  <div class="d-flex align-items-center solbloq info-text en-alertaLibre mr-0" *ngIf="data.esCompleto && solicitarApertura">
     Solicite la apertura del proceso al comité.
+  </div>
+  <div class="d-flex align-items-center solbloq info-text en-alertaLibre mr-0" *ngIf="!data.esCompleto">
+    Continue con el proceso de registro en Ver detalle / Editar
   </div>
 </div>
 

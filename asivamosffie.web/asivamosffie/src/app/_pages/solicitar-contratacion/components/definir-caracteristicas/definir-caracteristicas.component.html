@@ -143,7 +143,7 @@
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
                   <input matInput [matDatepicker]="picker" formControlName="fechaVigencia" readonly
-                    (click)="picker.open()" required>
+                    (click)="picker.open()" required placeholder="DD/MM/AAAA">
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">

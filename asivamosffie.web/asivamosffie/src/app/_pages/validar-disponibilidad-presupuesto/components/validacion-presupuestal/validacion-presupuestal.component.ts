@@ -53,7 +53,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
   }
   validar() {
     this.disponibilidadServices.SetValidarValidacionDDP(this.route.snapshot.paramMap.get('id')).subscribe(listas => {
-      this.openDialog('', 'La información ha sido guardada exitosamente.');    
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
       });
   }
   openDialog(modalTitle: string, modalText: string) {
@@ -62,9 +62,9 @@ export class ValidacionPresupuestalComponent implements OnInit {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-      
+
         this.router.navigate(['/validarDisponibilidadPresupuesto']);
-      
+
     });
   }
 

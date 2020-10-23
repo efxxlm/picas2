@@ -45,7 +45,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required,
       Validators.minLength(10),
       Validators.maxLength(1000),
-      Validators.email,
+      // Validators.email,
       Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
     ])
     ]
@@ -77,7 +77,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required,
       Validators.minLength(10),
       Validators.maxLength(1000),
-      Validators.email,
+      // Validators.email,
       Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
     ])
     ]
@@ -113,7 +113,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required,
       Validators.minLength(10),
       Validators.maxLength(1000),
-      Validators.email,
+      // Validators.email,
       Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
     ])
     ]
