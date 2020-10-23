@@ -34,7 +34,7 @@ export class VerObservacionesComponent implements OnInit{
   ngOnInit(): void {    
     this.procesoseleccionService.getObservacionesByID(this.data.id).subscribe(result=>
       {
-        this.observaciones=result;
+        this.observaciones=result[0];
       });
     this.procesoseleccionService.getProcesoSeleccionById(this.data.id).subscribe(result=>{
       this.procesoseleccion=result;

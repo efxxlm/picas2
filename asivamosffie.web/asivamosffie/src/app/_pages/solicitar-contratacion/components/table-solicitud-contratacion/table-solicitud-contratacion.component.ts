@@ -81,10 +81,10 @@ export class TableSolicitudContratacionComponent implements OnInit {
     });
   }
 
-  observacionesDialog ( numeroSolicitud: string, observacion: string ) {
+  observacionesDialog ( numeroSolicitud: string, contratacionProyecto: any[] ) {
     const dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '60em',
-      data: { numeroSolicitud, observacion: "<p>Test observaciones</p>" }
+      data: { numeroSolicitud, contratacionProyecto }
     });
   }
 

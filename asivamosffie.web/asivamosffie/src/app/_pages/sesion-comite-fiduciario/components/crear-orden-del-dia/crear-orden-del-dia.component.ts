@@ -258,7 +258,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if (result) {
+      if (result===true) {
         this.deleteTema(e)
       }
     });

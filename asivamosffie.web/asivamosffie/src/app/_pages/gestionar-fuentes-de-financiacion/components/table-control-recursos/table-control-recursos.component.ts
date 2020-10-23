@@ -109,13 +109,12 @@ export class TableControlRecursosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result === true)
-      {
+      
         this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])   
         setTimeout(() => {
           location.reload(); 
         }, 1000);    
-      }           
+                 
     });
   }
 

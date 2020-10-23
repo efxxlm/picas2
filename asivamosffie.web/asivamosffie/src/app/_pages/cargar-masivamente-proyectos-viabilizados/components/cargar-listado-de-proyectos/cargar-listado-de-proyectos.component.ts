@@ -42,10 +42,9 @@ export class CargarListadoDeProyectosComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result === true)
-        {
+        
           this.router.navigate(["/cargarMasivamente"], {});
-        }
+        
       });
     }
   }

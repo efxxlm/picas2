@@ -30,9 +30,11 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         public readonly IConverter _converter;
+        public readonly IProjectContractingService _ProjectContractingService;
 
-        public ManageContractualProcessesService(IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
+        public ManageContractualProcessesService(IProjectContractingService projectContractingService, IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
+            _ProjectContractingService = projectContractingService;
             _converter = converter;
             _context = context;
             _documentService = documentService;
@@ -89,7 +91,7 @@ namespace asivamosffie.services
                .FirstOrDefault();
 
             string TipoPlantilla = "";
-            Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
+            Contratacion contratacion = await _ProjectContractingService.GetAllContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
             if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
             {
@@ -306,7 +308,29 @@ namespace asivamosffie.services
 
                             try
                             {
-                                nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
+                                string strNombreAportante = string.Empty;
+                                switch (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.TipoAportanteId)
+                                {
+
+                                    case ConstanTipoAportante.Ffie:
+                                        strNombreAportante = ConstanStringTipoAportante.Ffie;
+                                        break;
+
+                                    case ConstanTipoAportante.ET:
+
+                                        if (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento != null)
+                                        {
+                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento.Descripcion;
+                                        }
+                                        else
+                                        {
+                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Municipio.Descripcion;
+                                        }
+                                        break;
+                                    case ConstanTipoAportante.Tercero:
+                                        strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.NombreAportante.Nombre;
+                                        break;
+                                }
                             }
                             catch (Exception)
                             {
@@ -510,14 +534,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
-        {
-            // Estado de la sesionComiteSolicitud
-            //• Recibidas sin tramitar ante Fiduciaria
-            //• Enviadas a la fiduciaria
-            //• Registradas por la fiduciaria
-
-            //Se listan las que tengan con acta de sesion aprobada  
-
+        { 
             try
             {
 
@@ -529,15 +546,9 @@ namespace asivamosffie.services
 
                 List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
-                //Listas Contratacion
-
-
-
+                //Listas Contratacion 
                 List<SesionComiteSolicitud> ListSesionComiteSolicitud = new List<SesionComiteSolicitud>();
-
-           
-
-
+                 
                 foreach (var comiteTecnico in ListComiteTecnicos)
                 {
                     foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(
@@ -551,10 +562,10 @@ namespace asivamosffie.services
                             case ConstanCodigoTipoSolicitud.Contratacion:
 
                                 Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
-                                 
+
                                 if (contratacion.DisponibilidadPresupuestal.Count() == 0)
                                 {
-                                    break; 
+                                    break;
                                 }
                                 foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
                                 {
@@ -564,6 +575,7 @@ namespace asivamosffie.services
                                     }
                                 }
                                 // sesionComiteSolicitud.Contratacion = contratacion;
+                                sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
 
                                 sesionComiteSolicitud.EstaTramitado = false;
 
@@ -581,7 +593,7 @@ namespace asivamosffie.services
                                     && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
                                     ).FirstOrDefault().Nombre;
 
-                                if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
+                                if (contratacion.RegistroCompleto1 == null || !(bool)contratacion.RegistroCompleto1)
                                 {
                                     sesionComiteSolicitud.EstadoRegistro = false;
                                     sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
@@ -625,11 +637,8 @@ namespace asivamosffie.services
         {
             try
             {
-
-
                 List<Dominio> LisParametricas = _context.Dominio.ToList();
                 List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-
 
                 Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                           .Include(r => r.DisponibilidadPresupuestal)
@@ -641,32 +650,27 @@ namespace asivamosffie.services
                                    .ThenInclude(r => r.Aportante)
                                      .ThenInclude(r => r.FuenteFinanciacion)
                                         .ThenInclude(r => r.GestionFuenteFinanciacion)
-                        .Include(r => r.ContratacionProyecto)
+                          .Include(r => r.ContratacionProyecto)
                               .ThenInclude(r => r.Proyecto)
                                   .ThenInclude(r => r.InstitucionEducativa)
+                          .Include(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.Sede)
                      .FirstOrDefaultAsync();
 
-                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
-                    .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                    .Include(r => r.ComiteTecnico).FirstOrDefault();
+                List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
+                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                     .Include(r => r.ComiteTecnico)
+                     .Include(r => r.ComiteTecnicoFiduciario)
+                     .ToList();
+
+                contratacion.sesionComiteSolicitud = sesionComiteSolicitud;
 
                 if (!string.IsNullOrEmpty(contratacion.TipoContratacionCodigo))
                 {
                     contratacion.TipoContratacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar && r.Codigo == contratacion.TipoContratacionCodigo).FirstOrDefault().Nombre;
                 }
-                if (sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario == null || !(bool)sesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario)
-                {
-                    sesionComiteSolicitud = null;
-                }
 
-                if (sesionComiteSolicitud != null)
-                {
-                    if (sesionComiteSolicitud.FechaComiteFiduciario != null)
-                    {
-                        //contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaComiteFiduciario = ((DateTime)sesionComiteSolicitud.FechaComiteFiduciario).ToString("dd-MM-yy");
-                    }
-                    //contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroComiteFiduciario = sesionComiteSolicitud.ComiteTecnico.NumeroComite;
-                }
                 if (contratacion.Contratista != null)
                 {
                     if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
@@ -744,7 +748,7 @@ namespace asivamosffie.services
             try
             {
                 string strFilePatch = "";
-                //Save Files  
+             
                 if (pFile == null)
                 {
                 }
@@ -767,8 +771,9 @@ namespace asivamosffie.services
                 contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
-                contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
-                contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
+                if (pFile != null && pFile.Length > 0)
+                    contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
+                contratacionOld.RegistroCompleto1 = ValidarCamposContratacion(contratacionOld);
 
                 await _context.SaveChangesAsync();
 

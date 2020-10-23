@@ -148,10 +148,9 @@ export class ControlDeRecursosComponent implements OnInit {
       data: { modalTitle, modalText }
     });   
     dialogRef.afterClosed().subscribe(result => {
-      if(result === true)
-      {
+      
         location.reload();
-      }
+      
     });
   }
 

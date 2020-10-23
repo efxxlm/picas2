@@ -32,7 +32,7 @@ namespace asivamosffie.services
             )
         {
             int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contratacion, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
@@ -42,26 +42,25 @@ namespace asivamosffie.services
 
                 contratacionOld.EstadoSolicitudCodigo = PCodigoEstado;
                 _context.SaveChanges();
-                 
+
                 List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
                 string strTipoObraIntervencion = TipoObraIntervencion.Where(r => r.Codigo == contratacionOld.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
-             
+
                 if (PCodigoEstado == ConstanCodigoEstadoSolicitudContratacion.En_tramite.ToString())
                 {
                     var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
                     foreach (var usuario in usuariosecretario)
                     {
-                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
+                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjEnviarSolicitudContratacion);
                         string template =
                             TemplateRecoveryPassword.Contenido
                             .Replace("_LinkF_", pDominioFront)
                             .Replace("[NUMERO_SOLICITUD]", contratacionOld.NumeroSolicitud)
-                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-mm-yy"))
-                            .Replace("[OBRA_INTERVENTORIA]", contratacionOld.TipoSolicitudCodigo);
+                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-MM-yyyy"))
+                            .Replace("[OBRA_INTERVENTORIA]", strTipoObraIntervencion);
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
-                  
 
                 return new Respuesta
                 {
@@ -144,6 +143,7 @@ namespace asivamosffie.services
             return await _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
                //para logica plantilla ficha contratacion
+               .Include(r => r.DisponibilidadPresupuestal)
                .Include(r => r.Contrato)
                 .Include(r => r.ContratacionProyecto)
                 .ThenInclude(r => r.ContratacionProyectoAportante)
@@ -153,7 +153,7 @@ namespace asivamosffie.services
                 .ThenInclude(r => r.ContratacionProyectoAportante)
                  .ThenInclude(r => r.ComponenteAportante)
                    .ThenInclude(r => r.ComponenteUso)
-              //
+              // 
               .Include(r => r.Contratista)
                  .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
@@ -309,17 +309,19 @@ namespace asivamosffie.services
 
             foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
             {
-                decimal ValorDisponibleAportante = 0;
+ 
+                    decimal ValorGastado = 0;
+                    decimal ValorDisponible = ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
 
-                foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
-                {
-                    ValorDisponibleAportante = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
+                    foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                    {
+                        ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
+                    }
 
-                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante);
-                }
-
-
+                    ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado ;
+             
             }
+
             return contratacionProyecto;
         }
 
@@ -331,15 +333,15 @@ namespace asivamosffie.services
             {
                 ListContratacion = await _context.Contratacion
                     .Where(r => !(bool)r.Eliminado)
-                    .Include(r => r.Contratista)
-                    .Include(r=> r.ContratacionProyecto)
-                        .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
-                     .Include(r => r.ContratacionProyecto)
-                        .ThenInclude(r => r.Proyecto)
-                             .ThenInclude(r => r.Sede)
-                    .Include(r => r.ContratacionProyecto)
-                        .ThenInclude(r => r.Proyecto)
-                                 .ThenInclude(r => r.InstitucionEducativa)
+                    //.Include(r => r.Contratista)
+                    //.Include(r => r.ContratacionProyecto)
+                    //    .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
+                    // .Include(r => r.ContratacionProyecto)
+                    //    .ThenInclude(r => r.Proyecto)
+                    //         .ThenInclude(r => r.Sede)
+                    //.Include(r => r.ContratacionProyecto)
+                    //    .ThenInclude(r => r.Proyecto)
+                    //             .ThenInclude(r => r.InstitucionEducativa)
                     .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
@@ -528,33 +530,6 @@ namespace asivamosffie.services
 
             try
             {
-                //Contratacion
-                if (Pcontratacion.ContratacionId == 0)
-                {
-                    Pcontratacion.Eliminado = false;
-                    Pcontratacion.FechaCreacion = DateTime.Now;
-
-                    Pcontratacion.FechaTramite = DateTime.Now;
-                    Pcontratacion.RegistroCompleto = false;
-                    Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
-                    Pcontratacion.RegistroCompleto = false;
-                    _context.Contratacion.Add(Pcontratacion);
-                }
-                else
-                {
-                    Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
-                    contratacionVieja.UsuarioModificacion = Pcontratacion.UsuarioCreacion;
-                    contratacionVieja.FechaModificacion = DateTime.Now;
-
-                    contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
-                    contratacionVieja.EsObligacionEspecial = Pcontratacion.EsObligacionEspecial;
-                    contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
-                    contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
-                    contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;
-
-                    contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
-                    _context.Update(contratacionVieja);
-                }
 
                 //Contratista 
                 if (Pcontratacion.Contratista != null)
@@ -587,6 +562,36 @@ namespace asivamosffie.services
                     }
                 }
 
+
+                //Contratacion
+                if (Pcontratacion.ContratacionId == 0)
+                {
+                    Pcontratacion.Eliminado = false;
+                    Pcontratacion.FechaCreacion = DateTime.Now;
+
+                    Pcontratacion.FechaTramite = DateTime.Now;
+                    Pcontratacion.RegistroCompleto = false;
+                    Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
+                    Pcontratacion.RegistroCompleto = false;
+                    _context.Contratacion.Add(Pcontratacion);
+                }
+                else
+                {
+                    Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
+                    contratacionVieja.UsuarioModificacion = Pcontratacion.UsuarioCreacion;
+                    contratacionVieja.FechaModificacion = DateTime.Now;
+
+                    contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
+                    contratacionVieja.EsObligacionEspecial = Pcontratacion.EsObligacionEspecial;
+                    contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
+                    contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
+                    contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;
+
+                   contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
+              
+                }
+
+ 
                 _context.SaveChanges();
 
                 return new Respuesta
@@ -844,14 +849,12 @@ namespace asivamosffie.services
             )
             {
                 return true;
-            }
-
+            } 
             return false;
         }
 
         public async Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
-        {
-
+        { 
             int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -977,7 +980,7 @@ namespace asivamosffie.services
              || string.IsNullOrEmpty(contratacion.NumeroSolicitud)
              || string.IsNullOrEmpty(contratacion.EstadoSolicitudCodigo)
              || string.IsNullOrEmpty(contratacion.ContratacionId.ToString())
-             || contratacion.EsObligacionEspecial == null
+             || !contratacion.EsObligacionEspecial.HasValue
              || contratacion.Contratista == null
              )
                 return false;
@@ -987,7 +990,7 @@ namespace asivamosffie.services
                 {
                     if (!ContratacionProyecto.RegistroCompleto.HasValue)
                         return false;
-                    else if ((bool)ContratacionProyecto.RegistroCompleto)
+                    else if (!(bool)ContratacionProyecto.RegistroCompleto)
                         return false;
                 }
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)

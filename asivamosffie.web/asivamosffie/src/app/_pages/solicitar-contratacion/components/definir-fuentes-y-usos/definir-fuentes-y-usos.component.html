@@ -75,7 +75,7 @@
                               onKeyPress="if(this.value.length>=this.maxLength) return false;"
                               [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                               formControlName="valorAportanteProyecto"
-                              (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value )">
+                              (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value, aportante.get( 'nombreAportante' ).value )">
                         <input type="hidden" formControlName="contratacionProyectoAportanteId" >
                         <input type="hidden" formControlName="proyectoAportanteId" >
 
@@ -85,7 +85,7 @@
                 </div>
               </div>
             </div>
-            <div class="animatedDown" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0">
+            <div class="animatedDown" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0 && esSaldoPermitido === true">
               <h2 class="card-subTitle">Usos</h2>
               <div formGroupName="componentes">
                 <div class="animatedDown" *ngFor="let conponente of componentes(j).controls; let i = index">
@@ -197,7 +197,7 @@
                       </div>
                     </div>
                     <div class="text-right mt-1em">
-                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes( i ).length > 1"
+                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes( j ).length > 1"
                         (click)="borrarArray(j, i)">
                         <img src="assets/img/icon/menos.svg" alt="Eliminar componente">
                         Eliminar componente
@@ -214,7 +214,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <div class="text-center">
+        <div class="text-center" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0 && esSaldoPermitido === true">
           <button mat-button color="warn" class="btn-guardar" type="submit">
             <img src="assets/img/icon/guardar.svg" alt="guardar">
           </button>

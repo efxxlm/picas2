@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GrillaProcesosContractuales } from 'src/app/_interfaces/procesosContractuales.interface';
 import { map } from 'rxjs/operators';
 import { DataSolicitud } from '../../../_interfaces/procesosContractuales.interface';
+import { Respuesta } from '../autenticacion/autenticacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -38,18 +39,21 @@ export class ProcesosContractualesService {
     return this.http.get( `${ this.url }/GetDDPBySesionComiteSolicitudID?pSesionComiteSolicitudID=${ sesionComiteSolicitudId }`, { responseType: "blob" } )
   };
 
-  sendTramite ( contratacion: DataSolicitud, documento: File ) {
+  sendTramite ( contratacion: DataSolicitud, documento?: File ) {
 
     const formData = new FormData();
     formData.append( 'contratacionId', `${ contratacion.contratacionId }` );
-    formData.append( 'observaciones', contratacion.observaciones );
-    formData.append('pFile', documento, documento.name);
-
-    return this.http.post( `${ this.url }/RegistrarTramiteContratacion?FechaEnvioDocumentacion=${ contratacion.fechaEnvioDocumentacion }`, formData );
+    if ( contratacion.observaciones !== null ) {
+      formData.append( 'observaciones', contratacion.observaciones );
+    };
+    if ( documento !== undefined ) {
+      formData.append('pFile', documento, documento.name);
+    };
+    return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteContratacion?FechaEnvioDocumentacion=${ contratacion.fechaEnvioDocumentacion }`, formData );
   };
 
   sendCambioTramite ( solicitud: GrillaProcesosContractuales ) {
-    return this.http.post( `${ this.url }/CambiarEstadoSesionComiteSolicitud`, solicitud );
+    return this.http.post<Respuesta>( `${ this.url }/CambiarEstadoSesionComiteSolicitud`, solicitud );
   }
 
 };

@@ -27,6 +27,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   componentesSelect: Dominio[] = [];
   usosSelect: Dominio[] = [];
   realizoPeticion: boolean = false;
+  esSaldoPermitido: boolean = false;
 
   createFormulario() {
     return this.fb.group({
@@ -61,7 +62,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty && this.realizoPeticion === false ) {
+    if ( this.addressForm.dirty && this.realizoPeticion === false && this.esSaldoPermitido === true ) {
       this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
     }
   };
@@ -140,7 +141,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.contratacionProyectoAportanteId);
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
               grupoAportante.get('valorAportanteProyecto').setValue( apo.valorAporte );
-              console.log( apo );
+              grupoAportante.get( 'saldoDisponible' ).setValue( apo['saldoDisponible'] ? apo['saldoDisponible'] : 0 );
               if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {
@@ -160,7 +161,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                   const listaUsos = grupoComponente.get('usos') as FormArray;
                   const faseSeleccionada = this.fasesSelect.find(f => f.codigo == compoApo.faseCodigo);
                   const componenteSeleccionado = this.componentesSelect.find(c => c.codigo == compoApo.tipoComponenteCodigo);
-                  grupoAportante.get( 'saldoDisponible' ).setValue( compoApo['saldoDisponible'] ? compoApo['saldoDisponible'] : 0 );
 
                   if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === true ) {
                     grupoAportante.get( 'estadoSemaforo' ).setValue( 'completo' )
@@ -200,7 +200,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
                 listaUsos.push(grupoUso);
 
-                listaComponentes.push(grupoComponente);
+                listaComponentes.push( grupoComponente );
               }
 
               this.aportantes.push(grupoAportante);
@@ -223,15 +223,16 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       };
     };
   };
-
-  validarSaldoDisponible ( saldoIngresado: any, saldoDisponible: string ) {
-    console.log( `${saldoIngresado}`, saldoDisponible );
-    if (  `${saldoIngresado}` > saldoDisponible ) {
-      console.log( 'Cumple validacion-mayor' );
-    } else if ( `${saldoIngresado}` <= saldoDisponible ) {
-      console.log( 'Cumple validacion-menor' );
-    }
-  }
+  
+  validarSaldoDisponible ( saldoIngresado: number, saldoDisponible: number, nombreAportante: string ) {
+    console.log( saldoIngresado, saldoDisponible );
+    if (  saldoIngresado > saldoDisponible ) {
+      this.openDialog( '', `<b>El valor del aportante ${ nombreAportante } al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>` );
+      this.esSaldoPermitido = false;
+    } else if ( saldoIngresado <= saldoDisponible ) {
+      this.esSaldoPermitido = true;
+    };
+  };
 
   deleteUsoSeleccionado ( usoCodigo: any ) {
     console.log( usoCodigo );
@@ -240,8 +241,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   getMunicipio() {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
-      //this.router.navigate(['/solicitarContratacion']);
-      this.municipio = 'Campo quemado fix antes de subir version!!!!!!!!!!!!!!!!'
+      this.router.navigate(['/solicitarContratacion']);
       return;
     };
     this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
