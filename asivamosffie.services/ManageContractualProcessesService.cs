@@ -748,7 +748,7 @@ namespace asivamosffie.services
             try
             {
                 string strFilePatch = "";
-                //Save Files  
+             
                 if (pFile == null)
                 {
                 }
@@ -773,7 +773,7 @@ namespace asivamosffie.services
                 contratacionOld.Observaciones = pContratacion.Observaciones;
                 if (pFile != null && pFile.Length > 0)
                     contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
-                contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
+                contratacionOld.RegistroCompleto1 = ValidarCamposContratacion(contratacionOld);
 
                 await _context.SaveChangesAsync();
 

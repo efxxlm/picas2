@@ -60,8 +60,7 @@ namespace asivamosffie.services
                             .Replace("[OBRA_INTERVENTORIA]", strTipoObraIntervencion);
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
-                }
-                  
+                } 
 
                 return new Respuesta
                 {
