@@ -333,15 +333,15 @@ namespace asivamosffie.services
             {
                 ListContratacion = await _context.Contratacion
                     .Where(r => !(bool)r.Eliminado)
-                    .Include(r => r.Contratista)
-                    .Include(r => r.ContratacionProyecto)
-                        .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
-                     .Include(r => r.ContratacionProyecto)
-                        .ThenInclude(r => r.Proyecto)
-                             .ThenInclude(r => r.Sede)
-                    .Include(r => r.ContratacionProyecto)
-                        .ThenInclude(r => r.Proyecto)
-                                 .ThenInclude(r => r.InstitucionEducativa)
+                    //.Include(r => r.Contratista)
+                    //.Include(r => r.ContratacionProyecto)
+                    //    .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
+                    // .Include(r => r.ContratacionProyecto)
+                    //    .ThenInclude(r => r.Proyecto)
+                    //         .ThenInclude(r => r.Sede)
+                    //.Include(r => r.ContratacionProyecto)
+                    //    .ThenInclude(r => r.Proyecto)
+                    //             .ThenInclude(r => r.InstitucionEducativa)
                     .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
