@@ -711,35 +711,51 @@ namespace asivamosffie.services
 
             VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
-            actaInicioConsolidado = actaInicioObra;
-            //interventoria
-            actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaInterventoria = actaInicioInterventoria.NumeroIdentificacionRepresentanteContratistaInterventoria;// Contratista . numeroIdentificaionRepresentante
-            actaInicioConsolidado.NombreRepresentanteContratistaInterventoria = actaInicioInterventoria.NombreRepresentanteContratistaInterventoria;
+            if (actaInicioObra.NumeroDRP1 == "ERROR" && actaInicioInterventoria.NumeroDRP1 == "ERROR")            
+            {
+                return actaInicioConsolidado;
+            }
+                
+            else if (actaInicioObra.NumeroDRP1 == "ERROR")
+            {
+                actaInicioConsolidado = actaInicioInterventoria;
+            }
+            else if (actaInicioInterventoria.NumeroDRP1 == "ERROR")
+            {
+                actaInicioConsolidado = actaInicioObra;
+            }
+            else
+                {                    
+                //interventoria
+                actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaInterventoria = actaInicioInterventoria.NumeroIdentificacionRepresentanteContratistaInterventoria;// Contratista . numeroIdentificaionRepresentante
+                actaInicioConsolidado.NombreRepresentanteContratistaInterventoria = actaInicioInterventoria.NombreRepresentanteContratistaInterventoria;
 
-            //obra
-            actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaObraInterventoria = actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria;
-            actaInicioConsolidado.NombreRepresentanteContratistaObra = actaInicioObra.NombreRepresentanteContratistaObra;
+                //obra
+                actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaObraInterventoria = actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria;
+                actaInicioConsolidado.NombreRepresentanteContratistaObra = actaInicioObra.NombreRepresentanteContratistaObra;
 
-            actaInicioConsolidado.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
-            actaInicioConsolidado.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;
+                actaInicioConsolidado.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
+                actaInicioConsolidado.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;
                        
 
-            actaInicioConsolidado.ValorFase1Preconstruccion = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion) ;
+                actaInicioConsolidado.ValorFase1Preconstruccion = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion) ;
 
 
-            actaInicioConsolidado.Valorfase2ConstruccionObra = formatValor(actaInicioInterventoria.Valorfase2ConstruccionObra) ;
+                actaInicioConsolidado.Valorfase2ConstruccionObra = formatValor(actaInicioInterventoria.Valorfase2ConstruccionObra) ;
 
      
-            actaInicioConsolidado.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion) ;
-            //actaInicioConsolidado.Valorfase2ConstruccionObra = actaInicioConsolidado.Valorfase2ConstruccionObra + actaInicioConsolidado.ValorFase1Preconstruccion;
+                actaInicioConsolidado.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion) ;
+                //actaInicioConsolidado.Valorfase2ConstruccionObra = actaInicioConsolidado.Valorfase2ConstruccionObra + actaInicioConsolidado.ValorFase1Preconstruccion;
 
-        //    Proyecto   ????
-        //             decimal? ValorObra 
-        // decimal? ValorInterventoria 
-        // decimal? ValorTotal 
+                //    Proyecto   ????
+                //             decimal? ValorObra 
+                // decimal? ValorInterventoria 
+                // decimal? ValorTotal 
 
-            //ValorFase1Preconstruccion = " PENDIENTE",
-            //        Valorfase2ConstruccionObra
+                //ValorFase1Preconstruccion = " PENDIENTE",
+                //        Valorfase2ConstruccionObra
+
+            }
             return actaInicioConsolidado;
 
         }
