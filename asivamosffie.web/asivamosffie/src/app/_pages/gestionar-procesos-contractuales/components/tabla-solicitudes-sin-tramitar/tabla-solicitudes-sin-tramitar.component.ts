@@ -24,9 +24,9 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoDelRegistro', 'id' ];
   estadoCodigo: string;
-  estadoCodigoFiduciaria: string = "9";
+  enviarFiduciaria: string = "4";
   estadoCodigos = {
-    aprobadoCf: '2'
+    aprobadoCf: '13'
   };
 
   constructor ( private routes: Router,
@@ -109,7 +109,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   sendCambioTramite ( elemento: any ) {
     
-    elemento.estadoCodigo = this.estadoCodigoFiduciaria;
+    elemento.estadoCodigo = this.enviarFiduciaria;
 
     this.procesosContractualesSvc.sendCambioTramite( elemento )
       .subscribe(
