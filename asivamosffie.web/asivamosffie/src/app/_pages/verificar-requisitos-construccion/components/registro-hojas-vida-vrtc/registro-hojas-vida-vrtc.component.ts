@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-registro-hojas-vida-vrtc',
@@ -7,6 +11,8 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./registro-hojas-vida-vrtc.component.scss']
 })
 export class RegistroHojasVidaVrtcComponent implements OnInit {
+  
+  
   formContratista: FormGroup;
   editorStyle = {
     height: '45px'
@@ -19,13 +25,28 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  perfilesCv: any[] = [
-    { value: 'Interventor de obra' },
-    { value: 'Ingeniero electrico' }
-  ]
+  perfilesCv: Dominio[] = [];
 
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder,
+                private activatedRoute: ActivatedRoute,
+                private faseUnoConstruccionService: FaseUnoConstruccionService,
+                private commonService: CommonService,
+              ) 
+  {
+    
     this.crearFormulario();
+    
+    this.getListaPerfil();
+
+  }
+
+  
+
+  getListaPerfil(){
+    this.commonService.listaPerfil()
+      .subscribe( respuesta => {
+        this.perfilesCv = respuesta;
+      });
   }
 
   ngOnInit(): void {

@@ -25,8 +25,8 @@
                         <mat-form-field class="w-50" appearance="fill">
                             <mat-select formControlName="tipoPerfil" class="padding-left" required>
                                 <mat-option></mat-option>
-                                <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.value">
-                                    {{perfilCv.value}}
+                                <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
+                                    {{ perfilCv.nombre }}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

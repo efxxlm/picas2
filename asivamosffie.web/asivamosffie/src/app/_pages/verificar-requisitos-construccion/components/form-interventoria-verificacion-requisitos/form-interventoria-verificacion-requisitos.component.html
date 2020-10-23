@@ -1,16 +1,16 @@
-<div class="text-center container">
+<div class="text-center container" *ngIf="contrato">
     <div class="text-right">
         <a routerLink="/verificarRequisitosTecnicosConstruccion" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Gestionar requisitos de inicio contrato N801801 fase 2 - Construcción
+        Gestionar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
     </h1>
     <section class="container margin-1em color-primary">
         <div class="text-center section-flex">
-            <p class="mr-1em">Fecha de aprobacion de póliza: <b>10/08/2020</b></p>
-            <p>Proyectos asociados: <b>1</b></p>
+            <p class="mr-1em">Fecha de aprobacion de póliza: <b>{{ fechaPoliza | date: 'dd/MM/yyyy' }}</b></p>
+            <p>Proyectos asociados: <b>{{ contrato.contratacion.contratacionProyecto.length }}</b></p>
         </div>
     </section>
     <section>
@@ -21,22 +21,22 @@
                 <span class="info-text completo">Completo</span>
             </p>
         </div>
-        <mat-accordion>
+        <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header w-45">
                     <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        LL706706 - I.E. Gerardo Hernandez - Única sede
+                        {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div align="left">
                     <mat-card class="border">
                       <mat-card-content>
-                        <p><b>Nombre del contratista</b>: Constructora Almendro</p>
-                        <p><b>Número de identificación (NIT/RUT)</b>: 900.005.000-6</p>
-                        <p><b>Tipo de intervención</b>: Remodelación</p>
-                        <p><b>Departamento</b>: Antioquia</p>
-                        <p><b>Municipio</b>: Jardín</p>
-                        <p><b>Valor total del proyecto</b>: $67.000.000</p>
+                        <p><b>Nombre del contratista</b>: {{ contrato.contratacion.contratista.nombre }}</p>
+                        <p><b>Número de identificación (NIT/RUT)</b>: {{ contrato.contratacion.contratista.numeroIdentificacion }}</p>
+                        <p><b>Tipo de intervención</b>: {{ contratacion.proyecto.tipoIntervencionCodigo }}</p>
+                        <p><b>Departamento</b>: {{ contratacion.proyecto.departamento }}</p>
+                        <p><b>Municipio</b>: {{ contratacion.proyecto.municipio }}</p>
+                        <p><b>Valor total del proyecto</b>: {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}</p>
                       </mat-card-content>
                     </mat-card>
                 </div>
