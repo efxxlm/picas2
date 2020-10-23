@@ -208,7 +208,10 @@ namespace asivamosffie.services
                     contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                     contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
 
+                    ValidarFechasNulas(ref contrato);
+
                     _context.Contrato.Update(contrato);
+                    _context.SaveChanges();
 
                 }
                     //contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(contratoObservacion.Observaciones);
@@ -264,6 +267,75 @@ namespace asivamosffie.services
 
         }
 
+        private void ValidarFechasNulas(ref Contrato contrato)
+        {
+            if (contrato.FechaActaInicioFase1.ToString().Contains("0001"))
+                contrato.FechaActaInicioFase1 = null;
+
+            if (contrato.FechaActaInicioFase2.ToString().Contains("0001"))
+                contrato.FechaActaInicioFase2 = null;
+
+            if (contrato.FechaAprobacionRequisitos.ToString().Contains("0001"))
+                contrato.FechaAprobacionRequisitos = null;
+
+            if (contrato.FechaCreacion.ToString().Contains("0001"))
+                contrato.FechaCreacion = null;
+
+            if (contrato.FechaEnvioFirma.ToString().Contains("0001"))
+                contrato.FechaEnvioFirma = null;
+
+            if (contrato.FechaEnvioFirmaFormat.ToString().Contains("0001"))
+                contrato.FechaEnvioFirmaFormat = null;
+
+            if (contrato.FechaFirmaActaContratista.ToString().Contains("0001"))
+                contrato.FechaFirmaActaContratista = null;
+
+            if (contrato.FechaFirmaActaContratistaFase1.ToString().Contains("0001"))
+                contrato.FechaFirmaActaContratistaFase1 = null;
+
+            if (contrato.FechaFirmaActaContratistaFase2.ToString().Contains("0001"))
+                contrato.FechaFirmaActaContratistaFase2 = null;
+
+            if (contrato.FechaFirmaActaContratistaInterventoria.ToString().Contains("0001"))
+                contrato.FechaFirmaActaContratistaInterventoria = null;
+
+            if (contrato.FechaFirmaActaContratistaInterventoriaFase1.ToString().Contains("0001"))
+                contrato.FechaFirmaActaContratistaInterventoriaFase1 = null;
+
+            if (contrato.FechaFirmaActaContratistaInterventoriaFase2.ToString().Contains("0001"))
+                contrato.FechaFirmaActaContratistaInterventoriaFase2 = null;
+
+            if (contrato.FechaFirmaContratista.ToString().Contains("0001"))
+                contrato.FechaFirmaContratista = null;
+
+            if (contrato.FechaFirmaContratistaFormat.ToString().Contains("0001"))
+                contrato.FechaFirmaContratistaFormat = null;
+
+            if (contrato.FechaFirmaContrato.ToString().Contains("0001"))
+                contrato.FechaFirmaContrato = null;
+
+            if (contrato.FechaFirmaContratoFormat.ToString().Contains("0001"))
+                contrato.FechaFirmaContratoFormat = null;
+
+            if (contrato.FechaFirmaFiduciaria.ToString().Contains("0001"))
+                contrato.FechaFirmaFiduciaria = null;
+
+            if (contrato.FechaFirmaFiduciariaFormat.ToString().Contains("0001"))
+                contrato.FechaFirmaFiduciariaFormat = null;
+
+            if (contrato.FechaModificacion.ToString().Contains("0001"))
+                contrato.FechaModificacion = null;
+
+            if (contrato.FechaTerminacion.ToString().Contains("0001"))
+                contrato.FechaTerminacion = null;
+
+            if (contrato.FechaTerminacionFase2.ToString().Contains("0001"))
+                contrato.FechaTerminacionFase2 = null;
+
+            if (contrato.FechaTramite.ToString().Contains("0001"))
+                contrato.FechaTramite = null;
+
+        }
 
         public async Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
