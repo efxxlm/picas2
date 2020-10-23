@@ -24,7 +24,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
   estadoCodigos = {
-    enRevision: '2'
+    enviadaFiduciaria: '4'
   }
 
   constructor ( private routes: Router,
@@ -40,7 +40,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
       .subscribe( ( resp: any ) => {
         
         for ( let contrataciones of resp ) {
-          if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enRevision ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
             this.dataTable.push( contrataciones );
           };
         };
