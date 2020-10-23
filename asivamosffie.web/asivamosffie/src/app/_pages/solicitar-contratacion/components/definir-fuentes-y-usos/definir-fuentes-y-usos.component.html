@@ -85,7 +85,7 @@
                 </div>
               </div>
             </div>
-            <div class="animatedDown" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0">
+            <div class="animatedDown" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0 && esSaldoPermitido === true">
               <h2 class="card-subTitle">Usos</h2>
               <div formGroupName="componentes">
                 <div class="animatedDown" *ngFor="let conponente of componentes(j).controls; let i = index">
@@ -214,7 +214,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <div class="text-center">
+        <div class="text-center" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0 && esSaldoPermitido === true">
           <button mat-button color="warn" class="btn-guardar" type="submit">
             <img src="assets/img/icon/guardar.svg" alt="guardar">
           </button>

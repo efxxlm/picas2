@@ -23,14 +23,17 @@
     </div>
 
     <div class="d-flex mt-1em">
-      <label class="mr-label">Observaciones</label>
-      <quill-editor class="quill-editor-style card" 
-                    [styles]="editorStyle"
-                    style="width: 85%"
-                    [modules]="config"
-                    required
-                    (onContentChanged)="maxLength($event, 2000)" 
-                    formControlName="observaciones"></quill-editor>
+      <div class="text-area-quill">
+        <label class="text-area-quill--label">Observaciones</label>
+        <quill-editor class="quill-editor-style" 
+                      [styles]="editorStyle"
+                      style="width: 85%"
+                      [modules]="config"
+                      required
+                      (onContentChanged)="maxLength($event, 2000)" 
+                      formControlName="observaciones">
+        </quill-editor>
+      </div>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 2.5em;">
         {{2000 - textoLimpio(dataFormulario.get('observaciones').value )}}
       </span>
