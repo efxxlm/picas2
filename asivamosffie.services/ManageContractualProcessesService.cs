@@ -32,7 +32,7 @@ namespace asivamosffie.services
         public readonly IConverter _converter;
         public readonly IProjectContractingService _ProjectContractingService;
 
-        public ManageContractualProcessesService(IProjectContractingService projectContractingService,IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
+        public ManageContractualProcessesService(IProjectContractingService projectContractingService, IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
             _ProjectContractingService = projectContractingService;
             _converter = converter;
@@ -784,7 +784,8 @@ namespace asivamosffie.services
                 contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
-                contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
+                if (pFile != null && pFile.Length > 0)
+                    contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
                 contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
 
                 await _context.SaveChangesAsync();
