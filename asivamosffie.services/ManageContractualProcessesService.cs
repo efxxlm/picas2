@@ -534,14 +534,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
-        {
-            // Estado de la sesionComiteSolicitud
-            //• Recibidas sin tramitar ante Fiduciaria
-            //• Enviadas a la fiduciaria
-            //• Registradas por la fiduciaria
-
-            //Se listan las que tengan con acta de sesion aprobada  
-
+        { 
             try
             {
 
@@ -553,15 +546,9 @@ namespace asivamosffie.services
 
                 List<Dominio> ListasParametricas = _context.Dominio.ToList();
 
-                //Listas Contratacion
-
-
-
+                //Listas Contratacion 
                 List<SesionComiteSolicitud> ListSesionComiteSolicitud = new List<SesionComiteSolicitud>();
-
-
-
-
+                 
                 foreach (var comiteTecnico in ListComiteTecnicos)
                 {
                     foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(
@@ -606,7 +593,7 @@ namespace asivamosffie.services
                                     && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
                                     ).FirstOrDefault().Nombre;
 
-                                if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
+                                if (contratacion.RegistroCompleto1 == null || !(bool)contratacion.RegistroCompleto1)
                                 {
                                     sesionComiteSolicitud.EstadoRegistro = false;
                                     sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";

@@ -310,17 +310,17 @@ namespace asivamosffie.services
 
             foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
             {
-                decimal ValorDisponibleAportante = 0;
-
+                decimal ValorGastado = 0;
+                decimal ValorDisponible = 0;
                 foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                 {
-                    ValorDisponibleAportante = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
-
-                    ComponenteAportante.SaldoDisponible = (ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum() - ValorDisponibleAportante);
-                }
-
-
+                    ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
+                    ValorDisponible = 
+                 ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
+                    ComponenteAportante.SaldoDisponible = (ValorDisponible - ValorGastado);
+                } 
             }
+
             return contratacionProyecto;
         }
 
