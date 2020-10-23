@@ -36,8 +36,7 @@ namespace asivamosffie.services
             //• Registrados 
 
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                .Where(r => !(bool)r.Eliminado
-                   && (r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                .Where(r => !(bool)r.Eliminado 
                    && (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
                 ).ToListAsync();
 
@@ -56,6 +55,8 @@ namespace asivamosffie.services
 
                             Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
+                            if (contratacion.ContratacionId == 0)
+                                break;
                             if (contratacion.Contrato.Count() > 0)
                             {
                                 if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
