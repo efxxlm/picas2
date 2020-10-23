@@ -11,48 +11,52 @@
         <p><b>Consecutivo proyecto administrativo:</b> 0001</p>
     </div>
     <mat-card class="shipping-card mainGris">
-        <mat-card-content align="left">
-            
-            <mat-card-title class="header-card--text textoGris">
-                Aportante 1
-            </mat-card-title>
+        <div *ngFor="let aportante of this.aportantesList; let i = index">
+            <mat-card-content align="left">
 
-            <p>
-                <strong>Valor del aportante al proyecto:</strong>
-                $70.000.000
-            </p>
-            <p>
-                <strong>Nombre del aportante:</strong>
-                FFIE
-            </p>
-            <p>
-                <strong>Fuente 1:</strong>
-                Contingencia
-            </p>
-            <p>
-                <strong>Valor fuente 1:</strong>
-                $70.000.000
-            </p>
-        </mat-card-content>
+                <mat-card-title class="header-card--text textoGris">
+                    Aportante {{i+1}}
+                </mat-card-title>
+    
+                <p>
+                    <strong>Valor del aportante al proyecto:</strong>
+                    {{aportante.valorAportanteAlProyecto}}
+                </p>
+                <p>
+                    <strong>Nombre del aportante:</strong>
+                    {{aportante.nombre}}
+                </p>
+                <p>
+                    <strong>Fuente 1:</strong>
+                    Contingencia
+                </p>
+                <p>
+                    <strong>Valor fuente 1:</strong>
+                    $70.000.000
+                </p>
+            </mat-card-content>
+        </div>
     </mat-card>
     <mat-card class="shipping-card mainGris">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text textoGris">
                 Objeto
             </mat-card-title>
-          </mat-card-header>
-          <mat-card-content align="left">
+        </mat-card-header>
+        <mat-card-content align="left">
             <div [innerHtml]="this.objeto"></div>
-          </mat-card-content>
+        </mat-card-content>
     </mat-card>
-    <mat-card class="shipping-card mainGris" *ngIf="this.observaciones !== null">
-        <mat-card-header class="header-card">
-            <mat-card-title class="header-card--text textoGris">
-              Observaciones
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content align="left">
-            La fuente ya no cuenta con recursos para esta solicitud
-          </mat-card-content>
-    </mat-card>
+    <div *ngIf="this.observaciones!=undefined">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <div [innerHtml]="this.observaciones"></div>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>

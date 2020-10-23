@@ -12,6 +12,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   numeroSolicitud: any;
   objeto: any;
   observaciones: any;
+  aportantesList: any;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private budgetAvailabilityService: DisponibilidadPresupuestalService) { }
 
@@ -23,10 +24,12 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   }
 
   cargarServicio(id){
-    this.budgetAvailabilityService.GetDisponibilidadPresupuestalByID(id).subscribe(data=>{
-      this.numeroSolicitud = data.numeroSolicitud;
-      this.objeto = data.objeto;
-      this.observaciones = data.observaciones;
+    this.budgetAvailabilityService.GetDetailAvailabilityBudgetProyect(id).subscribe(data=>{
+      this.aportantesList = data[0].aportantes;
+      console.log(this.aportantesList);
+      this.numeroSolicitud = data[0].numeroSolicitud;
+      this.objeto = data[0].objeto;
+      this.observaciones = data[0].observaciones;
     });
   }
 }
