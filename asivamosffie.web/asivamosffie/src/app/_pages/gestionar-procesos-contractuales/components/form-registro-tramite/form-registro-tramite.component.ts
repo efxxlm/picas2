@@ -119,7 +119,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
           err => this.openDialog( '' , err.message )
         ); 
       } else {
-        this.openDialog( '', 'El tipo de documento soportado es .doc y .docx' );
+        this.openDialog( 'El tipo de archivo que esta intentando cargar no es permitido en la plataforma.', 'El tipo de documento soportado es .doc y .docx' );
         return;
       }
     } else {
