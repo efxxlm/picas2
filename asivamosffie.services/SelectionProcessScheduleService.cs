@@ -223,13 +223,14 @@ namespace asivamosffie.services
                     //por aqui actualizo el estado de la solicitud si lo estoy envaiando a comite y se envia notificacion
                     if(procesoSeleccionCronograma.EnviadoComiteTecnico==true)
                     {
-                        var solicitud = _context.ProcesoSeleccion.Find(procesoSeleccionCronograma.ProcesoSeleccionId);
-                        solicitud.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite;
+                        //jflorez ya no le cambio el estado porque no debería afectar al papá
+                        /*var solicitud = _context.ProcesoSeleccion.Find(procesoSeleccionCronograma.ProcesoSeleccionId);
+                        solicitud.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite;*/
                         var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
                         foreach (var usuario in usuariosecretario)
                         {
                             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
-                            string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", pDominioFront).Replace("[NumeroSol]", solicitud.NumeroProceso).Replace("[FechaSol]", solicitud.FechaCreacion.ToString("dd/MM/yy"));
+                            string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", pDominioFront).Replace("[NumeroSol]", procesoSeleccionCronograma.NumeroProceso).Replace("[FechaSol]", procesoSeleccionCronograma.FechaCreacion.ToString("dd/MM/yy"));
                             bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Proceso de selección en tramite", template, pSentender, pPassword, pMailServer, pMailPort);
                         }
                     }

@@ -54,8 +54,8 @@ namespace asivamosffie.api.Controllers
 
             try
             {
-                string pUser = " ";
-                // string  pUser = HttpContext.User.FindFirst("User").Value;
+                //string pUser = " ";
+                 string  pUser = HttpContext.User.FindFirst("User").Value;
                 ArchivoCargue archivoCargue = await  _documentService.GetArchivoCargueByName(pNameFiles  , pUser);
 
                 string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre+ ".xlsx";
@@ -74,6 +74,33 @@ namespace asivamosffie.api.Controllers
 
         }
 
+        [HttpGet]
+        [Route("DownloadOrdenElegibilidadFilesByName")]
+        public async Task<ActionResult> DownloadOrdenElegibilidadFilesByName([FromQuery] string pNameFiles)
+        {
+            if (String.IsNullOrEmpty(pNameFiles))
+                return BadRequest();
+
+            try
+            {
+                //string pUser = " ";
+                string pUser = HttpContext.User.FindFirst("User").Value;
+                string Ruta = await _documentService.DownloadOrdenElegibilidadFilesByName(pNameFiles, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), pUser);
+
+                /*string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre + ".xlsx";
+                */
+                Stream stream = new FileStream(Ruta, FileMode.Open, FileAccess.Read);
+                
+                if (stream == null)
+                    return NotFound();
+                return File(stream, "application/octet-stream");
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Archivo no encontrado");
+            }
+        }
 
 
     }

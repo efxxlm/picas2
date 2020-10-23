@@ -90,7 +90,8 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
-      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite ;
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.Cerrado ;
 
     this.cerrarProceso=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado;
     this.obervaciones=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario ||
@@ -98,7 +99,14 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario ||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico ||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario ||
-      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteTecnico;
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteTecnico||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico
+      ;
     
     
   }

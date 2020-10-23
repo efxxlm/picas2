@@ -6,7 +6,7 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { EstadosProcesoSeleccion, ProcesoSeleccion, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface RegistrosCargados {
   id: number;
@@ -50,6 +50,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
 
   constructor(
               private projectService: ProjectService,
+              private procesoSeleccionService: ProcesoSeleccionService,
               private datepipe: DatePipe,
               public dialog: MatDialog
   ) { }
@@ -101,7 +102,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
   ver(gestion:any)
   {
     console.log(gestion);
-    this.projectService.getFileByName(gestion.gestion).subscribe(respuesta => {
+    this.procesoSeleccionService.downloadOrdenElegibilidadFilesByName(gestion.gestion).subscribe(respuesta => {
       let documento="documento.xlsx";
       //console.log(documento);
               

@@ -174,8 +174,8 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
       let res = respuesta[0] as Respuesta
       this.openDialog("Cronograma", res.message); 
       if (res.code == "200"){
-        console.log(respuesta);       
-        this.router.navigate(["/seleccion"]);
+//        console.log(respuesta);       
+  //      this.router.navigate(["/seleccion"]);
 
       }
     }, error => {
@@ -189,6 +189,10 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+    dialogRef.afterClosed().subscribe(result => {
+      location.reload();
+     });
+
   }
 
   onChangeEstado()
