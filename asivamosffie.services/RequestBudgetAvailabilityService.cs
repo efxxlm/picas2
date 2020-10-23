@@ -1342,6 +1342,7 @@ namespace asivamosffie.services
                     ThenInclude(y => y.Proyecto).
                     ThenInclude(v => v.ProyectoAportante).
                     ThenInclude(c => c.Aportante).
+                        ThenInclude(c => c.FuenteFinanciacion).
                 Include(x => x.DisponibilidadPresupuestalObservacion).ToListAsync();
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
 

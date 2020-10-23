@@ -26,10 +26,8 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   cargarServicio(id){
     this.budgetAvailabilityService.GetDetailAvailabilityBudgetProyect(id).subscribe(data=>{
       this.aportantesList = data[0].aportantes;
-      console.log(this.aportantesList);
       this.numeroSolicitud = data[0].numeroSolicitud;
       this.objeto = data[0].objeto;
-      this.observaciones = data[0].observaciones;
     });
   }
 }

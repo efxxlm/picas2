@@ -93,4 +93,8 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
       })
   }
 
+  verDetalle(e: number){
+    this.router.navigate(['/solicitarDisponibilidadPresupuestal/verDetalleDDPEspecial',e]);
+  }
+
 }

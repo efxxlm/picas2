@@ -17,7 +17,7 @@
   <div align="left">
     <mat-card class="border">
       <mat-card-content class="mt-1em">
-        <p><b>Número DDP</b>: {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp }}</p>
+        <p><b>Número DDP</b>: {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp || 'Sin DDP' }}</p>
         <section>
           <b>Objeto</b>: <div [innerHTML]="innerObservacion( dataContratacion.disponibilidadPresupuestal[0].objeto )"></div>
         </section>
@@ -195,7 +195,7 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp }}
+              {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp || 'Sin DDP' }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
