@@ -51,7 +51,7 @@ namespace asivamosffie.services
                     var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
                     foreach (var usuario in usuariosecretario)
                     {
-                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
+                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjEnviarSolicitudContratacion);
                         string template =
                             TemplateRecoveryPassword.Contenido
                             .Replace("_LinkF_", pDominioFront)
@@ -144,6 +144,7 @@ namespace asivamosffie.services
             return await _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
                //para logica plantilla ficha contratacion
+               .Include(r=> r.DisponibilidadPresupuestal)
                .Include(r => r.Contrato)
                 .Include(r => r.ContratacionProyecto)
                 .ThenInclude(r => r.ContratacionProyectoAportante)
@@ -153,7 +154,7 @@ namespace asivamosffie.services
                 .ThenInclude(r => r.ContratacionProyectoAportante)
                  .ThenInclude(r => r.ComponenteAportante)
                    .ThenInclude(r => r.ComponenteUso)
-              //
+              // 
               .Include(r => r.Contratista)
                  .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)

@@ -30,9 +30,11 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         public readonly IConverter _converter;
+        public readonly IProjectContractingService _ProjectContractingService;
 
-        public ManageContractualProcessesService(IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
+        public ManageContractualProcessesService(IProjectContractingService projectContractingService,IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
+            _ProjectContractingService = projectContractingService;
             _converter = converter;
             _context = context;
             _documentService = documentService;
@@ -89,7 +91,7 @@ namespace asivamosffie.services
                .FirstOrDefault();
 
             string TipoPlantilla = "";
-            Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
+            Contratacion contratacion = await _ProjectContractingService.GetAllContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
             if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
             {
@@ -306,7 +308,29 @@ namespace asivamosffie.services
 
                             try
                             {
-                                // nombreAportante = ContratacionProyecto.Proyecto.ProyectoAportante.FirstOrDefault().Aportante.NombreAportante.Nombre;
+                                string strNombreAportante = string.Empty;
+                                switch (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.TipoAportanteId)
+                                {
+
+                                    case ConstanTipoAportante.Ffie:
+                                        strNombreAportante = ConstanStringTipoAportante.Ffie;
+                                        break;
+
+                                    case ConstanTipoAportante.ET:
+
+                                        if (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento != null)
+                                        {
+                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento.Descripcion;
+                                        }
+                                        else
+                                        {
+                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Municipio.Descripcion;
+                                        }
+                                        break;
+                                    case ConstanTipoAportante.Tercero:
+                                        strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.NombreAportante.Nombre;
+                                        break;
+                                }
                             }
                             catch (Exception)
                             {
