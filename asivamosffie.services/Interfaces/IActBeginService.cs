@@ -19,7 +19,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion);
 
-        
+        Task<Respuesta> CambiarEstadoActa(int pContratoId, string pNuevoCodigoEstadoActa, string pUsuarioModifica);
         Task<byte[]> GetPlantillaActaInicio(int pContratoId);
         //        ---guardar
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
