@@ -7,6 +7,7 @@ import { CrearSolicitudEspecialComponent } from './components/crear-solicitud-es
 import { NuevaSolicitudEspecialComponent } from './components/nueva-solicitud-especial/nueva-solicitud-especial.component';
 import { CrearDisponibilidadPresupuestalAdministrativoComponent } from './components/crear-disponibilidad-presupuestal-administrativo/crear-administrativo.component';
 import { DetalleDisponibilidadPresupuestalComponent } from './components/detalle-disponibilidad-presupuestal/detalle-disponibilidad-presupuestal.component';
+import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-especial/ver-detalle-ddp-especial.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: 'crearSolicitudAdministrativa/nueva/:id',
     component: CrearDisponibilidadPresupuestalAdministrativoComponent
+  },
+  {
+    path: 'verDetalleDDPEspecial/:id',
+    component: VerDetalleDdpEspecialComponent
   }
 ];
 
