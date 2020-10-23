@@ -123,27 +123,33 @@ export class TablaDetalleCronogramaComponent implements OnInit {
   }
 
   onEliminar(id:any){
-
     this.openDialogSiNo('','¿Está seguro de eliminar este registro?',id)
   }
 
   eliminarRegistro(id:ProcesoSeleccionCronogramaMonitoreo ){    
-    this.procesoSeleccionService.deleteProcesoSeleccionCronogramaMonitoreo( id.procesoSeleccionCronogramaId ).subscribe( respuesta => {
+    this.procesoSeleccionService.deleteProcesoSeleccionCronogramaMonitoreo( id.procesoSeleccionMonitoreoId ).subscribe( respuesta => {
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
-         this.openDialog("Proceso Seleccion", "<b>La información se ha eliminado correctamente.</b>");
-         this.router.navigate(['/seleccion']);
+         this.openDialog("", "<b>La información se ha eliminado correctamente.</b>",true);
+         //this.router.navigate(['/seleccion']);
+
        }else
-        this.openDialog("Proceso Seleccion", r.message);
+        this.openDialog("", r.message);
     })
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string,refrescar:boolean=false) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+    if(refrescar)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+        location.reload();
+       }); 
+    }
   }
 
   openDialogSiNo(modalTitle: string, modalText: string , id:any) {

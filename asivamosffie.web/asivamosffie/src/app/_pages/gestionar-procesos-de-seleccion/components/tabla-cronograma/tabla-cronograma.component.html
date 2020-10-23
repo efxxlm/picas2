@@ -76,14 +76,14 @@
       </tbody>
     </table>
     <div class="text-right">
-      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaFuente()"
-        *ngIf="editMode.valor">
+      <button mat-button color="warn"   type="button" class="btn-eliminar" (click)="agregaFuente()"
+        *ngIf="editMode.valor && bitEditar">
         <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria">
         Agregar otra actividad
       </button>
     </div>
     <div class="text-center">
-      <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf="editMode.valor">
+      <button mat-button color="warn"  class="btn-guardar" type="submit" *ngIf="editMode.valor && bitEditar">
         <img src="assets/img/icon/guardar.svg" alt="Regresar">
       </button>
     </div>

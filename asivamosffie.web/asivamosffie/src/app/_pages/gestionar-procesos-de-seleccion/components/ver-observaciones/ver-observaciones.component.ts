@@ -5,7 +5,7 @@ import { ProcesoSeleccion, ProcesoSeleccionService, EstadosProcesoSeleccion, Tip
 import { pid } from 'process';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
-
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ver-observaciones',
@@ -27,6 +27,7 @@ export class VerObservacionesComponent implements OnInit{
               private router: Router,
               private procesoseleccionService: ProcesoSeleccionService,
               public dialog: MatDialog,
+              private sanitized: DomSanitizer
              ) 
   {
 

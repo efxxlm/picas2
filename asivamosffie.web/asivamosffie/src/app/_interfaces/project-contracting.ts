@@ -155,3 +155,24 @@ interface EstadoSolicitud{
     DevueltoComiteTecnico : "7",
     DevueltoComiteFiduciario : "8",
   }
+
+  interface EstadosSolicitudCronograma{
+    Creada: string,
+    AprobadaPorComiteTecnico: string,
+    AprobadaPorComiteFiduciario: string,
+    RechazadaPorComiteTecnico: string,
+    RechazadaPorComiteFiduciario: string,
+    DevueltaPorComiteTecnico: string,
+    DevueltaPorComiteFiduciario: string,
+    EnTramite: string,
+  }
+  export const EstadosSolicitudCronograma: EstadosSolicitudCronograma = {
+    Creada: '1',
+    AprobadaPorComiteTecnico: '2',
+    AprobadaPorComiteFiduciario: '3',
+    RechazadaPorComiteTecnico: '4',
+    RechazadaPorComiteFiduciario: '5',
+    DevueltaPorComiteTecnico: '6',
+    DevueltaPorComiteFiduciario: '7',
+    EnTramite: '8',
+  }

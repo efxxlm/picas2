@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
@@ -19,5 +20,6 @@ namespace asivamosffie.services.Interfaces
 
         Task<bool> SaveFileContratacion(IFormFile pFile, string pFilePatch, string pNameFile);
         Task<List<ArchivoCargue>> GetListloadedDocumentsByRelacionId(string pOrigenId, int pRelacionId);
+        Task<string> DownloadOrdenElegibilidadFilesByName(string pNameFiles,string ruta, string pUser);
     }
 }

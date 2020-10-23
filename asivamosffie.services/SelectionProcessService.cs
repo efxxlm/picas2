@@ -872,10 +872,12 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR CRONOGRAMA SEGUIMIENTO";
                     cronogramaSeguimiento.FechaCreacion = DateTime.Now;
                     cronogramaSeguimiento.Eliminado = false;
+                    cronogramaSeguimiento.EstadoActividadInicialCodigo = cronogramaSeguimiento.EstadoActividadInicialCodigo == null ?"1" :cronogramaSeguimiento.EstadoActividadInicialCodigo;//revisar
                     cronogramaSeguimiento.UsuarioCreacion = cronogramaSeguimiento.UsuarioCreacion.ToUpper();
 
 
                     _context.CronogramaSeguimiento.Add(cronogramaSeguimiento);
+                    _context.SaveChanges();
                     return respuesta = new Respuesta
                     {
                         IsSuccessful = true,
@@ -1051,45 +1053,7 @@ namespace asivamosffie.services
                             /* Columnas Obligatorias de excel
                              2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
                             Campos Obligatorios Validos   */
-                            if ((worksheet.Cells[i, 1].Text== "Persona Natural" && (
-                                 !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 7].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) )
-                                    ||
-                                (worksheet.Cells[i, 1].Text == "Persona Jurídica" && (
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 9].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 10].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 11].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 12].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 13].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 14].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 15].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 16].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)))
-                                    ||
-                                (worksheet.Cells[i, 1].Text == "Unión Temporal/Consorcio" && (
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 18].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 19].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 20].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 21].Text) |
-                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text) |
-                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text) |
-                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text) |
-                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 26].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 27].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 28].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 29].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 30].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 31].Text) |
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
-                                    ))
-                                )
-                            {
+                            
 
                                 TempOrdenLegibilidad temp = new TempOrdenLegibilidad();
                                 //Auditoria
@@ -1097,11 +1061,6 @@ namespace asivamosffie.services
                                 temp.EstaValidado = false;
                                 temp.FechaCreacion = DateTime.Now;
                                 temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
-
-                                // #1
-                                //Tipo proponente
-                                temp.TipoProponenteId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 1].Text, (int)EnumeratorTipoDominio.Tipo_Proponente));
-                                temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0");
 
                                 // #1
                                 //Tipo proponente
@@ -1122,7 +1081,7 @@ namespace asivamosffie.services
 
                                 //#5
                                 //Departamento domicilio proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 4].Text)) { temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0"); } else { temp.Departamento = int.Parse(null); }
+                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 4].Text)) { temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0"); } else { temp.Departamento = 0; }
 
                                 //#5
                                 //Municipio proponente///aqui debe recibir el parametro iddepartamento, pueden haber municipios del mismo nombre para diferente departamento
@@ -1134,7 +1093,7 @@ namespace asivamosffie.services
                                 }
                                 else
                                 {
-                                    temp.Minicipio = int.Parse(null);
+                                    temp.Minicipio = 0;
                                 }
 
                                 //#6
@@ -1227,7 +1186,7 @@ namespace asivamosffie.services
                                 //Porcentaje participacion
                                 if (!string.IsNullOrEmpty(worksheet.Cells[i, 21].Text))
                                 {
-                                    temp.PorcentajeParticipacion = Convert.ToDecimal(worksheet.Cells[i, 21].Text) >= 0 ? Int32.Parse(worksheet.Cells[i, 21].Text) : 0;
+                                    temp.PorcentajeParticipacion = Convert.ToDecimal(worksheet.Cells[i, 21].Text.Replace("%","")) >= 0 ? Int32.Parse(worksheet.Cells[i, 21].Text.Replace("%", "")) : 0;
                                 }
 
 
@@ -1239,7 +1198,7 @@ namespace asivamosffie.services
                                 //Cedula  del representante legal de la UT o consorcio
                                 if (!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text))
                                 {
-                                    temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 23].Text) >= 0 ? Int32.Parse(worksheet.Cells[i, 23].Text) : 0;
+                                    temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 23].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 23].Text.Replace("%", "")) : 0;
                                 }
 
 
@@ -1268,8 +1227,47 @@ namespace asivamosffie.services
                                 if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
 
 
-                                //Guarda Cambios en una tabla temporal
-
+                            //Guarda Cambios en una tabla temporal
+                            if ((worksheet.Cells[i, 1].Text == "Persona Natural" && (
+                             !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 7].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)))
+                                ||
+                            (worksheet.Cells[i, 1].Text == "Persona Juridica - Individual" && (
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 9].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 10].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 11].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 12].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 13].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 14].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 15].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 16].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)))
+                                ||
+                            (worksheet.Cells[i, 1].Text == "Persona Juridica - Unión Temporal o Consorcio" && (
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 18].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 19].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 20].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 21].Text) |
+                                //!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text) |
+                                //!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text) |
+                                //!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text) |
+                                //!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 26].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 27].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 28].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 29].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 30].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 31].Text) |
+                                !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
+                                ))
+                            )
+                            {
+                                temp.EstaValidado = true;
                                 _context.TempOrdenLegibilidad.Add(temp);
                                 _context.SaveChanges();
 
@@ -1291,7 +1289,7 @@ namespace asivamosffie.services
 
                                 for (int j = 1; j < 37; j++)
                                 {
-                                    strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
+                                    strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text.Trim());
                                 }
                                 if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
                                 {
@@ -1301,12 +1299,20 @@ namespace asivamosffie.services
                                 {
                                     CantidadRegistrosInvalidos++;
                                 }
+                                //Auditoria
+                                temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                                temp.EstaValidado = false;
+                                temp.FechaCreacion = DateTime.Now;
+                                temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
+                                _context.TempOrdenLegibilidad.Add(temp);
+                                _context.SaveChanges();
+
                             }
 
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-                            CantidadRegistrosInvalidos++;
+                            CantidadRegistrosVacios++;
                         }
                     }
 
@@ -1333,7 +1339,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "VALIDAR EXCEL")
                     };
                 }
             }
@@ -1345,7 +1351,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "VALIDAR EXCEL")
                 };
             }
 
@@ -1424,7 +1430,7 @@ namespace asivamosffie.services
                      IsException = false,
                      IsValidation = true,
                      Code = ConstantMessagesCargueElegibilidad.CamposVacios,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.CamposVacios, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "")
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.CamposVacios, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "CARGUE MASIVO ORDENES")
                  };
             }
             try
@@ -1435,7 +1441,7 @@ namespace asivamosffie.services
 
                 ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == 2 && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
 
-                List<TempOrdenLegibilidad> ListTempOrdenLegibilidad = await _context.TempOrdenLegibilidad.Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado).ToListAsync();
+                List<TempOrdenLegibilidad> ListTempOrdenLegibilidad = await _context.TempOrdenLegibilidad.Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId /*&& (bool)r.EstaValidado*/).ToListAsync();
 
                 if (ListTempOrdenLegibilidad.Count() > 0)
                 {
@@ -1524,7 +1530,7 @@ namespace asivamosffie.services
                             IsException = false,
                             IsValidation = true,
                             Code = ConstantMessagesCargueElegibilidad.NoExitenArchivos,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.NoExitenArchivos, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "")
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.NoExitenArchivos, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "CARGUE MASIVO ORDENES")
                         };
                 }
             }
@@ -1674,7 +1680,7 @@ namespace asivamosffie.services
             Respuesta respuesta = new Respuesta();
             int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
             string strCrearEditar = "";
-            ProcesoSeleccionCronogramaMonitoreo ProcesoSeleccionAntiguo = null;
+            ProcesoSeleccionMonitoreo ProcesoSeleccionAntiguo = null;
             try
             {
                 //si tiene relacion con algo, no lo dejo eliminar
@@ -1693,7 +1699,7 @@ namespace asivamosffie.services
                 }
                 */
                 strCrearEditar = "ELIMINAR PROCESO SELECCION CRONOGRAMA";
-                ProcesoSeleccionAntiguo = _context.ProcesoSeleccionCronogramaMonitoreo.Find(pId);
+                ProcesoSeleccionAntiguo = _context.ProcesoSeleccionMonitoreo.Find(pId);
                 //Auditoria
                 //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
                 ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
@@ -1701,7 +1707,7 @@ namespace asivamosffie.services
                 //Registros
                 ProcesoSeleccionAntiguo.Eliminado = true;
 
-                _context.ProcesoSeleccionCronogramaMonitoreo.Update(ProcesoSeleccionAntiguo);
+                _context.ProcesoSeleccionMonitoreo.Update(ProcesoSeleccionAntiguo);
 
 
 

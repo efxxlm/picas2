@@ -103,6 +103,11 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.get<any[]>(`${environment.apiUrl}/SelectionProcess/getObservacionesProcesoSeleccionProponentes?id=${id}`);
   }
   
+  public downloadOrdenElegibilidadFilesByName(name: string) {   
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadOrdenElegibilidadFilesByName?pNameFiles=${name}`, { responseType: "blob" });
+    return retorno;
+  }
+
 }
 export interface ProcesoSeleccionMonitoreo{
   procesoSeleccionMonitoreoId:number,

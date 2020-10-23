@@ -7,6 +7,7 @@ import { mergeMap, tap, toArray } from 'rxjs/operators';
 import { CommonService, Dominio, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EstadosSolicitud, EstadosSolicitudCronograma } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-tabla-cronograma',
@@ -16,6 +17,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class TablaCronogramaComponent implements OnInit {
 
   @Input() editMode: any = {};
+
+  bitEditar=true;
 
   addressForm = this.fb.array([]);
   maxDate: Date;
@@ -49,6 +52,7 @@ export class TablaCronogramaComponent implements OnInit {
   ) {
     this.maxDate = new Date();
   }
+
 
   ngOnInit(): void {
 
@@ -84,6 +88,7 @@ export class TablaCronogramaComponent implements OnInit {
           this.listaCronograma = monitoreo[monitoreo.length-1].procesoSeleccionCronogramaMonitoreo;                
           if(this.listaCronograma)
           {
+            
             this.listaCronograma.forEach(cronograma => {
               let grupo = this.crearActividad();
               const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
@@ -92,6 +97,11 @@ export class TablaCronogramaComponent implements OnInit {
               grupo.get('fecha').setValue(cronograma.fechaMaxima);
               grupo.get('etapaActualProceso').setValue(etapaActualproceso),    
               listaActividades.push(grupo);    
+              if(cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.Creada && cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteFiduciario &&
+                cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteTecnico)
+                {
+                  this.bitEditar=false;
+                }
             })
           }            
         }
