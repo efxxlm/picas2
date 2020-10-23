@@ -56,8 +56,8 @@ namespace asivamosffie.services
                             TemplateRecoveryPassword.Contenido
                             .Replace("_LinkF_", pDominioFront)
                             .Replace("[NUMERO_SOLICITUD]", contratacionOld.NumeroSolicitud)
-                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-mm-yy"))
-                            .Replace("[OBRA_INTERVENTORIA]", contratacionOld.TipoSolicitudCodigo);
+                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-MM-yyyy"))
+                            .Replace("[OBRA_INTERVENTORIA]", strTipoObraIntervencion);
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
