@@ -62,9 +62,11 @@
                   </quill-editor>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  <p>
-                    <input type="text" formControlName="fechaMaxima"  readonly style="border:0">
-                  </p>
+                  <mat-form-field class="example-full-width">
+                    <input formControlName="fechaMaxima" matInput [matDatepicker]="picker"
+                        readonly (click)="picker.open()" placeholder="DD/MM/AAAA" readonly>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <p>
@@ -77,7 +79,7 @@
                   </button>
                   <mat-form-field class="example-full-width calendar-class">
                     <input matInput [matDatepicker]="picker" formControlName="fechaMonitoreo" [max]="maxDate" readonly
-                      (click)="picker.open()">
+                      (click)="picker.open()" placeholder="DD/MM/AAAA">
                     <input formControlName="procesoSeleccionCronogramaId" type="hidden">
                     <input formControlName="estadoActividadInicialCodigo" type="hidden">
 

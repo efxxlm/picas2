@@ -46,8 +46,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     correoElectronico: [null, Validators.compose([
       Validators.required,
       Validators.minLength(10),
-      Validators.maxLength(100),
-      Validators.email,
+      Validators.maxLength(1000),
+      // Validators.email,
       Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
     ])]
   });
@@ -78,7 +78,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required,
       Validators.minLength(10),
       Validators.maxLength(1000),
-      Validators.email,
+      // Validators.email,
       Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
     ])]
   });
@@ -113,7 +113,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required,
       Validators.minLength(10),
       Validators.maxLength(1000),
-      Validators.email,
+      // Validators.email,
       Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
     ])]
   });

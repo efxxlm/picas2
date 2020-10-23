@@ -53,7 +53,7 @@
             </div>
             <mat-form-field class="example-full-width calendar-class">
               <input matInput [matDatepicker]="picker" readonly (click)="picker.open()" placeholder="DD/MM/AAAA"
-                formControlName="fecha" [disabled]="!editMode.valor">
+                formControlName="fecha" [disabled]="!editMode.valor" placeholder="DD/MM/AAAA">
               <input type="hidden" formControlName="procesoSeleccionCronogramaId">
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>

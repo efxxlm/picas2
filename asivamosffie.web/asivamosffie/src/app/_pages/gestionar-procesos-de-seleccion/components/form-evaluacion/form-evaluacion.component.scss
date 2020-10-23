@@ -21,13 +21,18 @@
   margin-right: 0;
 }
 
-.size1{
+.size1 {
   font-size: 0.8rem;
   color: var(--fontColor);
   font-style: italic;
 }
-.mcenter
-{
+
+.mcenter {
   margin-left: auto;
   margin-right: auto;
+}
+
+.margin-url-input {
+  padding-left: 3.2em;
+  padding-right: 4.5em;
 }

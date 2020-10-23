@@ -1,19 +1,19 @@
-
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()"
+  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">¿Cuántos proponentes serán seleccionados en el
-                proceso?</label>
+              <label for="cuantosProponentes" class="label-left">
+                ¿Cuántos proponentes serán seleccionados en el proceso?</label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" min="1" max="99"
-                 maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                 formControlName="cuantosProponentes">
+                <input matInput #cuantosProponentes type="number" min="1" max="99" maxlength="2"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" formControlName="cuantosProponentes" required>
               </mat-form-field>
               <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
             </div>
@@ -22,15 +22,15 @@
       </div>
       <div class="margin-tabla"
         *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
-        <div class="table-responsive">
-          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
+        <div class="table-responsive p-2px">
+          <table class="text-center mat-table cdk-table mat-sort mat-table-style table-form table-form--2 spacing-0">
             <thead>
               <tr class="mat-header-row cdk-header-row ng-star-inserted">
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                   Nombres de los proponentes
                 </th>
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Invitar
+                  Seleccionar
                 </th>
               </tr>
             </thead>
@@ -40,10 +40,10 @@
                   {{ proponente.nombreProponente }}
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  <section class="example-section">
-                    <mat-checkbox type="checkbox"
-                    [checked]="validateSel(proponente.numeroIdentificacion)"
-                     (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId" ></mat-checkbox>
+                  <section class="table-checkbox">
+                    <mat-checkbox type="checkbox" [checked]="validateSel(proponente.numeroIdentificacion)"
+                      (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId">
+                    </mat-checkbox>
                   </section>
                 </td>
               </tr>
@@ -51,16 +51,16 @@
           </table>
         </div>
 
-        <div class="row mt-2em">
-          <div class="pr-1">
-            <label for="url" class="label-left">Url con soporte</label>
-          </div>
-          <div class="col pr-3em">
-            <mat-form-field class="full-width">
-              <input matInput type="url" formControlName="url">
-            </mat-form-field>
-            <p class="text-center cursivayeso ">Indique la ruta del soporte de esta información</p>
-          </div>
+      </div>
+      <div class="row mt-2em">
+        <div class="pr-1">
+          <label for="url" class="label-left">Url con soporte</label>
+        </div>
+        <div class="col pr-3em">
+          <mat-form-field class="full-width">
+            <input matInput type="url" formControlName="url">
+          </mat-form-field>
+          <p class="text-center cursivayeso ">Indique la ruta del soporte de esta información</p>
         </div>
       </div>
     </mat-card-content>
@@ -68,8 +68,7 @@
 
   <div class="text-center"
     *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
-    <button  *ngIf="editar"
-    mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
+    <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>

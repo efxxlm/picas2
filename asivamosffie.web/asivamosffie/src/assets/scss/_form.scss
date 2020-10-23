@@ -1,193 +1,197 @@
 .full-width {
-    width: 100%;
+  width: 100%;
 }
 
 .shipping-card {
-    min-width: 120px;
-    margin: 20px auto;
+  min-width: 120px;
+  margin: 20px auto;
 }
 
 .row {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .col {
-    flex: 1;
-    margin-right: 20px;
+  flex: 1;
+  margin-right: 20px;
 }
 
 .col:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .mat-card .mat-input-element {
-    color: $mainColor;
-    font-weight: 400;
+  color: $mainColor;
+  font-weight: 400;
 }
 
 .iniciarSesion,
 .recuperar-pass {
-    .mat-form-field-empty.mat-form-field-label {
-        transform: translateY(5px);
-    }
-    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-        transform: translateY(-0.9em) scale(0.75);
-    }
+  .mat-form-field-empty.mat-form-field-label {
+    transform: translateY(5px);
+  }
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    transform: translateY(-0.9em) scale(0.75);
+  }
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline,
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-    color: $mainColor;
+  color: $mainColor;
 }
 
 .mat-form-field .mat-select.mat-select-invalid .mat-select-arrow,
 .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
-    color: $secondaryColor;
+  color: $secondaryColor;
 }
 
 label.mat-form-field-label {
-    font-weight: 500;
-    color: $mainColor;
+  font-weight: 500;
+  color: $mainColor;
 }
 
 input.mat-input-element {
-    text-align: center;
-    font-weight: 300;
+  text-align: center;
+  font-weight: 300;
 }
 
 mat-form-field {
-    width: 100%;
+  width: 100%;
 
-    .ver-contrasena {
-        height: 2.2em;
-        img {
-            height: 1.2em;
-            margin-top: -0.5em;
-        }
+  .ver-contrasena {
+    height: 2.2em;
+    img {
+      height: 1.2em;
+      margin-top: -0.5em;
     }
+  }
 
-    mat-label {
-        font-weight: 500;
-    }
+  mat-label {
+    font-weight: 500;
+  }
 }
 
 .mat-form-field-appearance-outline .mat-form-field-prefix,
 .mat-form-field-appearance-outline .mat-form-field-suffix {
-    bottom: 0 !important; //no pude sobreescribir usando especificidad
+  bottom: 0 !important; //no pude sobreescribir usando especificidad
 }
 
 .label-left {
-    font-weight: 500;
-    display: inline-block;
-    margin-top: 0.5em;
+  font-weight: 500;
+  display: inline-block;
+  margin-top: 0.5em;
 }
 
 .mat-form-field-infix {
-    border-top: 0;
+  border-top: 0;
 }
 
 .mat-select-value {
-    color: $mainColor;
-    text-align: center;
+  color: $mainColor;
+  text-align: center;
 }
 
 .mat-select-arrow-wrapper {
-    position: relative;
-    right: -2.7em;
-    top: 0.3em;
+  position: relative;
+  right: -2.7em;
+  top: 0.3em;
 }
 
 div.mat-select-arrow {
-    color: $mainColor;
-    border-left: 0.5em solid transparent;
-    border-right: 0.5em solid transparent;
-    border-top: 1em solid;
-    margin: 0 4px;
+  color: $mainColor;
+  border-left: 0.5em solid transparent;
+  border-right: 0.5em solid transparent;
+  border-top: 1em solid;
+  margin: 0 4px;
 }
 
 .select-width {
-    width: calc(100% - 2.9em);
+  width: calc(100% - 2.9em);
 
-    td & {
-      padding-right: 3em;
-    }
+  td & {
+    padding-right: 3em;
+  }
 }
 
 .contador {
-    color: $mainColor;
-    font-weight: 500;
-    height: 2em;
-    width: 2em;
-    min-width: 2em;
-    border-radius: 50%;
-    border: solid 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 0.8em;
+  color: $mainColor;
+  font-weight: 500;
+  height: 2em;
+  width: 2em;
+  min-width: 2em;
+  border-radius: 50%;
+  border: solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.8em;
 
-    &.miles {
-        height: 2.4em;
-        min-width: 2.4em;
-        margin-left: 0.4em;
-        transform: translateY(-5px);
-    }
+  &.miles {
+    height: 2.4em;
+    min-width: 2.4em;
+    margin-left: 0.4em;
+    transform: translateY(-5px);
+  }
 }
 
 .mat-form-field-appearance-legacy .mat-form-field-wrapper {
-    margin-bottom: -0.8em;
+  margin-bottom: -0.8em;
 }
 
 .radioInput > .mat-radio-button {
-    display: inline-block;
-    margin: 5px 0.5em;
+  display: inline-block;
+  margin: 5px 0.5em;
 }
 
 .sub-label {
-    font-weight: 600;
-    color: $mainColor;
-    margin-left: 1em;
-    margin-right: 0.5em;
+  font-weight: 600;
+  color: $mainColor;
+  margin-left: 1em;
+  margin-right: 0.5em;
 }
 
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
-    content: "*";
-    position: absolute;
-    right: 0;
-    top: 45%;
-    font-weight: 600;
-    color: $mainColor;
+  content: "*";
+  position: absolute;
+  right: 0;
+  top: 45%;
+  font-weight: 600;
+  color: $mainColor;
 }
 
 .mat-select[required]::after {
-    content: "*";
-    position: absolute;
-    right: 0;
-    font-weight: 600;
-    top: 25%;
-    color: $mainColor;
+  content: "*";
+  position: absolute;
+  right: 0;
+  font-weight: 600;
+  top: 25%;
+  color: $mainColor;
 
-    .right-igual-quill & {
-        right: .9em;
-    }
+  .right-igual-quill & {
+    right: 0.9em;
+  }
 }
 
 .mat-placeholder-required {
-    display: none;
+  display: none;
 }
 
 .mat-form-field-appearance-legacy .mat-form-field-label {
-    text-align: center;
+  text-align: center;
 }
 .mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-    opacity: 0;
+  opacity: 0;
 }
 
 .required-form-group {
-    font-weight: 600;
-    margin-left: -0.5em;
-    color: $mainColor;
+  font-weight: 600;
+  margin-left: -0.5em;
+  color: $mainColor;
+}
+
+.table-checkbox {
+  padding: 0.5em;
 }
 
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
@@ -196,55 +200,59 @@ div.mat-select-arrow {
 .mat-radio-button.mat-accent .mat-radio-inner-circle,
 .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
 .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
-    background-color: $mainColor;
+  background-color: $mainColor;
 }
 
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: $mainColor;
+  border-color: $mainColor;
 }
 
 .calendar-class .mat-form-field-appearance-legacy .mat-form-field-underline {
-    background-color: transparent !important;
+  background-color: transparent !important;
 }
 
 .mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
 .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
-    background: $mainColor !important;
+  background: $mainColor !important;
 }
 
 .sin-contador {
-    padding-right: 2.9em;
+  padding-right: 2.9em;
 }
 /* lo vole jflorez
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
     content: '';
 }*/
 .mat-form-field.nocontent input:required ~ .mat-form-field-label-wrapper::after {
-    content: "";
+  content: "";
 }
 
 .radio-color-detalle {
-    $mainColor: $fontColor !important;
+  $mainColor: $fontColor !important;
 }
 
 .required {
-    &-quill {
-        position: relative;
-        transform: translate(.4em, 1.55em);
-        font-weight: 600;
-    }
-    &-calendar {
-        position: absolute;
-        transform: translate(.3em, .8em);
-        font-weight: 600;
-    }
+  &-quill {
+    position: relative;
+    transform: translate(0.4em, 1.55em);
+    font-weight: 600;
+  }
+  &-calendar {
+    position: absolute;
+    transform: translate(0.3em, 0.8em);
+    font-weight: 600;
+  }
 }
 
 .select-table {
-    position: relative;
-    width: 6.5em;
-    .mat-select-arrow-wrapper {
-        right: 2.5em;
-        top: -4em;
-    }
+  position: relative;
+  width: 6.5em;
+  .mat-select-arrow-wrapper {
+    right: 2.5em;
+    top: -4em;
+  }
+}
+
+.spacing-0 {
+  border-spacing: 0;
 }

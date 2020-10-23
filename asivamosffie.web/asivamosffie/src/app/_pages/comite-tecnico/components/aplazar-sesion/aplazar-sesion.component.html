@@ -17,7 +17,7 @@
     <div class="col d-flex align-items-center">
         <mat-form-field class="example-full-width">
             <input [formControl]="fechaAplazamiento" matInput [matDatepicker]="picker" required [min]="minDate"
-                readonly (click)="picker.open()">
+                readonly (click)="picker.open()" placeholder="DD/MM/AAAA">
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">

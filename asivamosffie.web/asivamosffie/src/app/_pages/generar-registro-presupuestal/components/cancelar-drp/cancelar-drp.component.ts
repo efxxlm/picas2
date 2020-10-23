@@ -23,7 +23,7 @@ export class CancelarDrpComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '25em',
       data: { modalTitle, modalText }
-    });   
+    });
   }
   editorStyle = {
     height: '100px',
@@ -51,6 +51,6 @@ export class CancelarDrpComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('La información ha sido guardada exitosamente.', "");
+    this.openDialog('<b>La información ha sido guardada exitosamente.</b>', "");
   }
 }

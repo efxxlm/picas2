@@ -61,9 +61,9 @@ export class DevolverPorValidacionComponent implements OnInit {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-      
+
         this.router.navigate(['/validarDisponibilidadPresupuesto']);
-      
+
     });
   }
 
@@ -73,18 +73,18 @@ export class DevolverPorValidacionComponent implements OnInit {
     if(this.tipo==0)
     {
       this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
-      
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
       });
     }
     else
     {
       this.disponibilidadServices.SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
-      this.openDialog('', 'La información ha sido guardada exitosamente.');
-    
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
       });
     }
-    
-    
+
+
   }
 }
