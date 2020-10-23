@@ -569,7 +569,8 @@ namespace asivamosffie.services
                                 }
                                 foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
                                 {
-                                    if (string.IsNullOrEmpty(DisponibilidadPresupuestal.NumeroDdp.ToString()))
+                                    //jflorez, pequeño ajsute porque toteaba                                    
+                                    if (DisponibilidadPresupuestal.NumeroDdp == null ||string.IsNullOrEmpty(DisponibilidadPresupuestal.NumeroDdp))
                                     {
                                         break;
                                     }
