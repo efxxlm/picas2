@@ -84,7 +84,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
     
-    console.log( sesionComiteSolicitudId );
+    console.log( sesionComiteSolicitudId, estadoCodigo );
 
     switch ( tipoSolicitud ) {
 
