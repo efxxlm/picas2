@@ -53,14 +53,12 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       this.objetoDisponibilidad.contratacionId = params.idContratacion;
       this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
       this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
-      console.log(this.objetoDisponibilidad);
       if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
         this.cargarDisponibilidadPre();
 
       } else {
         this.cargarDisponibilidadNueva();
       }
-
 
     });
   }
@@ -74,6 +72,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
 
+        console.log( this.objetoDisponibilidad );
         this.objetoDisponibilidad.disponibilidadPresupuestalProyecto.forEach(dp => {
           this.projectService.getProjectById(dp.proyectoId)
             .subscribe(proyecto => {
@@ -90,10 +89,9 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
     this.objetoDisponibilidad.disponibilidadPresupuestalProyecto = [];
 
-    
-
     this.budgetAvailabilityService.getReuestCommittee()
-      .subscribe( listaSolicitudes => {
+      .subscribe( 
+        listaSolicitudes => {
         listaSolicitudes.forEach( solicitud => {
           if ( solicitud.contratacionId == this.objetoDisponibilidad.contratacionId ){
             this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
@@ -102,23 +100,30 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
             this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;
           }
-        })
+        }),
+        err => {
+          console.log( err );
+        }
       })
 
     this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
-      .subscribe(contratacion => {
-        console.log(contratacion, '0');
+      .subscribe(
+        contratacion => {
         contratacion.contratacionProyecto.forEach(cp => {
           this.projectService.getProjectById(cp.proyectoId)
             .subscribe(proyecto => {
               cp.proyecto = proyecto;
               console.log(proyecto);
-
+        
               this.listaProyectos.push(proyecto);
-
+        
             })
         });
-      });
+        },
+        err => {
+          console.log( err );
+        }
+      );
 
   }
 

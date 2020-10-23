@@ -20,7 +20,7 @@
             <strong>Tipo de solicitud: </strong>
             Modificación Contractual
         </p>
-        <p class="solicitud" *ngIf="objetoDisponibilidad.disponibilidadPresupuestalProyecto !== undefined && objetoDisponibilidad.disponibilidadPresupuestalProyecto[0].proyecto !== undefined">
+        <p class="solicitud" *ngIf="objetoDisponibilidad.disponibilidadPresupuestalProyecto.length > 0 && objetoDisponibilidad.disponibilidadPresupuestalProyecto !== undefined && objetoDisponibilidad.disponibilidadPresupuestalProyecto[0].proyecto !== undefined">
             <strong>Fecha de comité técnico:</strong>
             {{ objetoDisponibilidad.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'] | date: 'dd/MM/yyyy' }}
         </p>
