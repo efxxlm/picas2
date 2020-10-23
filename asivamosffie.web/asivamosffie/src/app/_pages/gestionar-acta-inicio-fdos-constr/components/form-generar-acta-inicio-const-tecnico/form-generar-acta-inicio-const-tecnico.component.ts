@@ -120,8 +120,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       /*Campo de texto no editable*/
       this.plazoActualContratoMeses = 12;
       this.plazoActualContratoDias = 26;
-      this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreDias;
-      this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreMeses;
+      this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
+      this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       /*Campo de texto editable*/
       if(this.editable == true){
         var year1 = data.fechaActaInicio.toString();
