@@ -114,7 +114,12 @@ export class FormContratacionComponent implements OnInit {
   getDdp ( sesionComiteSolicitudId, numeroDdp ) {
     this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
       .subscribe( resp => {
-        const documento = `DDP ${ numeroDdp }.pdf`;
+        let documento = '';
+        if ( numeroDdp !== undefined ) {
+          documento = `${ numeroDdp }.pdf`;
+        } else {
+          documento = `DDP.pdf`;
+        };
         const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),
         anchor = document.createElement('a');

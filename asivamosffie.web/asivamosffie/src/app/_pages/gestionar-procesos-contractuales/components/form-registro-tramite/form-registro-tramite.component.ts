@@ -103,6 +103,10 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
     this.fechaSesionString = `${ this.fechaSesion.getFullYear() }/${ this.fechaSesion.getMonth() + 1 }/${ this.fechaSesion.getDate() }` 
     this.contratacion.fechaEnvioDocumentacion =   this.fechaSesionString 
     let documento: any = document.getElementById('file');
+    if ( this.dataFormulario.get( 'minutaFile' ).value.size > 1048576 ) {
+      this.openDialog( '', '<b>El tamaño del archivo es superior al permitido, debe subir un archivo máximo de 1MB.</b>' );
+      return;
+    };
     if ( documento !== null ) {
       let pFile = this.dataFormulario.get( 'minutaFile' ).value;
       pFile = pFile.name.split( '.' )
@@ -119,7 +123,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
           err => this.openDialog( '' , err.message )
         ); 
       } else {
-        this.openDialog( 'El tipo de archivo que esta intentando cargar no es permitido en la plataforma.', 'El tipo de documento soportado es .doc y .docx' );
+        this.openDialog( '', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .doc y .docx</b>' );
         return;
       }
     } else {
