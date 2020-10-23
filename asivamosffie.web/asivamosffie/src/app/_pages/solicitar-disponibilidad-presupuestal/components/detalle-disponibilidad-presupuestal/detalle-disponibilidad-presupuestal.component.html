@@ -27,14 +27,16 @@
                     {{aportante.nombre}}
                 </p>
                 <!--Pendiente de mapeo-->
-                <p>
-                    <strong>Fuente 1:</strong>
-                    Contingencia
-                </p>
-                <p>
-                    <strong>Valor fuente 1:</strong>
-                    $70.000.000
-                </p>
+                <div *ngFor="let fuentes of aportante.fuentesFinanciacion; let j = index">
+                    <p>
+                        <strong>Fuente {{j+1}}:</strong>
+                        {{fuentes.estado_de_las_fuentes}}
+                    </p>
+                    <p>
+                        <strong>Valor fuente {{j+1}}:</strong>
+                        {{fuentes.valor_solicitado_de_la_fuente | currency:'COP':'symbol-narrow':'.0-0'}}
+                    </p>
+                </div>
             </mat-card-content>
         </div>
     </mat-card>
