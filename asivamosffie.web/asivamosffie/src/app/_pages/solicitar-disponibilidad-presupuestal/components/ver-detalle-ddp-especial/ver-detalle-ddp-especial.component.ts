@@ -17,14 +17,15 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
       console.log(param);
-      this.cargarServicio(param.id);
+      //this.cargarServicio(param.id);
     });
   }
-  cargarServicio(id){
+  /*cargarServicio(id){
     this.budgetAvailabilityService.GetDetailAvailabilityBudgetProyect(id).subscribe(data=>{
       this.aportantesList = data[0].aportantes;
       this.numeroSolicitud = data[0].numeroSolicitud;
       this.objeto = data[0].objeto;
+
     });
-  }
+  }*/
 }
