@@ -36,14 +36,15 @@ namespace asivamosffie.services
             //• Registrados 
 
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                .Where(r => !(bool)r.Eliminado 
+                .Where(r => !(bool)r.Eliminado  
                    && (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
                 ).ToListAsync();
 
-            List<Dominio> ListasParametricas = _context.Dominio.ToList();
+            List<Dominio> ListasParametricas = _context.Dominio.Where(r=> r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
 
-            List<Contratista> ListContratista = _context.Contratista.ToList();
+         
+
 
             foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
             {
@@ -53,9 +54,12 @@ namespace asivamosffie.services
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
 
-                            Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
+                            Contratacion contratacion = 
+                                _context.Contratacion
+                                .Where(r=> r.ContratacionId == sesionComiteSolicitud.SolicitudId)
+                                .Include(r=> r.Contrato).FirstOrDefault();
 
-                            if (contratacion.ContratacionId == 0)
+                            if (contratacion == null)
                                 break;
                             if (contratacion.Contrato.Count() > 0)
                             {
