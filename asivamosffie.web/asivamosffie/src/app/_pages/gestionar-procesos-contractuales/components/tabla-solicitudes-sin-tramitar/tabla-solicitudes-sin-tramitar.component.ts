@@ -7,6 +7,8 @@ import { GrillaProcesosContractuales } from 'src/app/_interfaces/procesosContrac
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 import { Observable } from 'rxjs';
 import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-solicitudes-sin-tramitar',
@@ -28,7 +30,9 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   };
 
   constructor ( private routes: Router,
-                private procesosContractualesSvc: ProcesosContractualesService ) {
+                private procesosContractualesSvc: ProcesosContractualesService,
+                private dialog: MatDialog ) 
+  {
   }
 
   ngOnInit() {
@@ -71,6 +75,13 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
+  openDialog (modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data : { modalTitle, modalText }
+    });
+  };
+
   gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
     
     console.log( sesionComiteSolicitudId );
@@ -100,8 +111,20 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     
     elemento.estadoCodigo = this.estadoCodigoFiduciaria;
 
-    this.procesosContractualesSvc.sendCambioTramite( elemento )
-      .subscribe( console.log );
+    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+      () => this.routes.navigate( [ '/procesosContractuales' ] )
+    );
+
+    //this.procesosContractualesSvc.sendCambioTramite( elemento )
+    //  .subscribe(
+    //    response => {
+    //      this.openDialog( '', response.message );
+    //      this.dataSource = new MatTableDataSource();
+    //      this.getDataGrilla();
+    //      //navigate( ['/procesosContractuales'] )
+    //    },
+    //    err => this.openDialog( '', err.message )
+    //  );
 
   }
 

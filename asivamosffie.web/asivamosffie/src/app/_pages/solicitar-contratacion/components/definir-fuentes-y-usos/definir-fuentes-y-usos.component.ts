@@ -223,12 +223,13 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       };
     };
   };
-
-  validarSaldoDisponible ( saldoIngresado: any, saldoDisponible: string ) {
-    console.log( `${saldoIngresado}`, saldoDisponible );
-    if (  `${saldoIngresado}` > saldoDisponible ) {
+  
+  validarSaldoDisponible ( saldoIngresado: number, saldoDisponible: number, nombreAportante: string ) {
+    console.log( saldoIngresado, saldoDisponible );
+    if (  saldoIngresado > saldoDisponible ) {
+      this.openDialog( '', `<b>El valor del aportante ${ nombreAportante } al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>` );
       console.log( 'Cumple validacion-mayor' );
-    } else if ( `${saldoIngresado}` <= saldoDisponible ) {
+    } else if ( saldoIngresado <= saldoDisponible ) {
       console.log( 'Cumple validacion-menor' );
     }
   }
@@ -240,8 +241,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   getMunicipio() {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
-      //this.router.navigate(['/solicitarContratacion']);
-      this.municipio = 'Campo quemado fix antes de subir version!!!!!!!!!!!!!!!!'
+      this.router.navigate(['/solicitarContratacion']);
       return;
     };
     this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
