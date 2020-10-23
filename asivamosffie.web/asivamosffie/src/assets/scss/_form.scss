@@ -229,8 +229,8 @@ div.mat-select-arrow {
 
 .required {
     &-quill {
-        position: absolute;
-        transform: translate(2em, 1.4em);
+        position: relative;
+        transform: translate(.4em, 1.55em);
         font-weight: 600;
     }
     &-calendar {
