@@ -74,6 +74,11 @@ export class FormContratacionComponent implements OnInit {
     };
   };
 
+  innerObservacion ( observacion: string ) {
+    const observacionHtml = observacion.replace( '"', '' );
+    return observacionHtml;
+  }
+
   getEstadoCodigo () {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {
       this.routes.navigate( [ '/contratosModificacionesContractuales' ] );

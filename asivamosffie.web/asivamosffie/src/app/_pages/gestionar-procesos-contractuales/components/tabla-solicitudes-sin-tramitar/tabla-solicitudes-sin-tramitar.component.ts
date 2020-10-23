@@ -118,7 +118,6 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
             () => this.routes.navigate( [ '/procesosContractuales' ] )
           );
-          //navigate( ['/procesosContractuales'] )
         },
         err => this.openDialog( '', err.message )
       );

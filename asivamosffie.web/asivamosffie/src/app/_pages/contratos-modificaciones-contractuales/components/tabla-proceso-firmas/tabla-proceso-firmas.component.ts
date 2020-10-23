@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-proceso-firmas',
@@ -34,6 +36,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
 
   constructor ( private routes: Router,
                 private contratosContractualesSvc: ContratosModificacionesContractualesService,
+                private dialog: MatDialog,
                 private procesosContractualesSvc: ProcesosContractualesService ) {
     this.getGrilla();
   }
@@ -98,6 +101,13 @@ export class TablaProcesoFirmasComponent implements OnInit {
 
   };
 
+  openDialog (modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data : { modalTitle, modalText }
+    });
+  };
+
   cambioEstadoRegistrado ( elemento ) {
     elemento.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
     elemento.estadoCodigo = this.estadoCodigos.registrado
@@ -108,26 +118,15 @@ export class TablaProcesoFirmasComponent implements OnInit {
     pContrato.append( 'contratoId', `${ elemento.contratacion.contrato[0].contratoId }` );
 
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
-      .subscribe( () => {
-        this.dataTable = [];
-        this.contratosContractualesSvc.getGrilla()
-          .subscribe( ( resp: any ) => {
-            
-            for ( let contrataciones of resp ) {
-              if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
-                this.dataTable.push( contrataciones );
-              } else if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.firmado ) {
-                this.dataTable.push( contrataciones );
-              };
-            };
-            if ( this.dataTable.length === 0 ) {
-              this.sinData.emit( false );
-            };
-            console.log( resp );
-            this.dataSource = new MatTableDataSource( this.dataTable );
-
-          } )
-      } )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/contratosModificacionesContractuales' ] )
+          );
+        },
+        err => this.openDialog( '', err.message )
+      );
   }
 
 };
