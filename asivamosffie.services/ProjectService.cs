@@ -1470,7 +1470,6 @@ namespace asivamosffie.services
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == idProyecto)
                                                         .Include(y => y.InstitucionEducativa)
                                                         .Include(y => y.Sede)
-                                                        .Include(y => y.Sede)
                                                         .Include(y => y.LocalizacionIdMunicipioNavigation)
                                                         .Include(y => y.ContratacionProyecto)
                                                              .ThenInclude(r => r.Contratacion)
@@ -1488,8 +1487,11 @@ namespace asivamosffie.services
 
             if (proyecto.ContratacionProyecto.Count() > 0)
             {
-                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && r.SolicitudId == proyecto.ContratacionProyecto.FirstOrDefault().ContratacionId).Include(r => r.ComiteTecnico).FirstOrDefault();
-                proyecto.FechaComite = sesionComiteSolicitud.ComiteTecnico.FechaOrdenDia;
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && r.SolicitudId == proyecto.ContratacionProyecto.FirstOrDefault().ContratacionId)
+                    .Include(r => r.ComiteTecnico).FirstOrDefault();
+                if(sesionComiteSolicitud != null)
+                     proyecto.FechaComite = sesionComiteSolicitud.ComiteTecnico.FechaOrdenDia;
                 Localizacion municipio = _context.Localizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                 proyecto.Municipio = municipio.Descripcion;
                 proyecto.Departamento = _context.Localizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault().Descripcion;
