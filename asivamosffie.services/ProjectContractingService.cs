@@ -32,7 +32,7 @@ namespace asivamosffie.services
             )
         {
             int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contratacion, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
@@ -42,10 +42,10 @@ namespace asivamosffie.services
 
                 contratacionOld.EstadoSolicitudCodigo = PCodigoEstado;
                 _context.SaveChanges();
-                 
+
                 List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
                 string strTipoObraIntervencion = TipoObraIntervencion.Where(r => r.Codigo == contratacionOld.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
-             
+
                 if (PCodigoEstado == ConstanCodigoEstadoSolicitudContratacion.En_tramite.ToString())
                 {
                     var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
@@ -60,7 +60,7 @@ namespace asivamosffie.services
                             .Replace("[OBRA_INTERVENTORIA]", strTipoObraIntervencion);
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
-                } 
+                }
 
                 return new Respuesta
                 {
@@ -143,7 +143,7 @@ namespace asivamosffie.services
             return await _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
                //para logica plantilla ficha contratacion
-               .Include(r=> r.DisponibilidadPresupuestal)
+               .Include(r => r.DisponibilidadPresupuestal)
                .Include(r => r.Contrato)
                 .Include(r => r.ContratacionProyecto)
                 .ThenInclude(r => r.ContratacionProyectoAportante)
@@ -307,17 +307,20 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.FuenteFinanciacion)
                 .FirstOrDefaultAsync();
 
-            foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
+            foreach (var ContratacionProyecto in contratacionProyecto.Contratacion.ContratacionProyecto)
             {
-                decimal ValorGastado = 0;
-                decimal ValorDisponible = 0;
-                foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                 {
-                    ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
-                    ValorDisponible = 
-                 ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
-                    ComponenteAportante.SaldoDisponible = (ValorDisponible - ValorGastado);
-                } 
+                    decimal ValorGastado = 0;
+                    decimal ValorDisponible = 0;
+                    foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                    {
+                        ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
+                        ValorDisponible =
+                     ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
+                        ComponenteAportante.SaldoDisponible = (ValorDisponible - ValorGastado);
+                    }
+                }
             }
 
             return contratacionProyecto;
@@ -332,7 +335,7 @@ namespace asivamosffie.services
                 ListContratacion = await _context.Contratacion
                     .Where(r => !(bool)r.Eliminado)
                     .Include(r => r.Contratista)
-                    .Include(r=> r.ContratacionProyecto)
+                    .Include(r => r.ContratacionProyecto)
                         .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
                      .Include(r => r.ContratacionProyecto)
                         .ThenInclude(r => r.Proyecto)
