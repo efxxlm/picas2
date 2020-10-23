@@ -14,6 +14,8 @@ export class FormContratacionComponent implements OnInit {
   form         : FormGroup;
   sesionComiteId: number = 0;
   estadoCodigo: string;
+  estadoAprobadoPorFiduciaria: string = '13';
+  enviadaFiduciaria: string = '4';
   valorTotalDdp: number = 0;
   dataContratacion: DataSolicitud = {
     contratacionId: 0,
@@ -67,7 +69,7 @@ export class FormContratacionComponent implements OnInit {
 
   innerObservacion ( observacion: string ) {
     const observacionHtml = observacion.replace( '"', '' );
-    return observacionHtml
+    return observacionHtml;
   }
 
   crearFormulario () {

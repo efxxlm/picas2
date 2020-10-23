@@ -21,7 +21,7 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoDelRegistro', 'id' ];
   estadoCodigo: string;
   estadoCodigos = {
-    enviadaFiduciaria: '9'
+    enviadaFiduciaria: '4'
   }
 
   constructor ( private routes: Router ) {
