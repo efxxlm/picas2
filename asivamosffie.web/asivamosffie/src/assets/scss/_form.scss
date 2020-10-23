@@ -131,6 +131,7 @@ div.mat-select-arrow {
         height: 2.4em;
         min-width: 2.4em;
         margin-left: 0.4em;
+        transform: translateY(-5px);
     }
 }
 
@@ -166,6 +167,10 @@ div.mat-select-arrow {
     font-weight: 600;
     top: 25%;
     color: $mainColor;
+
+    .right-igual-quill & {
+        right: .9em;
+    }
 }
 
 .mat-placeholder-required {

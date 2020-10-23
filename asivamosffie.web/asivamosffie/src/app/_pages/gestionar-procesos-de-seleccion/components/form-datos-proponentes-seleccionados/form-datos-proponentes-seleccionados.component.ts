@@ -55,7 +55,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   personaJuridicaIndividualForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])

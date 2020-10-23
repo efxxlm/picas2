@@ -257,8 +257,10 @@
                       <span class="required-quill">*</span>
                     </div>
                     <input type="hidden" formControlName="procesoSeleccionCronogramaId">
-                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                      (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
+                    <div class="quill-ancho">
+                      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                        (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
+                    </div>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted position-relative">
                     <div class="d-flex justify-content-center btn-calendario-container toptd">
@@ -391,8 +393,9 @@
             </div>
             <div class="d-flex align-items-center">
               <div class="text-area-quill">
-                <label for="condicionesAsignacion" class="text-area-quill--label">Condiciones de asignación de
-                  puntaje</label>
+                <label for="condicionesAsignacion" class="text-area-quill--label">
+                  Condiciones de asignación de puntaje
+                </label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
                   (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesAsignacion" required>
                 </quill-editor>

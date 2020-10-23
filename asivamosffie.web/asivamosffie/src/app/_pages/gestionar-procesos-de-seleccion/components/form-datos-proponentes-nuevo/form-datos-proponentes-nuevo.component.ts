@@ -28,7 +28,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   personaNaturalForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -36,7 +36,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
@@ -54,13 +54,13 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   personaJuridicaIndividualForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
     ],
     representanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     cedulaRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -89,7 +89,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required, ])
     ],
     nombreConsorcio: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     entidades: this.fb.array([]),
     nombre: [null, Validators.compose([

@@ -6,7 +6,7 @@
     <div class="pr-1">
       <label class="label-left">Tipos de proponente nuevo</label>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-5">
       <mat-form-field class="select-width">
         <mat-select [formControl]="tipoProponente" (selectionChange)="limpiarForms()" required>
           <mat-option *ngFor="let proponente of listaProponentes" [value]="proponente">
@@ -25,7 +25,7 @@
       </div>
       <div class="col d-flex">
         <mat-form-field class="full-width">
-          <input matInput #nombre type="text" maxlength="100" [formControl]="myControl" required
+          <input matInput #nombre type="text" maxlength="1000" [formControl]="myControl" required
             [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete">
             <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredName  | async"
@@ -35,7 +35,7 @@
           </mat-autocomplete>
           <input type="hidden" formControlName="procesoSeleccionProponenteId">
         </mat-form-field>
-        <span class="contador">{{100 - nombre.value.length}}</span>
+        <span class="contador miles">{{1000 - nombre.value.length}}</span>
       </div>
     </div>
 
@@ -142,7 +142,7 @@
       </div>
       <div class="col d-flex">
         <mat-form-field class="full-width">
-          <input matInput #nombre2 type="text" maxlength="100" [formControl]="myJuridica" required
+          <input matInput #nombre2 type="text" maxlength="1000" [formControl]="myJuridica" required
             [matAutocomplete]="auto2">
           <mat-autocomplete #auto2="matAutocomplete">
             <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredNameJuridica  | async"
@@ -152,7 +152,7 @@
           </mat-autocomplete>
           <input type="hidden" formControlName="procesoSeleccionProponenteId">
         </mat-form-field>
-        <span class="contador">{{100 - nombre2.value.length}}</span>
+        <span class="contador miles">{{1000 - nombre2.value.length}}</span>
       </div>
     </div>
     <div class="row">
@@ -179,10 +179,10 @@
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
-              <input matInput #representanteLegal2 type="text" maxlength="100" formControlName="representanteLegal"
+              <input matInput #representanteLegal2 type="text" maxlength="1000" formControlName="representanteLegal"
                 required>
             </mat-form-field>
-            <span class="contador">{{100 - representanteLegal2.value.length}}</span>
+            <span class="contador miles">{{1000 - representanteLegal2.value.length}}</span>
           </div>
         </div>
       </div>
@@ -324,9 +324,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #nombre3 type="text" maxlength="100" formControlName="nombreConsorcio" required>
+                <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombreConsorcio" required>
               </mat-form-field>
-              <span class="contador">{{100 - nombre3.value.length}}</span>
+              <span class="contador miles">{{1000 - nombre3.value.length}}</span>
             </div>
           </div>
         </div>
@@ -346,9 +346,9 @@
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required>
+                      <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombre" required>
                     </mat-form-field>
-                    <span class="contador">{{100 - nombre3.value.length}}</span>
+                    <span class="contador miles">{{1000 - nombre3.value.length}}</span>
                   </div>
                 </div>
               </div>
@@ -403,7 +403,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #nombre type="text" maxlength="100" [formControl]="myJuridica2" required
+                <input matInput #nombre type="text" maxlength="1000" [formControl]="myJuridica2" required
                   [matAutocomplete]="auto3">
                 <mat-autocomplete #auto3="matAutocomplete">
                   <mat-option (click)="seleccionAutocomplete2(nombres)"
@@ -412,7 +412,7 @@
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
-              <span class="contador">{{100 - nombre.value.length}}</span>
+              <span class="contador miles">{{1000 - nombre.value.length}}</span>
             </div>
           </div>
         </div>
