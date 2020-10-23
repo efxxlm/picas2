@@ -104,15 +104,24 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
     this.contratacion.fechaEnvioDocumentacion =   this.fechaSesionString 
     let documento: any = document.getElementById('file');
     if ( documento !== null ) {
-      this.procesosContractualesSvc.sendTramite( this.contratacion, documento.files[0] )
-      .subscribe( 
-        response => {
-          this.seRealizoPeticion = true;
-          this.openDialog( '' , response.message );
-          this.routes.navigate( [ '/procesosContractuales' ] );
-        },
-        err => this.openDialog( '' , err.message )
-      );
+      let pFile = this.dataFormulario.get( 'minutaFile' ).value;
+      pFile = pFile.name.split( '.' )
+      pFile = pFile[ pFile.length -1 ]
+      console.log( pFile );
+      if ( pFile === 'docx' || pFile === 'doc' ) {
+        this.procesosContractualesSvc.sendTramite( this.contratacion, documento.files[0] )
+        .subscribe( 
+          response => {
+            this.seRealizoPeticion = true;
+            this.openDialog( '' , response.message );
+            this.routes.navigate( [ '/procesosContractuales' ] );
+          },
+          err => this.openDialog( '' , err.message )
+        ); 
+      } else {
+        this.openDialog( '', 'El tipo de documento soportado es .doc y .docx' );
+        return;
+      }
     } else {
       this.procesosContractualesSvc.sendTramite( this.contratacion, undefined )
       .subscribe( 

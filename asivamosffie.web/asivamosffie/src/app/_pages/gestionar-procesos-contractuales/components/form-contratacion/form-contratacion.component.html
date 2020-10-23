@@ -233,7 +233,7 @@
               <p><b>Fecha del trámite</b>: {{ dataContratacion.fechaTramite | date: 'dd/MM/yyyy' }}</p>
               <p><b>Fecha de envío de documentación física para el trámite</b>: {{ dataContratacion.fechaEnvioDocumentacion | date: 'dd/MM/yyyy' }}</p>
               <section>
-                <b>Observaciones</b>:<div [innerHTML]="innerObservacion( dataContratacion.observaciones )"></div>
+                <b>Observaciones</b>:<div [innerHTML]="innerObservacion( dataContratacion.observaciones ? dataContratacion.observaciones : '' )"></div>
               </section>
               <p><b>Minuta adjunta</b>: {{ dataContratacion.rutaMinuta }}</p>
             </mat-card-content>

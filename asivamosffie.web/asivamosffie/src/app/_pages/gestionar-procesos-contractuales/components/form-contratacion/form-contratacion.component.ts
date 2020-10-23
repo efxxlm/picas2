@@ -96,7 +96,7 @@ export class FormContratacionComponent implements OnInit {
         this.form.reset({
           fechaEnvioTramite: contratacion.fechaEnvioDocumentacion,
           observaciones: contratacion.observaciones ? ( contratacion.observaciones.length > 0 ? contratacion.observaciones : null ) : null,
-          minutaName: rutaDocumento[ rutaDocumento.length-1 ]
+          minutaName: rutaDocumento !== null ? rutaDocumento[ rutaDocumento.length-1 ] : rutaDocumento
         });
 
         for ( let contratacionProyecto of contratacion.contratacionProyecto ) {

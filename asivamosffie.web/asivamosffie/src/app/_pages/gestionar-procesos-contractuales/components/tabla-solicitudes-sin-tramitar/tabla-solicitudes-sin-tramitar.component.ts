@@ -111,20 +111,17 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     
     elemento.estadoCodigo = this.estadoCodigoFiduciaria;
 
-    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-      () => this.routes.navigate( [ '/procesosContractuales' ] )
-    );
-
-    //this.procesosContractualesSvc.sendCambioTramite( elemento )
-    //  .subscribe(
-    //    response => {
-    //      this.openDialog( '', response.message );
-    //      this.dataSource = new MatTableDataSource();
-    //      this.getDataGrilla();
-    //      //navigate( ['/procesosContractuales'] )
-    //    },
-    //    err => this.openDialog( '', err.message )
-    //  );
+    this.procesosContractualesSvc.sendCambioTramite( elemento )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/procesosContractuales' ] )
+          );
+          //navigate( ['/procesosContractuales'] )
+        },
+        err => this.openDialog( '', err.message )
+      );
 
   }
 
