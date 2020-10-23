@@ -530,33 +530,6 @@ namespace asivamosffie.services
 
             try
             {
-                //Contratacion
-                if (Pcontratacion.ContratacionId == 0)
-                {
-                    Pcontratacion.Eliminado = false;
-                    Pcontratacion.FechaCreacion = DateTime.Now;
-
-                    Pcontratacion.FechaTramite = DateTime.Now;
-                    Pcontratacion.RegistroCompleto = false;
-                    Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
-                    Pcontratacion.RegistroCompleto = false;
-                    _context.Contratacion.Add(Pcontratacion);
-                }
-                else
-                {
-                    Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
-                    contratacionVieja.UsuarioModificacion = Pcontratacion.UsuarioCreacion;
-                    contratacionVieja.FechaModificacion = DateTime.Now;
-
-                    contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
-                    contratacionVieja.EsObligacionEspecial = Pcontratacion.EsObligacionEspecial;
-                    contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
-                    contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
-                    contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;
-
-                    contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
-                    _context.Update(contratacionVieja);
-                }
 
                 //Contratista 
                 if (Pcontratacion.Contratista != null)
@@ -589,6 +562,36 @@ namespace asivamosffie.services
                     }
                 }
 
+
+                //Contratacion
+                if (Pcontratacion.ContratacionId == 0)
+                {
+                    Pcontratacion.Eliminado = false;
+                    Pcontratacion.FechaCreacion = DateTime.Now;
+
+                    Pcontratacion.FechaTramite = DateTime.Now;
+                    Pcontratacion.RegistroCompleto = false;
+                    Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
+                    Pcontratacion.RegistroCompleto = false;
+                    _context.Contratacion.Add(Pcontratacion);
+                }
+                else
+                {
+                    Contratacion contratacionVieja = await _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.Contratista).FirstOrDefaultAsync();
+                    contratacionVieja.UsuarioModificacion = Pcontratacion.UsuarioCreacion;
+                    contratacionVieja.FechaModificacion = DateTime.Now;
+
+                    contratacionVieja.TipoSolicitudCodigo = Pcontratacion.TipoSolicitudCodigo;
+                    contratacionVieja.EsObligacionEspecial = Pcontratacion.EsObligacionEspecial;
+                    contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
+                    contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
+                    contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;
+
+                   contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
+              
+                }
+
+ 
                 _context.SaveChanges();
 
                 return new Respuesta
@@ -846,14 +849,12 @@ namespace asivamosffie.services
             )
             {
                 return true;
-            }
-
+            } 
             return false;
         }
 
         public async Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
-        {
-
+        { 
             int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -979,7 +980,7 @@ namespace asivamosffie.services
              || string.IsNullOrEmpty(contratacion.NumeroSolicitud)
              || string.IsNullOrEmpty(contratacion.EstadoSolicitudCodigo)
              || string.IsNullOrEmpty(contratacion.ContratacionId.ToString())
-             || contratacion.EsObligacionEspecial == null
+             || !contratacion.EsObligacionEspecial.HasValue
              || contratacion.Contratista == null
              )
                 return false;
@@ -989,7 +990,7 @@ namespace asivamosffie.services
                 {
                     if (!ContratacionProyecto.RegistroCompleto.HasValue)
                         return false;
-                    else if ((bool)ContratacionProyecto.RegistroCompleto)
+                    else if (!(bool)ContratacionProyecto.RegistroCompleto)
                         return false;
                 }
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
