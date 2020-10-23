@@ -86,7 +86,10 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
           if ( contratacionProyecto[ 'registroCompleto' ] === true ) {
             cantProyectosCompletos++;
           }
-          if ( contratacionProyecto[ 'registroCompleto' ] === false ) {
+          if ( contratacionProyecto[ 'registroCompleto' ] === false && contratacionProyecto[ 'tieneMonitoreoWeb' ] === undefined ) {
+            cantidadProyectosSinDiligenciar++;
+          }
+          if ( contratacionProyecto[ 'registroCompleto' ] === false && contratacionProyecto[ 'tieneMonitoreoWeb' ] !== undefined ) {
             cantProyectosEnProceso++;
           }
         }
