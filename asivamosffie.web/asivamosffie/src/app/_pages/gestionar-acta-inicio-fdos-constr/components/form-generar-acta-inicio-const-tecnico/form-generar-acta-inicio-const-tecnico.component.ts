@@ -101,7 +101,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
-      console.log(data.plazoInicialContratoSupervisor);
       this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
       /*Cuadro 1*/
       this.vigenciaContrato = data.vigenciaContrato;
@@ -119,6 +118,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
       this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
       /*Campo de texto no editable*/
+      this.plazoActualContratoMeses = 12;
+      this.plazoActualContratoDias = 26;
+      this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreDias;
+      this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreMeses;
       /*Campo de texto editable*/
       if(this.editable == true){
         var year1 = data.fechaActaInicio.toString();
@@ -133,10 +136,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       }
     });
     this.idContrato = id;
-    this.plazoActualContratoMeses = 12;
-    this.plazoActualContratoDias = 26;
-    this.plazoEjecucionPreConstruccionMeses = 4;
-    this.plazoEjecucionPreConstruccionDias = 3;
   }
 
   openDialog(modalTitle: string, modalText: string) {
