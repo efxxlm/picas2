@@ -49,7 +49,6 @@ export class TablaSinRegistroContratoComponent implements OnInit {
           this.sinData.emit( false );
         }
 
-        console.log( resp );
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

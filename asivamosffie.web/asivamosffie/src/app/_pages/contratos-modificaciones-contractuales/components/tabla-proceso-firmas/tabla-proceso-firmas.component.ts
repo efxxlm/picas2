@@ -62,7 +62,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
         };
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
-        }
+        };
         if ( registrado === this.dataTable.length ) {
           this.estadoAcordeon.emit( 'completo' );
         } else if ( enFirmaFiduciaria === this.dataTable.length ) {
@@ -70,7 +70,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
         } else if ( registrado < this.dataTable.length || enFirmaFiduciaria < this.dataTable.length ) {
           this.estadoAcordeon.emit( 'en-proceso' );
         };
-        console.log( resp );
+
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

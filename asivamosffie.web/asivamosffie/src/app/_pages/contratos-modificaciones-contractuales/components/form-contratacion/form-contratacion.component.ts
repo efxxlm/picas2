@@ -30,7 +30,6 @@ export class FormContratacionComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    console.log( this.estadoCodigo );
   };
 
   crearFormulario () {
@@ -50,20 +49,18 @@ export class FormContratacionComponent implements OnInit {
   getContratacionId ( id ) {
     this.contratosContractualesSvc.getContratacionId( id )
       .subscribe( ( resp: any ) => {
-        if ( resp.contrato.length === 0 ) {
-          this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
-        };
         this.contratacion = resp;
-        console.log( resp );
-        this.form.reset({
-          numeroContrato: resp.contrato[0].numeroContrato || '',
-          fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
-          fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
-          fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
-          fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
-          observaciones: this.textoLimpioMessage( resp.contrato[0].observaciones ) || null,
-          rutaDocumento: resp.contrato[0].rutaDocumento || null
-        });
+        if ( resp.contrato.length > 0 ) {
+          this.form.reset({
+            numeroContrato: resp.contrato[0].numeroContrato || '',
+            fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
+            fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
+            fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
+            fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
+            observaciones: this.textoLimpioMessage( resp.contrato[0].observaciones ) || null,
+            rutaDocumento: resp.contrato[0].rutaDocumento || null
+          });
+        };
       } );
   };
 
@@ -87,6 +84,6 @@ export class FormContratacionComponent implements OnInit {
     
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
     
-  }
+  };
 
 };

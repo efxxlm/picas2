@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -11,14 +11,15 @@ import { Contrato } from '../../../../_interfaces/contratos-modificaciones.inter
   templateUrl: './form-registro-tramite.component.html',
   styleUrls: ['./form-registro-tramite.component.scss']
 })
-export class FormRegistroTramiteComponent implements OnInit {
+export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
 
   archivo                : string;
+  seRealizoPeticion      : boolean = false;
   @Input() dataFormulario: FormGroup;
   @Input() contratoId    : number;
   @Input() contratacionId: number;
   @Input() fechaTramite  : Date;
-  estadoCodigo  : string;
+  estadoCodigo           : string;
   estadoCodigos = {
     enRevision: '2',
     enFirmaFiduciaria: '5',
@@ -39,7 +40,14 @@ export class FormRegistroTramiteComponent implements OnInit {
 
   constructor ( private dialog: MatDialog,
                 private routes: Router,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) { }
+                private contratosContractualesSvc: ContratosModificacionesContractualesService )
+  {}
+  
+  ngOnDestroy(): void {
+    if ( this.dataFormulario.dirty === true && this.seRealizoPeticion === false ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    };
+  }
 
   ngOnInit(): void {
   };
@@ -54,6 +62,20 @@ export class FormRegistroTramiteComponent implements OnInit {
       });
     };
 
+  };
+
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.guardar();
+        }
+      } );
   };
 
   textoLimpio (texto: string) {
@@ -84,7 +106,6 @@ export class FormRegistroTramiteComponent implements OnInit {
   };
 
   guardar () {
-    console.log( this.dataFormulario );
 
     if ( this.dataFormulario.invalid ) {
       this.openDialog( 'Falta registrar información.', '' );
@@ -93,18 +114,22 @@ export class FormRegistroTramiteComponent implements OnInit {
 
     let pContrato = new FormData();
     pContrato.append( 'contratacionId', `${ this.contratacionId }` );
-    pContrato.append( 'contratoId', `${ this.contratoId }` );
+    
+    if ( this.contratoId !== null ) {
+      pContrato.append( 'contratoId', `${ this.contratoId }` );
+    };
+
     if ( this.dataFormulario.get( 'numeroContrato' ).value !== null ) {
       pContrato.append( 'numeroContrato', `${ this.dataFormulario.get( 'numeroContrato' ).value }` );
       this.estadoCodigo = this.estadoCodigos.enRevision;
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null ) {
       let fechaEnvioFirma = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value );
       let fechaEnvioFirmas = fechaEnvioFirma.toISOString();
       pContrato.append( 'fechaEnvioFirma', `${ fechaEnvioFirmas }` );
       this.estadoCodigo = this.estadoCodigos.enFirmaContratista;
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null ) {
       let fechaFirmaContratista = new Date( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value );
@@ -112,7 +137,7 @@ export class FormRegistroTramiteComponent implements OnInit {
       pContrato.append( 'fechaFirmaContratista', `${ fechaFirmaContratistas }` );
     } else {
       pContrato.append( 'fechaFirmaContratista', null );
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null ) {
       let fechaFirmaFiduciaria = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value );
@@ -121,7 +146,7 @@ export class FormRegistroTramiteComponent implements OnInit {
       this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
     } else {
       pContrato.append( 'fechaFirmaFiduciaria', null );
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null ) {
       let fechaFirmaContrato = new Date( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value );
@@ -129,31 +154,29 @@ export class FormRegistroTramiteComponent implements OnInit {
       pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContratos }` );
     } else {
       pContrato.append( 'fechaFirmaContrato', null );
-    }
+    };
 
     if ( this.dataFormulario.get( 'observaciones' ).value ) {
       pContrato.append( 'observaciones', `${ this.dataFormulario.get( 'observaciones' ).value }` );
-    }
+    };
 
     if ( this.dataFormulario.get( 'rutaDocumento' ).value !== null ) {
       pContrato.append( 'rutaDocumento', this.dataFormulario.get( 'rutaDocumento' ).value );
       this.estadoCodigo = this.estadoCodigos.firmado;
-    }
+    };
 
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigo )
       .subscribe( 
         ( resp: any ) => {
-          this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+          this.seRealizoPeticion = true;
+          this.openDialog( '', resp.message );
           this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
         },
         ( error: any ) => {
-          console.log( error );
-          this.openDialog( error.message, '' );
+          this.openDialog( '', error.message );
         }
       );
 
-    //
-    //
   };
 
 }
