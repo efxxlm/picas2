@@ -89,14 +89,15 @@ export class FormContratacionComponent implements OnInit {
         this.dataContratacion = contratacion;
         let rutaDocumento;
         if ( contratacion.rutaMinuta !== undefined ) {
-          rutaDocumento = contratacion.rutaMinuta.split( '/' );
+          rutaDocumento = contratacion.rutaMinuta.split( /[^\w\s]/gi );
+          rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
         } else {
           rutaDocumento = null;
         };
         this.form.reset({
           fechaEnvioTramite: contratacion.fechaEnvioDocumentacion,
           observaciones: contratacion.observaciones ? ( contratacion.observaciones.length > 0 ? contratacion.observaciones : null ) : null,
-          minutaName: rutaDocumento !== null ? rutaDocumento[ rutaDocumento.length-1 ] : rutaDocumento
+          minutaName: rutaDocumento
         });
 
         for ( let contratacionProyecto of contratacion.contratacionProyecto ) {

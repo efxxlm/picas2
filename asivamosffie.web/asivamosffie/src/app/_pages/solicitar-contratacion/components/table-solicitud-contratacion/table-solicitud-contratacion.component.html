@@ -74,7 +74,8 @@
           <button mat-raised-button color="accent" class="btn-table"
                   [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
                   *ngIf=" (element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto)
-                          || (element.estadoSolicitudCodigo === 'Rechazado por comité técnico' && element.registroCompleto)">
+                          || (element.estadoSolicitudCodigo === 'Rechazado por comité técnico' && element.registroCompleto)
+                          || (element.estadoSolicitudCodigo === 'Aprobado por comité técnico' && element.registroCompleto)">
                   Ver detalle
           </button>
           <button mat-raised-button color="accent" class="btn-table"
