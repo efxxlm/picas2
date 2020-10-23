@@ -309,17 +309,17 @@ namespace asivamosffie.services
 
             foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
             {
- 
-                    decimal ValorGastado = 0;
-                    decimal ValorDisponible = ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
 
-                    foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
-                    {
-                        ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
-                    }
+                decimal ValorGastado = 0;
+                decimal ValorDisponible = ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
 
-                    ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado ;
-             
+                foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                {
+                    ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
+                }
+
+                ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado;
+
             }
 
             return contratacionProyecto;
@@ -586,14 +586,14 @@ namespace asivamosffie.services
                     contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
                     contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
                     contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;
-
-                   contratacionVieja.RegistroCompleto = ValidarEstado(contratacionVieja);
-              
-                }
-
- 
+                   
+                } 
                 _context.SaveChanges();
 
+                Contratacion contratacionValidarRegistro = _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.ContratacionProyecto).FirstOrDefault();
+                contratacionValidarRegistro.RegistroCompleto = ValidarEstado(contratacionValidarRegistro);
+
+                _context.SaveChanges();
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -780,6 +780,13 @@ namespace asivamosffie.services
                 {
                     return respuesta;
                 }
+                Contratacion contratacion = _context.Contratacion
+                    .Where(r => r.ContratacionId == pContratacionProyecto.ContratacionId)
+                    .Include(r => r.ContratacionProyecto)
+                    .FirstOrDefault();
+
+                contratacion.RegistroCompleto = ValidarEstado(contratacion);
+                 
                 _context.SaveChanges();
                 return new Respuesta
                 {
@@ -849,12 +856,12 @@ namespace asivamosffie.services
             )
             {
                 return true;
-            } 
+            }
             return false;
         }
 
         public async Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion)
-        { 
+        {
             int idAccionCrearContratacionContrataicionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -981,7 +988,7 @@ namespace asivamosffie.services
              || string.IsNullOrEmpty(contratacion.EstadoSolicitudCodigo)
              || string.IsNullOrEmpty(contratacion.ContratacionId.ToString())
              || !contratacion.EsObligacionEspecial.HasValue
-             || contratacion.Contratista == null
+             || contratacion.ContratistaId == null
              )
                 return false;
             else
