@@ -575,16 +575,16 @@ namespace asivamosffie.services
                                 //Jmartinez Si llegan dos Disponibilidad presupuestal error
 
                                 if (contratacion.DisponibilidadPresupuestal.Count() > 1)
-                                { 
+                                {
                                     break;
                                 }
-                              
-                                    //jflorez, pequeño ajsute porque toteaba                                    
-                                    if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp))
-                                    {
 
-                                    }
-                               
+                                //jflorez, pequeño ajsute porque toteaba                                    
+                                if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp))
+                                {
+                                    break;
+                                }
+
                                 // sesionComiteSolicitud.Contratacion = contratacion;
                                 sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
 
