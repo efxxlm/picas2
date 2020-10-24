@@ -33,6 +33,9 @@ export class ActBeginService {
   EditarContratoObservacion(pContratoId: number,  pPlazoFase2PreMeses:number , pPlazoFase2PreDias:number, pObservacion:string, pUsuarioModificacion:string,pFechaActaInicioFase1:string,pFechaTerminacionFase2:string){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditarContratoObservacion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacion=${pObservacion}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}`, "");
   }
+  CambiarEstadoActa(pContratoId :number, pNuevoCodigoEstadoActa:string, pUsuarioModifica:string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/actBegin/CambiarEstadoActa?pContratoId=${pContratoId}&pNuevoCodigoEstadoActa=${pNuevoCodigoEstadoActa}&pUsuarioModifica=${pUsuarioModifica}`, null);  
+  }
 }
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;
