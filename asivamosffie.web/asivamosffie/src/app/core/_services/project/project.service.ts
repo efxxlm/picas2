@@ -208,7 +208,8 @@ export interface Proyecto{
   cantidadAportantes?:number;
   regid?:string;
   depid?:string;
-
+  departamento?:string;
+  municipio?:string;
   institucionEducativa?:InstitucionEducativa
   institucionEducativaSede?:InstitucionEducativa,
   localizacionIdMunicipioNavigation?: Localizacion,

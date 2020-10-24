@@ -5,41 +5,82 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle disponibilidad presupuestal solicitud {{this.numeroSolicitud}}
+        Ver detalle información adicional solucitud PI_002
     </h1>
-    <div style="margin-top: 2em;">
-        <p><b>Consecutivo proyecto administrativo:</b> 0001</p>
+    <div class="d-flex justify-content-center">
+        <p class="solicitud" *ngIf="this.tipoSolicitudColdigo === '1'">
+            <strong>Tipo de solicitud: </strong>
+            Contratación
+        </p>
+        <p class="solicitud" *ngIf="this.tipoSolicitudColdigo === '3'">
+            <strong>Tipo de solicitud: </strong>
+            Modificación Contractual
+        </p>
+        <p class="solicitud">
+            <strong>Fecha de comité técnico:</strong>
+            20/02/2020
+        </p>
     </div>
-    <mat-card class="shipping-card mainGris">
-        <div *ngFor="let aportante of this.aportantesList; let i = index">
-            <mat-card-content align="left">
-
-                <mat-card-title class="header-card--text textoGris">
-                    Aportante {{i+1}}
-                </mat-card-title>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    {{ this.llaveMen }} - {{ this.nameColegio }} - {{ this.sede }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <section style="width: 80%;margin: auto;">
+                <p class="text-center color-mainColor departamento">
+                   {{this.departamento}} / {{this.municipio}}</p>
+                <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em;">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text">
+                            Aportantes
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="row">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of this.aportantesList; index as i" style="margin-top: .5em; text-align: left;">
+                                <p class="mb1-em"><b>Aportante {{ i+1 }} </b></p>
     
-                <p>
-                    <strong>Valor del aportante al proyecto:</strong>
-                    {{aportante.valorAportanteAlProyecto}}
-                </p>
-                <p>
-                    <strong>Nombre del aportante:</strong>
-                    {{aportante.nombre}}
-                </p>
-                <!--Pendiente de mapeo-->
-                <div *ngFor="let fuentes of aportante.fuentesFinanciacion; let j = index">
-                    <p>
-                        <strong>Fuente {{j+1}}:</strong>
-                        {{fuentes.estado_de_las_fuentes}}
-                    </p>
-                    <p>
-                        <strong>Valor fuente {{j+1}}:</strong>
-                        {{fuentes.valor_solicitado_de_la_fuente | currency:'COP':'symbol-narrow':'.0-0'}}
-                    </p>
-                </div>
-            </mat-card-content>
-        </div>
-    </mat-card>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 6" style="margin-top: .5em;">
+                                    <b>Tipo de aportante:</b>
+                                    FFIE
+                                </p>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 6">
+                                    <b>Aportante:</b> FFIE
+                                </p>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 9" style="margin-top: .5em;">
+                                    <b>Tipo de aportante:</b>
+                                    ET
+                                </p>
+                                <p *ngIf="aportante.aportante.tipoAportanteId === 9">
+                                    <b>Aportante:</b>
+                                    {{ aportante['tipoAportanteNombre'] }} de {{ aportante['nombreAportante'] }}
+                                </p>
+                                <p>
+                                    <b>Valor del aportante:</b>
+                                    {{ aportante.valorTotalAportante | currency }}
+    
+                                </p>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </section>
+
+        </mat-expansion-panel>
+
+    </mat-accordion>
+    <div class="d-flex justify-content-center">
+        <p>
+            <strong>Plazo meses: </strong>
+            {{this.plazoMeses}}&nbsp;  
+        </p>
+        <p>
+            <strong>Plazo días:</strong>
+            {{this.plazoDias}}
+        </p>
+    </div>
     <mat-card class="shipping-card mainGris">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text textoGris">

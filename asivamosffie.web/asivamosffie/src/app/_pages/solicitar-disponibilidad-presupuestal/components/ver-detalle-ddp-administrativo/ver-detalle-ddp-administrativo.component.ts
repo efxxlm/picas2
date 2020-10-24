@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { ProjectService } from 'src/app/core/_services/project/project.service';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { DisponibilidadPresupuestal } from 'src/app/_interfaces/budgetAvailability';
 
 @Component({
   selector: 'app-ver-detalle-ddp-administrativo',
@@ -11,8 +14,10 @@ export class VerDetalleDdpAdministrativoComponent implements OnInit {
   numeroSolicitud: string;
   objeto: string;
   idProyectoAdmin: number;
-
-  constructor(private activatedRoute: ActivatedRoute, private budgetAvailabilityService: BudgetAvailabilityService) { }
+  objetoDisponibilidad: DisponibilidadPresupuestal = {};
+  constructor(private activatedRoute: ActivatedRoute, private budgetAvailabilityService: BudgetAvailabilityService,
+    private projectContractingService: ProjectContractingService,
+    private projectService: ProjectService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
