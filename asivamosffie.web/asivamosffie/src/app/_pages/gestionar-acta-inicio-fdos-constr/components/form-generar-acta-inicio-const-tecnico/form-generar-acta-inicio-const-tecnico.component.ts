@@ -124,12 +124,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       /*Campo de texto editable*/
       if(this.editable == true){
-        var year1 = data.fechaActaInicio.toString();
-        var year2 = data.fechaPrevistaTerminacion.toString();
-        var fechaActaInicioFDosConstruccion = new Date(year1.slice(6,10)+"-"+year1.slice(3,5)+"-"+year1.slice(0,2)); // para detectar la fecha porque en el picker esta presentando fallas
-        var fechaPrevistaTerminacion = new Date(year2.slice(6,10)+"-"+year2.slice(3,5)+"-"+year2.slice(0,2)); // para detectar la fecha porque en el picker esta presentando fallas
-        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(this.datepipe.transform(fechaActaInicioFDosConstruccion, 'yyyy-MM-dd',	'UTC+10'));
-        this.addressForm.get('fechaPrevistaTerminacion').setValue(this.datepipe.transform(fechaPrevistaTerminacion, 'yyyy-MM-dd',	'UTC+10'));
+        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioDateTime);
+        this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaPrevistaTerminacionDateTime);
         this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
         this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
         this.addressForm.get('observacionesEspeciales').setValue(data.observacionOConsideracionesEspeciales);

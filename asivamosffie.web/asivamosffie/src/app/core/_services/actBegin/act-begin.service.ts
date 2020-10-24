@@ -65,6 +65,8 @@ export interface GetVistaGenerarActaInicio {
   plazoFase2ConstruccionMeses: number;
   plazoFase1PreDias: number;
   plazoFase1PreMeses: number;
+  fechaActaInicioDateTime: any;
+  fechaPrevistaTerminacionDateTime: any;
 }
 export interface GetListGrillaActaInicio {
 
