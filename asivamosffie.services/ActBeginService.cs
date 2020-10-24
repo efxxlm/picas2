@@ -491,11 +491,30 @@ namespace asivamosffie.services
             {
                 return Array.Empty<byte>();
             }
-            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+            Contrato contrato=null;
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            Plantilla plantilla=null;
+
+            if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+            {
+                pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
+                plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_interventoria_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+            }
+
+           else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+            {
+                pTipoContrato = ConstanCodigoTipoContratacion.Obra;
+                plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+            }            
+                       
 
             //Plantilla plantilla = new Plantilla();
             //plantilla.Contenido = "";
-
+            if(plantilla!=null)
             plantilla.Contenido = await ReemplazarDatosPlantillaActaInicio(plantilla.Contenido, actaInicio,"cdaza");
             return ConvertirPDF(plantilla);
         }
@@ -893,6 +912,9 @@ namespace asivamosffie.services
                 string strFechaPrevistaTerminacion = "";
                 string strFechaActaInicio = "";
 
+                DateTime FechaActaInicioDateTime=new DateTime();
+                DateTime FechaPrevistaTerminacionDateTime=new DateTime();                
+
                 string strContratoObservacion = "";
 
                 Contratacion contratacion = null;
@@ -909,6 +931,10 @@ namespace asivamosffie.services
                     //strFechaActaInicio = contrato.FechaActaInicioFase2.ToString("dd/MM/yyyy");
 
                     strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
+                    
+                    FechaActaInicioDateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
+                    FechaPrevistaTerminacionDateTime = Convert.ToDateTime(contrato.FechaTerminacionFase2);
+
                     strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
                     contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
@@ -965,9 +991,7 @@ namespace asivamosffie.services
                 }
                 //contratista obra
                 //TipoContratoCodigo 12,37
-                //1   Obra
-
-               
+                //1   Obra                              
 
                 //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                 string strTipoSolicitudCodigoContratoPoliza = "sin definir";
@@ -1060,7 +1084,7 @@ namespace asivamosffie.services
                 actaInicio = new VistaGenerarActaInicioContrato();
                 actaInicio.NumeroDRP1 = "ERROR";
 
-                    if (contrato!=null)
+                if (contrato != null)
                     actaInicio = new VistaGenerarActaInicioContrato
                     {
                         //FechaAprobacionRequisitos="[FechaAprobacionRequisitos] [contrato] FechaAprobacionRequisitos",
@@ -1094,7 +1118,11 @@ namespace asivamosffie.services
                         NombreEntidadContratistaSupervisorInterventoria = contratista.Nombre,
 
                         FechaActaInicio = strFechaActaInicio,
+                        FechaActaInicioDateTime = FechaActaInicioDateTime,
+
                         FechaPrevistaTerminacion = strFechaPrevistaTerminacion,
+                        FechaPrevistaTerminacionDateTime = FechaPrevistaTerminacionDateTime,                       
+
                         ObservacionOConsideracionesEspeciales = strContratoObservacion,
 
                         LlaveMENContrato = strLlaveMENContrato,

@@ -48,6 +48,10 @@ namespace asivamosffie.model.APIModels
 
         public string? FechaActaInicio { get; set; }
 
+        public DateTime? FechaActaInicioDateTime { get; set; }
+
+        public DateTime? FechaPrevistaTerminacionDateTime { get; set; }              
+
         public Int32? CantidadProyectosAsociados { get; set; }
 
 
