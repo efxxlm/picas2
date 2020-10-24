@@ -15,6 +15,11 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
   numeroRadicadoSolicitud: string;
   cuentaCartaAutorizacion: boolean;
   cartaAutorizacionString: string;
+  valorSolicitud: number;
+  llaveMen: string;
+  tipoIntervencion: number;
+  nombreIE: string;
+  sede: string;
   constructor(private activatedRoute: ActivatedRoute, private budgetAvailabilityService: BudgetAvailabilityService) { }
 
   ngOnInit(): void {
@@ -36,6 +41,13 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
         else{
           this.cartaAutorizacionString="No";
         }
+        this.valorSolicitud = disponibilidad.valorSolicitud;
+        this.llaveMen = disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen;
+        this.budgetAvailabilityService.searchLlaveMEN(this.llaveMen).subscribe(data=>{
+          this.tipoIntervencion= data[0].tipoIntervencionCodigo;
+          this.nombreIE= data[0].institucionEducativa.nombre;
+          this.sede= data[0].sede.nombre;
+        });
       })
   }
 }

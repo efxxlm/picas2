@@ -48,7 +48,7 @@
                 </p>
                 <p>
                     <strong>Llave MEN:</strong>
-                    LL45231
+                    {{this.llaveMen}}
                 </p>
             </div>
             <div *ngIf="this.tipoSolicitudCodigo=='2'">
@@ -64,21 +64,21 @@
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
-                    LL45231
+                   {{this.llaveMen}}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content align="left">
                 <p>
                     <b>Tipo de intervención:</b>
-                    Reconstrucción
+                    {{this.tipoIntervencion}}
                 </p>
                 <p>
                     <b>Nombre de la I.E:</b>
-                    Colegio Juan XXIII
+                    {{this.nombreIE}}
                 </p>
                 <p>
                     <b>Sede:</b>
-                    Única sede
+                    {{this.sede}}
                 </p>
             </mat-card-content>
         </mat-card>
@@ -95,7 +95,7 @@
                 </p>
                 <p>
                     <b>Valor:</b>
-                    $ 23.000
+                    {{this.valorSolicitud}}
                 </p>
             </mat-card-content>
         </mat-card>
@@ -143,7 +143,7 @@
                 </p>
                 <p>
                     <b>Valor:</b>
-                    $ 23.000
+                   {{this.valorSolicitud}}
                 </p>
             </mat-card-content>
         </mat-card>
