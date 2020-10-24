@@ -83,6 +83,9 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
         this.services.CambiarEstadoActa(this.idContrato,"5","usr2").subscribe(data0=>{
           
         });
+        this.services.GetListGrillaActaInicio().subscribe(items=>{
+          this.services.loadDataItems.next(items);
+        })
         this.openDialog(data.message,"");
         this.close();
       }
