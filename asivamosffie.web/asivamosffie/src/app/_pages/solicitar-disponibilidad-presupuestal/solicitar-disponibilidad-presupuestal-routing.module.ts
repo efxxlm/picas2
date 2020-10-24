@@ -8,6 +8,7 @@ import { NuevaSolicitudEspecialComponent } from './components/nueva-solicitud-es
 import { CrearDisponibilidadPresupuestalAdministrativoComponent } from './components/crear-disponibilidad-presupuestal-administrativo/crear-administrativo.component';
 import { DetalleDisponibilidadPresupuestalComponent } from './components/detalle-disponibilidad-presupuestal/detalle-disponibilidad-presupuestal.component';
 import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-especial/ver-detalle-ddp-especial.component';
+import { VerDetalleDdpAdministrativoComponent } from './components/ver-detalle-ddp-administrativo/ver-detalle-ddp-administrativo.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,10 @@ const routes: Routes = [
   {
     path: 'verDetalleDDPEspecial/:id',
     component: VerDetalleDdpEspecialComponent
+  },
+  {
+    path: 'verDetalleDDPAdministrativo/:id',
+    component: VerDetalleDdpAdministrativoComponent
   }
 ];
 

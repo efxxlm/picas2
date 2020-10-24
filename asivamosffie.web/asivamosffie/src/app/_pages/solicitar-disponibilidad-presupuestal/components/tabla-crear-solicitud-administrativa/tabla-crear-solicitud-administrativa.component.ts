@@ -92,5 +92,7 @@ export class TablaCrearSolicitudadministrativaComponent implements OnInit {
           this.ngOnInit();
       })
   }
-
+  verDetalle(e: number){
+    this.router.navigate(['/solicitarDisponibilidadPresupuestal/verDetalleDDPAdministrativo', e]);  
+  }
 }

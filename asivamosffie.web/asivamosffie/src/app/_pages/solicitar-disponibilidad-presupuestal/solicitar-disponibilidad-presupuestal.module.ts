@@ -17,7 +17,8 @@ import { CrearDisponibilidadPresupuestalAdministrativoComponent } from './compon
 import { CrearSolicitudDeDisponibilidadPresupuestalComponent } from './components/crear-disponibilidad-presupuestal/crear-disponibilidad-presupuestal.component';
 import { TablaCrearSolicitudadministrativaComponent } from './components/tabla-crear-solicitud-administrativa/tabla-crear-solicitud-administrativa.component';
 import { DetalleDisponibilidadPresupuestalComponent } from './components/detalle-disponibilidad-presupuestal/detalle-disponibilidad-presupuestal.component';
-import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-especial/ver-detalle-ddp-especial.component'
+import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-especial/ver-detalle-ddp-especial.component';
+import { VerDetalleDdpAdministrativoComponent } from './components/ver-detalle-ddp-administrativo/ver-detalle-ddp-administrativo.component'
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-esp
     CrearDisponibilidadPresupuestalAdministrativoComponent,
     TablaCrearSolicitudadministrativaComponent,
     DetalleDisponibilidadPresupuestalComponent,
-    VerDetalleDdpEspecialComponent
+    VerDetalleDdpEspecialComponent,
+    VerDetalleDdpAdministrativoComponent
   ],
   imports: [
     CommonModule,
