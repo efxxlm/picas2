@@ -45,8 +45,8 @@ export class TablaContratosInterventoriaVrtcComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  getForm ( id: number ) {
-    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verificarRequisitosInicioInterventoria', id ] )
+  getForm ( id: number, fechaPoliza: string ) {
+    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verificarRequisitosInicioInterventoria', id ], { state: { fechaPoliza } } )
   };
 
   aprobarInicio ( id: number ) {

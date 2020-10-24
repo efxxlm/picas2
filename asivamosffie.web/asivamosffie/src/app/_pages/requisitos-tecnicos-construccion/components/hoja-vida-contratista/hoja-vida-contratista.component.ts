@@ -294,6 +294,8 @@ export class HojaVidaContratistaComponent implements OnInit {
       } )
     } else {
       perfiles.forEach( value => {
+        
+        value['construccionPerfilId']             = value.contratoPerfilId;
         value.cantidadHvAprobadas                 = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );

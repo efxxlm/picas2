@@ -51,7 +51,7 @@
                   color="accent" 
                   class="btn-table"
                   *ngIf="element.estadoCodigo === '0' || element.estadoCodigo === '3'"
-                  (click)="getForm( element.contratoId )">
+                  (click)="getForm( element.contratoId, element.fechaAprobacion )">
                   Gestionar requisitos para inicio
           </button>
 
@@ -59,7 +59,7 @@
                   color="accent" 
                   class="btn-table"
                   *ngIf="element.estadoCodigo === '4' || element.estadoCodigo === '11'"
-                  (click)="getForm( element.contratoId )">
+                  (click)="getForm( element.contratoId, element.fechaAprobacion )">
                   Ver detalle/Editar
           </button>
   

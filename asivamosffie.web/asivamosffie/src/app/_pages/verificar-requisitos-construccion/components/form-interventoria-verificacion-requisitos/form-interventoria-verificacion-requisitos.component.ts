@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
-import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Contrato, ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-form-interventoria-verificacion-requisitos',
@@ -11,13 +13,19 @@ import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 export class FormInterventoriaVerificacionRequisitosComponent implements OnInit {
 
   contrato: Contrato;
+  fechaPoliza: string;
 
   constructor(
                 private faseUnoConstruccionService: FaseUnoConstruccionService,
                 private activatedRoute: ActivatedRoute,
+                private router: Router,
+                private dialog: MatDialog,
              ) 
   { 
     this.getContrato();
+
+    if (this.router.getCurrentNavigation().extras.state)
+      this.fechaPoliza = this.router.getCurrentNavigation().extras.state.fechaPoliza;
   }
 
   ngOnInit(): void {
@@ -30,5 +38,37 @@ export class FormInterventoriaVerificacionRequisitosComponent implements OnInit 
       console.log( this.contrato );
     } );
   };
+
+  openDialog (modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
+  estadoSemaforo ( index: number, semaforo: string ) {
+    this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
+  }
+
+  getPerfilesContrato ( index: number, perfilContrato: ContratoPerfil[] ) {
+
+    const construccionPerfil: any = {
+      contratoId: this.contrato.contratoId,
+      proyectoId: this.contrato.contratacion.contratacionProyecto[index].proyectoId,
+      construccionPerfil: perfilContrato
+    };
+    if ( this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoConstruccion.length > 0 ) {
+      construccionPerfil.contratoConstruccionId = this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoConstruccion[0].contratoConstruccionId;
+    }
+    this.faseUnoConstruccionService.createEditConstruccionPerfil( construccionPerfil )
+      .subscribe( 
+        response => {
+          this.openDialog( '', response.message );
+          this.getContrato();
+        },
+        err => this.openDialog( '', err.message )
+      );
+
+  };  
 
 }
