@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 export interface Contrato {
   idContrato: number;
@@ -88,23 +89,28 @@ const ELEMENT_DATA: Contrato[] = [
   styleUrls: ['./tabla-contr-obra-fdos-constr.component.scss']
 })
 export class TablaContrObraFdosConstrComponent implements OnInit {
-  displayedColumns: string[] = [ 'fechaAprobacionRequisitos', 'numeroContrato', 'estado', 'id'];
+  displayedColumns: string[] = [ 'fechaAprobacionRequisitos', 'numeroContratoObra', 'estadoActa', 'contratoId'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-  constructor(private router: Router, public dialog: MatDialog) { }
+
+  public dataTable;
+  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    this.services.GetListGrillaActaInicio().subscribe(data=>{
+      this.dataTable = data;
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.previousPageLabel = 'Anterior';
+      this.applyFilter("Obra");
+    });
+  }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue;
   }
   validarActaParaInicio(id){
     localStorage.setItem("origin","obra");
@@ -128,8 +134,17 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
     dialogConfig.width = '45%';
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
   }
-  descargarActaDesdeTabla(){
-    alert("llama al servicio");
+  descargarActaDesdeTabla(id){
+    this.services.GetPlantillaActaInicio(id).subscribe(resp=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 
 }
