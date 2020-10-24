@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle información adicional solucitud PI_002
+        Ver detalle información adicional solicitud PI_002
     </h1>
     <div class="d-flex justify-content-center">
         <p class="solicitud" *ngIf="this.tipoSolicitudColdigo === '1'">
@@ -21,6 +21,22 @@
             20/02/2020
         </p>
     </div>
+    <mat-card class="shipping-card mainGris"  *ngIf="this.tipoSolicitudColdigo === '3'">
+        <mat-card-content align="left">
+            <p>
+                <b>DDP:</b>
+                DDP_PI_007
+            </p>
+            <p>
+                <b>Valor DDP:</b>
+                $60.000.000
+            </p>
+            <p>
+                <b>Detalle de la modificación:</b>
+                Se realiza adición de recursos para obras complementarias
+            </p>
+        </mat-card-content>
+    </mat-card>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
