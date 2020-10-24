@@ -55,7 +55,10 @@ namespace asivamosffie.services
                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
                       .ThenInclude(r => r.SesionSolicitudCompromiso)
                 .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                      .ThenInclude(r => r.SesionSolicitudCompromiso)
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
+                .Include(r => r.SesionComiteTema)
+                    .ThenInclude(r => r.TemaCompromiso)
+
                 .Distinct()
                 .ToListAsync();
 
@@ -83,7 +86,7 @@ namespace asivamosffie.services
                     }
                 }
             }
-            return grillaSesionComiteTecnicoCompromisos.OrderByDescending(r=> r.ComiteTecnicoId).ToList();
+            return grillaSesionComiteTecnicoCompromisos.OrderByDescending(r => r.ComiteTecnicoId).ToList();
         }
 
         //Detalle gestion compromisos
@@ -128,7 +131,7 @@ namespace asivamosffie.services
                           .ThenInclude(r => r.TemaCompromiso)
                       .OrderByDescending(r => r.ComiteTecnicoId)
                       .Distinct()
-                      .OrderByDescending(r=> r.ComiteTecnicoId)
+                      .OrderByDescending(r => r.ComiteTecnicoId)
                   .ToListAsync();
         }
 
@@ -647,7 +650,7 @@ namespace asivamosffie.services
             }
             return ListDynamic;
         }
-         
+
         public async Task<Respuesta> ChangeStatusSesionComiteSolicitudCompromiso(SesionSolicitudCompromiso pSesionSolicitudCompromiso)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
