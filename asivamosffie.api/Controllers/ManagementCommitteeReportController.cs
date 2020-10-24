@@ -38,7 +38,13 @@ namespace asivamosffie.api.Controllers
             return await _managementCommitteeReportService.GetListCompromisoSeguimiento(SesionSolicitudCompromisoId); 
         }
 
-
+        [Route("GetListCompromisos")]
+        [HttpGet]
+        public async Task<List<dynamic>> GetListCompromisos()
+        {
+            return await _managementCommitteeReportService.GetListCompromisos();
+        }
+ 
 
         [Route("GetManagementCommitteeReport")]
         [HttpGet]

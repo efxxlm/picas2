@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
+using Z.Expressions;
 
 namespace asivamosffie.services
 {
@@ -47,7 +48,6 @@ namespace asivamosffie.services
 
             string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
             List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
-
                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                 .Include(r => r.SesionParticipante)
@@ -87,6 +87,62 @@ namespace asivamosffie.services
                 }
             }
             return grillaSesionComiteTecnicoCompromisos.OrderByDescending(r => r.ComiteTecnicoId).ToList();
+        }
+
+
+        public async Task<List<dynamic>> GetListCompromisos()
+        { 
+            List<dynamic> ListDynamic = new List<dynamic>();
+            //   string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
+            List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
+               .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
+                      && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
+                .Include(r => r.SesionParticipante)
+                .Include(r => r.SesionComentario)
+                .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                      .ThenInclude(r => r.SesionSolicitudCompromiso)
+                .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
+                .Include(r => r.SesionComiteTema)
+                    .ThenInclude(r => r.TemaCompromiso).ToListAsync();
+
+
+            foreach (var ComiteTecnico in ListComiteTecnico)
+            {
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico)
+                {
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso)
+                    {
+                        ListDynamic.Add(new
+                        {
+                            FechaComite = ComiteTecnico.FechaOrdenDia,
+                            ComiteTecnico.NumeroComite,
+                            Compromiso = SesionSolicitudCompromiso.CompromisoSeguimiento,
+                            EstadoCompromiso = SesionSolicitudCompromiso.EstadoCodigo,
+                            TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud,
+                            CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId
+                        });
+                    }
+                }
+
+                foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema)
+                {
+                    foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso)
+                    { 
+                        ListDynamic.Add(new
+                        {
+                            FechaComite = ComiteTecnico.FechaOrdenDia,
+                            ComiteTecnico.NumeroComite,
+                            Compromiso = TemaCompromiso.CompromisoSeguimiento,
+                            EstadoCompromiso = TemaCompromiso.EstadoCodigo,
+                            TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema,
+                            CompromisoId = TemaCompromiso.TemaCompromisoId
+                        });
+                    }
+                }
+            } 
+
+            return ListDynamic;
         }
 
         //Detalle gestion compromisos
