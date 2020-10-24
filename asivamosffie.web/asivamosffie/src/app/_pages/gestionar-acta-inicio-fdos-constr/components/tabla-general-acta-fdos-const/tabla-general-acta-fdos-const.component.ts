@@ -70,8 +70,10 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   verDetalleActaFDos(id){
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
-  enviarActaParaFirma(){
-    alert("llama al servicio donde cambia estado a true");
+  enviarActaParaFirma(id){
+    this.services.CambiarEstadoActa(id,"4","usr2").subscribe(data=>{
+
+    });
   }
   cargarActaSuscrita(id){
     const dialogConfig = new MatDialogConfig();
