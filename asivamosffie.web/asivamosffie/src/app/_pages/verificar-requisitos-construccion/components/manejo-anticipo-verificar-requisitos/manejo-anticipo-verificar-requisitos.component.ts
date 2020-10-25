@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ContratacionProyecto } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-manejo-anticipo-verificar-requisitos',
@@ -9,6 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./manejo-anticipo-verificar-requisitos.component.scss']
 })
 export class ManejoAnticipoVerificarRequisitosComponent implements OnInit {
+
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
@@ -29,6 +31,8 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit {
 
 
   @Input() observacionesCompleted;
+  @Input() contratacion: ContratacionProyecto;
+  
   constructor(private dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {

@@ -196,7 +196,9 @@ namespace asivamosffie.services
                         cp.ConstruccionPerfilObservacion = cp.ConstruccionPerfilObservacion.Where(cpo => cpo.Eliminado != true).ToList();
                         cp.ConstruccionPerfilNumeroRadicado = cp.ConstruccionPerfilNumeroRadicado.Where(cpr => cpr.Eliminado != true).ToList();
 
-                        cp.NombrePerfil = ListPerfilesDominio.Find( p => p.Codigo == cp.PerfilCodigo ).Nombre;
+                        Dominio nombrePerfil = ListPerfilesDominio.Find( p => p.Codigo == cp.PerfilCodigo );
+
+                        cp.NombrePerfil = nombrePerfil != null ? nombrePerfil.Nombre : "";
 
                     });
 

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-hojas-vida-verificar-requisitos',
@@ -28,6 +29,8 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   };
 
   @Input() observacionesCompleted;
+  @Input() perfil: any;
+
   constructor(private dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
