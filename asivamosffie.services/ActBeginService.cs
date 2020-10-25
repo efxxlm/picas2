@@ -914,6 +914,8 @@ namespace asivamosffie.services
             
             Dominio TipoContratoCodigoContrato ;
             string strTipoContratoCodigo = "";
+            bool bTieneObservacionesSupervisor;
+
 
             foreach (var item in lstContratos)
             {
@@ -929,10 +931,19 @@ namespace asivamosffie.services
                 if (TipoContratoCodigoContrato != null)
                     strTipoContratoCodigo = TipoContratoCodigoContrato.Nombre;
 
+                ContratoObservacion contratoObservacion = null;
+                contratoObservacion = await GetContratoObservacionByIdContratoId(item.ContratoId);
+
+                if (contratoObservacion != null)
+                    bTieneObservacionesSupervisor = true;
+                else
+                    bTieneObservacionesSupervisor = false;
+                
                 actaInicio.EstadoActa = strEstadoActaFase2Contrato;
                 actaInicio.ContratoId = item.ContratoId;
                 actaInicio.NumeroContratoObra = item.NumeroContrato;
                 actaInicio.TipoContrato = strTipoContratoCodigo;
+                actaInicio.TieneObservacionesSupervisor = bTieneObservacionesSupervisor;
 
                 contratacion = _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
                 //actaInicio.FechaAprobacionRequisitos = contratacion.FechaAprobacion.ToString("dd/MM/yyyy");
