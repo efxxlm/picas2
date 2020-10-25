@@ -153,7 +153,7 @@ namespace asivamosffie.services
                             EstadoCodigo = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : TemaCompromiso.EstadoCodigo,
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema,
                             TemaCompromiso.FechaCumplimiento,
-                            CompromisoId = TemaCompromiso.SesionTemaId
+                            CompromisoId = TemaCompromiso.TemaCompromisoId
                         });
                     }
                 }
@@ -749,7 +749,7 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
             List<dynamic> Return = new List<dynamic>();
-         
+
 
             try
             {
@@ -789,44 +789,39 @@ namespace asivamosffie.services
                 // Si el compromiso es de Tema
                 else
                 {
-                    SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
+                    TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
 
-                    sesionComiteTemaOld.UsuarioModificacion = pSesionSolicitudCompromiso.UsuarioCreacion;
-                    sesionComiteTemaOld.FechaModificacion = DateTime.Now;
+                    temaCompromisoOld.UsuarioModificacion = pSesionSolicitudCompromiso.UsuarioCreacion;
+                    temaCompromisoOld.FechaModificacion = DateTime.Now;
 
                     switch (pSesionSolicitudCompromiso.EstadoCodigo)
                     {
                         case ConstantCodigoCompromisos.Finalizado:
-                            sesionComiteTemaOld.EstadoTemaCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
+                            temaCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
                             break;
 
                         case ConstantCodigoCompromisos.En_proceso:
-                            sesionComiteTemaOld.EstadoTemaCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
+                            temaCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
                             break;
                     }
 
-                    TemaCompromiso temaCompromiso = new TemaCompromiso
+                    TemaCompromisoSeguimiento temaCompromisoSeguimiento = new TemaCompromisoSeguimiento
                     {
                         UsuarioCreacion = pSesionSolicitudCompromiso.UsuarioCreacion,
                         FechaCreacion = DateTime.Now,
-                        Eliminado = false,
-
                         EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo,
                         Tarea = pSesionSolicitudCompromiso.GestionRealizada,
-                        Responsable = Int32.Parse(pSesionSolicitudCompromiso.UsuarioModificacion),
-                        SesionTemaId = pSesionSolicitudCompromiso.SesionSolicitudCompromisoId
-
-                    };
-                    _context.TemaCompromiso.Add(temaCompromiso);
-
+                        TemaCompromisoId = pSesionSolicitudCompromiso.SesionSolicitudCompromisoId
+                    }; 
+                    _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento); 
                 }
                 _context.SaveChanges();
-  
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
-                    IsValidation = false, 
+                    IsValidation = false,
                     Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, pSesionSolicitudCompromiso.UsuarioCreacion, "CREAR SEGUIMIENTO")
 
