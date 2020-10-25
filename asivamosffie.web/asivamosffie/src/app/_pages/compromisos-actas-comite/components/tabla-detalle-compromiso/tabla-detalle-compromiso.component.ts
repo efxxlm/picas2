@@ -26,10 +26,8 @@ export class TablaDetalleCompromisoComponent implements OnInit {
   }
 
   getDataTable ( compromisoId: number, tipoCompromiso: number ) {
-    console.log( compromisoId, tipoCompromiso );
     this.compromisoSvc.getCompromiso( compromisoId, tipoCompromiso )
       .subscribe( ( resp: any ) => {
-        console.log( resp );
         this.dataSource = new MatTableDataSource( resp );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

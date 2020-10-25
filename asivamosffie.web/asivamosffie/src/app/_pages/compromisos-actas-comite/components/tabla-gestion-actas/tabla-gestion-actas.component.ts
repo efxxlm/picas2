@@ -38,7 +38,6 @@ export class TablaGestionActasComponent implements OnInit {
     this.compromisoSvc.getGrillaActas()
       .subscribe( ( resp: any ) => {
         this.estadoCodigo = resp.estadoComiteCodigo;
-        console.log( resp );
         this.dataSource = new MatTableDataSource( resp );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

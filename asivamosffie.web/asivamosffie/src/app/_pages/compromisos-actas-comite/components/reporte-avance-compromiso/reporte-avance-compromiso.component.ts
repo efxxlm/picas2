@@ -41,7 +41,10 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     if ( this.comite ) {
-      const observacion = await this.compromisoSvc.cargarObservacionGestion( this.comite.sesionComiteTecnicoCompromisoId )
+      const observacion = await this.compromisoSvc.cargarObservacionGestion( this.comite.compromisoId );
+      if ( this.comite.estadoCodigo === '2' || this.comite.estadoCodigo === '3' ) {
+        this.estadoCodigo = this.comite.estadoCodigo;
+      } 
       if ( observacion !== null ) {
         this.reporte.get( 'reporteEstado' ).setValue( observacion );
       };

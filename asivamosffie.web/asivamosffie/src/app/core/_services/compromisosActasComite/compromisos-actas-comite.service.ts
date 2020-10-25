@@ -24,7 +24,6 @@ export class CompromisosActasComiteService {
   };
 
   getCompromiso ( compromisoId: number, tipoCompromiso: number ) {
-    console.log( compromisoId, tipoCompromiso );
     return this.http.get( `${ this.url }/GetListCompromisoSeguimiento?SesionSolicitudCompromisoId=${ compromisoId }&pTipoCompromiso=${ tipoCompromiso }` )
   };
 
@@ -90,7 +89,6 @@ export class CompromisosActasComiteService {
   }
 
   postCompromisos ( comite: any, estadoId: string ) {
-    console.log( comite );
     const gestionRealizada = comite.tarea;
 
     const pSesionSolicitudCompromiso = {
@@ -100,8 +98,6 @@ export class CompromisosActasComiteService {
       gestionRealizada
     };
 
-    console.log( pSesionSolicitudCompromiso );
-
     return this.http.post<Respuesta>( `${ this.url }/ChangeStatusSesionComiteSolicitudCompromiso`, pSesionSolicitudCompromiso )
   };
 
@@ -110,14 +106,10 @@ export class CompromisosActasComiteService {
   }
 
   postComentariosActa ( acta: any ) {
-
     this.devolverActa.comiteTecnicoId = acta.comiteTecnicoId;
     this.devolverActa.observacion = acta.observaciones;
 
-    console.log( this.devolverActa );
-
     return this.http.post( `${ this.url }/CreateOrEditCommentReport`, this.devolverActa )
-
   };
 
 };
