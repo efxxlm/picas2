@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { DevolverActa } from '../../../_interfaces/compromisos-actas-comite.interfaces';
+import { Respuesta } from '../autenticacion/autenticacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +20,11 @@ export class CompromisosActasComiteService {
   constructor ( private http: HttpClient ) {};
 
   getGrillaCompromisos () {
-    return this.http.get( `${ this.url }/GetManagementCommitteeReport` )
+    return this.http.get( `${ this.url }/GetListCompromisos` )
   };
 
-  getCompromiso ( compromisoId: number ) {
-    return this.http.get( `${ this.url }/GetListCompromisoSeguimiento?SesionSolicitudCompromisoId=${ compromisoId }` )
+  getCompromiso ( compromisoId: number, tipoCompromiso: number ) {
+    return this.http.get( `${ this.url }/GetListCompromisoSeguimiento?SesionSolicitudCompromisoId=${ compromisoId }?tipoCompromiso${ tipoCompromiso }` )
   };
 
   guardarObservacionStorage ( observacion: string, sesionComiteTecnicoCompromisoId: number ) {
@@ -87,19 +88,20 @@ export class CompromisosActasComiteService {
     return this.http.post( `${ this.url }/AcceptReport?comiteTecnicoId=${ comiteTecnicoId }`, '' );
   }
 
-  postCompromisos ( seguimiento: any, estadoId: string ) {
-
-    const gestionRealizada = seguimiento.tarea;
+  postCompromisos ( comite: any, estadoId: string ) {
+    console.log( comite );
+    const gestionRealizada = comite.tarea;
 
     const pSesionSolicitudCompromiso = {
-      sesionSolicitudCompromisoId: seguimiento.sesionComiteTecnicoCompromisoId,
+      sesionSolicitudCompromisoId: comite.compromisoId,
+      tipoCompromiso: comite.tipoSolicitud,
       estadoCodigo: estadoId,
       gestionRealizada
     };
 
     console.log( pSesionSolicitudCompromiso );
 
-    return this.http.post( `${ this.url }/ChangeStatusSesionComiteSolicitudCompromiso`, pSesionSolicitudCompromiso )
+    return this.http.post<Respuesta>( `${ this.url }/ChangeStatusSesionComiteSolicitudCompromiso`, pSesionSolicitudCompromiso )
   };
 
   getSelectionProcessById ( id : number ) {

@@ -73,7 +73,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
           if ( this.estadoCodigo === undefined && this.reporte.get( 'reporteEstado' ).value !== null ) {
             this.openDialog( '', 'Debe seleccionar el estado del Compromiso' );
           }
-          this.compromisoSvc.guardarObservacionStorage( this.reporte.get( 'reporteEstado' ).value, this.comite.sesionComiteTecnicoCompromisoId );
+          this.compromisoSvc.guardarObservacionStorage( this.reporte.get( 'reporteEstado' ).value, this.comite.compromisoId );
         }
       } );
   };
@@ -130,16 +130,14 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
     this.comite.tarea = this.reporte.get( 'reporteEstado' ).value;
 
     this.compromisoSvc.postCompromisos( this.comite, this.estadoCodigo )
-      .subscribe( 
-        ( resp: any ) => {
+      .subscribe(
+        resp => {
           this.seRealizoPeticion = true;
-          this.compromisoSvc.eliminarObservacionStorage( this.comite.sesionComiteTecnicoCompromisoId );
+          this.compromisoSvc.eliminarObservacionStorage( this.comite.compromisoId );
           this.openDialog( '',  this.textoLimpioMessage( resp.message ) );
           this.routes.navigate( [ '/compromisosActasComite' ] )
         },
-        ( error: any ) => {
-          console.log( error );
-        }
+        err => this.openDialog( '', err.message )
       );
 
   }

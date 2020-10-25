@@ -43,7 +43,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.estadoCodigo === '1'"
-                (click)="reportProgress( element.sesionComiteTecnicoCompromisoId, element )">
+                (click)="reportProgress( element.compromisoId, element )">
           Reportar avance
         </button>
 
@@ -51,7 +51,7 @@
               color="accent" 
               class="btn-table"
               *ngIf="element.estadoCodigo === '2'"
-              (click)="reportProgress( element.sesionComiteTecnicoCompromisoId, element )">
+              (click)="reportProgress( element.compromisoId, element )">
               Ver detalle/Editar
         </button>
   
@@ -59,7 +59,7 @@
                 color="accent"
                 class="btn-table"
                 *ngIf="element.estadoCodigo === '3'"
-                (click)="reportProgress( element.sesionComiteTecnicoCompromisoId, element )">
+                (click)="reportProgress( element.compromisoId, element )">
           Ver detalle
         </button>
   
