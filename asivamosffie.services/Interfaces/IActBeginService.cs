@@ -17,6 +17,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId);
 
+         Task<Respuesta> EnviarCorreoSupervisor(int pContratoId, AppSettingsService settings);
         Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion);
 
         Task<Respuesta> CambiarEstadoActa(int pContratoId, string pNuevoCodigoEstadoActa, string pUsuarioModifica);
@@ -24,6 +25,10 @@ namespace asivamosffie.services.Interfaces
         //        ---guardar
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
         //ConObervacionesActa  - Contrato
+
+        Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId);
+
+        Task<Respuesta> InsertEditContratoObservacion(ContratoObservacion contratoObservacion);
 
         Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion

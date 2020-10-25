@@ -39,7 +39,71 @@ namespace asivamosffie.api.Controllers
 
                 throw ex;
             }
-        }        
+        }
+
+        [Route("GetContratoObservacionByIdContratoId")]
+        [HttpGet]        
+        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId)
+        {
+            var respuesta = await _ActBegin.GetContratoObservacionByIdContratoId(pContratoId);
+            return respuesta;
+        }
+
+
+        [HttpPost]
+        [Route("CreateEditContratoObservacion")]        
+        public async Task<IActionResult> InsertEditContratoObservacion([FromBody]  ContratoObservacion contratoObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _ActBegin.InsertEditContratoObservacion(contratoObservacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("EnviarCorreoSupervisor")]        
+        public async Task<IActionResult> EnviarCorreoSupervisor(int pContratoId)
+        
+        {
+            Respuesta rta = new Respuesta();
+            try
+            {
+                HttpContext.Connection.RemoteIpAddress.ToString();
+                //string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                //AppSettings _appSettingsService;
+                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+
+                _appSettingsService = toAppSettingsService(_settings);
+                rta = await _ActBegin.EnviarCorreoSupervisor(pContratoId, _appSettingsService);
+
+                return Ok(rta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+          
+        }
+
+        public AppSettingsService toAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService();
+            appSettingsService.MailPort = appSettings.Value.MailPort;
+            appSettingsService.MailServer = appSettings.Value.MailServer;
+            appSettingsService.Password = appSettings.Value.Password;
+            appSettingsService.Sender = appSettings.Value.Sender;
+
+            return appSettingsService;
+
+        }
 
         [HttpGet]
         [Route("GetListGrillaActaInicio")]

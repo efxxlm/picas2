@@ -665,6 +665,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Informativos
 
         public const string RecursoNoEncontrado = "104";
+        public const string CorreoEnviado = "101";
 
         #endregion Mensajes Informativos
 
@@ -676,14 +677,19 @@ namespace asivamosffie.services.Helpers.Constant
 
         #endregion Mensajes Exitoso
 
+        #region Mensajes Error
+
+        public const string Error = "500";
+        public const string ErrorEnviarCorreo = "107";
+        public const string ErrorInterno = "501";
+
+
+        #endregion
+
         #region Mensajes Redireccion
 
         #endregion Mensajes Redireccion
 
-        #region 
-        public const string Error = "500";
-        public const string ErrorInterno = "501";
-        #endregion
     }
 
     public class ConstantGestionarActaInicioFase2
