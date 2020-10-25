@@ -150,7 +150,7 @@ namespace asivamosffie.services
                             FechaComite = ComiteTecnico.FechaOrdenDia,
                             ComiteTecnico.NumeroComite,
                             Compromiso = TemaCompromiso.Tarea,
-                            EstadoCompromiso = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : TemaCompromiso.EstadoCodigo,
+                            EstadoCodigo = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : TemaCompromiso.EstadoCodigo,
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema,
                             TemaCompromiso.FechaCumplimiento,
                             CompromisoId = TemaCompromiso.TemaCompromisoId
