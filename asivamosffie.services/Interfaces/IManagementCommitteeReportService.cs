@@ -8,7 +8,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IManagementCommitteeReportService
     {
-        Task<List<dynamic>> GetListCompromisos();
+        Task<List<dynamic>> GetListCompromisos(int pUserId);
         Task<Respuesta> ChangeStatusSesionComiteSolicitudCompromiso(SesionSolicitudCompromiso pSesionSolicitudCompromiso);
         Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport(int pUserId); 
         Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId);

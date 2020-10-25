@@ -41,7 +41,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<dynamic>> GetListCompromisos()
         {
-            return await _managementCommitteeReportService.GetListCompromisos();
+            return await _managementCommitteeReportService.GetListCompromisos(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
         } 
 
         [Route("GetManagementCommitteeReport")]
