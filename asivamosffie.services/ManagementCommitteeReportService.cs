@@ -153,7 +153,7 @@ namespace asivamosffie.services
                             EstadoCodigo = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : TemaCompromiso.EstadoCodigo,
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema,
                             TemaCompromiso.FechaCumplimiento,
-                            CompromisoId = TemaCompromiso.TemaCompromisoId
+                            CompromisoId = TemaCompromiso.SesionTemaId
                         });
                     }
                 }
