@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public TemaCompromiso()
         {
             CompromisoSeguimiento = new HashSet<CompromisoSeguimiento>();
+            TemaCompromisoSeguimiento = new HashSet<TemaCompromisoSeguimiento>();
         }
 
         public int TemaCompromisoId { get; set; }
@@ -25,5 +26,6 @@ namespace asivamosffie.model.Models
         public virtual SesionParticipante ResponsableNavigation { get; set; }
         public virtual SesionComiteTema SesionTema { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
+        public virtual ICollection<TemaCompromisoSeguimiento> TemaCompromisoSeguimiento { get; set; }
     }
 }

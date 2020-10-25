@@ -110,6 +110,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SesionTemaVoto> SesionTemaVoto { get; set; }
         public virtual DbSet<Solicitud> Solicitud { get; set; }
         public virtual DbSet<TemaCompromiso> TemaCompromiso { get; set; }
+        public virtual DbSet<TemaCompromisoSeguimiento> TemaCompromisoSeguimiento { get; set; }
         public virtual DbSet<TempFlujoInversion> TempFlujoInversion { get; set; }
         public virtual DbSet<TempOrdenLegibilidad> TempOrdenLegibilidad { get; set; }
         public virtual DbSet<TempProgramacion> TempProgramacion { get; set; }
@@ -120,7 +121,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-         
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -177,7 +178,6 @@ namespace asivamosffie.model.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ActuacionSeguimiento_ControversiaActuacion");
             });
-
 
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
             {
@@ -3928,7 +3928,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Tarea)
                     .IsRequired()
-                    .HasMaxLength(300)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
@@ -3951,6 +3951,27 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SesionTemaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TemaCompromiso_SesionComiteTema");
+            });
+
+            modelBuilder.Entity<TemaCompromisoSeguimiento>(entity =>
+            {
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Tarea).HasMaxLength(500);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.TemaCompromiso)
+                    .WithMany(p => p.TemaCompromisoSeguimiento)
+                    .HasForeignKey(d => d.TemaCompromisoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TemaCompromisoId");
             });
 
             modelBuilder.Entity<TempFlujoInversion>(entity =>

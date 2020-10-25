@@ -812,8 +812,8 @@ namespace asivamosffie.services
                         EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo,
                         Tarea = pSesionSolicitudCompromiso.GestionRealizada,
                         TemaCompromisoId = pSesionSolicitudCompromiso.SesionSolicitudCompromisoId
-                    }; 
-                    _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento); 
+                    };
+                    _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento);
                 }
                 _context.SaveChanges();
 
