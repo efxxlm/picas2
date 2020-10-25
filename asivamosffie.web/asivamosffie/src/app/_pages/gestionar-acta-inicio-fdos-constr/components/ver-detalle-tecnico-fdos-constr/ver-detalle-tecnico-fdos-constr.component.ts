@@ -36,6 +36,8 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   fechaActaInicioConstruccion: Date;
   fechaPrevistaTerminacion: Date;
   obsConEspeciales: string;
+  plazoEjecucionConstrM: number;
+  plazoEjecucionConstrD: number;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -76,13 +78,15 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
       this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
       /*Campo de texto no editable*/
-      this.fechaActaInicioConstruccion = data.fechaActaInicio;
-      this.fechaPrevistaTerminacion = data.fechaPrevistaTerminacion;
+      this.fechaActaInicioConstruccion = data.fechaActaInicioDateTime;
+      this.fechaPrevistaTerminacion = data.fechaPrevistaTerminacionDateTime;
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
       this.plazoActualContratoMeses = 12;
       this.plazoActualContratoDias = 26;
-      this.plazoEjecucionPreConstruccionMeses = 4;
-      this.plazoEjecucionPreConstruccionDias = data.plazoFase2ConstruccionDias;
+      this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
+      this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
+      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
+      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
     });
     this.idContrato = id;
   }

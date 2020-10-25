@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { environment } from 'src/environments/environment';
 import { pid } from 'process';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActBeginService {
-
+  loadDataItems= new Subject();
   constructor(private http: HttpClient) { }
   GetVistaGenerarActaInicio(pContratoId: number) {
     return this.http.get<GetVistaGenerarActaInicio>(`${environment.apiUrl}/actBegin/GetVistaGenerarActaInicio?pContratoId=${pContratoId}`);
@@ -65,6 +66,8 @@ export interface GetVistaGenerarActaInicio {
   plazoFase2ConstruccionMeses: number;
   plazoFase1PreDias: number;
   plazoFase1PreMeses: number;
+  fechaActaInicioDateTime: any;
+  fechaPrevistaTerminacionDateTime: any;
 }
 export interface GetListGrillaActaInicio {
 

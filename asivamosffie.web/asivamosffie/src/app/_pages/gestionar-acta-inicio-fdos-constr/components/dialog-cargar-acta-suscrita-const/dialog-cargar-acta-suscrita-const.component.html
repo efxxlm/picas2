@@ -15,7 +15,7 @@
                     <div class="col d-flex">
                         <mat-form-field class="example-full-width">
                             <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
-                                (click)="picker.open()" [(ngModel)]="this.fechaFirmaContratistaObra">
+                                (click)="picker.open()" [(ngModel)]="this.fechaFirmaContratistaObra" placeholder="DD/MM/AAAA">
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" type="button" (click)="picker.open()"
@@ -35,7 +35,7 @@
                     <div class="col d-flex">
                         <mat-form-field class="example-full-width" style="width: 20%;">
                             <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
-                                (click)="picker2.open()" [(ngModel)]="this.fechaFirmaContratistaInterventoria">
+                                (click)="picker2.open()" [(ngModel)]="this.fechaFirmaContratistaInterventoria" placeholder="DD/MM/AAAA">
                             <mat-datepicker #picker2></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" type="button" (click)="picker2.open()"

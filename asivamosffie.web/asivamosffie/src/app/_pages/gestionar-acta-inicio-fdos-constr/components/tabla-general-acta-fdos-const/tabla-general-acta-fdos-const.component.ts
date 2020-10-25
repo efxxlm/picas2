@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 /*
@@ -35,9 +36,15 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   public dataTable;
+  loadDataItems: Subscription;
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {
+    this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {
+      if(loadDataItems!=''){
+      this.dataTable=loadDataItems;
+      }
+    }); 
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
@@ -70,8 +77,10 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   verDetalleActaFDos(id){
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
-  enviarActaParaFirma(){
-    alert("llama al servicio donde cambia estado a true");
+  enviarActaParaFirma(id){
+    this.services.CambiarEstadoActa(id,"4","usr2").subscribe(data=>{
+
+    });
   }
   cargarActaSuscrita(id){
     const dialogConfig = new MatDialogConfig();

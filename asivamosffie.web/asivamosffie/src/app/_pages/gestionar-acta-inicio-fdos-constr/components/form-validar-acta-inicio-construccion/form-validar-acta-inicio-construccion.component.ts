@@ -20,6 +20,31 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   public title;
 
   public contratoId;
+  contratoCode: string;
+  fechaAprobacionSupervisor: Date;
+  vigenciaContrato: Date;
+  fechaFirmaContrato: Date;
+  numeroDRP1: string;
+  fechaGeneracionDRP1: Date;
+  numeroDRP2: string;
+  fechaGeneracionDRP2: Date;
+  fechaAprobacionGarantiaPoliza: Date;
+  observacionOConsideracionesEspeciales: string;
+  valorInicialContrato: string;
+  valorActualContrato: string;
+  valorFase1Preconstruccion: string;
+  valorfase2ConstruccionObra: string;
+  nombreEntidadContratistaSupervisorInterventoria: string;
+  nombreEntidadContratistaObra: string;
+  fechaActaInicioConstruccion: any;
+  fechaPrevistaTerminacion: any;
+  obsConEspeciales: string;
+  plazoActualContratoMeses: number;
+  plazoActualContratoDias: number;
+  plazoEjecucionPreConstruccionMeses: number;
+  plazoEjecucionPreConstruccionDias: number;
+  plazoEjecucionConstrM: number;
+  plazoEjecucionConstrD: number;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -36,9 +61,36 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     }
   }
   loadData(id) {
-    if(this.editable==true){
-      console.log("cargar servicio");
-    }
+    this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
+      /*Titulo*/
+      this.contratoCode = data.numeroContrato;
+      this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
+      /*Cuadro 1*/
+      this.vigenciaContrato = data.vigenciaContrato;
+      this.fechaFirmaContrato = data.fechaFirmaContrato;
+      this.numeroDRP1 = data.numeroDRP1;
+      this.fechaGeneracionDRP1 = data.fechaGeneracionDRP1;
+      this.numeroDRP2 = data.numeroDRP2;
+      this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
+      this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
+      this.observacionOConsideracionesEspeciales = data.objeto;
+      this.valorInicialContrato = data.valorInicialContrato;
+      this.valorActualContrato = data.valorActualContrato;
+      this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
+      this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
+      this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
+      this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
+      /*Campo de texto no editable*/
+      this.fechaActaInicioConstruccion = data.fechaActaInicioDateTime;
+      this.fechaPrevistaTerminacion = data.fechaPrevistaTerminacionDateTime;
+      this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
+      this.plazoActualContratoMeses = 12;
+      this.plazoActualContratoDias = 26;
+      this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
+      this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
+      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
+      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
+    });
     this.contratoId = id;
   }
   openDialog(modalTitle: string, modalText: string) {
@@ -74,7 +126,16 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   }
 
   generarActaSuscrita(){
-    alert("llama al servicio");
+    this.services.GetPlantillaActaInicio(this.contratoId).subscribe(resp=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
   onSubmit() {
     this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3").subscribe(resp=>{
