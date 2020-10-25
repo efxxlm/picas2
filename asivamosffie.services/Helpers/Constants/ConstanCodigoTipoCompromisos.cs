@@ -5,4 +5,9 @@
         CompromisosSolicitud = 1,
         CompromisosTema = 2, 
     }
+
+    public static class ConstanStringCodigoCompromisos
+    {
+        public const string Sin_avance = "Sin avance";
+    }
 }
