@@ -68,9 +68,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   }
   enviarParaRevision(idContrato){
     this.services.CambiarEstadoActa(idContrato,"3","usr2").subscribe(data=>{
-      this.services.GetListGrillaActaInicio().subscribe(items=>{
-        this.services.loadDataItems.next(items);
-      });
+      this.ngOnInit();
     });
   }
   verDetalleActaFDos(id){
