@@ -21,6 +21,10 @@ export class FaseUnoConstruccionService {
     return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.urlApi }/getContractsGridApoyoInterventoria` );
   };
 
+  GetContractsGridApoyoObra ( ) {
+    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.urlApi }/GetContractsGridApoyoObra` );
+  };
+
   getContratoByContratoId ( pContratoId: number ) {
     return this.http.get<Contrato>( `${ this.urlApi }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
   };

@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 
 @Component({
   selector: 'app-tabla-contratos-obra-vrtc',
@@ -15,50 +17,26 @@ export class TablaContratosObraVrtcComponent implements OnInit {
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 
     'fechaAprobacion',
-    'numeroContratoObra',
-    'proyectosAsociados',
-    'proyectosAprobados',
-    'proyectosPendientes',
-    'estadoRequisito',
+    'numeroContrato',
+    'cantidadProyectosAsociados',
+    'cantidadProyectosRequisitosAprobados',
+    'cantidadProyectosRequisitosPendientes',
+    'estadoNombre',
     'gestion'
   ];
-  dataTable: any [] = [
-    {
-      fechaAprobacion: '06/08/2020',
-      numeroContratoObra: 'C326326',
-      proyectosAsociados: '2',
-      proyectosAprobados: '2',
-      proyectosPendientes: '0',
-      estadoRequisito: '1',
-      id: 1
-    },
-    {
-      fechaAprobacion: '05/08/2020',
-      numeroContratoObra: 'A208208',
-      proyectosAsociados: '1',
-      proyectosAprobados: '0',
-      proyectosPendientes: '1',
-      estadoRequisito: '1',
-      id: 2
-    },
-    {
-      fechaAprobacion: '01/08/2020',
-      numeroContratoObra: 'C801801',
-      proyectosAsociados: '1',
-      proyectosAprobados: '0',
-      proyectosPendientes: '1',
-      estadoRequisito: '3',
-      id: 3
-    }
-  ]
+  dataTable: any [] = [];
 
-  constructor ( private routes: Router ) { }
+  constructor ( private routes: Router,
+                private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+                private dialog : MatDialog ) { }
 
   ngOnInit(): void {
-    this.dataSource                        = new MatTableDataSource( this.dataTable );
-    this.dataSource.paginator              = this.paginator;
-    this.dataSource.sort                   = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.faseUnoConstruccionSvc.GetContractsGridApoyoObra().subscribe( respuesta => {
+      this.dataSource                        = new MatTableDataSource( respuesta );
+      this.dataSource.paginator              = this.paginator;
+      this.dataSource.sort                   = this.sort;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    })
   };
 
   applyFilter ( event: Event ) {
@@ -66,15 +44,15 @@ export class TablaContratosObraVrtcComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  getForm ( id: number ) {
-    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verificarRequisitosInicio', id ] )
+  getForm ( id: number, fechaPoliza: string ) {
+    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verificarRequisitosInicio', id ], { state: { fechaPoliza } } )
   };
 
   aprobarInicio ( id: number ) {
     console.log( id );
   };
 
-  verDetalle ( id: number ) {
-    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verDetalleObra', id ] )
+  verDetalle ( id: number, fechaPoliza: string  ) {
+    this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verDetalleObra', id ], { state: { fechaPoliza } } )
   }
 }

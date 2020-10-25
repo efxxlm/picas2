@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
+import { ContratacionProyecto } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-diagnostico-verificar-requisitos',
@@ -29,6 +31,8 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit {
 
   
   @Input() observacionesCompleted;
+  @Input() contratacion: ContratacionProyecto;
+
   constructor(private dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
