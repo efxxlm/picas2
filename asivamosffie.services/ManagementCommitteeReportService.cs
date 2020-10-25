@@ -117,7 +117,7 @@ namespace asivamosffie.services
                             FechaComite = ComiteTecnico.FechaOrdenDia,
                             ComiteTecnico.NumeroComite,
                             Compromiso = SesionSolicitudCompromiso.Tarea,
-                            EstadoCompromiso = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : ListEstadoCompromisos.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).Select(r => r.Nombre).FirstOrDefault(),
+                            EstadoCompromiso = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : SesionSolicitudCompromiso.EstadoCodigo,
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud,
                             SesionSolicitudCompromiso.FechaCumplimiento,
                             CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId
