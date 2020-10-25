@@ -20,6 +20,7 @@ namespace asivamosffie.services.Interfaces
          Task<Respuesta> EnviarCorreoSupervisor(int pContratoId, AppSettingsService settings);
         Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion);
 
+        Task<Contrato> GetContratoByIdContratoId(int pContratoId);
         Task<Respuesta> CambiarEstadoActa(int pContratoId, string pNuevoCodigoEstadoActa, string pUsuarioModifica);
         Task<byte[]> GetPlantillaActaInicio(int pContratoId);
         //        ---guardar

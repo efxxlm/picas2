@@ -816,6 +816,17 @@ namespace asivamosffie.services
             return contratoObservacion;
         }
 
+        public async Task<Contrato> GetContratoByIdContratoId(int pContratoId)
+        {
+
+            //includefilter
+            Contrato contrato = new Contrato();
+
+            contrato= _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();   
+          
+            return contrato;
+        }
+
         public async Task<Respuesta> InsertEditContratoObservacion(ContratoObservacion contratoObservacion)
         {
             Respuesta _response = new Respuesta();
