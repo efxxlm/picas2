@@ -43,6 +43,9 @@ export class ActBeginService {
   CambiarEstadoVerificacionActa(pContratoId: number, pNuevoCodigoEstadoVerificacionActa: string,pUsuarioModifica : string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/actBegin/CambiarEstadoActa?pContratoId=${pContratoId}&pNuevoCodigoEstadoVerificacionActa=${pNuevoCodigoEstadoVerificacionActa}&pUsuarioModifica=${pUsuarioModifica}`, null);  
   }
+  GetContratoByIdContratoId(pContratoId: number){
+    return this.http.get<GetContratoByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoByIdContratoId?pContratoId=${pContratoId}`);
+  }
 }
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;
@@ -89,4 +92,7 @@ export interface GetContratoObservacionByIdContratoId {
   usuarioCreacion: string;
   esActa: boolean;
   esActaFase2: boolean;
+}
+export interface GetContratoByIdContratoId{
+  
 }
