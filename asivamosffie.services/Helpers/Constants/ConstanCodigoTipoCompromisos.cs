@@ -8,6 +8,6 @@
 
     public static class ConstanStringCodigoCompromisos
     {
-        public const string Sin_avance = "Sin avance";
+        public const string Sin_avance = "1";
     }
 }
