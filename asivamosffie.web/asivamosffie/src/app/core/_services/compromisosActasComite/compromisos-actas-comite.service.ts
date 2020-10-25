@@ -24,7 +24,8 @@ export class CompromisosActasComiteService {
   };
 
   getCompromiso ( compromisoId: number, tipoCompromiso: number ) {
-    return this.http.get( `${ this.url }/GetListCompromisoSeguimiento?SesionSolicitudCompromisoId=${ compromisoId }?tipoCompromiso${ tipoCompromiso }` )
+    console.log( compromisoId, tipoCompromiso );
+    return this.http.get( `${ this.url }/GetListCompromisoSeguimiento?SesionSolicitudCompromisoId=${ compromisoId }&pTipoCompromiso=${ tipoCompromiso }` )
   };
 
   guardarObservacionStorage ( observacion: string, sesionComiteTecnicoCompromisoId: number ) {
