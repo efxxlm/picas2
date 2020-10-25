@@ -27,8 +27,7 @@ namespace asivamosffie.api.Controllers
         {
             _managementCommitteeReportService = managementCommitteeReportService;
             _settings = settings;
-            _converter = converter;
-
+            _converter = converter; 
         }
 
         [Route("GetListCompromisoSeguimiento")]
@@ -43,8 +42,7 @@ namespace asivamosffie.api.Controllers
         public async Task<List<dynamic>> GetListCompromisos()
         {
             return await _managementCommitteeReportService.GetListCompromisos();
-        }
- 
+        } 
 
         [Route("GetManagementCommitteeReport")]
         [HttpGet]
@@ -145,8 +143,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
+         
         [Route("CreateOrEditCommentReport")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditCommentReport([FromBody] SesionComentario SesionComentario)
@@ -191,8 +188,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
+         
         //Descargar acta
         [HttpGet]
         [Route("StartDownloadPDF")]

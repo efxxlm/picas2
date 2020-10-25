@@ -39,9 +39,7 @@ namespace asivamosffie.services
         {
             return _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
-
-
-
+         
         public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport(int pUserId)
         {
             List<GrillaSesionComiteTecnicoCompromiso> grillaSesionComiteTecnicoCompromisos = new List<GrillaSesionComiteTecnicoCompromiso>();
@@ -88,8 +86,8 @@ namespace asivamosffie.services
             }
             return grillaSesionComiteTecnicoCompromisos.OrderByDescending(r => r.ComiteTecnicoId).ToList();
         }
-
-
+         
+        //Lista Compromisos temas y solicitudes
         public async Task<List<dynamic>> GetListCompromisos()
         { 
             List<dynamic> ListDynamic = new List<dynamic>();
@@ -133,7 +131,7 @@ namespace asivamosffie.services
                         {
                             FechaComite = ComiteTecnico.FechaOrdenDia,
                             ComiteTecnico.NumeroComite,
-                            Compromiso = TemaCompromiso.CompromisoSeguimiento,
+                            Compromiso = TemaCompromiso.Tarea,
                             EstadoCompromiso = TemaCompromiso.EstadoCodigo,
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema,
                             CompromisoId = TemaCompromiso.TemaCompromisoId
@@ -142,7 +140,7 @@ namespace asivamosffie.services
                 }
             } 
 
-            return ListDynamic;
+            return ListDynamic.OrderByDescending(r=> r.CompromisoId).ToList();
         }
 
         //Detalle gestion compromisos
