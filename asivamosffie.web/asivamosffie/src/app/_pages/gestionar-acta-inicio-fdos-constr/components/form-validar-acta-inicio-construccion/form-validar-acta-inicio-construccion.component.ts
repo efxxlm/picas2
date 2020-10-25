@@ -50,6 +50,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
+      this.loadDataObservaciones(param.id);
     });
     if(localStorage.getItem("editable")=="true"){
       this.editable=true;
@@ -92,6 +93,12 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
     });
     this.contratoId = id;
+  }
+  loadDataObservaciones(id){
+    this.services.GetContratoObservacionByIdContratoId(id).subscribe(data0=>{
+      this.addressForm.get('tieneObservaciones').setValue(data0.esActaFase2);
+      this.addressForm.get('observaciones').setValue(data0.observaciones);
+    });
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
