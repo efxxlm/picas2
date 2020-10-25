@@ -727,7 +727,7 @@ namespace asivamosffie.services
             }
             else
             {
-                var dynamics = await _context.TemaCompromiso.Where(r => r.SesionTemaId == SesionSolicitudCompromisoId).Select(r => new { r.FechaCreacion, r.Tarea, r.EstadoCodigo }).ToListAsync();
+                var dynamics = await _context.TemaCompromisoSeguimiento.Where(r => r.TemaCompromisoId == SesionSolicitudCompromisoId).Select(r => new { r.FechaCreacion, r.Tarea, r.EstadoCodigo }).ToListAsync();
 
                 List<dynamic> ListDynamic = new List<dynamic>();
 
@@ -737,7 +737,7 @@ namespace asivamosffie.services
                     {
                         CompromisoSeguimiento.FechaCreacion,
                         EstadoCompromiso = ListDominio.Where(r => r.Codigo == CompromisoSeguimiento.EstadoCodigo).Select(r => r.Nombre).FirstOrDefault(),
-                        CompromisoSeguimiento.Tarea
+                        DescripcionSeguimiento = CompromisoSeguimiento.Tarea
                     });
                 }
                 return ListDynamic;
