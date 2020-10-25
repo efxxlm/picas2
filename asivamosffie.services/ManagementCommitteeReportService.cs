@@ -749,15 +749,14 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
             List<dynamic> Return = new List<dynamic>();
-            SesionSolicitudCompromiso sesionSolicitudCompromisoOld = new SesionSolicitudCompromiso();
-            SesionComiteTema sesionComiteTemaOld = new SesionComiteTema();
+         
 
             try
             {
                 // Si el compromiso es de sesionComiteSolicitud
                 if (pSesionSolicitudCompromiso.TipoCompromiso == ((int)EnumeratorTipoCompromisos.Compromisos_Solicitudes).ToString())
                 {
-                    sesionSolicitudCompromisoOld = await _context.SesionSolicitudCompromiso.FindAsync(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
+                    SesionSolicitudCompromiso sesionSolicitudCompromisoOld = await _context.SesionSolicitudCompromiso.FindAsync(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
                     sesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
                     sesionSolicitudCompromisoOld.UsuarioCreacion = pSesionSolicitudCompromiso.UsuarioCreacion;
 
@@ -790,7 +789,7 @@ namespace asivamosffie.services
                 // Si el compromiso es de Tema
                 else
                 {
-                    sesionComiteTemaOld = _context.SesionComiteTema.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
+                    SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
 
                     sesionComiteTemaOld.UsuarioModificacion = pSesionSolicitudCompromiso.UsuarioCreacion;
                     sesionComiteTemaOld.FechaModificacion = DateTime.Now;
@@ -822,20 +821,12 @@ namespace asivamosffie.services
 
                 }
                 _context.SaveChanges();
-
-              
-                if (sesionSolicitudCompromisoOld != null)
-                    Return.Add(sesionSolicitudCompromisoOld);
-                else
-                    Return.Add(sesionComiteTemaOld);
-
+  
                 return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
-                    IsValidation = false,
-                    Data = Return,
-
+                    IsValidation = false, 
                     Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, pSesionSolicitudCompromiso.UsuarioCreacion, "CREAR SEGUIMIENTO")
 
