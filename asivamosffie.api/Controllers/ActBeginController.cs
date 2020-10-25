@@ -139,6 +139,27 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [HttpPut]
+        [Route("CambiarEstadoVerificacionActa")]
+        
+        public async Task<IActionResult> CambiarEstadoVerificacionActa(int pContratoId, string pNuevoCodigoEstadoVerificacionActa, string pUsuarioModifica)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //respuesta = await _ActBegin.CambiarEstadoActa(pSesionComiteSolicitud, pCodigoEstado, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _ActBegin.CambiarEstadoVerificacionActa(pContratoId, pNuevoCodigoEstadoVerificacionActa, pUsuarioModifica);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+
 
 
         [HttpGet]

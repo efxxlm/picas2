@@ -28,6 +28,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId);
 
+        Task<Respuesta> CambiarEstadoVerificacionActa(int pContratoId, string pNuevoCodigoEstadoVerificacionActa, string pUsuarioModifica);
+
         Task<Respuesta> InsertEditContratoObservacion(ContratoObservacion contratoObservacion);
 
         Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria

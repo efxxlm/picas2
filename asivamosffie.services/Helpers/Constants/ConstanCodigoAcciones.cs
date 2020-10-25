@@ -107,7 +107,7 @@
         public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
         public const string Notificación_Acta_Inicio_Fase_II = "111";
         public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
-
+        public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
         public const string Crear_Editar_Contrato_Observacion = "122";
 
         
