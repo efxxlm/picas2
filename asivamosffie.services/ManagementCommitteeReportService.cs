@@ -117,7 +117,7 @@ namespace asivamosffie.services
                             FechaComite = ComiteTecnico.FechaOrdenDia, 
                             ComiteTecnico.NumeroComite,
                             Compromiso = SesionSolicitudCompromiso.CompromisoSeguimiento,
-                            EstadoCompromiso = ListEstadoCompromisos.Where(r=> r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault(),
+                            EstadoCompromiso = ListEstadoCompromisos.Where(r=> r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).Select(r=> r.Nombre).FirstOrDefault(),
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud,
                             SesionSolicitudCompromiso.FechaCumplimiento,
                             CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId
@@ -134,7 +134,7 @@ namespace asivamosffie.services
                             FechaComite = ComiteTecnico.FechaOrdenDia,
                             ComiteTecnico.NumeroComite,
                             Compromiso = TemaCompromiso.Tarea,
-                            EstadoCompromiso = ListEstadoCompromisos.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault(),
+                            EstadoCompromiso = ListEstadoCompromisos.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).Select(r => r.Nombre).FirstOrDefault(),
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema,
                             FechaCumplimiento = TemaCompromiso.FechaCumplimiento,
                             CompromisoId = TemaCompromiso.TemaCompromisoId
