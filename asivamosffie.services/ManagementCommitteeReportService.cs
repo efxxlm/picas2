@@ -711,7 +711,7 @@ namespace asivamosffie.services
 
             if (pTipoCompromiso == (int)EnumeratorTipoCompromisos.Compromisos_Solicitudes)
             {
-                var dynamics = await _context.CompromisoSeguimiento.Where(r => r.SesionSolicitudCompromisoId == SesionSolicitudCompromisoId).Select(r => new { r.FechaCreacion, r.DescripcionSeguimiento, r.EstadoCompromisoCodigo }).ToListAsync();
+                var dynamics = await _context.CompromisoSeguimiento.Where(r => r.SesionSolicitudCompromisoId == SesionSolicitudCompromisoId ).Select(r => new { r.FechaCreacion, r.DescripcionSeguimiento, r.EstadoCompromisoCodigo, r.CompromisoSeguimientoId }).OrderByDescending(r => r.CompromisoSeguimientoId).ToListAsync();
                 List<dynamic> ListDynamic = new List<dynamic>();
 
                 foreach (var CompromisoSeguimiento in dynamics)
@@ -727,7 +727,7 @@ namespace asivamosffie.services
             }
             else
             {
-                var dynamics = await _context.TemaCompromisoSeguimiento.Where(r => r.TemaCompromisoId == SesionSolicitudCompromisoId).Select(r => new { r.FechaCreacion, r.Tarea, r.EstadoCodigo }).ToListAsync();
+                var dynamics = await _context.TemaCompromisoSeguimiento.Where(r => r.TemaCompromisoId == SesionSolicitudCompromisoId).Select(r => new { r.FechaCreacion, r.Tarea, r.EstadoCodigo , r.TemaCompromisoSeguimientoId}).OrderByDescending(r=> r.TemaCompromisoSeguimientoId).ToListAsync();
 
                 List<dynamic> ListDynamic = new List<dynamic>();
 
