@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-contratos-interventoria-vrtc',
@@ -26,7 +28,8 @@ export class TablaContratosInterventoriaVrtcComponent implements OnInit {
   ];
   
   constructor ( private routes: Router,
-                private faseUnoConstruccionSvc: FaseUnoConstruccionService  ) 
+                private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+                private dialog : MatDialog  ) 
     { }
 
   ngOnInit(): void {
@@ -49,8 +52,21 @@ export class TablaContratosInterventoriaVrtcComponent implements OnInit {
     this.routes.navigate( [ '/verificarRequisitosTecnicosConstruccion/verificarRequisitosInicioInterventoria', id ], { state: { fechaPoliza } } )
   };
 
+  openDialog (modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
   aprobarInicio ( id: number ) {
-    console.log( id );
+    this.faseUnoConstruccionSvc.EnviarAlSupervisor( id )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message )
+        if ( respuesta.code == "200" )
+          this.ngOnInit();        
+      } )
+
   };
 
   verDetalle ( id: number ) {

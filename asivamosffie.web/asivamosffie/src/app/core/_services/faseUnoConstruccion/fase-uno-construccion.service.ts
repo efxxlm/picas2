@@ -73,17 +73,23 @@ export class FaseUnoConstruccionService {
   transferMassiveLoadInvestmentFlow ( pIdDocument: string ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/TransferMassiveLoadInvestmentFlow?pIdDocument=${ pIdDocument }`, '' )
   };
+
+  EnviarAlSupervisor ( pIdDocument: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/EnviarAlSupervisor?pContratoId=${ pIdDocument }`, '' )
+  };
+
   //Peticiones DELETE
   deleteConstruccionPerfil ( pConstruccioPerfilId: number ) {
     return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteConstruccionPerfil?pConstruccioPerfilId=${ pConstruccioPerfilId }` )
   };
 
   deleteConstruccionPerfilNumeroRadicado ( pConstruccionPerfilNumeroRadicadoId: number ) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteConstruccionPerfilNumeroRadicado'pConstruccionPerfilNumeroRadicadoId=${ pConstruccionPerfilNumeroRadicadoId }` )
+    return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteConstruccionPerfilNumeroRadicado?pConstruccionPerfilNumeroRadicadoId=${ pConstruccionPerfilNumeroRadicadoId }` )
   };
 
   deleteArchivoCargue ( pArchivoCargueId: number ) {
     return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteArchivoCargue?pArchivoCargueId=${ pArchivoCargueId }` );
   };
+  
 
 }

@@ -312,6 +312,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("EnviarAlSupervisor")]
+        [HttpPost]
+        public async Task<IActionResult> EnviarAlSupervisor([FromQuery]  int pContratoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _technicalRequirementsConstructionPhaseService.EnviarAlSupervisor( pContratoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
         [Route("DeleteConstruccionPerfilNumeroRadicado")]
         [HttpDelete]

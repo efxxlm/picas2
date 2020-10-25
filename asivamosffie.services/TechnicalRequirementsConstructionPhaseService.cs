@@ -143,11 +143,12 @@ namespace asivamosffie.services
 
         }
 
-        private bool VerificarEsSupervisor( string pUsuarioCreacion ){
-            List<UsuarioPerfil> usuarioPerfil =  _context.UsuarioPerfil.Where( r => r.PerfilId == 8 )
-            .Include( r => r.Usuario ).ToList();
+        private bool VerificarEsSupervisor(string pUsuarioCreacion)
+        {
+            List<UsuarioPerfil> usuarioPerfil = _context.UsuarioPerfil.Where(r => r.PerfilId == 8)
+            .Include(r => r.Usuario).ToList();
 
-            if ( usuarioPerfil.Where( r => r.Usuario.Email == pUsuarioCreacion ).ToList().Count > 0 )
+            if (usuarioPerfil.Where(r => r.Usuario.Email == pUsuarioCreacion).ToList().Count > 0)
                 return true;
             else
                 return false;
@@ -183,21 +184,27 @@ namespace asivamosffie.services
 
                 //contrato.ContratoConstruccion.ToList().RemoveAll( r => r.eliminado == true )
 
-                contrato.ContratoConstruccion.ToList().ForEach( cc => {
-                    cc.ConstruccionPerfil.ToList().RemoveAll( cp => cp.Eliminado == true );
+                contrato.ContratoConstruccion.ToList().ForEach(cc =>
+                {
+                    cc.ConstruccionPerfil = cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList();
 
-                    cc.ConstruccionPerfil.ToList().ForEach( cp => {
-                        cp.ConstruccionPerfilObservacion.ToList().RemoveAll( cpo => cpo.Eliminado == true );
-                        cp.ConstruccionPerfilNumeroRadicado.ToList().RemoveAll( cpr => cpr.Eliminado == true );
+                    cc.ConstruccionPerfil.ToList().ForEach(cp =>
+                    {
+                        cp.ConstruccionPerfilObservacion = cp.ConstruccionPerfilObservacion.Where(cpo => cpo.Eliminado != true).ToList();
+                        cp.ConstruccionPerfilNumeroRadicado = cp.ConstruccionPerfilNumeroRadicado.Where(cpr => cpr.Eliminado != true).ToList();
 
                     });
 
-                    cc.ObservacionDiagnostico = getObservacion( cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, VerificarEsSupervisor(pUsuarioCreacion));
+                    cc.ObservacionDiagnostico = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, VerificarEsSupervisor(pUsuarioCreacion));
+                    cc.ObservacionPlanesProgramas = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, VerificarEsSupervisor(pUsuarioCreacion));
+                    cc.ObservacionManejoAnticipo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, VerificarEsSupervisor(pUsuarioCreacion));
+                    cc.ObservacionProgramacionObra = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, VerificarEsSupervisor(pUsuarioCreacion));
+                    cc.ObservacionFlujoInversion = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, VerificarEsSupervisor(pUsuarioCreacion));
 
                 });
 
-                
-                
+
+
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
                     Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -214,14 +221,15 @@ namespace asivamosffie.services
             }
         }
 
-        private ConstruccionObservacion getObservacion( ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion ){
+        private ConstruccionObservacion getObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
+        {
             ConstruccionObservacion observacion = new ConstruccionObservacion();
 
             ConstruccionObservacion construccionObservacion = pContratoConstruccion.ConstruccionObservacion.ToList()
-                        .Where( r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico )
-                        .OrderByDescending( o => o.FechaCreacion ).FirstOrDefault();
+                        .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
+                        .OrderByDescending(o => o.FechaCreacion).FirstOrDefault();
 
-            if ( construccionObservacion != null )
+            if (construccionObservacion != null)
                 observacion = construccionObservacion;
 
             return construccionObservacion;
@@ -320,43 +328,52 @@ namespace asivamosffie.services
             {
                 CreateEdit = "EDIT OBSERVACION DIAGNOSTICO";
 
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( pContratoConstruccion.ContratoConstruccionId );
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
 
                 contratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
                 contratoConstruccion.FechaModificacion = DateTime.Now;
 
-                if ( esSupervisor ){
+                if (esSupervisor)
+                {
 
 
 
                     contratoConstruccion.TieneObservacionesDiagnosticoSupervisor = pContratoConstruccion.TieneObservacionesDiagnosticoSupervisor;
 
-                    if ( contratoConstruccion.TieneObservacionesDiagnosticoSupervisor.Value ){
+                    if (contratoConstruccion.TieneObservacionesDiagnosticoSupervisor.Value)
+                    {
 
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.EsSupervision == true &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.EsSupervision == true &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
 
-                }else{
+                }
+                else
+                {
                     contratoConstruccion.TieneObservacionesDiagnosticoApoyo = pContratoConstruccion.TieneObservacionesDiagnosticoApoyo;
 
-                    if ( contratoConstruccion.TieneObservacionesDiagnosticoApoyo.Value ){
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                    if (contratoConstruccion.TieneObservacionesDiagnosticoApoyo.Value)
+                    {
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.EsSupervision != true &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.EsSupervision != true &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
                 }
 
@@ -399,41 +416,50 @@ namespace asivamosffie.services
             {
                 CreateEdit = "EDIT OBSERVACION PLANESPROGRAMAS";
 
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( pContratoConstruccion.ContratoConstruccionId );
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
 
                 contratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
                 contratoConstruccion.FechaModificacion = DateTime.Now;
 
-                if ( esSupervisor ){
+                if (esSupervisor)
+                {
 
                     contratoConstruccion.TieneObservacionesPlanesProgramasSupervisor = pContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor;
 
-                    if ( contratoConstruccion.TieneObservacionesPlanesProgramasSupervisor.Value ){
+                    if (contratoConstruccion.TieneObservacionesPlanesProgramasSupervisor.Value)
+                    {
 
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas &&
-                                                                                    r.EsSupervision == true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas &&
+                                                                                   r.EsSupervision == true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
 
-                }else{
+                }
+                else
+                {
                     contratoConstruccion.TieneObservacionesPlanesProgramasApoyo = pContratoConstruccion.TieneObservacionesPlanesProgramasApoyo;
 
-                    if ( contratoConstruccion.TieneObservacionesPlanesProgramasApoyo.Value ){
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                    if (contratoConstruccion.TieneObservacionesPlanesProgramasApoyo.Value)
+                    {
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas &&
-                                                                                    r.EsSupervision != true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas &&
+                                                                                   r.EsSupervision != true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
                 }
 
@@ -476,41 +502,50 @@ namespace asivamosffie.services
             {
                 CreateEdit = "EDIT OBSERVACION MANEJOANTICIPO";
 
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( pContratoConstruccion.ContratoConstruccionId );
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
 
                 contratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
                 contratoConstruccion.FechaModificacion = DateTime.Now;
 
-                if ( esSupervisor ){
+                if (esSupervisor)
+                {
 
                     contratoConstruccion.TieneObservacionesManejoAnticipoSupervisor = pContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor;
 
-                    if ( contratoConstruccion.TieneObservacionesManejoAnticipoSupervisor.Value ){
+                    if (contratoConstruccion.TieneObservacionesManejoAnticipoSupervisor.Value)
+                    {
 
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo &&
-                                                                                    r.EsSupervision == true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo &&
+                                                                                   r.EsSupervision == true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
 
-                }else{
+                }
+                else
+                {
                     contratoConstruccion.TieneObservacionesManejoAnticipoApoyo = pContratoConstruccion.TieneObservacionesManejoAnticipoApoyo;
 
-                    if ( contratoConstruccion.TieneObservacionesManejoAnticipoApoyo.Value ){
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                    if (contratoConstruccion.TieneObservacionesManejoAnticipoApoyo.Value)
+                    {
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo &&
-                                                                                    r.EsSupervision != true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo &&
+                                                                                   r.EsSupervision != true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
                 }
 
@@ -553,41 +588,50 @@ namespace asivamosffie.services
             {
                 CreateEdit = "EDIT OBSERVACION PROGRAMACIONOBRA";
 
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( pContratoConstruccion.ContratoConstruccionId );
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
 
                 contratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
                 contratoConstruccion.FechaModificacion = DateTime.Now;
 
-                if ( esSupervisor ){
+                if (esSupervisor)
+                {
 
                     contratoConstruccion.TieneObservacionesProgramacionObraSupervisor = pContratoConstruccion.TieneObservacionesProgramacionObraSupervisor;
 
-                    if ( contratoConstruccion.TieneObservacionesProgramacionObraSupervisor.Value ){
+                    if (contratoConstruccion.TieneObservacionesProgramacionObraSupervisor.Value)
+                    {
 
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra &&
-                                                                                    r.EsSupervision == true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra &&
+                                                                                   r.EsSupervision == true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
 
-                }else{
+                }
+                else
+                {
                     contratoConstruccion.TieneObservacionesProgramacionObraApoyo = pContratoConstruccion.TieneObservacionesProgramacionObraApoyo;
 
-                    if ( contratoConstruccion.TieneObservacionesProgramacionObraApoyo.Value ){
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                    if (contratoConstruccion.TieneObservacionesProgramacionObraApoyo.Value)
+                    {
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra&&
-                                                                                    r.EsSupervision != true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra &&
+                                                                                   r.EsSupervision != true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
                 }
 
@@ -630,41 +674,50 @@ namespace asivamosffie.services
             {
                 CreateEdit = "EDIT OBSERVACION FLUJOINVERSION";
 
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( pContratoConstruccion.ContratoConstruccionId );
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
 
                 contratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
                 contratoConstruccion.FechaModificacion = DateTime.Now;
 
-                if ( esSupervisor ){
+                if (esSupervisor)
+                {
 
                     contratoConstruccion.TieneObservacionesFlujoInversionSupervisor = pContratoConstruccion.TieneObservacionesFlujoInversionSupervisor;
 
-                    if ( contratoConstruccion.TieneObservacionesFlujoInversionSupervisor.Value ){
+                    if (contratoConstruccion.TieneObservacionesFlujoInversionSupervisor.Value)
+                    {
 
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion &&
-                                                                                    r.EsSupervision == true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion &&
+                                                                                   r.EsSupervision == true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
 
-                }else{
+                }
+                else
+                {
                     contratoConstruccion.TieneObservacionesFlujoInversionApoyo = pContratoConstruccion.TieneObservacionesFlujoInversionApoyo;
 
-                    if ( contratoConstruccion.TieneObservacionesFlujoInversionApoyo.Value ){
-                        CreateEditObservacionConstruccion( contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion );
-                    }else{
+                    if (contratoConstruccion.TieneObservacionesFlujoInversionApoyo.Value)
+                    {
+                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                    }
+                    else
+                    {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion
-                                                                        .Where( r => r.ContratoConstruccionId ==  pContratoConstruccion.ContratoConstruccionId &&
-                                                                                    r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion &&
-                                                                                    r.EsSupervision != true )
-                                                                        .OrderByDescending( r => r.FechaCreacion)
+                                                                        .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
+                                                                                   r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion &&
+                                                                                   r.EsSupervision != true)
+                                                                        .OrderByDescending(r => r.FechaCreacion)
                                                                         .FirstOrDefault();
-                        _context.ConstruccionObservacion.Remove( observacionDelete );
+                        _context.ConstruccionObservacion.Remove(observacionDelete);
                     }
                 }
 
@@ -1139,14 +1192,38 @@ namespace asivamosffie.services
                 }
 
                 Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
-                
-                if ( contrato.TipoContratoCodigo == "1" ) // contrato de obra
+
+                if (contrato.TipoContratoCodigo == "1") // contrato de obra
                     if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
                         contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-                
-                if ( contrato.TipoContratoCodigo == "2" ) // contrato de interventoria
+
+                if (contrato.TipoContratoCodigo == "2")
+                { // contrato de interventoria
                     if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados)
                         contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
+
+                    List<ContratoConstruccion> listaConstruccion = _context.ContratoConstruccion
+                                                                        .Where(cp => cp.ContratoId == pConstruccion.ContratoId)
+                                                                        .Include(r => r.ConstruccionPerfil)
+                                                                        .ToList();
+
+                    string estadoTempContrato = contrato.EstadoVerificacionConstruccionCodigo;
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_verificados;
+
+                    listaConstruccion.ForEach(c =>
+                    {
+                        
+                        c.RegistroCompleto = true;
+                        c.ConstruccionPerfil.ToList().ForEach( cp => {
+                            if (cp.RegistroCompleto != true){
+                                c.RegistroCompleto = false; 
+                                contrato.EstadoVerificacionConstruccionCodigo = estadoTempContrato;
+                            }
+                        });
+                        
+                    });
+                }
+
 
                 _context.SaveChanges();
                 return
@@ -1170,6 +1247,48 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Code = GeneralCodes.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Al_Supervisor, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+                Contrato contrato = _context.Contrato.Find(pContratoId);
+
+                contrato.UsuarioModificacion = pUsuarioCreacion;
+                contrato.FechaModificacion = DateTime.Now;
+
+                contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Enviado_al_supervisor;
+              
+
+                _context.SaveChanges();
+                return
+                    new Respuesta
+                    {
+                        //Data = await this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
                     };
             }
         }
@@ -1754,8 +1873,8 @@ namespace asivamosffie.services
 
 
 
-                        //Temporal proyecto update
-                        tempFlujo.EstaValidado = true;
+                       //Temporal proyecto update
+                       tempFlujo.EstaValidado = true;
                        tempFlujo.FechaModificacion = DateTime.Now;
                        tempFlujo.UsuarioModificacion = pUsuarioModifico;
                        _context.TempFlujoInversion.Update(tempFlujo);
@@ -1903,7 +2022,7 @@ namespace asivamosffie.services
                     };
             }
         }
-        
+
         private bool ValidarRegistroCompletoConstruccionPerfil(ConstruccionPerfil pPerfil)
         {
             if (
@@ -1950,14 +2069,15 @@ namespace asivamosffie.services
                 throw new Exception("Debe enviar el id del contrato");
             }
 
-            Contrato contrato = _context.Contrato.Where( c => c.ContratoId == pContratoId )
-                                                    .Include( r => r.Contratacion )
-                                                        .ThenInclude( r => r.DisponibilidadPresupuestal )
+            Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId)
+                                                    .Include(r => r.Contratacion)
+                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
                                                     .FirstOrDefault();
 
-            if ( contrato?.Contratacion?.DisponibilidadPresupuestal != null )
-                return await _budgetAvailabilityService.GetPDFDRP( contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion  );
-            else{
+            if (contrato?.Contratacion?.DisponibilidadPresupuestal != null)
+                return await _budgetAvailabilityService.GetPDFDRP(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion);
+            else
+            {
                 throw new Exception("El contrato no tiene DRP");
             }
 
