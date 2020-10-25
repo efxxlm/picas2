@@ -32,9 +32,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListCompromisoSeguimiento")]
         [HttpGet]
-        public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId)
+        public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId , int pTipoCompromiso)
         {
-            return await _managementCommitteeReportService.GetListCompromisoSeguimiento(SesionSolicitudCompromisoId); 
+            return await _managementCommitteeReportService.GetListCompromisoSeguimiento(SesionSolicitudCompromisoId, pTipoCompromiso); 
         }
 
         [Route("GetListCompromisos")]

@@ -7,6 +7,11 @@
         public const string Finalizado = "3";
  
     }
+    public enum EnumeratorTipoCompromisos : int
+    {
+        Compromisos_Solicitudes = 1,
+        Compromisos_Temas_ProposicionesVarios = 2
+    }
 
 
     public class ConstantStringCompromisos

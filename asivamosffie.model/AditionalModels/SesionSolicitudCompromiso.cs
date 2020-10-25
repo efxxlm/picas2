@@ -9,7 +9,9 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public string GestionRealizada { get; set; }
-      
+
+        [NotMapped]
+        public string TipoCompromiso { get; set; }
     }
 
 }
