@@ -40,6 +40,9 @@ export class ActBeginService {
   GetContratoObservacionByIdContratoId(pContratoId: number){
     return this.http.get<GetContratoObservacionByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoObservacionByIdContratoId?pContratoId=${pContratoId}`);
   }
+  CambiarEstadoVerificacionActa(pContratoId: number, pNuevoCodigoEstadoVerificacionActa: string,pUsuarioModifica : string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/actBegin/CambiarEstadoActa?pContratoId=${pContratoId}&pNuevoCodigoEstadoVerificacionActa=${pNuevoCodigoEstadoVerificacionActa}&pUsuarioModifica=${pUsuarioModifica}`, null);  
+  }
 }
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;
