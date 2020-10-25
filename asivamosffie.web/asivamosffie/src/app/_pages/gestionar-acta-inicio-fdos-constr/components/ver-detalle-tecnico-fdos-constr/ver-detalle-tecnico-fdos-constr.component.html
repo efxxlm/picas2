@@ -82,6 +82,6 @@
         </mat-card>
     </div>
 </section>
-<section class="container text-center">
+<section class="container text-center" *ngIf="this.botonDescargar==true">
     <button mat-raised-button color="accent" (click)="this.descargarActaSuscrita()">Descargar acta suscrita</button>
 </section>

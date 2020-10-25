@@ -79,6 +79,10 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
 
     });
   }
+  verDetalleActaCargada(id){
+    localStorage.setItem("actaSuscrita","true");
+    this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
+  }
   cargarActaSuscrita(id){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';

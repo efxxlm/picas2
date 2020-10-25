@@ -38,6 +38,8 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   obsConEspeciales: string;
   plazoEjecucionConstrM: number;
   plazoEjecucionConstrD: number;
+
+  botonDescargar: boolean =false;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -45,6 +47,12 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
+    if(localStorage.getItem("actaSuscrita") == "true"){
+      this.botonDescargar = true;
+    }
+    else{
+      this.botonDescargar = false;
+    }
   }
 
   cargarRol() {
