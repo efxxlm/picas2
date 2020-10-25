@@ -66,19 +66,18 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     localStorage.setItem("editable","true");
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
-  enviarParaRevision(idContrato, estadoActaContrato){
-    /*estadoActaContrato="366";
-    this.service.CambiarEstadoActa(idContrato,estadoActaContrato).subscribe(data=>{
-      if(data.isSuccessful==true){
-        this.showSendForRevisionBtn=false;
-      }
-    });*/
+  enviarParaRevision(idContrato){
+    this.services.CambiarEstadoActa(idContrato,"3","usr2").subscribe(data=>{
+      this.services.GetListGrillaActaInicio().subscribe(items=>{
+        this.services.loadDataItems.next(items);
+      });
+    });
   }
   verDetalleActaFDos(id){
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
   enviarActaParaFirma(id){
-    this.services.CambiarEstadoActa(id,"4","usr2").subscribe(data=>{
+    this.services.CambiarEstadoActa(id,"3","usr2").subscribe(data=>{
 
     });
   }
