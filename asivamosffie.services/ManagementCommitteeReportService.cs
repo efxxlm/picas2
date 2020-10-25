@@ -86,10 +86,10 @@ namespace asivamosffie.services
             }
             return grillaSesionComiteTecnicoCompromisos.OrderByDescending(r => r.ComiteTecnicoId).ToList();
         }
-         
+
         //Lista Compromisos temas y solicitudes
         public async Task<List<dynamic>> GetListCompromisos()
-        { 
+        {
             List<dynamic> ListDynamic = new List<dynamic>();
             //   string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
             List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
@@ -104,7 +104,8 @@ namespace asivamosffie.services
                 .Include(r => r.SesionComiteTema)
                     .ThenInclude(r => r.TemaCompromiso).ToListAsync();
 
-
+            List<Dominio> ListEstadoCompromisos = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).ToList();
+                
             foreach (var ComiteTecnico in ListComiteTecnico)
             {
                 foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico)
@@ -113,11 +114,12 @@ namespace asivamosffie.services
                     {
                         ListDynamic.Add(new
                         {
-                            FechaComite = ComiteTecnico.FechaOrdenDia,
+                            FechaComite = ComiteTecnico.FechaOrdenDia, 
                             ComiteTecnico.NumeroComite,
                             Compromiso = SesionSolicitudCompromiso.CompromisoSeguimiento,
-                            EstadoCompromiso = SesionSolicitudCompromiso.EstadoCodigo,
+                            EstadoCompromiso = ListEstadoCompromisos.Where(r=> r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault(),
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud,
+                            SesionSolicitudCompromiso.FechaCumplimiento,
                             CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId
                         });
                     }
@@ -132,8 +134,9 @@ namespace asivamosffie.services
                             FechaComite = ComiteTecnico.FechaOrdenDia,
                             ComiteTecnico.NumeroComite,
                             Compromiso = TemaCompromiso.Tarea,
-                            EstadoCompromiso = TemaCompromiso.EstadoCodigo,
+                            EstadoCompromiso = ListEstadoCompromisos.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault(),
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema,
+                            FechaCumplimiento = TemaCompromiso.FechaCumplimiento,
                             CompromisoId = TemaCompromiso.TemaCompromisoId
                         });
                     }
