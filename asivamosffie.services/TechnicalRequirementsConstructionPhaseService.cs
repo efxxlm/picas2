@@ -160,6 +160,9 @@ namespace asivamosffie.services
             {
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
                 List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
+                List<Dominio> ListPerfilesDominio = _context.Dominio.Where( d => d.TipoDominioId == 11 ).ToList();
+
+
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                      .Include(r => r.ContratoPoliza)
                      .Include(r => r.Contratacion)
@@ -192,6 +195,8 @@ namespace asivamosffie.services
                     {
                         cp.ConstruccionPerfilObservacion = cp.ConstruccionPerfilObservacion.Where(cpo => cpo.Eliminado != true).ToList();
                         cp.ConstruccionPerfilNumeroRadicado = cp.ConstruccionPerfilNumeroRadicado.Where(cpr => cpr.Eliminado != true).ToList();
+
+                        cp.NombrePerfil = ListPerfilesDominio.Find( p => p.Codigo == cp.PerfilCodigo ).Nombre;
 
                     });
 

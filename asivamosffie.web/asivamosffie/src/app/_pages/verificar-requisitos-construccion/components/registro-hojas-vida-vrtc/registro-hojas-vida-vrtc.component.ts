@@ -190,7 +190,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
   };
 
   openDialog (modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });   
