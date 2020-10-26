@@ -75,8 +75,14 @@
                   [routerLink]="['/solicitarContratacion/verDetalleContratacion', element.contratacionId]"
                   *ngIf=" (element.estadoSolicitudCodigo === 'En trámite' && element.registroCompleto)
                           || (element.estadoSolicitudCodigo === 'Rechazado por comité técnico' && element.registroCompleto)
-                          || (element.estadoSolicitudCodigo === 'Aprobado por comité técnico' && element.registroCompleto)
-                          || (element.estadoSolicitudCodigo === 'Aprobado por comité fiduciario' && element.registroCompleto)">
+                          || (element.estadoSolicitudCodigo === 'Aprobado por comité técnico')
+                          || (element.estadoSolicitudCodigo === 'Aprobado por comité fiduciario')
+                          || (element.estadoSolicitudCodigo === 'Enviadas a la Fiduciaria')
+                          || (element.estadoSolicitudCodigo === 'Firmado')
+                          || (element.estadoSolicitudCodigo === 'En firma del contratista')
+                          || (element.estadoSolicitudCodigo === 'Rechazado por comité fiduciario' && element.registroCompleto)
+                          || (element.estadoSolicitudCodigo === 'En proceso de firmas' && element.registroCompleto)
+                          || (element.estadoSolicitudCodigo === 'Registradas por la fiduciaria')">
                   Ver detalle
           </button>
           <button mat-raised-button color="accent" class="btn-table"
