@@ -393,6 +393,7 @@ namespace asivamosffie.services
                 contrato.RutaActaSuscrita = strFilePatch + "//" + pFile.FileName;
                 //contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
                 _context.Contrato.Update(contrato);
+                 _context.SaveChanges();
 
                 //                notificación de alerta al interventor, al apoyo a la
                 //supervisión y al supervisor
@@ -990,7 +991,7 @@ namespace asivamosffie.services
             {
                 Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
                 contrato.UsuarioModificacion = pUsuarioModifica;
-                contrato.EstadoActaFase2 = pNuevoCodigoEstadoActa;
+                contrato.EstadoActaFase2 =  pNuevoCodigoEstadoActa.Trim();
                 contrato.FechaModificacion= DateTime.Now;               
 
                 _context.SaveChanges();

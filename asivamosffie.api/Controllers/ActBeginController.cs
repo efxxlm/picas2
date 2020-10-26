@@ -181,10 +181,9 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpPost]
-        [Route("EditCargarActaSuscritaContrato")]
-       
-        public async Task<IActionResult> EditCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
-             , IFormFile pFile,  string pUsuarioModificacion
+        [Route("EditCargarActaSuscritaContrato")]       
+        public async Task<IActionResult> EditCargarActaSuscritaContrato(  int pContratoId,  DateTime pFechaFirmaContratista,  DateTime pFechaFirmaActaContratistaInterventoria
+             ,  IFormFile pFile,  string pUsuarioModificacion
           )
         {
             Respuesta respuesta = new Respuesta();

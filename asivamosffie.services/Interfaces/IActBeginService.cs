@@ -33,6 +33,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> InsertEditContratoObservacion(ContratoObservacion contratoObservacion);
 
+
         Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
             );
