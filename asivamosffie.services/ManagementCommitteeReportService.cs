@@ -222,12 +222,16 @@ namespace asivamosffie.services
                                .ThenInclude(r => r.Usuario)
                              .Include(r => r.SesionComiteTecnicoCompromiso)
                                .ThenInclude(r => r.CompromisoSeguimiento)
+                                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                 .ThenInclude(r => r.SesionSolicitudVoto)
                              .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                .ThenInclude(r => r.SesionSolicitudCompromiso)
-                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario) 
                               .ThenInclude(r => r.SesionSolicitudCompromiso)
+                               .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                              .ThenInclude(r => r.SesionSolicitudVoto)
                              .ToListAsync();
-
+     
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
 
 
