@@ -222,10 +222,10 @@ namespace asivamosffie.services
                                  .ThenInclude(r => r.Usuario)
                                .Include(r => r.SesionComiteTecnicoCompromiso)
                                  .ThenInclude(r => r.CompromisoSeguimiento)
-                               .Include(r => r.SesionComiteTecnicoCompromiso)
                                .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                  .ThenInclude(r => r.SesionSolicitudCompromiso)
                                .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                                .ThenInclude(r => r.SesionSolicitudCompromiso)
                                .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
@@ -283,6 +283,32 @@ namespace asivamosffie.services
                                 SesionComiteSolicitudComiteTecnico.ProcesoSeleccion = ListProcesosSelecicon.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
                             }
                         }
+
+                        if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
+                        {
+                            SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
+                                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                                    && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
+                        }
+                    }
+
+                    foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnicoFiduciario)
+                    {
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                        {
+                            SesionComiteSolicitudComiteTecnico.Contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
+                        }
+
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ProcesoSeleccion =
+                                    ListProcesosSelecicon
+                                    .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        } 
 
                         if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                         {
