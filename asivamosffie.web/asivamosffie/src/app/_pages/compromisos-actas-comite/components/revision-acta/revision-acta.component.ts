@@ -80,7 +80,9 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         };
 
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId( this.activatedRoute.snapshot.params.id )
-        .subscribe( ( response: any ) => this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico );
+        .subscribe( ( response: any ) => { 
+          this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico;
+        } );
 
       } );
   };

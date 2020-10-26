@@ -25,9 +25,14 @@
         <div class="pr-1">
           <span class="label-left">Tipo de solicitud</span>
         </div>
-        <div class="col">
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '1'">
           <b class="label-left color-blue">
-            {{ ( solicitudes.tipoSolicitud || solicitudes.tipoSolicitudCodigo === '1' ? 'Contratación' : null ) }}
+            Apertura de proceso de selección
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '2'">
+          <b class="label-left color-blue">
+            Contratación
           </b>
         </div>
       </div>

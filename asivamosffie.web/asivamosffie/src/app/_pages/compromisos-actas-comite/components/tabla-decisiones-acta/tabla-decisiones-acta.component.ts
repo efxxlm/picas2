@@ -39,6 +39,7 @@ export class TablaDecisionesActaComponent implements OnInit {
       .subscribe( ( response: any[] ) => {
 
         const tipoSolicitud = response.filter( tipo => tipo.codigo === this.tipoSolicitudCodigo );
+        console.log( tipoSolicitud, this.tipoSolicitudCodigo, response );
 
         if ( tipoSolicitud[0].nombre === 'Apertura de proceso de selección' ) {
           //this.compromisoActaSvc.getSelectionProcessById( this.contratacionId )

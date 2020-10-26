@@ -310,6 +310,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     this.aportantes.controls.forEach(controlAportante => {
       const listaComponentes = controlAportante.get('componentes') as FormArray;
 
+      valorTotalSumado += controlAportante.get('valorAportanteProyecto').value;
+
       const aportante: ContratacionProyectoAportante = {
         contratacionProyectoAportanteId: controlAportante.get('contratacionProyectoAportanteId').value,
         contratacionProyectoId: this.contratacionProyecto.contratacionProyectoId,
@@ -356,8 +358,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         valoresCorrectos = false;
       };
 
-      valorTotalSumado += valorSumado;
-
       this.contratacionProyecto.contratacionProyectoAportante.push(aportante);
     });
 
@@ -369,6 +369,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     };
 
     if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' ) {
+      console.log( valorTotalSumado );
       if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra  ) {
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
         return;
