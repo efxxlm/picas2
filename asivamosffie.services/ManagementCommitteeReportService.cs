@@ -214,19 +214,19 @@ namespace asivamosffie.services
             try
             {
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
-                        .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
-                              .Include(r => r.SesionComentario)
-                              .Include(r => r.SesionComiteTema)
-                                 .ThenInclude(r => r.TemaCompromiso)
-                              .Include(r => r.SesionParticipante)
-                                 .ThenInclude(r => r.Usuario)
-                               .Include(r => r.SesionComiteTecnicoCompromiso)
-                                 .ThenInclude(r => r.CompromisoSeguimiento)
-                               .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                                 .ThenInclude(r => r.SesionSolicitudCompromiso)
-                               .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                                .ThenInclude(r => r.SesionSolicitudCompromiso)
-                               .ToListAsync();
+                      .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
+                            .Include(r => r.SesionComentario)
+                            .Include(r => r.SesionComiteTema)
+                               .ThenInclude(r => r.TemaCompromiso)
+                            .Include(r => r.SesionParticipante)
+                               .ThenInclude(r => r.Usuario)
+                             .Include(r => r.SesionComiteTecnicoCompromiso)
+                               .ThenInclude(r => r.CompromisoSeguimiento)
+                             .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                               .ThenInclude(r => r.SesionSolicitudCompromiso)
+                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                              .ThenInclude(r => r.SesionSolicitudCompromiso)
+                             .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
 
@@ -308,7 +308,7 @@ namespace asivamosffie.services
                                     .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                     .FirstOrDefault();
                             }
-                        } 
+                        }
 
                         if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                         {
@@ -320,6 +320,7 @@ namespace asivamosffie.services
                 }
 
                 return ListComiteTecnico;
+
             }
             catch (Exception ex)
             {
