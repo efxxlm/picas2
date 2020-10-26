@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActBeginService, ContratoObservacion } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -45,6 +45,11 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   plazoEjecucionPreConstruccionDias: number;
   plazoEjecucionConstrM: number;
   plazoEjecucionConstrD: number;
+  observacionID: any;
+
+  fechaSesionString: string;
+  fechaSesion: Date;
+  fechaCreacion: Date;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -98,7 +103,12 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     this.services.GetContratoObservacionByIdContratoId(id).subscribe(data0=>{
       this.addressForm.get('tieneObservaciones').setValue(data0.esActaFase2);
       this.addressForm.get('observaciones').setValue(data0.observaciones);
+      this.loadIdObs(data0.contratoObservacionId);
+      this.fechaCreacion = data0.fechaCreacion;
     });
+  }
+  loadIdObs(id){
+    this.observacionID = id;
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -145,7 +155,22 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     });
   }
   onSubmit() {
-    this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3").subscribe(resp=>{
+    this.fechaSesion = new Date(this.fechaCreacion);
+    this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
+    const contratoObs: ContratoObservacion ={
+      contratoObservacionId:  this.observacionID,
+      contratoId: this.contratoId,
+      observaciones:  this.addressForm.value.observaciones,
+      fechaCreacion: this.fechaSesionString,
+      usuarioCreacion: "usr3",
+      
+      //opcionales
+      esActa: true,
+      fechaModificacion: this.fechaSesionString,
+      usuarioModificacion: "usr3",
+      esActaFase2: this.addressForm.value.tieneObservaciones
+    };
+    this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp=>{
       if(resp.code=="200"){
         this.openDialog(resp.message, "");
         this.router.navigate(['/generarActaInicioConstruccion']);
