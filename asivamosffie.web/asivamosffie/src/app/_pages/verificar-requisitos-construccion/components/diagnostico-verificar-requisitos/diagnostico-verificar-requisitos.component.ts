@@ -53,9 +53,14 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
 
   ngOnInit(): void {
     if ( this.construccion ) {
-        this.addressForm.value.tieneObservaciones = this.construccion.tieneObservacionesDiagnosticoApoyo;
-        this.addressForm.value.observaciones = this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.observaciones : null;
-        this.addressForm.value.construccionObservacionId = this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null;
+        this.addressForm.setValue({
+          tieneObservaciones: this.construccion.tieneObservacionesDiagnosticoApoyo,
+          observaciones: this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.observaciones : null,
+          construccionObservacionId: this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null,
+        })
+        
+
+        console.log( this.addressForm );
     }
   }
 

@@ -113,6 +113,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public int? ArchivoCargueIdProgramacionObra { get; set; }
         public int? ArchivoCargueIdFlujoInversion { get; set; }
+        public bool? RegistroCompletoVerificacion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
