@@ -11,7 +11,7 @@ namespace asivamosffie.model.APIModels
     */
     public class GrillaFuentesFinanciacion
     {
-        public int FuenteFinanciacionID { get; set; }
+        public int? FuenteFinanciacionID { get; set; }
         public string Fuente { get; set; }
         public decimal Saldo_actual_de_la_fuente { get; set; }
         public decimal Valor_solicitado_de_la_fuente { get; set; }

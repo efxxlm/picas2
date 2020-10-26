@@ -350,8 +350,12 @@ export class RegistrarComponent implements OnInit {
         this.registrosPresupuestales.push(this.createRP());
       }
     } else if (FormNumRP <= this.registrosPresupuestales.length && FormNumRP >= 0) {
+      let i=this.registrosPresupuestales.length;
       while (this.registrosPresupuestales.length > FormNumRP) {
-        this.borrarArray(this.registrosPresupuestales, this.registrosPresupuestales.length - 1,0,4);
+        console.log(this.registrosPresupuestales.length);
+        console.log(FormNumRP)
+        this.registrosPresupuestales.removeAt(i);
+        i--;
       }
     }
   }
@@ -543,11 +547,14 @@ export class RegistrarComponent implements OnInit {
           }
         });
         if(bitestavacio)
-        {
-          while (this.vigencias1(j).length > FormNumvigencias.cuantasVigencias) {
-            this.removeItemVigencia(this.vigencias1(j), this.vigencias1(j).length - 1,j,false);
+        {          
+          let cuantas=FormNumvigencias.cuantasVigencias;
+          var resta=this.vigencias1(j).length-FormNumvigencias.cuantasVigencias
+          for(let secuenciaa=this.vigencias1(j).length;secuenciaa>=cuantas;secuenciaa--) {
+            //this.removeItemVigencia(this.vigencias1(j), this.vigencias1(j).length - 1,j,false);
+            this.vigencias1(j).removeAt(secuenciaa);
           }
-          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
+          //this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
         else{
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");

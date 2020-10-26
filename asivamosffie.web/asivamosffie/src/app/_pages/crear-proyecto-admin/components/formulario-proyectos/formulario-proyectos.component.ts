@@ -24,7 +24,7 @@ export class FormularioProyectosComponent implements OnInit {
   addFont(index: number) {
     console.log("push");
     console.log(index);
-    this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
+    this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
   }
 
   openDialogSiNo(modalTitle: string, modalText: string,key: AportanteFuenteFinanciacion, aportante: Aportante) {
@@ -102,10 +102,10 @@ export class FormularioProyectosComponent implements OnInit {
         let idcontador = 0;
         idcontador = respuesta[0]?respuesta[0].proyectoAdminitracionId:0;
         this.proyectoAdmin = { identificador: (idcontador + 1).toString(), proyectoAdministrativoAportante: [{
-          aportanteId: 0,
-          proyectoAdminstrativoId: 0,
+          aportanteId: null,
+          proyectoAdminstrativoId: null,
           
-          aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
+          aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
         }] };
       }
       
@@ -170,9 +170,9 @@ export class FormularioProyectosComponent implements OnInit {
 
   addAportant() {
     this.proyectoAdmin.proyectoAdministrativoAportante.push({
-      aportanteId: 0,
-      proyectoAdminstrativoId: 0,      
-      aportanteFuenteFinanciacion: [{ valorFuente: 0, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
+      aportanteId: null,
+      proyectoAdminstrativoId: null,      
+      aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
     });
   }
   deleteAportant(key: Aportante) {

@@ -497,7 +497,7 @@
             </div>
           </div>
         </div>
-        <div class="row" *ngIf="this.tipoAportante.Tercero.includes(aportantes.aportante.tipoAportanteId.toString())">
+        <div class="row" *ngIf="aportantes.aportante.tipoAportanteId!=null && this.tipoAportante.Tercero.includes(aportantes.aportante.tipoAportanteId?.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -516,7 +516,7 @@
             </div>
           </div>
         </div>
-        <div class="row" *ngIf="this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
+        <div class="row" *ngIf="aportantes.aportante.tipoAportanteId!=null && this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -535,7 +535,7 @@
             </div>
           </div>
         </div>
-        <div class="row" *ngIf="this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
+        <div class="row" *ngIf="aportantes.aportante.tipoAportanteId!=null && this.tipoAportante.ET.includes(aportantes.aportante.tipoAportanteId.toString())">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">

@@ -67,6 +67,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite)
         ;
     
@@ -91,6 +92,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.Cerrado ;
 
     this.cerrarProceso=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado;
