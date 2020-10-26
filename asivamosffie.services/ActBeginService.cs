@@ -936,9 +936,9 @@ namespace asivamosffie.services
 
                 TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
 
-                if (EnumeratorTipoDominio.Tipo_Contrato.ToString() == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                     EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
-                else if (EnumeratorTipoDominio.Tipo_Contrato.ToString() == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+                else if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
                     EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
 
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
