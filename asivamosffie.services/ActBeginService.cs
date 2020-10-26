@@ -1145,13 +1145,17 @@ namespace asivamosffie.services
 
                     strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
-                    contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+                    //contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+                    contratoObservacion =  await GetContratoObservacionByIdContratoId( contrato.ContratoId);
 
                     //if (contratoObservacion != null)
                     //{
                     //strContratoObservacion = contratoObservacion.Observaciones;
                     //}
-                    strContratoObservacion = contrato.Observaciones;
+
+                    //strContratoObservacion = contrato.Observaciones;
+                    
+                    strContratoObservacion = contratoObservacion.Observaciones;
 
                     contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
 
