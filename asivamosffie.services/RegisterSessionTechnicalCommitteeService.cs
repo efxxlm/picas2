@@ -41,7 +41,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateEditSesionSolicitudVoto(SesionComiteSolicitud pSesionComiteSolicitud)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Solicitud_Voto, (int)EnumeratorTipoDominio.Acciones);
-            string CreateEdit = "";
+            string CreateEdit = string.Empty;
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
@@ -797,7 +797,7 @@ namespace asivamosffie.services
                 “Contratación”,
                 “Modificación contractual por novedad”, 
                 “Controversia contractual”,
-                 “Procesos de defensa judicial”. */ 
+                 “Procesos de defensa judicial”. */
                 pFechaOrdenDelDia = pFechaOrdenDelDia.AddDays(-CantidadDiasComite);
 
                 List<ProcesoSeleccion> ListProcesoSeleccion =
@@ -1140,15 +1140,23 @@ namespace asivamosffie.services
             //  List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
-                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-
-                  .Include(r => r.SesionInvitado)
-                  .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId) 
+                     .Include(r => r.SesionInvitado) 
+                      //Para Comite Tecnico
+                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                      .ThenInclude(r => r.SesionSolicitudVoto)
-                  .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                      .ThenInclude(r => r.SesionSolicitudCompromiso)
                        .ThenInclude(r => r.ResponsableSesionParticipante)
                          .ThenInclude(r => r.Usuario)
+                  //Para Comite Fiduciaria
+                  .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                     .ThenInclude(r => r.SesionSolicitudVoto) 
+                  .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
+                       .ThenInclude(r => r.ResponsableSesionParticipante)
+                         .ThenInclude(r => r.Usuario)
+                          
                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
