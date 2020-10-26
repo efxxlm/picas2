@@ -126,13 +126,16 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   changeProponente($event:any){
     
-    console.log(this.addressForm.get('nombresProponentes').value);
-    this.procesoSeleccion.procesoSeleccionProponente=[];
+    console.log(this.addressForm.get('cuantosProponentes').value);
+    //this.procesoSeleccion.procesoSeleccionProponente=[];
+    console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
     if(this.addressForm.get('cuantosProponentes').value>0)
     {
-      if(this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
+      if(this.addressForm.get('cuantosProponentes').value>=this.addressForm.get('nombresProponentes').value.length
+      ||this.addressForm.get('cuantosProponentes').value>=this.procesoSeleccion.procesoSeleccionProponente.length)
       {
-        this.addressForm.get('nombresProponentes').value.forEach(element => {
+        this.addressForm.get('nombresProponentes').value.forEach(element => {   
+          console.log(element);     
           if ( element != 'Nuevo' ){
             let elemento: ProcesoSeleccionProponente = element;
             elemento.procesoSeleccionProponenteId = "0";
@@ -143,6 +146,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
             }
             
             this.idProponenteExistente = element.procesoSeleccionProponenteId; 
+            console.log(this.procesoSeleccion.procesoSeleccionProponente);
           }
           else{
             this.nuevo=true;

@@ -9,6 +9,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { forkJoin } from 'rxjs';
 
+/*deprecated
+*
+*
+*este componente se dio de baja para combinarlo en tabla cronograma, facilitando la comunicación de los objetos y eliminando doble llamado
+*
+*/ 
 export interface ProcesosElement {
   id: any;
   tipo: string;
@@ -108,9 +114,11 @@ export class TablaDetalleCronogramaComponent implements OnInit {
     })
   }
 
-  onDetalle(id:number){
-    this.editMode.valor = !this.editMode.valor;
-    location.reload();
+  onDetalle(id:any,tipo:number){
+    //this.editMode.valor = !this.editMode.valor;
+    console.log("editar");
+    console.log(id);
+    //location.reload();
   }
 
   onEnviarSolicitud(id:any){
