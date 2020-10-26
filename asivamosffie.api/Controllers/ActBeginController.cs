@@ -60,7 +60,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditContratoObservacion")]        
-        public async Task<IActionResult> InsertEditContratoObservacion([FromBody]  ContratoObservacion contratoObservacion)
+        public async Task<IActionResult> InsertEditContratoObservacion( ContratoObservacion contratoObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
