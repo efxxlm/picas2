@@ -15,7 +15,12 @@
         <div class="pr-1">
           <span class="label-left">Número de la solicitud</span>
         </div>
-        <div class="col">
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '1'">
+          <b class="label-left color-blue">
+            {{ solicitudes.procesoSeleccion.numeroProceso }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '2'">
           <b class="label-left color-blue">
             {{ solicitudes.numeroSolicitud }}
           </b>
@@ -34,6 +39,14 @@
           <b class="label-left color-blue">
             Contratación
           </b>
+        </div>
+      </div>
+      <div class="row" style="margin-top: .6em;">
+        <div class="col" *ngIf="solicitudes.desarrolloSolicitud">
+          <section [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitud )"></section>
+        </div>
+        <div class="col" *ngIf="solicitudes.desarrolloSolicitudFiduciario">
+          <section [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitudFiduciario )"></section>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>

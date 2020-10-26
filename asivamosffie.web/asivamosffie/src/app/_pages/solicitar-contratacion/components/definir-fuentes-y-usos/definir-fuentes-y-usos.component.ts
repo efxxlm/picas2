@@ -225,7 +225,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   };
   
   validarSaldoDisponible ( saldoIngresado: number, saldoDisponible: number, nombreAportante: string ) {
-    console.log( saldoIngresado, saldoDisponible );
     if (  saldoIngresado > saldoDisponible ) {
       this.openDialog( '', `<b>El valor del aportante ${ nombreAportante } al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>` );
       this.esSaldoPermitido = false;
@@ -309,6 +308,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
     this.aportantes.controls.forEach(controlAportante => {
       const listaComponentes = controlAportante.get('componentes') as FormArray;
+
+      if ( controlAportante.get('valorAportanteProyecto').value === 0 || controlAportante.get('valorAportanteProyecto').value === null ) {
+        this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+      };
 
       valorTotalSumado += controlAportante.get('valorAportanteProyecto').value;
 
