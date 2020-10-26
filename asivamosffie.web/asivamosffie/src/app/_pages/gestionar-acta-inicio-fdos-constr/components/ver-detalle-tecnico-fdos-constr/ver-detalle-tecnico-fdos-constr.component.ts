@@ -41,6 +41,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
 
   botonDescargar: boolean =false;
   conObservacionesSupervisor: boolean;
+  observacionesSupervisor: string;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -99,6 +100,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
     });
     this.services.GetContratoByIdContratoId(id).subscribe(data1=>{
       this.conObservacionesSupervisor = data1.conObervacionesActa;
+      this.observacionesSupervisor = data1.observaciones;
     });
     this.idContrato = id;
   }

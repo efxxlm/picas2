@@ -98,6 +98,7 @@ export interface GetContratoObservacionByIdContratoId {
 }
 export interface GetContratoByIdContratoId{
   conObervacionesActa: boolean;
+  observaciones: string;
 }
 export interface ContratoObservacion{
   contratoObservacionId: number;

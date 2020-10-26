@@ -51,7 +51,9 @@
                 </strong>{{this.plazoEjecucionConstrD}}</p>
             <p><strong>Observaciones o consideraciones especiales: </strong></p>
             <p *ngIf="this.obsConEspeciales=='' || this.obsConEspeciales==null || this.obsConEspeciales==undefined">-----</p>
-            <p *ngIf="this.obsConEspeciales!=='' || this.obsConEspeciales!==null || this.obsConEspeciales!==undefined">{{this.obsConEspeciales}}</p>
+            <div *ngIf="this.obsConEspeciales!=='' || this.obsConEspeciales!==null || this.obsConEspeciales!==undefined">
+                <div [innerHtml]="this.obsConEspeciales"></div> 
+            </div>
         </mat-card-content>
     </mat-card>
     <div *ngIf="this.conObservacionesSupervisor==true">
@@ -63,7 +65,7 @@
             </mat-card-header>
             <mat-card-content>
                 <p><strong>20/07/2020</strong></p>
-                <p>La fecha prevista de terminación no es correcta, verificar la información.</p>
+                <div [innerHtml]="this.observacionesSupervisor"></div> 
             </mat-card-content>
         </mat-card>
     </div>
