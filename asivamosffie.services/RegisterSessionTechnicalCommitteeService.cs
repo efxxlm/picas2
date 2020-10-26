@@ -1133,8 +1133,7 @@ namespace asivamosffie.services
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
             if (pComiteTecnicoId == 0)
-            {
-
+            { 
                 return new ComiteTecnico();
             }
             //  List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
