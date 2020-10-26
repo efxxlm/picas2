@@ -348,7 +348,13 @@ namespace asivamosffie.services
             foreach (var ret in retorno)
             {
                 ret.ControlRecurso = _context.ControlRecurso.Where(x=>x.FuenteFinanciacionId==ret.FuenteFinanciacionId && !(bool)x.Eliminado).ToList();
+                foreach(var control in ret.ControlRecurso)
+                {
+                    control.FuenteFinanciacion = null;
+                }
                 ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
+                ret.Aportante.Cofinanciacion.CofinanciacionAportante = null;
+                ret.Aportante.FuenteFinanciacion = null;
                 if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                 {
                     ret.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;

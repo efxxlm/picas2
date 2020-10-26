@@ -71,7 +71,7 @@
       </div>
       <!-- </div> -->
       <div *ngIf="nuevo">
-        <app-form-datos-proponentes-nuevo #proponente [procesoSeleccion]="procesoSeleccion"
+        <app-form-datos-proponentes-nuevo #proponente [procesoSeleccion]="procesoSeleccion" [noTanNuevo]="true"
           (guardar)="onSubmitNuevoProponente()">
         </app-form-datos-proponentes-nuevo>
         <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente">
@@ -80,7 +80,7 @@
 
     </mat-card-content>
   </mat-card>
-  <div class="text-center">
+  <div class="text-center" *ngIf="!nuevo">
     <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>

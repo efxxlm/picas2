@@ -10,6 +10,7 @@ import { CommonService } from '../../../../core/_services/common/common.service'
 export class FormSolicitudComponent implements OnInit {
 
   @Input() solicitudes: any;
+  @Input() esComiteFiduciario: boolean = false;
   totalAprobado: number = 0;
   totalNoAprobado: number = 0;
   resultadoVotacion: string;
@@ -47,6 +48,11 @@ export class FormSolicitudComponent implements OnInit {
       this.estadoSolicitud = resp.filter( estado => this.solicitudes.estadoCodigo === estado.codigo );
     } );
   };
+
+  innerObservacion ( observacion: string ) {
+    const observacionHtml = observacion.replace( '"', '' );
+    return observacionHtml;
+  }
 
   resultadosVotaciones ( solicitud: any ) {
     solicitud.sesionSolicitudVoto.forEach( sv => {

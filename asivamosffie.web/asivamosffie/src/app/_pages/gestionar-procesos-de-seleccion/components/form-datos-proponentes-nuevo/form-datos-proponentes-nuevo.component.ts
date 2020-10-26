@@ -15,6 +15,7 @@ import { startWith,map } from 'rxjs/operators';
 export class FormDatosProponentesNuevoComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() noTanNuevo: boolean=false;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
   listaDepartamentos: Localizacion[] = [];
@@ -345,8 +346,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   }
 
   onSubmitPersonaNatural() {
-
-    this.procesoSeleccion.procesoSeleccionProponente = [];
+    if(!this.noTanNuevo)
+    {
+      this.procesoSeleccion.procesoSeleccionProponente = [];
+    }
+    
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
       direccionProponente: this.personaNaturalForm.get('direccion').value,
@@ -368,7 +372,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
   onSubmitPersonaJuridicaIndividual() {
 
-    this.procesoSeleccion.procesoSeleccionProponente = [];
+    if(!this.noTanNuevo)
+    {
+      this.procesoSeleccion.procesoSeleccionProponente = [];
+    }
     let proponente: ProcesoSeleccionProponente = {
 
       procesoSeleccionProponenteId: this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').value,
@@ -411,7 +418,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
     let porcentaje: number = 0;
 
-    this.procesoSeleccion.procesoSeleccionProponente = [];
+    if(!this.noTanNuevo)
+    {
+      this.procesoSeleccion.procesoSeleccionProponente = [];
+    }
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
 
     let listaIntegrantes =  this.unionTemporalForm.get('entidades') as FormArray;
