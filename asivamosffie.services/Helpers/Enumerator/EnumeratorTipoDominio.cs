@@ -101,6 +101,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Proyecto = 63,
 
+        //obra
         Estado_Acta_Contrato = 60,
 
         Estado_Contrato_Poliza = 51,
@@ -114,6 +115,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Responsable_Equipo_Tecnico = 71,
         Responsable_Equipo_Estructurador = 73,
         Tipos_De_Ensayos_De_Laboratorio = 74,
-        Causas_De_Accidentes_Laborales = 75
+        Causas_De_Accidentes_Laborales = 75,
+
+       Estados_actas_inicio_obra=85
     }
 }

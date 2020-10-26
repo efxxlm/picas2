@@ -55,7 +55,17 @@ namespace asivamosffie.services
                 contrato.FechaModificacion = DateTime.Now;
                 contrato.UsuarioModificacion = pUsuarioModificacion;
                 contrato.ConObervacionesActa = true;
-                contrato.Observaciones = pObservacionesActa;
+                //contrato.Observaciones = pObservacionesActa;
+
+                ContratoObservacion contratoObservacion=new ContratoObservacion();
+                contratoObservacion.Observaciones = pObservacionesActa;
+                contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
+                contratoObservacion.EsActa = true;
+                contratoObservacion.EsActaFase2 = true;
+                contratoObservacion.ContratoId = pContratoId;
+
+                _context.ContratoObservacion.Add(contratoObservacion);
+                //await _context.SaveChangesAsync();
 
                 //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
                 //DOM 60  1   Sin acta generada
@@ -63,8 +73,8 @@ namespace asivamosffie.services
                 //contrato.EstadoActa = "3";
 
                 _context.Contrato.Update(contrato);
-
-                            return
+                await _context.SaveChangesAsync();
+                return
                 new Respuesta
                 {
                     IsSuccessful = true,
@@ -922,7 +932,14 @@ namespace asivamosffie.services
                 actaInicio = new GrillaActaInicio();
 
                 TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
+
+                if (EnumeratorTipoDominio.Tipo_Contrato.ToString() == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+                else if (EnumeratorTipoDominio.Tipo_Contrato.ToString() == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
+
                 EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActa, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
                 if (EstadoActaFase2Contrato != null)
