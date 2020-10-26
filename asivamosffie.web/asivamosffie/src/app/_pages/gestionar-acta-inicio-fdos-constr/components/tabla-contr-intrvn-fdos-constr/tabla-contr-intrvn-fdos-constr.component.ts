@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 export interface Contrato {
@@ -69,9 +70,15 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public dataTable;
+  loadDataItems: Subscription;
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {
+    this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {
+      if(loadDataItems!=''){
+      this.dataTable=loadDataItems;
+      }
+    }); 
     this.services.GetListGrillaActaInicio().subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
@@ -102,10 +109,16 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   generarActaFDos() {
     this.router.navigate(['/generarActaInicioConstruccion/generarActa']);
   }
-  cargarActaSuscrita() {
+  enviarActaParaFirma(id){
+    this.services.CambiarEstadoActa(id,"4","usr2").subscribe(data=>{
+      this.ngOnInit();
+    });
+  }
+  cargarActaSuscrita(id) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
+    dialogConfig.data = {id:id};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
   }
   descargarActaDesdeTabla(id){
