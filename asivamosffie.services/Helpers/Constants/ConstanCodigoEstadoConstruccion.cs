@@ -17,8 +17,6 @@
 
     public static class ConstanCodigoTipoObservacionConstruccion
     { 
-        public const string	Sin_aprobacion_de_requisitos_tecnicos = "1";
-
         public const string Diagnostico = "1";
         public const string PlanesProgramas = "2";
         public const string ManejoAnticipo = "3";

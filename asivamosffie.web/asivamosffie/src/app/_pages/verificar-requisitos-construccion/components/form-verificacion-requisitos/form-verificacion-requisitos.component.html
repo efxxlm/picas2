@@ -53,7 +53,9 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-diagnostico-verificar-requisitos [observacionesCompleted]="false"
-            [contratacion]="contrato.contratacion.contratacionProyecto[i]">
+            [construccion]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0]"
+            [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+            (createEditDiagnostico)="Cargar( $event )">
           </app-diagnostico-verificar-requisitos>
         </mat-expansion-panel>
 

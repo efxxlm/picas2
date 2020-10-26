@@ -1,12 +1,12 @@
-<div align="left" *ngIf="contratacion">
+<div align="left" *ngIf="construccion">
     <mat-card class="border">
         <mat-card-content>
-            <p><b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>: {{ contratacion.proyecto.contratoConstruccion[0].esInformeDiagnostico === true ? 'Si' : 'No' }}</p>
-            <p><b>Url con soporte</b>: {{ contratacion.proyecto.contratoConstruccion[0].rutaInforme }}</p>
+            <p><b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>: {{ construccion.esInformeDiagnostico === true ? 'Si' : 'No' }}</p>
+            <p><b>Url con soporte</b>: {{ construccion.rutaInforme }}</p>
         </mat-card-content>
     </mat-card>
 </div>
-<div align="left" *ngIf="contratacion">
+<div align="left" *ngIf="construccion">
     <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
@@ -14,11 +14,11 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <p><b>a. Costo directo</b>: {{ contratacion.proyecto.contratoConstruccion[0].costoDirecto | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>b. A (administracion)</b>: {{ contratacion.proyecto.contratoConstruccion[0].administracion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>c. I (Imprevistos)</b>: {{ contratacion.proyecto.contratoConstruccion[0].imprevistos | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>d. U (Utilidad)</b>: {{ contratacion.proyecto.contratoConstruccion[0].utilidad | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>Valor total de la fase 2 - Construcción</b>: {{ contratacion.proyecto.contratoConstruccion[0].valorTotalFaseConstruccion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>a. Costo directo</b>: {{ construccion.costoDirecto | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>b. A (administracion)</b>: {{ construccion.administracion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>c. I (Imprevistos)</b>: {{ construccion.imprevistos | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>d. U (Utilidad)</b>: {{ construccion.utilidad | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>Valor total de la fase 2 - Construcción</b>: {{ construccion.valorTotalFaseConstruccion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
         </mat-card-content>
     </mat-card>
 </div>
@@ -33,7 +33,7 @@
     </mat-card>
 </div>
 <div align="center" *ngIf="this.observacionesCompleted==false">
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarDiagnostico()">
         <div class="row" align="center">
             <div class="col-md-8">
                 <div class="row">

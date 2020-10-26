@@ -350,7 +350,7 @@ namespace asivamosffie.services
                     if (contratoConstruccion.TieneObservacionesDiagnosticoSupervisor.Value)
                     {
 
-                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                        CreateEditObservacionConstruccion(pContratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
                     }
                     else
                     {
@@ -370,7 +370,7 @@ namespace asivamosffie.services
 
                     if (contratoConstruccion.TieneObservacionesDiagnosticoApoyo.Value)
                     {
-                        CreateEditObservacionConstruccion(contratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
+                        CreateEditObservacionConstruccion(pContratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
                     }
                     else
                     {

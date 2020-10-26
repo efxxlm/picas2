@@ -246,3 +246,20 @@ interface Contratista {
   usuarioModificacion: string;
   contratacion: any[];
 }
+
+
+interface TipoObservacionConstruccion{
+  Diagnostico:string,
+  PlanesProgramas:string,
+  ManejoAnticipo:string,
+  ProgramacionObra:string,
+  FlujoInversion:string,
+}
+
+export const TiposObservacionConstruccion: TipoObservacionConstruccion = {
+  Diagnostico: "1",
+  PlanesProgramas: "2",
+  ManejoAnticipo: "3",
+  ProgramacionObra: "4",
+  FlujoInversion: "5",
+}
