@@ -68,6 +68,16 @@ export class FormSolicitudComponent implements OnInit {
       this.resultadoVotacion = 'Aprobó'
   };
 
+  compromisosFiduciario ( compromisos: any ) {
+    const compromisosCF = [];
+    compromisos.forEach( compromiso => {
+      if ( compromiso.esFiduciario === true ) {
+        compromisosCF.push( compromiso );
+      };
+    } );
+    return compromisosCF;
+  }
+
   textoLimpioMessage (texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');

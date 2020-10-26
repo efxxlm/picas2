@@ -115,12 +115,24 @@
                 <mat-radio-button [value]="false" [checked]="true" class="ml-min" *ngIf="solicitudes.sesionSolicitudCompromiso.length === 0">No</mat-radio-button>
               </mat-radio-group>
             </div>
-            <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0" class="margin-compromisos">
+            <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0 && esComiteFiduciario === false" class="margin-compromisos">
               <div *ngFor="let sesionCompromiso of solicitudes.sesionSolicitudCompromiso;let j = index" style="margin-top: 2em;">
-                <h3><b>Compromiso {{ j+1 }} </b></h3>
-                <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
-                <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante.usuario.nombres }} {{ sesionCompromiso.responsableSesionParticipante.usuario.apellidos }} </p>
-                <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                <section>
+                  <h3><b>Compromiso {{ j+1 }} </b></h3>
+                  <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
+                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante.usuario.nombres }} {{ sesionCompromiso.responsableSesionParticipante.usuario.apellidos }} </p>
+                  <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                </section>
+              </div>
+            </div>
+            <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0 && esComiteFiduciario === true" class="margin-compromisos">
+              <div *ngFor="let sesionCompromiso of compromisosFiduciario( solicitudes.sesionSolicitudCompromiso );let j = index" style="margin-top: 2em;">
+                <section *ngIf="sesionCompromiso.esFiduciario === true">
+                  <h3><b>Compromiso {{ j+1 }} </b></h3>
+                  <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
+                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante.usuario.nombres }} {{ sesionCompromiso.responsableSesionParticipante.usuario.apellidos }} </p>
+                  <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                </section>
               </div>
             </div>
           </div>

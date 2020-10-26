@@ -303,14 +303,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
     let valoresCorrectos = true;
     let valorTotalSumado = 0;
+    let totalAportantes = 0;
 
     this.contratacionProyecto.contratacionProyectoAportante = [];
 
     this.aportantes.controls.forEach(controlAportante => {
       const listaComponentes = controlAportante.get('componentes') as FormArray;
 
-      if ( controlAportante.get('valorAportanteProyecto').value === 0 || controlAportante.get('valorAportanteProyecto').value === null ) {
-        this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+      if ( controlAportante.get('valorAportanteProyecto').value !== 0 ) {
+        totalAportantes++;
       };
 
       valorTotalSumado += controlAportante.get('valorAportanteProyecto').value;
@@ -363,15 +364,21 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
       this.contratacionProyecto.contratacionProyectoAportante.push(aportante);
     });
-
-    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' ) {
+    
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length ) {
+      this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+    };
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorInterventoria && totalAportantes !== this.aportantes.controls.length ) {
+      this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+    };
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length ) {
       if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria  ) {
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
         return;
       };
     };
 
-    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' ) {
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' && totalAportantes === this.aportantes.controls.length ) {
       console.log( valorTotalSumado );
       if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra  ) {
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
