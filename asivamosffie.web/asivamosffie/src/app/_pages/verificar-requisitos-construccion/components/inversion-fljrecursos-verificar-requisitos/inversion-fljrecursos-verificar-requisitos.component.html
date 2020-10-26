@@ -1,6 +1,6 @@
 <div align="center">
     <section>
-        <button mat-raised-button color="accent">Descargar archivo</button>
+        <button mat-raised-button color="accent" (click)="descargar()">Descargar archivo</button>
     </section>
 </div>
 <div align="center" style="margin-top: 30px;" *ngIf="this.observacionesCompleted==false">

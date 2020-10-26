@@ -1557,6 +1557,8 @@ namespace asivamosffie.services
 
             Respuesta respuesta = new Respuesta();
 
+            int contratoConstruccionId = 0;
+
             if (string.IsNullOrEmpty(pIdDocument))
             {
                 return respuesta =
@@ -1590,7 +1592,8 @@ namespace asivamosffie.services
                     foreach (TempProgramacion tempProgramacion in listTempProgramacion)
                     {
 
-                        //ProcesoSeleccionProponente
+                        contratoConstruccionId = tempProgramacion.ContratoConstruccionId;
+
                         Programacion programacion = new Programacion()
                         {
                             ContratoConstruccionId = tempProgramacion.ContratoConstruccionId,
@@ -1615,6 +1618,11 @@ namespace asivamosffie.services
                         _context.TempProgramacion.Update(tempProgramacion);
                         _context.SaveChanges();
                     }
+
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( contratoConstruccionId );
+
+                    if ( contratoConstruccion != null )
+                        contratoConstruccion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
 
 
                     return respuesta =
@@ -1833,6 +1841,8 @@ namespace asivamosffie.services
 
             Respuesta respuesta = new Respuesta();
 
+            int contratoConstruccionId = 0;
+
             if (string.IsNullOrEmpty(pIdDocument))
             {
                 return respuesta =
@@ -1866,6 +1876,7 @@ namespace asivamosffie.services
                     listTempFlujoInversion.ForEach(tempFlujo =>
                    {
 
+                       contratoConstruccionId = tempFlujo.ContratoConstruccionId; 
                        FlujoInversion flujo = new FlujoInversion()
                        {
                            ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
@@ -1887,6 +1898,11 @@ namespace asivamosffie.services
                        _context.TempFlujoInversion.Update(tempFlujo);
                        _context.SaveChanges();
                    });
+
+                   ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( contratoConstruccionId );
+
+                   if (contratoConstruccion != null)
+                        contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
 
 
                     return respuesta =

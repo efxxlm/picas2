@@ -191,6 +191,11 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=11`);
   }
 
+  public getFileById(id: number) {   
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesById?pArchivoCargueId=${id}`, { responseType: "blob" });
+    return retorno;
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

@@ -63,7 +63,9 @@
               Planes y Programas
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-planes-programas-verificar-requisitos [observacionesCompleted]="false">
+          <app-planes-programas-verificar-requisitos 
+              [observacionesCompleted]="false"
+              [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]">
           </app-planes-programas-verificar-requisitos>
         </mat-expansion-panel>
 
@@ -107,7 +109,9 @@
               Programación de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-programacion-obra-verificar-requisitos [observacionesCompleted]="false">
+          <app-programacion-obra-verificar-requisitos 
+            [observacionesCompleted]="false"
+            [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]">
           </app-programacion-obra-verificar-requisitos>
         </mat-expansion-panel>
 
@@ -117,7 +121,9 @@
               Flujo de inversión de recursos
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-inversion-fljrecursos-verificar-requisitos [observacionesCompleted]="false">
+          <app-inversion-fljrecursos-verificar-requisitos 
+              [observacionesCompleted]="false"
+              [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]">
           </app-inversion-fljrecursos-verificar-requisitos>
         </mat-expansion-panel>
 
