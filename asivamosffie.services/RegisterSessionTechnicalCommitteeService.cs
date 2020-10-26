@@ -1140,9 +1140,9 @@ namespace asivamosffie.services
             //  List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
-                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId) 
-                     .Include(r => r.SesionInvitado) 
-                      //Para Comite Tecnico
+                 .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
+                     .Include(r => r.SesionInvitado)
+                     //Para Comite Tecnico
                      .Include(r => r.SesionComiteSolicitudComiteTecnico)
                      .ThenInclude(r => r.SesionSolicitudVoto)
                      .Include(r => r.SesionComiteSolicitudComiteTecnico)
@@ -1151,12 +1151,12 @@ namespace asivamosffie.services
                          .ThenInclude(r => r.Usuario)
                   //Para Comite Fiduciaria
                   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                     .ThenInclude(r => r.SesionSolicitudVoto) 
+                     .ThenInclude(r => r.SesionSolicitudVoto)
                   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                      .ThenInclude(r => r.SesionSolicitudCompromiso)
                        .ThenInclude(r => r.ResponsableSesionParticipante)
                          .ThenInclude(r => r.Usuario)
-                          
+
                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
@@ -1173,11 +1173,22 @@ namespace asivamosffie.services
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
             }
 
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+            {
+                SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+            }
+
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+            
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
             }
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+            {
+                SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
+            }
+
             List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
             List<ProcesoSeleccion> ListProcesoSeleccion =
@@ -1187,6 +1198,60 @@ namespace asivamosffie.services
             List<Contratacion> ListContratacion = _context.Contratacion.ToList();
 
             foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+            {
+
+                switch (sesionComiteSolicitud.TipoSolicitudCodigo)
+                {
+                    case ConstanCodigoTipoSolicitud.Contratacion:
+
+                        Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = contratacion.FechaCreacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
+
+                        sesionComiteSolicitud.Contratacion = contratacion;
+
+                        break;
+
+                    case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                        sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
+                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
+                          .FirstOrDefault()
+                          .FechaCreacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
+                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
+                          .FirstOrDefault()
+                          .NumeroProceso;
+
+                        sesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+
+                        break;
+
+                    case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
+
+                        ProcesoSeleccionMonitoreo actualizacionCronograma = _context.ProcesoSeleccionMonitoreo
+                                                                                .Where(r => r.ProcesoSeleccionMonitoreoId == sesionComiteSolicitud.SolicitudId)
+                                                                                .Include(r => r.ProcesoSeleccion)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = actualizacionCronograma.FechaCreacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = actualizacionCronograma.ProcesoSeleccion.NumeroProceso;
+
+                        sesionComiteSolicitud.ProcesoSeleccionMonitoreo = actualizacionCronograma;
+
+                        sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
+
+                        break;
+
+                }
+
+                sesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == sesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+            }
+
+            foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
             {
 
                 switch (sesionComiteSolicitud.TipoSolicitudCodigo)
