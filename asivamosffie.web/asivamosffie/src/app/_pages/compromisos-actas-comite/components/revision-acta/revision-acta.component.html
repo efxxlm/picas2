@@ -37,9 +37,8 @@
             Validación de solicitudes contractuales
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <section *ngIf="acta.sesionComiteSolicitudComiteTecnico !== null">
 
-        </section>
+        <section *ngIf="acta.sesionComiteSolicitudComiteTecnico !== null">
           <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnico">
             <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header class="expansion-style--header">
@@ -48,10 +47,26 @@
                   </mat-panel-title>
               </mat-expansion-panel-header>
     
-              <app-form-solicitud [solicitudes]="sesionComite"></app-form-solicitud>
+              <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="false"></app-form-solicitud>
   
             </mat-expansion-panel>
           </mat-accordion>
+        </section>
+
+        <section *ngIf="acta.sesionComiteSolicitudComiteTecnicoFiduciario !== null">
+          <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnicoFiduciario">
+            <mat-expansion-panel class="expansion-style sub-expansion">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title sub-expansion">
+                    <b>Solicitud {{ sesionComite.numeroSolicitud }}</b>
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+    
+              <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="true"></app-form-solicitud>
+  
+            </mat-expansion-panel>
+          </mat-accordion>
+        </section>
 
       </mat-expansion-panel>
 

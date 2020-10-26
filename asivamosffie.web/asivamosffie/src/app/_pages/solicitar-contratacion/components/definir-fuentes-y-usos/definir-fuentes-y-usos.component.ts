@@ -303,20 +303,19 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   onSubmit() {
 
     let valoresCorrectos = true;
+    let valorTotalSumado = 0;
 
     this.contratacionProyecto.contratacionProyectoAportante = [];
 
     this.aportantes.controls.forEach(controlAportante => {
       const listaComponentes = controlAportante.get('componentes') as FormArray;
 
-
       const aportante: ContratacionProyectoAportante = {
         contratacionProyectoAportanteId: controlAportante.get('contratacionProyectoAportanteId').value,
         contratacionProyectoId: this.contratacionProyecto.contratacionProyectoId,
         proyectoAportanteId: controlAportante.get('proyectoAportanteId').value,
         valorAporte: controlAportante.get('valorAportanteProyecto').value,
-        componenteAportante: [],
-
+        componenteAportante: []
       };
 
       let valorTotal = 0;
@@ -332,10 +331,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           contratacionProyectoAportanteId: aportante.contratacionProyectoAportanteId,
           tipoComponenteCodigo: controlComponente.get('componente').value ? controlComponente.get('componente').value.codigo : null,
           faseCodigo: controlComponente.get('fase').value ? controlComponente.get('fase').value.codigo : null,
-          componenteUso: [],
-
+          componenteUso: []
         };
-
 
         listaUsos.controls.forEach(controlUsos => {
           const componenteUso: ComponenteUso = {
@@ -357,10 +354,26 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       if (valorSumado != valorTotal) {
 
         valoresCorrectos = false;
-      }
+      };
+
+      valorTotalSumado += valorSumado;
 
       this.contratacionProyecto.contratacionProyectoAportante.push(aportante);
     });
+
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' ) {
+      if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria  ) {
+        this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
+        return;
+      };
+    };
+
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' ) {
+      if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra  ) {
+        this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
+        return;
+      };
+    };
 
     if (valoresCorrectos) {
 
