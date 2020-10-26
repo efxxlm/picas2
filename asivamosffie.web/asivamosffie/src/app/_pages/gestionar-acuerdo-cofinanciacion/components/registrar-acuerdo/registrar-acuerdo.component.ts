@@ -17,7 +17,10 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
   loading = false;
 
-  constructor(private fb: FormBuilder,
+  estaEditando = false;
+
+  constructor(
+    private fb: FormBuilder,
     private cofinanciacionService: CofinanciacionService,
     private commonService: CommonService,
     public dialog: MatDialog,
@@ -60,8 +63,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
   EditMode() {
     this.activatedRoute.params.subscribe(param => {
 
-
       if (param.id) {
+        this.estaEditando = true;
         this.id = param.id;
         this.cofinanciacionService.getAcuerdoCofinanciacionById(this.id).subscribe(cof => {
           this.mostrarDocumentosDeApropiacion = true;
@@ -77,8 +80,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
             const valorTipo = this.selectTiposAportante.find(a => a.dominioId === apor.tipoAportanteId);
             const valorNombre = this.nombresAportante.find(a => a.dominioId === apor.nombreAportanteId);
-            const idMunicipio = apor.municipioId ? apor.municipioId.toString() : "00000";
-            const idDepartamento= apor.departamentoId?apor.departamentoId.toString():"000";
+            const idMunicipio = apor.municipioId ? apor.municipioId.toString() : '00000';
+            const idDepartamento = apor.departamentoId ? apor.departamentoId.toString() : '000';
 
             this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.substring(0, 5)).subscribe(mun => {
 
@@ -146,68 +149,75 @@ export class RegistrarAcuerdoComponent implements OnInit {
     this.commonService.listaMunicipiosByIdDepartamento(this.aportantes.controls[id]
       .get('departamento').value.localizacionId).subscribe(mun => {
         this.aportantes.controls[id].get('municipios').setValue(mun);
-      }); 
+      });
   }
 
 
-  changeTipoAportante(p) {
+  changeTipoAportante(p: any) {
     console.log(p);
   }
 
   borrarArray(borrarForm: any, i: number) {
-    
+
     borrarForm.removeAt(i);
 
-    //this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
+    // this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
 
   }
 
   CambioNumeroAportantes() {
     const FormNumAportantes = this.datosAportantes.value;
-    if(FormNumAportantes.numAportes!=null)
-    {
-      if(FormNumAportantes.numAportes==0)
-      {        
-          this.openDialog("","<b>La cantidad de aportantes no puede ser igual a 0.</b>");
-          return;      
+    if (FormNumAportantes.numAportes !== null) {
+      if (FormNumAportantes.numAportes === 0) {
+        this.openDialog('', '<b>La cantidad de aportantes no puede ser igual a 0.</b>');
+        return;
       }
       if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
         while (this.aportantes.length < FormNumAportantes.numAportes) {
           this.aportantes.push(this.createAportante());
         }
       } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
-         
+
         console.log(this.datosAportantes);
         console.log(this.datosAportantes.value.numAportes);
-        let estaenblanco=true;
-        this.datosAportantes.value.aportantes.forEach(element => {
-          if(element.cauntosDocumentos!=""||
-          element.cofinanciacionAportanteId!=""||
-          element.cofinanciacionId!=""||
-          element.departamento!=""||
-          element.municipio!=""||
-          element.municipios!=""||
-          element.nombre!=""||
-          element.tipo!="")
-          {
-           estaenblanco=false;
+        let estaenblanco = true;
+        this.datosAportantes.value.aportantes.forEach((element: {
+          cauntosDocumentos: string;
+          cofinanciacionAportanteId: string;
+          cofinanciacionId: string;
+          departamento: string;
+          municipio: string;
+          municipios: string;
+          nombre: string;
+          tipo: string;
+        }) => {
+          if (element.cauntosDocumentos !== '' ||
+            element.cofinanciacionAportanteId !== '' ||
+            element.cofinanciacionId !== '' ||
+            element.departamento !== '' ||
+            element.municipio !== '' ||
+            element.municipios !== '' ||
+            element.nombre !== '' ||
+            element.tipo !== '') {
+            estaenblanco = false;
           }
         });
-        if(estaenblanco)
-        {
-         
+        if (estaenblanco) {
+
           while (this.aportantes.length > FormNumAportantes.numAportes) {
-           this.borrarArray(this.aportantes, this.aportantes.length - 1);   
-           this.listaCofinancAportantes.pop();       
+            this.borrarArray(this.aportantes, this.aportantes.length - 1);
+            this.listaCofinancAportantes.pop();
           }
         }
-        else
-         {
-           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>"); 
-           this.datosAportantes.controls.numAportes.setValue(this.aportantes.length);            
-         }        
+        else {
+          this.openDialog(
+            '',
+            '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+          );
+          this.datosAportantes.controls.numAportes.setValue(this.aportantes.length);
+        }
       }
-    }           
+    }
   }
 
   createAportante(): FormGroup {
@@ -257,7 +267,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         tipoAportanteId: '',
         nombreAportanteId: '',
         municipioId: 0,
-        departamentoId:0,
+        departamentoId: 0,
         cofinanciacionId: 0,
         cofinanciacionAportanteId: 0,
         cofinanciacionDocumento: []
@@ -286,11 +296,11 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
 
   borrarAportante(borrarForm: any, i: number) {
-    //antes de borrar reviso si tiene id, pues se debe borrar de manera logica    
-    if(borrarForm.value[i].cofinanciacionAportanteId>0)
-    {
-        this.cofinanciacionService.EliminarCofinanciacionAportanteByCofinanciacionAportanteId(borrarForm.value[i].cofinanciacionAportanteId).subscribe(
-          result=>{location.reload();}          
+    // antes de borrar reviso si tiene id, pues se debe borrar de manera logica
+    if (borrarForm.value[i].cofinanciacionAportanteId > 0) {
+      this.cofinanciacionService
+        .EliminarCofinanciacionAportanteByCofinanciacionAportanteId(borrarForm.value[i].cofinanciacionAportanteId).subscribe(
+          result => { location.reload(); }
         );
     }
 
@@ -321,7 +331,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         cofinanciacionDocumento
       };
 
-      listaAportantesTemp.push(cofiApo);      
+      listaAportantesTemp.push(cofiApo);
       i++;
     });
     this.listaCofinancAportantes = listaAportantesTemp;
@@ -343,7 +353,6 @@ export class RegistrarAcuerdoComponent implements OnInit {
       cofinanciacionId: this.id
     };
 
-    
     this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
       respuesta => {
         this.verificarRespuesta(respuesta, parcial);
@@ -393,20 +402,18 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
     this.mostrarDocumentosDeApropiacion = true;
     const cantidadDocumentos: number = data.get('cauntosDocumentos').value;
-    if(cantidadDocumentos==0 || cantidadDocumentos==null)
-    {
-      if(cantidadDocumentos==0)
-      {
-        this.openDialog("","<b>La cantidad de documentos de apropiación del aportante no puede ser igual a 0.</b>");
+    if (cantidadDocumentos === 0 || cantidadDocumentos === null) {
+      if (cantidadDocumentos === 0) {
+        this.openDialog('', '<b>La cantidad de documentos de apropiación del aportante no puede ser igual a 0.</b>');
         return;
       }
     }
-    else{
+    else {
       console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
       if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
         && cantidadDocumentos < 1000) {
         while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
-  
+
           this.listaCofinancAportantes[identificador].cofinanciacionDocumento.push(
             {
               cofinanciacionAportanteId: identificador,
@@ -420,72 +427,71 @@ export class RegistrarAcuerdoComponent implements OnInit {
               valorTotalAportante: null,
               vigenciaAporte: null
             });
-  
+
         }
       } else if (cantidadDocumentos <= this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
         && cantidadDocumentos >= 0) {
-          //para saber si borro, debo ver si tiene algo 
-          let estaenblanco=true;
-          this.listaCofinancAportantes[identificador].cofinanciacionDocumento.forEach(element => {
-            if(element.fechaAcuerdo!=null ||
-              element.numeroAcuerdo!=null ||
-              element.cofinanciacionDocumentoId!=null ||
-              element.numeroActa!=null ||
-              element.fechaActa!=null ||
-              element.tipoDocumentoId!=null ||
-              element.valorDocumento!=null ||
-              element.valorTotalAportante!=null ||
-              element.vigenciaAporte!=null)
-              {
-                estaenblanco=false;
-              }
-          });
-          if(estaenblanco)
-          {
-            while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length > cantidadDocumentos) {
-              this.listaCofinancAportantes[identificador].cofinanciacionDocumento.pop();
-            }
+        // para saber si borro, debo ver si tiene algo
+        let estaenblanco = true;
+        this.listaCofinancAportantes[identificador].cofinanciacionDocumento.forEach(element => {
+          if (element.fechaAcuerdo !== null ||
+            element.numeroAcuerdo !== null ||
+            element.cofinanciacionDocumentoId !== null ||
+            element.numeroActa !== null ||
+            element.fechaActa !== null ||
+            element.tipoDocumentoId !== null ||
+            element.valorDocumento !== null ||
+            element.valorTotalAportante !== null ||
+            element.vigenciaAporte !== null) {
+            estaenblanco = false;
           }
-          else{
-            this.openDialog("","Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.");
+        });
+        if (estaenblanco) {
+          while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length > cantidadDocumentos) {
+            this.listaCofinancAportantes[identificador].cofinanciacionDocumento.pop();
           }
-        
+        }
+        else {
+          this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.');
+        }
+
       }
-    }    
+    }
   }
 
   validaCompletitud(aportante: any) {
 
     let retorno = 0;
-    aportante.cofinanciacionDocumento.forEach(element => {
-      if (
-        element.fechaAcuerdo == null &&
-        element.numeroAcuerdo == null &&
-        element.tipoDocumentoId == null &&
-        element.valorDocumento == null &&
-        // element.valorTotalAportante==null&&
-        element.vigenciaAporte == null) {
-        // retorno=0;
-      }
-      else if (
-        element.fechaAcuerdo != null &&
-        element.numeroAcuerdo != null &&
-        element.tipoDocumentoId != null &&
-        element.valorDocumento != null &&
-        // element.valorTotalAportante!=null&&
-        element.vigenciaAporte != null) {
-        retorno += 2;
-      }
-      else {
-        retorno++;
-      }
-    });
-    const resultado = aportante.cofinanciacionDocumento.length * 2 == retorno ? 3 : retorno == 0 ? 1 : 2;
+    aportante.cofinanciacionDocumento
+      .forEach((element: { fechaAcuerdo: any; numeroAcuerdo: any; tipoDocumentoId: any; valorDocumento: any; vigenciaAporte: any; }) => {
+        if (
+          element.fechaAcuerdo === null &&
+          element.numeroAcuerdo === null &&
+          element.tipoDocumentoId === null &&
+          element.valorDocumento === null &&
+          // element.valorTotalAportante==null&&
+          element.vigenciaAporte === null) {
+          // retorno=0;
+        }
+        else if (
+          element.fechaAcuerdo !== null &&
+          element.numeroAcuerdo !== null &&
+          element.tipoDocumentoId !== null &&
+          element.valorDocumento !== null &&
+          // element.valorTotalAportante!=null&&
+          element.vigenciaAporte !== null) {
+          retorno += 2;
+        }
+        else {
+          retorno++;
+        }
+      });
+    const resultado = aportante.cofinanciacionDocumento.length * 2 === retorno ? 3 : retorno === 0 ? 1 : 2;
     return resultado;
   }
   getTotalAportante(aportante: any) {
     let retorno = 0;
-    aportante.cofinanciacionDocumento.forEach(element => {
+    aportante.cofinanciacionDocumento.forEach((element: { valorDocumento: number; }) => {
       if (element) {
         retorno += element.valorDocumento;
       }
@@ -493,15 +499,16 @@ export class RegistrarAcuerdoComponent implements OnInit {
     });
     return retorno;
   }
-  eliminadoc(aportante: any, documento: any,indexd:any) {
+  eliminadoc(aportante: any, documento: any, indexd: any) {
     console.log(aportante);
     console.log(indexd);
     const index = aportante.cofinanciacionDocumento.indexOf(documento, 0);
     if (index > -1) {
-      aportante.cofinanciacionDocumento.splice(index, 1);      
+      aportante.cofinanciacionDocumento.splice(index, 1);
     }
-    aportante.cauntosDocumentos=aportante.cofinanciacionDocumento.length;    
-    this.datosAportantes.get("aportantes")['controls'][indexd].controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);   
+    aportante.cauntosDocumentos = aportante.cofinanciacionDocumento.length;
+    this.datosAportantes.get('aportantes')['controls'][indexd]
+      .controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);
   }
 
   // evalua tecla a tecla
@@ -511,7 +518,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
-  validateNumber(event: Event, max) {
+  validateNumber(event: Event, max: any) {
     console.log(event);
     const alphanumeric = /[0-9]/;
     // let inputChar = String.fromCharCode(event.charCode);
