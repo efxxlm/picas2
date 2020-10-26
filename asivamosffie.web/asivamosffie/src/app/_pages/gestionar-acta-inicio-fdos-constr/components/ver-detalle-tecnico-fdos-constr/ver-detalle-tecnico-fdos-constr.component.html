@@ -54,7 +54,7 @@
             <p *ngIf="this.obsConEspeciales!=='' || this.obsConEspeciales!==null || this.obsConEspeciales!==undefined">{{this.obsConEspeciales}}</p>
         </mat-card-content>
     </mat-card>
-    <div>
+    <div *ngIf="this.conObservacionesSupervisor==true">
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">

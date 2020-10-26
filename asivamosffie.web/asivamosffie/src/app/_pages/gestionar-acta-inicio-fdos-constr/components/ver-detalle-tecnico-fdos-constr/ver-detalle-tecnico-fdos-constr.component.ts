@@ -40,6 +40,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   plazoEjecucionConstrD: number;
 
   botonDescargar: boolean =false;
+  conObservacionesSupervisor: boolean;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -95,6 +96,9 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
+    });
+    this.services.GetContratoByIdContratoId(id).subscribe(data1=>{
+      this.conObservacionesSupervisor = data1.conObervacionesActa;
     });
     this.idContrato = id;
   }

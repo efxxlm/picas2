@@ -94,5 +94,5 @@ export interface GetContratoObservacionByIdContratoId {
   esActaFase2: boolean;
 }
 export interface GetContratoByIdContratoId{
-  
+  conObervacionesActa: boolean;
 }
