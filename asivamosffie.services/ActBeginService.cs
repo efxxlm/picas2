@@ -938,9 +938,9 @@ namespace asivamosffie.services
                 TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
 
                 if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
                 else if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
-                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
+                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
 
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
@@ -948,7 +948,7 @@ namespace asivamosffie.services
 
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActa, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
-                if (EstadoActaFase2Contrato != null)
+                    if (EstadoActaFase2Contrato != null)
                     strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
 
                 if (TipoContratoCodigoContrato != null)
@@ -1175,14 +1175,14 @@ namespace asivamosffie.services
                     //contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
                     contratoObservacion =  await GetContratoObservacionByIdContratoId( contrato.ContratoId);
 
-                    //if (contratoObservacion != null)
-                    //{
-                    //strContratoObservacion = contratoObservacion.Observaciones;
-                    //}
+                    if (contratoObservacion != null)
+                    {
+                        strContratoObservacion = contratoObservacion.Observaciones;
+                    }
 
                     //strContratoObservacion = contrato.Observaciones;
-                    
-                    strContratoObservacion = contratoObservacion.Observaciones;
+
+
 
                     contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
 
