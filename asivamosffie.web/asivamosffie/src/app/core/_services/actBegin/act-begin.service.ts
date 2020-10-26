@@ -46,6 +46,9 @@ export class ActBeginService {
   GetContratoByIdContratoId(pContratoId: number){
     return this.http.get<GetContratoByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoByIdContratoId?pContratoId=${pContratoId}`);
   }
+  CreateEditContratoObservacion(contratoObs:ContratoObservacion){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateEditContratoObservacion`, contratoObs);
+  }
 }
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;
@@ -95,4 +98,18 @@ export interface GetContratoObservacionByIdContratoId {
 }
 export interface GetContratoByIdContratoId{
   conObervacionesActa: boolean;
+  observaciones: string;
+}
+export interface ContratoObservacion{
+  contratoObservacionId: number;
+  contratoId: number;
+  observaciones: string;
+  fechaCreacion: any;
+  usuarioCreacion: any;
+  
+  //opcionales
+  esActa: boolean;
+  fechaModificacion: any;
+  usuarioModificacion: any;
+  esActaFase2: boolean;
 }
