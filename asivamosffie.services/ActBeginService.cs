@@ -919,9 +919,12 @@ namespace asivamosffie.services
             lstContratos = _context.Contrato.Where(r => r.Eliminado == false).ToList();
             Contratacion contratacion;
 
-            Dominio EstadoActaFase2Contrato;
-            string strEstadoActaFase2Contrato="";         
-            
+            Dominio EstadoActaFase2Contrato=null;
+            string strEstadoActaFase2Contrato="";
+
+            Dominio EstadoVerificacion=null;
+            string strEstadoVerificacion = "";           
+
             Dominio TipoContratoCodigoContrato ;
             string strTipoContratoCodigo = "";
             bool bTieneObservacionesSupervisor;
@@ -938,7 +941,9 @@ namespace asivamosffie.services
                 else if (EnumeratorTipoDominio.Tipo_Contrato.ToString() == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
                     EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
 
-                EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+                //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
+
+                EstadoVerificacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoVerificacionCodigo, (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato);
 
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActa, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
@@ -948,6 +953,9 @@ namespace asivamosffie.services
                 if (TipoContratoCodigoContrato != null)
                     strTipoContratoCodigo = TipoContratoCodigoContrato.Nombre;
 
+                if (EstadoVerificacion != null)
+                    strEstadoVerificacion = EstadoVerificacion.Nombre;
+
                 ContratoObservacion contratoObservacion = null;
                 contratoObservacion = await GetContratoObservacionByIdContratoId(item.ContratoId);
 
@@ -955,7 +963,8 @@ namespace asivamosffie.services
                     bTieneObservacionesSupervisor = true;
                 else
                     bTieneObservacionesSupervisor = false;
-                
+
+                actaInicio.EstadoVerificacion = strEstadoVerificacion;
                 actaInicio.EstadoActa = strEstadoActaFase2Contrato;
                 actaInicio.ContratoId = item.ContratoId;
                 actaInicio.NumeroContratoObra = item.NumeroContrato;

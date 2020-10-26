@@ -14,7 +14,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ActBeginController : ControllerBase
     {
         public readonly IActBeginService _ActBegin;
