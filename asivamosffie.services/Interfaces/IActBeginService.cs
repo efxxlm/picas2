@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
     {
         //Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio();
 
-        Task<List<GrillaActaInicio>> GetListGrillaActaInicio();
+        Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
 
         Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId);
 

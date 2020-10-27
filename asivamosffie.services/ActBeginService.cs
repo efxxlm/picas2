@@ -911,7 +911,7 @@ namespace asivamosffie.services
         //GetListVistaGenerarActaInicio
 
 
-        public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio()
+        public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId)
         {
             //            Número del contrato de obra DisponibilidadPresupuestal? contrato - numeroContrato
             //Estado del acta - CONTRATO - EstadoActa - DOM 60
@@ -939,20 +939,26 @@ namespace asivamosffie.services
                 TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
 
                 if (item.EstadoActaFase2 != null) { 
-                if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
-                else if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
-                    EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
-
-            }
+                    if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                        EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estados_actas_inicio_interventoria);
+                    else if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+                        EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
+                }
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
                 EstadoVerificacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoVerificacionCodigo, (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato);
 
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActa, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
-                    if (EstadoActaFase2Contrato != null)
-                    strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
+                if (EstadoActaFase2Contrato != null)
+                {
+                    if((int)EnumeratorPerfil.Supervisor==pPerfilId)
+                        strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Descripcion;
+                    else if ((int)EnumeratorPerfil.Tecnica == pPerfilId)
+                        strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
+
+                }
+                
 
                 if (TipoContratoCodigoContrato != null)
                     strTipoContratoCodigo = TipoContratoCodigoContrato.Nombre;

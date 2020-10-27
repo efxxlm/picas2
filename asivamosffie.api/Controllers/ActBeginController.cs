@@ -117,11 +117,11 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListGrillaActaInicio")]
-        public async Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio()
+        public async Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio(int pPerfilId)
         {
             try
             {
-                return await _ActBegin.GetListGrillaActaInicio();
+                return await _ActBegin.GetListGrillaActaInicio(pPerfilId);
             }
             catch (Exception ex)
             {

@@ -117,6 +117,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipos_De_Ensayos_De_Laboratorio = 74,
         Causas_De_Accidentes_Laborales = 75,
 
-       Estados_actas_inicio_obra=85
+       Estados_actas_inicio_obra=85,
+       Estados_actas_inicio_interventoria = 86
     }
 }
