@@ -64,7 +64,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   enviarParaRevision(idContrato){
-    this.services.CambiarEstadoActa(idContrato,"18","usr2").subscribe(data=>{
+    this.services.CambiarEstadoActa(idContrato,"14","usr2").subscribe(data=>{
       this.ngOnInit();
     });
   }

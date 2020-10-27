@@ -69,6 +69,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     modalTitle: string,
     modalText: string
   };
+  esActaFase2: boolean;
+  fechaCreacion: Date;
+  observacionesActaFase2: string;
+  conObervacionesActa: boolean;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService) {
     this.maxDate = new Date();
@@ -78,6 +82,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
+      this.loadDataObservaciones(param.id);
     });
     if (localStorage.getItem("editable") == "true") {
       this.editable = true;
@@ -124,7 +129,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       /*Campo de texto editable*/
       if(this.editable == true){
-        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioDateTime);
+        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase1DateTime);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaPrevistaTerminacionDateTime);
         this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
         this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
@@ -132,6 +137,13 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       }
     });
     this.idContrato = id;
+  }
+  loadDataObservaciones(id){
+      this.services.GetContratoByIdContratoId(id).subscribe(data0=>{
+        this.conObervacionesActa = data0.conObervacionesActa;
+        this.observacionesActaFase2 = data0.observaciones;
+      });
+
   }
 
   openDialog(modalTitle: string, modalText: string) {

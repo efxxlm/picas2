@@ -45,8 +45,7 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaActaInicioFDosConstruccion">Fecha del acta de
-                                    inicio de la fase 1 - Preconstrucción</label>
+                                <label class="label-left" for="fechaActaInicioFDosConstruccion">Fecha del acta de inicio de la fase 2 - Construcción</label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
@@ -159,9 +158,8 @@
             </button>
         </div>
     </form>
-    <!--Aca van las observaciones, lo deje comentado para cuando sea el momento de la integración, ponerlo-->
-    <!--
-    <div>
+
+    <div *ngIf="this.conObervacionesActa==true">
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
@@ -169,10 +167,10 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <p><strong>20/07/2020</strong></p>
-                <p>La fecha prevista de terminación no es correcta, verificar la información.</p>
+                <p><strong>{{this.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></p>
+                    <div [innerHtml]="this.observacionesActaFase2"></div>
             </mat-card-content>
         </mat-card>
     </div>
-    --> 
+ 
 </section>
