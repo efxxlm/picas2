@@ -34,6 +34,11 @@ namespace asivamosffie.services
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
 
+        public async Task<List<Contrato>> GetListContatoByNumeroContrato(string pNumeroContrato)
+        { 
+            return await _context.Contrato.Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado).ToListAsync();  
+        }
+
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id)
         {
             DisponibilidadPresupuestal disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal
@@ -46,8 +51,7 @@ namespace asivamosffie.services
                 .FirstOrDefaultAsync();
 
             return disponibilidadPresupuestal;
-        }
-
+        } 
         //Avance compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento)
         {
@@ -152,10 +156,7 @@ namespace asivamosffie.services
                 throw;
             }
         }
-
-
-
-
+         
         //Aportantes por proyectoId
         public async Task<List<ListAdminProyect>> GetAportantesByProyectoAdministrativoId(int proyectoId)
         {
@@ -192,10 +193,7 @@ namespace asivamosffie.services
                 throw;
             }
         }
-
-
-
-
+         
         //Crear solciitud proyecto administrativo
         public async Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad)
         {
@@ -263,8 +261,7 @@ namespace asivamosffie.services
                             DisponibilidadPresupuestalProyecto proyecto = _context.DisponibilidadPresupuestalProyecto.Find(pro.DisponibilidadPresupuestalProyectoId);
 
                             proyecto.UsuarioModificacion = disponibilidad.UsuarioCreacion;
-                            proyecto.FechaModificacion = disponibilidad.FechaModificacion;
-
+                            proyecto.FechaModificacion = disponibilidad.FechaModificacion; 
                             proyecto.ProyectoAdministrativoId = pro.ProyectoAdministrativoId;
                         }
 
@@ -301,10 +298,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
-
-
+         
         //Registrar informacion Adicional en una solicitud
         public async Task<Respuesta> CreateOrEditInfoAdditional(DisponibilidadPresupuestal pDisponibilidad, string user)
         {
@@ -384,8 +378,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         //Ver detalle
         public async Task<DisponibilidadPresupuestal> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
         {
@@ -418,10 +411,8 @@ namespace asivamosffie.services
 
             return new DisponibilidadPresupuestal();
         }
-
-
-        //Registrar nueva solicitud DDp Especial
-
+         
+        //Registrar nueva solicitud DDp Especial 
         public async Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal)
         {
             Respuesta respuesta = new Respuesta();
@@ -642,8 +633,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         //Enviar solicitud
         public async Task<Respuesta> SendRequest(int disponibilidadPresupuestalId)
         {
@@ -746,8 +736,7 @@ namespace asivamosffie.services
                 };
             }
         }
-
-
+         
         //Grilla DDP Especial
         public async Task<List<DisponibilidadPresupuestal>> GetDDPEspecial()
         {
@@ -790,9 +779,7 @@ namespace asivamosffie.services
 
                             }).ToListAsync();
         }
-
-
-
+         
         //Solicitudes de comite tecnico
         public async Task<List<CustonReuestCommittee>> GetReuestCommittee()
         {
@@ -872,10 +859,7 @@ namespace asivamosffie.services
                 throw;
             }
         }
-
-
-
-
+         
         public async Task<List<Proyecto>> SearchLlaveMEN(string LlaveMEN)
         {
             var Id = await _context.Proyecto
@@ -891,8 +875,7 @@ namespace asivamosffie.services
             else
                 return new List<Proyecto>();
         }
-
-
+         
         //plantlla - rubro por financiar es infraestructura y el tipo de solicitud es contratación
         public async Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal obj)
         {

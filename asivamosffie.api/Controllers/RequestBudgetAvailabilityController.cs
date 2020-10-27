@@ -19,14 +19,19 @@ namespace asivamosffie.api.Controllers
         private readonly IRequestBudgetAvailabilityService _managementCommitteeReportService;
         private readonly IOptions<AppSettings> _settings;
 
-        public RequestBudgetAvailabilityController(IOptions<AppSettings> settings, IRequestBudgetAvailabilityService managementCommitteeReportService)
+        public RequestBudgetAvailabilityController(
+            IOptions<AppSettings> settings, IRequestBudgetAvailabilityService managementCommitteeReportService)
         {
             _managementCommitteeReportService = managementCommitteeReportService;
             _settings = settings;
 
         }
 
-
+        [Route("GetListContatoByNumeroContrato")]
+        public async Task<List<Contrato>> GetListContatoByNumeroContrato([FromQuery] string pNumero)
+        {
+           return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero); 
+        }
 
         [Route("GetReuestCommittee")]
         public async Task<IActionResult> GetReuestCommittee()
@@ -212,7 +217,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 disponibilidadPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal,proyectoId);
+                respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal, proyectoId);
                 return Ok(respuesta);
 
             }
@@ -233,7 +238,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 string user = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional( pDisponibilidad, user);
+                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional(pDisponibilidad, user);
                 return Ok(respuesta);
 
             }
