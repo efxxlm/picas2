@@ -1151,6 +1151,9 @@ namespace asivamosffie.services
             {
                 return new ComiteTecnico();
             }
+
+            List<Dominio> listaResponsables = _context.Dominio.Where( r => r.TipoDominioId == 46 ).ToList();
+
             //  List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
@@ -1180,6 +1183,12 @@ namespace asivamosffie.services
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
+            comiteTecnico.SesionComiteTema.ToList().ForEach( ct => {
+                Dominio responsable = listaResponsables.Find( lr => lr.Codigo == ct.ResponsableCodigo );
+
+                if (responsable != null)
+                    ct.NombreResponsable = responsable.Nombre;
+            });
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
