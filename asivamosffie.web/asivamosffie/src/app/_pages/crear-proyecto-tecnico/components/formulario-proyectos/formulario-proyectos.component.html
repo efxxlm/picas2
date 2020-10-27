@@ -181,7 +181,7 @@
           <div class="row">
             <div class="pr-1">
               <label class="label-left"
-              [ngClass]="{'color-secondaryColor' : !codigoDane.value && estaEditando}"
+              [ngClass]="{'color-secondaryColor' : !codigoDane.value && estaEditando && proyecto.tipoIntervencionCodigo != 1}"
               >Código DANE IE </label>
             </div>
             <div class="col d-flex">
@@ -214,7 +214,7 @@
           <div class="row">
             <div class="pr-1">
               <label class="label-left"
-              [ngClass]="{'color-secondaryColor' : !codigoDane2.value && estaEditando}"
+              [ngClass]="{'color-secondaryColor' : !codigoDane2.value && estaEditando && proyecto.tipoIntervencionCodigo != 1}"
               >Código DANE SEDE</label>
             </div>
             <div class="col d-flex">
@@ -231,7 +231,6 @@
           <div class="row">
             <div class="pr-1">
               <label class="label-left"
-              [ngClass]="{'color-secondaryColor' : !proyecto.enConvocatoria && estaEditando}"
               >¿Se encuentra dentro de una convocatoria?</label>
             </div>
             <div class="col">
@@ -248,7 +247,7 @@
       <div class="row">
         <div class="pr-1">
           <label class="label-left"
-          [ngClass]="{'opaco': proyecto.enConvocatoria===false, 'color-secondaryColor' : !proyecto.enConvocatoria && estaEditando}"
+          [ngClass]="{'opaco': proyecto.enConvocatoria===false, 'color-secondaryColor' : !proyecto.convocatoriaId && estaEditando && proyecto.enConvocatoria===true}"
           >Convocatoria</label>
         </div>
         <div class="col">
@@ -415,7 +414,7 @@
           <div class="row">
             <div class="pr-1">
               <label class="label-left"
-              [ngClass]="{'color-secondaryColor' : !proyecto.predioPrincipal.cedulaCatastral && estaEditando}"
+              [ngClass]="{'color-secondaryColor' : !proyecto.predioPrincipal.cedulaCatastral && estaEditando && !(proyecto.predioPrincipal.documentoAcreditacionCodigo!='1')}"
               >Cédula catastral del predio</label>
             </div>
             <div class="col d-flex">
@@ -481,7 +480,7 @@
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left"
-                  [ngClass]="{'color-secondaryColor' : !predios.predio.cedulaCatastral && estaEditando}"
+                  [ngClass]="{'color-secondaryColor' : !predios.predio.cedulaCatastral && estaEditando && !(predios.predio.documentoAcreditacionCodigo!='1')}"
                   >Cédula catastral del predio</label>
                 </div>
                 <div class="col d-flex">
