@@ -85,7 +85,7 @@
                 </div>
               </div>
             </div>
-            <div class="animatedDown" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0 && esSaldoPermitido === true">
+            <div class="animatedDown" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0">
               <h2 class="card-subTitle">Usos</h2>
               <div formGroupName="componentes">
                 <div class="animatedDown" *ngFor="let conponente of componentes(j).controls; let i = index">

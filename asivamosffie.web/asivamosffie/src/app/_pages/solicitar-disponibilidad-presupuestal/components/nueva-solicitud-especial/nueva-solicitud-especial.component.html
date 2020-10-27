@@ -174,8 +174,11 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
-                                        <input matInput #numeroContrato type="text" maxlength="10"
-                                            formControlName="numeroContrato">
+                                        <input  matInput
+                                                #numeroContrato
+                                                type="text"
+                                                maxlength="10"
+                                                formControlName="numeroContrato">
                                     </mat-form-field>
                                     <span class="contador">{{10 - numeroContrato.value.length}}</span>
                                 </div>
@@ -209,7 +212,38 @@
             </mat-card-content>
         </mat-card>
 
-        <mat-card class="shipping-card animatedDown" *ngIf="listaAportante.length > 0">
+        <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="contrato">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text">
+                    {{ contrato.numeroContrato }}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+                <section>
+                    <b>Nombre de la entidad contratista:</b> {{ contrato.contratacion.contratista.nombre }}
+                </section>
+
+            </mat-card-content>
+        </mat-card>
+
+        <section>
+            <div class="d-flex align-items-center">
+                <div class="text-area-quill">
+                  <label for="justificacion" class="text-area-quill--label" style="color: #174193;">Limitación especial</label>
+                  <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="configLimiteEspecial"
+                    (onContentChanged)="maxLength($event, 500)" formControlName="observacionLimiteEspecial"></quill-editor>
+                </div>
+                <span class="contador" *ngIf="addressForm.get('observacionLimiteEspecial').value !== null">
+                  {{500 - textoLimpio(addressForm.get('observacionLimiteEspecial').value)}}
+                </span>
+                <span class="contador" *ngIf="addressForm.get('observacionLimiteEspecial').value === null">
+                  500
+                </span>
+              </div>
+        </section>
+
+        <mat-card class="shipping-card animatedDown" *ngIf="listaAportante.length > 0 || contrato">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
                     Aportante
@@ -227,7 +261,7 @@
                                     <mat-select formControlName="tipoAportante">
                                         <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
                                             [value]="tipoSolicitud['value']">
-                                            {{ tipoSolicitud['name'] }}
+                                            {{ tipoSolicitud['nombre'] }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

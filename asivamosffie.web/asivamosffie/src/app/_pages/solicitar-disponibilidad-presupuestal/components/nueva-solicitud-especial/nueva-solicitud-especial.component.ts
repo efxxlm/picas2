@@ -19,17 +19,17 @@ import { DisponibilidadPresupuestal, DisponibilidadPresupuestalProyecto, ListApo
 export class NuevaSolicitudEspecialComponent implements OnInit {
 
   tipoSolicitudArray: Dominio[] = [];
-  listaDepartamento: Localizacion[] = [];
-  listaMunicipio: Localizacion[] = [];
+  listaDepartamento: any[] = [];
+  listaMunicipio: any[] = [];
   listaAportante: ListAportantes[] = [];
   proyectoEncontrado: boolean = false;
   seRealizoPeticion: boolean = false;
   proyecto: Proyecto;
+  contrato: any;
 
   addressForm = this.fb.group({
     disponibilidadPresupuestalId:[],
     disponibilidadPresupuestalProyectoId:[],
-
     tipo: [null, Validators.required],
     objeto: [null, Validators.required],
     numeroRadicado: [null, Validators.compose([
@@ -41,6 +41,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     municipio: [null, Validators.required],
     llaveMEN: [null, Validators.required],
     tipoAportante: [null, Validators.required],
+    observacionLimiteEspecial: [ null ],
     nombreAportante: [null, Validators.required],
     valor: [ '', Validators.compose([
       Validators.minLength(4), Validators.maxLength(20)])],
@@ -59,6 +60,10 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+
+  configLimiteEspecial = {
+    toolbar: []
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -119,6 +124,28 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
       .subscribe(
         () => this.buscarProyecto( false, 0 )
       );
+
+    this.addressForm.get( 'numeroContrato' ).valueChanges
+      .pipe(
+        debounceTime( 2000 )
+      )
+      .subscribe( response => {
+        
+        if ( response.length >= 3 ) {
+          this.budgetAvailabilityService.getNumeroContrato( response )
+            .subscribe(
+              ( response: any[] ) => {
+                if ( response.length === 0 ) {
+                  this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' );
+                  return;
+                };
+                this.contrato = response[0];
+                console.log( this.contrato );
+              }
+            );
+        }
+
+      } )
   };
 
   openDialog(modalTitle: string, modalText: string) {
@@ -161,7 +188,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                     this.openDialog('', '<b>El proyecto no tiene una entidad territorial como aportante.<br><br>La solicitud no se puede completar.</b>');
                   };
 
-                  if ( esModoEdit ){
+                  if ( esModoEdit === true ){
+
                     let aportanteNombreSeleccionado: ListAportantes = this.listaAportante.find( t => t.cofinanciacionAportanteId == aportanteId ); 
                     this.addressForm.get('nombreAportante').setValue( aportanteNombreSeleccionado );
                     this.changeAportante();

@@ -80,4 +80,8 @@ export class BudgetAvailabilityService {
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/eliminarDisponibilidad?disponibilidadPresupuestalId=${ id }`);    
   }
 
+  getNumeroContrato ( numeroContrato: string ) {
+    return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetListContatoByNumeroContrato?pNumero=${ numeroContrato }` );
+  }
+
 }
