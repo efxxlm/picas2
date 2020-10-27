@@ -11,7 +11,8 @@
     </h1>
   </div>
   <div class="text-center flex">
-    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>{{ dataContratacion.fechaCreacion | date: 'dd/MM/yyyy' }}</b></p>
+    <p class="color-titulo mr-right-8em">Fecha de solicitud:
+      <b>{{ dataContratacion.fechaCreacion | date: 'dd/MM/yyyy' }}</b></p>
     <p class="color-titulo"><b> {{ dataContratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }} </b></p>
   </div>
   <div align="left">
@@ -19,12 +20,16 @@
       <mat-card-content class="mt-1em">
         <p><b>Número DDP</b>: {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp || 'Sin DDP' }}</p>
         <section>
-          <b>Objeto</b>: <div [innerHTML]="innerObservacion( dataContratacion.disponibilidadPresupuestal[0].objeto )"></div>
+          <b>Objeto</b>: <div [innerHTML]="innerObservacion( dataContratacion.disponibilidadPresupuestal[0].objeto )">
+          </div>
         </section>
-        <p><b>Número de comité fiduciario</b>: {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
-        <p><b>Fecha de comité fiduciario</b>: {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
+        <p><b>Número de comité fiduciario</b>:
+          {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
+        <p><b>Fecha de comité fiduciario</b>:
+          {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}
+        </p>
       </mat-card-content>
-  </mat-card>
+    </mat-card>
   </div>
   <div class="text-center">
     <mat-accordion>
@@ -35,86 +40,93 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let data of dataContratacion.contratacionProyecto">
-            <mat-expansion-panel-header class="expansion-style--header w-45">
-              <mat-panel-title class="expansion-style--title">
-                {{ data.proyecto.llaveMen }} - {{ data.proyecto.institucionEducativa.nombre }} - {{ data.proyecto['sede'].nombre }}
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-  
-            <div class="text-center flex">
-              <p class="mr-right-8em"><b>{{ data.proyecto.institucionEducativa['departamento'].descripcion }}/{{ data.proyecto.institucionEducativa['municipio'].descripcion }}</b></p>
-              <p><b>{{ data.proyecto.tipoIntervencionCodigo }}</b></p>
-            </div>
-  
-            <div align="left" style="margin-top: 1em;">
-              <mat-card class="border">
-                <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
-                <mat-card-content class="mt-1em">
-                  <section *ngIf="data['tieneMonitoreoWeb'] !== undefined">
-                    <p *ngIf="data['tieneMonitoreoWeb'] === false"> 
-                      <b>
-                        ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
-                      </b>: No
-                    </p>
+        <mat-expansion-panel class="expansion-style sub-expansion"
+          *ngFor="let data of dataContratacion.contratacionProyecto">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              {{ data.proyecto.llaveMen }} - {{ data.proyecto.institucionEducativa.nombre }} -
+              {{ data.proyecto['sede'].nombre }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-                    <p *ngIf="data['tieneMonitoreoWeb'] === true">
-                      <b>
-                        ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
-                      </b>: Sí
-                    </p>
-                  </section>
-                  <section *ngIf="data['esReasignacion'] !== undefined">
-                    <p *ngIf="data['esReasignacion'] === true">
-                      <b>¿El proyecto es una reasignación?</b>: Sí
-                    </p>
-                    <p *ngIf="data['esReasignacion'] === false">
-                      <b>¿El proyecto es una reasignación?</b>: No
-                    </p>
-                  </section>
-                  <section *ngIf="data['esAvanceobra'] !== undefined">
-                    <p *ngIf="data['esAvanceobra'] === true">
-                      <b>¿El proyecto tiene avance de obra?</b>: Sí
-                    </p>
-                    <p *ngIf="data['esAvanceobra'] === false">
-                      <b>¿El proyecto tiene avance de obra?</b>: No
-                    </p>
-                  </section>
-                  <section *ngIf="data['porcentajeAvanceObra'] !== undefined">
-                    <p *ngIf="data['porcentajeAvanceObra'] !== 0">
-                      <b>¿Cuál es el porcentaje de avance de obra?</b>: 
-                      {{ data.porcentajeAvanceObra }}%
-                    </p>
-                  </section>
-                  <section *ngIf="data['requiereLicencia'] !== undefined">
-                    <p *ngIf="data['requiereLicencia'] === true">
-                      <b>¿El proyecto requiere licencias?</b>: Sí
-                    </p>
-                    <p *ngIf="data['requiereLicencia'] === false">
-                      <b>¿El proyecto requiere licencias?</b>: No
-                    </p>
-                  </section>
-                  <section *ngIf="data['licenciaVigente'] !== undefined">
-                    <p *ngIf="data['licenciaVigente'] === true">
-                      <b>¿El proyecto tiene licencia vigente?</b>: Sí
-                    </p>
-                    <p *ngIf="data['licenciaVigente'] === false">
-                      <b>¿El proyecto tiene licencia vigente?</b>: No
-                    </p>
-                  </section>
-                  <section *ngIf="data['numeroLicencia'] !== undefined">
-                    <p *ngIf="data['numeroLicencia'].length > 0">
-                      <b>Número de licencia</b>: {{ data['numeroLicencia'] }}
-                    </p>
-                  </section>
-                  <section *ngIf="data['fechaVigencia'] !== undefined">
-                    <p *ngIf="data['fechaVigencia'].length > 0">
-                      <b>Fecha de vigencia</b>: {{ data['fechaVigencia'] | date: 'dd/MM/yyyy' }}
-                    </p>
-                  </section>
-                </mat-card-content>
-              </mat-card>
-            </div>
+          <div class="text-center flex">
+            <p class="mr-right-8em">
+              <b>{{ data.proyecto.institucionEducativa['departamento'].descripcion }}/{{ data.proyecto.institucionEducativa['municipio'].descripcion }}</b>
+            </p>
+            <p><b>{{ data.proyecto.tipoIntervencionCodigo }}</b></p>
+          </div>
+
+          <div align="left" style="margin-top: 1em;">
+            <mat-card class="border">
+              <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales
+              </mat-card-title>
+              <mat-card-content class="mt-1em">
+                <section *ngIf="data['tieneMonitoreoWeb'] !== undefined">
+                  <p *ngIf="data['tieneMonitoreoWeb'] === false">
+                    <b>
+                      ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                      través de cámaras con acceso web?
+                    </b>: No
+                  </p>
+
+                  <p *ngIf="data['tieneMonitoreoWeb'] === true">
+                    <b>
+                      ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                      través de cámaras con acceso web?
+                    </b>: Sí
+                  </p>
+                </section>
+                <section *ngIf="data['esReasignacion'] !== undefined">
+                  <p *ngIf="data['esReasignacion'] === true">
+                    <b>¿El proyecto es una reasignación?</b>: Sí
+                  </p>
+                  <p *ngIf="data['esReasignacion'] === false">
+                    <b>¿El proyecto es una reasignación?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['esAvanceobra'] !== undefined">
+                  <p *ngIf="data['esAvanceobra'] === true">
+                    <b>¿El proyecto tiene avance de obra?</b>: Sí
+                  </p>
+                  <p *ngIf="data['esAvanceobra'] === false">
+                    <b>¿El proyecto tiene avance de obra?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['porcentajeAvanceObra'] !== undefined">
+                  <p *ngIf="data['porcentajeAvanceObra'] !== 0">
+                    <b>¿Cuál es el porcentaje de avance de obra?</b>:
+                    {{ data.porcentajeAvanceObra }}%
+                  </p>
+                </section>
+                <section *ngIf="data['requiereLicencia'] !== undefined">
+                  <p *ngIf="data['requiereLicencia'] === true">
+                    <b>¿El proyecto requiere licencias?</b>: Sí
+                  </p>
+                  <p *ngIf="data['requiereLicencia'] === false">
+                    <b>¿El proyecto requiere licencias?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['licenciaVigente'] !== undefined">
+                  <p *ngIf="data['licenciaVigente'] === true">
+                    <b>¿El proyecto tiene licencia vigente?</b>: Sí
+                  </p>
+                  <p *ngIf="data['licenciaVigente'] === false">
+                    <b>¿El proyecto tiene licencia vigente?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['numeroLicencia'] !== undefined">
+                  <p *ngIf="data['numeroLicencia'].length > 0">
+                    <b>Número de licencia</b>: {{ data['numeroLicencia'] }}
+                  </p>
+                </section>
+                <section *ngIf="data['fechaVigencia'] !== undefined">
+                  <p *ngIf="data['fechaVigencia'].length > 0">
+                    <b>Fecha de vigencia</b>: {{ data['fechaVigencia'] | date: 'dd/MM/yyyy' }}
+                  </p>
+                </section>
+              </mat-card-content>
+            </mat-card>
+          </div>
         </mat-expansion-panel>
 
       </mat-expansion-panel>
@@ -150,9 +162,13 @@
         <div align="left" style="margin-top: 2em;">
           <mat-card class="border">
             <mat-card-content class="mt-1em">
-              <p><b>Tipo de contrato</b>: {{ dataContratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }}</p>
-              <p><b>Plazo</b>: {{ dataContratacion.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ dataContratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
-              <p><b>Valor del contrato</b>: {{ dataContratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              <p><b>Tipo de contrato</b>: {{ dataContratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }}
+              </p>
+              <p><b>Plazo</b>: {{ dataContratacion.disponibilidadPresupuestal[0].plazoMeses }} meses /
+                {{ dataContratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p><b>Valor del contrato</b>:
+                {{ dataContratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}
+              </p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -169,7 +185,7 @@
         <div align="center" *ngIf="dataContratacion['esObligacionEspecial'] === true" style="margin-top: 2em;">
           <mat-card class="border">
             <mat-card-content class="mt-1em">
-                <section [innerHTML]="innerObservacion( dataContratacion.consideracionDescripcion )"></section>
+              <section [innerHTML]="innerObservacion( dataContratacion.consideracionDescripcion )"></section>
             </mat-card-content>
           </mat-card>
         </div>
@@ -208,11 +224,9 @@
         </mat-expansion-panel>
 
         <div class="text-center w-15">
-          <button mat-raised-button
-                  color="accent" 
-                  class="btn-table"
-                  (click)="getDdp( sesionComiteId, dataContratacion.disponibilidadPresupuestal[0].numeroDdp )">
-                  Descargar DDP
+          <button mat-raised-button color="accent" class="btn-table"
+            (click)="getDdp( sesionComiteId, dataContratacion.disponibilidadPresupuestal[0].numeroDdp )">
+            Descargar DDP
           </button>
         </div>
 
@@ -229,11 +243,15 @@
           <mat-card class="border">
             <mat-card-content>
               <p><b>Fecha del trámite</b>: {{ dataContratacion.fechaTramite | date: 'dd/MM/yyyy' }}</p>
-              <p><b>Fecha de envío de documentación física para el trámite</b>: {{ dataContratacion.fechaEnvioDocumentacion | date: 'dd/MM/yyyy' }}</p>
+              <p><b>Fecha de envío de documentación física para el trámite</b>:
+                {{ dataContratacion.fechaEnvioDocumentacion | date: 'dd/MM/yyyy' }}</p>
               <section>
-                <b>Observaciones</b>:<div [innerHTML]="innerObservacion( dataContratacion.observaciones ? dataContratacion.observaciones : '' )"></div>
+                <b>Observaciones</b>:<div
+                  [innerHTML]="innerObservacion( dataContratacion.observaciones ? dataContratacion.observaciones : '' )">
+                </div>
               </section>
-              <p><b>Minuta adjunta</b>: {{ form.get( 'minutaName' ).value !== null ? form.get( 'minutaName' ).value : '' }}</p>
+              <p><b>Minuta adjunta</b>:
+                {{ form.get( 'minutaName' ).value !== null ? form.get( 'minutaName' ).value : '' }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -244,10 +262,15 @@
 
   <div class="mt-2em" align="left" *ngIf="estadoCodigo === estadoAprobadoPorFiduciaria">
     <mat-card class="border">
-      <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Registrar trámite
+        </mat-card-title>
+      </mat-card-header>
       <mat-card-content class="mt-2em">
         <p>Fecha del trámite <b class="color-titulo">{{ dataContratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
-        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="dataContratacion" [minDate]="dataContratacion.fechaTramite"></app-form-registro-tramite>
+        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="dataContratacion"
+          [minDate]="dataContratacion.fechaTramite"></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>
