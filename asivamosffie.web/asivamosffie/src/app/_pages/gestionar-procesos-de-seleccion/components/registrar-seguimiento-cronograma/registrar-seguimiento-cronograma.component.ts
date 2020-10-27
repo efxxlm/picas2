@@ -7,6 +7,7 @@ import { forkJoin, from } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-registrar-seguimiento-cronograma',
@@ -53,6 +54,9 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   idProcesoSeleccion: number = 0;
   listaCronograma: CronogramaSeguimiento[];
   listaCronogramaActividades: ProcesoSeleccionCronograma[];
+  descripciones: string[]=[];
+  activo: boolean[]=[];
+  pasado: boolean[]=[];
   
 
   constructor(
@@ -61,7 +65,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private procesoSeleccionService: ProcesoSeleccionService,
               public dialog: MatDialog,
-              private router: Router,
+              private router: Router,private sanitized: DomSanitizer,
 
              ) 
   {
@@ -100,7 +104,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
         let listaActividades = this.addressForm.get('actividades') as FormArray;
         this.listaCronogramaActividades=lista;
         //console.log( lista );
-        
+        let i=0;
         lista.forEach( cronograma => {
           let grupo = this.createActividad();
           const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
@@ -110,14 +114,37 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
           //formato fecha
           //let fecha = Date.parse(cronograma.fechaMaxima);
           let fechaSesion = new Date(cronograma.fechaMaxima);
-        
-          grupo.get('fechaMaxima').setValue( `${fechaSesion.getFullYear()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getDate()}`);
+          let hoy = new Date();
+          this.pasado[i]=false;
+          if(fechaSesion>=hoy)//si la fecha maxima es mayor a hoy etonces se muestra la ultima opción de la lista "Sin reporte"
+          {
+            if(cronograma.cronogramaSeguimiento.length==0)
+            {
+              this.pasado[i]=true;
+            }            
+          } 
+          grupo.get('fechaMaxima').setValue( `${fechaSesion.getDate()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getFullYear()}`);
           grupo.get('descripcion').setValue( cronograma.descripcion );
-          grupo.get('descripcion').setValue( cronograma.descripcion );
-          grupo.get('etapaActualProceso').setValue(etapaActualproceso?.nombre),
+          this.descripciones[i]=cronograma.descripcion;
+          this.activo[i]=true;
+          //grupo.get('descripcion').setValue( cronograma.descripcion );
+          grupo.get('etapaActualProceso').setValue(etapaActualproceso?.nombre);
+          if(cronograma.cronogramaSeguimiento.length>0)
+          {
+            const estadoActividad = this.listaEstadosSeguimiento.find(p => p.codigo === cronograma.cronogramaSeguimiento[cronograma.cronogramaSeguimiento.length-1].estadoActividadFinalCodigo);
+            grupo.get('fechaMonitoreo').setValue(cronograma.cronogramaSeguimiento[cronograma.cronogramaSeguimiento.length-1].fechaCreacion);
+            grupo.get('estadoActividad').setValue(estadoActividad);
+            grupo.get('observacion').setValue(cronograma.cronogramaSeguimiento[cronograma.cronogramaSeguimiento.length-1].observacion);            
+            if(cronograma.cronogramaSeguimiento[cronograma.cronogramaSeguimiento.length-1].estadoActividadFinalCodigo=="3")//si es finalizada, perdon por el "3" tengo sueño
+            {
+              this.activo[i]=false;
+            }
+          }
+          
+          
 
           listaActividades.push( grupo );
-
+          i++;
         })
 
       })
@@ -172,14 +199,14 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
     toArray())
     .subscribe( respuesta => {
       let res = respuesta[0] as Respuesta
-      this.openDialog("Cronograma", res.message); 
+      this.openDialog("", res.message); 
       if (res.code == "200"){
 //        console.log(respuesta);       
   //      this.router.navigate(["/seleccion"]);
 
       }
     }, error => {
-      this.openDialog("Cronograma", error.message); 
+      this.openDialog("", error.message); 
     })
 
   }
@@ -211,8 +238,8 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
         //let fecha = Date.parse(cronograma.fechaMaxima);
         let fechaSesion = new Date(cronograma.fechaMaxima);
       
-        grupo.get('fechaMaxima').setValue( `${fechaSesion.getFullYear()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getDate()}`);
-        grupo.get('descripcion').setValue( cronograma.descripcion );
+        grupo.get('fechaMaxima').setValue( `${fechaSesion.getDate()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getFullYear()}`);
+        //grupo.get('descripcion').setValue( cronograma.descripcion );
         grupo.get('descripcion').setValue( cronograma.descripcion );
         grupo.get('etapaActualProceso').setValue(etapaActualproceso?.nombre),
 

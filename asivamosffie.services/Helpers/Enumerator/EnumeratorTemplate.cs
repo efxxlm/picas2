@@ -14,6 +14,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         proyectoadministrativocreado = 12,
         MsjCoordinadorFuentes = 14,
         MsjEnviarSolicitudContratacion = 15,
+        ActividadesNoMonitoreadasProcesoSeleccion=16
 
 
     }

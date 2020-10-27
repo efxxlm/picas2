@@ -61,7 +61,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
       console.log(respuesta);
 
       respuesta.forEach(element => {
-          datos.push({fechaCargue:this.datepipe.transform(element.fechaCreacion, 'yyyy-MM-dd')
+          datos.push({fechaCargue:this.datepipe.transform(element.fechaCreacion, 'dd/MM/yyyy')
           ,id:element.archivoCargueId,registrosInvalidos:element.cantidadRegistrosInvalidos
           ,registrosValidos:element.cantidadRegistrosValidos,totalRegistros:element.cantidadRegistros
           ,gestion:element.nombre});

@@ -1469,7 +1469,7 @@ namespace asivamosffie.services
                         _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
                         _context.SaveChanges();
 
-
+                        /* no se debería crear
                         //Cofinanciacion
                         Cofinanciacion cofinanciacion = new Cofinanciacion
                         {
@@ -1501,7 +1501,7 @@ namespace asivamosffie.services
                             _context.CofinanciacionAportante.Add(cofinanciacionAportante);
                             _context.SaveChanges();
 
-                        }
+                        }*/
                         //Temporal proyecto update
                         tempOrdenLegibilidad.EstaValidado = true;
                         tempOrdenLegibilidad.FechaModificacion = DateTime.Now;
@@ -1794,6 +1794,23 @@ namespace asivamosffie.services
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, usuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
+            }
+        }
+
+        /*jflorez
+         impacto: 3.1.3
+         resumen: tarea programada para enviar mensaje al equipo estructurador cuando se vence una actividad*/
+        public async Task getActividadesVencidas(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender)
+        {
+            var tareas = _context.ProcesoSeleccionCronograma.Where(x => x.FechaMaxima < DateTime.Now && !(bool)x.Eliminado && x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid!=null && x.CronogramaSeguimiento.Count() == 0).Select(x=>new { x.ProcesoSeleccion.NumeroProceso,x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid }).ToList();            
+            
+            foreach (var tarea in tareas.Select(x=>x.ResponsableEstructuradorUsuarioid).Distinct())
+            {
+                string texto = string.Join("<br>", tareas.Where(x=>x.ResponsableEstructuradorUsuarioid==tarea).Select(x => x.NumeroProceso));
+                var usuarioenvio = _context.Usuario.Find(tarea);
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ActividadesNoMonitoreadasProcesoSeleccion);
+                string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", dominioFront).Replace("[TablaSolicitudes]",texto);
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioenvio.Email, "Actividades procesos de selección", template, sender, password, mailServer, mailPort);
             }
         }
     }

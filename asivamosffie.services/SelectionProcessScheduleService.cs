@@ -26,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionCronograma>> GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(int pProcesoSeleccionId)
         {
-            return await _context.ProcesoSeleccionCronograma.Where(r=> !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).ToListAsync();
+            return await _context.ProcesoSeleccionCronograma.Where(r=> !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.CronogramaSeguimiento).ToListAsync();
         }
 
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule()

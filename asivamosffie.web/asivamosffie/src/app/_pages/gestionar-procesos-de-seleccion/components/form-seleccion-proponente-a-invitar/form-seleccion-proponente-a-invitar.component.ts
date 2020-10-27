@@ -48,7 +48,10 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   cargarRegistro() {
     this.ngOnInit().then(() => {
       console.log(this.procesoSeleccion.listaContratistas.length);
-      this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.listaContratistas.length);
+      if(this.procesoSeleccion.listaContratistas.length>0)
+      {
+        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.listaContratistas.length);
+      }      
       this.addressForm.get('url').setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });
   }

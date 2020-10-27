@@ -51,7 +51,7 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()">
+                <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()" required>
                   <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre">
                     {{ Nombre.nombreCuentaBanco }}
                   </mat-option>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" class="maincolor" placeholder="DD/MM/AAAA" formControlName="fechaConsignacion" readonly (click)="picker.open()">
+                    <input matInput [matDatepicker]="picker" class="maincolor"  required placeholder="DD/MM/AAAA" formControlName="fechaConsignacion" readonly (click)="picker.open()">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
@@ -122,7 +122,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorConsignacion currencyMask maxlength="50" class="maincolor"
+                    <input matInput #valorConsignacion currencyMask maxlength="50" required class="maincolor"
                     formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false"
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                   </mat-form-field>

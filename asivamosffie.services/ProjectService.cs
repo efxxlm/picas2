@@ -575,7 +575,7 @@ namespace asivamosffie.services
                             };
                             valorobra += proyectoAportante.ValorObra != null ? Convert.ToDecimal(proyectoAportante.ValorObra) : 0;
                             valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0;
-                            valortotal += proyectoAportante.ValorTotalAportante != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0;
+                            valortotal += valorobra + valorinterventoria;
                             _context.ProyectoAportante.Add(proyectoAportante1);
                             _context.SaveChanges();
                         }
@@ -684,7 +684,8 @@ namespace asivamosffie.services
                     //si el tipo de intervancion es nuevo el estado juridico es sin revision 
                     if (pProyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))
                     {
-                        proyectoAntiguo.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Sin_Revision;
+                        //jflorez, siempre aprobado, si no no sale en ningun lado
+                        proyectoAntiguo.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                     }
                     else
                     {
@@ -753,7 +754,9 @@ namespace asivamosffie.services
 
 
                     }
-
+                    decimal valorinterventoria = 0;
+                    decimal valorobra = 0;
+                    decimal valortotal = 0;
                     //Aportantes 
                     foreach (var proyectoAportante in pProyecto.ProyectoAportante)
                     {
@@ -772,6 +775,10 @@ namespace asivamosffie.services
                                 ValorInterventoria = proyectoAportante.ValorInterventoria,
                                 ValorTotalAportante = proyectoAportante.ValorTotalAportante,
                             };
+                            valorobra += proyectoAportante.ValorObra != null ? Convert.ToDecimal(proyectoAportante.ValorObra) : 0;
+                            valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0;
+                            valortotal += valorobra + valorinterventoria;
+
                             _context.ProyectoAportante.Add(proyectoAportante1);
                             _context.SaveChanges();
                         }
@@ -789,12 +796,18 @@ namespace asivamosffie.services
                             proyectoAportanteAntiguo.ValorObra = proyectoAportante.ValorObra;
                             proyectoAportanteAntiguo.ValorInterventoria = proyectoAportante.ValorInterventoria;
                             proyectoAportanteAntiguo.ValorTotalAportante = proyectoAportante.ValorTotalAportante;
+                            valorobra += proyectoAportante.ValorObra != null ? Convert.ToDecimal(proyectoAportanteAntiguo.ValorObra) : 0;
+                            valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportanteAntiguo.ValorInterventoria) : 0;
+                            valortotal += valorobra+valorinterventoria;
 
                             _context.Update(proyectoAportanteAntiguo);
                         }
 
 
                     }
+                    proyectoAntiguo.ValorInterventoria = valorinterventoria;
+                    proyectoAntiguo.ValorObra = valorobra;
+                    proyectoAntiguo.ValorTotal = valortotal;
 
 
                     // Infraestructura  a intervenir 
@@ -1318,7 +1331,8 @@ namespace asivamosffie.services
                         //si el tipo de intervancion es nuevo el estado juridico es sin revision 
                         if (proyecto.TipoIntervencionCodigo.Equals(ConstantCodigoTipoIntervencion.Nuevo))
                         {
-                            proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Sin_Revision;
+                            //jflorez, simpre aprobado o si no no sale en ningun lado
+                            proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                         }
                         else
                         {

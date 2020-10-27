@@ -27,6 +27,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetProcesoSeleccionCotizacion();
         Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetCotizacionByProcesoSeleccionId(int ProcesoSeleccionId);
         Task<Respuesta> CreateEditarProcesoSeleccionCotizacion(ProcesoSeleccionCotizacion procesoSeleccionCotizacion);
+        Task getActividadesVencidas(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         //Proponente
         Task<ProcesoSeleccionCronograma> GetProcesoSeleccionProponenteById(int id);

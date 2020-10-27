@@ -17,12 +17,14 @@ namespace asivamosffie.api.Controllers
     public class PublicController : ControllerBase
     {
         public readonly ISourceFundingService _sourceFunding;
+        public readonly ISelectionProcessService _selectionProcess;
         private readonly IOptions<AppSettings> _settings;
 
-        public PublicController(ISourceFundingService sourceFunding, IOptions<AppSettings> settings)
+        public PublicController(ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings)
         {
             _sourceFunding = sourceFunding;
             _settings = settings;
+            _selectionProcess = selectionProcess;
         }
 
         [HttpGet("GetConsignationValue")]
@@ -31,6 +33,21 @@ namespace asivamosffie.api.Controllers
             try
             {
                 await _sourceFunding.GetConsignationValue(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetMonitorWithoutFollow")]
+        public async Task GetMonitorWithoutFollow()
+        {
+            try
+            {
+                await _selectionProcess.getActividadesVencidas(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 //return result;
             }
             catch (Exception ex)

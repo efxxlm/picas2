@@ -196,7 +196,10 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
             procesoSeleccionId: element.procesoSeleccionId,
             procesoSeleccionProponenteId: element.procesoSeleccionProponenteId,
             telefonoProponente: element.telefonoProponente,
-            tipoProponenteCodigo: element.tipoProponenteCodigo})
+            tipoProponenteCodigo: element.tipoProponenteCodigo,
+            nombreDepartamento:element.nombreDepartamento,
+            nombreMunicipio:element.nombreMunicipio
+          })
           });
           this.addressForm.get('nombresProponentes').setValue(proceso);
           console.log(proceso);

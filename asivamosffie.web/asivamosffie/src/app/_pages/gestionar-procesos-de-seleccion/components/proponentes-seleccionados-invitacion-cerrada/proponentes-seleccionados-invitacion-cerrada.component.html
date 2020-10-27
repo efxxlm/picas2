@@ -50,11 +50,11 @@
         </p>
         <p>
           <strong>Departamento del domicilio del proponente:</strong>
-          {{ proponente.departamentoString }}
+          {{ proponente.departamentoString?proponente.departamentoString:proponente.nombreDepartamento }}
         </p>
         <p>
           <strong>Municipio del domicilio del proponente:</strong>
-          {{ proponente.municipioString }}
+          {{ proponente.municipioString?proponente.municipioString:proponente.nombreMunicipio }}
         </p>
         <p>
           <strong>Dirección del proponente:</strong>

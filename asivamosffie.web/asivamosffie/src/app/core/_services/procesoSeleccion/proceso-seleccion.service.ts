@@ -179,6 +179,7 @@ export interface ProcesoSeleccionGrupo{
 }
 
 export interface ProcesoSeleccionCronograma{
+  
   procesoSeleccionCronogramaId?: number,
   procesoSeleccionId?: number,
   numeroActividad?: number,
@@ -186,7 +187,9 @@ export interface ProcesoSeleccionCronograma{
   fechaMaxima?: Date,
   estadoActividadCodigo?: string,
   etapaActualProcesoCodigo?:string,
-  procesoSeleccion?: ProcesoSeleccion
+  procesoSeleccion?: ProcesoSeleccion,
+  cronogramaSeguimiento?: CronogramaSeguimiento[];
+
 }
 
 export interface ProcesoSeleccionCronogramaMonitoreo{
@@ -241,11 +244,13 @@ export interface ProcesoSeleccionIntegrante {
 }
 
 export interface CronogramaSeguimiento{
+  
   cronogramaSeguimientoId?: number,
   procesoSeleccionCronogramaId?: number,
   estadoActividadInicialCodigo?: string,
   estadoActividadFinalCodigo?: string,
   observacion?: string,
+  fechaCreacion?: Date,
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma
 
 }
