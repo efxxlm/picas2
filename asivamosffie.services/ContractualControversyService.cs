@@ -10,6 +10,7 @@ using System.Linq;
 using asivamosffie.services.Interfaces;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
+using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.services
 {
@@ -25,6 +26,102 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
             //_settings = settings;
+        }
+
+        //CreateEditNuevaActualizacionTramite(ControversiaActuacion
+        //“Registrar nueva actualización del trámite”
+
+             public async Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
+        {
+            Respuesta _response = new Respuesta();
+
+            int idAccionCrearcontroversiaActuacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.CreadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+
+            //try
+            //{
+            //    Respuesta respuesta = new Respuesta();
+            //    string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            //    respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
+
+            //    return Ok(respuesta);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.ToString());
+            //}
+
+            try
+            {
+                if (controversiaActuacion != null)
+                {
+
+                    controversiaActuacion.Observaciones = Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
+
+                    controversiaActuacion.FechaCreacion = DateTime.Now;
+                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                    //controversiaActuacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                    //_context.Add(contratoPoliza);
+
+                    controversiaActuacion.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaActuacion);
+                    //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+
+                    //LimpiarEntradasContratoPoliza(ref contratoPoliza);
+
+                    //_context.ContratoPoliza.Add(contratoPoliza);
+                    _context.ControversiaActuacion.Update(controversiaActuacion);
+                     _context.SaveChanges();
+
+                    return
+                        new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Code = ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                            Message =
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
+                            ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                            //contratoPoliza
+                            idAccionCrearcontroversiaActuacion
+                            , controversiaActuacion.UsuarioModificacion
+                            //"UsuarioCreacion"
+                            , "EDITAR CONTROVERSIA ACTUACION"
+                            //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
+                            )
+                        };
+
+                    //return _response = new Respuesta { IsSuccessful = true,
+                    //    IsValidation = false, Data = cuentaBancaria,
+                    //    Code = ConstantMessagesBankAccount.OperacionExitosa };
+                }
+                else
+                {
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.ErrorInterno };
+            }
+
+        }
+
+        private bool ValidarRegistroCompletoControversiaActuacion(ControversiaActuacion controversiaActuacion)
+        {
+            if (string.IsNullOrEmpty(controversiaActuacion.EstadoAvanceTramiteCodigo)
+             ||  string.IsNullOrEmpty(controversiaActuacion.ActuacionAdelantadaCodigo)
+            || string.IsNullOrEmpty(controversiaActuacion.CantDiasVencimiento.ToString())
+                || (controversiaActuacion.EsRequiereContratista==null)
+                ||  (controversiaActuacion.EsRequiereInterventor == null)
+               || (controversiaActuacion.EsRequiereJuridico == null)
+                || (controversiaActuacion.EsRequiereSupervisor == null))           
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<Respuesta> CreateEditarControversiaTAI(ControversiaContractual controversiaContractual )
