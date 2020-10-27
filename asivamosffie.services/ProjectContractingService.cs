@@ -1003,7 +1003,10 @@ namespace asivamosffie.services
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                 {
                     foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
-                    {
+                    { 
+                        if(ContratacionProyectoAportante.ComponenteAportante.Count() == 0)
+                            return false;
+
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                         {
                             if (!(bool)ComponenteAportante.Eliminado)
