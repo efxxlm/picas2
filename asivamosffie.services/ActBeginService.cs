@@ -607,7 +607,8 @@ namespace asivamosffie.services
 
                 foreach (var usuario in lstUsuarios)
                 {
-                    lstCorreos = lstCorreos += usuario.Email + ";";
+                    //lstCorreos = lstCorreos += usuario.Email + ";";
+                    lstCorreos = lstCorreos += usuario.Email ;
                 }
             }
             return lstCorreos;
