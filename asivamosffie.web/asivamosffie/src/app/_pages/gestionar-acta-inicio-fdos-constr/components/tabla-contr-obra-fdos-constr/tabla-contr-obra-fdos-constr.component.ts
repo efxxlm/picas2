@@ -107,7 +107,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-      this.applyFilter("Obra");
+      this.applyFilter("Obra e Interventoria");
     });
   }
   applyFilter(filterValue: string) {
@@ -130,10 +130,16 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/generarActa']);
   }
   enviarRevision(id,estadoObs){
-    this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
-      this.ngOnInit();
-      localStorage.setItem("estadoObs",estadoObs);
-    });
+    if(estadoObs=="Con revisión sin observaciones"){
+      this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
+    else{
+      this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
   }
   enviarInterventor(id){
     if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){

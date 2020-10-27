@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 export interface Contrato {
   fechaAprobacionRequisitos: string;
   numeroContrato:string;
@@ -25,9 +27,17 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
   public rolAsignado;
   public ocpion;
   public selTab;
-  constructor() { }
+  loadDataItems: Subscription;
+  dataTable: any;
+  constructor(private services: ActBeginService) { }
 
   ngOnInit(): void {
+    this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {
+      if(loadDataItems!=''){
+      this.dataTable=loadDataItems;
+      }
+    }); 
+    console.log(this.loadDataItems);
     this.cargarRol();
   }
   cargarRol() {

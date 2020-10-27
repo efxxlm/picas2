@@ -83,20 +83,7 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     this.fechaSesion2 = new Date(this.fechaFirmaContratistaInterventoria);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
     this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaSesionString,this.fechaSesionString2,inputNode.files[0],"usr3").subscribe(data=>{
-      if(data.code=="200"){
-        if(this.idRol==2){
-          this.services.CambiarEstadoActa(this.idContrato,"20","usr2").subscribe(data0=>{
-          
-          });
-        }
-        else{
-          this.services.CambiarEstadoActa(this.idContrato,"7","usr2").subscribe(data1=>{
-          
-          });
-        }
-        this.services.GetListGrillaActaInicio(this.idRol).subscribe(items=>{
-          this.services.loadDataItems.next(items);
-        })
+      if(data.isSuccessful==true){
         this.openDialog(data.message,"");
         this.close();
       }
@@ -106,7 +93,7 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     });
   }
   close(){
-    this.matDialogRef.close('cancel');
+    this.matDialogRef.close('aceptado');
 }
 
 }

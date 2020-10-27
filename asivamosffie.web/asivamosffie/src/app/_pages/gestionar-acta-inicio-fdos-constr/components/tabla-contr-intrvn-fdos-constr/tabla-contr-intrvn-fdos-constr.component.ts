@@ -144,6 +144,13 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     dialogConfig.width = '45%';
     dialogConfig.data = { id: id, idRol: idRol };
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(value => {
+      if (value == 'aceptado') {
+        this.services.CambiarEstadoActa(id,"7","usr2").subscribe(data=>{
+          this.ngOnInit();
+        });
+      }
+    });
   }
   descargarActaDesdeTabla(id) {
     this.services.GetPlantillaActaInicio(id).subscribe(resp => {

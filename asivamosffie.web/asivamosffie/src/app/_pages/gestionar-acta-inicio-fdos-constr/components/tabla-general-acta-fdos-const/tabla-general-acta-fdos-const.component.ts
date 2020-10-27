@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -37,14 +37,11 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   }
   public dataTable;
   loadDataItems: Subscription;
+  @Input () dataTableAux;
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {
-    this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {
-      if(loadDataItems!=''){
-      this.dataTable=loadDataItems;
-      }
-    }); 
+    this.dataTableAux = this.dataTable;
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
@@ -100,6 +97,13 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     dialogConfig.width = '45%';
     dialogConfig.data = {id:id, idRol:idRol};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(value => {
+      if (value == 'aceptado') {
+        this.services.CambiarEstadoActa(id,"20","usr2").subscribe(data=>{
+          this.ngOnInit();
+        });
+      }
+    });
   }
   descargarActaDesdeTabla(id){
     this.services.GetPlantillaActaInicio(id).subscribe(resp=>{
