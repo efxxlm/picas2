@@ -586,8 +586,8 @@ namespace asivamosffie.services
                     contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
                     contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
                     contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;
-                   
-                } 
+
+                }
                 _context.SaveChanges();
 
                 Contratacion contratacionValidarRegistro = _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.ContratacionProyecto).FirstOrDefault();
@@ -786,7 +786,7 @@ namespace asivamosffie.services
                     .FirstOrDefault();
 
                 contratacion.RegistroCompleto = ValidarEstado(contratacion);
-                 
+
                 _context.SaveChanges();
                 return new Respuesta
                 {
@@ -890,6 +890,16 @@ namespace asivamosffie.services
                         await CreateEditComponenteAportante(ComponenteAportante, true);
                     }
                 }
+
+                //Validar Registro Completo
+                Contratacion contratacion = _context.Contratacion
+                       .Where(r => r.ContratacionId == pContratacionProyecto.ContratacionId)
+                      .Include(r => r.ContratacionProyecto)
+                        .ThenInclude(r => r.ContratacionProyectoAportante)
+                            .ThenInclude(r => r.ComponenteAportante)
+                                .ThenInclude(r => r.ComponenteUso).FirstOrDefault();
+
+                contratacion.RegistroCompleto = ValidarEstado(contratacion);
                 _context.SaveChanges();
                 return new Respuesta
                 {
@@ -1003,8 +1013,8 @@ namespace asivamosffie.services
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                 {
                     foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
-                    { 
-                        if(ContratacionProyectoAportante.ComponenteAportante.Count() == 0)
+                    {
+                        if (ContratacionProyectoAportante.ComponenteAportante.Count() == 0)
                             return false;
 
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
