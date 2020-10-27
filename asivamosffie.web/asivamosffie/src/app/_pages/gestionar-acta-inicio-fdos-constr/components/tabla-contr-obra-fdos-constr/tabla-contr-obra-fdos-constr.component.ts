@@ -95,6 +95,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   public dataTable;
+  public noValidate = "Sin Validar";
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {

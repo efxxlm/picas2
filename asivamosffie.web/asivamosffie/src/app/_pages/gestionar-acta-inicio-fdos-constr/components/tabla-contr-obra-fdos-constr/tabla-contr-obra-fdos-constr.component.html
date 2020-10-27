@@ -40,12 +40,10 @@
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.enviadoparaInterventor==true">Enviar al interventor</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActa=='Con acta generada'">Enviar acta para firmar</button>
-                    <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActa=='Con observaciones' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con acta en proceso de firma'"
+                        *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión sin observaciones'"
                         (click)="this.verDetalleEditar(element.contratoId)">Ver detalle/Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActa=='Enviada al interventor' || element.estadoActa=='Con acta suscrita y cargada'"
+                        *ngIf="element.estadoActa=='Con notificación al interventor'"
                         (click)="this.verDetalle(element.contratoId)">Ver detalle</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Sin acta generada'" (click)="this.generarActaFDos()">Generar Acta</button>

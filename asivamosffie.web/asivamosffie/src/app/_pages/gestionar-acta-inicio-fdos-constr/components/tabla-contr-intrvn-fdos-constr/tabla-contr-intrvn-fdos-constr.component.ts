@@ -106,8 +106,8 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   verDetalle(id){
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
-  generarActaFDos() {
-    this.router.navigate(['/generarActaInicioConstruccion/generarActa']);
+  generarActaFDos(id) {
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   enviarActaParaFirma(id){
     this.services.CambiarEstadoActa(id,"4","usr2").subscribe(data=>{
