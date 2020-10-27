@@ -412,10 +412,7 @@ namespace asivamosffie.services
                                                s.ContratacionProyectoId == pContratacionProyectoId)
                                 .Include(r => r.SesionParticipante)
                                     .ThenInclude(r => r.Usuario)
-                                .Include( r => r.ContratacionProyecto )
-                                    .ThenInclude( r => r.Contratacion )
-                                        .ThenInclude( r => r.ContratacionObservacion )
-                                .ToListAsync();
+                                .ToListAsync(); 
             return lista;
         }
 
@@ -3116,6 +3113,7 @@ namespace asivamosffie.services
 
                 return new Respuesta
                 {
+                    Data = pContratacionObservacion,
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,

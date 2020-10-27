@@ -21,7 +21,8 @@ export class ObservacionComponent implements OnInit {
   sesionComiteSolicitudId: number;
   contratacionProyectoId: number;
   contratacionId: number;
-  listaObservaciones: SesionSolicitudObservacionProyecto[] = []
+  listaObservaciones: ContratacionObservacion[] = []
+  contratacionObservacion: ContratacionObservacion[] = []
 
   editorStyle = {
     height: '45px'
@@ -51,27 +52,28 @@ export class ObservacionComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.activatedRoute.params.subscribe(parametros => {
       this.sesionComiteSolicitudId = this.data.idsesionComiteSolicitud;
       this.comiteTecnicoId = this.data.idcomiteTecnico;
       this.contratacionProyectoId = this.data.contratacionProyectoid;
       this.contratacionId = this.data.contratacionid;
+      this.contratacionObservacion = this.data.contratacionObservacion;
 
       this.technicalCommitteSessionService
         .getSesionSolicitudObservacionProyecto(this.data.idsesionComiteSolicitud, this.data.contratacionProyectoid)
         .subscribe(observaciones => {
           this.listaObservaciones = observaciones;
-          if (this.listaObservaciones && this.listaObservaciones.length > 0) {
-            this.observacion = this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0] ?
-              this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0].observacion : null;
+          
+          this.contratacionObservacion = this.contratacionObservacion.filter( o => o.comiteTecnicoId == this.comiteTecnicoId );
 
-            this.contratacionObservacionId = this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0] ?
-              this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0].contratacionObservacionId : 0;
+          if (this.contratacionObservacion && this.contratacionObservacion.length > 0) {
+
+            this.observacion = this.contratacionObservacion.length > 0 ? this.contratacionObservacion[0].observacion : null;
+
+            this.contratacionObservacionId = this.contratacionObservacion.length > 0 ? this.contratacionObservacion[0].contratacionObservacionId : 0;
           }
         })
 
 
-    })
 
 
   }
@@ -102,6 +104,7 @@ export class ObservacionComponent implements OnInit {
 
     let contraracionObservacion: ContratacionObservacion = {
       contratacionObservacionId: this.contratacionObservacionId,
+      contratacionProyectoid: this.contratacionProyectoId,
       comiteTecnicoId: this.comiteTecnicoId,
       contratacionId: this.contratacionId,
 
@@ -113,7 +116,7 @@ export class ObservacionComponent implements OnInit {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
         if (respuesta.code == "200")
-          this.dialogRef.close(contraracionObservacion);
+          this.dialogRef.close(respuesta.data);
       })
 
   }

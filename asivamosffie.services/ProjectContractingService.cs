@@ -250,10 +250,11 @@ namespace asivamosffie.services
         public async Task<Contratacion> GetContratacionByContratacionIdWithGrillaProyecto(int pContratacionId)
         {
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
-               .Include(r => r.ContratacionObservacion)
-               .Include(r => r.ContratacionProyecto)
+                .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
-                           .FirstOrDefaultAsync();
+                .Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.ContratacionObservacion)
+                .FirstOrDefaultAsync();
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
 

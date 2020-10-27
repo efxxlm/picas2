@@ -132,6 +132,8 @@ interface EstadoSolicitud{
     usuarioCreacion?: string,
     fechaCreacion?: Date,
     comiteTecnicoId?: number,
+    contratacionProyectoid?: number,
+    
   }
   
   interface EstadoProyecto{
