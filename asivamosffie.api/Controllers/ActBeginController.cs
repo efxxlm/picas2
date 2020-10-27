@@ -79,9 +79,9 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("EnviarCorreoSupervisor")]        
-        public async Task<IActionResult> EnviarCorreoSupervisor(int pContratoId)
-        
+        [Route("EnviarCorreoSupervisorContratista")]             
+        public async Task<IActionResult> EnviarCorreoSupervisorContratista(int pContratoId, int pPerfilId)
+            //public async Task<IActionResult> EnviarCorreoSupervisor(int pContratoId)
         {
             Respuesta rta = new Respuesta();
             try
@@ -92,7 +92,7 @@ namespace asivamosffie.api.Controllers
                 asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
 
                 _appSettingsService = toAppSettingsService(_settings);
-                rta = await _ActBegin.EnviarCorreoSupervisor(pContratoId, _appSettingsService);
+                rta = await _ActBegin.EnviarCorreoSupervisorContratista(pContratoId, _appSettingsService,pPerfilId);
 
                 return Ok(rta);
             }

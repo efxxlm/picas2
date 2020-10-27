@@ -533,7 +533,7 @@ namespace asivamosffie.services
         }
         
 
-        public async Task<Respuesta> EnviarCorreoSupervisor(int pContratoId, AppSettingsService settings)
+        public async Task<Respuesta> EnviarCorreoSupervisorContratista(int pContratoId, AppSettingsService settings, int pPerfilId)
         {
             Respuesta respuesta = new Respuesta();
             
@@ -548,10 +548,12 @@ namespace asivamosffie.services
             
             VistaGenerarActaInicioContrato actaInicio=new VistaGenerarActaInicioContrato();
             if(contrato!=null)
-                actaInicio = await getDataActaInicioAsync(pContratoId,Convert.ToInt32( contrato.TipoContratoCodigo));             
-            
+                actaInicio = await getDataActaInicioAsync(pContratoId,Convert.ToInt32( contrato.TipoContratoCodigo));
+
             //perfilId = 8; //  Supervisor
-            perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
+            //perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
+            perfilId = pPerfilId;
+
             correo = getCorreos(perfilId);
 
             try
@@ -560,8 +562,6 @@ namespace asivamosffie.services
 
                //error correo
                 respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
-
-
 
                 //Task<Respuesta> result = EnviarCorreoGestionActaIncio(correo, settings.MailServer,
                 //settings.MailPort, settings.Password, settings.Sender,
