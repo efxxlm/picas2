@@ -41,10 +41,10 @@ namespace asivamosffie.services
                    .Include(r => r.DisponibilidadPresupuestalObservacion)
                    .Include(r => r.DisponibilidadPresupuestalProyecto)
                     .ThenInclude(r => r.Proyecto)
-                      .ThenInclude(r=> r.ProyectoAportante)
-                        .ThenInclude(r=> r.Aportante) 
+                      .ThenInclude(r => r.ProyectoAportante)
+                        .ThenInclude(r => r.Aportante)
                 .FirstOrDefaultAsync();
-             
+
             return disponibilidadPresupuestal;
         }
 
@@ -389,15 +389,34 @@ namespace asivamosffie.services
         //Ver detalle
         public async Task<DisponibilidadPresupuestal> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
         {
-            return await _context.DisponibilidadPresupuestal
-                                        .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
-                                        .Include(r => r.DisponibilidadPresupuestalProyecto)
-                                            .ThenInclude(r => r.Proyecto)
-                                                 .ThenInclude(r => r.Departamento)
-                                        .Include(r => r.DisponibilidadPresupuestalProyecto)
-                                            .ThenInclude(r => r.Proyecto)
-                                                 .ThenInclude(r => r.Municipio )
-                                        .FirstOrDefaultAsync();
+            try
+            {
+                DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
+                                                .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
+                                                .Include(r => r.DisponibilidadPresupuestalProyecto)
+                                                    .ThenInclude(r => r.Proyecto)
+                                                .FirstOrDefaultAsync();
+
+                foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
+                {
+                    if (!string.IsNullOrEmpty(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio))
+                    {
+
+                        Localizacion Municipio = _context.Localizacion.Find(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio);
+                        DisponibilidadPresupuestalProyecto.Proyecto.Municipio = Municipio.Descripcion;
+                        DisponibilidadPresupuestalProyecto.Proyecto.Departamento = _context.Localizacion.Find(Municipio.IdPadre).Descripcion;
+                    }
+                }
+
+
+                return disponibilidad;
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return new DisponibilidadPresupuestal();
         }
 
 
@@ -462,16 +481,16 @@ namespace asivamosffie.services
 
                     //Auditoria
                     disponibilidadPresupuestalAntiguo.UsuarioModificacion = disponibilidadPresupuestal.UsuarioModificacion;
-              
+
                     //Registros
-                 
-                    disponibilidadPresupuestalAntiguo.ValorSolicitud = disponibilidadPresupuestal.ValorSolicitud; 
-                    disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto; 
+
+                    disponibilidadPresupuestalAntiguo.ValorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
+                    disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto;
                     disponibilidadPresupuestalAntiguo.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestalAntiguo.AportanteId = disponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalAntiguo.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
                     disponibilidadPresupuestalAntiguo.CuentaCartaAutorizacion = disponibilidadPresupuestal.CuentaCartaAutorizacion;
-                     
+
                     disponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
                     {
                         if (p.DisponibilidadPresupuestalProyectoId == 0)
@@ -860,7 +879,7 @@ namespace asivamosffie.services
         public async Task<List<Proyecto>> SearchLlaveMEN(string LlaveMEN)
         {
             var Id = await _context.Proyecto
-                .Where(r => r.LlaveMen == LlaveMEN.ToString().Trim() && !(bool)r.Eliminado) 
+                .Where(r => r.LlaveMen == LlaveMEN.ToString().Trim() && !(bool)r.Eliminado)
                 .Select(r => r.LlaveMen).FirstOrDefaultAsync();
             if (!string.IsNullOrEmpty(Id))
                 return await _context.Proyecto
@@ -870,7 +889,7 @@ namespace asivamosffie.services
                 .ToListAsync();
 
             else
-                return new List<Proyecto>(); 
+                return new List<Proyecto>();
         }
 
 
