@@ -165,14 +165,7 @@
                                 Eliminar uso
                               </button>
                             </div>
-                          </div>
-                          <div class="text-right">
-                            <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                              *ngIf="k + 1 === usos(j, i).length" (click)="addUso(j, i)">
-                              <img src="assets/img/icon/mas.svg" alt="Agregar otro uso">
-                              Agregar otro uso
-                            </button>
-                          </div>
+                          </div>                          
                           <div class="row">
                             <div class="col-md-8">
                               <div class="row">
@@ -191,6 +184,13 @@
                                   <span class="contador">{{20 - valorUso.value.length}}</span>
                                 </div>
                               </div>
+                            </div>
+                            <div class="col-md-4 text-right">
+                              <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+                                *ngIf="k + 1 === usos(j, i).length" (click)="addUso(j, i)">
+                                <img src="assets/img/icon/mas.svg" alt="Agregar otro uso">
+                                Agregar otro uso
+                              </button>
                             </div>
                           </div>
                         </div>
