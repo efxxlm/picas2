@@ -95,7 +95,7 @@ namespace asivamosffie.services
                                 sesionComiteSolicitud.EstadoRegistro = true;
                                 sesionComiteSolicitud.EstadoDelRegistro = "Completo";
                             }
-
+                            sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
                             break;
 
                         case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
