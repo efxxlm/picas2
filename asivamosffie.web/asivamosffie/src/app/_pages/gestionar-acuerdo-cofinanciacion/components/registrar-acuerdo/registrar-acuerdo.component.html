@@ -57,7 +57,7 @@
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
                      min="1" max="999" required type="number"
                     maxlength="3" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    formControlName="numAportes" 
+                    formControlName="numAportes"
                     >
                 </mat-form-field>
                 <span class="contador">{{3 - numAportes.value.length}}</span>
@@ -105,7 +105,7 @@
                 <div class="row"
                   *ngIf="aportantes.controls[i].get('tipo').value && aportantes.controls[i].get('tipo').value.codigo && aportantes.controls[i].get('tipo').value.codigo.toString()=='3'">
                   <div class="pr-1">
-                    <label class="label-left" 
+                    <label class="label-left"
                     [ngClass]="{'color-secondaryColor' : aportante.controls.nombre.invalid && aportante.controls.nombre.dirty || aportante.controls.nombre.invalid && estaEditando}"
                     >Nombre de Aportante</label>
                   </div>
@@ -267,7 +267,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.valorDocumento<1 || documento.valorDocumento === '') && documento.cofinanciacionAportanteId>0 || documento.valorDocumento ==='' && estaEditando}"
+                        [ngClass]="{'color-secondaryColor' : (documento.valorDocumento<1 || documento.valorDocumento == undefined) && documento.cofinanciacionAportanteId>0 || documento.valorDocumento == undefined && estaEditando}"
                         >Valor indicado en el documento</label>
                       </div>
                       <div class="col d-flex align-items-center">
@@ -352,7 +352,7 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.numeroAcuerdo<1||documento.numeroAcuerdo=='') && documento.cofinanciacionAportanteId>0}"
+                        [ngClass]="{'color-secondaryColor' : (documento.numeroAcuerdo<1|| documento.numeroAcuerdo == undefined) && documento.cofinanciacionAportanteId>0}"
                         >Número de documento
                           {{documento.tipoDocumentoId==25?'de acuerdo':''}}</label>
                       </div>
