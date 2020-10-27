@@ -99,7 +99,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaActaInicio().subscribe(data=>{
+    this.services.GetListGrillaActaInicio(8).subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
@@ -128,6 +128,24 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   }
   generarActaFDos(){
     this.router.navigate(['/generarActaInicioConstruccion/generarActa']);
+  }
+  enviarRevision(id,estadoObs){
+    this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
+      this.ngOnInit();
+      localStorage.setItem("estadoObs",estadoObs);
+    });
+  }
+  enviarInterventor(id){
+    if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){
+      this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
+    else{
+      this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
   }
   cargarActaSuscrita(){
     const dialogConfig = new MatDialogConfig();

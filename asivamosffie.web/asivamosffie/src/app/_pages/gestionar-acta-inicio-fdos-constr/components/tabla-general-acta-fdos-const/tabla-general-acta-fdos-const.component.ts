@@ -48,7 +48,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
-    this.services.GetListGrillaActaInicio().subscribe(data=>{
+    this.services.GetListGrillaActaInicio(2).subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
@@ -67,7 +67,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   enviarParaRevision(idContrato){
-    this.services.CambiarEstadoActa(idContrato,"15","usr2").subscribe(data=>{
+    this.services.CambiarEstadoActa(idContrato,"18","usr2").subscribe(data=>{
       this.ngOnInit();
     });
   }
@@ -75,8 +75,18 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
   enviarActaParaFirma(id){
-    this.services.CambiarEstadoActa(id,"15","usr2").subscribe(data=>{
-
+    this.services.GetPlantillaActaInicio(id).subscribe(resp=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
+    this.services.CambiarEstadoActa(id,"19","usr2").subscribe(data=>{
+      this.ngOnInit();
     });
   }
   verDetalleActaCargada(id){
@@ -84,10 +94,11 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
   cargarActaSuscrita(id){
+    let idRol = 2; 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = {id:id};
+    dialogConfig.data = {id:id, idRol:idRol};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
   }
   descargarActaDesdeTabla(id){
