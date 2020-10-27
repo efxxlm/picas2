@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { Dominio, CommonService, Localizacion } from 'src/app/core/_services/common/common.service';
 import { Aportante, Proyecto } from 'src/app/core/_services/project/project.service';
@@ -21,7 +22,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   listaDepartamento: Localizacion[] = [];
   listaMunicipio: Localizacion[] = [];
   listaAportante: ListAportantes[] = [];
-  proyectoEncontrado: boolean = false
+  proyectoEncontrado: boolean = false;
+  seRealizoPeticion: boolean = false;
   proyecto: Proyecto;
 
   addressForm = this.fb.group({
@@ -40,7 +42,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     llaveMEN: [null, Validators.required],
     tipoAportante: [null, Validators.required],
     nombreAportante: [null, Validators.required],
-    valor: [null, Validators.compose([
+    valor: [ '', Validators.compose([
       Validators.minLength(4), Validators.maxLength(20)])],
     url: [null, Validators.required]
   });
@@ -73,8 +75,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     this.budgetAvailabilityService.getDetailInfoAdditionalById( id )
       .subscribe( disponibilidad => {
 
-        let tipoSeleccionado: Dominio = this.tipoSolicitudArray.find( t => t.codigo == disponibilidad.tipoSolicitudCodigo ); 
-        
+        let tipoSeleccionado: Dominio = this.tipoSolicitudArray.find( t => t.codigo == disponibilidad.tipoSolicitudCodigo );
 
         console.log( disponibilidad );
 
@@ -83,24 +84,18 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         this.addressForm.get('objeto').setValue( disponibilidad.objeto );
         this.addressForm.get('numeroRadicado').setValue( disponibilidad.numeroRadicadoSolicitud );
         this.addressForm.get('cartaAutorizacionET').setValue( disponibilidad.cuentaCartaAutorizacion );
-        
-        
-        
-        if (disponibilidad.disponibilidadPresupuestalProyecto && disponibilidad.disponibilidadPresupuestalProyecto.length > 0){
+
+        if (disponibilidad.disponibilidadPresupuestalProyecto.length > 0){
           this.addressForm.get('disponibilidadPresupuestalProyectoId').setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId);
           this.addressForm.get('llaveMEN').setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen)
           this.buscarProyecto( true, disponibilidad.aportanteId );
-
-    
         }
 
 
-      })
+      });
   }
 
-  ngOnInit(): void {
-
-    
+  ngOnInit(): void {    
 
     forkJoin([
       this.commonService.listaTipoDDPEspecial(),
@@ -117,7 +112,14 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
     })
 
-  }
+    this.addressForm.get( 'llaveMEN' ).valueChanges
+      .pipe(
+        debounceTime( 2000 )
+      )
+      .subscribe(
+        () => this.buscarProyecto( false, 0 )
+      );
+  };
 
   openDialog(modalTitle: string, modalText: string) {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -132,38 +134,46 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     this.proyecto = {};
     this.addressForm.get('valor').setValue('')
     this.addressForm.get('nombreAportante').setValue('')
-    this.listaAportante = []; 
+    this.listaAportante = [];
 
     let llameMen: string = this.addressForm.get('llaveMEN').value;
 
     if (llameMen) {
-      this.budgetAvailabilityService.searchLlaveMEN(llameMen)
-        .subscribe(listaProyectos => {
-          if (listaProyectos.length == 0) {
-            this.openDialog('', 'Esta llave no existe por favor verifique los datos registrados');
+      if ( llameMen.length >= 5 ) {
+        this.budgetAvailabilityService.searchLlaveMEN(llameMen)
+        .subscribe(
+          listaProyectos => {
+            if ( listaProyectos.length === 0 ) {
+              this.openDialog('', 'Esta llave no existe por favor verifique los datos registrados');
+              return;
+            };
+            if ( listaProyectos.length > 0 ) {
+              this.proyectoEncontrado = true;
+              this.proyecto = listaProyectos[0];
+              //console.log('pro',this.proyecto)
+              this.budgetAvailabilityService.getAportantesByProyectoId(this.proyecto.proyectoId)
+                .subscribe(listaApo => {
 
-          } else {
-            this.proyectoEncontrado = true;
-            this.proyecto = listaProyectos[0];
-            //console.log('pro',this.proyecto)
-            this.budgetAvailabilityService.getAportantesByProyectoId(this.proyecto.proyectoId)
-              .subscribe(listaApo => {
+                  this.listaAportante = listaApo;
+                  this.seRealizoPeticion = true;
 
-                this.listaAportante = listaApo;
-                console.log(this.listaAportante)
-                if ( esModoEdit ){
-                   let aportanteNombreSeleccionado: ListAportantes = this.listaAportante.find( t => t.cofinanciacionAportanteId == aportanteId ); 
-                   this.addressForm.get('nombreAportante').setValue( aportanteNombreSeleccionado );
-                   this.changeAportante();
-                }
+                  if ( this.listaAportante.length === 0 ) {
+                    this.openDialog('', '<b>El proyecto no tiene una entidad territorial como aportante.<br><br>La solicitud no se puede completar.</b>');
+                  };
+
+                  if ( esModoEdit ){
+                    let aportanteNombreSeleccionado: ListAportantes = this.listaAportante.find( t => t.cofinanciacionAportanteId == aportanteId ); 
+                    this.addressForm.get('nombreAportante').setValue( aportanteNombreSeleccionado );
+                    this.changeAportante();
+                  };
 
 
-              })
-          }
-
-        }, err => {
-          this.openDialog('', err.error.message)
-        })
+                })
+            };
+          }, 
+          err => this.openDialog('', err.message)
+        )
+      }
     }
   }
 
