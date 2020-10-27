@@ -638,6 +638,9 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Llave_MEN_Contrato_", pActaInicio.LlaveMENContrato);
             strContenido = strContenido.Replace("_Numero_Identificacion_Entidad_Contratista_Obra_", pActaInicio.NumeroIdentificacionEntidadContratistaObra);
             strContenido = strContenido.Replace("_Numero_Contrato_Obra_", pActaInicio.NumeroContrato);
+            strContenido = strContenido.Replace("_Numero_Contrato_Interventoria_", pActaInicio.NumeroContrato);
+            
+
             strContenido = strContenido.Replace("_Nombre_Entidad_Contratista_Obra_", pActaInicio.NombreEntidadContratistaObra);
             strContenido = strContenido.Replace("_Numero_Identificacion_Contratista_Interventoria_", pActaInicio.NumeroIdentificacionContratistaInterventoria);
             //strContenido = strContenido.Replace("_Nombre_Representante_Contratista_Obra_", pActaInicio.NombreRepresentanteContratistaObra);
