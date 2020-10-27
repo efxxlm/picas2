@@ -209,7 +209,21 @@ namespace asivamosffie.services
 
                 if(contrato!= null)
                 {
-                    contrato.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
+                    //contrato.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
+
+                    ContratoObservacion contratoObservacion = new ContratoObservacion();
+                    contratoObservacion = await GetContratoObservacionByIdContratoId(pContratoId);
+
+                    contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
+                    contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
+                    contratoObservacion.FechaCreacion = DateTime.Now;
+                    contratoObservacion.EsActa = true;
+                    contratoObservacion.EsActaFase2 = true;
+                    contratoObservacion.ContratoId = pContratoId;
+
+                    _context.ContratoObservacion.Update(contratoObservacion);
+                    _context.SaveChanges();
+
                     contrato.UsuarioCreacion = pUsuarioModificacion;
                     contrato.FechaModificacion = DateTime.Now;
 
