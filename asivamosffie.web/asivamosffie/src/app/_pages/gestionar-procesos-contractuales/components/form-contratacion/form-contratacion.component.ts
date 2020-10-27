@@ -111,7 +111,7 @@ export class FormContratacionComponent implements OnInit {
 
   };
 
-  getDdp ( sesionComiteSolicitudId, numeroDdp ) {
+  getDdp ( sesionComiteSolicitudId: number, numeroDdp: string ) {
     this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
       .subscribe( resp => {
         let documento = '';
@@ -129,6 +129,10 @@ export class FormContratacionComponent implements OnInit {
         anchor.click();
       } );
   };
+
+  getDocumento ( sesionComiteId: number, nombreDocumento: string ) {
+    console.log( sesionComiteId, nombreDocumento );
+  }
 
   guardar () {
     console.log( this.form );
