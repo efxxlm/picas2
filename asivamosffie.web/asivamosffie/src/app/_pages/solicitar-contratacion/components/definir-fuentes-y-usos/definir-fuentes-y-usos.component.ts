@@ -370,9 +370,11 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     
     if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length ) {
       this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+      return;
     };
     if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorInterventoria && totalAportantes !== this.aportantes.controls.length ) {
       this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+      return;
     };
     if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length ) {
       if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria  ) {
