@@ -126,7 +126,9 @@
         <mat-card class="border" style="margin-top: 2em;">
           <mat-card-title class="text-area-quill--label">Descripción</mat-card-title>
           <mat-card-content class="mt-1em">
-            <p><b>Observaciones</b>: {{ contratacion.consideracionDescripcion }}</p>
+            <section>
+              <b>Observaciones</b>: <div [innerHTML]="innerObservacion( contratacion.consideracionDescripcion )"></div>
+            </section>
           </mat-card-content>
         </mat-card>
       </div>
