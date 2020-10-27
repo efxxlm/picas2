@@ -122,6 +122,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -196,7 +198,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.AportanteFuenteFinanciacion)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FuenteFinanciacion_FuenteFinanciacionId");
 
                 entity.HasOne(d => d.ProyectoAdministrativoAportante)
@@ -963,6 +964,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaTerminacionFase2).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
+
+                entity.Property(e => e.LimitacionEspecial).HasMaxLength(550);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
@@ -2196,6 +2199,9 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<FuenteFinanciacion>(entity =>
             {
+                entity.HasIndex(e => new { e.AportanteId, e.Eliminado })
+                    .HasName("indexaportante");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -3108,6 +3114,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Proyecto>(entity =>
             {
+                entity.HasIndex(e => e.LlaveMen)
+                    .HasName("uk_llavemen")
+                    .IsUnique();
+
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoJuridicoCodigo)
