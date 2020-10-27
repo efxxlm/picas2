@@ -24,8 +24,9 @@
       </div>
       <div class="row">
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required></quill-editor>
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+            required (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required>
+          </quill-editor>
           <div class="d-flex align-items-center">
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
               {{3000 - textoLimpio(addressForm.get('observaciones').value)}}
@@ -38,6 +39,17 @@
       </div>
 
       <h2 class="card-subTitle">Decisiones</h2>
+      <div class="reparacion-card row" *ngIf="tieneVotacion">
+        <div class="col-md-4">
+          Resultado de la votación <b class="colorMainColor">{{ resultadoVotacion }}</b>
+        </div>
+        <div class="col-md-4 info-text completo">
+          Aprobó <b class="colorMainColor"> {{ cantidadAprobado }} </b>
+        </div>
+        <div class="col-md-4 info-text sin-diligenciar">
+          No aprobó <b class="colorMainColor"> {{ cantidadNoAprobado }} </b>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-md-8">
@@ -62,8 +74,8 @@
           <label class="label-left" for="observacionesDecision">Descripción</label>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 3000)" formControlName="observacionesDecision" required>
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+            required (onContentChanged)="maxLength($event, 3000)" formControlName="observacionesDecision" required>
           </quill-editor>
           <div class="d-flex align-items-center position-relative">
             <span class="contador miles" *ngIf="addressForm.get('observacionesDecision').value">
@@ -153,7 +165,8 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()" placeholder="DD/MM/AAAA">
+                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()"
+                      placeholder="DD/MM/AAAA">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">

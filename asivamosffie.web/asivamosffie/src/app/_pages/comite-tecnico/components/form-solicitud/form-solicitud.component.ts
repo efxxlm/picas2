@@ -114,6 +114,13 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     }
   }
 
+  textoLimpioString(texto: string) {
+    if (texto) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio;
+    }
+  }
+
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
   }
@@ -282,6 +289,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       this.resultadoVotacion = 'No Aprobó'
     else
       this.resultadoVotacion = 'Aprobó'
+
+      this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacion;
 
     // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
     

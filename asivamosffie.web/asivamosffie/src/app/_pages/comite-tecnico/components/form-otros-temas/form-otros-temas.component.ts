@@ -24,6 +24,11 @@ export class FormOtrosTemasComponent implements OnInit {
   listaResponsables: Dominio[] = [];
   responsable: Dominio = {}
 
+  tieneVotacion: boolean = true;
+  cantidadAprobado: number = 0;
+  cantidadNoAprobado: number = 0;
+  resultadoVotacion: string = '';
+
   addressForm = this.fb.group({
     estadoSolicitud: [null, Validators.required],
     observaciones: [null, Validators.required],
@@ -216,6 +221,20 @@ export class FormOtrosTemasComponent implements OnInit {
 
         this.compromisos.push(grupoCompromiso)
       })
+
+      this.sesionComiteTema.sesionTemaVoto.forEach( sv => {
+        if (sv.esAprobado)
+          this.cantidadAprobado++;
+        else
+          this.cantidadNoAprobado++;
+      })
+  
+      if ( this.cantidadNoAprobado > 0 )
+        this.resultadoVotacion = 'No Aprobó'
+      else
+        this.resultadoVotacion = 'Aprobó'
+  
+        this.tieneVotacion = this.sesionComiteTema.requiereVotacion;
 
     });
   }
