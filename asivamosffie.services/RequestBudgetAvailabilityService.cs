@@ -418,11 +418,11 @@ namespace asivamosffie.services
 
 
 
-                if (string.IsNullOrEmpty(disponibilidadPresupuestal.DisponibilidadPresupuestalId.ToString()) || disponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
+                if (disponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
                 {
                     //Auditoria
 
-                    strCrearEditar = "REGISTRAR SOLICITUD DDP ESPECIAL";
+                    strCrearEditar = "";
                     disponibilidadPresupuestal.FechaCreacion = DateTime.Now;
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.Eliminado = false;
@@ -430,7 +430,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", countMaxId);
                     disponibilidadPresupuestal.OpcionContratarCodigo = "Validando";
                     disponibilidadPresupuestal.ValorSolicitud = 0;
-                    disponibilidadPresupuestal.EstadoSolicitudCodigo = "8"; // Sin registrar => TipoDominioId = 39
+                    disponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
                     disponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     disponibilidadPresupuestal.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestal.Objeto = disponibilidadPresupuestal.Objeto;
@@ -439,7 +439,7 @@ namespace asivamosffie.services
 
                     disponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
                     {
-                        if (string.IsNullOrEmpty(p.DisponibilidadPresupuestalProyectoId.ToString()) || p.DisponibilidadPresupuestalProyectoId == 0)
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
                         {
                             entity.ProyectoId = p.ProyectoId;
                             entity.DisponibilidadPresupuestalId = disponibilidadPresupuestal.DisponibilidadPresupuestalId;
@@ -462,23 +462,19 @@ namespace asivamosffie.services
 
                     //Auditoria
                     disponibilidadPresupuestalAntiguo.UsuarioModificacion = disponibilidadPresupuestal.UsuarioModificacion;
-                    disponibilidadPresupuestalAntiguo.Eliminado = false;
-
-
+              
                     //Registros
-                    //disponibilidadPresupuestalAntiguo.OpcionContratarCodigo = disponibilidadPresupuestal.OpcionContratarCodigo;
-                    disponibilidadPresupuestalAntiguo.ValorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
-                    //disponibilidadPresupuestalAntiguo.NumeroSolicitud = disponibilidadPresupuestal.NumeroSolicitud;
-                    //disponibilidadPresupuestalAntiguo.FechaSolicitud = disponibilidadPresupuestal.FechaSolicitud;
-                    disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto;
-                    //disponibilidadPresupuestalAntiguo.EstadoSolicitudCodigo = disponibilidadPresupuestal.EstadoSolicitudCodigo;
+                 
+                    disponibilidadPresupuestalAntiguo.ValorSolicitud = disponibilidadPresupuestal.ValorSolicitud; 
+                    disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto; 
                     disponibilidadPresupuestalAntiguo.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestalAntiguo.AportanteId = disponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalAntiguo.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
-
+                    disponibilidadPresupuestalAntiguo.CuentaCartaAutorizacion = disponibilidadPresupuestal.CuentaCartaAutorizacion;
+                     
                     disponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
                     {
-                        if (string.IsNullOrEmpty(p.DisponibilidadPresupuestalProyectoId.ToString()) || p.DisponibilidadPresupuestalProyectoId == 0)
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
                         {
                             entity.ProyectoId = p.ProyectoId;
                             entity.DisponibilidadPresupuestalId = disponibilidadPresupuestal.DisponibilidadPresupuestalId;
