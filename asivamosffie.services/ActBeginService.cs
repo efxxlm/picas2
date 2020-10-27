@@ -113,7 +113,8 @@ namespace asivamosffie.services
             {
                 contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                 contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
-                contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();
+                //contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();
+                contrato.EstadoActaFase2 = "14";
 
                 contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
                  contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
@@ -934,14 +935,16 @@ namespace asivamosffie.services
             foreach (var item in lstContratos)
             {
                 actaInicio = new GrillaActaInicio();
-
+                
                 TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
 
+                if (item.EstadoActaFase2 != null) { 
                 if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                     EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
                 else if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
                     EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2.Trim(), (int)EnumeratorTipoDominio.Estados_actas_inicio_obra);
 
+            }
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
                 EstadoVerificacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoVerificacionCodigo, (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato);
