@@ -826,15 +826,30 @@ namespace asivamosffie.services
                 //Quitar los que ya estan en sesionComiteSolicitud
 
                 List<int> LisIdContratacion = _context.SesionComiteSolicitud
-                                                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString())
+                                                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString() &&
+                                                       r.Eliminado != true &&
+                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico &&
+                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario &&
+                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico )
                                                 .Select(r => r.SolicitudId).Distinct().ToList();
 
                 List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud
-                                                        .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                                                        .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion &&
+                                                            r.Eliminado != true &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
                                                         .Select(r => r.SolicitudId).Distinct().ToList();
 
                 List<int> ListIdActualizacionCronograma = _context.SesionComiteSolicitud
-                                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+                                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion &&
+                                                                r.Eliminado != true &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico )
                                                             .Select(r => r.SolicitudId).Distinct().ToList();
 
                 //Se comentan ya que no esta listo el caso de uso
@@ -1133,7 +1148,7 @@ namespace asivamosffie.services
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
             if (pComiteTecnicoId == 0)
-            { 
+            {
                 return new ComiteTecnico();
             }
             //  List<SesionParticipante> sesionParticipantes = _context.SesionParticipante.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId).ToList();
