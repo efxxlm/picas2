@@ -86,6 +86,9 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
       if(data.isSuccessful==true){
         this.openDialog(data.message,"");
         this.close();
+        this.services.EnviarCorreoSupervisorContratista(this.idContrato,this.idRol).subscribe(resp=>{
+
+        });
       }
       else{
         this.openDialog(data.message,"");
