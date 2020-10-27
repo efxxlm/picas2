@@ -1195,11 +1195,14 @@ namespace asivamosffie.services
 
                 if (responsable != null)
                     ct.NombreResponsable = responsable.Nombre;
+                
+                ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
             });
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+                SesionComiteSolicitud.SesionSolicitudCompromiso = SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList(); 
             }
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
 
@@ -1463,6 +1466,8 @@ namespace asivamosffie.services
             }
 
         }
+
+        
 
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
         {
@@ -1961,7 +1966,7 @@ namespace asivamosffie.services
                         CreateEdit = "CREAR SOLICITUD COMPROMISO";
                         SesionSolicitudCompromiso.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                         SesionSolicitudCompromiso.FechaCreacion = DateTime.Now;
-                        SesionSolicitudCompromiso.Eliminado = true;
+                        SesionSolicitudCompromiso.Eliminado = false;
 
                         _context.SesionSolicitudCompromiso.Add(SesionSolicitudCompromiso);
                     }
@@ -2975,6 +2980,115 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> EliminarCompromisosSolicitud(int pSesionComiteSolicitudId, string pUsuarioModificacion)
+        {
+            int idAccionEliminarSesionComiteTema = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Compromisos_Solicitud, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                List<SesionSolicitudCompromiso> listaCompromisos = _context.SesionSolicitudCompromiso.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitudId).ToList();
+                if (listaCompromisos == null)
+                {
+                    return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "NO SE ENCONTRO REGISTRO")
+                    };
+                }
+
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud.Find( pSesionComiteSolicitudId );
+                sesionComiteSolicitud.CantCompromisos = null;
+                sesionComiteSolicitud.GeneraCompromiso = false;
+
+                listaCompromisos.ForEach( c => {
+                    c.Eliminado = true;
+                });                
+
+                _context.SaveChanges();
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SOLICITUD COMPROMISO")
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                    };
+            }
+
+        }
+
+        public async Task<Respuesta> EliminarCompromisosTema(int pSesionTemaId, string pUsuarioModificacion)
+        {
+            int idAccionEliminarSesionComiteTema = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Compromisos_Tema, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                List<TemaCompromiso> listaCompromisos = _context.TemaCompromiso.Where(r => r.SesionTemaId == pSesionTemaId ).ToList();
+                if (listaCompromisos == null)
+                {
+                    return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "NO SE ENCONTRO REGISTRO")
+                    };
+                }
+
+                SesionComiteTema sesionComiteTema = _context.SesionComiteTema.Find( pSesionTemaId );
+                sesionComiteTema.CantCompromisos = null;
+                sesionComiteTema.GeneraCompromiso = false;
+
+                listaCompromisos.ForEach( c => {
+                    c.Eliminado = true;
+                });                
+
+                _context.SaveChanges();
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SOLICITUD COMPROMISO")
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                    };
+            }
+
+        }
 
         #endregion
 
@@ -3720,7 +3834,7 @@ namespace asivamosffie.services
 
                                             case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio4.Nombre, compromiso.FechaCumplimiento.ToString("dd-MM-yyyy"));
+                                                    .Replace(placeholderDominio4.Nombre, compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy"));
                                                 break;
                                         }
                                     }
@@ -3901,7 +4015,7 @@ namespace asivamosffie.services
 
                                             case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio5.Nombre, compromiso.FechaCumplimiento.ToString("dd-MM-yyyy"));
+                                                    .Replace(placeholderDominio5.Nombre, compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy"));
                                                 break;
                                         }
                                     }

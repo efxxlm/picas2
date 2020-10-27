@@ -14,8 +14,8 @@ namespace asivamosffie.model.Models
         public int TemaCompromisoId { get; set; }
         public int SesionTemaId { get; set; }
         public string Tarea { get; set; }
-        public int Responsable { get; set; }
-        public DateTime FechaCumplimiento { get; set; }
+        public int? Responsable { get; set; }
+        public DateTime? FechaCumplimiento { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }

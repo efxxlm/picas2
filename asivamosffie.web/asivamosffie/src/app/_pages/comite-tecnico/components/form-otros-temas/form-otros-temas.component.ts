@@ -103,6 +103,21 @@ export class FormOtrosTemasComponent implements OnInit {
     }
   }
 
+  changeCompromisos( requiereCompromisos ){
+
+    if ( requiereCompromisos.value === false )
+    {
+      console.log( requiereCompromisos.value );
+      this.technicalCommitteSessionService.eliminarCompromisosTema( this.sesionComiteTema.sesionTemaId )
+        .subscribe( respuesta => {
+          if (respuesta.code == "200"){
+            this.compromisos.clear();
+            this.addressForm.get("cuantosCompromisos").setValue(null); 
+          }
+        })
+    }
+  }
+
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
   }

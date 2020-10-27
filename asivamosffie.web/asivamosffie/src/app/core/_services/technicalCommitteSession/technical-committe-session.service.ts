@@ -131,5 +131,13 @@ export class TechnicalCommitteSessionService {
     return this.http.get<ProcesoSeleccionMonitoreo>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getProcesoSeleccionMonitoreo?pProcesoSeleccionMonitoreoId=${ id }`);
    }
 
+   eliminarCompromisosSolicitud( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EliminarCompromisosSolicitud?pSesionComiteSolicitudId=${ id }`);
+   }
+
+   eliminarCompromisosTema( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EliminarCompromisosTema?pSesionTemaId=${ id }`);
+   }
+
   
 }

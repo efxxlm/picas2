@@ -95,7 +95,7 @@
               <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
             </div>
             <div class="col">
-              <mat-radio-group class="radioInput" formControlName="tieneCompromisos">
+              <mat-radio-group class="radioInput" formControlName="tieneCompromisos" (change)="changeCompromisos( $event )">
                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                 <mat-radio-button [value]="false">No</mat-radio-button>
               </mat-radio-group>

@@ -63,6 +63,38 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("EliminarCompromisosSolicitud")]
+        public async Task<Respuesta> EliminarCompromisosSolicitud([FromQuery] int pSesionComiteSolicitudId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerSessionTechnicalCommitteeService.EliminarCompromisosSolicitud(pSesionComiteSolicitudId, HttpContext.User.FindFirst("User").Value);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpDelete]
+        [Route("EliminarCompromisosTema")]
+        public async Task<Respuesta> EliminarCompromisosTema([FromQuery] int pSesionTemaId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerSessionTechnicalCommitteeService.EliminarCompromisosTema(pSesionTemaId, HttpContext.User.FindFirst("User").Value);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost]
         [Route("CreateEditSesionSolicitudObservacionProyecto")]
         public async Task<IActionResult> CreateEditSesionSolicitudObservacionProyecto([FromBody] SesionSolicitudObservacionProyecto pSesionSolicitudObservacionProyecto)

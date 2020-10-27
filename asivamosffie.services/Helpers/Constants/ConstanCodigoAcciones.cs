@@ -102,5 +102,8 @@
         public const string Registrar_Tramite_Contrato = "78";
 
         public const string Crear_Cronograma_monitoreo = "114";
+
+        public const string Eliminar_Compromisos_Solicitud = "125";
+        public const string Eliminar_Compromisos_Tema = "126";
     }
 }

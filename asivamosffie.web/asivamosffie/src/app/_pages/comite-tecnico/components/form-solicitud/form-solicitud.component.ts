@@ -165,6 +165,21 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     return this.addressForm.get('estadoSolicitud').valueChanges;
   }
 
+  changeCompromisos( requiereCompromisos ){
+
+    if ( requiereCompromisos.value === false )
+    {
+      console.log( requiereCompromisos.value );
+      this.technicalCommitteSessionService.eliminarCompromisosSolicitud( this.sesionComiteSolicitud.sesionComiteSolicitudId )
+        .subscribe( respuesta => {
+          if (respuesta.code == "200"){
+            this.compromisos.clear();
+            this.addressForm.get("cuantosCompromisos").setValue(null); 
+          }
+        })
+    }
+  }
+
   onSubmit() {
 
     if (this.proyectos)
