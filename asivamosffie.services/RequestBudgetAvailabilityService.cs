@@ -403,8 +403,8 @@ namespace asivamosffie.services
                     {
 
                         Localizacion Municipio = _context.Localizacion.Find(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio);
-                        DisponibilidadPresupuestalProyecto.Proyecto.Municipio = Municipio.Descripcion;
-                        DisponibilidadPresupuestalProyecto.Proyecto.Departamento = _context.Localizacion.Find(Municipio.IdPadre).Descripcion;
+                        DisponibilidadPresupuestalProyecto.Proyecto.MunicipioObj = Municipio;
+                        DisponibilidadPresupuestalProyecto.Proyecto.DepartamentoObj = _context.Localizacion.Find(Municipio.IdPadre);
                     }
                 }
 

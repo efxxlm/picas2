@@ -23,5 +23,11 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string Municipio { get; set; }
 
+        [NotMapped]
+        public Localizacion DepartamentoObj { get; set; }
+
+        [NotMapped]
+        public Localizacion MunicipioObj { get; set; }
+
     }
 }
