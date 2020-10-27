@@ -288,7 +288,10 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-      location.reload();
+      if(refresh)
+      {
+        location.reload();
+      }
       
     });
   }

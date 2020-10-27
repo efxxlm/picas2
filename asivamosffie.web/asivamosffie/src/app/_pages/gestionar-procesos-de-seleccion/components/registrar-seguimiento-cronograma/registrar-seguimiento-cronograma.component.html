@@ -91,7 +91,7 @@
                     {{form.get('fechaMonitoreo').value | date:'dd/MM/yyyy'}}
                   </div>
                 </td>
-                <td class="mat-cell cdk-cell ng-star-inserted" [ngClass]="{'redBackground': !pasado[i]}" >
+                <td class="mat-cell cdk-cell ng-star-inserted" [ngClass]="{'redBackground': pasado[i]}" >
                   <div class="select-table">
                     <mat-select formControlName="estadoActividad" required *ngIf="activo[i]">
                       <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">

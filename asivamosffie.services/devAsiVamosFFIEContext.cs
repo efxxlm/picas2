@@ -1559,8 +1559,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion)
-                    .IsRequired()
+                entity.Property(e => e.Observacion)                    
                     .HasMaxLength(800)
                     .IsUnicode(false);
 

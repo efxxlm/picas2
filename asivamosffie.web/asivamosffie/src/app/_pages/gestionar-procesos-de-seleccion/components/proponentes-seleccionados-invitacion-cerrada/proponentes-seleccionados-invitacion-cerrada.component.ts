@@ -129,17 +129,26 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     console.log(this.addressForm.get('cuantosProponentes').value);
     //this.procesoSeleccion.procesoSeleccionProponente=[];
     console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
+    console.log(this.addressForm.get('nombresProponentes').value.length);
+    console.log(this.addressForm.get('nombresProponentes').value);
     if(this.addressForm.get('cuantosProponentes').value>0)
     {
-      if(this.addressForm.get('cuantosProponentes').value>=this.addressForm.get('nombresProponentes').value.length
-      ||this.addressForm.get('cuantosProponentes').value>=this.procesoSeleccion.procesoSeleccionProponente.length)
+      if(this.procesoSeleccion.procesoSeleccionProponente.length>this.addressForm.get('nombresProponentes').value.length)
+      {
+        this.procesoSeleccion.procesoSeleccionProponente=[];
+      }
+      if(this.addressForm.get('cuantosProponentes').value>this.addressForm.get('nombresProponentes').value.length
+      ||this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
       {
         this.addressForm.get('nombresProponentes').value.forEach(element => {   
           console.log(element);     
           if ( element != 'Nuevo' ){
             let elemento: ProcesoSeleccionProponente = element;
-            elemento.procesoSeleccionProponenteId = "0";
-            elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;
+            if(elemento.procesoSeleccionProponenteId!="0" && this.procesoSeleccion.procesoSeleccionId!=elemento.procesoSeleccionId)
+            {
+              elemento.procesoSeleccionProponenteId = "0";
+              elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;              
+            }
             if(!this.procesoSeleccion.procesoSeleccionProponente.includes(elemento))
             {
               this.procesoSeleccion.procesoSeleccionProponente.push( elemento );    
@@ -187,22 +196,25 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         { 
           this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
           let proceso:ProcesoSeleccionProponente[]=[];
+          
           this.procesoSeleccion.procesoSeleccionProponente.forEach(element => {
-            proceso.push({direccionProponente: element.direccionProponente,
-            emailProponente: element.emailProponente,
-            localizacionIdMunicipio: element.localizacionIdMunicipio,
-            nombreProponente: element.nombreProponente,
-            numeroIdentificacion: element.numeroIdentificacion,
-            procesoSeleccionId: element.procesoSeleccionId,
-            procesoSeleccionProponenteId: element.procesoSeleccionProponenteId,
-            telefonoProponente: element.telefonoProponente,
-            tipoProponenteCodigo: element.tipoProponenteCodigo,
-            nombreDepartamento:element.nombreDepartamento,
-            nombreMunicipio:element.nombreMunicipio
-          })
+            //busco 
+            console.log("busco "+element.procesoSeleccionProponenteId+" en");
+            console.log(this.nombresProponentesList);
+            let nombre = this.nombresProponentesList.filter(x=>x.procesoSeleccionProponenteId==element.procesoSeleccionProponenteId);
+            if(nombre.length>0)
+            {
+              proceso.push(nombre[0]);
+            }     
+            else
+            {
+              this.nombresProponentesList.push(element);
+              proceso.push(element);
+            }       
           });
+          console.log(proceso)
           this.addressForm.get('nombresProponentes').setValue(proceso);
-          console.log(proceso);
+          console.log(this.addressForm.get('nombresProponentes').value);
         });
   }
 

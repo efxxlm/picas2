@@ -195,7 +195,7 @@ export class RegistrarComponent implements OnInit {
           grupoCuenta.get('codigoSIFI').setValue(ba.codigoSifi);
           grupoCuenta.get('tipoCuenta').setValue(ba.tipoCuentaCodigo);
           grupoCuenta.get('banco').setValue(bancoSeleccionado);
-          grupoCuenta.get('extra').setValue(ba.exenta?ba.exenta.toString():"");
+          grupoCuenta.get('extra').setValue(ba.exenta!=null?ba.exenta.toString():"");
 
           listaCuentas.push(grupoCuenta);
         });

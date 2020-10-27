@@ -40,7 +40,7 @@ namespace asivamosffie.services
                                             .Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
-                                            .Include(r => r.ProcesoSeleccionProponente)
+                                            .Include(r => r.ProcesoSeleccionProponente).Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionCotizacion).Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionCronograma).Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionGrupo).Where(r => !(bool)r.Eliminado)
@@ -66,7 +66,7 @@ namespace asivamosffie.services
             {
                 var procesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)                                            
                                             .Include(r => r.ProcesoSeleccionObservacion)
-                                            .Include(r => r.ProcesoSeleccionProponente)
+                                            .IncludeFilter(r => r.ProcesoSeleccionProponente.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionIntegrante.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionCotizacion.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
@@ -172,6 +172,16 @@ namespace asivamosffie.services
                     await this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
                 }
 
+                //si la cantidad que recibe de parametros no es la misma que tiene en datos, borro los anteriores
+                if(procesoSeleccion.ProcesoSeleccionProponente.Count()<_context.ProcesoSeleccionProponente.Where(x=>x.ProcesoSeleccionId==procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado).Count())
+                {
+                    foreach(var procesoseleccionprop in _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado))
+                    {
+                        procesoseleccionprop.Eliminado = true;
+                        _context.ProcesoSeleccionProponente.Update(procesoseleccionprop);
+                    }
+                    _context.SaveChanges();
+                }
                 foreach (ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente)
                 {
                     proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
@@ -179,6 +189,7 @@ namespace asivamosffie.services
                     proponente.NombreProponente = proponente.NombreProponente.ToUpper();
                     proponente.DireccionProponente = proponente.DireccionProponente.ToUpper();
                     proponente.EmailProponente = proponente.EmailProponente.ToUpper();
+                    proponente.Eliminado = false;
                     await this.CreateEditarProcesoSeleccionProponente(proponente);
                 }
 

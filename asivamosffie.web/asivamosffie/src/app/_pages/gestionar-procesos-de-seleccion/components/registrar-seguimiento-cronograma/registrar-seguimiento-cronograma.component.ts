@@ -105,19 +105,19 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
         this.listaCronogramaActividades=lista;
         //console.log( lista );
         let i=0;
+        let hoy = new Date();
         lista.forEach( cronograma => {
           let grupo = this.createActividad();
-          const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
-          console.log("busco "+ cronograma.etapaActualProcesoCodigo);
-          console.log(etapaActualproceso.nombre);
+          const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);          
           grupo.get('procesoSeleccionCronogramaId').setValue( cronograma.procesoSeleccionCronogramaId );
           //formato fecha
           //let fecha = Date.parse(cronograma.fechaMaxima);
           let fechaSesion = new Date(cronograma.fechaMaxima);
-          let hoy = new Date();
+          
           this.pasado[i]=false;
-          if(fechaSesion>=hoy)//si la fecha maxima es mayor a hoy etonces se muestra la ultima opción de la lista "Sin reporte"
+          if(hoy>=fechaSesion)//si la fecha maxima es mayor a hoy etonces se muestra la ultima opción de la lista "Sin reporte"
           {
+            console.log(" fecha paso hoy a ver la cantidad "+cronograma.cronogramaSeguimiento.length);
             if(cronograma.cronogramaSeguimiento.length==0)
             {
               this.pasado[i]=true;
@@ -224,12 +224,10 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
 
   onChangeEstado()
   {
-    console.log(this.addressForm.value.tipoIntervencion.codigo); 
+    
     (<FormArray>this.addressForm.get('actividades')).clear();
     let listaActividades = this.addressForm.get('actividades') as FormArray;
-    console.log(this.listaCronogramaActividades); 
     let lista=this.listaCronogramaActividades.filter(x=>x.etapaActualProcesoCodigo==this.addressForm.value.tipoIntervencion.codigo);
-    console.log(lista); 
       lista.forEach( cronograma => {
         let grupo = this.createActividad();
         const etapaActualproceso = this.listaTipoIntervencion.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
