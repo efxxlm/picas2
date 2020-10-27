@@ -393,6 +393,10 @@ namespace asivamosffie.services
                                         .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
                                         .Include(r => r.DisponibilidadPresupuestalProyecto)
                                             .ThenInclude(r => r.Proyecto)
+                                                 .ThenInclude(r => r.Departamento)
+                                        .Include(r => r.DisponibilidadPresupuestalProyecto)
+                                            .ThenInclude(r => r.Proyecto)
+                                                 .ThenInclude(r => r.Municipio )
                                         .FirstOrDefaultAsync();
         }
 
