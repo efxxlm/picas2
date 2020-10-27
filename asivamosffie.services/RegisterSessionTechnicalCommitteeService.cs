@@ -829,27 +829,24 @@ namespace asivamosffie.services
                                                 .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString() &&
                                                        r.Eliminado != true &&
                                                        r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
-                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico &&
-                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario &&
-                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico )
+                                                       r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico 
+                                                        )
                                                 .Select(r => r.SolicitudId).Distinct().ToList();
 
                 List<int> ListIdProcesosSeleccion = _context.SesionComiteSolicitud
                                                         .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion &&
                                                             r.Eliminado != true &&
                                                             r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
-                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico &&
-                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario &&
-                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico 
+                                                            )
                                                         .Select(r => r.SolicitudId).Distinct().ToList();
 
                 List<int> ListIdActualizacionCronograma = _context.SesionComiteSolicitud
                                                             .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion &&
                                                                 r.Eliminado != true &&
                                                                 r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
-                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico &&
-                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario &&
-                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico )
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico 
+                                                                 )
                                                             .Select(r => r.SolicitudId).Distinct().ToList();
 
                 //Se comentan ya que no esta listo el caso de uso
@@ -1117,6 +1114,16 @@ namespace asivamosffie.services
                 if (ComiteTecnicoOld.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                 {
                     ComiteTecnicoOld.EstadoActaCodigo = ConstantCodigoActas.En_proceso_Aprobacion;
+                }
+
+                if ( ComiteTecnicoOld.EstadoComiteCodigo == ConstanCodigoEstadoComite.Fallida )
+                {
+                    List< SesionComiteSolicitud > listaSolicitudes = _context.SesionComiteSolicitud.Where( cs => cs.ComiteTecnicoId == ComiteTecnicoOld.ComiteTecnicoId ).ToList();
+
+                    if ( listaSolicitudes != null )
+                        listaSolicitudes.ForEach( s => {
+                            s.EstadoCodigo = ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico;
+                        });
                 }
 
                 _context.SaveChanges();
