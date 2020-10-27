@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AplazarSesionComponent } from '../aplazar-sesion/aplazar-sesion.component';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ComiteTecnico, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
@@ -21,6 +21,7 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
                 public dialog: MatDialog,
                 private technicalCommitteeSessionService: TechnicalCommitteSessionService,
                 private activatedRoute: ActivatedRoute,
+                private router: Router
 
              ) 
   { 
@@ -49,7 +50,7 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
     this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
       .subscribe( respuesta => {
         this.openDialog('', '“No se cuenta con el Quorum necesario para realizar la sesión”.');
-        this.ngOnInit();
+        this.router.navigate(["/comiteTecnico"]);
       })
   }
 
