@@ -149,6 +149,10 @@ div.mat-select-arrow {
   color: $mainColor;
   margin-left: 1em;
   margin-right: 0.5em;
+
+  &.color-secondaryColor {
+    color: $secondaryColor;
+  }
 }
 
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {

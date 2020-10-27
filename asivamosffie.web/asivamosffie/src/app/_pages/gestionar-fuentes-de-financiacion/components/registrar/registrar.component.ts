@@ -232,10 +232,10 @@ export class RegistrarComponent implements OnInit {
       ],
       cuantasVigencias: [1],
       vigencias: this.fb.array([]),
-      fuenteFinanciacionId: [null],
+      fuenteFinanciacionId: [null, Validators.required],
       cuentasBancaria: this.fb.array([
       ]),
-      tieneRP: [null],
+      tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
         Validators.minLength(5), Validators.maxLength(50)])]
 
@@ -313,17 +313,17 @@ export class RegistrarComponent implements OnInit {
 
 
     this.addressForm = this.fb.group({
-      nombreAportante: [null],
-      nombreAportanteFFIE:[null],
-      documentoApropiacion: [null],
-      tipoDocumento:[null],
+      nombreAportante: [null, Validators.required],
+      nombreAportanteFFIE:[null, Validators.required],
+      documentoApropiacion: [null, Validators.required],
+      tipoDocumento:[null, Validators.required],
       numerodocumento: [null, Validators.compose([
         Validators.minLength(10), Validators.maxLength(10)])
       ],
-      vigenciaAcuerdo: [],
-      departamento: [],
-      municipio: [],
-      tieneRP: [null],
+      vigenciaAcuerdo: [null, Validators.required],
+      departamento: [null, Validators.required],
+      municipio: [null, Validators.required],
+      tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
         Validators.minLength(5), Validators.maxLength(50)])]
       , registrosPresupuestales: this.fb.array([])
@@ -336,10 +336,10 @@ export class RegistrarComponent implements OnInit {
 
   createRP() {
     return this.fb.group({
-      registroPresupuestalId: [],
-      numeroRP: [null],
-      fecha: [null],
-      numerodocumentoRP:[null]
+      registroPresupuestalId: [null, Validators.required],
+      numeroRP: [null, Validators.required],
+      fecha: [null, Validators.required],
+      numerodocumentoRP:[null, Validators.required]
     });
   }
 
@@ -523,8 +523,8 @@ export class RegistrarComponent implements OnInit {
         if(FormNumvigencias.cuantasVigencias==1)
         {
           this.vigencias1(j).push(this.fb.group({
-            vigenciaAporteId: [],
-            vigenciaAportante: [null],
+            vigenciaAporteId: [null, Validators.required],
+            vigenciaAportante: [null, Validators.required],
             valorVigencia: [this.addressForm.get("fuenteRecursosArray")['controls'][j].value.valorFuenteRecursos, Validators.compose([
               Validators.minLength(10), Validators.maxLength(10)])
             ]
@@ -588,7 +588,7 @@ export class RegistrarComponent implements OnInit {
 
   createCuentaBancaria(): FormGroup {
     return this.fb.group({
-      cuentaBancariaId: [],
+      cuentaBancariaId: [null, Validators.required],
       numeroCuenta: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(50)])
       ],
@@ -598,9 +598,9 @@ export class RegistrarComponent implements OnInit {
       codigoSIFI: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(6)])
       ],
-      tipoCuenta: ['free', Validators.required],
+      tipoCuenta: [null, Validators.required],
       banco: [null, Validators.required],
-      extra: ['free', Validators.required]
+      extra: [null, Validators.required]
     });
   }
 
@@ -611,17 +611,17 @@ export class RegistrarComponent implements OnInit {
       valorFuenteRecursos: [null, Validators.compose([
         Validators.required, Validators.minLength(2), Validators.maxLength(2)])
       ],
-      cuantasVigencias: [null],
+      cuantasVigencias: [null, Validators.required],
       vigencias: this.fb.array([]),
-      fuenteFinanciacionId: [null],
-      departamento: [],
-      municipio: [],
-      tieneRP: [null],
+      fuenteFinanciacionId: [null, Validators.required],
+      departamento: [null, Validators.required],
+      municipio: [null, Validators.required],
+      tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
         Validators.minLength(5), Validators.maxLength(50)])]
       , cuentasBancaria: this.fb.array([
         this.fb.group({
-          cuentaBancariaId: [],
+          cuentaBancariaId: [null, Validators.required],
           numeroCuenta: [null, Validators.compose([
             Validators.required, Validators.minLength(1), Validators.maxLength(50)])
           ],
@@ -631,9 +631,9 @@ export class RegistrarComponent implements OnInit {
           codigoSIFI: [null, Validators.compose([
             Validators.required, Validators.minLength(1), Validators.maxLength(6)])
           ],
-          tipoCuenta: ['free', Validators.required],
+          tipoCuenta: [null, Validators.required],
           banco: [null, Validators.required],
-          extra: ['free', Validators.required]
+          extra: [null, Validators.required]
         })
       ]),
     });
@@ -641,8 +641,8 @@ export class RegistrarComponent implements OnInit {
 
   createVigencia(): FormGroup {
     return this.fb.group({
-      vigenciaAporteId: [],
-      vigenciaAportante: [null],
+      vigenciaAporteId: [null, Validators.required],
+      vigenciaAportante: [null, Validators.required],
       valorVigencia: [null, Validators.compose([
         Validators.minLength(10), Validators.maxLength(10)])
       ]

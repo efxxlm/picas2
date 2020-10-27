@@ -18,6 +18,9 @@ export class FormularioProyectosComponent implements OnInit {
   /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
   permiso que tenga el usuario
   */
+
+  estaEditando = false;
+
   bitPuedoEditar=true;
   maxDate: Date;
   tipoAportante = TiposAportante;
@@ -156,8 +159,8 @@ export class FormularioProyectosComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
 
-
     if (id) {
+      this.estaEditando = true;
       this.commonServices.forkProject().subscribe(listas => {
         console.log(listas);
         this.listadoTipoIntervencion = listas[0];

@@ -21,9 +21,11 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="row"  *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
+        <div class="row" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">Nombre del aportante</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.dirty || addressForm.controls.nombreAportante.invalid && edicion}"
+            >Nombre del aportante</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
@@ -35,9 +37,11 @@
             </mat-form-field>
           </div>
         </div>
-        <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">Acuerdos de cofinanciación</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.nombreAportanteFFIE.invalid && addressForm.controls.nombreAportanteFFIE.dirty || addressForm.controls.nombreAportanteFFIE.invalid && edicion}"
+            >Acuerdos de cofinanciación</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
@@ -83,7 +87,9 @@
         </div>-->
         <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">Tipo de documento</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.dirty || addressForm.controls.tipoDocumento.invalid && edicion}"
+            >Tipo de documento</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
@@ -98,7 +104,9 @@
         </div>
         <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">Número de documento de apropiación</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.numerodocumento.invalid && addressForm.controls.numerodocumento.dirty || addressForm.controls.numerodocumento.invalid && edicion}"
+            >Número de documento de apropiación</label>
           </div> 
           <div class="col">
             <mat-form-field class="select-width">
@@ -112,10 +120,12 @@
         </div>
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">Departamento</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.departamento.invalid && addressForm.controls.departamento.dirty || addressForm.controls.departamento.invalid && edicion}"
+            >Departamento</label>
           </div>
           <div class="col capitalize">
-            <mat-form-field class="select-width" >              
+            <mat-form-field class="select-width" >
               <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" required>
                 <mat-option *ngFor="let depto of departamentos" [value]="depto" class="capitalize">
                   {{ depto.descripcion }}
@@ -126,7 +136,9 @@
         </div>
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">Municipio</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.municipio.invalid && addressForm.controls.municipio.dirty || addressForm.controls.municipio.invalid && edicion}"
+            >Municipio</label>
           </div>
           <div class="col capitalize">
             <mat-form-field class="select-width">
@@ -141,7 +153,9 @@
         </div>
         <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">Vigencia del acuerdo de cofinanciación</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.dirty || addressForm.controls.vigenciaAcuerdo.invalid && edicion}"
+            >Vigencia del acuerdo de cofinanciación</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
@@ -187,7 +201,9 @@
       <mat-card-content>
         <div class="row">
           <div class="pr-1">
-            <label class="label-left">¿Este aporte tiene RP?</label>
+            <label class="label-left"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.tieneRP.invalid && addressForm.controls.tieneRP.dirty || addressForm.controls.tieneRP.invalid && edicion}"
+            >¿Este aporte tiene RP?</label>
           </div>
           <div class="col">
             <mat-radio-group class="radioInput" formControlName="tieneRP">
@@ -200,7 +216,9 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">¿Cuántos RP tiene asociados?</label>
+                <label class="label-left"
+                [ngClass]="{'color-secondaryColor' : addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.dirty || addressForm.controls.cuantosRP.invalid && edicion}"
+                >¿Cuántos RP tiene asociados?</label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
@@ -220,7 +238,9 @@
                   </mat-card-title>
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Número de RP</label>
+                      <label class="label-left"
+                      [ngClass]="{'color-secondaryColor' : registroPresupuestal.controls.numeroRP.invalid && registroPresupuestal.controls.numeroRP.dirty || registroPresupuestal.controls.numeroRP.invalid && edicion}"
+                      >Número de RP</label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
@@ -234,7 +254,9 @@
                   </div>
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Fecha</label>
+                      <label class="label-left"
+                      [ngClass]="{'color-secondaryColor' : registroPresupuestal.controls.fecha.invalid && registroPresupuestal.controls.fecha.dirty || registroPresupuestal.controls.fecha.invalid && edicion}"
+                      >Fecha</label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
@@ -250,7 +272,9 @@
                   </div>
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Documento de apropiación</label>
+                      <label class="label-left"
+                      [ngClass]="{'color-secondaryColor' : registroPresupuestal.controls.numerodocumentoRP.invalid && registroPresupuestal.controls.numerodocumentoRP.dirty || registroPresupuestal.controls.numerodocumentoRP.invalid && edicion}"
+                      >Documento de apropiación</label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
@@ -259,7 +283,7 @@
                             {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
                           </mat-option>
                         </mat-select>
-                      </mat-form-field>                      
+                      </mat-form-field>
                     </div>
                   </div>
                 </div>
@@ -284,7 +308,9 @@
             <mat-card-content>
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Fuente de recursos</label>
+                  <label class="label-left"
+                  [ngClass]="{'color-secondaryColor' : fuente.controls.fuenteRecursos.invalid && fuente.controls.fuenteRecursos.dirty || fuente.controls.fuenteRecursos.invalid && edicion}"
+                  >Fuente de recursos</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -301,7 +327,9 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Valor aporte fuente de recursos</label>
+                      <label class="label-left"
+                      [ngClass]="{'color-secondaryColor' : fuente.controls.valorFuenteRecursos.invalid && fuente.controls.valorFuenteRecursos.dirty || fuente.controls.valorFuenteRecursos.invalid && edicion}"
+                      >Valor aporte fuente de recursos</label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
@@ -309,7 +337,7 @@
                           required (keypress)="validateNumberKeypress($event);validateonevige(j)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                          >                          
+                          >
                       </mat-form-field>
                       <span class="contador">{{20 - valorAporte.value.length}}</span>
                     </div>
@@ -321,7 +349,9 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">¿De cuántas vigencias se realizará el aporte?</label>
+                      <label class="label-left"
+                      [ngClass]="{'color-secondaryColor' : fuente.controls.cuantasVigencias.invalid && fuente.controls.cuantasVigencias.dirty || fuente.controls.cuantasVigencias.invalid && edicion}"
+                      >¿De cuántas vigencias se realizará el aporte?</label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
@@ -346,7 +376,9 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left">Vigencia del aporte</label>
+                            <label class="label-left"
+                            [ngClass]="{'color-secondaryColor' : vigencia.controls.vigenciaAportante.invalid && vigencia.controls.vigenciaAportante.dirty || vigencia.controls.vigenciaAportante.invalid && edicion}"
+                            >Vigencia del aporte</label>
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
@@ -364,7 +396,9 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left">Valor aporte de la vigencia</label>
+                            <label class="label-left"
+                            [ngClass]="{'color-secondaryColor' : vigencia.controls.valorVigencia.invalid && vigencia.controls.valorVigencia.dirty || vigencia.controls.valorVigencia.invalid && edicion}"
+                            >Valor aporte de la vigencia</label>
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width maincolor">
@@ -400,7 +434,9 @@
                     </mat-card-title>
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left">Número de cuenta</label>
+                        <label class="label-left"
+                        [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.numeroCuenta.invalid && cuentaBancaria.controls.numeroCuenta.dirty || cuentaBancaria.controls.numeroCuenta.invalid && edicion}"
+                        >Número de cuenta</label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
@@ -413,7 +449,9 @@
                     </div>
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left">Nombre de cuenta</label>
+                        <label class="label-left"
+                        [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.nombreCuenta.invalid && cuentaBancaria.controls.nombreCuenta.dirty || cuentaBancaria.controls.nombreCuenta.invalid && edicion}"
+                        >Nombre de cuenta</label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
@@ -428,7 +466,9 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left">Código SIFI</label>
+                            <label class="label-left"
+                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.codigoSIFI.invalid && cuentaBancaria.controls.codigoSIFI.dirty || cuentaBancaria.controls.codigoSIFI.invalid && edicion}"
+                            >Código SIFI</label>
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width maincolor">
@@ -443,7 +483,9 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left">Tipo de cuenta</label>
+                            <label class="label-left"
+                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.tipoCuenta.invalid && cuentaBancaria.controls.tipoCuenta.dirty || cuentaBancaria.controls.tipoCuenta.invalid && edicion}"
+                            >Tipo de cuenta</label>
                           </div>
                           <div class="col">
                             <mat-radio-group class="radioInput" formControlName="tipoCuenta">
@@ -459,7 +501,9 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left">Banco</label>
+                            <label class="label-left"
+                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.banco.invalid && cuentaBancaria.controls.banco.dirty || cuentaBancaria.controls.banco.invalid && edicion}"
+                            >Banco</label>
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
@@ -477,7 +521,9 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left">¿Exenta?</label>
+                            <label class="label-left"
+                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.extra.invalid && cuentaBancaria.controls.extra.dirty || cuentaBancaria.controls.extra.invalid && edicion}"
+                            >¿Exenta?</label>
                           </div>
                           <div class="col">
                             <mat-radio-group class="radioInput" formControlName="extra">
