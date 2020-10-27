@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ContratacionObservacion } from 'src/app/_interfaces/project-contracting';
@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { SesionSolicitudObservacionProyecto } from 'src/app/_interfaces/technicalCommitteSession';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-observacion',
@@ -34,31 +35,32 @@ export class ObservacionComponent implements OnInit {
     ]
   };
 
-  constructor(
-                private technicalCommitteSessionService: TechnicalCommitteSessionService,
-                public dialog: MatDialog,
-                private router: Router,
-                private activatedRoute: ActivatedRoute,
 
-             ) 
-  {
+  constructor(
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
+    public dialog: MatDialog,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    @Inject(MAT_DIALOG_DATA) public data
+  ) {
     //this.declararObservacion();
+    console.log(data)
   }
 
   ngOnInit(): void {
 
-    this.activatedRoute.params.subscribe( parametros => {
+    this.activatedRoute.params.subscribe(parametros => {
       this.sesionComiteSolicitudId = parametros.idsesionComiteSolicitud;
       this.comiteTecnicoId = parametros.idcomiteTecnico;
       this.contratacionProyectoId = parametros.idcontratacionProyecto;
       this.contratacionId = parametros.idcontratacion;
 
-    this.technicalCommitteSessionService.getSesionSolicitudObservacionProyecto( this.sesionComiteSolicitudId, this.contratacionProyectoId )
-      .subscribe( observaciones => {
-        this.listaObservaciones = observaciones;
-      })
+      this.technicalCommitteSessionService.getSesionSolicitudObservacionProyecto(this.sesionComiteSolicitudId, this.contratacionProyectoId)
+        .subscribe(observaciones => {
+          this.listaObservaciones = observaciones;
+        })
 
-      
+
     })
 
 
@@ -96,9 +98,9 @@ export class ObservacionComponent implements OnInit {
 
     }
 
-    this.technicalCommitteSessionService.crearObservacionProyecto( contraracionObservacion )
-      .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message )
+    this.technicalCommitteSessionService.crearObservacionProyecto(contraracionObservacion)
+      .subscribe(respuesta => {
+        this.openDialog('', respuesta.message)
         if (respuesta.code == "200")
           this.router.navigate(['/comiteTecnico/crearActa', this.comiteTecnicoId]);
       })

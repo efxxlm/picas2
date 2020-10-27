@@ -43,7 +43,7 @@
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-raised-button (click)="Observaciones(element.contratacionProyectoId, element.contratacionId);"
+        <button mat-raised-button type="button" (click)="Observaciones(element.contratacionProyectoId, element.contratacionId);"
           mat-raised-button color="accent" class="btn-table"
           [disabled]="element.estadoSolicitud && element.estadoSolicitud.codigo == estadosSolicitud.AprobadaPorComiteTecnico">
           Observaciones

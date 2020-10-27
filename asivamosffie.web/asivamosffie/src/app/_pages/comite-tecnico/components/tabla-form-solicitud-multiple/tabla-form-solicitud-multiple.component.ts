@@ -9,7 +9,8 @@ import { ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app
 import { Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { Observable } from 'rxjs';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ObservacionComponent } from '../observacion/observacion.component'
 
 @Component({
   selector: 'app-tabla-form-solicitud-multiple',
@@ -53,7 +54,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     private commonService: CommonService,
     private router: Router,
     private projectContractingService: ProjectContractingService,
-
+    public dialog: MatDialog
   ) {
 
   }
@@ -140,14 +141,19 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     this.cargarRegistro();
   }
   Observaciones(contratacionProyectoid: number, contratacionid: number) {
-    this.router.navigate(['/comiteTecnico/crearActa',
-      this.sesionComiteSolicitud.comiteTecnicoId,
-      'observacion',
-      this.sesionComiteSolicitud.sesionComiteSolicitudId,
-      this.sesionComiteSolicitud.comiteTecnicoId,
-      contratacionProyectoid,
-      contratacionid
-    ])
+    // this.router.navigate(['/comiteTecnico/crearActa',
+    //   this.sesionComiteSolicitud.comiteTecnicoId,
+    //   'observacion',
+    //   this.sesionComiteSolicitud.sesionComiteSolicitudId,
+    //   this.sesionComiteSolicitud.comiteTecnicoId,
+    //   contratacionProyectoid,
+    //   contratacionid
+    // ])
+
+    const dialogRef = this.dialog.open(ObservacionComponent, {
+      width: '60em',
+      data: { contratacionProyectoid, contratacionid }
+    });
   }
 
   onChangeEstado() {
