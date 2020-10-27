@@ -49,6 +49,10 @@ export class ActBeginService {
   CreateEditContratoObservacion(contratoObs:ContratoObservacion){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateEditContratoObservacion`, contratoObs);
   }
+  EnviarCorreoSupervisor(pContratoId: number){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EnviarCorreoSupervisor?pContratoId=${pContratoId}`,null);
+
+  }
 }
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;
@@ -80,6 +84,7 @@ export interface GetVistaGenerarActaInicio {
   plazoFase1PreMeses: number;
   fechaActaInicioDateTime: any;
   fechaPrevistaTerminacionDateTime: any;
+  fechaActaInicioFase1DateTime: any;
 }
 export interface GetListGrillaActaInicio {
 

@@ -140,6 +140,9 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
         this.ngOnInit();
       });
     }
+    this.services.EnviarCorreoSupervisor(id).subscribe(resp=>{
+
+    });
   }
   enviarInterventor(id){
     if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){

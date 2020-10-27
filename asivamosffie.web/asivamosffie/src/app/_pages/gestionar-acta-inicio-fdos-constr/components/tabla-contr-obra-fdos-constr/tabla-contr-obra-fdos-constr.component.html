@@ -41,15 +41,15 @@
                         *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Descargar Acta</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
-                        (click)="this.enviarRevision(element.contratoId,element.estadoActa)">Enviar para revisión y aprobación</button>
+                        (click)="this.enviarRevision(element.contratoId,element.estadoActa)">Enviar notificación al interventor</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
                         (click)="this.verDetalleEditar(element.contratoId)">Ver detalle/Editar</button>
+                    <!--<button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActa=='Con notificación al interventor'"
+                        (click)="this.enviarInterventor(element.contratoId)">Enviar para revisión y aprobación</button>-->
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActa=='Enviado por el supervisor'"
-                        (click)="this.enviarInterventor(element.contratoId)">Enviar para revisión y aprobación</button>
-                    <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActa=='Enviado por el supervisor' || element.estadoActa=='Enviada por el supervisor'"
+                        *ngIf="element.estadoActa=='Con notificación al interventor'"
                         (click)="this.verDetalle(element.contratoId)">Ver detalle</button>
 
                 </td>
