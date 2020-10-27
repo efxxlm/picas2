@@ -48,7 +48,8 @@ namespace asivamosffie.model.APIModels
 
         public string? FechaActaInicio { get; set; }
 
-        public DateTime? FechaActaInicioDateTime { get; set; }
+        public DateTime? FechaActaInicioFase1DateTime { get; set; }
+        public DateTime? FechaActaInicioFase2DateTime { get; set; }
 
         public DateTime? FechaPrevistaTerminacionDateTime { get; set; }              
 

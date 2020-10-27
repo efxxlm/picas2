@@ -1320,7 +1320,9 @@ namespace asivamosffie.services
                 string strFechaPrevistaTerminacion = "";
                 string strFechaActaInicio = "";
 
-                DateTime FechaActaInicioDateTime=new DateTime();
+                DateTime FechaActaInicioFase1DateTime=new DateTime();
+                DateTime FechaActaInicioFase2DateTime = new DateTime();
+
                 DateTime FechaPrevistaTerminacionDateTime=new DateTime();                
 
                 string strContratoObservacion = "";
@@ -1340,7 +1342,9 @@ namespace asivamosffie.services
 
                     strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
                     
-                    FechaActaInicioDateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
+                    FechaActaInicioFase1DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase1);
+                    FechaActaInicioFase2DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
+
                     FechaPrevistaTerminacionDateTime = Convert.ToDateTime(contrato.FechaTerminacionFase2);
 
                     strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
@@ -1530,7 +1534,8 @@ namespace asivamosffie.services
                         NombreEntidadContratistaSupervisorInterventoria = contratista.Nombre,
 
                         FechaActaInicio = strFechaActaInicio,
-                        FechaActaInicioDateTime = FechaActaInicioDateTime,
+                        FechaActaInicioFase1DateTime = FechaActaInicioFase1DateTime,
+                        FechaActaInicioFase2DateTime = FechaActaInicioFase2DateTime,
 
                         FechaPrevistaTerminacion = strFechaPrevistaTerminacion,
                         FechaPrevistaTerminacionDateTime = FechaPrevistaTerminacionDateTime,                       
