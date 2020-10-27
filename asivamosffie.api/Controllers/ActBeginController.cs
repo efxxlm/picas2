@@ -189,9 +189,14 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
+
+                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+
+                _appSettingsService = toAppSettingsService(_settings);
+
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.GuardarCargarActaSuscritaContrato( pContratoId,  pFechaFirmaContratista,  pFechaFirmaActaContratistaInterventoria                     
-             ,  pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseActaInicio,  pUsuarioModificacion);
+             ,  pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseActaInicio,  pUsuarioModificacion, _appSettingsService);
                 return Ok(respuesta);
             }
             catch (Exception ex)

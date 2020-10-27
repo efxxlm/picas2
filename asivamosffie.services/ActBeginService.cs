@@ -349,7 +349,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
-            /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion
+            /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion, AppSettingsService _appSettingsService
             )
         {
             //            Fecha de la firma del documento por parte del contratista de obra -FechaFirmaContratista - contrato
@@ -415,10 +415,81 @@ namespace asivamosffie.services
                 string correo = "cdaza@ivolucion.com";
 
                 correo = getCorreos((int)EnumeratorPerfil.Supervisor);
+                //_settings = _appSettingsService;
+                //_appSettingsService = toAppSettingsService(_settings);
+                //   Task<Respuesta> result = EnviarCorreoGestionActaIncio(correo, _settings.Value.MailServer,
+                //_settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
+                //actaInicio, pIdTemplate);
 
-                Task<Respuesta> result = EnviarCorreoGestionActaIncio(correo, _settings.Value.MailServer,
-             _settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
-             actaInicio, pIdTemplate);
+                bool blEnvioCorreo = false;
+                Respuesta respuesta = new Respuesta();
+
+                //Si no llega Email
+                //if (string.IsNullOrEmpty(pUsuario.Email))
+                //{
+                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.EmailObligatorio };
+                //}
+               
+                    //Guardar Usuario                
+
+                    //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
+
+                    string template = TemplateRecoveryPassword.Contenido;
+
+                    int tipoContrato = 0;
+
+                    //Contrato contrato = null;
+                    contrato = _context.Contrato.Where(r => r.NumeroContrato == actaInicio.NumeroContrato).FirstOrDefault();
+
+                    //tipoContrato = 2;
+                    tipoContrato = ConstanCodigoTipoContratacion.Interventoria;
+
+                    template = template.Replace("_Numero_Contrato_", actaInicio.NumeroContrato);
+                    template = template.Replace("_Fecha_Aprobacion_Poliza_", actaInicio.FechaAprobacionGarantiaPoliza);
+
+                    if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Interventoria)
+                        template = template.Replace("_Obra_O_Interventoria_", "interventoría");
+                    else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
+                        template = template.Replace("_Obra_O_Interventoria_", "obra");
+
+                    template = template.Replace("_Cantidad_Proyectos_Asociados_", actaInicio.CantidadProyectosAsociados.ToString());
+
+                    template = template.Replace("_Fecha_Acta_Inicio_", actaInicio.FechaActaInicio);
+                    template = template.Replace("_Fecha_Prevista_Terminacion_", actaInicio.FechaPrevistaTerminacion);
+
+                //datos basicos generales, aplican para los 4 mensajes
+
+                //correo, _settings.Value.MailServer,
+                //_settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
+                //actaInicio, pIdTemplate
+                 //correo = "cdaza@ivolucion.com";
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(correo, "Gestión Acta Inicio Fase II", template, _appSettingsService.Sender, _appSettingsService.Password, _appSettingsService.MailServer, _appSettingsService.MailPort);
+
+                    if (blEnvioCorreo)
+                        respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.CorreoEnviado };
+
+                    else
+                        respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.ErrorEnviarCorreo };
+
+                    //}
+                    //}
+                    //else
+                    //{
+                    //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+                    //}
+                    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), correo, "Acta Inicio Fase II");
+                    return respuesta;
+
+                //}
+                //catch (Exception ex)
+                //{
+
+                //    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
+                //    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), lstMails, "Gestión Acta Inicio Fase II") + ": " + ex.ToString() + ex.InnerException;
+                //    return respuesta;
+                //}
 
                 return
                  new Respuesta
@@ -445,7 +516,7 @@ namespace asivamosffie.services
               };
             }
         }
-
+        
 
         public async Task<Respuesta> EnviarCorreoSupervisor(int pContratoId, AppSettingsService settings)
         {
@@ -755,8 +826,7 @@ namespace asivamosffie.services
 
                 //VistaGenerarActaInicioContrato pActaInicio = new VistaGenerarActaInicioContrato();
 
-                int tipoContrato = 0;
-                
+                int tipoContrato = 0;               
 
                 Contrato contrato=null;
                 contrato = _context.Contrato.Where(r => r.NumeroContrato == pActaInicio.NumeroContrato).FirstOrDefault();
@@ -815,6 +885,81 @@ namespace asivamosffie.services
             }
 
         }
+
+        //public  Task<Respuesta> EnviarCorreoGestionActaIncio2(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaGenerarActaInicioContrato pActaInicio, int pIdTemplate)
+        //{
+        //    bool blEnvioCorreo = false;
+        //    Respuesta respuesta = new Respuesta();
+
+        //    //Si no llega Email
+        //    //if (string.IsNullOrEmpty(pUsuario.Email))
+        //    //{
+        //    //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.EmailObligatorio };
+        //    //}
+        //    try
+        //    {               
+        //        //Guardar Usuario                
+
+        //        //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
+        //        Template TemplateRecoveryPassword =  _commonService.GetTemplateById(pIdTemplate);
+
+        //        string template = TemplateRecoveryPassword.Contenido;              
+                               
+        //        int tipoContrato = 0;
+
+        //        Contrato contrato = null;
+        //        contrato = _context.Contrato.Where(r => r.NumeroContrato == pActaInicio.NumeroContrato).FirstOrDefault();
+              
+        //        //tipoContrato = 2;
+        //        tipoContrato = ConstanCodigoTipoContratacion.Interventoria;                      
+
+        //        template = template.Replace("_Numero_Contrato_", pActaInicio.NumeroContrato);
+        //        template = template.Replace("_Fecha_Aprobacion_Poliza_", pActaInicio.FechaAprobacionGarantiaPoliza);
+
+        //        if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Interventoria)
+        //            template = template.Replace("_Obra_O_Interventoria_", "interventoría");
+        //        else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
+        //            template = template.Replace("_Obra_O_Interventoria_", "obra");
+
+        //        template = template.Replace("_Cantidad_Proyectos_Asociados_", pActaInicio.CantidadProyectosAsociados.ToString());
+
+        //        template = template.Replace("_Fecha_Acta_Inicio_", pActaInicio.FechaActaInicio);
+        //        template = template.Replace("_Fecha_Prevista_Terminacion_", pActaInicio.FechaPrevistaTerminacion);
+
+        //        //datos basicos generales, aplican para los 4 mensajes
+
+        //        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Acta Inicio Fase II", template, pSentender, pPassword, pMailServer, pMailPort);
+
+        //        if (blEnvioCorreo)
+        //            respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.CorreoEnviado };
+
+        //        else
+        //            respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.ErrorEnviarCorreo };
+
+        //        //}
+        //        //}
+        //        //else
+        //        //{
+        //        //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+        //        //}
+        //        respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), lstMails, "Acta Inicio Fase II");
+        //        return respuesta;
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
+        //        respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), lstMails, "Gestión Acta Inicio Fase II") + ": " + ex.ToString() + ex.InnerException;
+        //        return respuesta;
+        //    }
+
+        //}
+
+
+
 
         public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId)
         {
