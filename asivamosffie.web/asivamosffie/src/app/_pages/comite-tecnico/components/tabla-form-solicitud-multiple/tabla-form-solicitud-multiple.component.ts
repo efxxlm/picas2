@@ -141,6 +141,9 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     this.cargarRegistro();
   }
   Observaciones(contratacionProyectoid: number, contratacionid: number) {
+    let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
+    let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
+
     // this.router.navigate(['/comiteTecnico/crearActa',
     //   this.sesionComiteSolicitud.comiteTecnicoId,
     //   'observacion',
@@ -152,7 +155,9 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
 
     const dialogRef = this.dialog.open(ObservacionComponent, {
       width: '60em',
-      data: { contratacionProyectoid, contratacionid }
+      data: { contratacionProyectoid, contratacionid, 
+            idsesionComiteSolicitud, idcomiteTecnico
+             }
     });
   }
 
@@ -166,6 +171,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
       let promesa = new Promise(resolve => {
         this.projectContractingService.getContratacionByContratacionIdWithGrillaProyecto(this.sesionComiteSolicitud.contratacion.contratacionId)
           .subscribe(contra => {
+            console.log( contra );
             this.cantidadProyecto = contra.contratacionProyecto.length;
 
             this.proyectos = contra.contratacionProyecto;

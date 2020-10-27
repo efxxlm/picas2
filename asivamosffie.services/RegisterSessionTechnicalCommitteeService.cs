@@ -412,6 +412,9 @@ namespace asivamosffie.services
                                                s.ContratacionProyectoId == pContratacionProyectoId)
                                 .Include(r => r.SesionParticipante)
                                     .ThenInclude(r => r.Usuario)
+                                .Include( r => r.ContratacionProyecto )
+                                    .ThenInclude( r => r.Contratacion )
+                                        .ThenInclude( r => r.ContratacionObservacion )
                                 .ToListAsync();
             return lista;
         }
@@ -3098,8 +3101,17 @@ namespace asivamosffie.services
 
             try
             {
-                pContratacionObservacion.FechaCreacion = DateTime.Now;
-                _context.ContratacionObservacion.Add(pContratacionObservacion);
+                if ( pContratacionObservacion.ContratacionObservacionId == 0 )
+                {
+                    pContratacionObservacion.FechaCreacion = DateTime.Now;
+                    _context.ContratacionObservacion.Add(pContratacionObservacion);
+                }
+                else{
+                    ContratacionObservacion observacion = _context.ContratacionObservacion.Find( pContratacionObservacion.ContratacionObservacionId );
+
+                    observacion.Observacion = pContratacionObservacion.Observacion;
+                }
+                
                 _context.SaveChanges();
 
                 return new Respuesta

@@ -1390,7 +1390,7 @@ namespace asivamosffie.services
                                         && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuente_de_Recurso).FirstOrDefault().Nombre,
                                     Estado_de_las_fuentes = "",
                                     FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                    Valor_solicitado_de_la_fuente = font.FuenteFinanciacion.ValorFuente,
+                                    Valor_solicitado_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente,
                                     Nuevo_saldo_de_la_fuente = 0,
                                     Saldo_actual_de_la_fuente = 0
                                 });
@@ -1480,7 +1480,7 @@ namespace asivamosffie.services
                                     Fuente = font.FuenteRecursosString,
                                     Estado_de_las_fuentes = "",
                                     FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                    Valor_solicitado_de_la_fuente = font.ValorFuente,
+                                    Valor_solicitado_de_la_fuente = (decimal)font.ValorFuente,
                                     Nuevo_saldo_de_la_fuente = 0,
                                     Saldo_actual_de_la_fuente = 0
                                 });

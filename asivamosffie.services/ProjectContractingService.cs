@@ -311,7 +311,7 @@ namespace asivamosffie.services
             {
 
                 decimal ValorGastado = 0;
-                decimal ValorDisponible = ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
+                decimal ValorDisponible = (decimal)ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
 
                 foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                 {

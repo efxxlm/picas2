@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ContratacionObservacion } from 'src/app/_interfaces/project-contracting';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { SesionSolicitudObservacionProyecto } from 'src/app/_interfaces/technicalCommitteSession';
@@ -16,6 +16,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ObservacionComponent implements OnInit {
 
   observacion: string;
+  contratacionObservacionId: number;
   comiteTecnicoId: number;
   sesionComiteSolicitudId: number;
   contratacionProyectoId: number;
@@ -37,6 +38,7 @@ export class ObservacionComponent implements OnInit {
 
 
   constructor(
+    public dialogRef: MatDialogRef<ObservacionComponent>,
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     public dialog: MatDialog,
     private router: Router,
@@ -50,14 +52,22 @@ export class ObservacionComponent implements OnInit {
   ngOnInit(): void {
 
     this.activatedRoute.params.subscribe(parametros => {
-      this.sesionComiteSolicitudId = parametros.idsesionComiteSolicitud;
-      this.comiteTecnicoId = parametros.idcomiteTecnico;
-      this.contratacionProyectoId = parametros.idcontratacionProyecto;
-      this.contratacionId = parametros.idcontratacion;
+      this.sesionComiteSolicitudId = this.data.idsesionComiteSolicitud;
+      this.comiteTecnicoId = this.data.idcomiteTecnico;
+      this.contratacionProyectoId = this.data.contratacionProyectoid;
+      this.contratacionId = this.data.contratacionid;
 
-      this.technicalCommitteSessionService.getSesionSolicitudObservacionProyecto(this.sesionComiteSolicitudId, this.contratacionProyectoId)
+      this.technicalCommitteSessionService
+        .getSesionSolicitudObservacionProyecto(this.data.idsesionComiteSolicitud, this.data.contratacionProyectoid)
         .subscribe(observaciones => {
           this.listaObservaciones = observaciones;
+          if (this.listaObservaciones && this.listaObservaciones.length > 0) {
+            this.observacion = this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0] ?
+              this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0].observacion : null;
+
+            this.contratacionObservacionId = this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0] ?
+              this.listaObservaciones[0]['contratacionProyecto'].contratacion.contratacionObservacion[0].contratacionObservacionId : 0;
+          }
         })
 
 
@@ -91,6 +101,7 @@ export class ObservacionComponent implements OnInit {
   enviarObservacion() {
 
     let contraracionObservacion: ContratacionObservacion = {
+      contratacionObservacionId: this.contratacionObservacionId,
       comiteTecnicoId: this.comiteTecnicoId,
       contratacionId: this.contratacionId,
 
@@ -102,7 +113,7 @@ export class ObservacionComponent implements OnInit {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
         if (respuesta.code == "200")
-          this.router.navigate(['/comiteTecnico/crearActa', this.comiteTecnicoId]);
+          this.dialogRef.close(contraracionObservacion);
       })
 
   }

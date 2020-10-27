@@ -123,7 +123,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -775,6 +774,12 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ContratacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_ContratacionId_Contratacion");
+
+                entity.HasOne(d => d.ContratacionProyecto)
+                    .WithMany(p => p.ContratacionObservacion)
+                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ContratacionProyectId_ContratacionProyecto");
             });
 
             modelBuilder.Entity<ContratacionProyecto>(entity =>
@@ -1559,7 +1564,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion)                    
+                entity.Property(e => e.Observacion)
                     .HasMaxLength(800)
                     .IsUnicode(false);
 
@@ -2205,7 +2210,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FuenteRecursosCodigo)                    
+                entity.Property(e => e.FuenteRecursosCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -3935,7 +3940,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Tarea)
-                    .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
@@ -3951,7 +3955,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ResponsableNavigation)
                     .WithMany(p => p.TemaCompromiso)
                     .HasForeignKey(d => d.Responsable)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Responsable");
 
                 entity.HasOne(d => d.SesionTema)

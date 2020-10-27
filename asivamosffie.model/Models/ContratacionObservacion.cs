@@ -11,8 +11,10 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public int? ComiteTecnicoId { get; set; }
+        public int ContratacionProyectoId { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual Contratacion Contratacion { get; set; }
+        public virtual ContratacionProyecto ContratacionProyecto { get; set; }
     }
 }
