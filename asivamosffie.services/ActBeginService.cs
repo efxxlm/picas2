@@ -60,6 +60,7 @@ namespace asivamosffie.services
                 ContratoObservacion contratoObservacion=new ContratoObservacion();
                 contratoObservacion.Observaciones = pObservacionesActa;
                 contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
+                contratoObservacion.FechaCreacion = DateTime.Now;
                 contratoObservacion.EsActa = true;
                 contratoObservacion.EsActaFase2 = true;
                 contratoObservacion.ContratoId = pContratoId;
