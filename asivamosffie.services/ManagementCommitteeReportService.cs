@@ -106,11 +106,11 @@ namespace asivamosffie.services
 
             //   List<Dominio> ListEstadoCompromisos = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).ToList();
 
-            foreach (var ComiteTecnico in ListComiteTecnico.OrderByDescending(r=> r.ComiteTecnicoId))
+            foreach (var ComiteTecnico in ListComiteTecnico.OrderByDescending(r => r.ComiteTecnicoId))
             {
                 foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico.OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r=> r.SesionSolicitudCompromisoId))
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
                         ListDynamic.Add(new
                         {
@@ -126,7 +126,7 @@ namespace asivamosffie.services
                 }
                 foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r=> r.SesionSolicitudCompromisoId))
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
                         ListDynamic.Add(new
                         {
@@ -226,12 +226,12 @@ namespace asivamosffie.services
                                                  .ThenInclude(r => r.SesionSolicitudVoto)
                              .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                .ThenInclude(r => r.SesionSolicitudCompromiso)
-                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario) 
+                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                               .ThenInclude(r => r.SesionSolicitudCompromiso)
                                .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                               .ThenInclude(r => r.SesionSolicitudVoto)
                              .ToListAsync();
-     
+
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
 
 
@@ -478,10 +478,9 @@ namespace asivamosffie.services
             try
             {
                 ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == comiteTecnicoId)
-                     .Include(r => r.SesionComentario)
                      .Include(r => r.SesionParticipante)
                      .FirstOrDefaultAsync();
-
+                 
                 SesionComentario sesionComentario = new SesionComentario
                 {
                     Fecha = DateTime.Now,
@@ -494,7 +493,9 @@ namespace asivamosffie.services
                     ValidacionVoto = false
                 };
                 _context.SesionComentario.Add(sesionComentario);
+                _context.SaveChanges();
 
+                comiteTecnico.SesionComentario = _context.SesionComentario.Where(r => r.ComiteTecnicoId == comiteTecnicoId && !(bool)r.ValidacionVoto).ToList();
 
                 //ValidarVotacion
                 if ((bool)ValidarTodosVotacion(comiteTecnico))
@@ -541,8 +542,9 @@ namespace asivamosffie.services
         {
             string EstadoActa = ConstantCodigoActas.Devuelta;
 
-            if (pComiteTecnico.SesionComentario.Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count()
-                == pComiteTecnico.SesionComentario.Count())
+            if (pComiteTecnico.SesionComentario
+                .Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count()
+                                            == pComiteTecnico.SesionComentario.Count())
             {
                 EstadoActa = ConstantCodigoActas.Aprobada;
             }
