@@ -105,7 +105,7 @@
         <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
             <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.numerodocumento.invalid && addressForm.controls.numerodocumento.dirty || addressForm.controls.numerodocumento.invalid && edicion}"
+            [ngClass]="{'color-secondaryColor' : addressForm.controls.numerodocumento.dirty && addressForm.controls.numerodocumento.value==''}"
             >Número de documento de apropiación</label>
           </div> 
           <div class="col">

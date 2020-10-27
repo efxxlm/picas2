@@ -129,8 +129,8 @@ namespace asivamosffie.services
                     cuentaBancariaAntigua.FechaModificacion = DateTime.Now;
                     //Registros
                     cuentaBancariaAntigua.NumeroCuentaBanco = cuentaBancaria.NumeroCuentaBanco;
-                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco.ToUpper();
-                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi.ToUpper();
+                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco==null?"":cuentaBancaria.NombreCuentaBanco.ToUpper();
+                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi==null?"": cuentaBancaria.CodigoSifi.ToUpper();
                     cuentaBancariaAntigua.TipoCuentaCodigo = cuentaBancaria.TipoCuentaCodigo;
                     cuentaBancariaAntigua.BancoCodigo = cuentaBancaria.BancoCodigo;
                     cuentaBancariaAntigua.Exenta = cuentaBancaria.Exenta;

@@ -195,7 +195,7 @@ export class RegistrarComponent implements OnInit {
           grupoCuenta.get('codigoSIFI').setValue(ba.codigoSifi);
           grupoCuenta.get('tipoCuenta').setValue(ba.tipoCuentaCodigo);
           grupoCuenta.get('banco').setValue(bancoSeleccionado);
-          grupoCuenta.get('extra').setValue(ba.exenta.toString());
+          grupoCuenta.get('extra').setValue(ba.exenta?ba.exenta.toString():"");
 
           listaCuentas.push(grupoCuenta);
         });
@@ -687,7 +687,8 @@ export class RegistrarComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.addressForm.valid) {
+    //no puedo validarlo, porque puede ser parcial
+    //if (this.addressForm.valid) {
       
       let bitValorok=true;
       const lista: FuenteFinanciacion[] = [];
@@ -709,7 +710,7 @@ export class RegistrarComponent implements OnInit {
         const fuente: FuenteFinanciacion = {
           fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
           aportanteId: this.idAportante,
-          fuenteRecursosCodigo: controlFR.get('fuenteRecursos').value.codigo,
+          fuenteRecursosCodigo: controlFR.get('fuenteRecursos').value?.codigo,
           valorFuente: controlFR.get('valorFuenteRecursos').value,
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
@@ -754,7 +755,7 @@ export class RegistrarComponent implements OnInit {
         cuentas.controls.forEach(controlBa => {
           const cuentaBancaria: CuentaBancaria = {
             cuentaBancariaId: controlBa.get('cuentaBancariaId').value,
-            bancoCodigo: controlBa.get('banco').value.codigo,
+            bancoCodigo: controlBa.get('banco').value?.codigo,
             codigoSifi: controlBa.get('codigoSIFI').value,
             exenta: controlBa.get('extra').value,
             fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
@@ -818,7 +819,7 @@ export class RegistrarComponent implements OnInit {
         this.data = lista;    
       }
       
-    }
+    //}
   }
   
   validateonevige(j){

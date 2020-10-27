@@ -49,7 +49,7 @@ namespace asivamosffie.services
             else if (retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
             {
                 retorno.Aportante.NombreAportanteString = retorno.Aportante.NombreAportanteId == null
-                    ? "Error" :
+                    ? "" :
                     _context.Dominio.Find(retorno.Aportante.NombreAportanteId).Nombre;                    
             }
             else
@@ -57,13 +57,13 @@ namespace asivamosffie.services
                 if(retorno.Aportante.MunicipioId==null)
                 {
                     retorno.Aportante.NombreAportanteString = retorno.Aportante.DepartamentoId == null
-                    ? "Error" :
+                    ? "" :
                     "Gobernación " + _context.Localizacion.Find(retorno.Aportante.DepartamentoId).Descripcion;
                 }
                 else
                 {
                     retorno.Aportante.NombreAportanteString = retorno.Aportante.MunicipioId == null
-                    ? "Error" :
+                    ? "" :
                     "Alcaldía " + _context.Localizacion.Find(retorno.Aportante.MunicipioId).Descripcion;
                 }
             }
@@ -158,7 +158,7 @@ namespace asivamosffie.services
             {
                 retorno = false;
             }
-            if(fuentefinanciacion.FuenteRecursosCodigo.Equals(""))
+            if(fuentefinanciacion.FuenteRecursosCodigo == null || fuentefinanciacion.FuenteRecursosCodigo.Equals(""))
             {
                 retorno = false;
             }
@@ -320,12 +320,12 @@ namespace asivamosffie.services
                     if (ret.Aportante.MunicipioId != null)
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.MunicipioId==null?
-                            "Error":"Alcaldía de "+_context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
+                            "":"Alcaldía de "+_context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
                     }
                     else//solo departamento
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.DepartamentoId == null ?
-                            "Error" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
+                            "" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
                     }
                 }
                 else
@@ -333,7 +333,7 @@ namespace asivamosffie.services
                     ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
                 }
                 ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
-                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "Error" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
             }
             return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
         }
@@ -365,12 +365,12 @@ namespace asivamosffie.services
                     if (ret.Aportante.MunicipioId != null)
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.MunicipioId == null ?
-                            "Error" : "Alcaldía de " + _context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
+                            "" : "Alcaldía de " + _context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
                     }
                     else//solo departamento
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.DepartamentoId == null ?
-                            "Error" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
+                            "" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
                     }
                 }
                 else
@@ -378,7 +378,7 @@ namespace asivamosffie.services
                     ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
                 }
                 ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
-                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "Error" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
             }
             return retorno.OrderByDescending(x => x.FechaCreacion).ToList();
         }
@@ -515,12 +515,12 @@ namespace asivamosffie.services
                 if (aportante.MunicipioId != null)
                 {
                     nombre = aportante.MunicipioId == null ?
-                        "Error" : "Alcaldía de " + _context.Localizacion.Find(aportante.MunicipioId).Descripcion;
+                        "" : "Alcaldía de " + _context.Localizacion.Find(aportante.MunicipioId).Descripcion;
                 }
                 else//solo departamento
                 {
                     nombre = aportante.DepartamentoId == null ?
-                        "Error" : "Gobernación de " + _context.Localizacion.Find(aportante.DepartamentoId).Descripcion;
+                        "" : "Gobernación de " + _context.Localizacion.Find(aportante.DepartamentoId).Descripcion;
                 }
             }
             else

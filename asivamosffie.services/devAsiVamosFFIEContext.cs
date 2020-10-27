@@ -2206,8 +2206,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FuenteRecursosCodigo)
-                    .IsRequired()
+                entity.Property(e => e.FuenteRecursosCodigo)                    
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
