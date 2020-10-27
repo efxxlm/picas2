@@ -19,6 +19,7 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
 
 
   public idContrato;
+  public idRol;
   public contratacionId;
   public fechaTramite;
   public tipoContratoCodigo;
@@ -52,6 +53,9 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     if(data.id != undefined){
       this.idContrato = data.id;
     }
+    if(data.idRol != undefined){
+      this.idRol = data.idRol;
+    }
   }
 
   ngOnInit(): void {
@@ -80,10 +84,17 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
     this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaSesionString,this.fechaSesionString2,inputNode.files[0],"usr3").subscribe(data=>{
       if(data.code=="200"){
-        this.services.CambiarEstadoActa(this.idContrato,"5","usr2").subscribe(data0=>{
+        if(this.idRol==2){
+          this.services.CambiarEstadoActa(this.idContrato,"20","usr2").subscribe(data0=>{
           
-        });
-        this.services.GetListGrillaActaInicio().subscribe(items=>{
+          });
+        }
+        else{
+          this.services.CambiarEstadoActa(this.idContrato,"7","usr2").subscribe(data1=>{
+          
+          });
+        }
+        this.services.GetListGrillaActaInicio(this.idRol).subscribe(items=>{
           this.services.loadDataItems.next(items);
         })
         this.openDialog(data.message,"");

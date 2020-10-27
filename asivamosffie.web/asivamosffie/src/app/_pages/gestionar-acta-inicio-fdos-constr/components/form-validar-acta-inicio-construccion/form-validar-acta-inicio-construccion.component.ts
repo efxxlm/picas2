@@ -57,6 +57,10 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
       this.loadData(param.id);
       this.loadDataObservaciones(param.id);
     });
+    this.loadConditionals();
+  }
+
+  loadConditionals(){
     if(localStorage.getItem("editable")=="true"){
       this.editable=true;
       this.title='Ver detalle/Editar';
@@ -100,12 +104,19 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     this.contratoId = id;
   }
   loadDataObservaciones(id){
-    this.services.GetContratoObservacionByIdContratoId(id).subscribe(data0=>{
-      this.addressForm.get('tieneObservaciones').setValue(data0.esActaFase2);
-      this.addressForm.get('observaciones').setValue(data0.observaciones);
-      this.loadIdObs(data0.contratoObservacionId);
-      this.fechaCreacion = data0.fechaCreacion;
-    });
+    if(localStorage.getItem("editable")=="true"){
+      this.services.GetContratoObservacionByIdContratoId(id).subscribe(data0=>{
+        this.addressForm.get('tieneObservaciones').setValue(data0.esActaFase2);
+        this.addressForm.get('observaciones').setValue(data0.observaciones);
+        this.loadIdObs(data0.contratoObservacionId);
+        this.fechaCreacion = data0.fechaCreacion;
+      });
+    }
+    else{
+      this.services.GetContratoObservacionByIdContratoId(id).subscribe(data2=>{
+        this.fechaCreacion = data2.fechaCreacion;
+      });
+    }
   }
   loadIdObs(id){
     this.observacionID = id;
@@ -132,8 +143,8 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
 
   crearFormulario() {
     return this.fb.group({
-      tieneObservaciones: ['', Validators.required],
-      observaciones:[null, Validators.required],
+      tieneObservaciones: [null, Validators.required],
+      observaciones:['', Validators.required],
     })
   }
   maxLength(e: any, n: number) {
@@ -172,6 +183,16 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     };
     this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp=>{
       if(resp.code=="200"){
+        if(this.addressForm.value.tieneObservaciones==true){
+          this.services.CambiarEstadoActa(this.contratoId,"16","usr2").subscribe(data0=>{
+          
+          });
+        }
+        else{
+          this.services.CambiarEstadoActa(this.contratoId,"15","usr2").subscribe(data1=>{
+          
+          });
+        }
         this.openDialog(resp.message, "");
         this.router.navigate(['/generarActaInicioConstruccion']);
       }

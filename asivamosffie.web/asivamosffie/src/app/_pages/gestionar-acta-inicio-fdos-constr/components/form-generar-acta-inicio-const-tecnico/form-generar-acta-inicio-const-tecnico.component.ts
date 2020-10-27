@@ -226,6 +226,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
             this.openDialog(data1.message, "");
           }
         });
+        if(localStorage.getItem("origin")=="interventoria"){
+          this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
+          });
+        }
       }
     }
     else{
@@ -239,7 +243,14 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
         }
       })
     }
-  
+    if(localStorage.getItem("origin")=="interventoria"){
+      if(this.addressForm.value.observacionesEspeciales==null){
+        localStorage.setItem("observacionesEspecialesInterventoria","No");
+      }
+      else{
+        localStorage.setItem("observacionesEspecialesInterventoria","Si");
+      }
+    }
     console.log(this.addressForm.value);
 
   }

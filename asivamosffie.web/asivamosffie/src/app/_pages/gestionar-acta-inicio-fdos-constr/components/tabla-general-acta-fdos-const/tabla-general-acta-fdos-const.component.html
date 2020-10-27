@@ -32,7 +32,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarActaParaFirma(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con validación del supervisor'">Enviar acta para firma</button>
+                        *ngIf="element.estadoActa=='Con acta generada'">Enviar acta para firma</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarParaRevision(element.contratoId)"
                         *ngIf="element.estadoActa=='Con acta preliminar generada'">Enviar para revisión y aprobacion</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita(element.contratoId)"
