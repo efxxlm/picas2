@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
         public string TipoAportanteNombre { get; set; }
          
         [NotMapped]
-        public decimal SaldoAportanteFuenteFinanciacion { get; set; }
+        public decimal? SaldoDisponible { get; set; }
     }
 
 }

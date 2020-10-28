@@ -36,29 +36,50 @@ namespace asivamosffie.services
 
         public async Task<List<Contrato>> GetListContatoByNumeroContrato(string pNumeroContrato)
         {
-             List<Contrato> ListContrato =await _context.Contrato
-                .Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado)
+            //Si el aportante es tercero include dominio
+            List<Contrato> ListContrato = await _context.Contrato
+               .Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado)
+               .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.Contratista)
                 .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.Contratista)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.NombreAportante)
+
+                 //Si el aportante es Et include Depto
                  .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                                    .ThenInclude(r => r.ProyectoAportante)
-                                           .ThenInclude(r => r.Aportante) 
-                                                  .ThenInclude(r => r.NombreAportante)
-                  .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                                    .ThenInclude(r => r.ProyectoAportante)
-                                           .ThenInclude(r => r.Aportante)
-                                                  .ThenInclude(r => r.Departamento)
-                  .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                                    .ThenInclude(r => r.ProyectoAportante)
-                                           .ThenInclude(r => r.Aportante)
-                                                  .ThenInclude(r => r.Municipio)
-                .ToListAsync();
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.Departamento)
+
+                 //Si el aportante es Et include mun
+                 .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.Municipio)
+
+                 //incluir fuente de financiacion al aportante
+                 .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.FuenteFinanciacion)
+
+                 //incluir fuente de DDP al aportante
+                 .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .ToListAsync();
 
 
             foreach (var Contrato in ListContrato)
@@ -67,10 +88,11 @@ namespace asivamosffie.services
                 {
                     foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
                     {
-                        decimal? SaldoFuentesFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == ProyectoAportante.AportanteId).Sum(r => r.ValorFuente);
-                       // decimal? SaldoDisponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r=> r.AportanteId == ProyectoAportante.AportanteId
+                        decimal? SaldoFuentesFinanciacion, SaldoDisponibilidadPresupuestal = 0;
+                        SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Sum(r => r.ValorFuente);
+                        SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Sum(r => r.ValorAportante);
 
-                       //  ProyectoAportante.SaldoAportanteFuenteFinanciacion
+                        ProyectoAportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
                     }
                 }
             }
