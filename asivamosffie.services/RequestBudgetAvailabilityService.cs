@@ -1664,6 +1664,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
                     disponibilidadPresupuestalOld.NumeroContrato = pDisponibilidadPresupuestal.NumeroContrato;
+                    disponibilidadPresupuestalOld.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
                 }
 
                 await _context.SaveChangesAsync();
