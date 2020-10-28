@@ -1634,7 +1634,9 @@ namespace asivamosffie.services
                     pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo; 
                     pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
                     pDisponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", _context.DisponibilidadPresupuestal.Count((r => r.NumeroSolicitud.Contains("DE"))));
-                    pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
+                  
+                    if(pDisponibilidadPresupuestal.ValorAportante != null)
+                         pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
 
                     _context.DisponibilidadPresupuestal.Add(pDisponibilidadPresupuestal);
                 }
@@ -1695,8 +1697,8 @@ namespace asivamosffie.services
                      string.IsNullOrEmpty(pDisponibilidadPresupuestal.Objeto)
                   || string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroRadicadoSolicitud)
                   || string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroContrato)
-                  || pDisponibilidadPresupuestal.AportanteId == 0
-                  || pDisponibilidadPresupuestal.ValorAportante == 0 )
+                  || pDisponibilidadPresupuestal.AportanteId == null
+                  || pDisponibilidadPresupuestal.ValorAportante == null )
             { 
                 return false;
             }
