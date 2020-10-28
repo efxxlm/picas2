@@ -1,4 +1,4 @@
-<div class="container text-center">
+<div class="container text-center" *ngIf="disponibilidadPresupuestal">
     <div class="text-right">
         <a routerLink="/solicitarDisponibilidadPresupuestal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -16,27 +16,27 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p *ngIf="this.tipoSolicitudCodigo=='1'">
+            <p *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudExpensas">
                 <strong>Tipo de solicitud DDP especial:</strong>
                 Expensas
             </p>
-            <p *ngIf="this.tipoSolicitudCodigo=='2'">
+            <p *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudOtrosCostos">
                 <strong>Tipo de solicitud DDP especial:</strong>
                 Otros costos/Servicios
             </p>
             <p>
                 <strong>Objeto:</strong>
             </p>
-            <div [innerHtml]="this.objeto"></div>
+            <div [innerHtml]="disponibilidadPresupuestal.objeto"></div>
             <p>
                 <strong>Número de radicado de la solicitud:</strong>
-                {{this.numeroRadicadoSolicitud}}
+                {{disponibilidadPresupuestal.numeroRadicadoSolicitud}}
             </p>
-            <div *ngIf="this.tipoSolicitudCodigo=='1'">
+
+            <div *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudExpensas">
                 <h2 class="card-subTitle backgrondGris">Expensas</h2>
                 <p>
                     <strong>¿Cuenta con carta de autorización de la ET?:</strong>
-                    {{this.cartaAutorizacionString}}
                 </p>
                 <p>
                     <strong>Departamento:</strong>
@@ -48,37 +48,32 @@
                 </p>
                 <p>
                     <strong>Llave MEN:</strong>
-                    {{this.llaveMen}}
                 </p>
             </div>
-            <div *ngIf="this.tipoSolicitudCodigo=='2'">
+
+            <div *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudOtrosCostos">
                 <h2 class="card-subTitle backgrondGris">Otros costos/Servicios</h2>
-                <p>
-                    <strong>Número de contrato:</strong>
-                    1381
-                </p>
+                <p><strong>Número de contrato:</strong> {{ disponibilidadPresupuestal.numeroContrato }} </p>
             </div>
         </mat-card-content>
     </mat-card>
-    <div *ngIf="this.tipoSolicitudCodigo=='1'">
+
+    <div *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudExpensas">
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
-                   {{this.llaveMen}}
+                    Llave men - por integrar
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content align="left">
                 <p>
                     <b>Tipo de intervención:</b>
-                    {{this.tipoIntervencion}}
                 </p>
                 <p>
                     <b>Nombre de la I.E:</b>
-                    {{this.nombreIE}}
                 </p>
                 <p>
                     <b>Sede:</b>
-                    {{this.sede}}
                 </p>
             </mat-card-content>
         </mat-card>
@@ -95,16 +90,17 @@
                 </p>
                 <p>
                     <b>Valor:</b>
-                    {{this.valorSolicitud}}
+                    {{disponibilidadPresupuestal.valorSolicitud}}
                 </p>
             </mat-card-content>
         </mat-card>
     </div>
-    <div *ngIf="this.tipoSolicitudCodigo=='2'">
+
+    <div *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudOtrosCostos">
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
-                    1381
+                    {{ disponibilidadPresupuestal.numeroContrato }}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content align="left">
@@ -121,9 +117,7 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content align="left">
-                1. Los especialistas en el tema informan que las raices de estos árboles son aproximadamente de7 metros
-                de profundidad lo cual hace que la
-                extracción sea más complicada y requieren maquinaria especial.
+                <section [innerHTML]="innerObservacion( disponibilidadPresupuestal.limitacionEspecial ? disponibilidadPresupuestal.limitacionEspecial : 'No tiene observaciones de limitación especial' )"></section>
             </mat-card-content>
         </mat-card>
         <mat-card class="shipping-card mainGris">
@@ -143,11 +137,12 @@
                 </p>
                 <p>
                     <b>Valor:</b>
-                   {{this.valorSolicitud}}
+                   {{ disponibilidadPresupuestal.valorAportante | currency:' ':'symbol-narrow':'.0-0' }}
                 </p>
             </mat-card-content>
         </mat-card>
     </div>
+
     <mat-card class="shipping-card mainGris">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text textoGris">
@@ -155,7 +150,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            http://www.ffie.com
+            {{ disponibilidadPresupuestal.urlSoporte }}
         </mat-card-content>
     </mat-card>
 </div>
