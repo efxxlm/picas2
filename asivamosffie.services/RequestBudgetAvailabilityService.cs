@@ -81,17 +81,27 @@ namespace asivamosffie.services
                                                  .ThenInclude(r => r.DisponibilidadPresupuestal)
                .FirstOrDefaultAsync();
               
-                foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto)
+                foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r=> !(bool)r.Eliminado))
                 {
-                    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+                    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r=> !(bool)r.Eliminado))
                     {
                         decimal? SaldoFuentesFinanciacion, SaldoDisponibilidadPresupuestal = 0;
-                        SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Sum(r => r.ValorFuente);
-                        SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Sum(r => r.ValorAportante);
+                        SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Where(r=> !(bool)r.Eliminado).Sum(r => r.ValorFuente);
+                        SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorAportante);
 
-                        ProyectoAportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
+                        ProyectoAportante.Aportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
                     }
-                } 
+                }
+
+            //foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
+            //{
+            //    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
+            //    {
+            //        ProyectoAportante.Aportante.FuenteFinanciacion = null;
+            //        ProyectoAportante.Aportante.DisponibilidadPresupuestal = null;
+            //    }
+            //}
+
             return Contrato;
         }
 
