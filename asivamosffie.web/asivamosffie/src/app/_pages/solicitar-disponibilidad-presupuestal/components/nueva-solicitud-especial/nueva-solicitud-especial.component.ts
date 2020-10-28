@@ -304,8 +304,6 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           case "2":
 
             let disponibilidadPresupuestal: DisponibilidadPresupuestal = {
-
-              disponibilidadPresupuestalId: this.addressForm.get('disponibilidadPresupuestalId').value,
               tipoSolicitudCodigo: tipoDDP.codigo,
               objeto: this.addressForm.get('objeto').value,
               numeroRadicadoSolicitud: this.addressForm.get('numeroRadicado').value,
@@ -317,7 +315,10 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
             console.log( disponibilidadPresupuestal );
             this.budgetAvailabilityService.createUpdateDisponibilidaPresupuestalEspecial( disponibilidadPresupuestal )
               .subscribe(
-                response => this.openDialog( '', response.message ),
+                response => {
+                  this.openDialog( '', response.message );
+                  this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial']);
+                },
                 err => this.openDialog( '', err.message )
               )
 
