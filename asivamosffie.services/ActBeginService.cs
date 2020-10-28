@@ -114,8 +114,12 @@ namespace asivamosffie.services
             {
                 contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                 contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
-                //contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();
-                contrato.EstadoActaFase2 = "14";
+                //contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();                                                  
+                     
+                if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+                    contrato.EstadoActaFase2 = "14"; //14  Con acta preliminar generada
+                else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                    contrato.EstadoActaFase2 = "2";       //2   Con acta preliminar generada
 
                 contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
                  contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
