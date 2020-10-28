@@ -10,6 +10,7 @@ namespace asivamosffie.model.APIModels
         public int ContratoId { get; set; }                      
         public string FechaAprobacionRequisitos { get; set; }
         public string NumeroContratoObra { get; set; }
+        public string EstadoActaCodigo { get; set; }
         public string  EstadoActa { get; set; }
         public string EstadoVerificacion { get; set; }
         public string TipoContrato { get; set; }
