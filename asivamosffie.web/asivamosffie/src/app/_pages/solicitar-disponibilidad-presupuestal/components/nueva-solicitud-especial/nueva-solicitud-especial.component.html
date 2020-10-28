@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="margin-bottom: 2em;">
     <div class="text-right">
         <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial" mat-button color="primary"
             class="btn-regresar">
@@ -115,7 +115,7 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="departemento" (selectionChange)="changeDepartamento()">
-                                            <mat-option *ngFor="let departamento of listaDepartamento"
+                                            <mat-option #departamento *ngFor="let departamento of listaDepartamento"
                                                 [value]="departamento">
                                                 {{ departamento.descripcion }}
                                             </mat-option>
@@ -134,7 +134,7 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="municipio">
-                                            <mat-option *ngFor="let tipoSolicitud of listaMunicipio"
+                                            <mat-option #municipio *ngFor="let tipoSolicitud of listaMunicipio"
                                                 [value]="tipoSolicitud">
                                                 {{ tipoSolicitud.descripcion }}
                                             </mat-option>
@@ -227,7 +227,7 @@
             </mat-card-content>
         </mat-card>
 
-        <section>
+        <section *ngIf="contrato">
             <div class="d-flex align-items-center">
                 <div class="text-area-quill">
                   <label for="justificacion" class="text-area-quill--label" style="color: #174193;">Limitación especial</label>
@@ -259,9 +259,9 @@
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="tipoAportante">
-                                        <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
-                                            [value]="tipoSolicitud['value']">
-                                            {{ tipoSolicitud['nombre'] }}
+                                        <mat-option *ngFor="let tipoSolicitud of tipoAportantes"
+                                            [value]="tipoSolicitud.value">
+                                            {{ tipoSolicitud.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -276,11 +276,12 @@
                                 <label class="label-left" for="nombreAportante">Nombre del aportante</label>
                             </div>
                             <div class="col">
+
                                 <mat-form-field class="select-width">
-                                    <mat-select formControlName="nombreAportante" (selectionChange)="changeAportante()">
-                                        <mat-option *ngFor="let tipoSolicitud of listaAportante"
-                                            [value]="tipoSolicitud">
-                                            {{ tipoSolicitud.nombreAportante }}
+                                    <mat-select formControlName="nombreAportante">
+                                        <mat-option *ngFor="let aportante of nombreAportantes"
+                                            [value]="aportante">
+                                            {{ aportante.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -296,16 +297,21 @@
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput #valor type="text" maxlength="20" formControlName="valor">
+                                    <input  matInput
+                                            #valor
+                                            maxlength="28"
+                                            formControlName="valor"
+                                            currencyMask
+                                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                                 </mat-form-field>
-                                <span class="contador">{{20 - valor.value.length}}</span>
+                                <span class="contador" *ngIf="addressForm.get( 'valor' ).value.toString() !== null">{{20 - addressForm.get( 'valor' ).value.toString().length }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </mat-card-content>
         </mat-card>
-        <div class="row px-5em animatedDown" *ngIf="addressForm.get( 'valor' ).value !== null && addressForm.get( 'valor' ).value.length > 0">
+        <div class="row px-5em animatedDown" *ngIf="addressForm.get( 'valor' ).value !== null && addressForm.get( 'valor' ).value > 0">
             <div class="pr-1">
                 <label class="label-left" for="url">Url con soporte</label>
             </div>

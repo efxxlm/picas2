@@ -78,7 +78,8 @@ export class FormContratacionComponent implements OnInit {
       observaciones    : [ null ],
       minuta           : [ null ],
       minutaName       : [ null ],
-      minutaFile       : [ null ]
+      minutaFile       : [ null ],
+      rutaDocumento    : [ null ]
     })
   };
 
@@ -99,7 +100,8 @@ export class FormContratacionComponent implements OnInit {
         this.form.reset({
           fechaEnvioTramite: contratacion.fechaEnvioDocumentacion,
           observaciones: contratacion.observaciones ? ( contratacion.observaciones.length > 0 ? contratacion.observaciones : null ) : null,
-          minutaName: rutaDocumento
+          minutaName: rutaDocumento,
+          rutaDocumento: contratacion.rutaMinuta !== null ? contratacion.rutaMinuta : null
         });
 
         for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
@@ -130,9 +132,10 @@ export class FormContratacionComponent implements OnInit {
       } );
   };
 
-  getDocumento ( sesionComiteId: number, nombreDocumento: string ) {
-    console.log( sesionComiteId, nombreDocumento );
-  }
+  getDocumento ( nombreDocumento: string ) {
+    const URL = nombreDocumento;
+    window.open( URL, null );
+  };
 
   guardar () {
     console.log( this.form );

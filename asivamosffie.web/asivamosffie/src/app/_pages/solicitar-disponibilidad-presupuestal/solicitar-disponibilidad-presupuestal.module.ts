@@ -19,6 +19,7 @@ import { TablaCrearSolicitudadministrativaComponent } from './components/tabla-c
 import { DetalleDisponibilidadPresupuestalComponent } from './components/detalle-disponibilidad-presupuestal/detalle-disponibilidad-presupuestal.component';
 import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-especial/ver-detalle-ddp-especial.component';
 import { VerDetalleDdpAdministrativoComponent } from './components/ver-detalle-ddp-administrativo/ver-detalle-ddp-administrativo.component'
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { VerDetalleDdpAdministrativoComponent } from './components/ver-detalle-d
     ReactiveFormsModule,
     FormsModule,
     SolicitarDisponibilidadPresupuestalRoutingModule,
+    CurrencyMaskModule,
     QuillModule.forRoot()
   ]
 })

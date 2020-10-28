@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,6 +26,13 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   seRealizoPeticion: boolean = false;
   proyecto: Proyecto;
   contrato: any;
+  tipoAportante = {
+    aportanteFfie: 6,
+    aportanteEt: 9,
+    aportanteTercero: 10
+  };
+  tipoAportantes: any[] = [];
+  nombreAportantes: any[] = [];
 
   addressForm = this.fb.group({
     disponibilidadPresupuestalId:[],
@@ -43,7 +50,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     tipoAportante: [null, Validators.required],
     observacionLimiteEspecial: [ null ],
     nombreAportante: [null, Validators.required],
-    valor: [ '', Validators.compose([
+    valor: [ 0, Validators.compose([
       Validators.minLength(4), Validators.maxLength(20)])],
     url: [null, Validators.required]
   });
@@ -73,13 +80,80 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     private router: Router, 
     private activatedRoute: ActivatedRoute,
 
-  ) { }
+  ) {
+    this.addressForm.get( 'llaveMEN' ).valueChanges
+      .pipe(
+        debounceTime( 2000 )
+      )
+      .subscribe(
+        () => this.buscarProyecto( 0 )
+      );
 
-  cargarRegistro( id: number )
-  {
+    this.addressForm.get( 'numeroContrato' ).valueChanges
+      .pipe(
+        debounceTime( 2000 )
+      )
+      .subscribe( response => {
+      
+        if ( response.length >= 3 ) {
+          this.budgetAvailabilityService.getNumeroContrato( response )
+            .subscribe(
+              ( response: any[] ) => {
+                if ( response === undefined ) {
+                  this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' );
+                  return;
+                };
+                this.contrato = response;
+                for ( let contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
+                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteFfie ) {
+                    this.tipoAportantes.push( { value: this.tipoAportante.aportanteFfie, nombre: 'FFIE' } );
+                  };
+                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteEt ) {
+                    //por integrar
+                  };
+                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteTercero ) {
+                    //por integrar
+                  }
+                }
+                console.log( this.contrato );
+              },
+              err => this.openDialog( '', err.message )
+            );
+        }
+
+      } );
+
+      this.addressForm.get( 'tipoAportante' ).valueChanges
+        .subscribe( value => {
+          this.nombreAportantes = [];
+          this.contrato.contratacion.contratacionProyecto.forEach( contratacion => {
+            if ( contratacion.proyecto.proyectoAportante[0].aportante.tipoAportanteId === value ) {
+              this.nombreAportantes.push( { value, nombre: 'FFIE', aportanteId: contratacion.proyecto.proyectoAportante[0].aportante.cofinanciacionAportanteId } );
+            };
+          } );
+        } )
+  }
+
+  ngOnInit(): void {
+    forkJoin([
+      this.commonService.listaTipoDDPEspecial(),
+      this.commonService.listaDepartamentos(),
+
+    ])
+      .subscribe(respuesta => {
+        this.tipoSolicitudArray = respuesta[0];
+        console.log( this.tipoSolicitudArray );
+        this.listaDepartamento = respuesta[1];
+        this.activatedRoute.snapshot.params.id
+        if ( this.activatedRoute.snapshot.params.id !== '0' ) {
+          this.getRegistro( this.activatedRoute.snapshot.params.id );
+        }
+      })
+  };
+
+  getRegistro ( id: number ) {
     this.budgetAvailabilityService.getDetailInfoAdditionalById( id )
       .subscribe( disponibilidad => {
-
         let tipoSeleccionado: Dominio = this.tipoSolicitudArray.find( t => t.codigo == disponibilidad.tipoSolicitudCodigo );
 
         console.log( disponibilidad );
@@ -91,60 +165,11 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         this.addressForm.get('cartaAutorizacionET').setValue( disponibilidad.cuentaCartaAutorizacion );
 
         if (disponibilidad.disponibilidadPresupuestalProyecto.length > 0){
+          this.addressForm.get( 'departemento' ).setValue( disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'departamentoObj' ] );
+          this.addressForm.get( 'municipio' ).setValue( disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'municipioObj' ] );
           this.addressForm.get('disponibilidadPresupuestalProyectoId').setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId);
-          this.addressForm.get('llaveMEN').setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen)
-          this.buscarProyecto( true, disponibilidad.aportanteId );
+          this.addressForm.get('llaveMEN').setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen);
         }
-
-
-      });
-  }
-
-  ngOnInit(): void {    
-
-    forkJoin([
-      this.commonService.listaTipoDDPEspecial(),
-      this.commonService.listaDepartamentos(),
-
-    ]).subscribe(respuesta => {
-      this.tipoSolicitudArray = respuesta[0];
-      this.listaDepartamento = respuesta[1];
-
-      this.activatedRoute.params.subscribe( parametros => {
-        if ( parametros.id != "0" )
-          this.cargarRegistro( parametros.id );
-      })
-
-    })
-
-    this.addressForm.get( 'llaveMEN' ).valueChanges
-      .pipe(
-        debounceTime( 2000 )
-      )
-      .subscribe(
-        () => this.buscarProyecto( false, 0 )
-      );
-
-    this.addressForm.get( 'numeroContrato' ).valueChanges
-      .pipe(
-        debounceTime( 2000 )
-      )
-      .subscribe( response => {
-        
-        if ( response.length >= 3 ) {
-          this.budgetAvailabilityService.getNumeroContrato( response )
-            .subscribe(
-              ( response: any[] ) => {
-                if ( response.length === 0 ) {
-                  this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' );
-                  return;
-                };
-                this.contrato = response[0];
-                console.log( this.contrato );
-              }
-            );
-        }
-
       } )
   };
 
@@ -155,7 +180,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     });
   }
 
-  buscarProyecto( esModoEdit: boolean, aportanteId: number ) {
+  buscarProyecto( aportanteId: number ) {
 
     this.proyectoEncontrado = false;
     this.proyecto = {};
@@ -188,13 +213,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                     this.openDialog('', '<b>El proyecto no tiene una entidad territorial como aportante.<br><br>La solicitud no se puede completar.</b>');
                   };
 
-                  if ( esModoEdit === true ){
-
-                    let aportanteNombreSeleccionado: ListAportantes = this.listaAportante.find( t => t.cofinanciacionAportanteId == aportanteId ); 
-                    this.addressForm.get('nombreAportante').setValue( aportanteNombreSeleccionado );
-                    this.changeAportante();
-                  };
-
+                  let aportanteNombreSeleccionado: ListAportantes = this.listaAportante.find( t => t.cofinanciacionAportanteId == aportanteId ); 
+                  this.addressForm.get('nombreAportante').setValue( aportanteNombreSeleccionado );
 
                 })
             };
@@ -229,12 +249,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
+    let textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
-  }
-
-  changeAportante() {
-    this.addressForm.get('valor').setValue(this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.valorAporte : null);
   }
 
   onSubmit() {
@@ -267,8 +283,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
             if (this.proyecto){
               let disponibilidadPresupuestalProyecto: DisponibilidadPresupuestalProyecto = {
                 disponibilidadPresupuestalProyectoId: this.addressForm.get('disponibilidadPresupuestalProyectoId').value,
-                proyectoId: this.proyecto.proyectoId,
-                
+                proyectoId: this.proyecto.proyectoId
               }
 
               disponibilidad.disponibilidadPresupuestalProyecto.push( disponibilidadPresupuestalProyecto );
@@ -286,6 +301,27 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
 
             break;
+          case "2":
+
+            let disponibilidadPresupuestal: DisponibilidadPresupuestal = {
+
+              disponibilidadPresupuestalId: this.addressForm.get('disponibilidadPresupuestalId').value,
+              tipoSolicitudCodigo: tipoDDP.codigo,
+              objeto: this.addressForm.get('objeto').value,
+              numeroRadicadoSolicitud: this.addressForm.get('numeroRadicado').value,
+              aportanteId: this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.aportanteId : null,
+              valorAportante: this.addressForm.get('valor').value ? this.addressForm.get('valor').value : null,
+              urlSoporte: this.addressForm.get('url').value ? this.addressForm.get('url').value : null,
+              limitacionEspecial: this.addressForm.get( 'observacionLimiteEspecial' ).value ? this.addressForm.get( 'observacionLimiteEspecial' ).value : null
+            }
+            console.log( disponibilidadPresupuestal );
+            this.budgetAvailabilityService.createUpdateDisponibilidaPresupuestalEspecial( disponibilidadPresupuestal )
+              .subscribe(
+                response => this.openDialog( '', response.message ),
+                err => this.openDialog( '', err.message )
+              )
+
+           break;  
         }
 
 

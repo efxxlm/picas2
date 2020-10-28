@@ -50,6 +50,7 @@ export class FormContratacionComponent implements OnInit {
     this.contratosContractualesSvc.getContratacionId( id )
       .subscribe( ( resp: any ) => {
         this.contratacion = resp;
+        console.log( this.contratacion );
         if ( resp.contrato.length > 0 ) {
           this.form.reset({
             numeroContrato: resp.contrato[0].numeroContrato || '',
@@ -57,7 +58,7 @@ export class FormContratacionComponent implements OnInit {
             fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
             fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
             fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
-            observaciones: this.textoLimpioMessage( resp.contrato[0].observaciones ) || null,
+            observaciones: resp.contrato[0].observaciones || null,
             rutaDocumento: resp.contrato[0].rutaDocumento || null
           });
         };
@@ -72,9 +73,11 @@ export class FormContratacionComponent implements OnInit {
   };
 
   innerObservacion ( observacion: string ) {
-    const observacionHtml = observacion.replace( '"', '' );
-    return observacionHtml;
-  }
+    if ( observacion !== null ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return observacionHtml;
+    };
+  };
 
   getEstadoCodigo () {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {

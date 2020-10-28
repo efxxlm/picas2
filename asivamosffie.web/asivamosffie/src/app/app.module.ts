@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { DomSafePipe } from './_pipes/dom-safe.pipe';
 //import { LoaderInterceptor } from './_helpers/loader.interceptor';
 
 export const customCurrencyMaskConfig = {

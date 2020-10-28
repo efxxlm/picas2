@@ -24,7 +24,8 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
   estadoCodigos = {
-    enviadaFiduciaria: '4'
+    enviadaFiduciaria: '4',
+    enRevision: '2'
   }
 
   constructor ( private routes: Router,
@@ -38,9 +39,11 @@ export class TablaSinRegistroContratoComponent implements OnInit {
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
       .subscribe( ( resp: any ) => {
-        
         for ( let contrataciones of resp ) {
           if ( contrataciones.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
+            this.dataTable.push( contrataciones );
+          };
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enRevision ) {
             this.dataTable.push( contrataciones );
           };
         };

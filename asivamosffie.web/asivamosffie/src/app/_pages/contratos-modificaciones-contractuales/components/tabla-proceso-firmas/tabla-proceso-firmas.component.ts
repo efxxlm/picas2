@@ -49,25 +49,27 @@ export class TablaProcesoFirmasComponent implements OnInit {
       .subscribe( ( resp: any ) => {     
         let conTrue = 0;
         let conFalse = 0;
-        let enFirmaFiduciaria = 0;
-        let registrado = 0;
+        let firmado = 0;
+        let firmaContratista = 0;
         for ( let contrataciones of resp ) {
-          if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
             this.dataTable.push( contrataciones );
-          } else if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.firmado ) {
+          } else if ( contrataciones.estadoCodigo === this.estadoCodigos.firmado ) {
             this.dataTable.push( contrataciones );
-          } else if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaContratista ) {
+            firmado++;
+          } else if ( contrataciones.estadoCodigo === this.estadoCodigos.enFirmaContratista ) {
             this.dataTable.push( contrataciones );
+            firmaContratista++;
           };
         };
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
         };
-        if ( registrado === this.dataTable.length ) {
-          this.estadoAcordeon.emit( 'completo' );
-        } else if ( enFirmaFiduciaria === this.dataTable.length ) {
+        if ( firmaContratista === this.dataTable.length ) {
           this.estadoAcordeon.emit( 'sin-diligenciar' );
-        } else if ( registrado < this.dataTable.length || enFirmaFiduciaria < this.dataTable.length ) {
+        } else if ( firmado === this.dataTable.length ) {
+          this.estadoAcordeon.emit( 'completo' );
+        } else if ( firmaContratista < this.dataTable.length || firmado < this.dataTable.length ) {
           this.estadoAcordeon.emit( 'en-proceso' );
         };
 

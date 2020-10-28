@@ -84,4 +84,8 @@ export class BudgetAvailabilityService {
     return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetListContatoByNumeroContrato?pNumero=${ numeroContrato }` );
   }
 
+  createUpdateDisponibilidaPresupuestalEspecial ( pDisponibilidadPresupuestal: any ) {
+    return this.http.post<Respuesta>( `${ environment.apiUrl }/RequestBudgetAvailability/CreateUpdateDisponibilidaPresupuestalEspecial`, pDisponibilidadPresupuestal )
+  };
+
 }

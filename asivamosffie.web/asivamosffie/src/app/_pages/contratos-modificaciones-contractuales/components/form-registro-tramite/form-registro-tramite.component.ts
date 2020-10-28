@@ -107,10 +107,11 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
 
   guardar () {
 
-    if ( this.dataFormulario.invalid ) {
-      this.openDialog( 'Falta registrar información.', '' );
+    if ( this.dataFormulario.get( 'numeroContrato' ).value.length === 0 ) {
+      this.openDialog( '', 'Falta registrar información.' );
+      this.dataFormulario.get( 'numeroContrato' ).markAsTouched();
       return;
-    };
+    }
 
     let pContrato = new FormData();
     pContrato.append( 'contratacionId', `${ this.contratacionId }` );
