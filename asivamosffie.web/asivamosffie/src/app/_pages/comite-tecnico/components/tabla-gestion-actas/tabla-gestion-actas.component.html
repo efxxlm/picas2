@@ -60,6 +60,12 @@
           Enviar para aprobación
         </button>
 
+        <a [routerLink]="['crearActa', element.id]" mat-raised-button
+          *ngIf="element.registroCompleto && (element.estadoActa == 'Sin Acta' || element.estadoActa == 'Devuelta')"
+          color="accent" 
+          class="btn-table">
+          Ver detalle/editar</a>
+
         <button type="button" *ngIf="element.estadoActa == 'Aprobada'" (click)="descargarActa(element.id)"
           mat-raised-button color="accent" class="btn-table">
           Descargar acta aprobada
