@@ -306,6 +306,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
             let disponibilidadPresupuestal: DisponibilidadPresupuestal = {
               tipoSolicitudCodigo: tipoDDP.codigo,
               objeto: this.addressForm.get('objeto').value,
+              numeroContrato: this.contrato.numeroContrato,
               numeroRadicadoSolicitud: this.addressForm.get('numeroRadicado').value,
               aportanteId: this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.aportanteId : null,
               valorAportante: this.addressForm.get('valor').value ? this.addressForm.get('valor').value : null,
