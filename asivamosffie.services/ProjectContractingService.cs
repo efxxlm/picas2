@@ -140,6 +140,7 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetAllContratacionByContratacionId(int pContratacionId)
         {
+            try{
             return await _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
                //para logica plantilla ficha contratacion
@@ -181,6 +182,9 @@ namespace asivamosffie.services
                     .ThenInclude(r => r.ComponenteAportante)
                         .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
               .FirstOrDefaultAsync();
+            }catch(Exception ex ){
+                throw ex;
+            }
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)

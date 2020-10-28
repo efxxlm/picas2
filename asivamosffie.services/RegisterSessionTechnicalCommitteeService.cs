@@ -2448,7 +2448,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.CODIGO_DANE_IE:
-                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, IntitucionEducativa.CodigoDane.ToString());
+                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, IntitucionEducativa.CodigoDane );
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SEDE:
@@ -2456,19 +2456,11 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.CODIGO_DANE_SEDE:
-                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, Sede.CodigoDane.ToString());
+                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, Sede.CodigoDane);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_ALCANCE:
-                            //Predio Principal
-
-                            //List<Predio> ListPredios = proyecto.Proyecto.ProyectoPredio.Select(r => r.Predio).ToList();
-                            //ListPredios.Add(proyecto.Proyecto.PredioPrincipal); 
-                            //var PrediosOrdenadosPorTipoPredio = ListPredios.GroupBy(x => x.TipoPredioCodigo)
-                            //           .Select(x => new {
-                            //               Espacio = x.Key,
-                            //               Cantidad = x.Count()});
-
+            
                             foreach (var infraestructura in proyecto.Proyecto.InfraestructuraIntervenirProyecto)
                             {
                                 RegistrosAlcance += RegistroAlcance;
@@ -2479,32 +2471,6 @@ namespace asivamosffie.services
                                 RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_CANTIDAD]", infraestructura.Cantidad.ToString());
                             }
 
-                            //Dictionary<string, int> DictionaryRegistrosAlcance = new Dictionary<string, int>();
-
-                            //foreach (var ListRegistrosAlcance in proyecto.Proyecto.ProyectoPredio.GroupBy(predio => predio.Predio.TipoPredioCodigo)
-                            //       .Select(group => new
-                            //       {
-                            //           Espacio = group.Key,
-                            //           Cantidad = group.Count()
-                            //       })
-                            //       .OrderBy(x => x.Cantidad)) ;
-                            //          DictionaryRegistrosAlcance.Add(ListRegistrosAlcance.Espacio, ListRegistrosAlcance.Cantidad);
-
-                            //Agregar el predio principal a los otros predios relacionados con el proyecto 
-                            //RegistrosAlcance += RegistroAlcance;
-
-                            //RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_ESPACIOS_A_INTERVENIR]", ListaParametricas.Where(r => r.Codigo == proyecto.Proyecto.PredioPrincipal.TipoPredioCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Espacios_Intervenir).FirstOrDefault().Nombre);
-                            //RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_CANTIDAD]", "1");
-
-                            //// Lista Predios 
-                            //foreach (var predio in proyecto.Proyecto.ProyectoPredio)
-                            //{
-                            //    RegistrosAlcance += RegistroAlcance;
-
-                            //    RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_ESPACIOS_A_INTERVENIR]", ListaParametricas.Where(r => r.Codigo == predio.Predio.TipoPredioCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Espacios_Intervenir).FirstOrDefault().Nombre);
-                            //    RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_CANTIDAD]", "1");
-
-                            //}
                             DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, RegistrosAlcance);
                             break;
 
@@ -2666,7 +2632,7 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.FechaTramite != null ? ((DateTime)pContratacion.FechaTramite).ToString("yyyy-MM-dd") : " ");
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.FechaTramite != null ? ((DateTime)pContratacion.FechaTramite).ToString("dd-MM-yyyy") : " ");
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.OPCION_POR_CONTRATAR:
@@ -2674,7 +2640,17 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.VALOR_TOTAL_DE_LA_SOLICITUD:
-                        decimal? ValorTotal = pContratacion.ContratacionProyecto.Sum(r => r.Proyecto.ValorTotal);
+                        decimal? ValorTotal = 0;
+                        pContratacion.ContratacionProyecto.ToList().ForEach( cp => {
+                            cp.ContratacionProyectoAportante.ToList().ForEach( cpa => {
+                                cpa.ComponenteAportante.ToList().ForEach( ca => {
+                                    ca.ComponenteUso.ToList().ForEach( cu => {
+                                        ValorTotal = ValorTotal + cu.ValorUso;
+                                    });
+                                });
+                            });
+                        });
+                        //decimal? ValorTotal = pContratacion.ContratacionProyecto.Sum(r => r.Proyecto.ValorTotal);
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, "$" + String.Format("{0:n0}", ValorTotal));
                         break;
 
@@ -2906,7 +2882,7 @@ namespace asivamosffie.services
                 PagesCount = true,
                 HtmlContent = pPlantilla.Contenido,
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18, },
                 FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
             };
 
