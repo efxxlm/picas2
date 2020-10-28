@@ -123,7 +123,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -1880,10 +1879,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DisponibilidadPresupuestal>(entity =>
             {
-                entity.Property(e => e.AportanteId)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
-
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -1961,6 +1956,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorAportante).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
+
+                entity.HasOne(d => d.Aportante)
+                    .WithMany(p => p.DisponibilidadPresupuestal)
+                    .HasForeignKey(d => d.AportanteId)
+                    .HasConstraintName("FK_DisponibilidadPresupuestal_Aportante");
 
                 entity.HasOne(d => d.Contratacion)
                     .WithMany(p => p.DisponibilidadPresupuestal)

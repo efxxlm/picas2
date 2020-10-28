@@ -61,18 +61,19 @@ namespace asivamosffie.services
                 .ToListAsync();
 
 
-            //foreach (var  Contrato in ListContrato)
-            //{
-            //    foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto)
-            //    {
-            //        foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
-            //        {
-            //            decimal SaldoFuentesFinanciacion = _context.FuenteFinanciacion.Where(r=> r.AportanteId == )
-                       
-            //            ProyectoAportante.SaldoAportanteFuenteFinanciacion
-            //        }
-            //    }
-            //}
+            foreach (var Contrato in ListContrato)
+            {
+                foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto)
+                {
+                    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+                    {
+                        decimal? SaldoFuentesFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == ProyectoAportante.AportanteId).Sum(r => r.ValorFuente);
+                       // decimal? SaldoDisponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r=> r.AportanteId == ProyectoAportante.AportanteId
+
+                       //  ProyectoAportante.SaldoAportanteFuenteFinanciacion
+                    }
+                }
+            }
 
             return ListContrato;
         }
