@@ -446,7 +446,7 @@ namespace asivamosffie.services
                                                 .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
                                                     .ThenInclude(r => r.Proyecto)
-                                                .FirstOrDefaultAsync();
+                                                .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();
 
                 foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
                 {
@@ -814,7 +814,7 @@ namespace asivamosffie.services
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
 
-                            }).ToListAsync();
+                            }).OrderByDescending(r=> r.DisponibilidadPresupuestalId).ToListAsync();
         }
 
         public async Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa()
@@ -835,7 +835,7 @@ namespace asivamosffie.services
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
 
-                            }).ToListAsync();
+                            }).OrderByDescending(r => r.DisponibilidadPresupuestalId).ToListAsync();
         }
 
         //Solicitudes de comite tecnico
@@ -1633,7 +1633,7 @@ namespace asivamosffie.services
                     pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
                     pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo; 
                     pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
-                    pDisponibilidadPresupuestal.NumeroSolicitud = contrato.Contratacion.NumeroSolicitud;
+                    pDisponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", _context.DisponibilidadPresupuestal.Count((r => r.NumeroSolicitud.Contains("DE"))));
                     pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
 
                     _context.DisponibilidadPresupuestal.Add(pDisponibilidadPresupuestal);
