@@ -40,9 +40,9 @@
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con validacion del supervisor'"
                         (click)="this.enviarActaParaFirma(element.contratoId)">Enviar acta para firmar</button>
-                    <button mat-raised-button color="accent" class="btn-table"
+                    <!--<button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con acta preliminar generada'"
-                        (click)="this.cambiarEstadoSupervisor(element.contratoId)">Enviar al supervisor</button>
+                        (click)="this.cambiarEstadoSupervisor(element.contratoId)">Enviar al supervisor</button>-->
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Enviada por el supervisor'"
                         (click)="this.cambiarEstadoInterventor(element.contratoId,element.tieneObservacionesSupervisor)">Enviar
