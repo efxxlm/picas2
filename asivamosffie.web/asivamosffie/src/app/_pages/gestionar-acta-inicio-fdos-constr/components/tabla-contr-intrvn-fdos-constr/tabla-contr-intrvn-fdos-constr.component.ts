@@ -118,16 +118,9 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   }
   cambiarEstadoInterventor(id, tieneObs) {
     if (localStorage.getItem("origin") == "interventoria") {
-      if (tieneObs == false) {
         this.services.CambiarEstadoActa(id, "5", "usr2").subscribe(data => {
           this.ngOnInit();
         });
-      }
-      else {
-        this.services.CambiarEstadoActa(id, "4", "usr2").subscribe(data => {
-          this.ngOnInit();
-        });
-      }
     }
   }
   enviarActaParaFirma(id) {
@@ -135,6 +128,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
       this.services.CambiarEstadoActa(id, "6", "usr2").subscribe(data => {
         this.ngOnInit();
       });
+      this.descargarActaDesdeTabla(id);
     }
   }
   cargarActaSuscrita(id) {

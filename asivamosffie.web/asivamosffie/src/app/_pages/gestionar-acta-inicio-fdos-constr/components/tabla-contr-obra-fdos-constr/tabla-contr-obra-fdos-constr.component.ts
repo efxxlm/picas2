@@ -140,7 +140,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
         this.ngOnInit();
       });
     }
-    this.services.EnviarCorreoSupervisor(id).subscribe(resp=>{
+    this.services.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
 
     });
   }

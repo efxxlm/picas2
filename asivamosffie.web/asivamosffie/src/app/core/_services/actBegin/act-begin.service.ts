@@ -49,8 +49,8 @@ export class ActBeginService {
   CreateEditContratoObservacion(contratoObs:ContratoObservacion){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateEditContratoObservacion`, contratoObs);
   }
-  EnviarCorreoSupervisor(pContratoId: number){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EnviarCorreoSupervisor?pContratoId=${pContratoId}`,null);
+  EnviarCorreoSupervisorContratista(pContratoId: number, pPerfilId: number){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EnviarCorreoSupervisorContratista?pContratoId=${pContratoId}?pPerfilId=${pPerfilId}`,null);
 
   }
 }
