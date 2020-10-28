@@ -1926,7 +1926,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Objeto)
-                    .IsRequired()
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 

@@ -1615,13 +1615,27 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateUpdateDisponibilidaPresupuestalEspecial(DisponibilidadPresupuestal pDisponibilidadPresupuestal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_DDP, (int)EnumeratorTipoDominio.Acciones);
-  
+
+
+            Contrato contrato = _context.Contrato
+                .Where(r => r.NumeroContrato == pDisponibilidadPresupuestal.NumeroContrato)
+                .Include(r => r.Contratacion)
+                .FirstOrDefault();
             try
             {
                 if (pDisponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
                 {
                     pDisponibilidadPresupuestal.FechaCreacion = DateTime.Now;
-                    pDisponibilidadPresupuestal.Eliminado = false;
+                    pDisponibilidadPresupuestal.Eliminado = false;  
+                    pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
+                    pDisponibilidadPresupuestal.RegistroCompleto = false;
+
+                    pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
+                    pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo; 
+                    pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
+                    pDisponibilidadPresupuestal.NumeroSolicitud = contrato.Contratacion.NumeroSolicitud;
+                    pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
+
                     _context.DisponibilidadPresupuestal.Add(pDisponibilidadPresupuestal);
                 }
                 else
