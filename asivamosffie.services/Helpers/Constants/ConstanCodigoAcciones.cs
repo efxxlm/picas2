@@ -105,5 +105,7 @@
 
         public const string Eliminar_Compromisos_Solicitud = "125";
         public const string Eliminar_Compromisos_Tema = "126";
+
+        public const string Crear_Editar_DDP = "127";
     }
 }

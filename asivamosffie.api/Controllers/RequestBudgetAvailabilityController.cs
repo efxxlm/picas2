@@ -30,7 +30,7 @@ namespace asivamosffie.api.Controllers
         [Route("GetListContatoByNumeroContrato")]
         public async Task<Contrato> GetListContatoByNumeroContrato([FromQuery] string pNumero)
         {
-           return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero); 
+            return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero);
         }
 
         [Route("GetReuestCommittee")]
@@ -47,7 +47,6 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
 
         [Route("GetAportantesByProyectoId")]
         public async Task<IActionResult> GetAportantesByProyectoId(int proyectoId)
@@ -79,8 +78,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [Route("GetDDPEspecial")]
         public async Task<IActionResult> GetDDPEspecial()
         {
@@ -110,7 +107,6 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
 
         [Route("GetDetailInfoAdditionalById")]
         public async Task<IActionResult> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
@@ -157,12 +153,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
-
-
-
-
         [Route("CreateOrEditReportProgress")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditReportProgress([FromBody] CompromisoSeguimiento compromisoSeguimiento)
@@ -182,8 +172,25 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+        [Route("CreateUpdateDisponibilidaPresupuestalEspecial")]
+        [HttpPost]
+        public async Task<IActionResult> CreateUpdateDisponibilidaPresupuestalEspecial([FromBody] DisponibilidadPresupuestal pDisponibilidadPresupuestal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
 
+                pDisponibilidadPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateUpdateDisponibilidaPresupuestalEspecial(pDisponibilidadPresupuestal);
+                return Ok(respuesta);
 
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
         [Route("CreateOrEditProyectoAdministrtivo")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditProyectoAdministrtivo([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)

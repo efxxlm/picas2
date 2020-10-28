@@ -80,18 +80,18 @@ namespace asivamosffie.services
                                           .ThenInclude(r => r.Aportante)
                                                  .ThenInclude(r => r.DisponibilidadPresupuestal)
                .FirstOrDefaultAsync();
-              
-                foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r=> !(bool)r.Eliminado))
-                {
-                    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r=> !(bool)r.Eliminado))
-                    {
-                        decimal? SaldoFuentesFinanciacion, SaldoDisponibilidadPresupuestal = 0;
-                        SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Where(r=> !(bool)r.Eliminado).Sum(r => r.ValorFuente);
-                        SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorAportante);
 
-                        ProyectoAportante.Aportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
-                    }
+            foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
+            {
+                foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
+                {
+                    decimal? SaldoFuentesFinanciacion, SaldoDisponibilidadPresupuestal = 0;
+                    SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorFuente);
+                    SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorAportante);
+
+                    ProyectoAportante.Aportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
                 }
+            }
 
             //foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
             //{
@@ -228,34 +228,26 @@ namespace asivamosffie.services
         {
             try
             {
-
-                using (SqlConnection sql = new SqlConnection(_connectionString))
+                using SqlConnection sql = new SqlConnection(_connectionString);
+                using SqlCommand cmd = new SqlCommand("GetAportantesByProyectoId", sql)
                 {
-                    using (SqlCommand cmd = new SqlCommand("GetAportantesByProyectoId", sql))
+                    CommandType = System.Data.CommandType.StoredProcedure
+                };
+                cmd.Parameters.Add("@ProyectoId", SqlDbType.Int).Value = proyectoId;
+                var response = new List<ListAdminProyect>();
+                await sql.OpenAsync();
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
                     {
-                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@ProyectoId", SqlDbType.Int).Value = proyectoId;
-                        var response = new List<ListAdminProyect>();
-                        await sql.OpenAsync();
-
-                        using (var reader = await cmd.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                response.Add(MapToValueProyectoAdmnistrativo(reader));
-                            }
-                        }
-
-                        return response;
+                        response.Add(MapToValueProyectoAdmnistrativo(reader));
                     }
                 }
-
-
-
+                return response;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -906,7 +898,7 @@ namespace asivamosffie.services
             };
         }
 
-        //Lista Concecutivo admnistrativo
+        //Lista Consecutivo admnistrativo
         public async Task<List<ListConcecutivoProyectoAdministrativo>> GetListCocecutivoProyecto()
         {
             try
@@ -1619,5 +1611,69 @@ namespace asivamosffie.services
             }
             return nombreAportante;
         }
+
+        public async Task<Respuesta> CreateUpdateDisponibilidaPresupuestalEspecial(DisponibilidadPresupuestal pDisponibilidadPresupuestal)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_DDP, (int)EnumeratorTipoDominio.Acciones);
+  
+            try
+            {
+                if (pDisponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
+                {
+                    pDisponibilidadPresupuestal.FechaCreacion = DateTime.Now;
+                    pDisponibilidadPresupuestal.Eliminado = false;
+                    _context.DisponibilidadPresupuestal.Add(pDisponibilidadPresupuestal);
+                }
+                else
+                {
+                    DisponibilidadPresupuestal disponibilidadPresupuestalOld = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresupuestal.DisponibilidadPresupuestalId);
+
+                    disponibilidadPresupuestalOld.FechaSolicitud = pDisponibilidadPresupuestal.FechaSolicitud;
+                    disponibilidadPresupuestalOld.TipoSolicitudCodigo = pDisponibilidadPresupuestal.TipoSolicitudCodigo;
+                    disponibilidadPresupuestalOld.NumeroSolicitud = pDisponibilidadPresupuestal.NumeroSolicitud;
+                    disponibilidadPresupuestalOld.OpcionContratarCodigo = pDisponibilidadPresupuestal.OpcionContratarCodigo;
+                    disponibilidadPresupuestalOld.ValorSolicitud = pDisponibilidadPresupuestal.ValorSolicitud;
+                    disponibilidadPresupuestalOld.EstadoSolicitudCodigo = pDisponibilidadPresupuestal.EstadoSolicitudCodigo;
+                    disponibilidadPresupuestalOld.Objeto = pDisponibilidadPresupuestal.Objeto;
+                    disponibilidadPresupuestalOld.FechaDdp = pDisponibilidadPresupuestal.FechaDdp;
+                    disponibilidadPresupuestalOld.NumeroDdp = pDisponibilidadPresupuestal.NumeroDdp;
+                    disponibilidadPresupuestalOld.RutaDdp = pDisponibilidadPresupuestal.RutaDdp;
+                    disponibilidadPresupuestalOld.FechaModificacion = pDisponibilidadPresupuestal.FechaModificacion;
+                    disponibilidadPresupuestalOld.UsuarioModificacion = pDisponibilidadPresupuestal.UsuarioModificacion;
+                    disponibilidadPresupuestalOld.ContratacionId = pDisponibilidadPresupuestal.ContratacionId;
+                    disponibilidadPresupuestalOld.NumeroDrp = pDisponibilidadPresupuestal.NumeroDrp;
+                    disponibilidadPresupuestalOld.PlazoMeses = pDisponibilidadPresupuestal.PlazoMeses;
+                    disponibilidadPresupuestalOld.PlazoDias = pDisponibilidadPresupuestal.PlazoDias;
+                    disponibilidadPresupuestalOld.CuentaCartaAutorizacion = pDisponibilidadPresupuestal.CuentaCartaAutorizacion;
+                    disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
+                    disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
+                    disponibilidadPresupuestalOld.NumeroContrato = pDisponibilidadPresupuestal.NumeroContrato;
+                }
+
+                await _context.SaveChangesAsync();
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, pDisponibilidadPresupuestal.UsuarioCreacion, ConstantCommonMessages.CREAR_EDITAR_DDP_ESPECIAL)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, pDisponibilidadPresupuestal.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
     }
 }
