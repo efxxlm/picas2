@@ -1161,6 +1161,7 @@ namespace asivamosffie.services
 
             Dominio EstadoActaFase2Contrato=null;
             string strEstadoActaFase2Contrato="";
+            string strEstadoActaCodigoFase2Contrato = "";
 
             Dominio EstadoVerificacion=null;
             string strEstadoVerificacion = "";           
@@ -1190,11 +1191,14 @@ namespace asivamosffie.services
 
                 if (EstadoActaFase2Contrato != null)
                 {
-                    if((int)EnumeratorPerfil.Supervisor==pPerfilId)
-                        strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Descripcion;
+                    strEstadoActaCodigoFase2Contrato = EstadoActaFase2Contrato.Codigo;
+                    if ((int)EnumeratorPerfil.Supervisor == pPerfilId)
+                    {
+                        strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Descripcion;                     
+
+                    }                        
                     else if ((int)EnumeratorPerfil.Tecnica == pPerfilId)
                         strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
-
                 }
                 
 
@@ -1212,6 +1216,7 @@ namespace asivamosffie.services
                 else
                     bTieneObservacionesSupervisor = false;
 
+                actaInicio.EstadoActaCodigo = strEstadoActaCodigoFase2Contrato;
                 actaInicio.EstadoVerificacion = strEstadoVerificacion;
                 actaInicio.EstadoActa = strEstadoActaFase2Contrato;
                 actaInicio.ContratoId = item.ContratoId;
