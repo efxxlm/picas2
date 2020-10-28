@@ -17,12 +17,14 @@ namespace asivamosffie.api.Controllers
     public class PublicController : ControllerBase
     {
         public readonly ISourceFundingService _sourceFunding;
+        public readonly IActBeginService _actBegin;
         private readonly IOptions<AppSettings> _settings;
 
-        public PublicController(ISourceFundingService sourceFunding, IOptions<AppSettings> settings)
+        public PublicController(ISourceFundingService sourceFunding, IOptions<AppSettings> settings, IActBeginService actBegin)
         {
             _sourceFunding = sourceFunding;
             _settings = settings;
+            _actBegin = actBegin;
         }
 
         [HttpGet("GetConsignationValue")]
@@ -31,6 +33,21 @@ namespace asivamosffie.api.Controllers
             try
             {
                 await _sourceFunding.GetConsignationValue(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetNoLoadDocumentValue")]
+        public async Task GetNoLoadDocumentValue()
+        {
+            try
+            {
+                await _actBegin.GetDocumentoNoCargadoValue(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 //return result;
             }
             catch (Exception ex)

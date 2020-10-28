@@ -230,14 +230,14 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CreateTieneObservacionesActaInicio")]
 
-        public async Task<IActionResult> CreateTieneObservacionesActaInicio(int pContratoId, string pObservacionesActa, string pUsuarioModificacion
+        public async Task<IActionResult> CreateTieneObservacionesActaInicio(int pContratoId, string pObservacionesActa, string pUsuarioModificacion, bool pEsSupervisor, bool pEsActa
           )
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.GuardarTieneObservacionesActaInicio( pContratoId,  pObservacionesActa,  pUsuarioModificacion);
+                respuesta = await _ActBegin.GuardarTieneObservacionesActaInicio( pContratoId,  pObservacionesActa,  pUsuarioModificacion,  pEsSupervisor,  pEsActa);
                 return Ok(respuesta);
             }
             catch (Exception ex)

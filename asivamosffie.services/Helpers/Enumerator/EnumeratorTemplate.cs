@@ -16,6 +16,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         proyectoadministrativocreado=12,
         MsjCoordinadorFuentes=14,
 
+        Dias2ObraOInterventoriaDocNoCargado=17,
+
 
 
     }     
