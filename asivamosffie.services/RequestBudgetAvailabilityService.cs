@@ -1628,7 +1628,7 @@ namespace asivamosffie.services
                     pDisponibilidadPresupuestal.FechaCreacion = DateTime.Now;
                     pDisponibilidadPresupuestal.Eliminado = false;  
                     pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
-                    pDisponibilidadPresupuestal.RegistroCompleto = false;
+                    pDisponibilidadPresupuestal.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
 
                     pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
                     pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo; 
@@ -1689,5 +1689,18 @@ namespace asivamosffie.services
             }
         }
 
+        private bool? ValidarDisponibilidadPresupuestal(DisponibilidadPresupuestal pDisponibilidadPresupuestal)
+        {
+            if (
+                     string.IsNullOrEmpty(pDisponibilidadPresupuestal.Objeto)
+                  || string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroRadicadoSolicitud)
+                  || string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroContrato)
+                  || pDisponibilidadPresupuestal.AportanteId == 0
+                  || pDisponibilidadPresupuestal.ValorAportante == 0 )
+            { 
+                return false;
+            }
+            return true;
+        }
     }
 }
