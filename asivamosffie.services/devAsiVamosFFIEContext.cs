@@ -123,6 +123,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -969,8 +970,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaTerminacionFase2).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
-
-                entity.Property(e => e.LimitacionEspecial).HasMaxLength(550);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)

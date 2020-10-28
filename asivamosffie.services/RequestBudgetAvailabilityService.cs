@@ -36,7 +36,7 @@ namespace asivamosffie.services
 
         public async Task<List<Contrato>> GetListContatoByNumeroContrato(string pNumeroContrato)
         {
-            return await _context.Contrato
+             List<Contrato> ListContrato =await _context.Contrato
                 .Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado)
                 .Include(r => r.Contratacion)
                    .ThenInclude(r => r.Contratista)
@@ -44,7 +44,7 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                                     .ThenInclude(r => r.ProyectoAportante)
-                                           .ThenInclude(r => r.Aportante)
+                                           .ThenInclude(r => r.Aportante) 
                                                   .ThenInclude(r => r.NombreAportante)
                   .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
@@ -59,6 +59,22 @@ namespace asivamosffie.services
                                            .ThenInclude(r => r.Aportante)
                                                   .ThenInclude(r => r.Municipio)
                 .ToListAsync();
+
+
+            //foreach (var  Contrato in ListContrato)
+            //{
+            //    foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto)
+            //    {
+            //        foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
+            //        {
+            //            decimal SaldoFuentesFinanciacion = _context.FuenteFinanciacion.Where(r=> r.AportanteId == )
+                       
+            //            ProyectoAportante.SaldoAportanteFuenteFinanciacion
+            //        }
+            //    }
+            //}
+
+            return ListContrato;
         }
 
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id)
