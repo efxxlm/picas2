@@ -64,12 +64,23 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
   // no sirvio, ni con este ciclo ni con .include
   validateSel(numeroid: string) {
+    
+    let retorno= this.valida(numeroid);
+    console.log("valido "+numeroid);
+    console.log(retorno);
+    return retorno;
+    
+  }
+  valida(numeroid:string)
+  {
+    let ret=false;
     this.procesoSeleccion.listaContratistas.forEach(element => {
-      if (element.numeroIdentificacion == numeroid) {
-        return true;
+      if (element.nombre == numeroid) {
+        console.log("valido2 "+element.nombre);
+        ret= true;
       }
     });
-    return this.procesoSeleccion.listaContratistas.includes(x => x.numeroIdentificacion.toString() == numeroid.toString());
+    return ret;
   }
 
   onSaveContractors() {

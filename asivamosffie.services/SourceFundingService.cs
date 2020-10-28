@@ -166,6 +166,33 @@ namespace asivamosffie.services
             {
                 retorno = false;
             }
+            else
+            {
+                foreach(var cuentas in fuentefinanciacion.CuentaBancaria)
+                {
+                    if(cuentas.BancoCodigo==null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.CodigoSifi == null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.NombreCuentaBanco == null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.TipoCuentaCodigo == null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.Exenta == null)
+                    {
+                        retorno = false;
+                    }
+                }
+
+            }
             if(fuentefinanciacion.AportanteId!=null)
             {
                 var aportante = _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == fuentefinanciacion.AportanteId).FirstOrDefault();

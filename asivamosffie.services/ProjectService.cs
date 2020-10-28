@@ -122,8 +122,8 @@ namespace asivamosffie.services
 
                 //VALIDAR PREDIO PRINCIPAL
                 if (
-                     string.IsNullOrEmpty(proyecto.PredioPrincipal.TipoPredioCodigo)
-                  || string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud)
+                     /*string.IsNullOrEmpty(proyecto.PredioPrincipal.TipoPredioCodigo)
+                  || */string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLongitud)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.Direccion)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.DocumentoAcreditacionCodigo)

@@ -182,7 +182,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
         
         observacion: control.get('observacion').value,
         estadoActividadInicialCodigo: control.get('estadoActividadInicialCodigo').value,
-        estadoActividadFinalCodigo: control.get('estadoActividad').value.codigo,
+        estadoActividadFinalCodigo: control.get('estadoActividad').value?.codigo,
         procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
 
       }
@@ -198,9 +198,20 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
       ),
     toArray())
     .subscribe( respuesta => {
-      let res = respuesta[0] as Respuesta
-      this.openDialog("", res.message); 
-      if (res.code == "200"){
+      let algunabien=false;
+      let mensaje="";
+      respuesta.forEach(element => {
+        if(element.code=="200")
+        {
+          algunabien=true;
+          mensaje=element.message;
+        }
+        
+      });
+      //let res = respuesta[0] as Respuesta
+      //this.openDialog("", res.message); 
+      if (algunabien){
+        this.openDialog("", mensaje); 
 //        console.log(respuesta);       
   //      this.router.navigate(["/seleccion"]);
 

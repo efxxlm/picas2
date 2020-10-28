@@ -464,13 +464,21 @@ export class RegistrarAcuerdoComponent implements OnInit {
     let retorno = 0;
     aportante.cofinanciacionDocumento
       .forEach((element: { fechaAcuerdo: any; numeroAcuerdo: any; tipoDocumentoId: any; valorDocumento: any; vigenciaAporte: any; }) => {
+        
         if (
-          element.fechaAcuerdo === null &&
+          (element.fechaAcuerdo === null &&
           element.numeroAcuerdo === null &&
           element.tipoDocumentoId === null &&
           element.valorDocumento === null &&
           // element.valorTotalAportante==null&&
-          element.vigenciaAporte === null) {
+          element.vigenciaAporte === null) ||
+          (!element.fechaAcuerdo &&
+            !element.numeroAcuerdo &&
+            !element.tipoDocumentoId &&
+            !element.valorDocumento &&
+            
+            !element.vigenciaAporte)) {
+
           // retorno=0;
         }
         else if (
@@ -484,7 +492,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         }
         else {
           retorno++;
-        }
+        }        
       });
     const resultado = aportante.cofinanciacionDocumento.length * 2 === retorno ? 3 : retorno === 0 ? 1 : 2;
     return resultado;

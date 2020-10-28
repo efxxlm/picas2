@@ -240,7 +240,7 @@ export class TablaCronogramaComponent implements OnInit {
     this.procesoSeleccionService.createEditarProcesoSeleccionCronogramaMonitoreo(listaCronograma).subscribe(respuesta => {
      
       if (respuesta.code == "200")
-        this.openDialog("", respuesta.message);
+        this.openDialog("", respuesta.message,true);
     });
 
     /*from(this.listaCronograma)

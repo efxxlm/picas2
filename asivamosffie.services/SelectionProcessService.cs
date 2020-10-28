@@ -167,8 +167,8 @@ namespace asivamosffie.services
                 foreach (ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion)
                 {
                     cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion.ToUpper();
-                    cotizacion.UrlSoporte = cotizacion.UrlSoporte.ToUpper();
+                    cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion==null?"":cotizacion.NombreOrganizacion.ToUpper();
+                    cotizacion.UrlSoporte = cotizacion.UrlSoporte==null?"":cotizacion.UrlSoporte.ToUpper();
                     await this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
                 }
 
@@ -879,25 +879,41 @@ namespace asivamosffie.services
 
                 if (string.IsNullOrEmpty(cronogramaSeguimiento.CronogramaSeguimientoId.ToString()) || cronogramaSeguimiento.CronogramaSeguimientoId == 0)
                 {
-                    //Auditoria
-                    strCrearEditar = "CREAR CRONOGRAMA SEGUIMIENTO";
-                    cronogramaSeguimiento.FechaCreacion = DateTime.Now;
-                    cronogramaSeguimiento.Eliminado = false;
-                    cronogramaSeguimiento.EstadoActividadInicialCodigo = cronogramaSeguimiento.EstadoActividadInicialCodigo == null ?"1" :cronogramaSeguimiento.EstadoActividadInicialCodigo;//revisar
-                    cronogramaSeguimiento.UsuarioCreacion = cronogramaSeguimiento.UsuarioCreacion.ToUpper();
-
-
-                    _context.CronogramaSeguimiento.Add(cronogramaSeguimiento);
-                    _context.SaveChanges();
-                    return respuesta = new Respuesta
+                    if(cronogramaSeguimiento.EstadoActividadFinalCodigo!=null)
                     {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = cronogramaSeguimiento,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, cronogramaSeguimiento.UsuarioCreacion, strCrearEditar)
-                    };
+                        //Auditoria
+                        strCrearEditar = "CREAR CRONOGRAMA SEGUIMIENTO";
+                        cronogramaSeguimiento.FechaCreacion = DateTime.Now;
+                        cronogramaSeguimiento.Eliminado = false;
+                        cronogramaSeguimiento.EstadoActividadInicialCodigo = cronogramaSeguimiento.EstadoActividadInicialCodigo == null ? "1" : cronogramaSeguimiento.EstadoActividadInicialCodigo;//revisar
+                        cronogramaSeguimiento.UsuarioCreacion = cronogramaSeguimiento.UsuarioCreacion.ToUpper();
+
+
+                        _context.CronogramaSeguimiento.Add(cronogramaSeguimiento);
+                        _context.SaveChanges();
+                        return respuesta = new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Data = cronogramaSeguimiento,
+                            Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, cronogramaSeguimiento.UsuarioCreacion, strCrearEditar)
+                        };
+                    }
+                    else
+                    {
+                        return respuesta = new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Data = cronogramaSeguimiento,
+                            Code = ConstantMessagesProcesoSeleccion.CamposIncompletos,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.CamposIncompletos, idAccion, cronogramaSeguimiento.UsuarioCreacion, strCrearEditar)
+                        };
+                    }
+                    
 
                 }
                 else

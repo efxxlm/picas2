@@ -137,8 +137,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
       {
         this.procesoSeleccion.procesoSeleccionProponente=[];
       }
-      if(this.addressForm.get('cuantosProponentes').value>this.addressForm.get('nombresProponentes').value.length
-      ||this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
+      if(this.addressForm.get('cuantosProponentes').value>=this.addressForm.get('nombresProponentes').value.length
+      && this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
       {
         this.addressForm.get('nombresProponentes').value.forEach(element => {   
           console.log(element);     

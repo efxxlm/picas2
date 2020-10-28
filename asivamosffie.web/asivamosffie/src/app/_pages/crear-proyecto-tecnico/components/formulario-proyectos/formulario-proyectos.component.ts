@@ -208,7 +208,9 @@ export class FormularioProyectosComponent implements OnInit {
           
 
           this.proyecto.cantidadAportantes = respuesta.proyectoAportante.length==0?null:respuesta.proyectoAportante.length;
-          this.getInstitucion(respuesta.institucionEducativaId,respuesta.sedeId);          
+          this.codigoDaneSede=this.proyecto.sede?.codigoDane;
+          this.getInstitucion(respuesta.institucionEducativaId,respuesta.sedeId); 
+          
           if(respuesta.localizacionIdMunicipio!=undefined)
           {
             this.commonServices.forkDepartamentoMunicipio(respuesta.localizacionIdMunicipio).subscribe(
@@ -221,13 +223,16 @@ export class FormularioProyectosComponent implements OnInit {
                 this.proyecto.regid = listadoregiones[1][0].idPadre;
               }
             );
-            let i = 0;
+            
+          }
+          let i = 0;
             respuesta.proyectoAportante.forEach(element => {
+              console.log("reviso por tipo");
+              console.log(element);
               this.getAportanteById(element.aportante.tipoAportanteId, i);
               this.getVigenciaById(element.aportanteId, i);
               i++;
             });
-          }
           
         },
           err => {
@@ -490,7 +495,11 @@ export class FormularioProyectosComponent implements OnInit {
     {
       let institucion=this.listadoInstitucion.filter(x=>x.institucionEducativaSedeId==this.proyecto.institucionEducativaId);
       console.log(institucion);
-      this.CodigoDaneIE = institucion?institucion[0].codigoDane:"";  
+      if(institucion.length>0)
+      {
+        this.CodigoDaneIE = institucion?institucion[0].codigoDane:"";  
+      }
+      
     }
     
     console.log("loading sede");

@@ -109,7 +109,7 @@
                     <span class="contador mt-1em" *ngIf="form.get('observacion').value && activo[i]">
                       {{800 - textoLimpio(form.get('observacion').value)}}
                     </span>
-                    <span class="contador mt-1em" *ngIf="!form.get('observacion').value">
+                    <span class="contador mt-1em" *ngIf="!form.get('observacion').value && activo[i]">
                       800
                     </span>
                   </div>
