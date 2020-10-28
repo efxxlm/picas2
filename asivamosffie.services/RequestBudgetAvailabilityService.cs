@@ -34,10 +34,10 @@ namespace asivamosffie.services
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
 
-        public async Task<List<Contrato>> GetListContatoByNumeroContrato(string pNumeroContrato)
+        public async Task<Contrato> GetListContatoByNumeroContrato(string pNumeroContrato)
         {
             //Si el aportante es tercero include dominio
-            List<Contrato> ListContrato = await _context.Contrato
+            Contrato Contrato = await _context.Contrato
                .Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado)
                .Include(r => r.Contratacion)
                   .ThenInclude(r => r.Contratista)
@@ -79,11 +79,8 @@ namespace asivamosffie.services
                                    .ThenInclude(r => r.ProyectoAportante)
                                           .ThenInclude(r => r.Aportante)
                                                  .ThenInclude(r => r.DisponibilidadPresupuestal)
-               .ToListAsync();
-
-
-            foreach (var Contrato in ListContrato)
-            {
+               .FirstOrDefaultAsync();
+              
                 foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto)
                 {
                     foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante)
@@ -94,10 +91,8 @@ namespace asivamosffie.services
 
                         ProyectoAportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
                     }
-                }
-            }
-
-            return ListContrato;
+                } 
+            return Contrato;
         }
 
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id)

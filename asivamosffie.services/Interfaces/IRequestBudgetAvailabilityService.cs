@@ -12,7 +12,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRequestBudgetAvailabilityService
     {
-        Task<List<Contrato>> GetListContatoByNumeroContrato(string pNumeroContrato);
+        Task<Contrato> GetListContatoByNumeroContrato(string pNumeroContrato);
         Task<List<ListAportantes>> GetAportantesByProyectoId(int proyectoId);
         Task<List<ListAdminProyect>> GetAportantesByProyectoAdministrativoId(int proyectoId);
         Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento);
