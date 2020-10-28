@@ -17,9 +17,11 @@ namespace asivamosffie.services.Interfaces
 
         Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId);
 
+        Task GetDocumentoNoCargadoValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+
         Task<Respuesta> EnviarCorreoSupervisorContratista(int pContratoId, AppSettingsService settings, int pPerfilId);
          //Task<Respuesta> EnviarCorreoSupervisor(int pContratoId, AppSettingsService settings);
-        Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion);
+        Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion, bool pEsSupervisor, bool pEsActa);
 
         Task<Contrato> GetContratoByIdContratoId(int pContratoId);
         Task<Respuesta> CambiarEstadoActa(int pContratoId, string pNuevoCodigoEstadoActa, string pUsuarioModifica);
