@@ -284,14 +284,26 @@ namespace asivamosffie.services
 
             contratacionProyecto = await _context.ContratacionProyecto
                 .Where(r => !(bool)r.Eliminado && r.ContratacionProyectoId == idContratacionProyecto)
+                
+                //Tipo ET DEPARTAMENTO
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
                            .ThenInclude(r => r.Departamento)
+                 .Include(r => r.Proyecto)
+                
+                 //Tipo ET MUNICIPIO
+                     .ThenInclude(r => r.ProyectoAportante)
+                         .ThenInclude(r => r.Aportante)
+                           .ThenInclude(r => r.Municipio)
+                
+                 //Tipo TERCERO DOMINIO
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
                              .ThenInclude(r => r.NombreAportante)
+
+
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante)
                         .ThenInclude(r => r.ComponenteUso)
