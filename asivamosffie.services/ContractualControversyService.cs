@@ -35,7 +35,7 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta();
 
-            int idAccionCrearcontroversiaActuacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.CreadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearcontroversiaActuacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContractualControversy.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
 
             //try
             //{
@@ -50,26 +50,51 @@ namespace asivamosffie.services
             //    return BadRequest(ex.ToString());
             //}
 
+            string strCrearEditar = string.Empty;
+
             try
             {
                 if (controversiaActuacion != null)
                 {
 
-                    controversiaActuacion.Observaciones = Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
+                    if (string.IsNullOrEmpty(controversiaActuacion.ControversiaActuacionId.ToString()) || controversiaActuacion.ControversiaActuacionId == 0)
+                    {
+                        strCrearEditar = "REGISTRAR CONTROVERSIA ACTUACION";
 
-                    controversiaActuacion.FechaCreacion = DateTime.Now;
-                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                    //controversiaActuacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                        //Auditoria
+                        strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
+                        controversiaActuacion.FechaCreacion = DateTime.Now;
+                        //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
 
-                    //_context.Add(contratoPoliza);
+                        controversiaActuacion.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaActuacion);
 
-                    controversiaActuacion.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaActuacion);
-                    //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+                        controversiaActuacion.Eliminado = false;
+                        _context.ControversiaActuacion.Add(controversiaActuacion);
 
-                    //LimpiarEntradasContratoPoliza(ref contratoPoliza);
+                    }
 
-                    //_context.ContratoPoliza.Add(contratoPoliza);
-                    _context.ControversiaActuacion.Update(controversiaActuacion);
+                    else
+                    {
+                        strCrearEditar = "EDIT CONTROVERSIA ACTUACION";
+
+                        controversiaActuacion.Observaciones = Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
+
+                        controversiaActuacion.FechaCreacion = DateTime.Now;
+                        //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                        //controversiaActuacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                        //_context.Add(contratoPoliza);
+
+                        controversiaActuacion.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaActuacion);
+                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+
+                        //LimpiarEntradasContratoPoliza(ref contratoPoliza);
+
+                        //_context.ContratoPoliza.Add(contratoPoliza);
+                        _context.ControversiaActuacion.Update(controversiaActuacion);
+
+                    }
+
                      _context.SaveChanges();
 
                     return
@@ -78,10 +103,10 @@ namespace asivamosffie.services
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
-                            Code = ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                            Code = ConstantMessagesContractualControversy.OperacionExitosa,
                             Message =
-                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
-                            ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                            ConstantMessagesContractualControversy.OperacionExitosa,
                             //contratoPoliza
                             idAccionCrearcontroversiaActuacion
                             , controversiaActuacion.UsuarioModificacion
@@ -97,15 +122,65 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.RecursoNoEncontrado };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.ErrorInterno };
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.ErrorInterno };
             }
 
+        }
+
+
+        public async Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId)
+        {                     
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            ControversiaActuacion controversiaActuacion = null;
+
+            try
+            {
+                controversiaActuacion = await _context.ControversiaActuacion.Where(d => d.ControversiaActuacionId == pControversiaActuacionId).FirstOrDefaultAsync();
+
+                if (controversiaActuacion != null)
+                {
+                    strCrearEditar = "Eliminar DISPONIBILIDAD PRESUPUESAL";
+                    controversiaActuacion.FechaModificacion = DateTime.Now;
+                    //controversiaActuacion.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    controversiaActuacion.Eliminado = true;
+                    _context.ControversiaActuacion.Update(controversiaActuacion);
+
+                    _context.SaveChanges();
+
+                }               
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = controversiaActuacion,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, controversiaActuacion.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = controversiaActuacion,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesSesionComiteTema.Error, idAccion, controversiaActuacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
         }
 
         private bool ValidarRegistroCompletoControversiaActuacion(ControversiaActuacion controversiaActuacion)
