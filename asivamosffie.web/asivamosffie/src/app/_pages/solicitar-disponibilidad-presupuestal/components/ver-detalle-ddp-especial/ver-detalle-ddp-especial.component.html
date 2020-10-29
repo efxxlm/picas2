@@ -1,6 +1,6 @@
 <div class="container text-center" *ngIf="disponibilidadPresupuestal">
     <div class="text-right">
-        <a routerLink="/solicitarDisponibilidadPresupuestal" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -35,19 +35,22 @@
 
             <div *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudExpensas">
                 <h2 class="card-subTitle backgrondGris">Expensas</h2>
-                <p>
+                <section style="display: flex;">
                     <strong>¿Cuenta con carta de autorización de la ET?:</strong>
-                </p>
+                    <p *ngIf="disponibilidadPresupuestal.cuentaCartaAutorizacion === true" style="margin-left: .4em;">Si</p>
+                    <p *ngIf="disponibilidadPresupuestal.cuentaCartaAutorizacion === false" style="margin-left: .4em;">No</p>
+                </section>
                 <p>
                     <strong>Departamento:</strong>
-                    Antioquia
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto['departamentoObj'].descripcion }}
                 </p>
                 <p>
                     <strong>Municipio:</strong>
-                    Abejorral
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto['municipioObj'].descripcion }}
                 </p>
                 <p>
                     <strong>Llave MEN:</strong>
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen }}
                 </p>
             </div>
 
@@ -62,18 +65,21 @@
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
-                    Llave men - por integrar
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen }}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content align="left">
                 <p>
                     <b>Tipo de intervención:</b>
+                    Por integrar
                 </p>
                 <p>
                     <b>Nombre de la I.E:</b>
+                    Por integrar
                 </p>
                 <p>
                     <b>Sede:</b>
+                    Por integrar
                 </p>
             </mat-card-content>
         </mat-card>
@@ -86,7 +92,7 @@
             <mat-card-content align="left">
                 <p>
                     <b>Nombre del aportante:</b>
-                    Alacladia
+                    Por integrar
                 </p>
                 <p>
                     <b>Valor:</b>
@@ -106,7 +112,7 @@
             <mat-card-content align="left">
                 <p>
                     <b>Nombre de la entidad contratista:</b>
-                    Constructora Colpatria
+                    {{ disponibilidadPresupuestal[ 'contratista' ].nombre }}
                 </p>
             </mat-card-content>
         </mat-card>
@@ -129,11 +135,11 @@
             <mat-card-content align="left">
                 <p>
                     <b>Tipo de aportante:</b>
-                    FFIE
+                    {{ disponibilidadPresupuestal[ 'tipoAportante' ] }}
                 </p>
                 <p>
                     <b>Nombre del aportante:</b>
-                    Alacladia
+                    {{ disponibilidadPresupuestal[ 'nombreAportante' ] }}
                 </p>
                 <p>
                     <b>Valor:</b>

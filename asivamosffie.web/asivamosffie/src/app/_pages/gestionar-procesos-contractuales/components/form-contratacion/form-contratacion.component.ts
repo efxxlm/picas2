@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
+import { CommonService } from '../../../../core/_services/common/common.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-contratacion',
@@ -53,6 +56,8 @@ export class FormContratacionComponent implements OnInit {
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private routes: Router,
+                private commonSvc: CommonService,
+                private dialog: MatDialog,
                 private procesosContractualesSvc: ProcesosContractualesService ) {
     this.getContratacion( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
@@ -132,9 +137,30 @@ export class FormContratacionComponent implements OnInit {
       } );
   };
 
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   getDocumento ( nombreDocumento: string ) {
-    const URL = nombreDocumento;
-    window.open( URL, null );
+    this.commonSvc.getDocumento( nombreDocumento )
+      .subscribe(
+        response => {
+
+          const documento = `Minuta contractual`;
+          const text = documento,
+          blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }),
+          anchor = document.createElement('a');
+          anchor.download = documento;
+          anchor.href = window.URL.createObjectURL(blob);
+          anchor.dataset.downloadurl = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', anchor.download, anchor.href].join(':');
+          anchor.click();
+
+        },
+        err => this.openDialog( '', err.message )
+      );
   };
 
   guardar () {

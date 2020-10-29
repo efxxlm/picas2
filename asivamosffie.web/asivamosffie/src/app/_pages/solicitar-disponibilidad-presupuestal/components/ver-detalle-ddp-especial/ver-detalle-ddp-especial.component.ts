@@ -14,11 +14,16 @@ import { DisponibilidadPresupuestal } from '../../../../_interfaces/budgetAvaila
 })
 export class VerDetalleDdpEspecialComponent implements OnInit {
 
+  disponibilidadPresupuestal: DisponibilidadPresupuestal;
   tipoSolicitudCodigos = {
     solicitudExpensas: '1',
     solicitudOtrosCostos: '2'
   };
-  disponibilidadPresupuestal: DisponibilidadPresupuestal;
+  tipoAportante = {
+    aportanteFfie: 6,
+    aportanteEt: 9,
+    aportanteTercero: 10
+  };
 
   constructor ( private activatedRoute: ActivatedRoute,
                 private budgetAvailabilitySvc: BudgetAvailabilityService,
@@ -34,8 +39,18 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
     this.budgetAvailabilitySvc.getDetailInfoAdditionalById( disponibilidadId )
       .subscribe(
         disponibilidad => {
-          this.disponibilidadPresupuestal = disponibilidad;
-          console.log( this.disponibilidadPresupuestal );
+          this.budgetAvailabilitySvc.getNumeroContrato( disponibilidad.numeroContrato )
+            .subscribe( 
+              response => {
+                this.disponibilidadPresupuestal = disponibilidad;
+                this.disponibilidadPresupuestal[ 'contratista' ] = response[ 'contratacion' ].contratista;
+                if ( this.disponibilidadPresupuestal[ 'aportante' ].tipoAportanteId === this.tipoAportante.aportanteFfie ) {
+                  this.disponibilidadPresupuestal[ 'tipoAportante' ] = 'FFIE';
+                  this.disponibilidadPresupuestal[ 'nombreAportante' ] = 'FFIE';
+                  console.log( this.disponibilidadPresupuestal );
+                }
+              } 
+            )
         },
         err => this.openDialog( '', err.message )
       );

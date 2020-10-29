@@ -88,4 +88,8 @@ export class BudgetAvailabilityService {
     return this.http.post<Respuesta>( `${ environment.apiUrl }/RequestBudgetAvailability/CreateUpdateDisponibilidaPresupuestalEspecial`, pDisponibilidadPresupuestal )
   };
 
-}
+  getAportanteTerritorial ( pProyectoId: number, pTipoAportanteId: number ) {
+    return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetListAportanteByTipoAportanteByProyectoId?pProyectoId=${ pProyectoId }&pTipoAportanteId=${ pTipoAportanteId }` );
+  };
+
+};

@@ -23,6 +23,10 @@ export class CommonService {
     return retorno;
   }
 
+  getDocumento ( pPath: string ) {
+    return this.http.get( `${ environment.apiUrl }/Document/GetFileByPath?pPath=${ pPath }`, { responseType: "blob" } );
+  };
+
   listaTipoAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
