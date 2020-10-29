@@ -27,27 +27,26 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
-        [Route("GetFileActaByName")]
+        [Route("GetFileByPath")]
         [HttpGet]
-        public async Task<ActionResult> GetFileActaByName([FromQuery] string pRutaActa)
+        public async Task<ActionResult> GetFileByPath([FromQuery] string pPath)
         {
-            if (String.IsNullOrEmpty(pRutaActa))
+            if (String.IsNullOrEmpty(pPath))
                 return BadRequest();
             try
             {
-                Stream stream = new FileStream(pRutaActa, FileMode.Open, FileAccess.Read);
+                Stream stream = new FileStream(pPath, FileMode.Open, FileAccess.Read);
 
                 if (stream == null)
                     return NotFound();
                 return File(stream, "application/octet-stream");
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("Archivo no encontrado");
             }
         }
-
 
         [HttpGet]
         [Route("GetListloadedDocuments")]
