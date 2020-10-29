@@ -1207,11 +1207,18 @@ namespace asivamosffie.services
                         construccionObservacion.FechaCreacion = DateTime.Now;
 
                         ContratoConstruccion contratoConstruccion = null;
-                        contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
-                        construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
-                     
-                        _context.ConstruccionObservacion.Add(construccionObservacion);                        
-                        await _context.SaveChangesAsync();
+
+                            contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoConstruccionId == construccionObservacion.ContratoConstruccionId).FirstOrDefault();
+
+
+                        if (contratoConstruccion != null)
+                        {
+                            construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+
+                            _context.ConstruccionObservacion.Add(construccionObservacion);
+                            await _context.SaveChangesAsync();
+
+                        }                       
 
                     }
                     else
