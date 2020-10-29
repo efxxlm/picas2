@@ -1210,7 +1210,6 @@ namespace asivamosffie.services
 
                             contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoConstruccionId == construccionObservacion.ContratoConstruccionId).FirstOrDefault();
 
-
                         if (contratoConstruccion != null)
                         {
                             construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
@@ -1223,11 +1222,34 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        strCrearEditar = "EDIT CONTRATO OBSERVACION";                        
-                        _context.ConstruccionObservacion.Update(construccionObservacion);
-                        await _context.SaveChangesAsync();
+                        strCrearEditar = "EDIT CONTRATO OBSERVACION";
+                        ConstruccionObservacion construccionObservacion2=null;
+
+                        ContratoConstruccion contratoConstruccion2 = null;
+
+                        contratoConstruccion2 = _context.ContratoConstruccion.Where(r => r.ContratoConstruccionId == construccionObservacion.ContratoConstruccionId).FirstOrDefault();
 
 
+                        if (contratoConstruccion2 != null)
+                        {
+                            //obtener ultima obserbacion
+                            construccionObservacion2 = await GetContratoObservacionByIdContratoId(contratoConstruccion2.ContratoId, Convert.ToBoolean(construccionObservacion.EsSupervision));
+
+                            //sin alterar los ids
+                            construccionObservacion2.EsActa = construccionObservacion.EsActa;
+                            construccionObservacion2.EsSupervision = construccionObservacion.EsSupervision;
+                            construccionObservacion2.FechaCreacion = construccionObservacion.FechaCreacion;
+                            construccionObservacion2.FechaModificacion = construccionObservacion.FechaModificacion;
+                            construccionObservacion2.Observaciones = Helpers.Helpers.CleanStringInput(construccionObservacion.Observaciones);
+                            construccionObservacion2.UsuarioCreacion = construccionObservacion.UsuarioCreacion;
+                            
+                            //construccionObservacion.ConstruccionObservacionId = construccionObservacion2.ConstruccionObservacionId;
+                            //construccionObservacion.ContratoConstruccionId = construccionObservacion2.ContratoConstruccionId;
+                            //construccionObservacion.id
+
+                            _context.ConstruccionObservacion.Update(construccionObservacion2);
+                            await _context.SaveChangesAsync();
+                        }
                     }
                     //contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;                                     
