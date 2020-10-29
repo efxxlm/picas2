@@ -33,6 +33,11 @@ namespace asivamosffie.services
                 return await _context.ProyectoAportante
                         .Where(r => r.ProyectoId == pProyectoId)
                         .Include(r => r.Aportante)
+                        .ThenInclude(r=> r.Departamento)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(r => r.Municipio)
+                           .Include(r => r.Aportante)
+                        .ThenInclude(r => r.NombreAportante)
                         .Select(r=> r.Aportante)
                         .Where(r=> r.TipoAportanteId == pTipoAportanteId)
                      .ToListAsync();
@@ -1622,11 +1627,11 @@ namespace asivamosffie.services
             return nombreAportante;
         }
 
+        //Crear DDP Especial 
         public async Task<Respuesta> CreateUpdateDisponibilidaPresupuestalEspecial(DisponibilidadPresupuestal pDisponibilidadPresupuestal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_DDP, (int)EnumeratorTipoDominio.Acciones);
-
-
+             
             Contrato contrato = _context.Contrato
                 .Where(r => r.NumeroContrato == pDisponibilidadPresupuestal.NumeroContrato)
                 .Include(r => r.Contratacion)
@@ -1639,10 +1644,7 @@ namespace asivamosffie.services
                     pDisponibilidadPresupuestal.Eliminado = false;
                     pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     pDisponibilidadPresupuestal.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
-                    if (!(bool)pDisponibilidadPresupuestal.RegistroCompleto)
-                        pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
-                    else
-                        pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
+                    pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
 
                     pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo;
                     pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
@@ -1679,11 +1681,8 @@ namespace asivamosffie.services
                         pDisponibilidadPresupuestal.ValorSolicitud = (decimal)disponibilidadPresupuestalOld.ValorAportante;
                     disponibilidadPresupuestalOld.NumeroContrato = pDisponibilidadPresupuestal.NumeroContrato;
                     disponibilidadPresupuestalOld.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
-                    if (!(bool)disponibilidadPresupuestalOld.RegistroCompleto)
-                        disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
-                    else
-                        disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
-                }
+                    disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
+                 }
 
                 await _context.SaveChangesAsync();
                 return new Respuesta
