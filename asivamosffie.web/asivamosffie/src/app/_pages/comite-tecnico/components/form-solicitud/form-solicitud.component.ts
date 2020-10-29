@@ -21,7 +21,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Input() listaMiembros: SesionParticipante[];
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
-  
+  minDate: Date;
+
   tiposSolicitud = TiposSolicitud;
 
   fechaSolicitud: Date;
@@ -71,34 +72,38 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     public dialog: MatDialog,
     private router: Router,
 
-  ) 
-  {
-    
+  ) {
+
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.sesionComiteSolicitud.currentValue)
       this.cargarRegistro();
   }
 
-  ActualizarProyectos( lista ){
+  ActualizarProyectos(lista) {
     this.proyectos = lista;
   }
 
-  getMostrarProyectos(){
-    if ( this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion )
+  getMostrarProyectos() {
+    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion)
       return 'block';
     else
       return 'none';
   }
 
-  getMostrarActulizacionCronograma(){
-    if ( this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion )
+  getMostrarActulizacionCronograma() {
+    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion)
       return 'block';
     else
       return 'none';
   }
 
   ngOnInit(): void {
+    this.minDate = new Date();
+    this.addressForm.valueChanges
+      .subscribe(value => {
+        if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+      });
   }
 
   maxLength(e: any, n: number) {
@@ -122,7 +127,20 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este compromiso?</b>', i, borrarForm);
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number, grupo: any) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        grupo.removeAt(e);
+      }
+    });
   }
 
   agregaCompromiso() {
@@ -134,7 +152,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       sesionSolicitudCompromisoId: [],
       sesionComiteSolicitudId: [],
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(500)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]
@@ -161,20 +179,19 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     });
   }
 
-  getObservableEstadoSolicitud(){
+  getObservableEstadoSolicitud() {
     return this.addressForm.get('estadoSolicitud').valueChanges;
   }
 
-  changeCompromisos( requiereCompromisos ){
+  changeCompromisos(requiereCompromisos) {
 
-    if ( requiereCompromisos.value === false )
-    {
-      console.log( requiereCompromisos.value );
-      this.technicalCommitteSessionService.eliminarCompromisosSolicitud( this.sesionComiteSolicitud.sesionComiteSolicitudId )
-        .subscribe( respuesta => {
-          if (respuesta.code == "200"){
+    if (requiereCompromisos.value === false) {
+      console.log(requiereCompromisos.value);
+      this.technicalCommitteSessionService.eliminarCompromisosSolicitud(this.sesionComiteSolicitud.sesionComiteSolicitudId)
+        .subscribe(respuesta => {
+          if (respuesta.code == "200") {
             this.compromisos.clear();
-            this.addressForm.get("cuantosCompromisos").setValue(null); 
+            this.addressForm.get("cuantosCompromisos").setValue(null);
           }
         })
     }
@@ -183,17 +200,16 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   onSubmit() {
 
     if (this.proyectos)
-      this.proyectos.forEach( p => 
-        {
-            let proyecto = p.proyecto
-            p.proyecto = {
-              EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
-              proyectoId: proyecto.proyectoId,
-              
+      this.proyectos.forEach(p => {
+        let proyecto = p.proyecto
+        p.proyecto = {
+          EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
+          proyectoId: proyecto.proyectoId,
 
-            }
-            p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
-        })
+
+        }
+        p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
+      })
 
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
@@ -230,8 +246,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message)
-        console.log( respuesta.data )
-        this.validar.emit( respuesta.data );
+        console.log(respuesta.data)
+        this.validar.emit(respuesta.data);
         if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
       })
@@ -240,7 +256,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   cargarRegistro() {
 
-    console.log( this.sesionComiteSolicitud )
+    console.log(this.sesionComiteSolicitud)
 
     let estados: string[] = ['1', '3', '5']
 
@@ -249,16 +265,16 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
 
-        if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-          this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-        }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-          this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+        if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico) {
+          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+        } else if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico) {
+          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
         }
-    console.log(this.estadosArray)
+        console.log(this.estadosArray)
 
       })
 
-    
+
 
     //let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
 
@@ -268,7 +284,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromiso)
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisos)
     this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitud)
-    
+
 
     this.commonService.listaUsuarios().then((respuesta) => {
 
@@ -293,31 +309,31 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     });
 
-    this.sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
+    this.sesionComiteSolicitud.sesionSolicitudVoto.forEach(sv => {
       if (sv.esAprobado)
         this.cantidadAprobado++;
       else
         this.cantidadNoAprobado++;
     })
 
-    if ( this.cantidadNoAprobado > 0 )
+    if (this.cantidadNoAprobado > 0)
       this.resultadoVotacion = 'No Aprobó'
     else
       this.resultadoVotacion = 'Aprobó'
 
-      this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacion;
+    this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacion;
 
     // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
-    
+
     // btnSolicitudMultiple.forEach( element =>{
     //   element.click();
     // })
-    
 
-    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion){
+
+    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion) {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
     }
-    
+
 
   }
 
