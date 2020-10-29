@@ -1117,14 +1117,19 @@ namespace asivamosffie.services
 
             ContratoConstruccion contratoConstruccion = null;
             contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-            contratoObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
 
-            lstContratoObservacion = _context.ConstruccionObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId && r.EsSupervision == pEsSupervisor).ToList();
-            lstContratoObservacion = lstContratoObservacion.OrderByDescending(r => r.ConstruccionObservacionId).ToList();
+            if (contratoConstruccion != null)
+            {
+                contratoObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
 
-            //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-            contratoObservacion = lstContratoObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId).FirstOrDefault();
-            return contratoObservacion;
+                lstContratoObservacion = _context.ConstruccionObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId && r.EsSupervision == pEsSupervisor).ToList();
+                lstContratoObservacion = lstContratoObservacion.OrderByDescending(r => r.ConstruccionObservacionId).ToList();
+
+                //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+                contratoObservacion = lstContratoObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId).FirstOrDefault();
+                return contratoObservacion;
+            }
+            return null;
         }
 
         public async Task<Contrato> GetContratoByIdContratoId(int pContratoId)
