@@ -201,7 +201,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2)
+        public async Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
             Respuesta _response = new Respuesta();
 
@@ -241,17 +241,40 @@ namespace asivamosffie.services
                 {
                     //contrato.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
 
-                    ContratoObservacion contratoObservacion = new ContratoObservacion();
-                    contratoObservacion = await GetContratoObservacionByIdContratoId(pContratoId);
+                    //ContratoObservacion contratoObservacion = new ContratoObservacion();
+                    //contratoObservacion = await GetContratoObservacionByIdContratoId(pContratoId);
 
-                    contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
-                    contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
-                    contratoObservacion.FechaCreacion = DateTime.Now;
-                    contratoObservacion.EsActa = true;
-                    contratoObservacion.EsActaFase2 = true;
-                    contratoObservacion.ContratoId = pContratoId;
+                    //contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
+                    //contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
+                    //contratoObservacion.FechaCreacion = DateTime.Now;
+                    //contratoObservacion.EsActa = true;
+                    //contratoObservacion.EsActaFase2 = true;
+                    //contratoObservacion.ContratoId = pContratoId;
 
-                    _context.ContratoObservacion.Update(contratoObservacion);
+                    ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
+
+                    //                6   Acta de inicio interventor
+                    //7   Acta de inicio supervisor
+                    construccionObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
+
+                    if (pEsSupervisor)
+                        //if (construccionObservacion.EsSupervision)
+                        construccionObservacion.TipoObservacionConstruccion = "7";
+                    else
+                        construccionObservacion.TipoObservacionConstruccion = "6";
+
+                    construccionObservacion.EsSupervision = pEsSupervisor;
+                    construccionObservacion.EsActa = pEsActa;
+               
+                    construccionObservacion.UsuarioCreacion = pUsuarioModificacion;
+                    construccionObservacion.FechaCreacion = DateTime.Now;
+
+                    ContratoConstruccion contratoConstruccion = null;
+                    contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+                    construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+                   
+                    //_context.ContratoObservacion.Update(contratoObservacion);
+                    _context.ConstruccionObservacion.Update(construccionObservacion);
                     _context.SaveChanges();
 
                     contrato.UsuarioCreacion = pUsuarioModificacion;
@@ -1019,12 +1042,12 @@ namespace asivamosffie.services
         //        Template TemplateRecoveryPassword =  _commonService.GetTemplateById(pIdTemplate);
 
         //        string template = TemplateRecoveryPassword.Contenido;              
-                               
+
         //        int tipoContrato = 0;
 
         //        Contrato contrato = null;
         //        contrato = _context.Contrato.Where(r => r.NumeroContrato == pActaInicio.NumeroContrato).FirstOrDefault();
-              
+
         //        //tipoContrato = 2;
         //        tipoContrato = ConstanCodigoTipoContratacion.Interventoria;                      
 
@@ -1076,18 +1099,31 @@ namespace asivamosffie.services
 
 
 
-        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId)
+        //public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId)
+        public async Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
         {
 
             //includefilter
-            ContratoObservacion contratoObservacion = new ContratoObservacion();
-            List<ContratoObservacion> lstContratoObservacion = new List<ContratoObservacion>();
-            lstContratoObservacion=_context.ContratoObservacion.Where(r => r.ContratoId == pContratoId && r.EsActaFase2==true).ToList();
-            lstContratoObservacion = lstContratoObservacion.OrderByDescending(r => r.ContratoObservacionId).ToList();
+            //ContratoObservacion contratoObservacion = new ContratoObservacion();
+            //List<ContratoObservacion> lstContratoObservacion = new List<ContratoObservacion>();
+            //lstContratoObservacion=_context.ContratoObservacion.Where(r => r.ContratoId == pContratoId && r.EsActaFase2==true).ToList();
+            //lstContratoObservacion = lstContratoObservacion.OrderByDescending(r => r.ContratoObservacionId).ToList();
+
+            ////contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+            //contratoObservacion = lstContratoObservacion.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            ConstruccionObservacion contratoObservacion = new ConstruccionObservacion();
+            List<ConstruccionObservacion> lstContratoObservacion = new List<ConstruccionObservacion>();
+
+            ContratoConstruccion contratoConstruccion = null;
+            contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+            contratoObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+
+            lstContratoObservacion = _context.ConstruccionObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId && r.EsSupervision == pEsSupervisor).ToList();
+            lstContratoObservacion = lstContratoObservacion.OrderByDescending(r => r.ConstruccionObservacionId).ToList();
 
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-            contratoObservacion = lstContratoObservacion.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-                    
+            contratoObservacion = lstContratoObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId).FirstOrDefault();
             return contratoObservacion;
         }
 
@@ -1233,8 +1269,11 @@ namespace asivamosffie.services
                 if (EstadoVerificacion != null)
                     strEstadoVerificacion = EstadoVerificacion.Nombre;
 
-                ContratoObservacion contratoObservacion = null;
-                contratoObservacion = await GetContratoObservacionByIdContratoId(item.ContratoId);
+                //ContratoObservacion contratoObservacion = null;
+                //contratoObservacion = await GetContratoObservacionByIdContratoId(item.ContratoId, false);
+
+                ConstruccionObservacion contratoObservacion = null;
+                contratoObservacion = await GetContratoObservacionByIdContratoId(item.ContratoId, false);
 
                 if (contratoObservacion != null)
                     bTieneObservacionesSupervisor = true;
@@ -1502,7 +1541,8 @@ namespace asivamosffie.services
 
                 Contratacion contratacion = null;
 
-                ContratoObservacion contratoObservacion = null;
+                //ContratoObservacion contratoObservacion = null;
+                ConstruccionObservacion contratoObservacion = null;
 
                 ContratoPoliza contratoPoliza=null;
                 
@@ -1523,7 +1563,7 @@ namespace asivamosffie.services
                     strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
                     //contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
-                    contratoObservacion =  await GetContratoObservacionByIdContratoId( contrato.ContratoId);
+                    contratoObservacion =  await GetContratoObservacionByIdContratoId( contrato.ContratoId,false);
 
                     if (contratoObservacion != null)
                     {
