@@ -1695,7 +1695,7 @@ namespace asivamosffie.services
                 Contratacion contratacion = null;
 
                 //ContratoObservacion contratoObservacion = null;
-                ConstruccionObservacion contratoObservacion = null;
+                ConstruccionObservacion construccionObservacion = null;
 
                 ContratoPoliza contratoPoliza=null;
                 
@@ -1716,11 +1716,11 @@ namespace asivamosffie.services
                     strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
                     //contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
-                    contratoObservacion =  await GetContratoObservacionByIdContratoId( contrato.ContratoId,false);
+                    construccionObservacion =  await GetContratoObservacionByIdContratoId( contrato.ContratoId,false);
 
-                    if (contratoObservacion != null)
+                    if (construccionObservacion != null)
                     {
-                        strContratoObservacion = contratoObservacion.Observaciones;
+                        strContratoObservacion = construccionObservacion.Observaciones;
                     }
 
                     //strContratoObservacion = contrato.Observaciones;
