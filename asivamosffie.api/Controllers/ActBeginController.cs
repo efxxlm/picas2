@@ -62,13 +62,13 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditContratoObservacion")]        
-        public async Task<IActionResult> InsertEditContratoObservacion( ContratoObservacion contratoObservacion)
+        public async Task<IActionResult> InsertEditContratoObservacion( ConstruccionObservacion construccionObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.InsertEditContratoObservacion(contratoObservacion);
+                respuesta = await _ActBegin.InsertEditContratoObservacion(construccionObservacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)

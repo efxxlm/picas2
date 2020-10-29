@@ -35,7 +35,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CambiarEstadoVerificacionActa(int pContratoId, string pNuevoCodigoEstadoVerificacionActa, string pUsuarioModifica);
 
-        Task<Respuesta> InsertEditContratoObservacion(ContratoObservacion contratoObservacion);
+        Task<Respuesta> InsertEditContratoObservacion(ConstruccionObservacion construccionObservacion);
 
 
         Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
