@@ -541,7 +541,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    strCrearEditar = "EDIT SOLICITUD DDP ESPECIAL";
+                    strCrearEditar = "EDITAR SOLICITUD DDP ESPECIAL";
                     disponibilidadPresupuestalAntiguo = _context.DisponibilidadPresupuestal.Find(disponibilidadPresupuestal.DisponibilidadPresupuestalId);
 
                     //Auditoria
@@ -1631,7 +1631,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateUpdateDisponibilidaPresupuestalEspecial(DisponibilidadPresupuestal pDisponibilidadPresupuestal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_DDP, (int)EnumeratorTipoDominio.Acciones);
-             
+            DisponibilidadPresupuestalProyecto entity = new DisponibilidadPresupuestalProyecto();
             Contrato contrato = _context.Contrato
                 .Where(r => r.NumeroContrato == pDisponibilidadPresupuestal.NumeroContrato)
                 .Include(r => r.Contratacion)
@@ -1652,6 +1652,20 @@ namespace asivamosffie.services
 
                     if (pDisponibilidadPresupuestal.ValorAportante != null)
                         pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
+                      
+                    pDisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
+                    {
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
+                        {
+                            entity.ProyectoId = p.ProyectoId;
+                            entity.DisponibilidadPresupuestalId = pDisponibilidadPresupuestal.DisponibilidadPresupuestalId;
+                            entity.FechaCreacion = DateTime.Now;
+                            entity.UsuarioCreacion = pDisponibilidadPresupuestal.UsuarioCreacion;
+                            entity.Eliminado = false; 
+                            pDisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Add(entity);
+                        }
+
+                    });
 
                     _context.DisponibilidadPresupuestal.Add(pDisponibilidadPresupuestal);
                 }
@@ -1678,11 +1692,33 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
                     if (pDisponibilidadPresupuestal.ValorAportante != null)
-                        pDisponibilidadPresupuestal.ValorSolicitud = (decimal)disponibilidadPresupuestalOld.ValorAportante;
+                        pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
                     disponibilidadPresupuestalOld.NumeroContrato = pDisponibilidadPresupuestal.NumeroContrato;
                     disponibilidadPresupuestalOld.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
                     disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
-                 }
+
+                    pDisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
+                    {
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
+                        {
+                            entity.ProyectoId = p.ProyectoId;
+                            entity.DisponibilidadPresupuestalId = pDisponibilidadPresupuestal.DisponibilidadPresupuestalId;
+                            entity.FechaCreacion = DateTime.Now;
+                            entity.UsuarioCreacion = pDisponibilidadPresupuestal.UsuarioCreacion;
+                            entity.Eliminado = false;
+
+                            disponibilidadPresupuestalOld.DisponibilidadPresupuestalProyecto.Add(entity);
+                        }
+                        else
+                        {
+                            entity = _context.DisponibilidadPresupuestalProyecto.Find(p.DisponibilidadPresupuestalProyectoId);
+
+                            entity.UsuarioModificacion = pDisponibilidadPresupuestal.UsuarioCreacion;
+                            entity.FechaModificacion = DateTime.Now;
+                            entity.ProyectoId = p.ProyectoId;
+                        } 
+                    });
+                }
 
                 await _context.SaveChangesAsync();
                 return new Respuesta
