@@ -45,9 +45,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratoObservacionByIdContratoId")]
         [HttpGet]        
-        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId)
+        public async Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
         {
-            var respuesta = await _ActBegin.GetContratoObservacionByIdContratoId(pContratoId);
+            var respuesta = await _ActBegin.GetContratoObservacionByIdContratoId(pContratoId,  pEsSupervisor);
             return respuesta;
         }
 
@@ -249,13 +249,13 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("EditarContratoObservacion")]        
-        public async Task<IActionResult> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2)
+        public async Task<IActionResult> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.EditarContratoObservacion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacion,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2);
+                respuesta = await _ActBegin.EditarContratoObservacion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacion,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2,  pEsSupervisor,  pEsActa);
                 return Ok(respuesta);
             }
             catch (Exception ex)
