@@ -155,7 +155,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: [null, Validators.required],
-      observaciones:['', Validators.required],
+      observaciones:[null, Validators.required],
     })
   }
   maxLength(e: any, n: number) {
@@ -194,6 +194,30 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     if(localStorage.getItem("editable")=="false"){
       this.services.CreateTieneObservacionesActaInicio(this.contratoId,this.addressForm.value.observaciones,"usr3",true,this.addressForm.value.tieneObservaciones).subscribe(resp=>{
         if(resp.code=="200"){
+          if(this.addressForm.value.tieneObservaciones==true){
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.services.CambiarEstadoActa(this.contratoId,"8","usr2").subscribe(data0=>{
+            
+              });
+            }
+            else{
+              this.services.CambiarEstadoActa(this.contratoId,"16","usr2").subscribe(data0=>{
+            
+              });
+            }
+          }
+          else{
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.services.CambiarEstadoActa(this.contratoId,"5","usr2").subscribe(data1=>{
+            
+              });
+            }
+            else{
+              this.services.CambiarEstadoActa(this.contratoId,"15","usr2").subscribe(data1=>{
+            
+              });
+            }
+          }
           this.openDialog(resp.message, "");
           this.router.navigate(['/generarActaInicioConstruccion']);
         }

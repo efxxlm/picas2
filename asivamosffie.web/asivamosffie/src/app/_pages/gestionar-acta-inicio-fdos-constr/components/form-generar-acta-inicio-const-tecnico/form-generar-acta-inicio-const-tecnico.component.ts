@@ -217,7 +217,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.fechaSesion2 = new Date(fecha2);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}/${this.fechaSesion2.getMonth() + 1}/${this.fechaSesion2.getDate()}`;
     //compara los meses
-    if(this.editable==false){
+    if(localStorage.getItem("editable") == "false"){
       var sumaMeses;
       var sumaDias;
       sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
@@ -246,7 +246,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       }
     }
     else{
-      this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(resp=>{
+      this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(resp=>{
         if (resp.code == "200") {
           this.openDialog('La información ha sido guardada exitosamente.', "");
           this.router.navigate(['/generarActaInicioConstruccion']);
