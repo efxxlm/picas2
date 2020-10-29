@@ -4,6 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { Router } from '@angular/router';
+import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
+import { estadosPreconstruccion } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 
 export interface PeriodicElement {
   id: number;
@@ -32,6 +34,7 @@ export class TablaContratoDeObraComponent implements OnInit {
     'gestion'
   ];
   dataSource = new MatTableDataSource();
+  estadosPreconstruccionObra: estadosPreconstruccion;
 
   @ViewChild( MatPaginator, {static: true} ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort        : MatSort;
@@ -42,8 +45,16 @@ export class TablaContratoDeObraComponent implements OnInit {
   }
 
   constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+                private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
                 private routes: Router ) 
   {
+    this.faseUnoVerificarPreconstruccionSvc.listaEstadosVerificacionContrato( 'obra' )
+      .subscribe(
+        response => {
+          this.estadosPreconstruccionObra = response;
+          console.log( this.estadosPreconstruccionObra );
+        }
+      );
     this.faseUnoPreconstruccionSvc.getListContratacion()
       .subscribe( listas => {
         console.log( listas );
@@ -73,4 +84,8 @@ export class TablaContratoDeObraComponent implements OnInit {
     this.routes.navigate( [ '/verificarPreconstruccion/obraGestionarRequisitos', id ], { state: { fechaPoliza } } )
   };
 
-}
+  enviarSupervisor ( contratoId: number ) {
+    console.log( contratoId );
+  };
+
+};

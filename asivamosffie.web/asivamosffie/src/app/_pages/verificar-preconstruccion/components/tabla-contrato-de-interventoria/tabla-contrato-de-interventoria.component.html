@@ -37,14 +37,53 @@
 
     <ng-container matColumnDef="estadoNombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de requisitos </th>
-        <td mat-cell *matCellDef="let element"> {{element.estadoNombre}} </td>
+        <td mat-cell *matCellDef="let element">
+            <section *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo">
+                {{ element.estadoCodigo === estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.enProcesoVerificacionReqTecnicos.codigo">
+                {{ estadosPreconstruccionInterventoria.enProcesoVerificacionReqTecnicos.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo">
+                {{ estadosPreconstruccionInterventoria.conReqTecnicosVerificados.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo">
+                {{ estadosPreconstruccionInterventoria.enviadoAlSupervisor.nombre }}
+            </section>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="gestion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <a (click)="getForm( element.contratoId, element.fechaAprobacion )" mat-raised-button color="accent" class="btn-table">Ver detalle</a>
-            <a (click)="getForm( element.contratoId, element.fechaAprobacion )" mat-raised-button color="accent" class="btn-table">Gestionar requisitos para inicio</a>
+            <a  (click)="getForm( element.contratoId, element.fechaAprobacion )"
+                mat-raised-button color="accent"
+                class="btn-table"
+                *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo">
+                Ver detalle
+            </a>
+            <a  (click)="getForm( element.contratoId, element.fechaAprobacion )"
+                mat-raised-button color="accent"
+                class="btn-table"
+                *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo">
+                Gestionar requisitos para inicio
+            </a>
+            <a  (click)="getForm( element.contratoId, element.fechaAprobacion )"
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                *ngIf=" estadosPreconstruccionInterventoria !== undefined
+                        && (element.estadoCodigo === estadosPreconstruccionInterventoria.enProcesoVerificacionReqTecnicos.codigo
+                        || element.estadoCodigo === estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo)">
+                Ver detalle/Editar
+            </a>
+            <a  (click)="enviarSupervisor( element.contratoId )"
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo">
+                Enviar al supervisor
+            </a>
         </td>
     </ng-container>
 

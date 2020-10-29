@@ -31,7 +31,7 @@
 
 	<mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
 		<mat-expansion-panel class="expansion-style">
-			<mat-expansion-panel-header class="expansion-style--header">
+			<mat-expansion-panel-header class="expansion-style--header" style="width: 50%;">
 				<mat-panel-title class="expansion-style--title" [ngClass]="contratacion.proyecto['estadoSemaforo']">
 					{{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
 				</mat-panel-title>

@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { GrillaFaseUnoPreconstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { map } from 'rxjs/operators';
-import { Contrato, ContratoModificado } from '../../../_interfaces/faseUnoPreconstruccion.interface';
+import { Contrato, ContratoModificado, estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 import { Respuesta } from '../autenticacion/autenticacion.service';
+import { Dominio } from '../common/common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,45 @@ export class FaseUnoPreconstruccionService {
 
   deleteContratoPerfilNumeroRadicado ( contratoPerfilNumeroRadicadoId: number ) {
     return this.http.post<Respuesta>( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
+  };
+  //Estados de preconstrucción
+  listaEstadosVerificacionContrato () {
+    let estadosPreconstruccion: estadosPreconstruccion = {};
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=53`)
+      .pipe(
+        map(
+          estados => {
+            console.log( estados );
+            estados.forEach( value => {
+              if ( value.codigo === '1' ) {
+                estadosPreconstruccion.sinAprobacionReqTecnicos = {
+                  codigo: value.codigo,
+                  nombre: value.nombre
+                };
+              };
+              if ( value.codigo === '2' ) {
+                estadosPreconstruccion.enProcesoAprobacionReqTecnicos = {
+                  codigo: value.codigo,
+                  nombre: value.nombre
+                };
+              };
+              if ( value.codigo === '3' ) {
+                estadosPreconstruccion.conReqTecnicosAprobados = {
+                  codigo: value.codigo,
+                  nombre: value.nombre
+                };
+              };
+              if ( value.codigo === '10' ) {
+                estadosPreconstruccion.enviadoAlInterventor = {
+                  codigo: value.codigo,
+                  nombre: value[ 'descripcion' ]
+                };
+              };
+            } );
+            return estadosPreconstruccion;
+          }
+        )
+      );
   };
 
 };

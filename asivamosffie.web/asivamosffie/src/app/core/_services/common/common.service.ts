@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 import { Usuario } from '../autenticacion/autenticacion.service';
 import { promise } from 'protractor';
+import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -159,10 +160,6 @@ export class CommonService {
 
   listaPerfil () {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=11`);
-  }
-
-  listaEstadosVerificacionContrato () {
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=53`);
   }
 
   public listaUsuarios(){

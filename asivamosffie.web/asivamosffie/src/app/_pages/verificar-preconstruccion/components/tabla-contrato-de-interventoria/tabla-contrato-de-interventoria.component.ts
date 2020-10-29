@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
 import { Router } from '@angular/router';
+import { estadosPreconstruccion } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-tabla-contrato-de-interventoria',
@@ -21,6 +22,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
     'estadoNombre',
     'gestion'
   ];
+  estadosPreconstruccionInterventoria: estadosPreconstruccion;
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -34,6 +36,8 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
   constructor ( private faseUnoVerificarPreConstruccionSvc: FaseUnoVerificarPreconstruccionService,
                 private routes: Router ) 
   {
+    this.faseUnoVerificarPreConstruccionSvc.listaEstadosVerificacionContrato( 'interventoria' )
+      .subscribe( console.log );
     this.faseUnoVerificarPreConstruccionSvc.getListContratacion()
       .subscribe( listas => {
         console.log( listas );
@@ -61,6 +65,10 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
 
   getForm ( id: number, fechaPoliza: string ) {
     this.routes.navigate( [ '/verificarPreconstruccion/interventoriaGestionarRequisitos', id ], { state: { fechaPoliza } } )
+  };
+
+  enviarSupervisor ( contratoId: number ) {
+    console.log( contratoId );
   };
 
 }

@@ -5,6 +5,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { CommonService } from '../../../../core/_services/common/common.service';
 import { Router } from '@angular/router';
+import { estadosPreconstruccion } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 
 export interface PeriodicElement {
   id: number;
@@ -34,6 +35,7 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
     'estadoNombre',
     'gestion'
   ];
+  estadosPreconstruccion: estadosPreconstruccion;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -47,8 +49,13 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
                 private commonSvc: CommonService,
                 private routes: Router ) 
   {
-    commonSvc.listaEstadosVerificacionContrato()
-      .subscribe( console.log )
+    faseUnoPreconstruccionSvc.listaEstadosVerificacionContrato()
+      .subscribe(
+        response => {
+          this.estadosPreconstruccion = response;
+          console.log( this.estadosPreconstruccion );
+        }
+      );
     this.faseUnoPreconstruccionSvc.getListContratacion()
       .subscribe( listas => {
         console.log( listas );

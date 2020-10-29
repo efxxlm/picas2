@@ -7,7 +7,26 @@ export interface GrillaFaseUnoPreconstruccion {
   proyectosCompletos: number;
   proyectosNoCompletos: number;
   verBotonAprobarInicio: boolean;
-}
+};
+
+export interface estadosPreconstruccion {
+  sinAprobacionReqTecnicos?: estadoCodigos,
+  enProcesoAprobacionReqTecnicos?: estadoCodigos,
+  conReqTecnicosAprobados?: estadoCodigos,
+  enProcesoVerificacionReqTecnicos?: estadoCodigos,
+  conReqTecnicosVerificados?: estadoCodigos,
+  enviadoAlSupervisor?: estadoCodigos,
+  enProcesoValidacionReqTecnicos?: estadoCodigos,
+  conReqTecnicosValidados?: estadoCodigos,
+  conReqTecnicosAprobadosPorSupervisor?: estadoCodigos,
+  enviadoAlInterventor?: estadoCodigos,
+  enviadoAlApoyo?: estadoCodigos
+};
+
+interface estadoCodigos {
+  codigo: string;
+  nombre: string;
+};
 
 export interface ContratoModificado {
   contratacion: Contratacion,

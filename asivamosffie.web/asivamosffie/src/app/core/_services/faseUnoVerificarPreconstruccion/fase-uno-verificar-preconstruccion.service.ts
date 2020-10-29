@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Contrato, GrillaFaseUnoPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
+import { Contrato, GrillaFaseUnoPreconstruccion, estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 import { ObservacionPerfil } from '../../../_interfaces/faseUnoVerificarPreconstruccion.interface';
 import { Respuesta } from '../autenticacion/autenticacion.service';
+import { Dominio } from '../common/common.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +38,76 @@ export class FaseUnoVerificarPreconstruccionService {
   crearContratoPerfilObservacion ( pContratoPerfilObservacion: ObservacionPerfil ) {
     return this.http.post<Respuesta>( `${ this.paramUrl( '/VerifyPreConstructionRequirementsPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );
   }
+  //Estados verificar preconstrucción
+  listaEstadosVerificacionContrato ( tipoContrato: string ) {
+    let estadosPreconstruccion: estadosPreconstruccion = {};
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=53`)
+      .pipe(
+        map(
+          estados => {
+            console.log( estados );
+            if ( tipoContrato === 'obra' ) {
+             estados.forEach( value => {
+               if ( value.codigo === '3' ) {
+                 estadosPreconstruccion.conReqTecnicosAprobados = {
+                   codigo: value.codigo,
+                   nombre: value[ 'descripcion' ]
+                 };
+               };
+               if ( value.codigo === '4' ) {
+                 estadosPreconstruccion.enProcesoAprobacionReqTecnicos = {
+                   codigo: value.codigo,
+                   nombre: value.nombre
+                 };
+               };
+               if ( value.codigo === '5' ) {
+                 estadosPreconstruccion.conReqTecnicosVerificados = {
+                   codigo: value.codigo,
+                   nombre: value.nombre
+                 };
+               };
+               if ( value.codigo === '6' ) {
+                 estadosPreconstruccion.enviadoAlSupervisor = {
+                   codigo: value.codigo,
+                   nombre: value.nombre
+                 };
+               };
+             } );
+             return estadosPreconstruccion;
+            };
+            if ( tipoContrato === 'interventoria' ) {
+              estados.forEach( value => {
+                if ( value.codigo === '1' ) {
+                  estadosPreconstruccion.sinAprobacionReqTecnicos = {
+                    codigo: value.codigo,
+                    nombre: 'Sin verificación de requisitos técnicos'
+                  };
+                };
+                if ( value.codigo === '4' ) {
+                  estadosPreconstruccion.enProcesoVerificacionReqTecnicos = {
+                    codigo: value.codigo,
+                    nombre: value.nombre
+                  };
+                };
+                if ( value.codigo === '5' ) {
+                  estadosPreconstruccion.conReqTecnicosVerificados = {
+                    codigo: value.codigo,
+                    nombre: value.nombre
+                  };
+                };
+                if ( value.codigo === '6' ) {
+                  estadosPreconstruccion.enviadoAlSupervisor = {
+                    codigo: value.codigo,
+                    nombre: value.nombre
+                  };
+                };
+              } );
+              return estadosPreconstruccion;
+            };
+          }
+        )
+      );
+  };
   //servicio del 3.1.8
   aprobarCrearContratoPerfilObservacion ( pContratoPerfilObservacion: ObservacionPerfil ) {
     return this.http.post<Respuesta>( `${ this.paramUrl( '/ApprovePreConstructionPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );
