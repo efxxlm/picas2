@@ -44,6 +44,7 @@
         public const string  VALOR_USO_FUENTE_USO ="176";
         public const string  REGISTROS_USOS = "178";
         public const string  ROWSPAN_CANTIDAD_USOS = "179";
+        public const string  ROWSPAN_CANTIDAD_USOS_COMPONENTES = "193";
 
         #endregion
 
