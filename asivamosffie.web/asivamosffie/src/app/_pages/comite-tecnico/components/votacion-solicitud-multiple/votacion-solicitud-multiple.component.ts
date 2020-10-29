@@ -138,8 +138,8 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
           let listaObservaciones = grupoProyecto.get('observaciones') as FormArray;
 
           grupoProyecto.get('llaveMen').setValue(cp.proyecto.llaveMen);
-          grupoProyecto.get('nombreInstitucion').setValue(''/*response.institucionEducativa.nombre*/);
-          grupoProyecto.get('nombreSede').setValue(''/*response.sede.nombre*/);
+          grupoProyecto.get('nombreInstitucion').setValue(cp.proyecto.institucionEducativa.nombre);
+          grupoProyecto.get('nombreSede').setValue(cp.proyecto.sede.nombre);
 
           this.data.sesionComiteSolicitud.sesionSolicitudObservacionProyecto
             .filter(o => o.contratacionProyectoId == cp.contratacionProyectoId)
