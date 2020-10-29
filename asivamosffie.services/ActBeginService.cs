@@ -122,7 +122,7 @@ namespace asivamosffie.services
         }
         //_context.Add(contratoPoliza);
                 
-        public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1 , DateTime pFechaTerminacionFase2)
+        public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1 , DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
             Respuesta _response = new Respuesta();
 
@@ -149,7 +149,33 @@ namespace asivamosffie.services
                 contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
                  contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
                 //contrato.ContratoObservacion = pObservacionesConsideracionesEspeciales;
-                contrato.Observaciones = Helpers.Helpers.CleanStringInput( pObservacionesConsideracionesEspeciales);
+                //contrato.Observaciones = Helpers.Helpers.CleanStringInput( pObservacionesConsideracionesEspeciales);
+
+                ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
+
+                //                6   Acta de inicio interventor
+                //7   Acta de inicio supervisor
+                construccionObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacionesConsideracionesEspeciales);
+
+                if (pEsSupervisor)
+                    //if (construccionObservacion.EsSupervision)
+                    construccionObservacion.TipoObservacionConstruccion = "7";
+                else
+                    construccionObservacion.TipoObservacionConstruccion = "6";
+
+                construccionObservacion.EsSupervision = pEsSupervisor;
+                construccionObservacion.EsActa = pEsActa;
+
+                construccionObservacion.UsuarioCreacion = pUsuarioModificacion;
+                construccionObservacion.FechaCreacion = DateTime.Now;
+
+                ContratoConstruccion contratoConstruccion = null;
+                contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+                construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+
+                //_context.ContratoObservacion.Update(contratoObservacion);
+                _context.ConstruccionObservacion.Add(construccionObservacion);
+
                 _context.Contrato.Update(contrato);
                 //contrato.FechaModificacion = DateTime.Now;
                 //contrato.UsuarioModificacion = pUsuarioModificacion;

@@ -209,13 +209,13 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CreatePlazoEjecucionFase2Construccion")]
         
-        public async Task<IActionResult> CreatePlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2    )
+        public async Task<IActionResult> CreatePlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.GuardarPlazoEjecucionFase2Construccion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacionesConsideracionesEspeciales,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2);
+                respuesta = await _ActBegin.GuardarPlazoEjecucionFase2Construccion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacionesConsideracionesEspeciales,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2,  pEsSupervisor,  pEsActa);
                 return Ok(respuesta);
             }
             catch (Exception ex)

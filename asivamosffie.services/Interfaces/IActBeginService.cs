@@ -48,7 +48,7 @@ namespace asivamosffie.services.Interfaces
         //FechaFirmaActaContratistaInterventoria  - contrato
         //----cargar archivo pdf VALIDAR FORMATO PDF?? NATALIA   - julian cargar archivo ???
 
-        Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1 , DateTime pFechaTerminacionFase2);
+        Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1 , DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa);
         //:  Meses: xx Días: xx   - PlazoFase2PreMeses  - PlazoFase2PreDias - contrato
         //ObservacionesConsideracionesEspeciales Observaciones  - contrato
 
