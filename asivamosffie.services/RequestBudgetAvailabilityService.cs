@@ -445,26 +445,27 @@ namespace asivamosffie.services
                 DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                                                 .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
+                                                   .ThenInclude(r => r.Proyecto)
                                                 .Include(r => r.Aportante)
                                                    .ThenInclude(r => r.NombreAportante)
                                                 .Include(r => r.Aportante)
                                                    .ThenInclude(r => r.Departamento)
                                                 .Include(r => r.Aportante)
                                                    .ThenInclude(r => r.Municipio)
-                                                       .ThenInclude(r => r.Proyecto)
                                                 .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();
 
                 foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
                 {
-                    if (!string.IsNullOrEmpty(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio))
+                    if (DisponibilidadPresupuestalProyecto.Proyecto != null)
                     {
-
-                        Localizacion Municipio = _context.Localizacion.Find(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio);
-                        DisponibilidadPresupuestalProyecto.Proyecto.MunicipioObj = Municipio;
-                        DisponibilidadPresupuestalProyecto.Proyecto.DepartamentoObj = _context.Localizacion.Find(Municipio.IdPadre);
+                        if (!string.IsNullOrEmpty(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio))
+                        { 
+                            Localizacion Municipio = _context.Localizacion.Find(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio);
+                            DisponibilidadPresupuestalProyecto.Proyecto.MunicipioObj = Municipio;
+                            DisponibilidadPresupuestalProyecto.Proyecto.DepartamentoObj = _context.Localizacion.Find(Municipio.IdPadre);
+                        }
                     }
-                }
-
+                } 
 
                 return disponibilidad;
             }
@@ -771,7 +772,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.FechaModificacion = DateTime.Now;
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.Eliminado = true;
-                    _context.SaveChanges(); 
+                    _context.SaveChanges();
                 }
 
                 return respuesta = new Respuesta
@@ -819,7 +820,7 @@ namespace asivamosffie.services
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
 
-                            }).OrderByDescending(r=> r.DisponibilidadPresupuestalId).ToListAsync();
+                            }).OrderByDescending(r => r.DisponibilidadPresupuestalId).ToListAsync();
         }
 
         public async Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa()
@@ -1631,7 +1632,7 @@ namespace asivamosffie.services
                 if (pDisponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
                 {
                     pDisponibilidadPresupuestal.FechaCreacion = DateTime.Now;
-                    pDisponibilidadPresupuestal.Eliminado = false;  
+                    pDisponibilidadPresupuestal.Eliminado = false;
                     pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     pDisponibilidadPresupuestal.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
                     if (!(bool)pDisponibilidadPresupuestal.RegistroCompleto)
@@ -1639,12 +1640,12 @@ namespace asivamosffie.services
                     else
                         pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
 
-                    pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo; 
+                    pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo;
                     pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
                     pDisponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", _context.DisponibilidadPresupuestal.Count((r => r.NumeroSolicitud.Contains("DE"))));
-                  
-                    if(pDisponibilidadPresupuestal.ValorAportante != null)
-                         pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
+
+                    if (pDisponibilidadPresupuestal.ValorAportante != null)
+                        pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
 
                     _context.DisponibilidadPresupuestal.Add(pDisponibilidadPresupuestal);
                 }
@@ -1655,7 +1656,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalOld.FechaSolicitud = pDisponibilidadPresupuestal.FechaSolicitud;
                     disponibilidadPresupuestalOld.TipoSolicitudCodigo = pDisponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestalOld.NumeroSolicitud = pDisponibilidadPresupuestal.NumeroSolicitud;
-                    disponibilidadPresupuestalOld.OpcionContratarCodigo = pDisponibilidadPresupuestal.OpcionContratarCodigo; 
+                    disponibilidadPresupuestalOld.OpcionContratarCodigo = pDisponibilidadPresupuestal.OpcionContratarCodigo;
                     disponibilidadPresupuestalOld.EstadoSolicitudCodigo = pDisponibilidadPresupuestal.EstadoSolicitudCodigo;
                     disponibilidadPresupuestalOld.Objeto = pDisponibilidadPresupuestal.Objeto;
                     disponibilidadPresupuestalOld.FechaDdp = pDisponibilidadPresupuestal.FechaDdp;
@@ -1668,7 +1669,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalOld.PlazoMeses = pDisponibilidadPresupuestal.PlazoMeses;
                     disponibilidadPresupuestalOld.PlazoDias = pDisponibilidadPresupuestal.PlazoDias;
                     disponibilidadPresupuestalOld.CuentaCartaAutorizacion = pDisponibilidadPresupuestal.CuentaCartaAutorizacion;
-                    disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId; 
+                    disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
                     if (pDisponibilidadPresupuestal.ValorAportante != null)
                         pDisponibilidadPresupuestal.ValorSolicitud = (decimal)disponibilidadPresupuestalOld.ValorAportante;
@@ -1712,8 +1713,8 @@ namespace asivamosffie.services
                   || string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroRadicadoSolicitud)
                   || string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroContrato)
                   || pDisponibilidadPresupuestal.AportanteId == null
-                  || pDisponibilidadPresupuestal.ValorAportante == null )
-            { 
+                  || pDisponibilidadPresupuestal.ValorAportante == null)
+            {
                 return false;
             }
             return true;
