@@ -495,9 +495,16 @@ namespace asivamosffie.services
                 }
 
 
+                comiteTecnicoOld.SesionComiteSolicitudComiteTecnico.ToList().ForEach( ct => {
+                    SesionComiteSolicitud solicitud = _context.SesionComiteSolicitud.Find( ct.SesionComiteSolicitudId );
+
+                    solicitud.Eliminado = true;
+                });
+
                 comiteTecnicoOld.UsuarioModificacion = pUsuarioModifico;
                 comiteTecnicoOld.FechaModificacion = DateTime.Now;
                 comiteTecnicoOld.Eliminado = true;
+
                 _context.SaveChanges();
 
                 return new Respuesta
