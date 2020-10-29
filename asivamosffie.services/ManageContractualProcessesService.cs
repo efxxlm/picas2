@@ -20,6 +20,7 @@ using System.IO;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace asivamosffie.services
 {
@@ -39,44 +40,7 @@ namespace asivamosffie.services
             _context = context;
             _documentService = documentService;
             _commonService = commonService;
-        }
-        //public async Task<byte[]> GetFileByName(string pNameFile)
-        //{
-        //    if (string.IsNullOrEmpty(codigoArchivo))
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-
-        //    int idvalor = db.Valor.Where(p => p.IdClasificador == (int)TipoClasificador.OrigenesAdjuntos && p.Ordinal == (int)ordTipoAdjunto.Requerimiento).FirstOrDefault().IdValor;
-
-        //    //Adjunto adjuntos = db.Adjunto.Include(p => p.Valor).Where(b => b.CodigoDescarga == codigoArchivo && b.IdOrigen == idvalor).FirstOrDefault();
-        //    Adjunto adjuntos = db.Adjunto.Include(p => p.Valor).Where(b => b.CodigoDescarga == codigoArchivo).FirstOrDefault();
-
-        //    if (adjuntos == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-
-        //    string sNombrePdf = adjuntos.IdAdjunto + "." + adjuntos.Tipo;
-        //    string ubicacacionPdf = "";
-
-        //    ubicacacionPdf = WebConfigurationManager.AppSettings["RutaArchivos"];
-
-        //    System.IO.FileInfo fileInfo = new System.IO.FileInfo(ubicacacionPdf + sNombrePdf);
-        //    if (fileInfo.Exists)
-        //    {
-        //        var cd = new System.Net.Mime.ContentDisposition
-        //        {
-        //            FileName = ubicacacionPdf + sNombrePdf,
-        //            Inline = false
-        //        };
-
-        //        Response.AppendHeader("Content-Disposition", cd.ToString());
-        //        return File(ubicacacionPdf + sNombrePdf, "application");
-        //    }
-
-        //}
-
+        } 
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
         {
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);

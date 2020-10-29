@@ -26,14 +26,7 @@ namespace asivamosffie.api.Controllers
             _manageContractualProcessesService = IManageContractualProcessesService;
             _settings = settings;
         }
-        //[Route("GetFileByName")]
-        //[HttpGet]
-        //public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
-        //{
-        //    var result = await _manageContractualProcessesService.GetListSesionComiteSolicitud();
-        //    return result;
-        //}
-
+  
 
         [Route("GetListSesionComiteSolicitud")]
         [HttpGet]
