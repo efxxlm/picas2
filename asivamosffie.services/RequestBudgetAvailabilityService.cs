@@ -1567,7 +1567,7 @@ namespace asivamosffie.services
                     Id = detailDP.DisponibilidadPresupuestalId,
                     NumeroSolicitud = detailDP.NumeroSolicitud,
                     TipoSolicitudCodigo = detailDP.TipoSolicitudCodigo,
-                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud) : "",
+                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal) : "",
                     NumeroDDP = detailDP.NumeroDdp,
                     RubroPorFinanciar = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
                                 && r.Codigo == detailDP.TipoSolicitudCodigo).FirstOrDefault().Descripcion,

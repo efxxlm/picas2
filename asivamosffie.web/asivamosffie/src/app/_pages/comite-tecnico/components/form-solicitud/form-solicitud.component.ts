@@ -166,9 +166,16 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         this.compromisos.push(this.crearCompromiso());
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
-      while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
+      console.log(this.compromisos.length);
+      console.log(FormGrupos.cuantosCompromisos);
+      for(let i=this.compromisos.length;i>FormGrupos.cuantosCompromisos;i--)
+      {
+        console.log(i);
         this.borrarArray(this.compromisos, this.compromisos.length - 1);
       }
+      /*while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
+        this.borrarArray(this.compromisos, this.compromisos.length - 1);
+      }*/
     }
   }
 

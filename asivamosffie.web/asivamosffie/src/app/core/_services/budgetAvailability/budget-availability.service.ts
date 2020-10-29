@@ -92,4 +92,16 @@ export class BudgetAvailabilityService {
     return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetListAportanteByTipoAportanteByProyectoId?pProyectoId=${ pProyectoId }&pTipoAportanteId=${ pTipoAportanteId }` );
   };
 
+  
 };
+interface TipoDDP{
+  DDP_tradicional: string;
+  DDP_especial: string;
+  DDP_administrativo: string;
+}
+
+export const TipoDDP: TipoDDP = {
+  DDP_tradicional:   "1",
+  DDP_especial:     "2",
+  DDP_administrativo:"3"
+}

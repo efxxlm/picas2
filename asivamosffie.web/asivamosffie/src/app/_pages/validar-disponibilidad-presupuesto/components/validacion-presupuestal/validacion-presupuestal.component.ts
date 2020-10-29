@@ -6,6 +6,7 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
 import { DomSanitizer } from '@angular/platform-browser';
 import { RechasadaPorValidacionComponent } from '../rechasada-por-validacion/rechasada-por-validacion.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 
 @Component({
   selector: 'app-validacion-presupuestal',
@@ -20,22 +21,27 @@ export class ValidacionPresupuestalComponent implements OnInit {
     ) { }
     detailavailabilityBudget:any=null;
     esModificacion=false;
+    pTipoDDP=TipoDDP;
 
   ngOnInit(): void {
+    console.log(this.pTipoDDP.DDP_tradicional);
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id).subscribe(listas => {
         console.log(listas);
-        this.detailavailabilityBudget=listas;
+        if(listas.length>0)
+        {
+          this.detailavailabilityBudget=listas[0];        
+        }                
       });
     }
   }
   download()
   {
     console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget[0].id).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
       console.log(listas);
-      const documento = `DDP ${ this.detailavailabilityBudget[0].id }.pdf`;
+      const documento = `DDP ${ this.detailavailabilityBudget.id }.pdf`;
         const text = documento,
           blob = new Blob([listas], { type: 'application/pdf' }),
           anchor = document.createElement('a');
@@ -46,9 +52,9 @@ export class ValidacionPresupuestalComponent implements OnInit {
     });
   }
 
-  openDialogDevolver(tipo) {
+  openDialogDevolver(tipo,numero,tipoSolicitud) {
     this.dialog.open(DevolverPorValidacionComponent, {
-      width: '70em',data:{solicitudID:this.route.snapshot.paramMap.get('id'),tipo:tipo}
+      width: '70em',data:{solicitudID:this.route.snapshot.paramMap.get('id'),tipo:tipo,numeroSolicitud:numero,tipoSolicitud:tipoSolicitud}
     });
   }
   validar() {
