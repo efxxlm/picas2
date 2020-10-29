@@ -1169,32 +1169,58 @@ namespace asivamosffie.services
             return contrato;
         }
 
-        public async Task<Respuesta> InsertEditContratoObservacion(ContratoObservacion contratoObservacion)
+        public async Task<Respuesta> InsertEditContratoObservacion(ConstruccionObservacion construccionObservacion)
         {
             Respuesta _response = new Respuesta();
 
             int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Observacion, (int)EnumeratorTipoDominio.Acciones);
-                        
+
             string strCrearEditar;
             try
             {
-                if (contratoObservacion != null)
+                if (construccionObservacion != null)
                 {
-                    if (contratoObservacion.ContratoObservacionId == 0)
+                    if ((bool)construccionObservacion.EsSupervision)
+                        //if (construccionObservacion.EsSupervision)
+                        construccionObservacion.TipoObservacionConstruccion = "7";
+                    else
+                        construccionObservacion.TipoObservacionConstruccion = "6";
+
+                    if (construccionObservacion.ConstruccionObservacionId == 0)
                     {
                         //Auditoria
                         strCrearEditar = "REGISTRAR CONTRATO OBSERVACION";
-                        _context.ContratoObservacion.Add(contratoObservacion);
+
+                        //ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
+
+                        //                6   Acta de inicio interventor
+                        //7   Acta de inicio supervisor
+                        construccionObservacion.Observaciones = Helpers.Helpers.CleanStringInput(construccionObservacion.Observaciones);
+                                      
+                        //construccionObservacion.EsSupervision = pEsSupervisor;
+                        //construccionObservacion.EsActa = pEsActa;
+
+                        //construccionObservacion.UsuarioCreacion = construccionObservacion.UsuarioCreacion;
+                        //construccionObservacion.UsuarioModificacion = construccionObservacion.UsuarioModificacion;
+                        //construccionObservacion.EsActa = construccionObservacion.UsuarioModificacion;
+                        //construccionObservacion.UsuarioCreacion = pUsuarioModificacion;
+                        construccionObservacion.FechaCreacion = DateTime.Now;
+
+                        ContratoConstruccion contratoConstruccion = null;
+                        contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
+                        construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+                     
+                        _context.ConstruccionObservacion.Add(construccionObservacion);                        
                         await _context.SaveChangesAsync();
 
                     }
                     else
                     {
-                        strCrearEditar = "EDIT CONTRATO OBSERVACION";
-                        _context.ContratoObservacion.Update(contratoObservacion);
+                        strCrearEditar = "EDIT CONTRATO OBSERVACION";                        
+                        _context.ConstruccionObservacion.Update(construccionObservacion);
                         await _context.SaveChangesAsync();
 
-                        
+
                     }
                     //contratoPoliza.FechaCreacion = DateTime.Now;
                     //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;                                     
@@ -1235,6 +1261,73 @@ namespace asivamosffie.services
             }
 
         }
+
+        //public async Task<Respuesta> InsertEditContratoObservacion(ContratoObservacion contratoObservacion)
+        //{
+        //    Respuesta _response = new Respuesta();
+
+        //    int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Observacion, (int)EnumeratorTipoDominio.Acciones);
+
+        //    string strCrearEditar;
+        //    try
+        //    {
+        //        if (contratoObservacion != null)
+        //        {
+        //            if (contratoObservacion.ContratoObservacionId == 0)
+        //            {
+        //                //Auditoria
+        //                strCrearEditar = "REGISTRAR CONTRATO OBSERVACION";
+        //                _context.ContratoObservacion.Add(contratoObservacion);
+        //                await _context.SaveChangesAsync();
+
+        //            }
+        //            else
+        //            {
+        //                strCrearEditar = "EDIT CONTRATO OBSERVACION";
+        //                _context.ContratoObservacion.Update(contratoObservacion);
+        //                await _context.SaveChangesAsync();
+
+
+        //            }
+        //            //contratoPoliza.FechaCreacion = DateTime.Now;
+        //            //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;                                     
+
+        //            //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+
+        //            return
+        //                new Respuesta
+        //                {
+        //                    IsSuccessful = true,
+        //                    IsException = false,
+        //                    IsValidation = false,
+        //                    Code = ConstantMessagesActaInicio.OperacionExitosa,
+        //                    Message =
+        //                    await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
+        //                    ConstantMessagesActaInicio.OperacionExitosa,
+        //                    //contratoPoliza
+        //                    1
+        //                    ,
+        //                    "UsuarioCreacion", strCrearEditar
+        //                    //contratoPoliza.UsuarioCreacion, "REGISTRAR POLIZA GARANTIA"
+        //                    )
+        //                };
+
+        //            //return _response = new Respuesta { IsSuccessful = true,
+        //            //    IsValidation = false, Data = cuentaBancaria,
+        //            //    Code = ConstantMessagesBankAccount.OperacionExitosa };
+        //        }
+        //        else
+        //        {
+        //            return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.RecursoNoEncontrado };
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
+        //    }
+
+        //}
 
 
         //Task<ActionResult<VistaGenerarActaInicioContrato>> GetListVistaGenerarActaInicio(int pContratoId);
