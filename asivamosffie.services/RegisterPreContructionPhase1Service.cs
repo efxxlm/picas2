@@ -44,8 +44,7 @@ namespace asivamosffie.services
                     CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
                     c.EstadoCodigo,
                     c.EstadoNombre,
-                    c.ExisteRegistro,
-
+                    c.ExisteRegistro, 
                 });
             });
 

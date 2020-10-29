@@ -33,13 +33,15 @@ namespace asivamosffie.model.Models
         public int? PlazoMeses { get; set; }
         public int? PlazoDias { get; set; }
         public bool? CuentaCartaAutorizacion { get; set; }
-        public string AportanteId { get; set; }
+        public int? AportanteId { get; set; }
         public decimal? ValorAportante { get; set; }
         public string NumeroContrato { get; set; }
         public string LimitacionEspecial { get; set; }
         public string NumeroRadicadoSolicitud { get; set; }
         public DateTime? FechaDrp { get; set; }
+        public string UrlSoporte { get; set; }
 
+        public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }

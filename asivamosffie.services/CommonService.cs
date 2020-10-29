@@ -209,7 +209,7 @@ namespace asivamosffie.services
         public async Task<int> getInstitucionEducativaIdByCodigoDane(int pCodigoDane)
         {
 
-            return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.CodigoDane == pCodigoDane).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
+            return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.CodigoDane == pCodigoDane.ToString()).Select(r => r.InstitucionEducativaSedeId).FirstOrDefaultAsync();
         }
 
         public async Task<Localizacion> GetLocalizacionByLocalizacionId(string pLocalizacionId)
