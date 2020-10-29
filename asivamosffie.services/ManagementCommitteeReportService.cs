@@ -321,7 +321,7 @@ namespace asivamosffie.services
                                     && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
                         }
                     }
-                } 
+                }
                 return ListComiteTecnico;
             }
             catch (Exception ex)
@@ -342,7 +342,7 @@ namespace asivamosffie.services
                     //Auditoria
                     strCrearEditar = ConstantCommonMessages.REGISTRAR_AVANCE_COMPROMISOS;
                     compromisoSeguimiento.FechaCreacion = DateTime.Now;
-                    compromisoSeguimiento.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion; 
+                    compromisoSeguimiento.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
                     compromisoSeguimiento.Eliminado = false;
                     _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
 
@@ -394,12 +394,12 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comentario_Acta, (int)EnumeratorTipoDominio.Acciones);
             ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(SesionComentario.ComiteTecnicoId);
             try
-            { 
+            {
                 string strCrearEditar;
                 if (string.IsNullOrEmpty(SesionComentario.SesionComentarioId.ToString()) || SesionComentario.SesionComentarioId == 0)
                 {
                     //Auditoria
-                    strCrearEditar = ConstantCommonMessages.COMENTAR_Y_DEVOLVER_ACTA; 
+                    strCrearEditar = ConstantCommonMessages.COMENTAR_Y_DEVOLVER_ACTA;
                     SesionComentario.Fecha = DateTime.Now;
                     SesionComentario.FechaCreacion = DateTime.Now;
                     SesionComentario.UsuarioCreacion = SesionComentario.UsuarioCreacion;
@@ -414,7 +414,7 @@ namespace asivamosffie.services
                     //Auditoria
                     SesionComentarioAntiguo.UsuarioModificacion = SesionComentario.UsuarioModificacion;
                     SesionComentarioAntiguo.FechaModificacion = DateTime.Now;
-                     
+
                     //Registros
                     SesionComentarioAntiguo.Fecha = SesionComentario.Fecha;
                     SesionComentarioAntiguo.Observacion = SesionComentario.Observacion;
@@ -470,7 +470,7 @@ namespace asivamosffie.services
                 ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                      .Include(r => r.SesionParticipante)
                      .FirstOrDefaultAsync();
-                 
+
                 SesionComentario sesionComentario = new SesionComentario
                 {
                     Fecha = DateTime.Now,
@@ -492,33 +492,38 @@ namespace asivamosffie.services
                 {
                     comiteTecnico.EstadoActaCodigo = ValidarEstadoActaVotacion(comiteTecnico);
 
+                    //Cambiar estado Comite Con acta aprobada
+                    if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
+                        comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
+                  
+                    
                     //Validar sesionComentario 
                     foreach (var SesionComentario in comiteTecnico.SesionComentario)
                     {
                         SesionComentario.ValidacionVoto = true;
                     }
-                } 
+                }
                 _context.SaveChanges();
                 return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
-                    IsValidation = false, 
+                    IsValidation = false,
                     Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, pUser.Email, strCrearEditar)
                 };
-            } 
+            }
             catch (Exception ex)
             {
                 return new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
-                    IsValidation = false, 
+                    IsValidation = false,
                     Code = ConstantMessagesSesionComiteTema.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, pUser.Email, ex.InnerException.ToString().Substring(0, 500))
                 };
-            } 
+            }
         }
 
         private string ValidarEstadoActaVotacion(ComiteTecnico pComiteTecnico)
@@ -530,6 +535,7 @@ namespace asivamosffie.services
                                             == pComiteTecnico.SesionComentario.Count())
             {
                 EstadoActa = ConstantCodigoActas.Aprobada;
+
             }
             return EstadoActa;
         }
@@ -576,7 +582,7 @@ namespace asivamosffie.services
                 throw;
             }
         }
-         
+
         public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId, int pTipoCompromiso)
         {
             List<Dominio> ListDominio = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
@@ -713,7 +719,7 @@ namespace asivamosffie.services
             }
         }
 
-         
+
 
         //plantilla - Acta de comité técnico
         //Forozco

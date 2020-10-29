@@ -3831,8 +3831,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-
-
+                 
                 //Temas para ordel del dia
                 int enumTemaOrdelDia = 1;
                 foreach (var Tema in pComiteTecnico.SesionComiteTema.Where(r => r.EsProposicionesVarios == null).ToList())
