@@ -26,27 +26,63 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListContratacion()
         {
-
             List<dynamic> listaContrats = new List<dynamic>();
 
-            List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra).ToListAsync();
+            //List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra).ToListAsync();
 
-            lista.ForEach(c =>
+            //lista.ForEach(c =>
+            //{
+            //    listaContrats.Add(new
+            //    {
+            //        c.ContratoId,
+            //        c.FechaAprobacion,
+            //        c.TipoContratoCodigo,
+            //        c.NumeroContrato,
+            //        c.CantidadProyectosAsociados,
+            //        c.CantidadProyectosRequisitosAprobados,
+            //        CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+            //        c.EstadoCodigo,
+            //        c.EstadoNombre,
+            //        c.ExisteRegistro, 
+            //    });
+            //});
+
+            List<Contrato> listContratos = await _context.Contrato.FromSqlRaw("SELECT c.* FROM	dbo.Contrato AS c INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId WHERE dp.NumeroDDP IS NOT NULL AND ctr.TipoSolicitudCodigo = 1")
+               .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.ContratacionProyecto)
+                       .ThenInclude(r => r.Proyecto)
+                            .ThenInclude(r => r.ContratoPerfil)
+                .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.DisponibilidadPresupuestal)
+             .ToListAsync();
+
+
+            foreach (var c in listContratos)
             {
+                int CantidadProyectosConPerfilesAprobados = 0;
+                int CantidadProyectosConPerfilesPendientes = 0;
+                foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
+                {
+                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
+                        CantidadProyectosConPerfilesPendientes++;
+                    else if (ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado) == ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado && r.RegistroCompleto))
+                        CantidadProyectosConPerfilesAprobados++;
+                    else
+                        CantidadProyectosConPerfilesPendientes++;
+                }
                 listaContrats.Add(new
                 {
                     c.ContratoId,
-                    c.FechaAprobacion,
+                    c.FechaAprobacionRequisitos,
                     c.TipoContratoCodigo,
                     c.NumeroContrato,
-                    c.CantidadProyectosAsociados,
-                    c.CantidadProyectosRequisitosAprobados,
-                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    c.EstadoCodigo,
-                    c.EstadoNombre,
-                    c.ExisteRegistro, 
+                    CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
+                    CantidadProyectosRequisitosAprobados =  CantidadProyectosConPerfilesAprobados,
+                    CantidadProyectosConPerfilesPendientes,
+                    c.EstadoVerificacionCodigo,
+                    c.EstaDevuelto,
                 });
-            });
+            }
 
             return listaContrats;
         }
@@ -72,7 +108,7 @@ namespace asivamosffie.services
                        .ThenInclude(r => r.ContratacionProyecto)
                              .ThenInclude(r => r.Proyecto)
                                  .ThenInclude(r => r.Sede)
-                    .Include(r => r.Contratacion) 
+                    .Include(r => r.Contratacion)
                         .ThenInclude(r => r.Contratista)
                     .FirstOrDefaultAsync();
 
@@ -160,8 +196,8 @@ namespace asivamosffie.services
                                 }
                                 else
                                 {
-                                    if(!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
-                                         ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
+                                    if (!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
+                                        ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
                                     ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                     ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
@@ -202,13 +238,13 @@ namespace asivamosffie.services
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
 
-                                if(!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
+                                if (!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
                                     ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                 ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
                                 ContratoPerfilObservacion.Eliminado = false;
-                        
+
 
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
