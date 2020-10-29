@@ -45,12 +45,15 @@ export class TablaSesionesComponent implements OnInit {
   getSesionSeleccionada ( event: boolean, sesion: DataSesion ) {
 
     const data = { estado: event, solicitud: this.solicitud };
+    console.log( data, sesion );
 
     if ( event ) {
       this.solicitud.data.push( sesion )
       
       event ? this.sesionesSeleccionadas.emit( data ) : this.sesionesSeleccionadas.emit( data );
     } else {
+      if (data.solicitud.data.length === 0)
+        data.solicitud.data.push( sesion ); 
       event ? this.sesionesSeleccionadas.emit( data ) : this.sesionesSeleccionadas.emit( data );
 
       const index = this.solicitud.data.findIndex( data => data.numeroSolicitud === sesion.numeroSolicitud );

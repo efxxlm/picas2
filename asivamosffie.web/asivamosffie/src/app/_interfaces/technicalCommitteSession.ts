@@ -13,6 +13,11 @@ export interface SolicitudesContractuales{
     sesionComiteSolicitudId?: number,
     tipoSolicitudCodigo?: string,
     solicitudId?: number,
+    comiteTecnicoId?: number,
+    fecha?: Date,
+    nombreSesion?: string,
+    data?: any[],
+    
 }
 
 export interface ComiteTecnico{

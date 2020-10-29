@@ -127,6 +127,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   //Metodo para recibir las solicitudes contractuales
   getSesionesSeleccionada(event: DataTable) {
 
+    console.log(this.solicitudesSeleccionadas, event)
     if (event.estado) {
 
       const index = this.solicitudesSeleccionadas.findIndex(value => value.data[0].idSolicitud === event.solicitud.data[0].idSolicitud);
@@ -139,10 +140,12 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
 
     } else {
-      console.log( this.solicitudesSeleccionadas, event )
+
 
 
       if (event.solicitud.data.length === 0) {
+    console.log(this.solicitudesSeleccionadas, event)
+
 
         const index = this.solicitudesSeleccionadas.findIndex(value => value.data[0].idSolicitud === event.solicitud.data[0].idSolicitud);
 
@@ -177,13 +180,13 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           this.tipoDeTemas.setValue(tipoTemaSeleccionado);
         }
 
-        this.getvalues( this.tipoDeTemas.value );
+        this.getvalues(this.tipoDeTemas.value);
 
         let temas = this.addressForm.get('tema') as FormArray;
 
         temas.clear();
         this.solicitudesSeleccionadas = [];
-  
+
         comite.sesionComiteTema.filter(t => t.esProposicionesVarios != true).forEach(te => {
           let grupoTema = this.crearTema();
           let responsable = this.responsablesArray.find(m => m.codigo == te.responsableCodigo)
@@ -198,17 +201,85 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           this.tema.push(grupoTema);
         })
 
-        comite.sesionComiteSolicitudComiteTecnicoFiduciario.forEach( tf => {
-          this.solicitudesSeleccionadas.push( { nombreSesion: '',
-                                                fecha: '',
-                                                data:[{ fechaSolicitud: '',
-                                                        id: 0, 
-                                                        idSolicitud: tf.sesionComiteSolicitudId,
-                                                        numeroSolicitud: '',
-                                                        tipoSolicitud: tf.tipoSolicitud,
-                                                        tipoSolicitudNumeroTabla: tf.tipoSolicitudCodigo
-                                                      }]
-                                              } );
+        console.log(comite);
+
+        let existeComite = false;
+
+        console.log(comite.sesionComiteSolicitudComiteTecnico.length)
+
+        comite.sesionComiteSolicitudComiteTecnico.forEach(tf => {
+
+          if ( this.dataSolicitudContractual.filter( r => r.comiteTecnicoId == tf.comiteTecnicoId ).length == 0 )
+          {
+            this.dataSolicitudContractual.push({
+
+              comiteTecnicoId: tf['comiteTecnico'].comiteTecnicoId,
+              fecha: tf['comiteTecnico'].fechaOrdenDia,
+              nombreSesion: tf['comiteTecnico'].numeroComite,
+              data: []
+
+
+            })
+          }
+
+          this.dataSolicitudContractual.forEach(sc => {
+
+            if (sc['comiteTecnicoId'] == tf.comiteTecnicoId) {
+
+              sc.data.push({
+                fechaSolicitud: tf.fechaSolicitud,
+                id: 0,
+                numeroSolicitud: tf.numeroSolicitud,
+                sesionComiteSolicitudId: tf.sesionComiteSolicitudId,
+                idSolicitud: tf.sesionComiteSolicitudId,
+                tipoSolicitud: tf.tipoSolicitud,
+                tipoSolicitudCodigo: tf.tipoSolicitudCodigo,
+                tipoSolicitudNumeroTabla: tf.tipoSolicitudCodigo,
+                ['seleccionado']: true
+              })
+
+              existeComite = true;
+            }
+          });
+
+
+          // if (existeComite === false)
+          // {
+          //   this.dataSolicitudContractual.push({
+
+          //     comiteTecnicoId: tf['comiteTecnico'].comiteTecnicoId,
+          //     fecha: tf['comiteTecnico'].fechaOrdenDia,
+          //     nombreSesion: tf['comiteTecnico'].numeroComite,
+          //     data: [
+          //       {
+          //         fechaSolicitud: tf.fechaSolicitud,
+          //         id: 0,
+          //         numeroSolicitud: tf.numeroSolicitud,
+          //         sesionComiteSolicitudId: tf.sesionComiteSolicitudId,
+          //         idSolicitud: tf.sesionComiteSolicitudId,
+          //         tipoSolicitud: tf.tipoSolicitud,
+          //         tipoSolicitudCodigo: tf.tipoSolicitudCodigo,
+          //         tipoSolicitudNumeroTabla: tf.tipoSolicitudCodigo,
+          //         ['seleccionado']: true
+          //       }
+          //     ]
+
+          //   })
+          // }
+
+
+          this.solicitudesSeleccionadas.push({
+            nombreSesion: '',
+            fecha: '',
+            data: [{
+              fechaSolicitud: '',
+              id: 0,
+              idSolicitud: tf.sesionComiteSolicitudId,
+              numeroSolicitud: '',
+              tipoSolicitud: tf.tipoSolicitud,
+              tipoSolicitudNumeroTabla: tf.tipoSolicitudCodigo,
+            }]
+          });
         })
 
       })
@@ -258,7 +329,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if (result===true) {
+      if (result === true) {
         this.deleteTema(e)
       }
     });
@@ -299,17 +370,17 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     } else {
 
       let tipoTema: string = null;
-      if ( this.tipoDeTemas.value ){
-        if (this.tipoDeTemas.value.length == 1 )
+      if (this.tipoDeTemas.value) {
+        if (this.tipoDeTemas.value.length == 1)
           tipoTema = this.tipoDeTemas.value[0].codigo;
-        else if (this.tipoDeTemas.value.length == 2 )
+        else if (this.tipoDeTemas.value.length == 2)
           tipoTema = "3";
       }
 
       let sesion: ComiteTecnico = {
         comiteTecnicoId: this.idSesion,
         fechaOrdenDia: this.fechaSesion,
-        tipoTemaFiduciarioCodigo: tipoTema ,
+        tipoTemaFiduciarioCodigo: tipoTema,
         sesionComiteTema: [],
         sesionComiteSolicitudComiteTecnico: [],
       }
@@ -328,13 +399,13 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         sesion.sesionComiteTema.push(sesionComiteTema);
       })
 
-      this.solicitudesSeleccionadas.forEach( ss =>{
+      this.solicitudesSeleccionadas.forEach(ss => {
         ss.data.forEach(sol => {
           let sesionSol: SesionComiteSolicitud = {
             sesionComiteSolicitudId: sol.idSolicitud,
           }
 
-          sesion.sesionComiteSolicitudComiteTecnico.push( sesionSol );
+          sesion.sesionComiteSolicitudComiteTecnico.push(sesionSol);
         });
 
       })
