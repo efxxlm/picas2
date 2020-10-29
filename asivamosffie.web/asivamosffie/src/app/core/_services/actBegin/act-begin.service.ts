@@ -25,11 +25,11 @@ export class ActBeginService {
     formData.append('pFile', pFile, pFile.name);
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditCargarActaSuscritaContrato?pContratoId=${pContratoId}&pFechaFirmaContratista=${pFechaFirmaContratista}&pFechaFirmaActaContratistaInterventoria=${pFechaFirmaActaContratistaInterventoria}&pUsuarioModificacion=${pUsuarioModificacion}`, formData);
   }
-  CreatePlazoEjecucionFase2Construccion(pContratoId: number, pPlazoFase2PreMeses: number, pPlazoFase2PreDias: number, pObservacionesConsideracionesEspeciales: string, pUsuarioModificacion: string, pFechaActaInicioFase1: string, pFechaTerminacionFase2: string) {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreatePlazoEjecucionFase2Construccion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacionesConsideracionesEspeciales=${pObservacionesConsideracionesEspeciales}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}`, "");
+  CreatePlazoEjecucionFase2Construccion(pContratoId: number, pPlazoFase2PreMeses: number, pPlazoFase2PreDias: number, pObservacionesConsideracionesEspeciales: string, pUsuarioModificacion: string, pFechaActaInicioFase1: string, pFechaTerminacionFase2: string, pEsSupervisor:boolean, pEsActa:boolean) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreatePlazoEjecucionFase2Construccion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacionesConsideracionesEspeciales=${pObservacionesConsideracionesEspeciales}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}&pEsSupervisor=${pEsSupervisor}&pEsActa=${pEsActa}`, "");
   }
-  CreateTieneObservacionesActaInicio(pContratoId:number, pObservacionesActa:string, pUsuarioModificacion: string){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateTieneObservacionesActaInicio?pContratoId=${pContratoId}&pObservacionesActa=${pObservacionesActa}&pUsuarioModificacion=${pUsuarioModificacion}`, "");
+  CreateTieneObservacionesActaInicio(pContratoId:number, pObservacionesActa:string, pUsuarioModificacion: string, pEsSupervisor:boolean, pEsActa:boolean){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateTieneObservacionesActaInicio?pContratoId=${pContratoId}&pObservacionesActa=${pObservacionesActa}&pUsuarioModificacion=${pUsuarioModificacion}&pEsSupervisor=${pEsSupervisor}&pEsActa=${pEsActa}`, "");
   }
   EditarContratoObservacion(pContratoId: number,  pPlazoFase2PreMeses:number , pPlazoFase2PreDias:number, pObservacion:string, pUsuarioModificacion:string,pFechaActaInicioFase1:string,pFechaTerminacionFase2:string){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditarContratoObservacion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacion=${pObservacion}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}`, "");
@@ -37,8 +37,8 @@ export class ActBeginService {
   CambiarEstadoActa(pContratoId :number, pNuevoCodigoEstadoActa:string, pUsuarioModifica:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/actBegin/CambiarEstadoActa?pContratoId=${pContratoId}&pNuevoCodigoEstadoActa=${pNuevoCodigoEstadoActa}&pUsuarioModifica=${pUsuarioModifica}`, null);  
   }
-  GetContratoObservacionByIdContratoId(pContratoId: number){
-    return this.http.get<GetContratoObservacionByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoObservacionByIdContratoId?pContratoId=${pContratoId}`);
+  GetContratoObservacionByIdContratoId(pContratoId: number, pEsSupervisor:boolean){
+    return this.http.get<GetContratoObservacionByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoObservacionByIdContratoId?pContratoId=${pContratoId}&pEsSupervisor=${pEsSupervisor}`);
   }
   CambiarEstadoVerificacionActa(pContratoId: number, pNuevoCodigoEstadoVerificacionActa: string,pUsuarioModifica : string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/actBegin/CambiarEstadoActa?pContratoId=${pContratoId}&pNuevoCodigoEstadoVerificacionActa=${pNuevoCodigoEstadoVerificacionActa}&pUsuarioModifica=${pUsuarioModifica}`, null);  
@@ -46,11 +46,11 @@ export class ActBeginService {
   GetContratoByIdContratoId(pContratoId: number){
     return this.http.get<GetContratoByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoByIdContratoId?pContratoId=${pContratoId}`);
   }
-  CreateEditContratoObservacion(contratoObs:ContratoObservacion){
+  CreateEditContratoObservacion(contratoObs:ConstruccionObservacion){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateEditContratoObservacion`, contratoObs);
   }
   EnviarCorreoSupervisorContratista(pContratoId: number, pPerfilId: number){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EnviarCorreoSupervisorContratista?pContratoId=${pContratoId}?pPerfilId=${pPerfilId}`,null);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EnviarCorreoSupervisorContratista?pContratoId=${pContratoId}&pPerfilId=${pPerfilId}`,null);
 
   }
 }
@@ -94,6 +94,7 @@ export interface GetPlantillaActaInicio {
 }
 export interface GetContratoObservacionByIdContratoId {
   contratoObservacionId: number;
+  contratoConstruccionId: number;
   contratoId: number;
   observaciones: string;
   fechaCreacion: Date;
@@ -117,4 +118,16 @@ export interface ContratoObservacion{
   fechaModificacion: any;
   usuarioModificacion: any;
   esActaFase2: boolean;
+}
+export interface ConstruccionObservacion{
+//ConstruccionObservacionId: number;
+ ContratoConstruccionId: number;
+ TipoObservacionConstruccion: string;
+ Observaciones: string;
+ UsuarioModificacion: string;
+ FechaCreacion:any;
+ UsuarioCreacion: string;
+ EsSupervision:boolean;
+ EsActa:boolean;
+FechaModificacion:any;
 }

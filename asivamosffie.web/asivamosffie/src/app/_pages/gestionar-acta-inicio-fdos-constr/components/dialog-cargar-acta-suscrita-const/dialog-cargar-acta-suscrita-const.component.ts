@@ -46,6 +46,9 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
   public fechaFirmaContratistaObra;
   public fechaFirmaContratistaInterventoria;
 
+  public fecha1Titulo;
+  public fecha2Titulo;
+
   constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private services: ActBeginService) { 
     this.declararInputFile();
     this.maxDate = new Date();
@@ -55,6 +58,15 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     }
     if(data.idRol != undefined){
       this.idRol = data.idRol;
+    }
+    if(data.numContrato != undefined){
+      this.numContrato = data.numContrato;
+    }
+    if(data.fecha1Titulo != undefined){
+      this.fecha1Titulo = data.fecha1Titulo;
+    }
+    if(data.fecha2Titulo != undefined){
+      this.fecha2Titulo = data.fecha2Titulo;
     }
   }
 

@@ -72,17 +72,18 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
   enviarActaParaFirma(id){
-    this.services.GetPlantillaActaInicio(id).subscribe(resp=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
-      const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
-      anchor.download = documento;
-      anchor.href = window.URL.createObjectURL(blob);
-      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-      anchor.click();
-    });
+    this.descargarActaDesdeTabla(id);
     this.services.CambiarEstadoActa(id,"19","usr2").subscribe(data=>{
+      this.ngOnInit();
+    });
+  }
+  enviarRevisionAprobacionInt(id){
+    this.services.CambiarEstadoActa(id,"3","usr2").subscribe(data=>{
+      this.ngOnInit();
+    });
+  }
+  enviarRevisionAprobacionTecEst2(id){
+    this.services.CambiarEstadoActa(id,"2","usr2").subscribe(data=>{
       this.ngOnInit();
     });
   }
@@ -90,18 +91,35 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     localStorage.setItem("actaSuscrita","true");
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
-  cargarActaSuscrita(id){
+  cargarActaSuscrita(id,tipoContrato,numContrato){
     let idRol = 2; 
+    let fecha1Titulo;
+    let fecha2Titulo;
+    if(tipoContrato=='Interventoria'){
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del supervisor';
+    }
+    else{
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de obra';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
+    }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = {id:id, idRol:idRol};
+    dialogConfig.data = {id:id, idRol:idRol, numContrato:numContrato, fecha1Titulo:fecha1Titulo, fecha2Titulo:fecha2Titulo};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
-        this.services.CambiarEstadoActa(id,"20","usr2").subscribe(data=>{
-          this.ngOnInit();
-        });
+        if(tipoContrato=='Obra e Interventoria'){
+          this.services.CambiarEstadoActa(id,"20","usr2").subscribe(data=>{
+            this.ngOnInit();
+          });
+        }
+        else{
+          this.services.CambiarEstadoActa(id,"7","usr2").subscribe(data0=>{
+            this.ngOnInit();
+          });
+        }
       }
     });
   }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActBeginService, ContratoObservacion } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActBeginService, ConstruccionObservacion, ContratoObservacion } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -50,6 +50,11 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   fechaSesionString: string;
   fechaSesion: Date;
   fechaCreacion: Date;
+  construccionObservacionId: any;
+  contratoConstruccionId: any;
+  esActa: any;
+  esSupervision: any;
+  tipoObservacionConstruccion: any;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -105,21 +110,27 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   }
   loadDataObservaciones(id){
     if(localStorage.getItem("editable")=="true"){
-      this.services.GetContratoObservacionByIdContratoId(id).subscribe(data0=>{
-        this.addressForm.get('tieneObservaciones').setValue(data0.esActaFase2);
+      this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data0=>{
+        this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
         this.addressForm.get('observaciones').setValue(data0.observaciones);
-        this.loadIdObs(data0.contratoObservacionId);
+        this.loadData2(data0);
         this.fechaCreacion = data0.fechaCreacion;
       });
     }
     else{
-      this.services.GetContratoObservacionByIdContratoId(id).subscribe(data2=>{
+      this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data2=>{
         this.fechaCreacion = data2.fechaCreacion;
       });
     }
   }
-  loadIdObs(id){
-    this.observacionID = id;
+  loadData2(data){
+    this.construccionObservacionId = data.construccionObservacionId;
+    this.contratoConstruccionId = data.contratoConstruccionId;
+    this.esActa = data.esActa;
+    this.esSupervision = data.esSupervision;
+    this.fechaCreacion = data.fechaCreacion;
+    this.tipoObservacionConstruccion = data.tipoObservacionConstruccion;
+
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -168,38 +179,64 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   onSubmit() {
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
-    const contratoObs: ContratoObservacion ={
-      contratoObservacionId:  this.observacionID,
-      contratoId: this.contratoId,
-      observaciones:  this.addressForm.value.observaciones,
-      fechaCreacion: this.fechaSesionString,
-      usuarioCreacion: "usr3",
-      
-      //opcionales
-      esActa: true,
-      fechaModificacion: this.fechaSesionString,
-      usuarioModificacion: "usr3",
-      esActaFase2: this.addressForm.value.tieneObservaciones
+    const contratoObs: ConstruccionObservacion ={
+      ContratoConstruccionId: this.contratoConstruccionId,
+      TipoObservacionConstruccion: "",
+      Observaciones: this.addressForm.value.observaciones,
+      UsuarioModificacion: "usr3",
+      FechaCreacion:this.fechaSesionString,
+      UsuarioCreacion:"usr3",
+      EsSupervision:true,
+      EsActa:true,
+     FechaModificacion:this.fechaSesionString
     };
-    this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp=>{
-      if(resp.code=="200"){
-        if(this.addressForm.value.tieneObservaciones==true){
-          this.services.CambiarEstadoActa(this.contratoId,"16","usr2").subscribe(data0=>{
-          
-          });
+    
+    if(localStorage.getItem("editable")=="false"){
+      this.services.CreateTieneObservacionesActaInicio(this.contratoId,this.addressForm.value.observaciones,"usr3",true,this.addressForm.value.tieneObservaciones).subscribe(resp=>{
+        if(resp.code=="200"){
+          this.openDialog(resp.message, "");
+          this.router.navigate(['/generarActaInicioConstruccion']);
         }
         else{
-          this.services.CambiarEstadoActa(this.contratoId,"15","usr2").subscribe(data1=>{
-          
-          });
+          this.openDialog(resp.message, "");
         }
-        this.openDialog(resp.message, "");
-        this.router.navigate(['/generarActaInicioConstruccion']);
-      }
-      else{
-        this.openDialog(resp.message, "");
-      }
-    });
+      });
+    } 
+    else{
+      this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp=>{
+        if(resp.code=="200"){
+          if(this.addressForm.value.tieneObservaciones==true){
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.services.CambiarEstadoActa(this.contratoId,"8","usr2").subscribe(data0=>{
+            
+              });
+            }
+            else{
+              this.services.CambiarEstadoActa(this.contratoId,"16","usr2").subscribe(data0=>{
+            
+              });
+            }
+          }
+          else{
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.services.CambiarEstadoActa(this.contratoId,"5","usr2").subscribe(data1=>{
+            
+              });
+            }
+            else{
+              this.services.CambiarEstadoActa(this.contratoId,"15","usr2").subscribe(data1=>{
+            
+              });
+            }
+          }
+          this.openDialog(resp.message, "");
+          this.router.navigate(['/generarActaInicioConstruccion']);
+        }
+        else{
+          this.openDialog(resp.message, "");
+        }
+      });
+    }
     console.log(this.addressForm.value);
     //this.openDialog('La información ha sido guardada exitosamente.', "");
   }

@@ -96,12 +96,12 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   validarActaParaInicio(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "false");
-    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
   }
   verDetalleEditar(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "true");
-    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
   }
   verDetalle(id) {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion', id]);
@@ -131,12 +131,29 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
       this.descargarActaDesdeTabla(id);
     }
   }
-  cargarActaSuscrita(id) {
+  enviarInterventorBtn(id){
+    if (localStorage.getItem("origin") == "interventoria") {
+      this.services.CambiarEstadoActa(id, "4", "usr2").subscribe(data => {
+        this.ngOnInit();
+      });
+    }
+  }
+  cargarActaSuscrita(id,tipoContrato,numContrato) {
     let idRol = 8;
+    let fecha1Titulo;
+    let fecha2Titulo;
+    if(tipoContrato=='Interventoria'){
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del supervisor';
+    }
+    else{
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de obra';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
+    }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = { id: id, idRol: idRol };
+    dialogConfig.data = {id:id, idRol:idRol, numContrato:numContrato, fecha1Titulo:fecha1Titulo, fecha2Titulo:fecha2Titulo};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {

@@ -139,9 +139,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.idContrato = id;
   }
   loadDataObservaciones(id){
-      this.services.GetContratoByIdContratoId(id).subscribe(data0=>{
-        this.conObervacionesActa = data0.conObervacionesActa;
+      this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data0=>{
+        this.conObervacionesActa = data0.esActa;
         this.observacionesActaFase2 = data0.observaciones;
+        this.fechaCreacion = data0.fechaCreacion;
       });
 
   }
@@ -229,7 +230,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
         this.openDialog('Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato', "");
       }
       else{
-        this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2 ).subscribe(data1 => {
+        this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(data1 => {
           if (data1.code == "200") {
             this.openDialog('La información ha sido guardada exitosamente.', "");
             this.router.navigate(['/generarActaInicioConstruccion']);

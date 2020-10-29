@@ -33,21 +33,25 @@
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarActaParaFirma(element.contratoId)"
                         *ngIf="element.estadoActa=='Con acta generada'">Enviar acta para firma</button>
+                     <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarRevisionAprobacionInt(element.contratoId)"
+                        *ngIf="element.estadoActa=='Enviada por el supervisor' &&  element.tipoContrato=='Interventoria'">Enviar para revisión y aprobación</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarParaRevision(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta preliminar generada'">Enviar para revisión y aprobación</button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Cargar acta suscrita</button>
+                        *ngIf="element.estadoActa=='Con acta preliminar generada' && element.tipoContrato=='Obra e Interventoria'">Enviar para revisión y aprobación</button>
+                        <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarRevisionAprobacionInt(element.contratoId)"
+                        *ngIf="(element.estadoActa=='Con acta preliminar generada'&&  element.tipoContrato=='Interventoria')&&(element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')">Enviar para revisión y aprobación</button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita(element.contratoId,element.tipoContrato,element.numeroContratoObra)"
+                        *ngIf="element.estadoActa=='Con acta en proceso de firma' && element.tipoContrato=='Obra e Interventoria'"> Cargar acta suscrita</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="descargarActaDesdeTabla(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Descargar acta preliminar</button>
+                        *ngIf="element.estadoActa=='Con acta en proceso de firma' && element.tipoContrato=='Obra e Interventoria'"> Descargar acta preliminar</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.generarActaFDos(element.contratoId)"
                     *ngIf="element.estadoActa=='Sin acta generada'">Generar acta</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleEditarActaFDos(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta preliminar generada' || element.estadoActa=='Enviada por el supervisor'"> Ver detalle /
+                        *ngIf="(element.estadoActa=='Con acta preliminar generada'&& element.tipoContrato=='Obra e Interventoria') || element.estadoActa=='Enviada por el supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')"> Ver detalle /
                         Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleActaFDos(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con validación del supervisor' || element.estadoActa=='Con acta generada'">
+                        *ngIf="element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con validación del supervisor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con validacion del supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='3') || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='8')">
                         Ver detalle</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleActaCargada(element.contratoId)"

@@ -2,7 +2,7 @@
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 <h1 class="title-menu--h1 centerTrick">
-    Cargar acta suscrita contrato C223456789
+    Cargar acta suscrita contrato {{this.numContrato}}
 </h1>
 <div class="text-center">
     <div class="mtop">
@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left">Fecha de la firma del documento por parte del contratista de obra</label>
+                        <label class="label-left">{{this.fecha1Titulo}}</label>
                     </div>
                     <div class="col d-flex">
                         <mat-form-field class="example-full-width">
@@ -30,7 +30,7 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left">Fecha de la firma del documento por parte del contratista de interventoría</label>
+                        <label class="label-left">{{this.fecha2Titulo}}</label>
                     </div>
                     <div class="col d-flex">
                         <mat-form-field class="example-full-width" style="width: 20%;">
