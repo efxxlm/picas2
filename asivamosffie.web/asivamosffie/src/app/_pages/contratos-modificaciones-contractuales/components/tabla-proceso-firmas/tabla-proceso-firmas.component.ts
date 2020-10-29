@@ -72,7 +72,6 @@ export class TablaProcesoFirmasComponent implements OnInit {
         } else if ( firmaContratista < this.dataTable.length || firmado < this.dataTable.length ) {
           this.estadoAcordeon.emit( 'en-proceso' );
         };
-
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

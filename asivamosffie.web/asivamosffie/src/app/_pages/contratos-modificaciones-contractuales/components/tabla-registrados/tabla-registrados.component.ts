@@ -36,15 +36,14 @@ export class TablaRegistradosComponent implements OnInit {
         
         
         for ( let contrataciones of resp ) {
-          if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.registrado ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado ) {
             this.dataTable.push( contrataciones );
           };
         };
 
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
-        }
-
+        };
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;
