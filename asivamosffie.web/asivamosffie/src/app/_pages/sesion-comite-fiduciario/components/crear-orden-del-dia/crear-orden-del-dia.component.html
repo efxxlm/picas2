@@ -15,7 +15,7 @@
 
     <span class="mr-1em">Tipo de tema</span>
 
-    <mat-form-field appearance="fill" class="w-30">
+    <mat-form-field class="w-30">
       <mat-select [formControl]="tipoDeTemas" multiple required (selectionChange)="getvalues( $event.value )">
         <mat-select-trigger>
           <small >
@@ -128,7 +128,7 @@
                   <mat-form-field class="full-width">
                     <input matInput type="text" formControlName="url" maxlength="100">
                   </mat-form-field>
-                  <span class="text-center d-block">Indique la ruta del soporte de esta información</span>
+                  <span class="info-url">Indique la ruta del soporte de esta información</span>
                 </div>
               </div>
               <div class="text-right" *ngIf="tema.controls.length > 0">

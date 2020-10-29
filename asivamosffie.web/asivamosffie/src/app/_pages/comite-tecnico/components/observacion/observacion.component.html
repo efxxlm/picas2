@@ -4,11 +4,11 @@
       Observaciones para la devolución o rechazo del proyecto
     </h1>
     <b class="sub-text">
-      <span>Ampliación</span>
-      <span>Atlántico/Manatí</span>
-      <span>I.E Antonio Nariño</span>
-      <span>Única sede</span>
-      <span>Devuelto por el comité</span>
+      Ampliación
+      Atlántico/Manatí
+      I.E Antonio Nariño
+      Única sede
+      Devuelto por el comité
     </b>
   </div>
 
@@ -29,9 +29,7 @@
           {{ observacion.sesionParticipante.usuario.nombres }}
         </td>
         <td class="mat-cell cdk-cell ng-star-inserted">
-          <p class="p-table">
-            {{ observacion.observacion }}
-          </p>
+          <div class="p-table" [innerHTML]="observacion.observacion"></div>
         </td>
       </tr>
     </tbody>

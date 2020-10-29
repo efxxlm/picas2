@@ -136,7 +136,7 @@
           <mat-form-field class="full-width">
             <input matInput type="text" formControlName="url" maxlength="100">
           </mat-form-field>
-          <span class="text-center d-block">Indique la ruta del soporte de esta información</span>
+          <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>
       </div>
       <h2 class="card-subTitle">Compromisos</h2>
@@ -165,7 +165,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosGrupos type="number" min="1" max="10" formControlName="cuantosCompromisos"
+                <input matInput #cuantosGrupos type="number" min="1" max="10" formControlName="cuantosCompromisos" required
                   (keyup)="CambioCantidadCompromisos()" onkeyup="if(this.value>10) this.value = 10;">
               </mat-form-field>
               <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
@@ -188,7 +188,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea">
+                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea" required>
                   <input type="hidden" formControlName="sesionSolicitudCompromisoId">
                   <input type="hidden" formControlName="sesionComiteSolicitudId">
                 </mat-form-field>
@@ -218,7 +218,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()" placeholder="DD/MM/AAAA" [min]="minDate">
+                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()" placeholder="DD/MM/AAAA" [min]="minDate" required>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
