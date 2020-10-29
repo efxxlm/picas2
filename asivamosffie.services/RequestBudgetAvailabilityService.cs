@@ -765,8 +765,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.FechaModificacion = DateTime.Now;
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.Eliminado = true;
-                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
-
+                    _context.SaveChanges(); 
                 }
 
                 return respuesta = new Respuesta
@@ -1629,8 +1628,11 @@ namespace asivamosffie.services
                     pDisponibilidadPresupuestal.Eliminado = false;  
                     pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     pDisponibilidadPresupuestal.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
+                    if (!(bool)pDisponibilidadPresupuestal.RegistroCompleto)
+                        pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
+                    else
+                        pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
 
-                    pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
                     pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo; 
                     pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
                     pDisponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", _context.DisponibilidadPresupuestal.Count((r => r.NumeroSolicitud.Contains("DE"))));
@@ -1647,8 +1649,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalOld.FechaSolicitud = pDisponibilidadPresupuestal.FechaSolicitud;
                     disponibilidadPresupuestalOld.TipoSolicitudCodigo = pDisponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestalOld.NumeroSolicitud = pDisponibilidadPresupuestal.NumeroSolicitud;
-                    disponibilidadPresupuestalOld.OpcionContratarCodigo = pDisponibilidadPresupuestal.OpcionContratarCodigo;
-                    disponibilidadPresupuestalOld.ValorSolicitud = pDisponibilidadPresupuestal.ValorSolicitud;
+                    disponibilidadPresupuestalOld.OpcionContratarCodigo = pDisponibilidadPresupuestal.OpcionContratarCodigo; 
                     disponibilidadPresupuestalOld.EstadoSolicitudCodigo = pDisponibilidadPresupuestal.EstadoSolicitudCodigo;
                     disponibilidadPresupuestalOld.Objeto = pDisponibilidadPresupuestal.Objeto;
                     disponibilidadPresupuestalOld.FechaDdp = pDisponibilidadPresupuestal.FechaDdp;
@@ -1661,10 +1662,16 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalOld.PlazoMeses = pDisponibilidadPresupuestal.PlazoMeses;
                     disponibilidadPresupuestalOld.PlazoDias = pDisponibilidadPresupuestal.PlazoDias;
                     disponibilidadPresupuestalOld.CuentaCartaAutorizacion = pDisponibilidadPresupuestal.CuentaCartaAutorizacion;
-                    disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
+                    disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId; 
                     disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
+                    if (pDisponibilidadPresupuestal.ValorAportante != null)
+                        pDisponibilidadPresupuestal.ValorSolicitud = (decimal)disponibilidadPresupuestalOld.ValorAportante;
                     disponibilidadPresupuestalOld.NumeroContrato = pDisponibilidadPresupuestal.NumeroContrato;
                     disponibilidadPresupuestalOld.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
+                    if (!(bool)disponibilidadPresupuestalOld.RegistroCompleto)
+                        disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
+                    else
+                        disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.En_Validacion_Presupuestal;
                 }
 
                 await _context.SaveChangesAsync();
