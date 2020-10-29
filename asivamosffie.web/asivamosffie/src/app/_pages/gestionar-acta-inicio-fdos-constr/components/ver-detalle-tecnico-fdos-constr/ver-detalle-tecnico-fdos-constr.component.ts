@@ -42,6 +42,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   botonDescargar: boolean =false;
   conObservacionesSupervisor: boolean;
   observacionesSupervisor: string;
+  fechaCreacion: Date;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService) { }
 
   ngOnInit(): void {
@@ -98,9 +99,10 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
     });
-    this.services.GetContratoByIdContratoId(id).subscribe(data1=>{
-      this.conObservacionesSupervisor = data1.conObervacionesActa;
+    this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data1=>{
+      this.conObservacionesSupervisor = data1.esActa;
       this.observacionesSupervisor = data1.observaciones;
+      this.fechaCreacion = data1.fechaCreacion;
     });
     this.idContrato = id;
   }
