@@ -445,7 +445,13 @@ namespace asivamosffie.services
                 DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                                                 .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
-                                                    .ThenInclude(r => r.Proyecto)
+                                                .Include(r => r.Aportante)
+                                                   .ThenInclude(r => r.NombreAportante)
+                                                .Include(r => r.Aportante)
+                                                   .ThenInclude(r => r.Departamento)
+                                                .Include(r => r.Aportante)
+                                                   .ThenInclude(r => r.Municipio)
+                                                       .ThenInclude(r => r.Proyecto)
                                                 .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();
 
                 foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
