@@ -25,6 +25,12 @@ namespace asivamosffie.api.Controllers
             _managementCommitteeReportService = managementCommitteeReportService;
             _settings = settings;
 
+        } 
+
+        [Route("GetListAportanteByTipoAportanteByProyectoId")]
+        public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId([FromQuery] int pProyectoId, int pTipoAportanteId)
+        {
+            return await _managementCommitteeReportService.GetListAportanteByTipoAportanteByProyectoId(pProyectoId, pTipoAportanteId);
         }
 
         [Route("GetListContatoByNumeroContrato")]
@@ -172,6 +178,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
         [Route("CreateUpdateDisponibilidaPresupuestalEspecial")]
         [HttpPost]
         public async Task<IActionResult> CreateUpdateDisponibilidaPresupuestalEspecial([FromBody] DisponibilidadPresupuestal pDisponibilidadPresupuestal)
@@ -191,6 +198,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
         [Route("CreateOrEditProyectoAdministrtivo")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditProyectoAdministrtivo([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)
@@ -210,10 +218,6 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
-
 
         [Route("CreateOrEditServiceCosts")]
         [HttpPost]
@@ -235,7 +239,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
         [Route("CreateOrEditInfoAdditional")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditInfoAdditional([FromBody] DisponibilidadPresupuestal pDisponibilidad)
@@ -255,7 +258,6 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
 
         [Route("SendRequest")]
         [HttpPost]

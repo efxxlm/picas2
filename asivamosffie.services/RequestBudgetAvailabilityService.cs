@@ -26,6 +26,22 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly string _connectionString;
 
+        public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId(int pProyectoId , int pTipoAportanteId) 
+        { 
+            try
+            {
+                return await _context.ProyectoAportante
+                        .Where(r => r.ProyectoId == pProyectoId)
+                        .Include(r => r.Aportante)
+                        .Select(r=> r.Aportante)
+                        .Where(r=> r.TipoAportanteId == pTipoAportanteId)
+                     .ToListAsync();
+            }
+            catch (Exception)
+            {
+                return new CofinanciacionAportante();
+            }         
+        }
 
         public RequestBudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConfiguration configuration)
         {
@@ -91,16 +107,7 @@ namespace asivamosffie.services
 
                     ProyectoAportante.Aportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
                 }
-            }
-
-            //foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
-            //{
-            //    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
-            //    {
-            //        ProyectoAportante.Aportante.FuenteFinanciacion = null;
-            //        ProyectoAportante.Aportante.DisponibilidadPresupuestal = null;
-            //    }
-            //}
+            } 
 
             return Contrato;
         }
@@ -183,13 +190,11 @@ namespace asivamosffie.services
             }
 
         }
-
+         
         public async Task<List<ListAportantes>> GetAportantesByProyectoId(int proyectoId)
         {
             try
-            {
-
-
+            { 
                 return await (
                                 from cp in _context.ContratacionProyecto
                                 join ct in _context.Contratacion on cp.ContratacionId equals ct.ContratacionId
@@ -210,15 +215,14 @@ namespace asivamosffie.services
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
                                     ValorAporte = ctp.ValorAporte,
-                                    TipoAportanteText = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(cf.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
-                                }).ToListAsync();
-
-
-
+                                    TipoAportanteText = _context.Dominio
+                                    .Where(r => (bool)r.Activo && r.DominioId
+                                    .Equals(cf.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante)
+                                    .Select(r => r.Nombre).FirstOrDefault(),
+                                }).ToListAsync(); 
             }
-            catch (Exception)
-            {
-
+            catch (Exception ex)
+            {  
                 throw;
             }
         }
