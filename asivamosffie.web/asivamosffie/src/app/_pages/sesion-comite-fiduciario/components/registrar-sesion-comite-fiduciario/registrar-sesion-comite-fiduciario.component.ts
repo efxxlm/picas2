@@ -49,7 +49,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
       .subscribe( respuesta => {
-        this.openDialog('', '“No se cuenta con el Quorum necesario para realizar la sesión”.');
+        this.openDialog('', '<b>No se cuenta con el Quorum necesario para realizar la sesión.</b>');
         this.ngOnInit();
       })
   }

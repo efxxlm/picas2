@@ -138,7 +138,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   onSubmit () {
 
     if ( this.form.invalid ) {
-      this.openDialog('Falta registrar información', '');
+      this.openDialog('', '<b>Falta registrar información</b>');
       return;
     };
 

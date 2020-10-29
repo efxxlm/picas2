@@ -81,6 +81,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
             });
             this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
           })
+          this.initPaginator()
         }
 
         this.estadosArray = respuesta[1];
@@ -88,7 +89,9 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
       })
     })
+  }
 
+  initPaginator() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

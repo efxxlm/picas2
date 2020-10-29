@@ -28,13 +28,13 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     nombresProponentes: [null, Validators.required],
     tipoProponente: [null, Validators.required],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
     ],
     numeroIdentificacon: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
     ],
     representanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
     ],
     cedulaRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -42,7 +42,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     departamentoRepresentanteLegal: [null, Validators.required],
     municipioRepresentanteLegal: [null, Validators.required],
     direccionPrincipalRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
     ],
     telefonoRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(10)])

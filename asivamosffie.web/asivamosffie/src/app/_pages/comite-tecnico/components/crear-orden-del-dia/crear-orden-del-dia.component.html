@@ -44,10 +44,10 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #temaInput type="text" formControlName="tema" maxlength="100" required>
+                    <input matInput #temaInput type="text" formControlName="tema" maxlength="1000" required>
                     <input type="hidden" formControlName="sesionTemaId">
                   </mat-form-field>
-                  <span class="contador">{{100 - temaInput.value.length}}</span>
+                  <span class="contador miles">{{1000 - temaInput.value.length}}</span>
                 </div>
               </div>
               <div class="row">
@@ -121,7 +121,10 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-
+        <p>
+          <img src="assets/img/icon/sim.svg" alt="información" class="icon">
+          Tenga en cuenta que antes de registrar la sesión de comité técnico podrá diligenciar este campo
+      </p>
       </mat-card-content>
     </mat-card>
     <div class="text-center">

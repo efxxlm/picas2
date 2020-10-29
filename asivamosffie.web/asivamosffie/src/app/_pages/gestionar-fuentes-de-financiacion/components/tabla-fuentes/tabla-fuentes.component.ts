@@ -88,7 +88,7 @@ export class TablaFuentesComponent implements OnInit {
     this.router.navigate(['/registrarFuentes',e,idTipo]);
   }
   eliminarFuente(e: number) {
-    this.openDialogSiNo('','¿Está seguro de eliminar este registro?',e)
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',e)
   }
 
   controlRecursosFuente(e: number) {

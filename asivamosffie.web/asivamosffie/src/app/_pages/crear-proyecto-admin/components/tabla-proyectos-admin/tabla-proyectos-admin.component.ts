@@ -132,7 +132,7 @@ export class TablaProyectosAdminComponent {
   eliminar(gestion:any)
   {
     this.proyectoid=gestion.id;
-    this.openDialogSiNo('', "¿Está seguro de eliminar este registro?",);   
+    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);   
   }
   
   enviar(gestion:any)

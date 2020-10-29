@@ -1008,7 +1008,7 @@ export class FormularioProyectosComponent implements OnInit {
   deleteInfraestructura(indice:number)
   {
     console.log(indice)
-    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",3,indice);
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",3,indice);
     //this.proyecto.infraestructuraIntervenirProyecto.splice(indice,1); 
   }
 }

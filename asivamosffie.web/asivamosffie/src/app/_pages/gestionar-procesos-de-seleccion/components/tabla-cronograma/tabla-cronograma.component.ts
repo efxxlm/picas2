@@ -189,7 +189,7 @@ export class TablaCronogramaComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionCronogramaId: [],
       descripcion: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(500)
+        Validators.required, Validators.minLength(1), Validators.maxLength(500)
       ])],
       fecha: [null, Validators.required],
       etapaActualProceso: [null, Validators.required],
@@ -311,7 +311,7 @@ export class TablaCronogramaComponent implements OnInit {
   }
 
   onEliminar(id:any){
-    this.openDialogSiNo('','¿Está seguro de eliminar este registro?',id)
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',id)
   }
 
   eliminarRegistro(id:ProcesoSeleccionCronogramaMonitoreo ){    

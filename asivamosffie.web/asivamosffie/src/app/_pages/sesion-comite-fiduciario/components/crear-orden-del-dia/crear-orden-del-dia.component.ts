@@ -277,7 +277,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([
@@ -294,7 +294,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
     console.log(this.solicitudesSeleccionadas);
     if (this.addressForm.invalid) {
-      this.openDialog('Falta registrar información', '');
+      this.openDialog('', '<b>Falta registrar información</b>');
 
     } else {
 

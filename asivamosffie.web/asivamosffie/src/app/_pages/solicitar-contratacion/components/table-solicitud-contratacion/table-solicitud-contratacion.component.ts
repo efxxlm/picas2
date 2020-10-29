@@ -58,7 +58,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   onDelete(id: number) {
-    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', id);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', id);
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {

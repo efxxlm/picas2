@@ -131,7 +131,7 @@ export class TablaDetalleCronogramaComponent implements OnInit {
   }
 
   onEliminar(id:any){
-    this.openDialogSiNo('','¿Está seguro de eliminar este registro?',id)
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',id)
   }
 
   eliminarRegistro(id:ProcesoSeleccionCronogramaMonitoreo ){    

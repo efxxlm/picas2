@@ -53,7 +53,7 @@ export class TablaAcuerdosComponent implements OnInit {
     this.router.navigate(['/registrarAcuerdos', e ]);
   }
   eliminarAcuerdo(e: number) {
-    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",e);
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",e);
   }
   eliminarAcuerdoConfirmado(e: number) {
     this.cofinanciacionService.EliminarCofinanciacionByCofinanciacionId(e).subscribe(result=>{

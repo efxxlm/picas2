@@ -237,7 +237,7 @@ export class RegistrarComponent implements OnInit {
       ]),
       tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
-        Validators.minLength(5), Validators.maxLength(50)])]
+        Validators.minLength(1), Validators.maxLength(50)])]
 
     });
   }
@@ -325,7 +325,7 @@ export class RegistrarComponent implements OnInit {
       municipio: [null, Validators.required],
       tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
-        Validators.minLength(5), Validators.maxLength(50)])]
+        Validators.minLength(1), Validators.maxLength(50)])]
       , registrosPresupuestales: this.fb.array([])
       , fuenteRecursosArray: this.fb.array([]),
     });
@@ -618,7 +618,7 @@ export class RegistrarComponent implements OnInit {
       municipio: [null, Validators.required],
       tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
-        Validators.minLength(5), Validators.maxLength(50)])]
+        Validators.minLength(1), Validators.maxLength(50)])]
       , cuentasBancaria: this.fb.array([
         this.fb.group({
           cuentaBancariaId: [null, Validators.required],

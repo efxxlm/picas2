@@ -146,7 +146,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   eliminarTema(i) {
     let tema = this.addressForm.get('tema');
-    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, tema);
 
   }
 
@@ -215,7 +215,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(1000)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([
@@ -232,7 +232,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
     console.log(this.addressForm);
     if (this.addressForm.invalid) {
-      this.openDialog('Falta registrar información', '');
+      this.openDialog('', '<b>Falta registrar información</b>');
 
     } else {
       let comite: ComiteTecnico = {
@@ -273,7 +273,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       console.log(comite)
 
       this.techicalCommitteeSessionService.createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(comite).subscribe(respuesta => {
-        this.openDialog('Sesion Comite', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200")
           this.router.navigate(['/comiteTecnico']);
       });

@@ -46,7 +46,7 @@
     
                 <button mat-raised-button color="accent" 
                     class="btn-table" 
-                    (click)="openDialogSiNo('', '¿Está seguro de eliminar este registro?',element.id)" 
+                    (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>',element.id)" 
                     *ngIf="estadosComite.sinConvocatoria == element.estadoComiteCodigo">
                     Eliminar
                 </button>

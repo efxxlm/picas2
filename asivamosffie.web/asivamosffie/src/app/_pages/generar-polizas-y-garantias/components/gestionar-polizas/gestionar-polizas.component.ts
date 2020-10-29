@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class GestionarPolizasComponent implements OnInit {
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(50)])
     ],
     numeroPoliza: [null, Validators.compose([
       Validators.required, Validators.minLength(2), Validators.maxLength(20)])
@@ -26,7 +26,7 @@ export class GestionarPolizasComponent implements OnInit {
     vigenciaPoliza: [null, Validators.required],
     vigenciaAmparo: [null, Validators.required],
     valorAmparo: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(20)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(20)])
     ],
     polizasYSeguros: [null, Validators.required],
     buenManejoCorrectaInversionAnticipo: [null, Validators.required],

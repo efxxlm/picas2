@@ -2,17 +2,19 @@
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 
-<h1 class="title-menu--h1">
-    Votación solicitud {{ this.data.comite.numeroComite }}
-</h1>
-
-<p>
-    {{ this.data.comite.fechaOrdenDia | date: 'dd/MM/yyyy' }}
-</p>
+<div class="text-center">
+    <h1 class="title-menu--h1">
+        Votación solicitud {{ this.data.comite.numeroComite }}
+    </h1>
+    
+    <p>
+        {{ this.data.comite.fechaOrdenDia | date: 'dd/MM/yyyy' }}
+    </p>
+</div>
 
 <div class="row justify-content-center mt-1em mb-1em">
     <div class="pr-1">
-        <label class="label-left">Fecha del próximo comité</label>
+        <label class="label-left">Fecha de aplazamiento</label>
     </div>
     <div class="col d-flex align-items-center">
         <mat-form-field class="example-full-width">

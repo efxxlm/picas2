@@ -18,10 +18,10 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #temaInput type="text" formControlName="tema" maxlength="100" required>
+                  <input matInput #temaInput type="text" formControlName="tema" maxlength="1000" required>
                   <input type="hidden" formControlName="sesionTemaId" >
                 </mat-form-field>
-                <span class="contador">{{50 - temaInput.value.length}}</span>
+                <span class="contador miles">{{1000 - temaInput.value.length}}</span>
               </div>
             </div>
             <div class="row">
@@ -67,6 +67,7 @@
                 <mat-form-field class="full-width">
                   <input matInput type="text" formControlName="url" maxlength="100">
                 </mat-form-field>
+                <span class="text-center d-block">Indique la ruta del soporte de esta información</span>
               </div>
             </div>
             <div class="text-right" *ngIf="tema.controls.length > 1">

@@ -113,7 +113,7 @@ export class FormOtrosTemasComponent implements OnInit {
       temaCompromisoId: [],
       sesionTemaId: [],
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]

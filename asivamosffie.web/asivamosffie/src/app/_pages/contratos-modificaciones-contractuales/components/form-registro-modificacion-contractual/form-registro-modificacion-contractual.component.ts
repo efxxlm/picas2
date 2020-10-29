@@ -67,11 +67,11 @@ export class FormRegistroModificacionContractualComponent implements OnInit {
     console.log( this.dataFormulario );
 
     if ( this.dataFormulario.invalid ) {
-      this.openDialog( 'Falta registrar información.', '' );
+      this.openDialog( '', '<b>Falta registrar información</b>' );
       return;
     };
 
-    this.openDialog( '<b>La información ha sido guardada exitosamente.</b>', '' );
+    this.openDialog( '', '<b>La información ha sido guardada exitosamente.</b>' );
     this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
   };
 

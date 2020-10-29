@@ -137,7 +137,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
 
   onEliminar( pId: number ){
 
-    this.openDialogSiNo('','¿Está seguro de eliminar este registro?', pId)
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>', pId)
   }
 
   eliminarRegistro( pId: number ){

@@ -2,14 +2,16 @@
   <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 
-<h1 class="title-menu--h1">
-  Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}
-</h1>
-
-<p>
-  <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span> 
-  <span class="mx-1em">{{ data.sesionComiteSolicitud.tipoSolicitud }}</span>
-</p>
+<div class="text-center">
+  <h1 class="title-menu--h1">
+    Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}
+  </h1>
+  
+  <p>
+    <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span> 
+    <span class="mx-1em">{{ data.sesionComiteSolicitud.tipoSolicitud }}</span>
+  </p>
+</div>
 
 <mat-dialog-content>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">

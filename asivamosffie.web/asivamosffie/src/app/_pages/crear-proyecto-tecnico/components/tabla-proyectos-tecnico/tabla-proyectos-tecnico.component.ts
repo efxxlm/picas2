@@ -142,7 +142,7 @@ export class TablaProyectosTecnicoComponent {
   {
     console.log(gestion);  
     this.proyectoid=gestion;
-    this.openDialogSiNo('', "¿Está seguro de eliminar este registro?",);  
+    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);  
     
   }
   

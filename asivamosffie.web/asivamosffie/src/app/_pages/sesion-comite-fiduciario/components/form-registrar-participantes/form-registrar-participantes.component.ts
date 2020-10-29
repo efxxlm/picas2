@@ -141,13 +141,13 @@ export class FormRegistrarParticipantesComponent {
     return this.fb.group({
       sesionInvitadoId: [],
       nombre: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       cargo: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(50)])
       ],
       entidad: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ]
     });
   }

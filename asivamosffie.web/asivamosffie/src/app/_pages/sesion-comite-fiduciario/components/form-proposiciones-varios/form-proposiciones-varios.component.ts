@@ -80,7 +80,7 @@ export class FormProposicionesVariosComponent {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([
@@ -116,13 +116,13 @@ export class FormProposicionesVariosComponent {
 
       this.fiduciaryCommitteeSessionService.createEditSesionComiteTema( temas )
         .subscribe( respuesta => {
-          this.openDialog('Comité Técnico', respuesta.message)
+          this.openDialog('', respuesta.message)
           if ( respuesta.code == "200" )
             this.validarCompletos(respuesta.data);
         })
 
     }else{
-      this.openDialog('', 'Falta registrar información.')
+      this.openDialog('', '<b>Falta registrar información</b>')
     }
   }
 
@@ -165,7 +165,7 @@ export class FormProposicionesVariosComponent {
 
   eliminarTema(i) {
     let tema = this.addressForm.get('tema');
-    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, tema);
 
   }
 

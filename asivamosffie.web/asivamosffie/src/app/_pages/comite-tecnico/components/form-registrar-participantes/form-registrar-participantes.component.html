@@ -10,7 +10,7 @@
     </h1>
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-    <div class="row px-5em mt-1em">
+    <div class="row px-miembros mt-2em mb-2em">
       <div class="pr-1">
         <label class="label-left">Miembros participantes</label>
       </div>
@@ -71,12 +71,12 @@
                   <span class="contador">{{100 - entidad.value.length}}</span>
                 </div>
               </div>
-              <div class="text-right" *ngIf="invitados.controls.length > 0">
+              <div class="text-right" *ngIf="invitados.controls.length > 1">
                 <button mat-button
                         color="warn"
                         type="button"
                         class="btn-eliminar"
-                        (click)="openDialogSiNo('', '¿Está seguro de eliminar este registro?', i)"
+                        (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i)"
                         >
                   <img src="assets/img/icon/menos.svg" alt="Eliminar invitado">
                   Eliminar invitado
