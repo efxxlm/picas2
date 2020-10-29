@@ -73,13 +73,13 @@ namespace asivamosffie.services
                 listaContrats.Add(new
                 {
                     c.ContratoId,
-                    c.FechaAprobacionRequisitos,
-                    c.TipoContratoCodigo,
+                    FechaAprobacion = c.FechaAprobacionRequisitos,
+                    c.Contratacion.TipoSolicitudCodigo,
                     c.NumeroContrato,
                     CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
-                    CantidadProyectosRequisitosAprobados =  CantidadProyectosConPerfilesAprobados,
+                    CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
                     CantidadProyectosConPerfilesPendientes,
-                    c.EstadoVerificacionCodigo,
+                    EstadoCodigo = c.EstadoVerificacionCodigo,
                     c.EstaDevuelto,
                 });
             }
