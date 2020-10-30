@@ -95,7 +95,7 @@
                     <a  mat-raised-button color="accent" 
                         class="btn-table" 
                         [routerLink]="['verDetalle', element.contratacionId, element.disponibilidadPresupuestalId,1]"
-                        *ngIf="element.disponibilidadPresupuestalId != 0 && element.estadoSolicitudText == 'Con validación presupuestal'">
+                        *ngIf="element.disponibilidadPresupuestalId != 0 && ( element.estadoSolicitudText === 'Con validación presupuestal' || element.estadoSolicitudText === 'En validación presupuestal' )">
                         Ver detalle
                     </a>
     

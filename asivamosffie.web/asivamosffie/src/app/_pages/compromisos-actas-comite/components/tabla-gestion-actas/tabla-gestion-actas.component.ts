@@ -17,7 +17,11 @@ export class TablaGestionActasComponent implements OnInit {
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
   displayedColumns: string[] = [ 'fechaOrdenDia', 'numeroComite', 'estadoComiteCodigo', 'gestion' ];
-  estadoCodigo: string;
+  estadoActa = {
+    revisarActa: '2',
+    aprobado: '3',
+    devuelto: '4'
+  };
 
   constructor ( private routes: Router,
                 private compromisoSvc: CompromisosActasComiteService,
@@ -36,9 +40,20 @@ export class TablaGestionActasComponent implements OnInit {
   getData () {
 
     this.compromisoSvc.getGrillaActas()
-      .subscribe( ( resp: any ) => {
-        this.estadoCodigo = resp.estadoComiteCodigo;
-        this.dataSource = new MatTableDataSource( resp );
+      .subscribe( ( resp: any[] ) => {
+        console.log( resp );
+        const dataTable = [];
+
+        resp.forEach( value => {
+          if (  value.estadoActaCodigo === this.estadoActa.revisarActa
+                || value.estadoActaCodigo === this.estadoActa.aprobado
+                || value.estadoActaCodigo === this.estadoActa.devuelto ) 
+          {
+            dataTable.push( value );
+          };
+        } );
+
+        this.dataSource = new MatTableDataSource( dataTable );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
