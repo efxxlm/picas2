@@ -199,7 +199,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     this.fiduciaryCommitteeSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         console.log(respuesta.data)
         this.validar.emit(respuesta.data);
         if (respuesta.code == "200" && !respuesta.data)

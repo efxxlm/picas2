@@ -114,12 +114,12 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     this.procesosContractualesSvc.sendCambioTramite( elemento )
       .subscribe(
         response => {
-          this.openDialog( '', response.message );
+          this.openDialog( '', `<b>${response.message}</b>` );
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
             () => this.routes.navigate( [ '/procesosContractuales' ] )
           );
         },
-        err => this.openDialog( '', err.message )
+        err => this.openDialog( '', `<b>${err.message}</b>` )
       );
 
   }

@@ -812,7 +812,7 @@ export class RegistrarComponent implements OnInit {
           .subscribe(respuesta => {
             const res = respuesta[0][0] as Respuesta;
             if (res.code === '200') {
-              this.openDialog('', res.message,true);
+              this.openDialog('', `<b>${res.message}</b>`,true);
             }
             console.log(respuesta);
           });      

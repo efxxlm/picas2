@@ -145,7 +145,7 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.verificarTemasCompromisos(comite)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200") {
           this.listaCompromisos = [];
           this.ngOnInit();

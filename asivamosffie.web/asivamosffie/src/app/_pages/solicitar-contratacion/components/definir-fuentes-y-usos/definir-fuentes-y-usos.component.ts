@@ -396,13 +396,13 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto(this.contratacionProyecto)
         .subscribe(
           respuesta => {
-            this.openDialog('', respuesta.message);
+            this.openDialog('', `<b>${respuesta.message}</b>`);
             this.realizoPeticion = true;
             if (respuesta.code === '200') {
               this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
             }
           },
-          err => this.openDialog('', err.message)
+          err => this.openDialog('', `<b>${err.message}</b>`)
         );
 
     } else {

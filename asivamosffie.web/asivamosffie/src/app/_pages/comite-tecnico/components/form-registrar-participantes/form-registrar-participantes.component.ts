@@ -312,7 +312,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     }
     this.technicalCommitteSessionService.cambiarEstadoComiteTecnico(comite)
       .subscribe(respuesta => {
-        this.openDialog('', 'La sesión ha sido registrada exitosamente.');
+        this.openDialog('', '<b>La sesión ha sido registrada exitosamente.</b>');
         if (respuesta.code == "200")
           this.router.navigate(['/comiteTecnico']);
       })
@@ -361,7 +361,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
       this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
-          this.openDialog('', respuesta.message)
+          this.openDialog('', `<b>${respuesta.message}</b>`)
           if (respuesta.code == "200")
             this.ngOnInit();
         })

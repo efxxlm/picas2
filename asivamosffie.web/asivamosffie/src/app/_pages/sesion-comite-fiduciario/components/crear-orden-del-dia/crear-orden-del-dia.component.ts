@@ -355,7 +355,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         Validators.required, Validators.minLength(1), Validators.maxLength(3)])
       ],
       url: [null, [
-        //Validators.required,
+        Validators.required,
         //Validators.pattern('/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/')
       ]],
     });
@@ -414,7 +414,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
       this.fiduciaryCommitteeSessionService.createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(sesion)
         .subscribe(respuesta => {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
           if (respuesta.code == "200")
             this.router.navigate(['/comiteFiduciario'])
         })

@@ -116,7 +116,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
     this.projectContractingService.createEditContratacionProyecto(this.contratacionProyecto)
       .subscribe(respuesta => {
 
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         console.log(respuesta);
         // tslint:disable-next-line: triple-equals
         if (respuesta.code == '200') {

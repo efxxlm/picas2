@@ -106,7 +106,7 @@ export class CargarOrdenDeElegibilidadComponent {
       {
         this.procesoSeleccionService.uploadMassiveLoadElegibilidad(this.idProject,this.data.procesoSeleccionId).subscribe(
           response => {
-            this.openDialog('', response.message,response.code=="200");
+            this.openDialog('', `<b>${response.message}</b>`,response.code=="200");
           },
           error => {
             console.log(<any>error);

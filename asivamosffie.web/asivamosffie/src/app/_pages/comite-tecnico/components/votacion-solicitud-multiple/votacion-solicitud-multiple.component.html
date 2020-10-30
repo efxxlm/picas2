@@ -81,24 +81,25 @@
                     {{ observacion.value.nombreParticipante }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    <section class="example-section">
+                    <section class="w-quill">
                       <div class="d-flex">
                         <quill-editor
                             class="quill-editor-style card"
                             #observaciones
                             [styles]="editorStyle"
                             [modules]="config"
-                            required
                             (onContentChanged)="maxLength($event, 1000)"
-                            formControlName="observacion"
-                            required>
+                            formControlName="observacion">
                           <input type="hidden" formControlName="sesionSolicitudObservacionProyectoId">
                           <input type="hidden" formControlName="sesionComiteSolicitudId">
                           <input type="hidden" formControlName="sesionParticipanteId">
                           <input type="hidden" formControlName="contratacionProyectoId">
                         </quill-editor>
-                        <div class="d-flex align-items-center">
-                          <span class="contador miles">
+                        <div class="d-flex align-items-center"> 
+                          <span class="contador miles" *ngIf="observacion.get('observacion').value !== null">
+                            {{1000 - textoLimpio(observacion.get('observacion').value)}}
+                          </span>
+                          <span class="contador miles" *ngIf="observacion.get('observacion').value === null">
                             1000
                           </span>
                         </div>

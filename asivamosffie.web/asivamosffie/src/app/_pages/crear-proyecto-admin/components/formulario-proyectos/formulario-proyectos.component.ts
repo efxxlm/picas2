@@ -192,7 +192,7 @@ export class FormularioProyectosComponent implements OnInit {
 
   onSubmit() {
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
-      this.openDialog('', respuesta.message,true);
+      this.openDialog('', `<b>${respuesta.message}</b>`,true);
     },
       err => {
         let mensaje: string;

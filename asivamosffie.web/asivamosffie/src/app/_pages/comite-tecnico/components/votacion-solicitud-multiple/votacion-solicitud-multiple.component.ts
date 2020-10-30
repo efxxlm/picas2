@@ -161,6 +161,12 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
           this.proyectos.push(grupoProyecto)
         })
       })
+
+      this.addressForm.valueChanges
+        .subscribe(value => {
+          console.log(value);
+          console.log(value.proyectos[0].observaciones[0].observacion);
+        })
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -218,7 +224,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
 
     this.technicalCommitteSessionService.createEditSesionSolicitudVoto(sesionComiteSolicitud)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200") {
           this.dialogRef.close(this.data.objetoComiteTecnico);
           //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])

@@ -310,7 +310,7 @@ export class FormRegistrarParticipantesComponent {
     }
     this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico(comite)
       .subscribe(respuesta => {
-        this.openDialog('', 'La sesión ha sido registrada exitosamente.');
+        this.openDialog('', '<b>La sesión ha sido registrada exitosamente.</b>');
         if (respuesta.code == "200")
           this.router.navigate(['/comiteFiduciario']);
       })
@@ -359,7 +359,7 @@ export class FormRegistrarParticipantesComponent {
 
       this.fiduciaryCommitteeSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
-          this.openDialog('', respuesta.message)
+          this.openDialog('', `<b>${respuesta.message}</b>`)
           if (respuesta.code == "200")
             this.ngOnInit();
         })

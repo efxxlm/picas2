@@ -233,11 +233,11 @@ export class EditarEnRevisionComponent implements OnInit {
     }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){
-        this.openDialog('', data.message);
+        this.openDialog('', `<b>${data.message}</b>`);
         this.router.navigate(['/generarPolizasYGarantias']);
       }
       else{
-        this.openDialog('', data.message);
+        this.openDialog('', `<b>${data.message}</b>`);
       }
     });
     this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data1=>{

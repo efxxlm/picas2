@@ -56,7 +56,7 @@ export class AplazarSesionComponent implements OnInit {
 
     this.technicalCommitteeSessionService.aplazarSesionComite( comiteTecnico )
       .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message )
+        this.openDialog( '', `<b>${respuesta.message}</b>` )
         if ( respuesta.code == "200" )
         {
           this.dialogRef.close();

@@ -119,7 +119,7 @@ export class TablaFuentesComponent implements OnInit {
   eliminarRegistro(e: number){
     this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe( resultado => {
       let res = resultado as Respuesta;
-      this.openDialog('', res.message);
+      this.openDialog('', `<b>${res.message}</b>`);
       this.ngOnInit();
     })
   }

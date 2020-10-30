@@ -225,7 +225,7 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
 
     this.technicalCommitteSessionService.createEditSesionSolicitudVoto(sesionComiteSolicitud)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200") {
           this.dialogRef.close(this.data.objetoComiteTecnico);
           //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])

@@ -151,7 +151,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     this.compromisoSvc.postComentariosActa( observaciones )
       .subscribe( ( resp: any ) => {
         this.seRealizoPeticion = true;
-        this.openDialog( '', this.textoLimpioMessage( resp.message ) );
+        this.openDialog( '', `<b>${this.textoLimpioMessage( resp.message )}</b>` );
         this.routes.navigate( ['/compromisosActasComite'] );
       } );
 

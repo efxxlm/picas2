@@ -222,7 +222,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         Validators.required, Validators.minLength(1), Validators.maxLength(3)])
       ],
       url: [null, [
-        //Validators.required,
+        Validators.required,
         //Validators.pattern('/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/')
       ]],
     });

@@ -165,7 +165,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       console.log(this.objetoDisponibilidad);
     this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         if (respuesta.code == "200")
           this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
       })

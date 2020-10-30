@@ -59,7 +59,7 @@ export class CargarListadoDeProyectosComponent implements OnInit {
       {
         this.projectService.uploadOkProjectsFileProject(this.idProject).subscribe(
           response => {
-            this.openDialog('', response.message,response.code=="200");
+            this.openDialog('', `<b>${response.message}</b>`,response.code=="200");
           },
           error => {
             console.log(<any>error);

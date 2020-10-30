@@ -96,7 +96,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
     this.procesoSeleccionService.createContractorsFromProponent(proceso)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         if (respuesta.code === '200') {
           this.router.navigate(['/seleccion/invitacionCerrada', this.procesoSeleccion.procesoSeleccionId]);
         }

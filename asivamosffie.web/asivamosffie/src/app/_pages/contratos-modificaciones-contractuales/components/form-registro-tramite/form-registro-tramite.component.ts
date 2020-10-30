@@ -170,11 +170,11 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       .subscribe( 
         ( resp: any ) => {
           this.seRealizoPeticion = true;
-          this.openDialog( '', resp.message );
+          this.openDialog( '', `<b>${resp.message}</b>` );
           this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
         },
         ( error: any ) => {
-          this.openDialog( '', error.message );
+          this.openDialog( '', `<b>${error.message}</b>` );
         }
       );
 

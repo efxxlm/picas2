@@ -122,7 +122,7 @@ export class ObservacionComponent implements OnInit {
 
     this.technicalCommitteSessionService.crearObservacionProyecto(contraracionObservacion)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200")
           this.dialogRef.close(respuesta.data);
       })

@@ -77,7 +77,7 @@ export class AsociadaComponent implements OnInit {
     const mensajeValidaciones = this.validaciones();
 
     if (mensajeValidaciones.length > 0) {
-      this.openDialog('', mensajeValidaciones)
+      this.openDialog('', `<b>${mensajeValidaciones}</b>`)
       return false;
     };
 
@@ -94,11 +94,11 @@ export class AsociadaComponent implements OnInit {
       respuesta => {
         this.dialogRef.close();
         if (respuesta.code === '200') {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         }
         this.router.navigate(['/solicitarContratacion']);
       },
-      err => this.openDialog('', err.message)
+      err => this.openDialog('', `<b>${err.message}</b>`)
     );
 
   }

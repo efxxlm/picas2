@@ -73,7 +73,7 @@ export class TablaCrearSolicitudadministrativaComponent implements OnInit {
     
     this.budgetAvailabilityService.sendRequest( e )
       .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message );
+        this.openDialog( '', `<b>${respuesta.message}</b>` );
         if (respuesta.code == "200")
           this.ngOnInit();
       })
@@ -87,7 +87,7 @@ export class TablaCrearSolicitudadministrativaComponent implements OnInit {
   eliminar(e: number) {
     this.budgetAvailabilityService.eliminarDisponibilidad( e )
       .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message );
+        this.openDialog( '', `<b>${respuesta.message}</b>` );
         if (respuesta.code == "200")
           this.ngOnInit();
       })

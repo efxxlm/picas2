@@ -376,7 +376,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   private verificarRespuesta(respuesta: Respuesta, parcial: boolean) {
     if (respuesta.isSuccessful) // Response witout errors
     {
-      this.openDialog('', respuesta.message);
+      this.openDialog('', `<b>${respuesta.message}</b>`);
       if (!respuesta.isValidation) // have validations
       {
         console.log(respuesta);
@@ -387,7 +387,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         }
       }
     } else {
-      this.openDialog('', respuesta.message);
+      this.openDialog('', `<b>${respuesta.message}</b>`);
     }
   }
 
@@ -452,7 +452,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
           }
         }
         else {
-          this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.');
+          this.openDialog('', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>');
         }
 
       }

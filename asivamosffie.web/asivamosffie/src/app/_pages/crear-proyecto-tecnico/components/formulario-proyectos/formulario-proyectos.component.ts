@@ -113,14 +113,14 @@ export class FormularioProyectosComponent implements OnInit {
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(respuesta => {
       if(respuesta.code=="200")
       {
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         this.router.navigate(['/crearProyecto']); 
       }
       else
       {
         if(respuesta.code)
         {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         }
         else{
           this.openDialog('','<b>Error en el formulario, debe ingresar los datos obligatorios.</b>');

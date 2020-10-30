@@ -145,7 +145,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
-         this.openDialog("", "<b>La información se ha eliminado correctamente.</b>",true);         
+         this.openDialog("", "<b>La información se ha eliminado correctamente.</b>",true);
        }else
         this.openDialog("", r.message,false);
     })

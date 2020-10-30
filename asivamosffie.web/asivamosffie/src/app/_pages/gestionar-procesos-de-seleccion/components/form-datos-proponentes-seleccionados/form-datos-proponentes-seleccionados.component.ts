@@ -490,7 +490,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
     let mensajeValidaciones = this.validacionesUnionTemporal(porcentaje);
     if (mensajeValidaciones.length > 0) {
-      this.openDialog('', mensajeValidaciones);
+      this.openDialog('', `<b>${mensajeValidaciones}</b>`);
       return false;
     }
 

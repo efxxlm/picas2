@@ -31,8 +31,8 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
   constructor ( private router: Router,
                 public dialog: MatDialog,
-                private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,            
-                ) 
+                private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+                )
   {
 
   }
@@ -41,7 +41,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.getCommitteeSession()
       .subscribe( response => {
-        
+
         this.dataSource = new MatTableDataSource( response );
       })
 
@@ -83,7 +83,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
     this.fiduciaryCommitteeSessionService.convocarComiteTecnico( comite )
       .subscribe( respuesta => {
 
-        this.openDialog( ' sesión comité ', respuesta.message )
+        this.openDialog( '', `<b>${respuesta.message}</b>` )
 
         this.ngOnInit();
 
@@ -94,19 +94,19 @@ export class TablaOrdenDelDiaComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton:true }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
       if(result === true)
       {
         this.OnDelete(e)
-      }           
+      }
     });
   }
 
   OnDelete(e: number){
     this.fiduciaryCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId( e )
       .subscribe( respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         this.ngOnInit();
       })
   }

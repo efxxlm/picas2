@@ -90,7 +90,7 @@ export class TablaGestionActasComponent implements OnInit {
     }
     this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
     .subscribe( respuesta => {
-      this.openDialog( '', respuesta.message);
+      this.openDialog( '', `<b>${respuesta.message}</b>`);
       if ( respuesta.code == "200" )
         this.ngOnInit();  
     })

@@ -172,7 +172,7 @@ export class FormOtrosTemasComponent implements OnInit {
     console.log(tema)
     this.fiduciaryCommitteeSessionService.createEditTemasCompromiso(tema)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         this.validar.emit( respuesta.data );
         
         if (respuesta.code == "200" && !respuesta.data)

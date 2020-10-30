@@ -159,7 +159,7 @@ export class FormContratacionComponent implements OnInit {
           anchor.click();
 
         },
-        err => this.openDialog( '', err.message )
+        err => this.openDialog( '', `<b>${err.message}</b>` )
       );
   };
 

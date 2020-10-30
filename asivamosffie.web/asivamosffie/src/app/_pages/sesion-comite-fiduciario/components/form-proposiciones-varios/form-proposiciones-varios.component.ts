@@ -86,9 +86,7 @@ export class FormProposicionesVariosComponent {
       tiempoIntervencion: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(3)])
       ],
-      url: [null, [
-        ,
-      ]],
+      url: [null, [Validators.required]],
     });
   }
 
@@ -116,7 +114,7 @@ export class FormProposicionesVariosComponent {
 
       this.fiduciaryCommitteeSessionService.createEditSesionComiteTema( temas )
         .subscribe( respuesta => {
-          this.openDialog('', respuesta.message)
+          this.openDialog('', `<b>${respuesta.message}</b>`)
           if ( respuesta.code == "200" )
             this.validarCompletos(respuesta.data);
         })

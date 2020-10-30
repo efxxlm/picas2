@@ -79,7 +79,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (response === true) {
           if (this.estadoCodigo === undefined && this.reporte.get('reporteEstado').value !== null) {
-            this.openDialog('', 'Debe seleccionar el estado del Compromiso');
+            this.openDialog('', '<b>Debe seleccionar el estado del Compromiso</b>');
           }
           this.compromisoSvc.guardarObservacionStorage(this.reporte.get('reporteEstado').value, this.comite.compromisoId);
         }
@@ -142,10 +142,10 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
         resp => {
           this.seRealizoPeticion = true;
           this.compromisoSvc.eliminarObservacionStorage(this.comite.compromisoId);
-          this.openDialog('', this.textoLimpioMessage(resp.message));
+          this.openDialog('', `<b>${this.textoLimpioMessage(resp.message)}</b>`);
           this.routes.navigate(['/compromisosActasComite']);
         },
-        err => this.openDialog('', err.message)
+        err => this.openDialog('', `<b>${err.message}</b>`)
       );
 
   }

@@ -121,12 +121,12 @@ export class TablaProcesoFirmasComponent implements OnInit {
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
       .subscribe(
         response => {
-          this.openDialog( '', response.message );
+          this.openDialog( '', `<b>${response.message}</b>` );
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
             () => this.routes.navigate( [ '/contratosModificacionesContractuales' ] )
           );
         },
-        err => this.openDialog( '', err.message )
+        err => this.openDialog( '', `<b>${err.message}</b>` )
       );
   }
 

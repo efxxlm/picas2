@@ -52,7 +52,7 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
               } 
             )
         },
-        err => this.openDialog( '', err.message )
+        err => this.openDialog( '', `<b>${err.message}</b>` )
       );
   };
 

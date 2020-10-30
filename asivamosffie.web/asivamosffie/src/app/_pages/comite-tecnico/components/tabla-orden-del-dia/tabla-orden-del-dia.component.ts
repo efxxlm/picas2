@@ -92,7 +92,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
     this.technicalCommitteeSessionService.convocarComiteTecnico(comite)
       .subscribe(respuesta => {
 
-        this.openDialog(' sesión comité ', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
 
         this.ngOnInit();
 
@@ -114,7 +114,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   OnDelete(e: number) {
     this.technicalCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId(e)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         this.ngOnInit();
       });
   }

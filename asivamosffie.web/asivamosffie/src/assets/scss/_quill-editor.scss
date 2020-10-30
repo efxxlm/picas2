@@ -97,3 +97,7 @@
     content: none;
   }
 }
+
+.w-quill .quill-editor-style.card .ql-container.ql-snow {
+  max-width: var(--w-quill);
+}

@@ -206,7 +206,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         .subscribe(
           listaProyectos => {
             if ( listaProyectos.length === 0 ) {
-              this.openDialog('', 'Esta llave no existe por favor verifique los datos registrados');
+              this.openDialog('', '<b>Esta llave no existe por favor verifique los datos registrados</b>');
               return;
             };
             if ( listaProyectos.length > 0 ) {
@@ -241,11 +241,11 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                     };
                     this.seRecibioAportante = true;
                   },
-                  err => this.openDialog( '', err.message )
+                  err => this.openDialog( '', `<b>${err.message}</b>` )
                 );
             };
           }, 
-          err => this.openDialog('', err.message)
+          err => this.openDialog('', `<b>${err.message}</b>`)
         )
       }
     }
@@ -329,10 +329,10 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
             this.budgetAvailabilityService.createUpdateDisponibilidaPresupuestalEspecial( disponibilidadPresupuestal )
               .subscribe(
                 response => {
-                  this.openDialog( '', response.message );
+                  this.openDialog( '', `<b>${response.message}</b>` );
                   this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial']);
                 },
-                err => this.openDialog( '', err.message )
+                err => this.openDialog( '', `<b>${err.message}</b>` )
               )
 
            break;  
