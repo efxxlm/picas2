@@ -47,7 +47,6 @@ export class TablaContratoDeObraComponent implements OnInit {
           .subscribe( listas => {
             const dataTable = [];
             listas.forEach( value => {
-              console.log( this.estadosPreconstruccionObra );
               if (  (value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosAprobados.codigo
                     || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enProcesoAprobacionReqTecnicos.codigo
                     || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosVerificados.codigo
@@ -57,7 +56,6 @@ export class TablaContratoDeObraComponent implements OnInit {
                 dataTable.push( value );
               };
             } );
-            console.log( listas );
             this.dataSource = new MatTableDataSource( dataTable );
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;

@@ -68,6 +68,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
         this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
           .subscribe( contrato => {
             this.contrato = contrato;
+            console.log( this.contrato );
             const observacionTipo2 = [];
             for ( let contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
   
@@ -95,13 +96,13 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                   };
                 };
                 if ( observacionTipo2.length > 0 ) {
-                  if ( perfil[ 'tieneObservacionApoyo' ] === true && observacionTipo2[ observacionTipo2.length -1 ].observacion.length === 0 ) {
+                  if ( perfil[ 'tieneObservacionApoyo' ] === true && observacionTipo2[ observacionTipo2.length -1 ].observacion === undefined ) {
                     perfil[ 'estadoSemaforo' ] = 'en-proceso';
                     perfil[ 'tieneObservaciones' ] = true;
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo2[ observacionTipo2.length -1 ].contratoPerfilObservacionId;
                     enProceso++;
                   };
-                  if ( perfil[ 'tieneObservacionApoyo' ] === true && observacionTipo2[ observacionTipo2.length -1 ].observacion.length > 0 ) {
+                  if ( perfil[ 'tieneObservacionApoyo' ] === true && observacionTipo2[ observacionTipo2.length -1 ].observacion !== undefined ) {
                     perfil[ 'estadoSemaforo' ] = 'completo';
                     perfil[ 'tieneObservaciones' ] = true;
                     perfil[ 'verificarObservacion' ] = observacionTipo2[ observacionTipo2.length -1 ].observacion;
@@ -109,7 +110,6 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                   };
                 };
               };
-              console.log( sinDiligenciar, enProceso, completo );
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
                 contratacionProyecto[ 'estadoSemaforo' ] = 'sin-diligenciar';
                 return;
