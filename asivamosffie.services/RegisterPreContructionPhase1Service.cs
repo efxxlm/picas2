@@ -198,7 +198,7 @@ namespace asivamosffie.services
                                     if (!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
                                     {
                                         ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
-                                        ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.ApoyoSupervisor;
+                                        ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
                                         ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                         ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                         ContratoPerfilObservacion.Eliminado = false;
