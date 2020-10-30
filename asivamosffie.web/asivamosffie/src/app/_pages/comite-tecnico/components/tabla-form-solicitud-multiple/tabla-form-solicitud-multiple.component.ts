@@ -28,6 +28,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   listaEstadosCompleta: Dominio[] = [];
   estadosValidos: string[] = ['3', '5', '7']
   estadosSolicitud = EstadosSolicitud;
+  estadosProyecto = EstadosProyecto;
   proyectos: ContratacionProyecto[] = []
 
   displayedColumns: string[] = [
@@ -140,7 +141,12 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     };
     this.cargarRegistro();
   }
-  Observaciones(contratacionProyectoid: number, contratacionid: number, contratacionObservacion: ContratacionObservacion[]) {
+  Observaciones(contratacionProyectoid: number, 
+                contratacionid: number, 
+                contratacionObservacion: ContratacionObservacion[],
+                proyectoId: number,
+                estadoProyectoCodigo: number) {
+
     let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
     let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
 
@@ -150,7 +156,9 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
               contratacionid,
               idsesionComiteSolicitud, 
               idcomiteTecnico, 
-              contratacionObservacion
+              contratacionObservacion,
+              proyectoId,
+              estadoProyectoCodigo
 
              }
     });

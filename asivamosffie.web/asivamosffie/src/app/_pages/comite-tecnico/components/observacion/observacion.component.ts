@@ -110,6 +110,14 @@ export class ObservacionComponent implements OnInit {
 
       observacion: this.observacion,
 
+      contratacionProyecto:{
+        proyecto:{
+          proyectoId: this.data.proyectoId,
+          estadoProyectoCodigo: this.data.estadoProyectoCodigo,
+          
+        }
+      }
+
     }
 
     this.technicalCommitteSessionService.crearObservacionProyecto(contraracionObservacion)

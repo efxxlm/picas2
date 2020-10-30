@@ -133,6 +133,8 @@ interface EstadoSolicitud{
     fechaCreacion?: Date,
     comiteTecnicoId?: number,
     contratacionProyectoid?: number,
+
+    contratacionProyecto?: ContratacionProyecto,
     
   }
   

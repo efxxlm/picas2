@@ -495,8 +495,9 @@ namespace asivamosffie.services
                 }
 
 
-                comiteTecnicoOld.SesionComiteSolicitudComiteTecnico.ToList().ForEach( ct => {
-                    SesionComiteSolicitud solicitud = _context.SesionComiteSolicitud.Find( ct.SesionComiteSolicitudId );
+                comiteTecnicoOld.SesionComiteSolicitudComiteTecnico.ToList().ForEach(ct =>
+                {
+                    SesionComiteSolicitud solicitud = _context.SesionComiteSolicitud.Find(ct.SesionComiteSolicitudId);
 
                     solicitud.Eliminado = true;
                 });
@@ -1079,7 +1080,8 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
-               sesionComiteSolicitud.RutaSoporteVotacion == null ||
+               (sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
+                    string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion) ) ||
                sesionComiteSolicitud.GeneraCompromiso == null ||
                sesionComiteSolicitud.RequiereVotacion == null ||
                //sesionComiteSolicitud.ComiteTecnicoFiduciarioId > 0 ||
@@ -1087,8 +1089,8 @@ namespace asivamosffie.services
                //sesionComiteSolicitud.UsuarioComiteFiduciario == null ||
                //sesionComiteSolicitud.EstadoActaCodigo == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion)
+               string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones)
+                //string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion
                 )
             {
                 return false;
@@ -3136,6 +3138,12 @@ namespace asivamosffie.services
 
             try
             {
+                Proyecto proyecto = _context.Proyecto.Find( pContratacionObservacion.ContratacionProyecto.Proyecto.ProyectoId );
+
+                proyecto.EstadoProyectoCodigo = pContratacionObservacion.ContratacionProyecto.Proyecto.EstadoProyectoCodigo;
+
+                pContratacionObservacion.ContratacionProyecto = null;
+
                 if (pContratacionObservacion.ContratacionObservacionId == 0)
                 {
                     pContratacionObservacion.FechaCreacion = DateTime.Now;
@@ -3894,7 +3902,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-                 
+
                 //Temas para ordel del dia
                 int enumTemaOrdelDia = 1;
                 foreach (var Tema in pComiteTecnico.SesionComiteTema.Where(r => r.EsProposicionesVarios == null).ToList())
