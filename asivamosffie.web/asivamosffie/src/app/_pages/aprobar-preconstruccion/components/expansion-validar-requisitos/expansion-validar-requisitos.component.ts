@@ -82,7 +82,8 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
   onSubmit( perfil: ContratoPerfil ) {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
-      observacion: perfil[ 'verificarObservacion' ]
+      observacion: perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
+      tieneObservacionSupervisor: perfil[ 'tieneObservaciones' ]
     };
     console.log( observacionPerfil );
     this.faseUnoVerificarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )

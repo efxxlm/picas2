@@ -22,6 +22,7 @@ export class FormPerfilComponent implements OnInit {
   @Output() perfilesCompletados = new EventEmitter();
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
   perfilesCompletos: number = 0;
+  perfilesEnProceso: number = 0;
   editorStyle = {
     height: '45px'
   };
@@ -136,13 +137,13 @@ export class FormPerfilComponent implements OnInit {
             }
           }
         }
-        if ( perfil.registroCompleto ) {
+        if ( perfil.registroCompleto === true ) {
           this.perfilesCompletos++;
           semaforo = 'completo';
-          console.log( semaforo );
-        }
+        };
         if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
           semaforo = 'en-proceso'
+          this.perfilesEnProceso++;
         }
         this.perfiles.push(
           this.fb.group(
@@ -166,10 +167,10 @@ export class FormPerfilComponent implements OnInit {
       };
       if ( this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
-      }
-      if ( this.perfilesCompletos < this.perfilProyecto.length && this.perfilesCompletos > 0 ) {
+      };
+      if ( this.perfilesEnProceso < this.perfilProyecto.length && this.perfilesCompletos !== this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'en-proceso' );
-      }
+      };
     };
   };
 
@@ -188,7 +189,7 @@ export class FormPerfilComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   };
 
   openDialogTrueFalse (modalTitle: string, modalText: string) {

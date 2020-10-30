@@ -7,16 +7,6 @@ import { Router } from '@angular/router';
 import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
 import { estadosPreconstruccion } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 
-export interface PeriodicElement {
-  id: number;
-  fecha: string;
-  numContrato: string;
-  proyAsociados: number;
-  proyConRequisitosAprovados: number;
-  proyConRequisitosPendientes: number;
-  estado: string;
-}
-
 @Component({
   selector: 'app-tabla-contrato-de-obra',
   templateUrl: './tabla-contrato-de-obra.component.html',
@@ -34,6 +24,7 @@ export class TablaContratoDeObraComponent implements OnInit {
     'gestion'
   ];
   dataSource = new MatTableDataSource();
+  tipoSolicitudCodigoObra: string = '1';
   estadosPreconstruccionObra: estadosPreconstruccion;
 
   @ViewChild( MatPaginator, {static: true} ) paginator: MatPaginator;
@@ -52,29 +43,40 @@ export class TablaContratoDeObraComponent implements OnInit {
       .subscribe(
         response => {
           this.estadosPreconstruccionObra = response;
-          console.log( this.estadosPreconstruccionObra );
+          this.faseUnoVerificarPreconstruccionSvc.getListContratacion()
+          .subscribe( listas => {
+            const dataTable = [];
+            listas.forEach( value => {
+              console.log( this.estadosPreconstruccionObra );
+              if (  (value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosAprobados.codigo
+                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enProcesoAprobacionReqTecnicos.codigo
+                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosVerificados.codigo
+                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo)
+                    && value[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
+              {
+                dataTable.push( value );
+              };
+            } );
+            console.log( listas );
+            this.dataSource = new MatTableDataSource( dataTable );
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+            this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+              if (length === 0 || pageSize === 0) {
+                return '0 de ' + length;
+              }
+              length = Math.max(length, 0);
+              const startIndex = page * pageSize;
+              // If the start index exceeds the list length, do not try and fix the end index to the end.
+              const endIndex = startIndex < length ?
+                Math.min(startIndex + pageSize, length) :
+                startIndex + pageSize;
+              return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+            };
+          } );
         }
       );
-    this.faseUnoPreconstruccionSvc.getListContratacion()
-      .subscribe( listas => {
-        console.log( listas );
-        this.dataSource = new MatTableDataSource( listas );
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-          if (length === 0 || pageSize === 0) {
-            return '0 de ' + length;
-          }
-          length = Math.max(length, 0);
-          const startIndex = page * pageSize;
-          // If the start index exceeds the list length, do not try and fix the end index to the end.
-          const endIndex = startIndex < length ?
-            Math.min(startIndex + pageSize, length) :
-            startIndex + pageSize;
-          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-        };
-      } );
   }
 
   ngOnInit(): void {

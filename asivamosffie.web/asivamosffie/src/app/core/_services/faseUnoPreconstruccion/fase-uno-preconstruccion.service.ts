@@ -35,6 +35,9 @@ export class FaseUnoPreconstruccionService {
   deleteContratoPerfilNumeroRadicado ( contratoPerfilNumeroRadicadoId: number ) {
     return this.http.post<Respuesta>( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
   };
+  changeStateContrato ( pContratoId: number, pEstadoVerificacionContratoCodigo: string ) {
+    return this.http.post<Respuesta>( `${ this.url_api }/ChangeStateContrato?pContratoId=${ pContratoId }&pEstadoVerificacionContratoCodigo=${ pEstadoVerificacionContratoCodigo }`, '' );
+  };
   //Estados de preconstrucción
   listaEstadosVerificacionContrato () {
     let estadosPreconstruccion: estadosPreconstruccion = {};
@@ -42,7 +45,6 @@ export class FaseUnoPreconstruccionService {
       .pipe(
         map(
           estados => {
-            console.log( estados );
             estados.forEach( value => {
               if ( value.codigo === '1' ) {
                 estadosPreconstruccion.sinAprobacionReqTecnicos = {

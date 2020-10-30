@@ -45,7 +45,6 @@ export class FaseUnoVerificarPreconstruccionService {
       .pipe(
         map(
           estados => {
-            console.log( estados );
             if ( tipoContrato === 'obra' ) {
              estados.forEach( value => {
                if ( value.codigo === '3' ) {

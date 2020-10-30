@@ -6,6 +6,8 @@ import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPre
 import { CommonService } from '../../../../core/_services/common/common.service';
 import { Router } from '@angular/router';
 import { estadosPreconstruccion } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 export interface PeriodicElement {
   id: number;
@@ -47,42 +49,68 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
 
   constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
                 private commonSvc: CommonService,
+                private dialog: MatDialog,
                 private routes: Router ) 
   {
     faseUnoPreconstruccionSvc.listaEstadosVerificacionContrato()
       .subscribe(
         response => {
           this.estadosPreconstruccion = response;
-          console.log( this.estadosPreconstruccion );
+          this.faseUnoPreconstruccionSvc.getListContratacion()
+          .subscribe( listas => {
+            const dataTable = [];
+    
+            listas.forEach( value => {
+              if (  value[ 'estadoCodigo' ] === this.estadosPreconstruccion.sinAprobacionReqTecnicos.codigo
+                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enProcesoAprobacionReqTecnicos.codigo
+                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.conReqTecnicosAprobados.codigo
+                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enviadoAlInterventor.codigo ) 
+              {
+                dataTable.push( value );
+              };
+            } );
+            this.dataSource = new MatTableDataSource( dataTable );
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+            this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+              if (length === 0 || pageSize === 0) {
+                return '0 de ' + length;
+              }
+              length = Math.max(length, 0);
+              const startIndex = page * pageSize;
+              // If the start index exceeds the list length, do not try and fix the end index to the end.
+              const endIndex = startIndex < length ?
+                Math.min(startIndex + pageSize, length) :
+                startIndex + pageSize;
+              return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+            };
+          } );
         }
       );
-    this.faseUnoPreconstruccionSvc.getListContratacion()
-      .subscribe( listas => {
-        console.log( listas );
-        this.dataSource = new MatTableDataSource( listas );
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-          if (length === 0 || pageSize === 0) {
-            return '0 de ' + length;
-          }
-          length = Math.max(length, 0);
-          const startIndex = page * pageSize;
-          // If the start index exceeds the list length, do not try and fix the end index to the end.
-          const endIndex = startIndex < length ?
-            Math.min(startIndex + pageSize, length) :
-            startIndex + pageSize;
-          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-        };
-      } );
   }
 
   ngOnInit(): void {
   }
 
-  aprobarInicio () {
-    console.log( 'Aprobando Inicio' );
+  openDialog (modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
+  aprobarInicio ( contratoId: number ) {
+    this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccion.conReqTecnicosAprobados.codigo )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/preconstruccion' ] )
+          );
+        },
+        err => this.openDialog( '', err.message )
+      );
   }
 
   getForm ( id: number, fechaPoliza: string ) {

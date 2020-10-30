@@ -29,11 +29,9 @@ export class VerDetallePerfilesComponent implements OnInit {
       } );
   };
 
-  textoLimpioObservacion(texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio;
-    }
-  }
+  innerObservacion ( observacion: string ) {
+    const observacionHtml = observacion.replace( '"', '' );
+    return observacionHtml;
+  };
 
 }
