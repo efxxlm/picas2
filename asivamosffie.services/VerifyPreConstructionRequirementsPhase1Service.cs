@@ -39,8 +39,7 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.ContratacionProyecto)
                        .ThenInclude(r => r.Proyecto)
                             .ThenInclude(r => r.ContratoPerfil)
-                .Include(r => r.Contratacion)
-                  .ThenInclude(r => r.DisponibilidadPresupuestal)
+                               .ThenInclude(r => r.ContratoPerfilObservacion)
                .ToListAsync();
 
             foreach (var c in listContratos)
@@ -53,17 +52,18 @@ namespace asivamosffie.services
                     EstaDevuelto = true;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
                 {
+
                     bool RegistroCompletoObservaciones = true;
-                    foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado))
+                    foreach (var ContratoPerfil in  c.ContratoPerfil.Where(r => !(bool)r.Eliminado).ToList())
                     {
-                        if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
+                        if (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).Count() == 0)
                             RegistroCompletoObservaciones = false;
                         else if ((ContratoPerfil.TieneObservacionApoyo == null)
-                             || (ContratoPerfil.TieneObservacionApoyo.HasValue
-                             && (bool)ContratoPerfil.TieneObservacionApoyo
-                             && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
-                             && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
-                                    RegistroCompletoObservaciones = false; 
+                            || (ContratoPerfil.TieneObservacionApoyo.HasValue
+                            && (bool)ContratoPerfil.TieneObservacionApoyo
+                            && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
+                            && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
+                            RegistroCompletoObservaciones = false;
                     }
                     if (RegistroCompletoObservaciones)
                         CantidadProyectosConPerfilesAprobados++;
@@ -357,6 +357,8 @@ namespace asivamosffie.services
                     pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                     pContratoPerfilObservacion.Eliminado = false;
                     pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.ApoyoSupervisor;
+                    if (pContratoPerfilObservacion.Observacion != null)
+                        pContratoPerfilObservacion.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
                     _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
                 }
                 else
@@ -372,7 +374,8 @@ namespace asivamosffie.services
                 //Validar Estados Completos
                 Contrato contrato = _context.Contrato
                     .Where(r => r.ContratoId == contratoPerfilOld.ContratoId)
-                    .Include(r => r.ContratoPerfil)
+                    .Include(r => r.Contratacion)
+                    .Include(r => r.ContratoPerfil) 
                     .ThenInclude(r => r.ContratoPerfilObservacion).FirstOrDefault();
 
                 bool RegistroCompleto = true;
@@ -387,6 +390,7 @@ namespace asivamosffie.services
                         && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                         && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
                         RegistroCompleto = false;
+           
                 }
 
                 if (RegistroCompleto)
