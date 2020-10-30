@@ -5,6 +5,7 @@ import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPre
 import { FaseUnoVerificarPreconstruccionService } from 'src/app/core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
 import { Contrato, ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { ObservacionPerfil } from 'src/app/_interfaces/faseUnoVerificarPreconstruccion.interface';
+import { FaseUnoAprobarPreconstruccionService } from '../../../../core/_services/faseUnoAprobarPreconstruccion/fase-uno-aprobar-preconstruccion.service';
 
 @Component({
   selector: 'app-expansion-validar-requisitos',
@@ -34,7 +35,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
-                private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+                private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService )
   { 
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
@@ -86,7 +87,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
       tieneObservacionSupervisor: perfil[ 'tieneObservaciones' ]
     };
     console.log( observacionPerfil );
-    this.faseUnoVerificarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
+    this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
       .subscribe( console.log );
   }
 

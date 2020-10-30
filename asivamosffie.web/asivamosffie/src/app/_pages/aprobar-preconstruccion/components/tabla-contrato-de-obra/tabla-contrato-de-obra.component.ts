@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { FaseUnoAprobarPreconstruccionService } from '../../../../core/_services/faseUnoAprobarPreconstruccion/fase-uno-aprobar-preconstruccion.service';
 
 @Component({
   selector: 'app-tabla-contrato-de-obra',
@@ -30,7 +31,11 @@ export class TablaContratoDeObraComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
+  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+                private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService ) 
+  {
+    this.faseUnoAprobarPreconstruccionSvc.listaEstadosAprobarContrato( 'obra' )
+      .subscribe( console.log );
     this.faseUnoPreconstruccionSvc.getListContratacion()
       .subscribe( listas => {
         console.log( listas );

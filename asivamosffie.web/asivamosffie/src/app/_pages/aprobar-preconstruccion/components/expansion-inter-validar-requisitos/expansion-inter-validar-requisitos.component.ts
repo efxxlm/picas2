@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FaseUnoVerificarPreconstruccionService } from 'src/app/core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
 import { Contrato, ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { ObservacionPerfil } from 'src/app/_interfaces/faseUnoVerificarPreconstruccion.interface';
+import { FaseUnoAprobarPreconstruccionService } from '../../../../core/_services/faseUnoAprobarPreconstruccion/fase-uno-aprobar-preconstruccion.service';
 
 @Component({
   selector: 'app-expansion-inter-validar-requisitos',
@@ -33,6 +34,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
 
   constructor ( private fb: FormBuilder,
                 private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+                private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService,
                 private activatedRoute: ActivatedRoute ) 
   {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
@@ -92,7 +94,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
       observacion: perfil[ 'verificarObservacion' ]
     };
     console.log( observacionPerfil );
-    this.faseUnoVerificarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
+    this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
       .subscribe( console.log );
   }
 
