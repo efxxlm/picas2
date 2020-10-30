@@ -39,7 +39,8 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDDP IS NOT NULL " +
-                "AND cp.FechaAprobacion is not null")
+                "AND cp.FechaAprobacion is not null " +
+                "AND ctr.TipoSolicitudCodigo = 1")
                 .Include(r => r.ContratoPoliza)
                 .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
@@ -70,6 +71,7 @@ namespace asivamosffie.services
                     RegistroCompleto = true;
                 listaContrats.Add(new
                 {
+                    c.Contratacion.NumeroSolicitud,
                     c.ContratoId,
                     FechaAprobacion = ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
                     c.Contratacion.TipoSolicitudCodigo,
