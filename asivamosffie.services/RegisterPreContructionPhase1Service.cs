@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Constants;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,12 @@ namespace asivamosffie.services
             //    });
             //});
 
-            List<Contrato> listContratos = await _context.Contrato.FromSqlRaw("SELECT c.* FROM	dbo.Contrato AS c INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId WHERE dp.NumeroDDP IS NOT NULL AND ctr.TipoSolicitudCodigo = 1")
+            List<Contrato> listContratos = await _context.Contrato
+                .FromSqlRaw("SELECT c.* FROM	dbo.Contrato AS c " +
+                "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
+                "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
+                "WHERE dp.NumeroDDP IS NOT NULL " +
+                "AND ctr.TipoSolicitudCodigo = 1")
                .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
                        .ThenInclude(r => r.Proyecto)
@@ -178,9 +184,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
-
-
-
+                             
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
 
@@ -273,12 +277,16 @@ namespace asivamosffie.services
 
                 }
                 //Cambiar Estado Requisitos 
-                if (pContrato.ContratoPerfil
-                    .Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count()
-                    && pContrato.ContratoPerfil.Count() > 1)
+                if (pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count() && pContrato.ContratoPerfil.Count() > 1)
                 {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
-                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
+                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados;
+                    contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                    contratoOld.FechaModificacion = DateTime.Now;
+                }
+                else {
+                    Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
+                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
                 }
