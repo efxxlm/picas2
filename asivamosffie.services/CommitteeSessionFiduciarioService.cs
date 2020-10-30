@@ -1610,15 +1610,21 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aplazar_Sesion_De_Comite_Fiduciario, (int)EnumeratorTipoDominio.Acciones);
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+            DateTime fechaAnterior;
 
             try
             {
                 ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(pComiteTecnico.ComiteTecnicoId);
+
+                fechaAnterior = comiteTecnicoOld.FechaOrdenDia.Value;
+
                 comiteTecnicoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                 comiteTecnicoOld.FechaModificacion = DateTime.Now;
                 comiteTecnicoOld.FechaOrdenDia = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.FechaAplazamiento = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Aplazada;
+
+                
 
                 _context.SaveChanges();
                 //Plantilla
@@ -1636,7 +1642,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.COMITE_FECHA:
-                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, comiteTecnicoOld.FechaCreacion.ToString("yyyy-MM-dd"));
+                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, fechaAnterior.ToString("dd-MM-yyyy"));
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.COMITE_FECHA_APLAZAMIENTO:
@@ -1672,8 +1678,8 @@ namespace asivamosffie.services
                       IsSuccessful = true,
                       IsException = false,
                       IsValidation = false,
-                      Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.OperacionExitosa, idAccion, pComiteTecnico.UsuarioCreacion, "APLAZAR SESIÓN COMITE")
+                      Code = ConstantSesionComiteFiduciario.AplazarExitoso,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.AplazarExitoso, idAccion, pComiteTecnico.UsuarioCreacion, "APLAZAR SESIÓN COMITE")
                   };
             }
             catch (Exception ex)

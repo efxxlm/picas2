@@ -384,6 +384,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string OperacionExitosa = "200";
         public const string EliminacionExitosa = "201";
+        public const string AplazarExitoso = "202";
 
         #endregion Mensajes Exitoso
 
@@ -409,6 +410,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string OperacionExitosa = "200";
         public const string EliminacionExitosa = "201";
+        public const string AplazarExitoso = "202";
 
         #endregion Mensajes Exitoso
 
