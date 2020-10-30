@@ -156,9 +156,9 @@ namespace asivamosffie.services
                 foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto)
                 {
                     //Guardar estado de la fase 1 preConstruccion 
-                    if (ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico != null)
+                    if (ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico != null  || ContratacionProyecto.Proyecto.TieneEstadoFase1EyD != null)
                     {
-                        Proyecto proyectoOld = _context.Proyecto.Find(ContratacionProyecto.Proyecto.ProyectoId);
+                        Proyecto proyectoOld = _context.Proyecto.Find(ContratacionProyecto.Proyecto.ProyectoId); 
                         proyectoOld.TieneEstadoFase1Diagnostico = ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico;
                         proyectoOld.TieneEstadoFase1EyD = ContratacionProyecto.Proyecto.TieneEstadoFase1EyD;
                         proyectoOld.FechaModificacion = DateTime.Now;
@@ -271,7 +271,11 @@ namespace asivamosffie.services
                 }
 
                 //Cambiar Estado Contrato 
-                Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.Contratacion).FirstOrDefault();
+                Contrato contratoOld = _context.Contrato.
+                    Where(r => r.ContratoId == pContrato.ContratoId)
+                    .Include(r => r.Contratacion)
+                    .Include(r=> r.ContratoPerfil)
+                    .FirstOrDefault();
                  
                 if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
                 {
