@@ -6,6 +6,8 @@ import { FaseUnoPreconstruccionService } from '../../../../core/_services/faseUn
 import { Router } from '@angular/router';
 import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
 import { estadosPreconstruccion } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-contrato-de-obra',
@@ -37,6 +39,7 @@ export class TablaContratoDeObraComponent implements OnInit {
 
   constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
                 private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+                private dialog: MatDialog,
                 private routes: Router ) 
   {
     this.faseUnoVerificarPreconstruccionSvc.listaEstadosVerificacionContrato( 'obra' )
@@ -80,12 +83,28 @@ export class TablaContratoDeObraComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openDialog ( modalTitle: string, modalText: string ) {
+    let dialogRef =this.dialog.open( ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
   getForm ( id: number, fechaPoliza: string ) {
     this.routes.navigate( [ '/verificarPreconstruccion/obraGestionarRequisitos', id ], { state: { fechaPoliza } } )
   };
 
   enviarSupervisor ( contratoId: number ) {
-    console.log( contratoId );
+    this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/verificarPreconstruccion' ] )
+          );
+        },
+        err => this.openDialog( '', err.message )
+      )
   };
 
 };

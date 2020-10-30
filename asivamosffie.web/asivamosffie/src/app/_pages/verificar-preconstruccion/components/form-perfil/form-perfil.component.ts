@@ -24,6 +24,7 @@ export class FormPerfilComponent implements OnInit {
   tieneEstadoFase1Diagnostico: boolean = false;
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
   perfilesCompletos: number = 0;
+  perfilesEnProceso: number = 0;
   editorStyle = {
     height: '45px'
   };
@@ -155,7 +156,8 @@ export class FormPerfilComponent implements OnInit {
           console.log( semaforo );
         }
         if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
-          semaforo = 'en-proceso'
+          semaforo = 'en-proceso';
+          this.perfilesEnProceso++;
         }
 
         this.perfiles.push(
@@ -181,7 +183,7 @@ export class FormPerfilComponent implements OnInit {
       if ( this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
       }
-      if ( this.perfilesCompletos < this.perfilProyecto.length && this.perfilesCompletos > 0 ) {
+      if ( this.perfilesEnProceso < this.perfilProyecto.length && this.perfilesCompletos !== this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'en-proceso' );
       }
     };

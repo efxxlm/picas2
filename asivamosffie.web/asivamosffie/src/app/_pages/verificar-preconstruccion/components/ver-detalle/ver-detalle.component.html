@@ -73,7 +73,7 @@
                       <mat-card-content>
                           <p>
                             <b>Perfil:</b>
-                            {{ perfil.perfilCodigo }}
+                            {{ tipoPerfil( perfil.perfilCodigo ) }}
                           </p>
                           <p>
                             <b>Cantidad de hojas de vida requeridas:</b>
@@ -91,12 +91,11 @@
                             <b>Fecha de aprobación de la totalidad de las hojas de vida:</b>
                             {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }}
                           </p>
-                          <div *ngFor="let obs of perfil.contratoPerfilObservacion">
-                            <p *ngIf="obs.tipoObservacionCodigo === '1'">
-                              <b>Oservaciones:</b>
-                              {{ textoLimpioObservacion( obs.observacion ) }}
-                            </p>
-                          </div>
+                          <section *ngFor="let obs of perfil.contratoPerfilObservacion">
+                            <div *ngIf="obs.tipoObservacionCodigo === '1'">
+                              <b style="margin-bottom: .5em;">Oservaciones:</b> <div [innerHTML]="innerObservacion( obs.observacion )"></div>
+                            </div>
+                          </section>
                           <p *ngFor="let radicadoFfie of perfil.contratoPerfilNumeroRadicado; index as j">
                             <b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }}:</b>
                             {{ radicadoFfie['numeroRadicado'] }}
@@ -114,28 +113,25 @@
                         ¿Tiene observaciones a las hojas de vida de este perfil?
                       </strong>
                     </div>
-                    <div>
-                      <span>
-                        Sí
-                      </span>
-                    </div>
+                    <div *ngIf="perfil[ 'tieneObservacionApoyo' ] === true"><span>Si</span></div>
+                    <div *ngIf="perfil[ 'tieneObservacionApoyo' ] === false"><span>No</span></div>
                   </div>
-        
-                  <mat-card class="shipping-card var-main-gris">
-                    <mat-card-header class="header-card">
-                      <mat-card-title class="header-card--text">
-                        Verificación del apoyo a la supervisión
-                      </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                      <b>
-                        21/06/2020
-                      </b>
-                      <p>
-                        La hoja de vida de Natalia Aranda no cuenta con los soportes indicados, verificar la información.
-                      </p>
-                    </mat-card-content>
-                  </mat-card>
+                    
+                  <section *ngFor="let observaciones of perfil.contratoPerfilObservacion">
+                    <mat-card class="shipping-card var-main-gris" *ngIf="observaciones.tipoObservacionCodigo === '2'">
+                      <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text">
+                          Verificación del apoyo a la supervisión
+                        </mat-card-title>
+                      </mat-card-header>
+                      <mat-card-content>
+                        <b style="margin-bottom: .5em;">
+                          {{ observaciones.fechaCreacion | date: 'dd/MM/yyyy' }}
+                        </b>
+                        <section [innerHTML]="innerObservacion( observaciones.observacion )"></section>
+                      </mat-card-content>
+                    </mat-card>
+                  </section>
 
               </mat-expansion-panel>
           </mat-accordion>

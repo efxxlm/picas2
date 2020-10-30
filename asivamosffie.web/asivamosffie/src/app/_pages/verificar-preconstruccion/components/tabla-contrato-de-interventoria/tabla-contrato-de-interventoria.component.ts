@@ -22,6 +22,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
     'estadoNombre',
     'gestion'
   ];
+  tipoSolicitudCodigoInterventoria: string = '2';
   estadosPreconstruccionInterventoria: estadosPreconstruccion;
   dataSource = new MatTableDataSource();
 
@@ -37,27 +38,46 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
                 private routes: Router ) 
   {
     this.faseUnoVerificarPreConstruccionSvc.listaEstadosVerificacionContrato( 'interventoria' )
-      .subscribe( console.log );
-    this.faseUnoVerificarPreConstruccionSvc.getListContratacion()
-      .subscribe( listas => {
-        console.log( listas );
-        this.dataSource = new MatTableDataSource( listas );
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-          if (length === 0 || pageSize === 0) {
-            return '0 de ' + length;
-          }
-          length = Math.max(length, 0);
-          const startIndex = page * pageSize;
-          // If the start index exceeds the list length, do not try and fix the end index to the end.
-          const endIndex = startIndex < length ?
-            Math.min(startIndex + pageSize, length) :
-            startIndex + pageSize;
-          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-        };
-      } );
+      .subscribe( 
+        estados => {
+          this.estadosPreconstruccionInterventoria = estados;
+          faseUnoVerificarPreConstruccionSvc.getListContratacionInterventoria()
+            .subscribe( listas => {
+              console.log( listas );
+              const dataTable = [];
+              listas.forEach( lista => {
+                if (  (  lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo
+                      || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.enProcesoVerificacionReqTecnicos.codigo
+                      || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo
+                      || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo )
+                      && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoInterventoria )
+              {
+                dataTable.push( lista );
+              };
+              } );
+
+              this.dataSource = new MatTableDataSource( dataTable );
+              this.dataSource.sort = this.sort;
+              this.dataSource.paginator = this.paginator;
+              this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+              this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+                if (length === 0 || pageSize === 0) {
+                  return '0 de ' + length;
+                }
+                length = Math.max(length, 0);
+                const startIndex = page * pageSize;
+                // If the start index exceeds the list length, do not try and fix the end index to the end.
+                const endIndex = startIndex < length ?
+                  Math.min(startIndex + pageSize, length) :
+                  startIndex + pageSize;
+                return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+              };
+            } )
+        }
+      );
+    //this.faseUnoVerificarPreConstruccionSvc.getListContratacion()
+    //  .subscribe( listas => {
+    //  } );
   }
 
   ngOnInit(): void {

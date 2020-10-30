@@ -23,6 +23,10 @@ export class FaseUnoVerificarPreconstruccionService {
     return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.paramUrl( '/VerifyPreConstructionRequirementsPhase1/GetListContratacion' ) }` );
   };
 
+  getListContratacionInterventoria () {
+    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.paramUrl( '/VerifyPreConstructionRequirementsPhase1/GetListContratacionInterventoria' ) }` );
+  };
+
   getContratacionByContratoId ( pContratoId: number ) {
     return this.http.get<Contrato>( `${ this.paramUrl( '/VerifyPreConstructionRequirementsPhase1/GetContratoByContratoId' ) }?pContratoId=${ pContratoId }` );
   };
