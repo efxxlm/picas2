@@ -210,3 +210,11 @@ div.mat-select-arrow {
 .radio-color-detalle {
     $mainColor: $fontColor !important;
 }
+
+.noBorderForm{
+    height: 0px;
+}
+
+.noBorderForm:focus{
+    height: 0px;
+}

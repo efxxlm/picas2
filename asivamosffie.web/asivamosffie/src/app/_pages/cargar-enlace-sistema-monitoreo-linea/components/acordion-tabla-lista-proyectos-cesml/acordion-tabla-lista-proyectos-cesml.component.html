@@ -13,7 +13,7 @@
         </mat-expansion-panel-header>
         <div align="center">
             <p class="info-sub-title">
-                <span>Nombre del contratista: <b>{{cont.nombreContratista}}</b> Proyectos asociados: <b>{{cont.numeroProyectosAsociados}}</b></span>
+                <span>Nombre del contratista: <b>{{cont.nombreContratista}}</b> Proyectos asociados: <b>{{cont.lstProyectoGrilla.length}}</b></span>
             </p>
         </div>
         <app-tabla-general-proyectos-cesml [dataTableServ]="cont.lstProyectoGrilla"></app-tabla-general-proyectos-cesml>
