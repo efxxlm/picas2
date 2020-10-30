@@ -31,8 +31,8 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
-                            <div class="text-area-quill auxBox">
-                                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                            <div>
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
                                     formControlName="resumenReclamacionFiduciaria">
                                 </quill-editor>
