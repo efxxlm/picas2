@@ -40,14 +40,12 @@ namespace asivamosffie.services
                 try
                 {
                     Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
-
                     Contratista contratista =null;
                     string strNombreContratista = string.Empty;
 
                     if (contratacion != null)
                     {
                         contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
-
                         if(contratista!=null)
                         {
                             strNombreContratista = contratista.Nombre;
@@ -59,9 +57,11 @@ namespace asivamosffie.services
                     ContratacionProyecto contratacionProyecto = null;
                     int contratacionProyectoId = 0;
 
+
                     if (contratacion != null)
                     {
                         contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+
 
                     }
 
@@ -220,8 +220,10 @@ namespace asivamosffie.services
                                 InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                                 Sede = proyecto.Sede.Nombre,
                                 ProyectoId = proyecto.ProyectoId,
+
                                 URLMonitoreo = strProyectoUrlMonitoreo,
                                 ContratoId = getContratoIdByProyectoId(proyecto.ProyectoId),
+
                             };
 
                             //r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
@@ -441,7 +443,6 @@ namespace asivamosffie.services
         //    return ListContratoGrilla.OrderByDescending(r => r.TipoSolicitud).ToList();
 
         //}
-
 
 
         public async Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string pURLMonitoreo, string pUsuarioModificacion)
