@@ -459,7 +459,7 @@ namespace asivamosffie.services
         }
 
         //Aprobar Acta
-        public async Task<Respuesta> AcceptReport(int comiteTecnicoId, Usuario pUser)
+        public async Task<Respuesta> AcceptReport(int comiteTecnicoId, Usuario pUser, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Acta, (int)EnumeratorTipoDominio.Acciones);
 
@@ -494,9 +494,11 @@ namespace asivamosffie.services
 
                     //Cambiar estado Comite Con acta aprobada
                     if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
+                    {
                         comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
-                  
-                    
+                        await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    }
+                     
                     //Validar sesionComentario 
                     foreach (var SesionComentario in comiteTecnico.SesionComentario)
                     {
@@ -523,6 +525,53 @@ namespace asivamosffie.services
                     Code = ConstantMessagesSesionComiteTema.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, pUser.Email, ex.InnerException.ToString().Substring(0, 500))
                 };
+            }
+        }
+        /// <summary>
+        /// Tarea Programada 
+        /// </summary>
+        /// <param name="pServerUser"></param>
+        /// <returns></returns>
+        public async Task GetApproveExpiredMinutes(string pServerUser)
+        {
+
+            int intCantidadDiasDeVencimiento = Int32.Parse(await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tiempo_Aprobar_Acta).Select(r => r.Nombre).FirstOrDefaultAsync());
+            DateTime FechaCorteActas = DateTime.Now.AddDays(-intCantidadDiasDeVencimiento);
+            List<ComiteTecnico> comiteTecnicos = _context.ComiteTecnico.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion).Where(r => r.FechaModificacion.HasValue && r.FechaModificacion < FechaCorteActas).ToList();
+            foreach (var comite in comiteTecnicos)
+            {
+                comite.EstadoActaCodigo = ConstantCodigoActas.Aprobada;
+                comite.FechaModificacion = DateTime.Now;
+                comite.UsuarioModificacion = pServerUser;
+            }
+
+            _context.SaveChanges();
+        }
+
+        public async Task<bool> EnviarActaAprobada(int pComiteTecnicoId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            try
+            {
+                ComiteTecnico comiteTecnico = _context.ComiteTecnico.Find(pComiteTecnicoId);
+                bool blEnvioCorreo = false;
+                var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+                foreach (var usuario in usuariosecretario)
+                {
+                    Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionActaAprobacion);
+                    string template =
+                        TemplateActaAprobada.Contenido
+                        .Replace("_LinkF_", pDominioFront)
+                        .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
+                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                        .Replace("[FECHA_COMITE]", ((DateTime)comiteTecnico.FechaOrdenDia).ToString("dd-MM-yyyy"));
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSender, pPassword, pMailServer, pMailPort);
+                }
+
+                return blEnvioCorreo;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
 

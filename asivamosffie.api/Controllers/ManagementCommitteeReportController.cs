@@ -178,7 +178,7 @@ namespace asivamosffie.api.Controllers
                     UsuarioId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value)
                 };
 
-                respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId, pUsuario);
+                respuesta = await _managementCommitteeReportService.AcceptReport(comiteTecnicoId, pUsuario, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
 
             }
