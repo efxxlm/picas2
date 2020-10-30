@@ -24,11 +24,15 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-
+        //  JMartinez 
+        /// <summary>
+        /// Se listan Los Contratos que tengan poliza aprobada y numero de ddp
+        /// </summary>
+        /// <returns></returns>
         public async Task<dynamic> GetListContratacion()
         {
             List<dynamic> listaContrats = new List<dynamic>();
-
+  
             List<Contrato> listContratos = await _context.Contrato
                 .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
                 "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
@@ -44,15 +48,14 @@ namespace asivamosffie.services
                 .Include(r => r.Contratacion)
                   .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToListAsync();
-
-
+             
             foreach (var c in listContratos)
             {
                 int CantidadProyectosConPerfilesAprobados = 0;
                 int CantidadProyectosConPerfilesPendientes = 0;
                 bool RegistroCompleto = false;
                 bool EstaDevuelto = false; 
-                if (c.EstaDevuelto.HasValue & (bool)c.EstaDevuelto)
+                if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
                     EstaDevuelto  = true;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
                 {
