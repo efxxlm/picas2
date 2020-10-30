@@ -13,29 +13,22 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormPerfilComponent implements OnInit {
 
-  formContratista            : FormGroup;
-  minDate: Date;
-  @Input() perfilProyecto    : any[] = [];
-  @Input() contratoId        : number;
-  @Input() proyectoId        : number;
-  @Output() enviarPerfilesContrato     = new EventEmitter();
-  @Output() perfilesCompletados = new EventEmitter();
-  tieneEstadoFase1EyD        : boolean = false;
-  tieneEstadoFase1Diagnostico: boolean = false;
+  formContratista                     : FormGroup;
+  minDate                             : Date;
+  @Input() contratoId                 : number;
+  @Input() proyectoId                 : number;
+  @Input() tieneEstadoFase1EyD        : boolean;
+  @Input() tieneEstadoFase1Diagnostico: boolean;
+  @Input() perfilProyecto             : any[]   = [];
+  @Output() enviarPerfilesContrato              = new EventEmitter();
+  @Output() perfilesCompletados                 = new EventEmitter();
+  perfilesCompletos                   : number  = 0;
+  perfilesEnProceso                   : number  = 0;
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
-  perfilesCompletos: number = 0;
-  perfilesEnProceso: number = 0;
   editorStyle = {
     height: '45px'
   };
-  estadoProyectoArray = [
-    {
-      name: 'Estudios y Diseños'
-    },
-    {
-      name: 'Diagnóstico'
-    }
-  ];
+  estadoProyectoArray = [ 'Estudios y Diseños', 'Diagnóstico' ];
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -70,10 +63,11 @@ export class FormPerfilComponent implements OnInit {
 
   crearFormulario () {
     this.formContratista = this.fb.group({
-      numeroPerfiles: [ '' ],
-      fechaObservacion: [ null ],
+      numeroPerfiles       : [ '' ],
+      estadoFases          : [ null ],
+      fechaObservacion     : [ null ],
       observacionSupervisor: [ null ],
-      perfiles: this.fb.array([])
+      perfiles             : this.fb.array([])
     });
   };
 
@@ -105,15 +99,19 @@ export class FormPerfilComponent implements OnInit {
       } );
       this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
+      const estadosArray = [];
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
         .subscribe( () => {
           this.cantidadPerfiles.nativeElement.value = String( this.perfilProyecto.length );
         } );
+      if ( this.tieneEstadoFase1EyD === true ) estadosArray.push( 'Estudios y Diseños' );
+      if ( this.tieneEstadoFase1Diagnostico === true ) estadosArray.push( 'Diagnóstico' );
+      this.formContratista.get( 'estadoFases' ).setValue( estadosArray );
       for ( let perfil of this.perfilProyecto ) {
-        let numeroRadicados = [];
-        let observaciones = null;
-        let fechaObservacion = null;
+        let numeroRadicados       = [];
+        let observaciones         = null;
+        let fechaObservacion      = null;
         let observacionSupervisor = null;
         let semaforo;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
@@ -121,8 +119,8 @@ export class FormPerfilComponent implements OnInit {
             this.fb.group(
               {
                 contratoPerfilNumeroRadicadoId: 0,
-                contratoPerfilId: perfil.contratoPerfilId,
-                numeroRadicado: ''
+                contratoPerfilId              : perfil.contratoPerfilId,
+                numeroRadicado                : ''
               }
             )
           )
@@ -131,8 +129,8 @@ export class FormPerfilComponent implements OnInit {
             numeroRadicados.push( 
               this.fb.group(
                 { contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0,
-                  contratoPerfilId: perfil.contratoPerfilId,
-                  numeroRadicado: radicado.numeroRadicado
+                  contratoPerfilId              : perfil.contratoPerfilId,
+                  numeroRadicado                : radicado.numeroRadicado
                 }
               )
             );
@@ -153,7 +151,6 @@ export class FormPerfilComponent implements OnInit {
         if ( perfil.registroCompleto ) {
           this.perfilesCompletos++;
           semaforo = 'completo';
-          console.log( semaforo );
         }
         if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
           semaforo = 'en-proceso';
@@ -187,6 +184,11 @@ export class FormPerfilComponent implements OnInit {
         this.perfilesCompletados.emit( 'en-proceso' );
       }
     };
+  };
+
+  getvalues ( values: any[] ) {
+    this.tieneEstadoFase1EyD = values.includes( 'Estudios y Diseños' );
+    this.tieneEstadoFase1Diagnostico = values.includes( 'Diagnóstico' );
   };
 
   disabledDate ( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
@@ -324,7 +326,6 @@ export class FormPerfilComponent implements OnInit {
       } )
     }
 
-    console.log( perfiles );
     this.enviarPerfilesContrato.emit( { 
       perfiles,
       tieneEstadoFase1EyD: this.tieneEstadoFase1EyD,

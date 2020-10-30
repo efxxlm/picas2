@@ -5,6 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FaseUnoVerificarPreconstruccionService } from '../../../../core/_services/faseUnoVerificarPreconstruccion/fase-uno-verificar-preconstruccion.service';
 import { Router } from '@angular/router';
 import { estadosPreconstruccion } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
+import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-contrato-de-interventoria',
@@ -35,15 +38,17 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
   }
 
   constructor ( private faseUnoVerificarPreConstruccionSvc: FaseUnoVerificarPreconstruccionService,
+                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+                private dialog: MatDialog,
                 private routes: Router ) 
   {
     this.faseUnoVerificarPreConstruccionSvc.listaEstadosVerificacionContrato( 'interventoria' )
       .subscribe( 
         estados => {
           this.estadosPreconstruccionInterventoria = estados;
+          console.log( this.estadosPreconstruccionInterventoria );
           faseUnoVerificarPreConstruccionSvc.getListContratacionInterventoria()
             .subscribe( listas => {
-              console.log( listas );
               const dataTable = [];
               listas.forEach( lista => {
                 if (  (  lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo
@@ -75,20 +80,33 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
             } )
         }
       );
-    //this.faseUnoVerificarPreConstruccionSvc.getListContratacion()
-    //  .subscribe( listas => {
-    //  } );
-  }
+  };
 
   ngOnInit(): void {
-  }
+  };
+
+  openDialog ( modalTitle: string, modalText: string ) {
+    let dialogRef =this.dialog.open( ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
 
   getForm ( id: number, fechaPoliza: string ) {
     this.routes.navigate( [ '/verificarPreconstruccion/interventoriaGestionarRequisitos', id ], { state: { fechaPoliza } } )
   };
 
   enviarSupervisor ( contratoId: number ) {
-    console.log( contratoId );
+    this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/verificarPreconstruccion' ] )
+          );
+        },
+        err => this.openDialog( '', err.message )
+      )
   };
 
-}
+};

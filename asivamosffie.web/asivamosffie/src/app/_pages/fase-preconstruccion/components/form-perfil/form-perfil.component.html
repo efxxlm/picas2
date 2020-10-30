@@ -3,7 +3,7 @@
     <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el proyecto?</b></label>
     <div class="col d-flex">
       <mat-form-field class="w-38">
-        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles>          
+        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>
       </mat-form-field>
       <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
     </div>
@@ -22,8 +22,7 @@
           <section class="d-flex mt-1em">
             <label class="mr-label mr-min label-left" style="margin-top: 1.7em;"><b>Perfil</b></label>
             <mat-form-field class="w-50" appearance="fill">
-              <mat-select formControlName="perfilCodigo" class="padding-left">
-                <mat-option></mat-option>
+              <mat-select formControlName="perfilCodigo" class="padding-left" required>
                 <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
                   {{perfilCv.nombre}}
                 </mat-option>
@@ -35,7 +34,7 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas">
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas" required>
               </mat-form-field>
               <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.toString().length}}</span>
             </div>
@@ -45,7 +44,7 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas">
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas" required>
               </mat-form-field>
               <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.toString().length}}</span>
             </div>
@@ -55,7 +54,7 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas">
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas" required>
               </mat-form-field>
               <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.toString().length}}</span>
             </div>
@@ -72,6 +71,7 @@
                       formControlName="fechaAprobacion"
                       [min]="minDate"
                       placeholder="DD/MM/AAAA"
+                      required
                       [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
               <mat-datepicker #fechaAprobacion></mat-datepicker>
               </mat-form-field>
@@ -109,7 +109,7 @@
               <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b></label>
               <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
                 <mat-form-field class="w-38">
-                  <input matInput type="text" maxlength="20" formControlName="numeroRadicado">
+                  <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
                 </mat-form-field>
                 <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
               </div>
@@ -160,7 +160,7 @@
             <label class="mr-label mr-min mt-1em"><b>URL con soporte</b></label>
             <div class="col d-flex" style="width: 85%;">
               <mat-form-field class="w-38">
-                <input matInput type="text" formControlName="rutaSoporte">          
+                <input matInput type="text" formControlName="rutaSoporte" required>
               </mat-form-field>
             </div>
           </section>

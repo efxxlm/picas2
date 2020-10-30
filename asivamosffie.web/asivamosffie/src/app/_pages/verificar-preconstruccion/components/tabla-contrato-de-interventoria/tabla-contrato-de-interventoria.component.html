@@ -56,7 +56,7 @@
     <ng-container matColumnDef="gestion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <a  (click)="getForm( element.contratoId, element.fechaAprobacion )"
+            <a  [routerLink]="['obraVerDetalle', element.contratoId]"
                 mat-raised-button color="accent"
                 class="btn-table"
                 *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo">

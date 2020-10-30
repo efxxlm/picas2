@@ -59,7 +59,6 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
     this.faseUnoVerificarPreconstruccionSvc.getContratacionByContratoId( pContratoId )
     .subscribe( contrato => {
       this.contrato = contrato;
-      console.log( this.contrato );
     } );
   }
 
@@ -76,25 +75,24 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
 
   estadoSemaforo ( index: number, semaforo: string ) {
     this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
-  }
+  };
 
   getPerfilesContrato ( index: number, evento: any ) {
-    console.log( evento );
     this.contrato.contratacion.contratacionProyecto[index].proyecto[ 'tieneEstadoFase1EyD' ] = evento.tieneEstadoFase1EyD;
     this.contrato.contratacion.contratacionProyecto[index].proyecto[ 'tieneEstadoFase1Diagnostico' ] = evento.tieneEstadoFase1Diagnostico;
     this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoPerfil = evento.perfiles;
-    console.log( this.contrato.contratacion.contratacionProyecto[index] );
 
-    console.log( this.contrato );
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
       .subscribe( 
         response => {
           this.openDialog( '', response['message'] );
+          this.contrato = null;
+          this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
         },
         err => {
           this.openDialog( '', err.message );
         }
       );
-  }
+  };
 
-}
+};
