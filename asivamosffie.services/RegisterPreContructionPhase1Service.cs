@@ -448,6 +448,12 @@ namespace asivamosffie.services
                 contratoMod.FechaModificacion = DateTime.Now;
                 contratoMod.UsuarioModificacion = UsuarioModificacion;
                 contratoMod.EstadoVerificacionCodigo = pEstadoVerificacionContratoCodigo;
+
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor
+                  || pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
+                {
+                    contratoMod.EstaDevuelto = true;
+                }
                 _context.SaveChanges();
 
                 string NombreEstadoMod = _context.Dominio.Where(r => r.Codigo == pEstadoVerificacionContratoCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).FirstOrDefault().Nombre;
