@@ -308,15 +308,16 @@ namespace asivamosffie.services
                 ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(pContratoPerfilObservacion.ContratoPerfilId);
                 contratoPerfilOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
                 contratoPerfilOld.FechaModificacion = DateTime.Now;
+                contratoPerfilOld.TieneObservacionApoyo = pContratoPerfilObservacion.TieneObservacionApoyo;
 
-
-                pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                pContratoPerfilObservacion.Eliminado = false;
-                pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.ApoyoSupervisor;
-                if (!string.IsNullOrEmpty(pContratoPerfilObservacion.Observacion))
+                if (pContratoPerfilObservacion.TieneObservacionApoyo)
+                {
+                    pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
+                    pContratoPerfilObservacion.Eliminado = false;
+                    pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.ApoyoSupervisor;
                     pContratoPerfilObservacion.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
-                _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
-
+                    _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
+                }
 
                 _context.SaveChanges();
 
