@@ -133,6 +133,43 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> CambiarEstadoControversiaContractual(int pControversiaContractualId, string pNuevoCodigoEstado, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Acta, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ControversiaContractual controversiaContractualOld;
+                controversiaContractualOld = _context.ControversiaContractual.Find(pControversiaContractualId);
+                controversiaContractualOld.UsuarioModificacion = pUsuarioModifica;
+                controversiaContractualOld.FechaModificacion = DateTime.Now;
+                controversiaContractualOld.EstadoCodigo = pNuevoCodigoEstado;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO CONTROVERSIA ACTUAL")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
 
         public async Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId)
         {                     
@@ -164,7 +201,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = controversiaActuacion,
                     Code = ConstantMessagesContractualControversy.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, controversiaActuacion.UsuarioCreacion, strCrearEditar)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.EliminacionExitosa, idAccion, controversiaActuacion.UsuarioCreacion, strCrearEditar)
 
                 };
             }
@@ -177,11 +214,64 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Data = controversiaActuacion,
-                    Code = ConstantMessagesSesionComiteTema.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesSesionComiteTema.Error, idAccion, controversiaActuacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, controversiaActuacion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
+
+
+        public async Task<Respuesta> EliminarControversiaContractual(int pControversiaContractualId)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Controversia_Contractual, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            ControversiaContractual controversiaContractual = null;
+
+            try
+            {
+                controversiaContractual = await _context.ControversiaContractual.Where(d => d.ControversiaContractualId == pControversiaContractualId).FirstOrDefaultAsync();
+
+                if (controversiaContractual != null)
+                {
+                    strCrearEditar = "Eliminar DISPONIBILIDAD PRESUPUESAL";
+                    controversiaContractual.FechaModificacion = DateTime.Now;
+                    //controversiaContractual.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    
+                    //controversiaContractual.elim = true;
+
+                    _context.ControversiaContractual.Update(controversiaContractual);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = controversiaContractual,
+                    Code = ConstantMessagesContractualControversy.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.EliminacionExitosa, idAccion, controversiaContractual.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = controversiaContractual,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, controversiaContractual.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
 
         private bool ValidarRegistroCompletoControversiaActuacion(ControversiaActuacion controversiaActuacion)
         {
@@ -203,7 +293,7 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta();
 
-            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.CreadoCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContractualControversy.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
 
             //try
             //{
@@ -217,28 +307,48 @@ namespace asivamosffie.services
             //{
             //    return BadRequest(ex.ToString());
             //}
-
+            string strCrearEditar = string.Empty;
             try
             {
                 if (controversiaContractual != null)
-                {                           
+                {
+                    if (string.IsNullOrEmpty(controversiaContractual.ControversiaContractualId.ToString()) || controversiaContractual.ControversiaContractualId == 0)
+                    {
+                        strCrearEditar = "REGISTRAR CONTROVERSIA CONTRACTUAL";
 
-                      controversiaContractual.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);
-                       controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
-                    //ControversiaContractual.FechaCreacion = DateTime.Now;
-                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                    //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                        //Auditoria
+                        strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
+                        controversiaContractual.FechaCreacion = DateTime.Now;
+                        //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
 
-                    //_context.Add(contratoPoliza);
+                        //controversiaContractual.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaContractual);
 
-                    //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
-                    //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+                        //controversiaContractual.Eliminado = false;
+                        _context.ControversiaContractual.Add(controversiaContractual);
 
-                    //LimpiarEntradasContratoPoliza(ref contratoPoliza);
+                    }
+                    else
+                    {
+                        strCrearEditar = "EDITAR CONTROVERSIA CONTRACTUAL";
+                        controversiaContractual.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);
+                        controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
+                        //ControversiaContractual.FechaCreacion = DateTime.Now;
+                        //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                        //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
 
-                    //_context.ContratoPoliza.Add(contratoPoliza);
-                    _context.ControversiaContractual.Update(controversiaContractual);
-                    //await _context.SaveChangesAsync();
+                        //_context.Add(contratoPoliza);
+
+                        //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+
+                        //LimpiarEntradasContratoPoliza(ref contratoPoliza);
+
+                        //_context.ContratoPoliza.Add(contratoPoliza);
+                        _context.ControversiaContractual.Update(controversiaContractual);
+                        //await _context.SaveChangesAsync();
+                    }
+
+
 
 
                     return
@@ -247,10 +357,10 @@ namespace asivamosffie.services
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
-                            Code = ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                            Code = ConstantMessagesContractualControversy.OperacionExitosa,
                             Message =
-                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
-                            ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                            ConstantMessagesContractualControversy.OperacionExitosa,
                             //contratoPoliza
                             idAccionCrearContratoPoliza
                             , controversiaContractual.UsuarioModificacion
@@ -266,13 +376,13 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.RecursoNoEncontrado };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.ErrorInterno };
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.ErrorInterno };
             }
 
         }

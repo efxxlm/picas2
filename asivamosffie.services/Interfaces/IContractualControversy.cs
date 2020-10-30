@@ -11,6 +11,8 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> CreateEditarControversiaTAI(ControversiaContractual controversiaContractual);
 
+        Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion);
+
         Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual();
     }
 }

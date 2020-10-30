@@ -39,6 +39,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("CreateEditNuevaActualizacionTramite")]
+        
+        public async Task<IActionResult> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //controversiaContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditNuevaActualizacionTramite(controversiaActuacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpGet]
         [Route("GetListGrillaTipoSolicitudControversiaContractual")]
         public async Task<ActionResult<List<GrillaTipoSolicitudControversiaContractual>>> GetListGrillaTipoSolicitudControversiaContractual()
