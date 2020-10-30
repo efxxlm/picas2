@@ -9,7 +9,8 @@ namespace asivamosffie.model.Models
         {
             DisponibilidadPresupuestalObservacion = new HashSet<DisponibilidadPresupuestalObservacion>();
             DisponibilidadPresupuestalProyecto = new HashSet<DisponibilidadPresupuestalProyecto>();
-        } 
+        }
+
         public int DisponibilidadPresupuestalId { get; set; }
         public DateTime FechaSolicitud { get; set; }
         public string TipoSolicitudCodigo { get; set; }
@@ -37,8 +38,8 @@ namespace asivamosffie.model.Models
         public string NumeroContrato { get; set; }
         public string LimitacionEspecial { get; set; }
         public string NumeroRadicadoSolicitud { get; set; }
-        public string UrlSoporte { get; set; }
         public DateTime? FechaDrp { get; set; }
+        public string UrlSoporte { get; set; }
 
         public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual Contratacion Contratacion { get; set; }

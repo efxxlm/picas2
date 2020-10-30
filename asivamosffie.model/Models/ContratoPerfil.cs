@@ -19,7 +19,6 @@ namespace asivamosffie.model.Models
         public int? CantidadHvAprobadas { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public string RutaSoporte { get; set; }
-        public bool? ConObervacionesSupervision { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
@@ -27,6 +26,8 @@ namespace asivamosffie.model.Models
         public bool Eliminado { get; set; }
         public bool RegistroCompleto { get; set; }
         public int ProyectoId { get; set; }
+        public bool? TieneObservacionApoyo { get; set; }
+        public bool? TieneObservacionSupervisor { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
