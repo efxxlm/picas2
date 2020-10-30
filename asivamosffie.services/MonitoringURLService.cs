@@ -223,7 +223,7 @@ namespace asivamosffie.services
 
 
                                 URLMonitoreo = strProyectoUrlMonitoreo,
-                                ContratoId = getContratoIdByProyectoId(proyecto.ProyectoId),
+                                ContratoId = 0, //await getContratoIdByProyectoId(proyecto.ProyectoId),
 
 
                             };
@@ -272,25 +272,26 @@ namespace asivamosffie.services
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
 
-        private int? getContratoIdByProyectoId(int pProyectoId)
+        public async Task<int> getContratoIdByProyectoId(int pProyectoId)
+        //private int? getContratoIdByProyectoId(int pProyectoId)
         {
             Proyecto proyecto = null;
-            proyecto = _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+            proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefaultAsync();
 
             ContratacionProyecto contratacionProyecto = null;
-            contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pProyectoId && (bool)r.Activo==true).FirstOrDefault();
+            contratacionProyecto = await _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pProyectoId && (bool)r.Activo == true).FirstOrDefaultAsync();
 
             Contratacion contratacion = null;
             if (contratacionProyecto != null)
             {
-                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contratacionProyecto.ContratacionId&&r.Eliminado==false).FirstOrDefault();
+                contratacion = await _context.Contratacion.Where(r => r.ContratacionId == contratacionProyecto.ContratacionId && r.Eliminado == false).FirstOrDefaultAsync();
 
-            }               
+            }
 
             Contrato contrato = null;
             if (contratacion != null)
             {
-                contrato = _context.Contrato.Where(r => r.ContratacionId == contratacion.ContratacionId&&r.Eliminado==false).FirstOrDefault();
+                contrato = await _context.Contrato.Where(r => r.ContratacionId == contratacion.ContratacionId && r.Eliminado == false).FirstOrDefaultAsync();
             }
 
             if (contrato != null)
