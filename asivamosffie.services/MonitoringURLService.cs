@@ -215,7 +215,7 @@ namespace asivamosffie.services
                                 Sede = proyecto.Sede.Nombre,
                                 ProyectoId = proyecto.ProyectoId,
                                 URLMonitoreo=proyecto.UrlMonitoreo,
-                                ContratoId = await getContratoIdByProyectoId(proyecto.ProyectoId),
+                                ContratoId = 0,//await getContratoIdByProyectoId(proyecto.ProyectoId),
 
                             };
 
@@ -223,7 +223,7 @@ namespace asivamosffie.services
 
                             foreach (var item in proyecto.ContratacionProyecto)
                             {
-                                item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
+                                item.Contratacion =  ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
 
                                 if (item.Contratacion != null)
                                 {
@@ -241,6 +241,7 @@ namespace asivamosffie.services
                                 }
                             }
                             }
+
                             ListProyectoGrilla.Add(proyectoGrilla);
                         }
                         catch (Exception ex)
