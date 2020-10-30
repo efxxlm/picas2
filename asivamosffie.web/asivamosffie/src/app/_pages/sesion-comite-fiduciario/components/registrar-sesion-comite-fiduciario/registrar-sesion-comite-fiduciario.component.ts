@@ -29,6 +29,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
   }
 
   openDialogAplazarSesion() {
+    console.log( this.objetoComiteTecnico )
     this.dialog.open(AplazarSesionComponent, {
       width: '42em', data: { comite: this.objetoComiteTecnico }
     });
