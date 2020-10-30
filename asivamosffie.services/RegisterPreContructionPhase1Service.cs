@@ -29,25 +29,6 @@ namespace asivamosffie.services
         {
             List<dynamic> listaContrats = new List<dynamic>();
 
-            //List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra).ToListAsync();
-
-            //lista.ForEach(c =>
-            //{
-            //    listaContrats.Add(new
-            //    {
-            //        c.ContratoId,
-            //        c.FechaAprobacion,
-            //        c.TipoContratoCodigo,
-            //        c.NumeroContrato,
-            //        c.CantidadProyectosAsociados,
-            //        c.CantidadProyectosRequisitosAprobados,
-            //        CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-            //        c.EstadoCodigo,
-            //        c.EstadoNombre,
-            //        c.ExisteRegistro, 
-            //    });
-            //});
-
             List<Contrato> listContratos = await _context.Contrato
                 .FromSqlRaw("SELECT c.* FROM	dbo.Contrato AS c " +
                 "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
@@ -67,6 +48,7 @@ namespace asivamosffie.services
             {
                 int CantidadProyectosConPerfilesAprobados = 0;
                 int CantidadProyectosConPerfilesPendientes = 0;
+                bool RegistroCompleto = false;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
                 {
                     if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
@@ -76,6 +58,8 @@ namespace asivamosffie.services
                     else
                         CantidadProyectosConPerfilesPendientes++;
                 }
+                if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
+                    RegistroCompleto = true;
                 listaContrats.Add(new
                 {
                     c.ContratoId,
@@ -87,6 +71,7 @@ namespace asivamosffie.services
                     CantidadProyectosConPerfilesPendientes,
                     EstadoCodigo = c.EstadoVerificacionCodigo,
                     c.EstaDevuelto,
+                    RegistroCompleto
                 });
             }
 
@@ -184,7 +169,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
-                             
+
                             contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
 
@@ -277,14 +262,15 @@ namespace asivamosffie.services
 
                 }
                 //Cambiar Estado Requisitos 
-                if (pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count() && pContrato.ContratoPerfil.Count() > 1)
+                if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
                 {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
                 }
-                else {
+                else
+                {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
