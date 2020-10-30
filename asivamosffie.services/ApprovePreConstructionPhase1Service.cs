@@ -104,7 +104,7 @@ namespace asivamosffie.services
                 contratoPerfilOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
                 contratoPerfilOld.FechaModificacion = DateTime.Now;
                 contratoPerfilOld.TieneObservacionSupervisor = pContratoPerfilObservacion.TieneObservacionSupervisor;
-
+        
                 if (pContratoPerfilObservacion.ContratoPerfilObservacionId == 0)
                 {
                     pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
@@ -130,16 +130,16 @@ namespace asivamosffie.services
                     .Include(r => r.Contratacion)
                     .Include(r => r.ContratoPerfil)
                     .ThenInclude(r => r.ContratoPerfilObservacion).FirstOrDefault();
-
+           
                 bool RegistroCompleto = true;
 
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
                     if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
                         RegistroCompleto = false;
-                    else if ((ContratoPerfil.TieneObservacionApoyo == null)
-                         || (ContratoPerfil.TieneObservacionApoyo.HasValue
-                         && (bool)ContratoPerfil.TieneObservacionApoyo
+                    else if ((ContratoPerfil.TieneObservacionSupervisor == null)
+                         || (ContratoPerfil.TieneObservacionSupervisor.HasValue
+                         && (bool)ContratoPerfil.TieneObservacionSupervisor
                          && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                          && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)))
                         RegistroCompleto = false;

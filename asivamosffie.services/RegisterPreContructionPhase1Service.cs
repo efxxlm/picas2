@@ -164,8 +164,7 @@ namespace asivamosffie.services
                         proyectoOld.FechaModificacion = DateTime.Now;
                         proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     }
-
-
+                     
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
                         if (ContratoPerfil.ContratoPerfilId > 0)
@@ -203,7 +202,7 @@ namespace asivamosffie.services
                                         ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                         ContratoPerfilObservacion.Eliminado = false;
                                         _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
-                                    } 
+                                    }
                                 }
                             }
 
@@ -268,23 +267,29 @@ namespace asivamosffie.services
                                 }
                             }
                         }
-                    }
-
-
-
+                    } 
                 }
-                //Cambiar Estado Requisitos 
+
+                //Cambiar Estado Contrato 
+                Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.Contratacion).FirstOrDefault();
+                 
                 if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
                 {
-                    Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
-                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados;
+                    if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados;
+                    else
+                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
+
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
                 }
                 else
                 {
-                    Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
-                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                    if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                    else
+                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
+
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
                 }
