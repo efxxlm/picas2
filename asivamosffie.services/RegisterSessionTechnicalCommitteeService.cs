@@ -541,8 +541,9 @@ namespace asivamosffie.services
                 ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
                     .Include(r => r.SesionComiteTema)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnico )
                     .Include(r => r.SesionParticipante)
-                    .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
+                        .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
 
                 comiteTecnico.SesionParticipante = comiteTecnico.SesionParticipante.Where(r => !(bool)r.Eliminado).ToList();
                 comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
@@ -552,57 +553,54 @@ namespace asivamosffie.services
                 comiteTecnico.FechaModificacion = DateTime.Now;
 
 
-                //Plantilla
-                string TipoPlantilla = ((int)ConstanCodigoPlantillas.Convocar_Comite_Tecnico).ToString();
-                Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).FirstOrDefault();
+                Template TemplateConvocar = await _commonService.GetTemplateById((int)enumeratorTemplate.ConvocarSesionComite);
+                Template TemplateOrdenDia = await _commonService.GetTemplateById((int)enumeratorTemplate.OrdenDia);
+                string strOrdenDia = "";
+                int contador = 0;
+
+                foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnico){
+                    strOrdenDia += TemplateOrdenDia.Contenido;
+                    contador++;
 
 
-                string TipoPlantilla2 = ((int)ConstanCodigoPlantillas.Tabla_Orden_Del_Dia).ToString();
-                Plantilla TablaTemasRegistro = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla2).Include(r => r.Encabezado).FirstOrDefault();
-                string strRegistros = "";
-
-                List<Dominio> ListaParametricas = _context.Dominio.ToList();
-
-                foreach (var item in comiteTecnico.SesionComiteTema)
-                {
-                    strRegistros += TablaTemasRegistro.Contenido;
-
-                    foreach (Dominio placeholderDominio in placeholders)
+                    switch (item.TipoSolicitudCodigo)
                     {
-                        switch (placeholderDominio.Codigo)
-                        {
-                            case ConstanCodigoVariablesPlaceHolders.TEMAS_ORDEN_DIA:
-                                plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, item.Tema);
-                                break;
+                        case ConstanCodigoTipoSolicitud.Contratacion:
+                            item.NumeroSolicitud = _context.Contratacion.Find( item.SolicitudId ).NumeroSolicitud;
+                        break;
+                        case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                            item.NumeroSolicitud = _context.ProcesoSeleccion.Find( item.SolicitudId ).NumeroProceso;
+                        break;
+                        case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
 
-                            case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_TEMA_ORDEN_DIA:
-                                plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre,
-                                !string.IsNullOrEmpty(item.ResponsableCodigo) ? ListaParametricas.Where(r => r.Codigo == item.ResponsableCodigo
-                                && r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico).FirstOrDefault().Nombre : ""
-                                );
-                                break;
-
-                            case ConstanCodigoVariablesPlaceHolders.TIEMPO_TEMA_ORDEN_DIA:
-                                plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, item.TiempoIntervencion.ToString());
-                                break;
-                        }
+                             ProcesoSeleccionMonitoreo proceso = _context.ProcesoSeleccionMonitoreo
+                                                                            .Where( r => r.ProcesoSeleccionMonitoreoId == item.SolicitudId )
+                                                                            .Include( r => r.ProcesoSeleccion )
+                                                                            .FirstOrDefault();
+                             item.NumeroSolicitud = string.Concat( proceso.ProcesoSeleccion.NumeroProceso, " - ", proceso.NumeroProceso );
+                        break;
                     }
 
+                    strOrdenDia = strOrdenDia.Replace("[NUMERO]", contador.ToString())
+                                             .Replace("[ORDEN]", item.NumeroSolicitud);
+                    
                 }
 
-                foreach (Dominio placeholderDominio in placeholders)
-                {
-                    switch (placeholderDominio.Codigo)
-                    {
-                        case ConstanCodigoVariablesPlaceHolders.FECHA_SESION_CONVOCAR_COMITE:
-                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, comiteTecnico.FechaCreacion.ToString("yyyy-MM-dd"));
-                            break;
+                foreach (var item in comiteTecnico.SesionComiteTema.Where( r => r.Eliminado != true )){
+                    strOrdenDia += TemplateOrdenDia.Contenido;
+                    contador++;
 
-                        case ConstanCodigoVariablesPlaceHolders.ORDEN_DEL_DIA_CONVOCAR_COMITE:
-                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, strRegistros);
-                            break;
-                    }
+                    strOrdenDia = strOrdenDia.Replace("[NUMERO]", contador.ToString())
+                                             .Replace("[ORDEN]", item.Tema);
+                    
                 }
+
+                string template = TemplateConvocar.Contenido.Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                                            .Replace("[FECHA_COMITE]", comiteTecnico.FechaOrdenDia.Value.ToString("dd/MM/yyyy"))
+                                                            .Replace("[ORDEN_DIA]", strOrdenDia);
+
+
+                
                 //Notificar a los participantes
                 bool blEnvioCorreo = false;
 
@@ -616,7 +614,7 @@ namespace asivamosffie.services
                     if (!string.IsNullOrEmpty(Usuario.Email))
                     {
 
-                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(Usuario.Email, "Convocatoria sesión de comité técnico", plantilla.Contenido, pSentender, pPassword, pMailServer, pMailPort);
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(Usuario.Email, "Convocatoria sesión de comité técnico", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
 
