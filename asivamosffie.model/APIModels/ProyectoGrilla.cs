@@ -30,5 +30,6 @@ namespace asivamosffie.model.APIModels
         public decimal ValorGestionado { get; set; }
 
         public string? URLMonitoreo { get; set; }
+        public int? ContratoId { get; set; }
     }
 }

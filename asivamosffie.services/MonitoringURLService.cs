@@ -41,15 +41,28 @@ namespace asivamosffie.services
                 {
                     Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
 
-                    Contratista contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+                    Contratista contratista ;
+                    string strContratista=string.Empty;
+
+                    if (contratacion != null)
+                    {
+                        contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+
+                        if (contratista != null)
+                            strContratista = contratista.Nombre;
+
+
+                    }                       
 
                     //TipoContrato = contrato.TipoContratoCodig
 
                     ContratacionProyecto contratacionProyecto = null;
+                    int contratacionProyectoId=0;
 
                     if (contratacion != null)
                     {
                         contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+
 
                     }
 
@@ -62,14 +75,15 @@ namespace asivamosffie.services
                     {
                         listProyectoGrilla = listProyectoGrilla.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).ToList();
                         NumProyectosAsociados = listProyectoGrilla.Count();
+                        contratacionProyectoId = contratacionProyecto.ProyectoId;
                     }
 
 
                     vistaContratoProyectos = new VistaContratoProyectos
                     {
                         NumeroContrato = contrato.NumeroContrato,
-                        NombreContratista = contratista.Nombre,
-                        ProyectoId = contratacionProyecto.ProyectoId,
+                        NombreContratista = strContratista,
+                        ProyectoId = contratacionProyectoId ,
                         lstProyectoGrilla = listProyectoGrilla,
                         NumeroProyectosAsociados = NumProyectosAsociados
                     };
@@ -201,6 +215,7 @@ namespace asivamosffie.services
                                 Sede = proyecto.Sede.Nombre,
                                 ProyectoId = proyecto.ProyectoId,
                                 URLMonitoreo=proyecto.UrlMonitoreo,
+                                ContratoId = getContratoIdByProyectoId(proyecto.ProyectoId),
 
                             };
 
@@ -385,7 +400,33 @@ namespace asivamosffie.services
 
         //}
 
+        private int? getContratoIdByProyectoId(int pProyectoId)
+        {
+            Proyecto proyecto = null;
+            proyecto = _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
 
+            ContratacionProyecto contratacionProyecto = null;
+            contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pProyectoId && (bool)r.Activo == true).FirstOrDefault();
+
+            Contratacion contratacion = null;
+            if (contratacionProyecto != null)
+            {
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contratacionProyecto.ContratacionId && r.Eliminado == false).FirstOrDefault();
+
+            }
+
+            Contrato contrato = null;
+            if (contratacion != null)
+            {
+                contrato = _context.Contrato.Where(r => r.ContratacionId == contratacion.ContratacionId && r.Eliminado == false).FirstOrDefault();
+            }
+
+            if (contrato != null)
+                return contrato.ContratoId;
+            else
+                return 0;
+
+        }
 
         public async Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string pURLMonitoreo, string pUsuarioModificacion)
         {
