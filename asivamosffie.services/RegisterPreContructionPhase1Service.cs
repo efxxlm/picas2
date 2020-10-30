@@ -30,12 +30,15 @@ namespace asivamosffie.services
             List<dynamic> listaContrats = new List<dynamic>();
 
             List<Contrato> listContratos = await _context.Contrato
-                .FromSqlRaw("SELECT c.* FROM	dbo.Contrato AS c " +
+                .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
                 "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
+                "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDDP IS NOT NULL " +
+                "AND cp.FechaAprobacion is not null " +
                 "AND ctr.TipoSolicitudCodigo = 1")
-               .Include(r => r.Contratacion)
+                .Include(r => r.ContratoPoliza)
+                .Include(r => r.Contratacion) 
                    .ThenInclude(r => r.ContratacionProyecto)
                        .ThenInclude(r => r.Proyecto)
                             .ThenInclude(r => r.ContratoPerfil)
@@ -63,7 +66,7 @@ namespace asivamosffie.services
                 listaContrats.Add(new
                 {
                     c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacionRequisitos,
+                    FechaAprobacion =  ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
                     c.Contratacion.TipoSolicitudCodigo,
                     c.NumeroContrato,
                     CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
