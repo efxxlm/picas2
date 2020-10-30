@@ -32,7 +32,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListContratacion()
         {
             List<dynamic> listaContrats = new List<dynamic>();
-  
+
             List<Contrato> listContratos = await _context.Contrato
                 .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
                 "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
@@ -41,22 +41,22 @@ namespace asivamosffie.services
                 "WHERE dp.NumeroDDP IS NOT NULL " +
                 "AND cp.FechaAprobacion is not null")
                 .Include(r => r.ContratoPoliza)
-                .Include(r => r.Contratacion) 
+                .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
                        .ThenInclude(r => r.Proyecto)
                             .ThenInclude(r => r.ContratoPerfil)
                 .Include(r => r.Contratacion)
                   .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToListAsync();
-             
+
             foreach (var c in listContratos)
             {
                 int CantidadProyectosConPerfilesAprobados = 0;
                 int CantidadProyectosConPerfilesPendientes = 0;
                 bool RegistroCompleto = false;
-                bool EstaDevuelto = false; 
+                bool EstaDevuelto = false;
                 if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
-                    EstaDevuelto  = true;
+                    EstaDevuelto = true;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
                 {
                     if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
@@ -71,7 +71,7 @@ namespace asivamosffie.services
                 listaContrats.Add(new
                 {
                     c.ContratoId,
-                    FechaAprobacion =  ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
+                    FechaAprobacion = ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
                     c.Contratacion.TipoSolicitudCodigo,
                     c.NumeroContrato,
                     CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
@@ -178,7 +178,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
 
-                            contratoPerfilOld.ConObervacionesSupervision = ContratoPerfil.ConObervacionesSupervision;
+                            contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
@@ -194,12 +194,14 @@ namespace asivamosffie.services
                                 else
                                 {
                                     if (!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
+                                    {
                                         ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
-                                    ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
-                                    ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
-                                    ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
-                                    ContratoPerfilObservacion.Eliminado = false;
-                                    _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
+                                        ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.ApoyoSupervisor;
+                                        ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                        ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
+                                        ContratoPerfilObservacion.Eliminado = false;
+                                        _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
+                                    } 
                                 }
                             }
 
