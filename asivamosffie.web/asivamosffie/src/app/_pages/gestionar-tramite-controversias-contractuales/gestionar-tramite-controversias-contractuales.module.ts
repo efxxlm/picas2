@@ -21,15 +21,18 @@ import { VerDetalleActuacionContrContrctComponent } from './components/ver-detal
 import { DetalleDescrActCcComponent } from './components/detalle-descr-act-cc/detalle-descr-act-cc.component';
 import { DetalleReclmAseguradoraCcComponent } from './components/detalle-reclm-aseguradora-cc/detalle-reclm-aseguradora-cc.component';
 import { DetalleSopActuacionCcComponent } from './components/detalle-sop-actuacion-cc/detalle-sop-actuacion-cc.component';
+import { VerdetalleTramiteCcComponent } from './components/verdetalle-tramite-cc/verdetalle-tramite-cc.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
 @NgModule({
-  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent, VerDetalleActuacionContrContrctComponent, DetalleDescrActCcComponent, DetalleReclmAseguradoraCcComponent, DetalleSopActuacionCcComponent],
+  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent, VerDetalleActuacionContrContrctComponent, DetalleDescrActCcComponent, DetalleReclmAseguradoraCcComponent, DetalleSopActuacionCcComponent, VerdetalleTramiteCcComponent],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
     FormsModule,
     QuillModule.forRoot(),
     GestionarTramiteControversiasContractualesRoutingModule

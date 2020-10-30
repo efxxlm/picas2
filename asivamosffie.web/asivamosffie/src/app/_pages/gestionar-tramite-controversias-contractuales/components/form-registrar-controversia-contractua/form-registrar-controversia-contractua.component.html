@@ -14,6 +14,20 @@
                     <div class="pr-1">
                         <label class="label-left" for="contrato">Número de contrato</label>
                     </div>
+                    <div class="col d-flex">
+                        <mat-form-field class="full-width">
+                          <input matInput #nombre type="text" maxlength="100" required
+                            [matAutocomplete]="auto">
+                          <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of contratosArray  | async"
+                            [value]="contr.value">
+                              {{nombres}}
+                            </mat-option>
+                          </mat-autocomplete>
+                          <input type="hidden" formControlName="contrato">
+                        </mat-form-field>
+                      </div>
+                    <!--
                     <div class="col">
                         <mat-form-field class="select-width">
                             <mat-select formControlName="contrato" required>
@@ -23,6 +37,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
