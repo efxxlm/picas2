@@ -41,11 +41,23 @@ namespace asivamosffie.services
                 {
                     Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
 
-                    Contratista contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+                    Contratista contratista =null;
+                    string strNombreContratista = string.Empty;
+
+                    if (contratacion != null)
+                    {
+                        contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+
+                        if(contratista!=null)
+                        {
+                            strNombreContratista = contratista.Nombre;
+                        }
+                    }                        
 
                     //TipoContrato = contrato.TipoContratoCodig
 
                     ContratacionProyecto contratacionProyecto = null;
+                    int contratacionProyectoId = 0;
 
                     if (contratacion != null)
                     {
@@ -62,14 +74,16 @@ namespace asivamosffie.services
                     {
                         listProyectoGrilla = listProyectoGrilla.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).ToList();
                         NumProyectosAsociados = listProyectoGrilla.Count();
-                    }
 
+                        contratacionProyectoId = contratacionProyecto.ProyectoId;
+                    }
 
                     vistaContratoProyectos = new VistaContratoProyectos
                     {
                         NumeroContrato = contrato.NumeroContrato,
-                        NombreContratista = contratista.Nombre,
-                        ProyectoId = contratacionProyecto.ProyectoId,
+                        //NombreContratista = contratista.Nombre,
+                        NombreContratista = strNombreContratista,
+                        ProyectoId = contratacionProyectoId ,
                         lstProyectoGrilla = listProyectoGrilla,
                         NumeroProyectosAsociados = NumProyectosAsociados
                     };
