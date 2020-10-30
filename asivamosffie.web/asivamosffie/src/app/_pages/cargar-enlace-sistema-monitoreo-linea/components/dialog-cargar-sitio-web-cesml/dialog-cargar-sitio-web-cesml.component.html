@@ -19,10 +19,10 @@
                 <input matInput class="alignLeft" formControlName="urlMonitoreo" maxlength="300" required>
             </mat-card-content>
         </mat-card>
-        <span class="contador miles mb-2em" *ngIf="addressForm.value.urlMonitoreo !== null">
+        <span class="contador miles mb-2em" *ngIf="addressForm.value.urlMonitoreo">
             {{300 - textoLimpio(addressForm.get('urlMonitoreo').value)}}
         </span>
-        <span class="contador miles mb-2em" *ngIf="addressForm.value.urlMonitoreo === null">
+        <span class="contador miles mb-2em" *ngIf="!addressForm.value.urlMonitoreo">
             300
         </span>
     </div>
