@@ -2,21 +2,27 @@
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 <h1 class="title-menu--h1 centerIng">
-    Cargar sitio {{this.llaveMen}}
+    Cargar sitio web {{this.llaveMen}}
 </h1>
 <div class="centerIng2">
     <p>{{this.departamento}} {{this.municipio}} {{this.instEdu}} {{this.sede}}</p>
 </div>
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <div class="flex-editor mt-2em">
-        <mat-card class="shipping-card w-80">
-            <mat-card-header class="header-card">
+        <mat-card class="shipping-card w-85" style="padding: 1em 2em;">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
                     URL para monitoreo en línea
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <input matInput class="alignLeft" formControlName="urlMonitoreo" maxlength="300" required>
+                <!--
+                <mat-form-field class="full-width noBorderForm">
+                    <input matInput #urlMonitoreo type="text" class="alignLeft" formControlName="urlMonitoreo" maxlength="300" required>
+                  </mat-form-field>
+                -->
+                <input matInput #urlMonitoreo type="text" class="alignLeft" formControlName="urlMonitoreo" maxlength="300"> 
+                <span class="required-form-group">*</span>
             </mat-card-content>
         </mat-card>
         <span class="contador miles mb-2em" *ngIf="addressForm.value.urlMonitoreo">
@@ -28,7 +34,7 @@
     </div>
     <div class="text-center">
         <div class="mtop">
-            <button mat-raised-button color="accent"  type="submit">Cargar</button>
+            <button mat-raised-button color="accent"  type="submit" [disabled]="!addressForm.value.urlMonitoreo">Cargar</button>
         </div>
     </div>
 </form>

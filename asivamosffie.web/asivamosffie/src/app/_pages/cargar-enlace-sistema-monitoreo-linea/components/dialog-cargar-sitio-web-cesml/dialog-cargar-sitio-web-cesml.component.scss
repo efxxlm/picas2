@@ -18,6 +18,9 @@
   .w-80 {
     width: 80%;
   }
+  .w-85 {
+    width: 85%;
+  }
   
   .flex-editor {
     display: flex;
@@ -54,4 +57,8 @@
 }
 .alignLeft{
     text-align: left !important;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-underline{
+  height: 0px !important;
 }
