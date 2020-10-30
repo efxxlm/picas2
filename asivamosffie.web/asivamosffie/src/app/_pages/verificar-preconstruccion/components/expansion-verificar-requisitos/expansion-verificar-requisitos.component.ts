@@ -80,7 +80,6 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                 perfil[ 'verificarObservacion' ] = '';
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
                 perfil[ 'nombre' ] = tipoPerfil[0].nombre;
-                console.log( tipoPerfil, perfil.perfilCodigo );
                 if ( perfil[ 'tieneObservacionApoyo' ] === undefined ) {
                   perfil[ 'estadoSemaforo' ] = 'sin-diligenciar';
                   sinDiligenciar++;
@@ -110,15 +109,19 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                   };
                 };
               };
+              console.log( sinDiligenciar, enProceso, completo );
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
                 contratacionProyecto[ 'estadoSemaforo' ] = 'sin-diligenciar';
+                return;
               };
               if ( completo === contratacionProyecto.proyecto.contratoPerfil.length ) {
                 contratacionProyecto[ 'estadoSemaforo' ] = 'completo';
+                return;
               };
-              if ( enProceso < contratacionProyecto.proyecto.contratoPerfil.length ) {
+              if ( ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length ) || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
                 contratacionProyecto[ 'estadoSemaforo' ] = 'en-proceso';
-              }
+                return;
+              };
             };
             console.log( this.contrato );
           } );
@@ -162,6 +165,9 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
       contratoPerfilId: perfil.contratoPerfilId,
       observacion: perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
       tieneObservacionApoyo: perfil[ 'tieneObservaciones' ]
+    };
+    if ( perfil[ 'contratoPerfilObservacionId' ] !== null ) {
+      observacionPerfil[ 'contratoPerfilObservacionId' ] = perfil[ 'contratoPerfilObservacionId' ];
     };
     console.log( observacionPerfil );
     this.faseUnoVerificarPreconstruccionSvc.crearContratoPerfilObservacion( observacionPerfil )
