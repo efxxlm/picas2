@@ -17,15 +17,22 @@ import { FormDescripcionActuacionComponent } from './components/form-descripcion
 import { FormReclamacionAseguradoraActuacionComponent } from './components/form-reclamacion-aseguradora-actuacion/form-reclamacion-aseguradora-actuacion.component';
 import { FormSoporteActuacionActtramComponent } from './components/form-soporte-actuacion-acttram/form-soporte-actuacion-acttram.component';
 import { VerdetalleeditTramiteCntrvContrcComponent } from './components/verdetalleedit-tramite-cntrv-contrc/verdetalleedit-tramite-cntrv-contrc.component';
+import { VerDetalleActuacionContrContrctComponent } from './components/ver-detalle-actuacion-contr-contrct/ver-detalle-actuacion-contr-contrct.component';
+import { DetalleDescrActCcComponent } from './components/detalle-descr-act-cc/detalle-descr-act-cc.component';
+import { DetalleReclmAseguradoraCcComponent } from './components/detalle-reclm-aseguradora-cc/detalle-reclm-aseguradora-cc.component';
+import { DetalleSopActuacionCcComponent } from './components/detalle-sop-actuacion-cc/detalle-sop-actuacion-cc.component';
+import { VerdetalleTramiteCcComponent } from './components/verdetalle-tramite-cc/verdetalle-tramite-cc.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
 @NgModule({
-  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent],
+  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent, VerDetalleActuacionContrContrctComponent, DetalleDescrActCcComponent, DetalleReclmAseguradoraCcComponent, DetalleSopActuacionCcComponent, VerdetalleTramiteCcComponent],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
     FormsModule,
     QuillModule.forRoot(),
     GestionarTramiteControversiasContractualesRoutingModule

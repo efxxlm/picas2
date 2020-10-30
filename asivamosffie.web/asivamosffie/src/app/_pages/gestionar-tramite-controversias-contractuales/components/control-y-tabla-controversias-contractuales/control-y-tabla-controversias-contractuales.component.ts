@@ -58,4 +58,8 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
     localStorage.setItem("controversiaID",id);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
   }
+
+  verDetalleButton(id){
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleControversia',id]);
+  }
 }
