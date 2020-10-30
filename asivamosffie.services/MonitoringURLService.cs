@@ -33,13 +33,13 @@ namespace asivamosffie.services
             List<VistaContratoProyectos> lstVistaContratoProyectos = new List<VistaContratoProyectos>();
             VistaContratoProyectos vistaContratoProyectos = new VistaContratoProyectos();
 
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct().ToListAsync();
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => (bool)r.Estado).Distinct().ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
                 try
                 {
-                    Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
+                    Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratacionId);
                     Contratista contratista =null;
                     string strNombreContratista = string.Empty;
 
@@ -268,18 +268,24 @@ namespace asivamosffie.services
             {
                 return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
             }
-            ListProyectoGrilla = ListProyectoGrilla.Where(r => r.ContratoId != 0).ToList();
+            //ListProyectoGrilla = ListProyectoGrilla.Where(r => r.ContratoId != 0).ToList();
+
+            foreach(ProyectoGrilla element in ListProyectoGrilla)
+            {
+                element.ContratoId = await getContratoIdByProyectoId(element.ProyectoId);
+            }
+
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
 
         public async Task<int> getContratoIdByProyectoId(int pProyectoId)
         //private int? getContratoIdByProyectoId(int pProyectoId)
         {
-            Proyecto proyecto = null;
-            proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefaultAsync();
+            //Proyecto proyecto = null;
+            //proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefaultAsync();
 
             ContratacionProyecto contratacionProyecto = null;
-            contratacionProyecto = await _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pProyectoId && (bool)r.Activo == true).FirstOrDefaultAsync();
+            contratacionProyecto = await _context.ContratacionProyecto.Where(r => r.ProyectoId == pProyectoId && (bool)r.Activo == true).FirstOrDefaultAsync();
 
             Contratacion contratacion = null;
             if (contratacionProyecto != null)
