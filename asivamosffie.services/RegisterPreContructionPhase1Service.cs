@@ -35,8 +35,7 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDDP IS NOT NULL " +
-                "AND cp.FechaAprobacion is not null " +
-                "AND ctr.TipoSolicitudCodigo = 1")
+                "AND cp.FechaAprobacion is not null")
                 .Include(r => r.ContratoPoliza)
                 .Include(r => r.Contratacion) 
                    .ThenInclude(r => r.ContratacionProyecto)
@@ -44,7 +43,7 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.ContratoPerfil)
                 .Include(r => r.Contratacion)
                   .ThenInclude(r => r.DisponibilidadPresupuestal)
-             .ToListAsync();
+               .ToListAsync();
 
 
             foreach (var c in listContratos)
@@ -52,6 +51,9 @@ namespace asivamosffie.services
                 int CantidadProyectosConPerfilesAprobados = 0;
                 int CantidadProyectosConPerfilesPendientes = 0;
                 bool RegistroCompleto = false;
+                bool EstaDevuelto = false; 
+                if (c.EstaDevuelto.HasValue & (bool)c.EstaDevuelto)
+                    EstaDevuelto  = true;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
                 {
                     if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
@@ -73,7 +75,7 @@ namespace asivamosffie.services
                     CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
                     CantidadProyectosConPerfilesPendientes,
                     EstadoCodigo = c.EstadoVerificacionCodigo,
-                    c.EstaDevuelto,
+                    EstaDevuelto,
                     RegistroCompleto
                 });
             }
