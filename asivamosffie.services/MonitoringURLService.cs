@@ -41,11 +41,23 @@ namespace asivamosffie.services
                 {
                     Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
 
-                    Contratista contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+                    Contratista contratista =null;
+                    string strNombreContratista = string.Empty;
+
+                    if (contratacion != null)
+                    {
+                        contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+
+                        if(contratista!=null)
+                        {
+                            strNombreContratista = contratista.Nombre;
+                        }
+                    }                        
 
                     //TipoContrato = contrato.TipoContratoCodig
 
                     ContratacionProyecto contratacionProyecto = null;
+                    int contratacionProyectoId = 0;
 
                     if (contratacion != null)
                     {
@@ -54,7 +66,7 @@ namespace asivamosffie.services
                     }
 
                     List<ProyectoGrilla> listProyectoGrilla = new List<ProyectoGrilla>();
-                    listProyectoGrilla = await GetListProyects();
+                    listProyectoGrilla = await GetListProyects( );
 
                     int NumProyectosAsociados = 0;
 
@@ -62,14 +74,16 @@ namespace asivamosffie.services
                     {
                         listProyectoGrilla = listProyectoGrilla.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).ToList();
                         NumProyectosAsociados = listProyectoGrilla.Count();
-                    }
 
+                        contratacionProyectoId = contratacionProyecto.ProyectoId;
+                    }
 
                     vistaContratoProyectos = new VistaContratoProyectos
                     {
                         NumeroContrato = contrato.NumeroContrato,
-                        NombreContratista = contratista.Nombre,
-                        ProyectoId = contratacionProyecto.ProyectoId,
+                        //NombreContratista = contratista.Nombre,
+                        NombreContratista = strNombreContratista,
+                        ProyectoId = contratacionProyectoId ,
                         lstProyectoGrilla = listProyectoGrilla,
                         NumeroProyectosAsociados = NumProyectosAsociados
                     };
@@ -97,7 +111,7 @@ namespace asivamosffie.services
             return lstVistaContratoProyectos;
         }
 
-            public async Task<List<ProyectoGrilla>> GetListProyects()
+            public async Task<List<ProyectoGrilla>> GetListProyects(/*int pContratoId*/)
         {
             //Listar Los proyecto segun caso de uso solo trae los ue estado
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
@@ -178,11 +192,17 @@ namespace asivamosffie.services
                 //    Region  
                 List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).ToList();
 
+                string strProyectoUrlMonitoreo= string.Empty;
+                
+
                 foreach (var proyecto in ListProyectos)
                 {
                     if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
                     {
                         Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
+
+                        if(proyecto.UrlMonitoreo!=null)
+                            strProyectoUrlMonitoreo = proyecto.UrlMonitoreo;
 
                         try
                         {
@@ -200,32 +220,41 @@ namespace asivamosffie.services
                                 InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                                 Sede = proyecto.Sede.Nombre,
                                 ProyectoId = proyecto.ProyectoId,
-                                URLMonitoreo=proyecto.UrlMonitoreo,
-
+                                URLMonitoreo = strProyectoUrlMonitoreo,
+                                ContratoId = getContratoIdByProyectoId(proyecto.ProyectoId),
                             };
 
                             //r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
+                            //List<Contrato> lstContratos = _context.Contrato.Where(r => r.ContratoId == pContratoId).ToList();
 
-                            foreach (var item in proyecto.ContratacionProyecto)
-                            {
-                                item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
+                            //foreach (var contrato in lstContratos)
+                            //{
+
+                                foreach (var item in proyecto.ContratacionProyecto)
+                                {
+                                item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId ).FirstOrDefault();
+                                //item.Contratacion = ListContratacion.Where(r => r.ContratacionId == contrato.ContratacionId ).FirstOrDefault();
+
+                                //item.Contratacion= item.Contratacion.wh(r => r.ContratacionId == item.ContratacionId ).FirstOrDefault();
 
                                 if (item.Contratacion != null)
-                                {
-                                
-                                if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
-                                {
-                                    if (item.Contratacion.TipoSolicitudCodigo == "1")
                                     {
-                                        proyectoGrilla.TieneObra = true;
-                                    }
-                                    if (item.Contratacion.TipoSolicitudCodigo == "2")
-                                    {
-                                        proyectoGrilla.TieneInterventoria = true;
+
+                                        if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
+                                        {
+                                            if (item.Contratacion.TipoSolicitudCodigo == "1")
+                                            {
+                                                proyectoGrilla.TieneObra = true;
+                                            }
+                                            if (item.Contratacion.TipoSolicitudCodigo == "2")
+                                            {
+                                                proyectoGrilla.TieneInterventoria = true;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            }
+
+                            //}
                             ListProyectoGrilla.Add(proyectoGrilla);
                         }
                         catch (Exception ex)
@@ -240,6 +269,34 @@ namespace asivamosffie.services
                 return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
             }
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
+        }
+
+        private int? getContratoIdByProyectoId(int pProyectoId)
+        {
+            Proyecto proyecto = null;
+            proyecto = _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+
+            ContratacionProyecto contratacionProyecto = null;
+            contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pProyectoId && (bool)r.Activo==true).FirstOrDefault();
+
+            Contratacion contratacion = null;
+            if (contratacionProyecto != null)
+            {
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contratacionProyecto.ContratacionId&&r.Eliminado==false).FirstOrDefault();
+
+            }               
+
+            Contrato contrato = null;
+            if (contratacion != null)
+            {
+                contrato = _context.Contrato.Where(r => r.ContratacionId == contratacion.ContratacionId&&r.Eliminado==false).FirstOrDefault();
+            }
+
+            if (contrato != null)
+                return contrato.ContratoId;
+            else
+                return 0;
+
         }
 
         //public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza()
@@ -411,13 +468,16 @@ namespace asivamosffie.services
                     strCrearEditar = "EDITAR URL MONITOREO";
                     proyecto.FechaModificacion = DateTime.Now;
                 proyecto.UsuarioModificacion = pUsuarioModificacion;
-                proyecto.UrlMonitoreo = pURLMonitoreo;
-                    //DP.Eliminado = false;
 
-                    //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
-                    //DP.EstadoSolicitudCodigo = "4"; // Sin registr/*a*/r
+                proyecto.UrlMonitoreo = pURLMonitoreo;                             
 
-                    _context.Proyecto.Update(proyecto);
+                //proyecto.UrlMonitoreo = pURLMonitoreo;
+                //DP.Eliminado = false;
+
+                //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
+                //DP.EstadoSolicitudCodigo = "4"; // Sin registr/*a*/r
+
+                _context.Proyecto.Update(proyecto);
                     return respuesta = new Respuesta
                     {
                         IsSuccessful = true,
