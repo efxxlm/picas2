@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Constants;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -52,12 +53,22 @@ namespace asivamosffie.services
                     EstaDevuelto = true;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
                 {
-                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
-                        CantidadProyectosConPerfilesPendientes++;
-                    else if (ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado) == ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado && r.TieneObservacionApoyo.HasValue))
+                    bool RegistroCompletoObservaciones = true;
+                    foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado))
+                    {
+                        if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
+                            RegistroCompletoObservaciones = false;
+                        else if ((ContratoPerfil.TieneObservacionApoyo == null)
+                             || (ContratoPerfil.TieneObservacionApoyo.HasValue
+                             && (bool)ContratoPerfil.TieneObservacionApoyo
+                             && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
+                             && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
+                                    RegistroCompletoObservaciones = false; 
+                    }
+                    if (RegistroCompletoObservaciones)
                         CantidadProyectosConPerfilesAprobados++;
                     else
-                        CantidadProyectosConPerfilesPendientes++;
+                        CantidadProyectosConPerfilesPendientes++; 
                 }
                 if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
                     RegistroCompleto = true;
@@ -341,16 +352,47 @@ namespace asivamosffie.services
                 contratoPerfilOld.FechaModificacion = DateTime.Now;
                 contratoPerfilOld.TieneObservacionApoyo = pContratoPerfilObservacion.TieneObservacionApoyo;
 
-                if (pContratoPerfilObservacion.TieneObservacionApoyo)
+                if (pContratoPerfilObservacion.ContratoPerfilObservacionId == 0)
                 {
                     pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                     pContratoPerfilObservacion.Eliminado = false;
                     pContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.ApoyoSupervisor;
-                    pContratoPerfilObservacion.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
                     _context.ContratoPerfilObservacion.Add(pContratoPerfilObservacion);
                 }
-
+                else
+                {
+                    ContratoPerfilObservacion contratoPerfilObservacionOld = _context.ContratoPerfilObservacion.Find(pContratoPerfilObservacion.ContratoPerfilObservacionId);
+                    contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
+                    contratoPerfilObservacionOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
+                    if (pContratoPerfilObservacion.Observacion == null)
+                        contratoPerfilObservacionOld.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
+                }
                 _context.SaveChanges();
+
+                //Validar Estados Completos
+                Contrato contrato = _context.Contrato
+                    .Where(r => r.ContratacionId == contratoPerfilOld.ContratoId)
+                    .Include(r => r.ContratoPerfil)
+                    .ThenInclude(r => r.ContratoPerfilObservacion).FirstOrDefault();
+
+                bool RegistroCompleto = true;
+
+                foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
+                {
+                    if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
+                        RegistroCompleto = false;
+                    else if ((ContratoPerfil.TieneObservacionApoyo == null)
+                        || (ContratoPerfil.TieneObservacionApoyo.HasValue
+                        && (bool)ContratoPerfil.TieneObservacionApoyo
+                        && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
+                        && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
+                        RegistroCompleto = false;
+                }
+
+                if (RegistroCompleto)
+                    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
+                else
+                    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
 
                 return
                     new Respuesta
@@ -375,7 +417,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
 
     }
 }

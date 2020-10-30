@@ -4,6 +4,6 @@
     { 
         public const string Interventoria = "1";
         public const string ApoyoSupervisor = "2";
-        public const string SupervisorAprobar = "3";
+        public const string Supervisor = "3";
     }
 }
