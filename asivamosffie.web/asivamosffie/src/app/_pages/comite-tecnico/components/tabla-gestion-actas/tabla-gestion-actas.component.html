@@ -61,7 +61,7 @@
         </button>
 
         <a [routerLink]="['crearActa', element.id]" mat-raised-button
-          *ngIf="element.registroCompleto && (element.estadoActa == 'Sin Acta' || element.estadoActa == 'Devuelta')"
+          *ngIf="element.registroCompleto && (element.estadoActa == 'Sin Acta')"
           color="accent" 
           class="btn-table">
           Ver detalle/editar</a>

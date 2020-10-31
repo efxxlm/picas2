@@ -649,6 +649,73 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> EnviarComiteParaAprobacion(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        {
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Convocar_Comite_Tecnico, (int)EnumeratorTipoDominio.Acciones);
+            List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+
+            try
+            {
+                ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                    .Include(r => r.SesionParticipante)
+                        .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
+
+                comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
+                comiteTecnico.EstadoActaCodigo = ConstantCodigoActas.En_proceso_Aprobacion;
+                comiteTecnico.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                comiteTecnico.FechaModificacion = DateTime.Now;
+
+
+                Template TemplateConvocar = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarComiteAprobacion);
+
+                string template = TemplateConvocar.Contenido.Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                                            .Replace("[FECHA_COMITE]", comiteTecnico.FechaOrdenDia.Value.ToString("dd/MM/yyyy"));
+
+
+                
+                //Notificar a los participantes
+                bool blEnvioCorreo = false;
+
+                //TODO: esta lista debe ser parametrizada de acuerdo a los perfiles Directore de las 4 areas :
+                //Director financiero, Director Juridico , Director técnico, y Director administrativo
+
+                foreach (var participante in comiteTecnico.SesionParticipante)
+                {
+                    if (participante.Usuario != null && !string.IsNullOrEmpty(participante.Usuario.Email))
+                    {
+
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(participante.Usuario.Email, comiteTecnico.EsComiteFiduciario.Value ? "Aprobacion acta comité fiduciario" : "Aprobacion acta comité técnico" , template, pSentender, pPassword, pMailServer, pMailPort);
+                    }
+                }
+
+                _context.SaveChanges();
+                return
+                   new Respuesta
+                   {
+                       //Data = await GetComiteTecnicoByComiteTecnicoId(pComiteTecnico.ComiteTecnicoId),
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pComiteTecnico.UsuarioCreacion, "CONVOCAR COMITE TECNICO")
+                   };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = ConstantSesionComiteTecnico.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
         public async Task<Respuesta> CreateEditSesionComiteTema(List<SesionComiteTema> ListSesionComiteTemas)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);

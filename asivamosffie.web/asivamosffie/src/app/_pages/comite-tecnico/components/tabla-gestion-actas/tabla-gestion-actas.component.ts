@@ -76,7 +76,7 @@ export class TablaGestionActasComponent implements OnInit {
       estadoComiteCodigo: EstadosComite.conActaDeSesionEnviada,
 
     };
-    this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico(comite)
+    this.technicalCommitteeSessionService.enviarComiteParaAprobacion(comite)
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`);
         if (respuesta.code === '200') {

@@ -52,6 +52,10 @@ export class FiduciaryCommitteeSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditSesionComiteTema`, lista);    
   }
 
+  enviarComiteParaAprobacion( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EnviarComiteParaAprobacion`, comite );
+   }
+
   aplazarSesionComite( comite: ComiteTecnico ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/aplazarSesionComite`, comite );
    }

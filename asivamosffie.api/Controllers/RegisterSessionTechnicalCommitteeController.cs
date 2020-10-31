@@ -274,6 +274,24 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
+        [Route("EnviarComiteParaAprobacion")]
+        public async Task<IActionResult> EnviarComiteParaAprobacion([FromBody] ComiteTecnico pComiteTecnico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerSessionTechnicalCommitteeService.EnviarComiteParaAprobacion(pComiteTecnico, _settings.Value.Dominio, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
         [Route("CreateEditSesionSolicitudVoto")]
         public async Task<IActionResult> CreateEditSesionSolicitudVoto([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
         {
