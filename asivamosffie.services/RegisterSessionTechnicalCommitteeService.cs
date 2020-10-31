@@ -1150,8 +1150,9 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
-               (sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
-                    string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion) ) ||
+               //(sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
+               //     string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion) ) ||
+               (sesionComiteSolicitud.RequiereVotacion == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion)) ||
                sesionComiteSolicitud.GeneraCompromiso == null ||
                sesionComiteSolicitud.RequiereVotacion == null ||
                //sesionComiteSolicitud.ComiteTecnicoFiduciarioId > 0 ||
