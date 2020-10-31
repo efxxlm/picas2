@@ -41,10 +41,10 @@ namespace asivamosffie.api.Controllers
  
         [HttpGet]
         [Route("ListMonitoreo")]
-        public async Task<List<dynamic>> ListMonitoreo()
+        public async Task<dynamic> ListMonitoreo()
         {
-            List<dynamic> list =await _registerSessionTechnicalCommitteeService.ListMonitoreo();
-            return list;
+            return   await _registerSessionTechnicalCommitteeService.ListMonitoreo();
+       
         }
 
         [HttpDelete]

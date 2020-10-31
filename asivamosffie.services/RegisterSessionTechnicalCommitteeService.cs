@@ -546,7 +546,7 @@ namespace asivamosffie.services
                 ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
                     .Include(r => r.SesionComiteTema)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnico )
+                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
                     .Include(r => r.SesionParticipante)
                         .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
 
@@ -563,7 +563,8 @@ namespace asivamosffie.services
                 string strOrdenDia = "";
                 int contador = 0;
 
-                foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnico){
+                foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+                {
                     strOrdenDia += TemplateOrdenDia.Contenido;
                     contador++;
 
@@ -571,33 +572,34 @@ namespace asivamosffie.services
                     switch (item.TipoSolicitudCodigo)
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
-                            item.NumeroSolicitud = _context.Contratacion.Find( item.SolicitudId ).NumeroSolicitud;
-                        break;
+                            item.NumeroSolicitud = _context.Contratacion.Find(item.SolicitudId).NumeroSolicitud;
+                            break;
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                            item.NumeroSolicitud = _context.ProcesoSeleccion.Find( item.SolicitudId ).NumeroProceso;
-                        break;
+                            item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
+                            break;
                         case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
 
-                             ProcesoSeleccionMonitoreo proceso = _context.ProcesoSeleccionMonitoreo
-                                                                            .Where( r => r.ProcesoSeleccionMonitoreoId == item.SolicitudId )
-                                                                            .Include( r => r.ProcesoSeleccion )
-                                                                            .FirstOrDefault();
-                             item.NumeroSolicitud = string.Concat( proceso.ProcesoSeleccion.NumeroProceso, " - ", proceso.NumeroProceso );
-                        break;
+                            ProcesoSeleccionMonitoreo proceso = _context.ProcesoSeleccionMonitoreo
+                                                                           .Where(r => r.ProcesoSeleccionMonitoreoId == item.SolicitudId)
+                                                                           .Include(r => r.ProcesoSeleccion)
+                                                                           .FirstOrDefault();
+                            item.NumeroSolicitud = string.Concat(proceso.ProcesoSeleccion.NumeroProceso, " - ", proceso.NumeroProceso);
+                            break;
                     }
 
                     strOrdenDia = strOrdenDia.Replace("[NUMERO]", contador.ToString())
                                              .Replace("[ORDEN]", item.NumeroSolicitud);
-                    
+
                 }
 
-                foreach (var item in comiteTecnico.SesionComiteTema.Where( r => r.Eliminado != true )){
+                foreach (var item in comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true))
+                {
                     strOrdenDia += TemplateOrdenDia.Contenido;
                     contador++;
 
                     strOrdenDia = strOrdenDia.Replace("[NUMERO]", contador.ToString())
                                              .Replace("[ORDEN]", item.Tema);
-                    
+
                 }
 
                 string template = TemplateConvocar.Contenido.Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
@@ -605,7 +607,7 @@ namespace asivamosffie.services
                                                             .Replace("[ORDEN_DIA]", strOrdenDia);
 
 
-                
+
                 //Notificar a los participantes
                 bool blEnvioCorreo = false;
 
@@ -674,7 +676,7 @@ namespace asivamosffie.services
                                                             .Replace("[FECHA_COMITE]", comiteTecnico.FechaOrdenDia.Value.ToString("dd/MM/yyyy"));
 
 
-                
+
                 //Notificar a los participantes
                 bool blEnvioCorreo = false;
 
@@ -686,7 +688,7 @@ namespace asivamosffie.services
                     if (participante.Usuario != null && !string.IsNullOrEmpty(participante.Usuario.Email))
                     {
 
-                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(participante.Usuario.Email, comiteTecnico.EsComiteFiduciario.Value ? "Aprobacion acta comité fiduciario" : "Aprobacion acta comité técnico" , template, pSentender, pPassword, pMailServer, pMailPort);
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(participante.Usuario.Email, comiteTecnico.EsComiteFiduciario.Value ? "Aprobacion acta comité fiduciario" : "Aprobacion acta comité técnico", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
 
@@ -3209,7 +3211,7 @@ namespace asivamosffie.services
 
             try
             {
-                Proyecto proyecto = _context.Proyecto.Find( pContratacionObservacion.ContratacionProyecto.Proyecto.ProyectoId );
+                Proyecto proyecto = _context.Proyecto.Find(pContratacionObservacion.ContratacionProyecto.Proyecto.ProyectoId);
 
                 proyecto.EstadoProyectoCodigo = pContratacionObservacion.ContratacionProyecto.Proyecto.EstadoProyectoCodigo;
 
@@ -4348,41 +4350,106 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<List<dynamic>> ListMonitoreo()
+        public async Task<dynamic> ListMonitoreo()
         {
-            List<ComiteTecnico> comiteTecnicos = await _context.ComiteTecnico.Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
-                                                                .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                                                                   .ThenInclude(r => r.SesionSolicitudCompromiso)
-                                                                       .ThenInclude(r => r.CompromisoSeguimiento).Distinct().ToListAsync();
+            List<ComiteTecnico> comiteTecnicos =
+                await _context.ComiteTecnico
+                .Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
+                .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
+                       && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
+                .Include(r => r.SesionParticipante)
+                .Include(r => r.SesionComentario)
+                .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                      .ThenInclude(r => r.SesionSolicitudCompromiso)
+                .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
+                .Include(r => r.SesionComiteTema)
+                    .ThenInclude(r => r.TemaCompromiso).ToListAsync();
 
-            List<dynamic> dynamics = new List<dynamic>();
-            foreach (var comiteTecnico in comiteTecnicos)
+            List<ListCompromisos> ListCompromisos = new List<ListCompromisos>();
+
+            foreach (var ComiteTecnico in comiteTecnicos.OrderByDescending(r => r.ComiteTecnicoId))
             {
-                List<SesionSolicitudCompromiso> ListSesionComiteSolicitudComiteTecnico = new List<SesionSolicitudCompromiso>();
-
-                foreach (var SesionComiteSolicitudComiteTecnico in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico.OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso)
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
-                        ListSesionComiteSolicitudComiteTecnico.Add(SesionSolicitudCompromiso);
+                        ListCompromisos.Add(new ListCompromisos
+                        {
+                            FechaComite = ComiteTecnico.FechaOrdenDia,
+                            NumeroComite = ComiteTecnico.NumeroComite,
+                            Compromiso = SesionSolicitudCompromiso.Tarea,
+                            EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : SesionSolicitudCompromiso.EstadoCodigo,
+                            FechaCumplimiento = ((DateTime)SesionSolicitudCompromiso.FechaCumplimiento).ToString("dd-MMMM-YY"),
+                            TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud.ToString(),
+                            CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId,
+                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId
+                        });
                     }
                 }
-
-                if (ListSesionComiteSolicitudComiteTecnico.Count() > 0)
+                foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.OrderByDescending(r => r.SesionTemaId))
                 {
-                    dynamics.Add(new
+                    foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso.OrderByDescending(r => r.TemaCompromisoId))
                     {
-                        comiteTecnico.FechaOrdenDia,
-                        comiteTecnico.NumeroComite,
-                        cantidadCompromisos = ListSesionComiteSolicitudComiteTecnico.Count(),
-                        cantidadCompromisosCumplidos = ListSesionComiteSolicitudComiteTecnico.Where(r => r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
-                        comiteTecnico.ComiteTecnicoId
+                        ListCompromisos.Add(new ListCompromisos
+                        {
+                            FechaComite = ComiteTecnico.FechaOrdenDia,
+                            NumeroComite = ComiteTecnico.NumeroComite,
+                            Compromiso = TemaCompromiso.Tarea,
+                            EstadoCodigo = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : TemaCompromiso.EstadoCodigo,
+                            FechaCumplimiento = ((DateTime)TemaCompromiso.FechaCumplimiento).ToString("dd-MMMM-YY"),
+                            TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema.ToString(),
+                            CompromisoId = TemaCompromiso.TemaCompromisoId,
+                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId
+                        });
+                    }
+                }
+            }
+            List<dynamic> ListGrilla = new List<dynamic>();
+             
+            foreach (var item in ListCompromisos)
+            {
+                if (ListGrilla.Where(t => t.ComiteTecnicoId == item.ComiteTecnicoId).Count() == 0)
+                { 
+                    ListGrilla.Add(new
+                    {
+                        FechaOrdenDia = item.FechaComite,
+                        item.NumeroComite,
+                        cantidadCompromisos = ListCompromisos.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).Count(),
+                        cantidadCompromisosCumplidos = ListCompromisos.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId && r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
+                        item.ComiteTecnicoId
                     });
                 }
             }
-            return dynamics;
+            //var query = ListCompromisos.GroupBy(c => new
+            //{
+            //    c.NumeroComite,
+            //    c.FechaComite,
+            //    c.Compromiso,
+            //    c.EstadoCodigo,
+            //    c.FechaCumplimiento,
+            //    c.TipoSolicitud,
+            //    c.CompromisoId,
+            //    c.ComiteTecnicoId,
+            //})
+            //    .Select(x => new
+            //    {
+            //        x.Key.NumeroComite,
+            //        cantidadCompromisos = x.Key.Compromiso.Count(),
+            //        cantidadCompromisosCumplidos = x.Key.EstadoCodigo.Where(r => )
+            //        ComiteTecnicoId = x.Key.ComiteTecnicoId
+            //    })
+            //    .OrderBy(x => x.NumeroComite).ToList();
+
+            //comiteTecnico.FechaOrdenDia,
+            //            comiteTecnico.NumeroComite,
+            //            cantidadCompromisos = ListSesionComiteSolicitudComiteTecnico.Count(),
+            //            cantidadCompromisosCumplidos = ListSesionComiteSolicitudComiteTecnico.Where(r => r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
+            //            comiteTecnico.ComiteTecnicoId
+             
+            return ListGrilla; 
         }
 
 
-    }
+}
 }
