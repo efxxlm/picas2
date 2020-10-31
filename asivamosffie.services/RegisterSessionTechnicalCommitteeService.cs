@@ -1870,13 +1870,13 @@ namespace asivamosffie.services
                                                          .Include(r => r.SesionComiteTema)
                                                         .FirstOrDefault();
 
-            comite.SesionComiteSolicitudComiteTecnico.ToList().ForEach(cs =>
+            comite.SesionComiteSolicitudComiteTecnico.Where( t => t.Eliminado != true ).ToList().ForEach(cs =>
             {
                 if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
                     estaCompleto = false;
             });
 
-            comite.SesionComiteTema.ToList().ForEach(ct =>
+            comite.SesionComiteTema.Where( t => t.Eliminado != true).ToList().ForEach(ct =>
             {
                 if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
                     estaCompleto = false;

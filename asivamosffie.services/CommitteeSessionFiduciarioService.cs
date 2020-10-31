@@ -2217,13 +2217,13 @@ namespace asivamosffie.services
                                                          .Include(r => r.SesionComiteTema)
                                                         .FirstOrDefault();
 
-            comite.SesionComiteSolicitudComiteTecnicoFiduciario.ToList().ForEach(cs =>
+            comite.SesionComiteSolicitudComiteTecnicoFiduciario.Where( t => t.Eliminado != true ).ToList().ForEach(cs =>
             {
                 if ((cs.RegistroCompletoFiduciaria.HasValue ? cs.RegistroCompletoFiduciaria.Value : false) == false)
                     estaCompleto = false;
             });
 
-            comite.SesionComiteTema.ToList().ForEach(ct =>
+            comite.SesionComiteTema.Where( t => t.Eliminado != true ).ToList().ForEach(ct =>
             {
                 if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
                     estaCompleto = false;
