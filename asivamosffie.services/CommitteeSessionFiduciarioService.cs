@@ -285,11 +285,13 @@ namespace asivamosffie.services
                                                                                             .Where(r => r.ComiteTecnicoFiduciarioId == pComiteTecnico.ComiteTecnicoId)
                                                                                             .ToList();
 
-                    SolicitudesExistentes.ForEach( se => {
-                        if (pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where( r => r.SesionComiteSolicitudId == se.SesionComiteSolicitudId ).Count() == 0){
+                    SolicitudesExistentes.ForEach(se =>
+                    {
+                        if (pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.SesionComiteSolicitudId == se.SesionComiteSolicitudId).Count() == 0)
+                        {
                             se.ComiteTecnicoFiduciarioId = null;
                         }
-                    });         
+                    });
 
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
@@ -423,7 +425,7 @@ namespace asivamosffie.services
 
                 comite.SesionComiteSolicitudComiteTecnicoFiduciario.ToList().ForEach(cf =>
                 {
-                    comite.SesionComiteSolicitudComiteTecnico.Add(  _context.SesionComiteSolicitud
+                    comite.SesionComiteSolicitudComiteTecnico.Add(_context.SesionComiteSolicitud
                                                                     .Where(r => r.SesionComiteSolicitudId == cf.SesionComiteSolicitudId)
                                                                     .Include(r => r.ComiteTecnico)
                                                                     .FirstOrDefault()
@@ -500,7 +502,7 @@ namespace asivamosffie.services
                 ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
                     .Include(r => r.SesionComiteTema)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario )
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                     .Include(r => r.SesionParticipante)
                         .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
 
@@ -516,7 +518,8 @@ namespace asivamosffie.services
                 string strOrdenDia = "";
                 int contador = 0;
 
-                foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario){
+                foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+                {
                     strOrdenDia += TemplateOrdenDia.Contenido;
                     contador++;
 
@@ -524,33 +527,34 @@ namespace asivamosffie.services
                     switch (item.TipoSolicitudCodigo)
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
-                            item.NumeroSolicitud = _context.Contratacion.Find( item.SolicitudId ).NumeroSolicitud;
-                        break;
+                            item.NumeroSolicitud = _context.Contratacion.Find(item.SolicitudId).NumeroSolicitud;
+                            break;
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                            item.NumeroSolicitud = _context.ProcesoSeleccion.Find( item.SolicitudId ).NumeroProceso;
-                        break;
+                            item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
+                            break;
                         case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
 
-                             ProcesoSeleccionMonitoreo proceso = _context.ProcesoSeleccionMonitoreo
-                                                                            .Where( r => r.ProcesoSeleccionMonitoreoId == item.SolicitudId )
-                                                                            .Include( r => r.ProcesoSeleccion )
-                                                                            .FirstOrDefault();
-                             item.NumeroSolicitud = string.Concat( proceso.ProcesoSeleccion.NumeroProceso, " - ", proceso.NumeroProceso );
-                        break;
+                            ProcesoSeleccionMonitoreo proceso = _context.ProcesoSeleccionMonitoreo
+                                                                           .Where(r => r.ProcesoSeleccionMonitoreoId == item.SolicitudId)
+                                                                           .Include(r => r.ProcesoSeleccion)
+                                                                           .FirstOrDefault();
+                            item.NumeroSolicitud = string.Concat(proceso.ProcesoSeleccion.NumeroProceso, " - ", proceso.NumeroProceso);
+                            break;
                     }
 
                     strOrdenDia = strOrdenDia.Replace("[NUMERO]", contador.ToString())
                                              .Replace("[ORDEN]", item.NumeroSolicitud);
-                    
+
                 }
 
-                foreach (var item in comiteTecnico.SesionComiteTema.Where( r => r.Eliminado != true )){
+                foreach (var item in comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true))
+                {
                     strOrdenDia += TemplateOrdenDia.Contenido;
                     contador++;
 
                     strOrdenDia = strOrdenDia.Replace("[NUMERO]", contador.ToString())
                                              .Replace("[ORDEN]", item.Tema);
-                    
+
                 }
 
                 string template = TemplateConvocar.Contenido.Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
@@ -558,7 +562,7 @@ namespace asivamosffie.services
                                                             .Replace("[ORDEN_DIA]", strOrdenDia);
 
 
-                
+
                 //Notificar a los participantes
                 bool blEnvioCorreo = false;
 
@@ -667,8 +671,8 @@ namespace asivamosffie.services
                   .Include(r => r.SesionInvitado)
                   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                      .ThenInclude(r => r.SesionSolicitudVoto)
-                //   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                //      .ThenInclude(r => r.SesionSolicitudCompromiso)
+                   //   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                   //      .ThenInclude(r => r.SesionSolicitudCompromiso)
                    .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
@@ -685,8 +689,8 @@ namespace asivamosffie.services
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
                 SesionComiteSolicitud.SesionSolicitudCompromiso = _context.SesionSolicitudCompromiso
-                                                                            .Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId && 
-                                                                                r.EsFiduciario == true && 
+                                                                            .Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId &&
+                                                                                r.EsFiduciario == true &&
                                                                                 !(bool)r.Eliminado)
                                                                             .ToList();
             }
@@ -858,7 +862,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_ALCANCE:
-                     
+
                             foreach (var infraestructura in proyecto.Proyecto.InfraestructuraIntervenirProyecto)
                             {
                                 RegistrosAlcance += RegistroAlcance;
@@ -1736,7 +1740,7 @@ namespace asivamosffie.services
                 comiteTecnicoOld.FechaAplazamiento = pComiteTecnico.FechaAplazamiento;
                 comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Aplazada;
 
-                
+
 
                 _context.SaveChanges();
                 //Plantilla
@@ -2738,12 +2742,11 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
-               sesionComiteSolicitud.RutaSoporteVotacionFiduciario == null ||
+                (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario)) ||
                sesionComiteSolicitud.GeneraCompromisoFiduciario == null ||
                sesionComiteSolicitud.RequiereVotacionFiduciario == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
                string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario)
                 )
             {
                 return false;
