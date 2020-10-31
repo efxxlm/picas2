@@ -9,9 +9,12 @@ namespace asivamosffie.services.Interfaces
     public interface IMonitoringURL
     {
 
-        Task<List<ProyectoGrilla>> GetListProyects();
+        //Task<List<ProyectoGrilla>> GetListProyects();
 
         Task<List<VistaContratoProyectos>> GetListContratoProyectos();
+
+        
+
 
         Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo, string UsuarioModificacion);
 

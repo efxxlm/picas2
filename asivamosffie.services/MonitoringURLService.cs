@@ -66,7 +66,7 @@ namespace asivamosffie.services
                     }
 
                     List<ProyectoGrilla> listProyectoGrilla = new List<ProyectoGrilla>();
-                    listProyectoGrilla = await GetListProyects( );
+                    listProyectoGrilla = await GetListProyects(contratacionProyecto.ProyectoId );
 
                     int NumProyectosAsociados = 0;
 
@@ -111,7 +111,7 @@ namespace asivamosffie.services
             return lstVistaContratoProyectos;
         }
 
-            public async Task<List<ProyectoGrilla>> GetListProyects(/*int pContratoId*/)
+            public async Task<List<ProyectoGrilla>> GetListProyects(/*int pContratoId*/ int pProyectoId)
         {
             //Listar Los proyecto segun caso de uso solo trae los ue estado
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
@@ -119,19 +119,15 @@ namespace asivamosffie.services
             List<Proyecto> ListProyectos = new List<Proyecto>();
             try
             {
-                ListProyectos = await
-                     _context.Proyecto.Where(
+                ListProyectos = await _context.Proyecto.Where(
                          r => !(bool)r.Eliminado &&
                          r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
-                         &&
-                         (bool)r.RegistroCompleto 
+                         &&(bool)r.RegistroCompleto 
+                         && r.ProyectoId== pProyectoId
                          //Se quitan los proyectos que ya esten vinculados a una contratacion
-                       
                          )
-                                 .Include(r => r.ContratacionProyecto)
-                                   .ThenInclude(r => r.Contratacion)
-                                 .Include(r => r.Sede)
-                                 .Include(r => r.InstitucionEducativa)
+                                 .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Contratacion)
+                                 .Include(r => r.Sede) .Include(r => r.InstitucionEducativa)
                                  .Include(r => r.LocalizacionIdMunicipioNavigation).Distinct().ToListAsync();
 
                 //List<Localicacion> Municipios = new List<Localicacion>();
@@ -183,11 +179,11 @@ namespace asivamosffie.services
                 List<Dominio> ListTipoSolicitud = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Solicitud_Obra_Interventorias);
 
                 //Lista para Dominio intervencio
-                List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
+                List<Dominio> ListTipoIntervencion = await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToListAsync();
 
-                List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == 1).ToList();
+                List<Localizacion> ListDepartamentos = await _context.Localizacion.Where(r => r.Nivel == 1).ToListAsync();
 
-                List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == 3).ToList();
+                List<Localizacion> ListRegiones = await _context.Localizacion.Where(r => r.Nivel == 3).ToListAsync();
                 //departamneto 
                 //    Region  
                 List<Contratacion> ListContratacion = await _context.Contratacion.Where(r => !(bool)r.Eliminado).ToListAsync();

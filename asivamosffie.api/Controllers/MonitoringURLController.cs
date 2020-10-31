@@ -25,13 +25,13 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
-        [Route("GetListProyects")]
-        [HttpGet]
-        public async Task<List<ProyectoGrilla>> GetListProyects()
-        {
-            var respuesta = await _monitoringURLService.GetListProyects();
-            return respuesta;
-        }
+        //[Route("GetListProyects")]
+        //[HttpGet]
+        //public async Task<List<ProyectoGrilla>> GetListProyects()
+        //{
+        //    var respuesta = await _monitoringURLService.GetListProyects();
+        //    return respuesta;
+        //}
 
         [Route("GetListContratoProyectos")]
         [HttpGet]
