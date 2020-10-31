@@ -55,14 +55,17 @@
       </div>
 
       <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Desarrollo</span>
+        </div>
         <div class="col d-flex">
           <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
             (onContentChanged)="maxLength($event, 5000)" formControlName="desarrolloSolicitud" required></quill-editor>
             <div class="d-flex align-items-center">
-              <span class="contador miles" *ngIf="addressForm.get('desarrolloSolicitud').value">
-                {{5000 - textoLimpio(addressForm.get('desarrolloSolicitud').value)}}
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('desarrolloSolicitud').value">
+                {{5000 - (textoLimpio(addressForm.get('desarrolloSolicitud').value)>5000?5000:textoLimpio(addressForm.get('desarrolloSolicitud').value))}}
               </span>
-              <span class="contador miles" *ngIf="!addressForm.get('desarrolloSolicitud').value">
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('desarrolloSolicitud').value">
                 5000
               </span>
             </div>
@@ -119,10 +122,10 @@
             required (onContentChanged)="maxLength($event, 5000)" formControlName="observaciones" required>
           </quill-editor>
           <div class="d-flex align-items-center">
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-              {{5000 - textoLimpio(addressForm.get('observaciones').value)}}
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('observaciones').value">
+              {{5000 - (textoLimpio(addressForm.get('observaciones').value)>5000?5000:textoLimpio(addressForm.get('observaciones').value))}}
             </span>
-            <span class="contador miles" *ngIf="!addressForm.get('observaciones').value">
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('observaciones').value">
               5000
             </span>
           </div>

@@ -161,12 +161,6 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
           this.proyectos.push(grupoProyecto)
         })
       })
-
-      this.addressForm.valueChanges
-        .subscribe(value => {
-          console.log(value);
-          console.log(value.proyectos[0].observaciones[0].observacion);
-        })
   }
 
   openDialog(modalTitle: string, modalText: string) {

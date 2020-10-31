@@ -72,7 +72,12 @@
   &.card {
     width: 100%;
     .ql-container.ql-snow {
+      max-width: 70em;
       border-bottom: $fontColor solid 1px;
+
+      .w-quill & {
+        max-width: var(--w-quill);
+      }
     }
   }
 
@@ -96,8 +101,4 @@
   .ql-editor::before {
     content: none;
   }
-}
-
-.w-quill .quill-editor-style.card .ql-container.ql-snow {
-  max-width: var(--w-quill);
 }

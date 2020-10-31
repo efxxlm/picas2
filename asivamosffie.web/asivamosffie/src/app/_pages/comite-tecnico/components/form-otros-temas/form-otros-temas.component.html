@@ -23,16 +23,19 @@
         </div>
       </div>
       <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Desarrollo</span>
+        </div>
         <div class="col d-flex">
           <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-            required (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required>
+            required (onContentChanged)="maxLength($event, 5000)" formControlName="observaciones" required>
           </quill-editor>
           <div class="d-flex align-items-center">
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-              {{3000 - textoLimpio(addressForm.get('observaciones').value)}}
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('observaciones').value">
+              {{5000 - (textoLimpio(addressForm.get('observaciones').value)>5000?5000:textoLimpio(addressForm.get('observaciones').value))}}
             </span>
-            <span class="contador miles" *ngIf="!addressForm.get('observaciones').value">
-              3000
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('observaciones').value">
+              5000
             </span>
           </div>
         </div>
@@ -75,14 +78,14 @@
         </div>
         <div class="col d-flex">
           <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-            required (onContentChanged)="maxLength($event, 3000)" formControlName="observacionesDecision" required>
+            required (onContentChanged)="maxLength($event, 5000)" formControlName="observacionesDecision" required>
           </quill-editor>
           <div class="d-flex align-items-center position-relative">
-            <span class="contador miles" *ngIf="addressForm.get('observacionesDecision').value">
-              {{3000 - textoLimpio(addressForm.get('observacionesDecision').value)}}
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('observacionesDecision').value">
+              {{5000 - (textoLimpio(addressForm.get('observacionesDecision').value)>5000?5000:textoLimpio(addressForm.get('observacionesDecision').value))}}
             </span>
-            <span class="contador miles" *ngIf="!addressForm.get('observacionesDecision').value">
-              3000
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('observacionesDecision').value">
+              5000
             </span>
           </div>
         </div>
