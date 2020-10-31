@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
   objetoComiteTecnico: ComiteTecnico = {};
+  cargoRegistro: boolean = false
 
   estadosComite = EstadosComite
   
@@ -69,7 +70,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
           console.log( response )
 
           this.objetoComiteTecnico = response;
-
+          this.cargoRegistro = true
 
           setTimeout(() => {
 
