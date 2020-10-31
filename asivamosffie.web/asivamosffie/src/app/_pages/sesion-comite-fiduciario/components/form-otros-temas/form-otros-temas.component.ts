@@ -11,6 +11,7 @@ import { forkJoin } from 'rxjs';
 import { SesionComiteTema, SesionParticipante, TemaCompromiso } from 'src/app/_interfaces/technicalCommitteSession';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-form-otros-temas',
@@ -56,33 +57,38 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   constructor(
-              private fb: FormBuilder,
-              private commonService: CommonService,
-              private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
-              public dialog: MatDialog,
-              private router: Router,
+    private fb: FormBuilder,
+    private commonService: CommonService,
+    private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+    public dialog: MatDialog,
+    private router: Router,
 
-             ) 
-  {
+  ) {
 
   }
 
-  ngOnInit(): void 
-  {
+  async ngOnInit() {
 
     let estados: string[] = ['2', '4', '6', '8']
 
-    forkJoin([
-      this.commonService.listaEstadoSolicitud(),
-      this.commonService.listaMiembrosComiteTecnico()
-    ])   
-      .subscribe(response => {
+    return new Promise(resolve => {
 
-        this.estadosArray = response[0].filter(s => estados.includes(s.codigo));
-        this.listaResponsables = response[1];
-      })
+      forkJoin([
+        this.commonService.listaEstadoSolicitud(),
+        this.commonService.listaMiembrosComiteTecnico()
+      ])
+        .subscribe(response => {
 
-    this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
+          this.estadosArray = response[0].filter(s => estados.includes(s.codigo));
+          this.listaResponsables = response[1];
+
+          this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
+
+          resolve();
+
+        })
+
+    });
 
 
   }
@@ -94,7 +100,7 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    if ( texto ){
+    if (texto) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
     }
@@ -157,7 +163,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
     this.compromisos.controls.forEach(control => {
       let temacompromiso: TemaCompromiso = {
-        
+
         temaCompromisoId: control.get('temaCompromisoId').value,
         sesionTemaId: this.sesionComiteTema.sesionTemaId,
         responsable: control.get('responsable').value ? control.get('responsable').value.sesionParticipanteId : null,
@@ -173,8 +179,8 @@ export class FormOtrosTemasComponent implements OnInit {
     this.fiduciaryCommitteeSessionService.createEditTemasCompromiso(tema)
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`)
-        this.validar.emit( respuesta.data );
-        
+        this.validar.emit(respuesta.data);
+
         if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteFiduciario/crearActa', this.sesionComiteTema.comiteTecnicoId])
       })
@@ -182,44 +188,49 @@ export class FormOtrosTemasComponent implements OnInit {
 
   cargarRegistro() {
 
-    if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-    }else if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
-    }
+    this.ngOnInit().then(() => {
+      if (this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.AprobadaPorComiteTecnico) {
+        this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+      } else if (this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.RechazadaPorComiteTecnico) {
+        this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+      }
+      console.log(this.estadosArray)
 
-    this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
+      this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
 
-    let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
+      let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
 
-    this.addressForm.get('observaciones').setValue( this.sesionComiteTema.observaciones ),
-    this.addressForm.get('estadoSolicitud').setValue( estadoSeleccionado ),
-    this.addressForm.get('observacionesDecision').setValue( this.sesionComiteTema.observacionesDecision ),
-    this.addressForm.get('tieneCompromisos').setValue( this.sesionComiteTema.generaCompromiso ),
-    this.addressForm.get('cuantosCompromisos').setValue( this.sesionComiteTema.cantCompromisos ),
-    
-    this.commonService.listaUsuarios().then((respuesta) => {
+      this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
+        this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado),
+        this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
+        this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),
+        this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos),
 
-      this.listaMiembros.forEach(m => {
-        let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId);
-        m.nombre = `${usuario.nombres} ${usuario.apellidos}`
+        this.commonService.listaUsuarios().then((respuesta) => {
 
-      })
+          this.listaMiembros.forEach(m => {
+            let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId);
+            m.nombre = `${usuario.nombres} ${usuario.apellidos}`
 
-      this.sesionComiteTema.temaCompromiso.forEach(c => {
-        let grupoCompromiso = this.crearCompromiso();
-        let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId.toString() == c.responsable)
+          })
 
-        grupoCompromiso.get('tarea').setValue(c.tarea);
-        grupoCompromiso.get('responsable').setValue(responsableSeleccionado);
-        grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento);
-        grupoCompromiso.get('temaCompromisoId').setValue(c.temaCompromisoId);
-        grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId);
+          this.sesionComiteTema.temaCompromiso.forEach(c => {
+            let grupoCompromiso = this.crearCompromiso();
+            let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId.toString() == c.responsable)
 
-        this.compromisos.push(grupoCompromiso)
-      })
+            grupoCompromiso.get('tarea').setValue(c.tarea);
+            grupoCompromiso.get('responsable').setValue(responsableSeleccionado);
+            grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento);
+            grupoCompromiso.get('temaCompromisoId').setValue(c.temaCompromisoId);
+            grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId);
 
-    });
+            this.compromisos.push(grupoCompromiso)
+          })
+
+        });
+
+    })
+
   }
 
 }
