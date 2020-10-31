@@ -93,8 +93,8 @@ namespace asivamosffie.services
             List<dynamic> ListDynamic = new List<dynamic>();
             string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
             List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
-               .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
-                      && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
+               .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
+                    //  && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada)
                 .Include(r => r.SesionParticipante)
                 .Include(r => r.SesionComentario)
                 .Include(r => r.SesionComiteSolicitudComiteTecnico)

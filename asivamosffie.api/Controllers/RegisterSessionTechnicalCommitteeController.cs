@@ -41,15 +41,14 @@ namespace asivamosffie.api.Controllers
  
         [HttpGet]
         [Route("ListMonitoreo")]
-        public async Task<dynamic> ListMonitoreo()
+        public async Task<dynamic> ListMonitoreo([FromQuery]bool EsFiduciario)
         {
-            return   await _registerSessionTechnicalCommitteeService.ListMonitoreo();
-       
+            return   await _registerSessionTechnicalCommitteeService.ListMonitoreo(EsFiduciario); 
         }
 
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
-        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery]int pComiteTecnicoId)
         {
             Respuesta respuesta = new Respuesta();
             try

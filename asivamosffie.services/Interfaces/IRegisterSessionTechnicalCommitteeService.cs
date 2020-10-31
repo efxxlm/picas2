@@ -12,7 +12,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId);
         Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto(int pSesionComiteSolicitudId, int pContratacionProyectoId);
 
-        Task<dynamic> ListMonitoreo();
+        Task<dynamic> ListMonitoreo(bool EsFiduciario);
 
         Task<byte[]> GetPlantillaActaIdComite(int pdComite);
 

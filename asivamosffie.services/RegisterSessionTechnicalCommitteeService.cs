@@ -4350,11 +4350,11 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<dynamic> ListMonitoreo()
+        public async Task<dynamic> ListMonitoreo(bool EsFiduciario)
         {
             List<ComiteTecnico> comiteTecnicos =
                 await _context.ComiteTecnico
-                .Where(r => !(bool)r.Eliminado && !(bool)r.EsComiteFiduciario)
+                .Where(r => !(bool)r.Eliminado && r.EsComiteFiduciario == EsFiduciario)
                 .Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada
                        && r.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
                 .Include(r => r.SesionParticipante)
@@ -4405,8 +4405,7 @@ namespace asivamosffie.services
                     }
                 }
             }
-            List<dynamic> ListGrilla = new List<dynamic>();
-             
+            List<dynamic> ListGrilla = new List<dynamic>(); 
             foreach (var item in ListCompromisos)
             {
                 if (ListGrilla.Where(t => t.ComiteTecnicoId == item.ComiteTecnicoId).Count() == 0)
@@ -4420,33 +4419,7 @@ namespace asivamosffie.services
                         item.ComiteTecnicoId
                     });
                 }
-            }
-            //var query = ListCompromisos.GroupBy(c => new
-            //{
-            //    c.NumeroComite,
-            //    c.FechaComite,
-            //    c.Compromiso,
-            //    c.EstadoCodigo,
-            //    c.FechaCumplimiento,
-            //    c.TipoSolicitud,
-            //    c.CompromisoId,
-            //    c.ComiteTecnicoId,
-            //})
-            //    .Select(x => new
-            //    {
-            //        x.Key.NumeroComite,
-            //        cantidadCompromisos = x.Key.Compromiso.Count(),
-            //        cantidadCompromisosCumplidos = x.Key.EstadoCodigo.Where(r => )
-            //        ComiteTecnicoId = x.Key.ComiteTecnicoId
-            //    })
-            //    .OrderBy(x => x.NumeroComite).ToList();
-
-            //comiteTecnico.FechaOrdenDia,
-            //            comiteTecnico.NumeroComite,
-            //            cantidadCompromisos = ListSesionComiteSolicitudComiteTecnico.Count(),
-            //            cantidadCompromisosCumplidos = ListSesionComiteSolicitudComiteTecnico.Where(r => r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
-            //            comiteTecnico.ComiteTecnicoId
-             
+            } 
             return ListGrilla; 
         }
 

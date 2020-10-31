@@ -2737,8 +2737,7 @@ namespace asivamosffie.services
                    };
             }
         }
-
-
+         
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
@@ -2800,9 +2799,7 @@ namespace asivamosffie.services
             }
             return true;
         }
-
-
-
+        
         public async Task<ProcesoSeleccion> GetProcesosSelecccionByProcesoSeleccionId(int pId)
         {
 
@@ -2815,6 +2812,7 @@ namespace asivamosffie.services
                .FirstOrDefaultAsync();
 
         }
+
         public async Task<byte[]> GetPlantillaActaIdComite(int ComiteId)
         {
             if (ComiteId == 0)
