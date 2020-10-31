@@ -667,9 +667,9 @@ namespace asivamosffie.services
                   .Include(r => r.SesionInvitado)
                   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                      .ThenInclude(r => r.SesionSolicitudVoto)
-                  .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                     .ThenInclude(r => r.SesionSolicitudCompromiso)
-                  .Include(r => r.SesionComiteTema)
+                //   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                //      .ThenInclude(r => r.SesionSolicitudCompromiso)
+                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.TemaCompromiso)
@@ -684,7 +684,11 @@ namespace asivamosffie.services
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
             {
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
-                SesionComiteSolicitud.SesionSolicitudCompromiso = SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario == true && !(bool)r.Eliminado).ToList();
+                SesionComiteSolicitud.SesionSolicitudCompromiso = _context.SesionSolicitudCompromiso
+                                                                            .Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId && 
+                                                                                r.EsFiduciario == true && 
+                                                                                !(bool)r.Eliminado)
+                                                                            .ToList();
             }
 
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
@@ -1577,8 +1581,8 @@ namespace asivamosffie.services
                         sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
                         //sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
                     }
-                    //_context.SaveChanges();
                 }
+                _context.SaveChanges();
 
                 return
                 new Respuesta
