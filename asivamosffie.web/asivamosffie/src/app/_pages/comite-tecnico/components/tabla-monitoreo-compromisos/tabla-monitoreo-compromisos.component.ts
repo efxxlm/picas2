@@ -29,7 +29,7 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.technicalCommitteeSessionService.getListComite()
+    this.technicalCommitteeSessionService.getListComite( 'False' )
       .subscribe(response => {
         // esponse = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
         // console.log(response);

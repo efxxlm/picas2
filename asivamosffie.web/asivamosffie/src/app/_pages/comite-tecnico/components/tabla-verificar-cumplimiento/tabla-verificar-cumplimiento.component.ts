@@ -20,7 +20,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaVerificarCumplimientoComponent implements OnInit {
 
   listaCompromisos: any[] = [];
-
+  comite: any;
   displayedColumns: string[] = [
     'tarea',
     'responsable',
@@ -62,7 +62,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
         this.commonService.listaEstadoCompromisos(),
 
       ]).subscribe(respuesta => {
-
+        this.comite = respuesta[0];
         respuesta[0].sesionComiteTema.forEach(tem => {
           tem.temaCompromiso.forEach(tc => {
             tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
@@ -81,11 +81,11 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
             });
             this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
           })
-          this.initPaginator()
         }
-
+        console.log( respuesta[0] );
         this.estadosArray = respuesta[1];
         this.dataSource = new MatTableDataSource(this.listaCompromisos);
+        this.initPaginator();
 
       })
     })

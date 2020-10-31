@@ -65,9 +65,8 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
       .subscribe( ( resp: any ) => {
         this.acta = resp[0];
         console.log( this.acta );
-        this.acta.sesionComiteSolicitudComiteTecnico = null;
 
-        for ( let temas of resp[0].sesionComiteTema ) {
+        for ( let temas of this.acta.sesionComiteTema ) {
           if ( !temas.esProposicionesVarios ) {
             this.temas.push( temas );
           } else {
@@ -75,7 +74,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
           }
         };
 
-        for ( let participantes of resp[0].sesionParticipante ) {
+        for ( let participantes of this.acta.sesionParticipante ) {
           this.miembrosParticipantes.push( `${ participantes.usuario.nombres } ${ participantes.usuario.apellidos }` )
         };
 
@@ -151,7 +150,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     this.compromisoSvc.postComentariosActa( observaciones )
       .subscribe( ( resp: any ) => {
         this.seRealizoPeticion = true;
-        this.openDialog( '', `<b>${this.textoLimpioMessage( resp.message )}</b>` );
+        this.openDialog( '', `<b>${ resp.message }</b>` );
         this.routes.navigate( ['/compromisosActasComite'] );
       } );
 
@@ -162,7 +161,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     this.compromisoSvc.aprobarActa( comiteTecnicoId )
       .subscribe( ( resp: any ) => {
         this.seRealizoPeticion = true;
-        this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+        this.openDialog( '', `<b>${ resp.message }</b>` );
         this.routes.navigate( ['/compromisosActasComite'] );
       } )
   };

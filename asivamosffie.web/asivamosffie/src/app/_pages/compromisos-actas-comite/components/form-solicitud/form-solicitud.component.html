@@ -22,7 +22,7 @@
         </div>
         <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '2'">
           <b class="label-left color-blue">
-            {{ solicitudes.numeroSolicitud }}
+            {{ solicitudes.contratacion.numeroSolicitud }}
           </b>
         </div>
       </div>
@@ -94,12 +94,20 @@
           <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.observacionesFiduciario )"></div>
         </section>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="esComiteFiduciario === false">
         <div class="pr-1">
           <label><b>URL con soporte de votación</b></label>
         </div>
         <div class="col w-80">
           <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacion }}</b> </span>
+        </div>
+      </div>
+      <div class="row" *ngIf="esComiteFiduciario === true">
+        <div class="pr-1">
+          <label><b>URL con soporte de votación</b></label>
+        </div>
+        <div class="col w-80">
+          <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacionFiduciario }}</b> </span>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>

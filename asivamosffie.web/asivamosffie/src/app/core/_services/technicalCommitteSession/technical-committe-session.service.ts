@@ -31,8 +31,8 @@ export class TechnicalCommitteSessionService {
     return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getListComiteGrilla`);
   }
 
-  getListComite(){
-    return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/ListMonitoreo`);
+  getListComite( EsFiduciario: string ){
+    return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/ListMonitoreo?EsFiduciario=${ EsFiduciario }`);
  }
 
   cambiarEstadoComiteTecnico( comite: ComiteTecnico ){

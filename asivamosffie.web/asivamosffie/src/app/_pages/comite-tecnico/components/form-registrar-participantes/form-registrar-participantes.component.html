@@ -18,7 +18,7 @@
         <mat-form-field class="select-width">
           <mat-select formControlName="miembrosParticipantes" multiple required>
             <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro">
-              {{ miembro.nombres }} {{ miembro.apellidos }}
+              {{ miembro['nombres'] }} {{ miembro['apellidos'] }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -198,8 +198,7 @@
             type="button"
             *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"
             (click)="CambiarEstado()"
-            [disabled]="!estaTodo"
-            >
+            [disabled]="!estaTodo">
             
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>

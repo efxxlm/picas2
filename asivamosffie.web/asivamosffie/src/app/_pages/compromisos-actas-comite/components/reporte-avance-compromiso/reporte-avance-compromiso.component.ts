@@ -142,7 +142,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
         resp => {
           this.seRealizoPeticion = true;
           this.compromisoSvc.eliminarObservacionStorage(this.comite.compromisoId);
-          this.openDialog('', `<b>${this.textoLimpioMessage(resp.message)}</b>`);
+          this.openDialog('', `<b>${resp.message}</b>`);
           this.routes.navigate(['/compromisosActasComite']);
         },
         err => this.openDialog('', `<b>${err.message}</b>`)
