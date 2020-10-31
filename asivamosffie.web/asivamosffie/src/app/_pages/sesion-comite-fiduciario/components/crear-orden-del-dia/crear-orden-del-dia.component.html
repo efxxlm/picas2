@@ -13,7 +13,7 @@
   <!-- Seleccionar temas a tratar en el comite Fiduciario -->
   <div class="flex w-tema">
 
-    <span class="mr-1em">Tipo de tema</span>
+    <span class="mr-1em font-weight-bold">Tipo de tema</span>
 
     <mat-form-field class="w-30">
       <mat-select [formControl]="tipoDeTemas" multiple required (selectionChange)="getvalues( $event.value )">
@@ -79,10 +79,10 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #temaInput type="text" formControlName="tema" maxlength="100" required>
+                    <input matInput #temaInput type="text" formControlName="tema" maxlength="1000" required>
                     <input type="hidden" formControlName="sesionTemaId">
                   </mat-form-field>
-                  <span class="contador">{{100 - temaInput.value.length}}</span>
+                  <span class="contador">{{1000 - temaInput.value.length}}</span>
                 </div>
               </div>
               <div class="row">
