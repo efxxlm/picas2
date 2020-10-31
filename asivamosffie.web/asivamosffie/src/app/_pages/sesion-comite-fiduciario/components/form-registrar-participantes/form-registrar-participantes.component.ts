@@ -248,9 +248,9 @@ export class FormRegistrarParticipantesComponent {
             this.estadoOtrosTemas = this.estadoFormulario.completo;
       }else{
         if (esProposicion)
-          this.estadoProposiciones = '';
+          this.estadoProposiciones = this.estadoFormulario.completo;
         else 
-          this.estadoOtrosTemas = '';
+          this.estadoOtrosTemas = this.estadoFormulario.completo;
       }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
@@ -258,6 +258,8 @@ export class FormRegistrarParticipantesComponent {
   }
 
   onUpdate() {
+
+    this.estaTodo = false;
 
     this.validarSolicitudes();
     this.validarTemas(true);
@@ -274,8 +276,12 @@ export class FormRegistrarParticipantesComponent {
       btnProposiciones.click();
     }
 
-    if (this.estadoSolicitudes == this.estadoFormulario.completo)
+    if (this.estadoSolicitudes == this.estadoFormulario.completo &&
+        this.estadoOtrosTemas == this.estadoFormulario.completo &&
+        this.estadoProposiciones == this.estadoFormulario.completo  
+    ){
       this.estaTodo = true;
+    }
   }
 
   onDelete(i: number) {

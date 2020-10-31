@@ -198,8 +198,9 @@
             type="button"
             *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"
             (click)="CambiarEstado()"
+            [disabled]="!estaTodo"
             >
-            <!-- [disabled]="!estaTodo" -->
+            
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>
