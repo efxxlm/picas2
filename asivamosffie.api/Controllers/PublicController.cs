@@ -74,8 +74,7 @@ namespace asivamosffie.api.Controllers
                 await _managementCommitteeReportService.GetApproveExpiredMinutes(_settings.Value.Sender);
             }
             catch (Exception ex)
-            {
-
+            { 
                 throw ex;
             }
         }

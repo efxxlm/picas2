@@ -431,8 +431,13 @@ namespace asivamosffie.services
                .Include(r => r.SesionComiteSolicitudComiteTecnico)
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
                        .ThenInclude(r => r.CompromisoSeguimiento)
+               .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                   .ThenInclude(r => r.SesionSolicitudCompromiso)
+                       .ThenInclude(r => r.CompromisoSeguimiento)
                 .FirstOrDefaultAsync();
-             
+
+            if (comiteTecnico == null)
+                return new ComiteTecnico();
             List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
             List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r => !(bool)r.Eliminado).Include(r => r.Usuario).ToList();
 
@@ -455,6 +460,23 @@ namespace asivamosffie.services
             }
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+            {
+                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                {
+
+                    SesionSolicitudCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstantStringCompromisos.Sin_Iniciar : ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+
+                    if (SesionSolicitudCompromiso.ResponsableSesionParticipanteId > 0)
+                    {
+                        SesionSolicitudCompromiso.ResponsableSesionParticipante = ListSesionParticipantes.Where(r => r.SesionParticipanteId == SesionSolicitudCompromiso.ResponsableSesionParticipanteId).FirstOrDefault();
+                    }
+                    if (SesionSolicitudCompromiso.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
+                }
+            }
+
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
             {
                 foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
