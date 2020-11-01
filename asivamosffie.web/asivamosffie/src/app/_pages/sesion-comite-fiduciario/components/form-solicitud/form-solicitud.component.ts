@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { SesionComiteSolicitud, SesionParticipante, SesionSolicitudCompromiso, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -67,6 +68,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private commonService: CommonService,
     private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
     public dialog: MatDialog,
     private router: Router,
 
@@ -126,6 +128,34 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     });
   }
 
+  changeCompromisos(requiereCompromisos) {
+
+    if (requiereCompromisos.value === false) {
+      console.log(requiereCompromisos.value);
+      this.technicalCommitteSessionService.eliminarCompromisosSolicitud(this.sesionComiteSolicitud.sesionComiteSolicitudId)
+        .subscribe(respuesta => {
+          if (respuesta.code == "200") {
+            this.compromisos.clear();
+            this.addressForm.get("cuantosCompromisos").setValue(null);
+          }
+        })
+    }
+  }
+  
+
+  validarCompromisosDiligenciados(): boolean {
+    let vacio = true;
+    this.compromisos.controls.forEach(control => {
+      if (  control.value.tarea || 
+            control.value.responsable ||
+            control.value.fecha
+      )
+        vacio = false;
+    })
+
+    return vacio;
+  }
+
   CambioCantidadCompromisos() {
     const FormGrupos = this.addressForm.value;
     if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
@@ -133,8 +163,18 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         this.compromisos.push(this.crearCompromiso());
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
-      while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
-        this.borrarArray(this.compromisos, this.compromisos.length - 1);
+      if (this.validarCompromisosDiligenciados()) {
+
+        while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
+          this.borrarArray(this.compromisos, this.compromisos.length - 1);
+        }
+
+      }
+      else {
+        
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+        this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
+
       }
     }
   }

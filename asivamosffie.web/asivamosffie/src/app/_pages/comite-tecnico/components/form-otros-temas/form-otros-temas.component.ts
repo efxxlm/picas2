@@ -138,6 +138,19 @@ export class FormOtrosTemasComponent implements OnInit {
     });
   }
 
+  validarCompromisosDiligenciados(): boolean {
+    let vacio = true;
+    this.compromisos.controls.forEach(control => {
+      if (  control.value.tarea || 
+            control.value.responsable ||
+            control.value.fecha
+      )
+        vacio = false;
+    })
+
+    return vacio;
+  }
+
   CambioCantidadCompromisos() {
     const FormGrupos = this.addressForm.value;
     if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
@@ -145,8 +158,18 @@ export class FormOtrosTemasComponent implements OnInit {
         this.compromisos.push(this.crearCompromiso());
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
-      while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
-        this.borrarArray(this.compromisos, this.compromisos.length - 1);
+      if (this.validarCompromisosDiligenciados()) {
+
+        while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
+          this.borrarArray(this.compromisos, this.compromisos.length - 1);
+        }
+
+      }
+      else {
+        
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+        this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
+
       }
     }
   }
