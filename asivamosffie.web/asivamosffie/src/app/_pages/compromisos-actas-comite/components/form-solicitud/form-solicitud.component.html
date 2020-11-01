@@ -128,7 +128,7 @@
                 <section>
                   <h3><b>Compromiso {{ j+1 }} </b></h3>
                   <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
-                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante.usuario.nombres }} {{ sesionCompromiso.responsableSesionParticipante.usuario.apellidos }} </p>
+                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </p>
                   <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
                 </section>
               </div>
@@ -138,7 +138,7 @@
                 <section *ngIf="sesionCompromiso.esFiduciario === true">
                   <h3><b>Compromiso {{ j+1 }} </b></h3>
                   <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
-                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante.usuario.nombres }} {{ sesionCompromiso.responsableSesionParticipante.usuario.apellidos }} </p>
+                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </p>
                   <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
                 </section>
               </div>

@@ -11,6 +11,7 @@ export class DialogVerDetalleComponent implements OnInit {
   constructor ( @Inject(MAT_DIALOG_DATA) public compromisoSeguimiento ) { }
 
   ngOnInit(): void {
+    console.log( this.compromisoSeguimiento );
   };
 
-}
+};

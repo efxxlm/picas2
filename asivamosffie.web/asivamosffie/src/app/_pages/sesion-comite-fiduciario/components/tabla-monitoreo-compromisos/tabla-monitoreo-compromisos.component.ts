@@ -25,7 +25,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id'];
+  displayedColumns: string[] = ['fechaOrdenDia', 'numero', 'cantidadCompromisos', 'nivelCumplimiento', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -34,7 +34,7 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+  };
 
   constructor(
                 private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
@@ -49,7 +49,6 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
       this.technicalCommitteeSessionService.getListComite( 'True' )
         .subscribe( response => {
           console.log( response );
-          response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
           this.dataSource = new MatTableDataSource( response );
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;

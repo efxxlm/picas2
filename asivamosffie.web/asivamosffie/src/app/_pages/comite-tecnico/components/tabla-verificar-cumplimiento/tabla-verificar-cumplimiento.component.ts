@@ -68,6 +68,8 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
             tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
             tc.nombreEstado = tc.estadoCodigo;
             tc.estadoCodigo = null;
+            tc['temaCompromisoSeguimiento'] = tc['temaCompromisoSeguimiento'];
+            tc[ 'tieneCompromisos' ] = tc['temaCompromisoSeguimiento'].length > 0 ? true : false;
           });
           this.listaCompromisos = this.listaCompromisos.concat(tem.temaCompromiso);
         })
@@ -78,11 +80,12 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
               sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
               sc.nombreEstado = sc.estadoCodigo;
               sc.estadoCodigo = null;
+              sc[ 'tieneCompromisos' ] = sc[ 'compromisoSeguimiento' ].length > 0 ? true : false;
             });
             this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
           })
         }
-        console.log( respuesta[0] );
+        console.log( respuesta[0], this.listaCompromisos );
         this.estadosArray = respuesta[1];
         this.dataSource = new MatTableDataSource(this.listaCompromisos);
         this.initPaginator();
@@ -113,11 +116,12 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
   }
 
-  openVerDetalle(id: number) {
+  openVerDetalle( compromisoSeguimiento: any[] ) {
     this.dialog.open(DialogVerDetalleComponent, {
-      width: '70em'
+      width: '70em',
+      data: { compromisos: compromisoSeguimiento }
     });
-  }
+  };
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {

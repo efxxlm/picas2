@@ -7,9 +7,10 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ComiteTecnico, SesionComiteSolicitud, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
-import { DialogVerDetalleComponent } from 'src/app/_pages/comite-tecnico/components/dialog-ver-detalle/dialog-ver-detalle.component';
+import { DialogVerDetalleComponent } from '../dialog-ver-detalle/dialog-ver-detalle.component';
 import { VerDetallesComponent } from '../ver-detalles/ver-detalles.component';
 
 @Component({
@@ -20,7 +21,7 @@ import { VerDetallesComponent } from '../ver-detalles/ver-detalles.component';
 export class TablaVerificarCumplimientosComponent implements OnInit {
 
   listaCompromisos: any[] = [];
-
+  comite: any;
   displayedColumns: string[] = [
     'tarea',
     'responsable',
@@ -39,12 +40,13 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase(); 
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   constructor(
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
     private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
     private commonService: CommonService,
 
@@ -58,16 +60,17 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
     this.activatedRoute.params.subscribe(parametros => {
 
       forkJoin([
-        this.fiduciaryCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id),
-        this.commonService.listaEstadoCompromisos(),
-
+        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id),
+        this.commonService.listaEstadoCompromisos()
       ]).subscribe(respuesta => {
-
+        this.comite = respuesta[0];
         respuesta[0].sesionComiteTema.forEach(tem => {
           tem.temaCompromiso.forEach(tc => {
             tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
             tc.nombreEstado = tc.estadoCodigo;
             tc.estadoCodigo = null;
+            tc[ 'temaCompromisoSeguimiento' ] = tc[ 'temaCompromisoSeguimiento' ];
+            tc[ 'tieneCompromisos' ] = tc['temaCompromisoSeguimiento'].length > 0 ? true : false;
           });
           this.listaCompromisos = this.listaCompromisos.concat(tem.temaCompromiso);
         })
@@ -78,18 +81,21 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
               sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
               sc.nombreEstado = sc.estadoCodigo;
               sc.estadoCodigo = null;
+              sc[ 'tieneCompromisos' ] = sc[ 'compromisoSeguimiento' ].length > 0 ? true : false;
             });
             this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
           })
         }
-
+        console.log( respuesta[0], this.listaCompromisos );
         this.estadosArray = respuesta[1];
-
         this.dataSource = new MatTableDataSource(this.listaCompromisos);
+        this.initPaginator();
 
       })
     })
+  }
 
+  initPaginator() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -111,11 +117,12 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
 
   }
 
-  openVerDetalle(id: number) {
+  openVerDetalle( compromisoSeguimiento: any[] ) {
     this.dialog.open(DialogVerDetalleComponent, {
-      width: '70em'
+      width: '70em',
+      data: { compromisos: compromisoSeguimiento }
     });
-  }
+  };
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -123,6 +130,7 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
       data: { modalTitle, modalText }
     });
   }
+
 
   onSave() {
 

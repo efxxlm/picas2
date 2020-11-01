@@ -38,7 +38,8 @@ import { FormOtrosTemasComponent } from './components/form-otros-temas/form-otro
 import { TablaFormSolicitudMultipleComponent } from './components/tabla-form-solicitud-multiple/tabla-form-solicitud-multiple.component';
 import { VotacionSolicitudMultipleComponent } from './components/votacion-solicitud-multiple/votacion-solicitud-multiple.component';
 import { tablaComentariosActaComponent } from './components/tabla-comentarios-acta/tabla-comentarios-acta.component'
-import { VotacionSolicitudActualizaCronogramaComponent } from './components/votacion-solicitud-actualiza_cronograma/votacion-solicitud-actualiza_cronograma.component'
+import { VotacionSolicitudActualizaCronogramaComponent } from './components/votacion-solicitud-actualiza_cronograma/votacion-solicitud-actualiza_cronograma.component';
+import { DialogVerDetalleComponent } from './components/dialog-ver-detalle/dialog-ver-detalle.component'
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { VotacionSolicitudActualizaCronogramaComponent } from './components/vota
     TablaFormSolicitudMultipleComponent,
     VotacionSolicitudMultipleComponent,
     tablaComentariosActaComponent,
-    VotacionSolicitudActualizaCronogramaComponent
+    VotacionSolicitudActualizaCronogramaComponent,
+    DialogVerDetalleComponent
   ],
   imports: [
     CommonModule,
