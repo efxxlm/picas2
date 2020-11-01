@@ -427,11 +427,12 @@ namespace asivamosffie.services
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == ComiteTecnicoId)
                 .Include(r => r.SesionComiteTema)
                    .ThenInclude(r => r.TemaCompromiso)
+                       .ThenInclude(r => r.TemaCompromisoSeguimiento)
                .Include(r => r.SesionComiteSolicitudComiteTecnico)
                    .ThenInclude(r => r.SesionSolicitudCompromiso)
-                      .FirstOrDefaultAsync();
-
-
+                       .ThenInclude(r => r.CompromisoSeguimiento)
+                .FirstOrDefaultAsync();
+             
             List<Dominio> ListEstadoReportado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromisos).ToList();
             List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r => !(bool)r.Eliminado).Include(r => r.Usuario).ToList();
 

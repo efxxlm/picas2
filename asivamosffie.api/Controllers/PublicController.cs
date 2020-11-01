@@ -60,6 +60,7 @@ namespace asivamosffie.api.Controllers
         }
 
         /// <summary>
+        /// JMartinez
         // Aprobar Actas de
         // Comité Con Fecha
         // vencida Según Fecha paramétrica 
