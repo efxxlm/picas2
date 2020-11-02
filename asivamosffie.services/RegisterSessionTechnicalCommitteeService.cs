@@ -3126,6 +3126,11 @@ namespace asivamosffie.services
             {
                 if (pObservacionComentario.TemaCompromisoId != null)
                 {
+                    TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(pObservacionComentario.TemaCompromisoId);
+                    temaCompromisoOld.FechaModificacion = DateTime.Now;
+                    temaCompromisoOld.UsuarioModificacion = pObservacionComentario.Usuario;
+                    temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+
                     TemaCompromisoSeguimiento temaCompromisoSeguimiento = new TemaCompromisoSeguimiento
                     {
                         UsuarioCreacion = pObservacionComentario.Usuario,
@@ -3136,9 +3141,16 @@ namespace asivamosffie.services
                         Tarea = pObservacionComentario.Observacion 
                     };
                     _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento);
+
+
                 }
                 else
                 {
+                    SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pObservacionComentario.SesionSolicitudCompromisoId);
+                    SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
+                    SesionSolicitudCompromisoOld.UsuarioModificacion = pObservacionComentario.Usuario;
+                    SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                     
                     CompromisoSeguimiento compromisoSeguimiento = new CompromisoSeguimiento
                     {
                         UsuarioCreacion = pObservacionComentario.Usuario,
