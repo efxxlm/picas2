@@ -44,7 +44,7 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
   constructor(
                 private budgetAvailabilityService: BudgetAvailabilityService,
                 public dialog: MatDialog,
-                
+
              )
   {
 
@@ -97,7 +97,7 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText,siNoBoton:true }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if(result === true)
@@ -108,16 +108,16 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
         this.openDialog( '', `<b>${respuesta.message}</b>` );
         if (respuesta.code == "200")
           this.ngOnInit();
-      }) 
-      }           
+      })
+      }
     });
   }
-  
-  
+
+
   eliminarSolicitud(e: number) {
     console.log(e);
-    this.openDialogSiNo("","¿Está seguro de eliminar este registro? ",e)
-    
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', e)
+
   }
 
   verDetalle(e: number) {

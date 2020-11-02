@@ -2,9 +2,9 @@
   <table mat-table matSort [dataSource]="dataSource">
 
     <ng-container matColumnDef="fechaSolicitud">
-      <th mat-header-cell *matHeaderCellDef> Seleccionar </th>
+      <th mat-header-cell *matHeaderCellDef> Fecha de la solicitud </th>
       <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaSolicitud | date: 'dd/MM/yyyy' }}</b> </td>
-      
+
     </ng-container>
 
     <!-- Data Column -->

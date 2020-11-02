@@ -43,8 +43,11 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       .subscribe( response => {
 
         this.dataSource = new MatTableDataSource( response );
-      })
+        this.initPaginator();
+      });
+  }
 
+  initPaginator() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

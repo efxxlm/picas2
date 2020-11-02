@@ -34,14 +34,17 @@
   <!-- Solicitudes contractuales -->
   <div *ngIf="solicitudBoolean">
 
-    <div class="flex ml-3">
-      <h4 align="center"> Seleccione los temas que desea incluir al comité fiduciario</h4>
+    <div class="text-center mt-2em d-flex align-items-center">
+      <p class="mb-0 pr-1">
+        <img src="assets/img/icon/sim.svg" alt="información" class="icon">
+        Seleccione los temas que desea incluir al comité fiduciario
+      </p>
       <span class="seleccionados"> {{ totalSolicitudes() }} </span>
     </div>
 
     <mat-accordion>
 
-      <mat-expansion-panel class="expansion-style ml-5" *ngFor="let datasolicitud of dataSolicitudContractual">
+      <mat-expansion-panel class="expansion-style " *ngFor="let datasolicitud of dataSolicitudContractual">
         <mat-expansion-panel-header class="expansion-style--header width-40">
           <mat-panel-title class="expansion-style--title">
             Sesión del {{ datasolicitud.fecha | date: 'dd/MM/yyyy' }} {{ datasolicitud.nombreSesion }}
@@ -82,7 +85,7 @@
                     <input matInput #temaInput type="text" formControlName="tema" maxlength="1000" required>
                     <input type="hidden" formControlName="sesionTemaId">
                   </mat-form-field>
-                  <span class="contador">{{1000 - temaInput.value.length}}</span>
+                  <span class="contador miles">{{1000 - temaInput.value.length}}</span>
                 </div>
               </div>
               <div class="row">
@@ -122,7 +125,7 @@
               </div>
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Url con soporte</label>
+                  <label class="label-left">URL con soporte</label>
                 </div>
                 <div class="col pr-3em">
                   <mat-form-field class="full-width">
@@ -158,7 +161,7 @@
       <mat-card-content>
         <p>
           <img src="assets/img/icon/sim.svg" alt="información" class="icon">
-          Tenga en cuenta que antes de registrar la sesión de comité técnico podrá diligenciar este campo
+          Tenga en cuenta que antes de registrar la sesión de comité fiduciario podrá diligenciar este campo
       </p>
       </mat-card-content>
     </mat-card>

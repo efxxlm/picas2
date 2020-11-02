@@ -37,9 +37,7 @@
           <span class="label-left">Justificación</span>
         </div>
         <div class="col">
-          <p class="label-left colorMainColor pt-1 font-weight-lighter">
-            {{ textoLimpioString(justificacion) }}
-          </p>
+          <div class="label-left colorMainColor font-weight-lighter" [innerHTML]="textoLimpioString(justificacion)"></div>
         </div>
       </div>
       <div class="row"

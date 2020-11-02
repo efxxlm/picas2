@@ -8,7 +8,7 @@
         </div>
         <div class="col">
           <b class="label-left colorMainColor">
-            {{ sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }} 
+            {{ sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}
           </b>
         </div>
       </div>
@@ -37,9 +37,7 @@
           <span class="label-left">Justificación</span>
         </div>
         <div class="col">
-          <p class="label-left colorMainColor pt-1 font-weight-lighter">
-            {{ justificacion }}
-          </p>
+          <div class="label-left colorMainColor font-weight-lighter" [innerHTML]="justificacion"></div>
         </div>
       </div>
 
@@ -55,12 +53,23 @@
       </div>
 
       <div class="row">
-        <div class="col">
-          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 3000)" formControlName="desarrolloSolicitud" required></quill-editor>
+        <div class="pr-1">
+          <span class="label-left">Desarrollo</span>
+        </div>
+        <div class="col d-flex">
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+            (onContentChanged)="maxLength($event, 5000)" formControlName="desarrolloSolicitud" required></quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('desarrolloSolicitud').value">
+                {{5000 - (textoLimpio(addressForm.get('desarrolloSolicitud').value)>5000?5000:textoLimpio(addressForm.get('desarrolloSolicitud').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('desarrolloSolicitud').value">
+                5000
+              </span>
+            </div>
         </div>
       </div>
-      
+
       <h2 class="card-subTitle">Decisiones</h2>
       <div class="reparacion-card row" *ngIf="tieneVotacion">
         <div class="col-md-4">
@@ -117,14 +126,14 @@
           <label class="label-left" for="observaciones">Descripción</label>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required></quill-editor>
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+            (onContentChanged)="maxLength($event, 5000)" formControlName="observaciones" required></quill-editor>
           <div class="d-flex align-items-center">
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{3000 - textoLimpio(addressForm.get('observaciones').value)}}
+              {{5000 - (textoLimpio(addressForm.get('observaciones').value)>5000?5000:textoLimpio(addressForm.get('observaciones').value))}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
-              3000
+              5000
             </span>
           </div>
         </div>
@@ -140,7 +149,7 @@
           <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>
       </div>
-      <h2 class="card-subTitle">Decisiones</h2>
+      <h2 class="card-subTitle">Compromisos</h2>
       <div class="row">
         <div class="col-md-8">
           <div class="row">
@@ -188,11 +197,11 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
+                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea">
                   <input type="hidden" formControlName="sesionSolicitudCompromisoId">
                   <input type="hidden" formControlName="sesionComiteSolicitudId">
                 </mat-form-field>
-                <span class="contador">{{100 - tarea.value.length}}</span>
+                <span class="contador">{{500 - tarea.value.length}}</span>
               </div>
             </div>
           </div>
@@ -214,7 +223,7 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" class="fecha">Fecha de consignación</label>
+                  <label class="label-left" for="fecha">Fecha de cumplimiento</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
