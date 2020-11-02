@@ -93,6 +93,33 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
       })
   }
 
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.budgetAvailabilityService.deleteRequest( e )
+        .subscribe( respuesta => {
+          console.log(respuesta);
+        this.openDialog( '', `<b>${respuesta.message}</b>` );
+        if (respuesta.code == "200")
+          this.ngOnInit();
+      }) 
+      }           
+    });
+  }
+  
+  
+  eliminarSolicitud(e: number) {
+    console.log(e);
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro? ",e)
+    
+  }
+
   verDetalle(e: number) {
     console.log(e);
   }

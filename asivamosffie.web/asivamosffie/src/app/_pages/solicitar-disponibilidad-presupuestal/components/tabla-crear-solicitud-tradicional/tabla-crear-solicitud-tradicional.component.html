@@ -77,6 +77,12 @@
                             *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == ''">
                             Enviar solicitud
                     </button>
+                    <button mat-raised-button color="accent" 
+                            class="btn-table" 
+                            (click)="eliminarSolicitud(element.disponibilidadPresupuestalId)"
+                            *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == ''">
+                            Eliminar
+                    </button>
                     
                     <a mat-raised-button color="accent" 
                             class="btn-table" 

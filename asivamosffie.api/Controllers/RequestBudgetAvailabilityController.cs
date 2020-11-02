@@ -299,6 +299,26 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("EliminarDisponibilidad")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarDisponibilidadPost(int disponibilidadPresupuestalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                string user = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.EliminarDisponibilidad(disponibilidadPresupuestalId);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [Route("CreateOrEditDDPRequest")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditDDPRequest([FromBody] DisponibilidadPresupuestal disponibilidadPresupuestal)

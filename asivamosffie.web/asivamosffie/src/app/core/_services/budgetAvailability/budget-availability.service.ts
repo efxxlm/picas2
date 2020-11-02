@@ -39,6 +39,10 @@ export class BudgetAvailabilityService {
   sendRequest( id: number ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/sendRequest?disponibilidadPresupuestalId=${ id }`, null);
   }
+  
+  deleteRequest( id: number ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/EliminarDisponibilidad?disponibilidadPresupuestalId=${ id }`, null);
+  }
 
   searchLlaveMEN( texto: string ){
     return this.http.get<Proyecto[]>(`${environment.apiUrl}/RequestBudgetAvailability/searchLlaveMEN?LlaveMEN=${ texto }`);    
