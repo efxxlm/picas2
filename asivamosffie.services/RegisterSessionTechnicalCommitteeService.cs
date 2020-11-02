@@ -3072,7 +3072,8 @@ namespace asivamosffie.services
                         TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(temaCompromiso.TemaCompromisoId);
                         temaCompromisoOld.FechaModificacion = DateTime.Now;
                         temaCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
-                        temaCompromisoOld.EstadoCodigo = temaCompromiso.EstadoCodigo;
+                        temaCompromisoOld.EsCumplido =  temaCompromiso.EsCumplido;
+                        //temaCompromisoOld.EstadoCodigo = temaCompromiso.EstadoCodigo;
                     }
                 }
 
@@ -3084,7 +3085,8 @@ namespace asivamosffie.services
                         SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
                         SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
                         SesionSolicitudCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
-                        SesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
+                        SesionSolicitudCompromisoOld.EsCumplido = pSesionSolicitudCompromiso.EsCumplido;
+                      //  SesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
                     }
                 }
 
