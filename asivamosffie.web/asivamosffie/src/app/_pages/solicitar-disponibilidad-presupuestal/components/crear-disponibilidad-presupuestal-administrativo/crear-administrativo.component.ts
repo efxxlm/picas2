@@ -86,10 +86,11 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     let proyecto = this.formulario.get('consecutivo').value;
     console.log( proyecto )
-    this.budgetAvailabilityService.getAportantesByProyectoAdminId( proyecto.proyectoId )
+    this.listaAportantes = proyecto.aportanteFuenteFinanciacion;
+    /*this.budgetAvailabilityService.getAportantesByProyectoAdminId( proyecto.proyectoId )
       .subscribe( lista  => {
-        this.listaAportantes = lista;
-      })
+        
+      })*/
   }
 
   maxLength(e: any, n: number) {
@@ -118,7 +119,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       disponibilidadPresupuestalId: this.formulario.get('disponibilidadPresupuestalId').value,
       objeto: this.formulario.get('objeto').value,
       tipoSolicitudCodigo: '3',
-      valorSolicitud: aportante ? aportante.valorAporte : 0,
+      valorSolicitud: aportante ? aportante.valorFuente : 0,
      
       disponibilidadPresupuestalProyecto: []
       

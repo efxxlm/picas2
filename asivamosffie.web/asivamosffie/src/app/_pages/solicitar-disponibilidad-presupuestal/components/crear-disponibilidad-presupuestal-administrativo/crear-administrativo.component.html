@@ -32,17 +32,17 @@
                 Aportante {{ i + 1 }}
             </mat-card-title>
 
-            <p>
+            <p *ngIf="false">
                 <strong>Valor del aportante al proyecto:</strong>
                 {{ aportante.valorAporte }}
             </p>
             <p>
                 <strong>Nombre del aportante:</strong>
-                {{ aportante.nombreAportante }}
+                {{ aportante.nombreAportanteString }}
             </p>
             <p>
                 <strong>Fuente 1:</strong>
-                {{ aportante.nombreFuente }}
+                {{ aportante.fuenteFinanciacionString }}
             </p>
             <p>
                 <strong>Valor fuente 1:</strong>
@@ -53,7 +53,7 @@
 
     <div class="d-flex align-items-center">
         <div class="text-area-quill">
-            <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
+            <label for="alcanceParticular" class="text-area-quill--label">Objeto</label>
             <quill-editor class="quill-editor-style" #objeto [styles]="editorStyle" [modules]="config"
                 (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
                 <input type="hidden" formControlName="proyectoAdministrativoId">
@@ -62,7 +62,7 @@
         <span class="contador miles" *ngIf="formulario.get('objeto').value">
             {{1000 - textoLimpio(formulario.get('objeto').value)}}
         </span>
-        <span class="contador miles" *ngIf="formulario.get('objeto').value">
+        <span class="contador miles" *ngIf="!formulario.get('objeto').value">
             1000
         </span>
     </div>

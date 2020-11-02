@@ -1884,7 +1884,11 @@ namespace asivamosffie.services
                 OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
             foreach (var res in resultado)
             {
-                res.FuenteRecursosString = _context.Dominio.Where(x => x.Codigo == res.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                if(res.FuenteRecursosCodigo!=null)
+                {
+                    res.FuenteRecursosString = _context.Dominio.Where(x => x.Codigo == res.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                }
+                
             }
             return resultado;
         }

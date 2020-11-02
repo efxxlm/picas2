@@ -141,6 +141,10 @@ export class CommonService {
   listaTipoDisponibilidadPresupuestal(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);
   }
+  
+  listaTipoDisponibilidadPresupuestalNotCode(minCode:string){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominioNotCode?pIdDominio=36&pMinCode=${minCode}`);
+  }
 
   listaEstadoCronogramaSeguimiento(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=40`);

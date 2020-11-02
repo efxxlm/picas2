@@ -46,20 +46,21 @@ export class TablaCrearSolicitudadministrativaComponent implements OnInit {
       .subscribe( listaDDP => {
         //console.log( listaDDP )
         this.dataSource = new MatTableDataSource(listaDDP);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.previousPageLabel = 'Anterior';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          if (length === 0 || pageSize === 0) { return '0 de ' + length; }
+          length = Math.max(length, 0);
+          const startIndex = page * pageSize;
+          const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+        };
       })
 
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      if (length === 0 || pageSize === 0) { return '0 de ' + length; }
-      length = Math.max(length, 0);
-      const startIndex = page * pageSize;
-      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-    };
+    
   }
 
   openDialog(modalTitle: string, modalText: string) {

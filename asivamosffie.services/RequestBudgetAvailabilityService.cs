@@ -918,20 +918,62 @@ namespace asivamosffie.services
         {
             try
             {
-                return await (from cp in _context.ProyectoAdministrativoAportante
-                              select new ListConcecutivoProyectoAdministrativo
-                              {
-                                  ProyectoId = cp.ProyectoAdminstrativoId,
-                                  Concecutivo = Helpers.Helpers.Consecutive("D4", cp.ProyectoAdminstrativoId),
-                              }).ToListAsync();
+                var proyectoadminapo = _context.ProyectoAdministrativoAportante.Where(x => (bool)x.ProyectoAdminstrativo.Enviado).ToList();
+                List<ListConcecutivoProyectoAdministrativo> proyectoreturn = new List<ListConcecutivoProyectoAdministrativo>();
+                foreach(var proy in proyectoadminapo)
+                {
+                    List<AportanteFuenteFinanciacion> aportantefuente = new List<AportanteFuenteFinanciacion>();
+                    foreach(var apor in _context.AportanteFuenteFinanciacion.Include(x=>x.FuenteFinanciacion).ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId).ToList())
+                    {
+                        apor.FuenteFinanciacionString = _context.Dominio.Where(x => x.Codigo == apor.FuenteFinanciacion.FuenteRecursosCodigo 
+                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                        if (apor.FuenteFinanciacion.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+                        {
+                            apor.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                        }
+                        else if (apor.FuenteFinanciacion.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+                        {
+                            apor.NombreAportanteString = apor.FuenteFinanciacion.Aportante.NombreAportanteId == null
+                                ? "" :
+                                _context.Dominio.Find(apor.FuenteFinanciacion.Aportante.NombreAportanteId).Nombre;
+                        }
+                        else
+                        {
+                            if (apor.FuenteFinanciacion.Aportante.MunicipioId == null)
+                            {
+                                apor.FuenteFinanciacion.Aportante.NombreAportanteString = apor.FuenteFinanciacion.Aportante.DepartamentoId == null
+                                ? "" :
+                                "Gobernación " + _context.Localizacion.Find(apor.FuenteFinanciacion.Aportante.DepartamentoId).Descripcion;
+                            }
+                            else
+                            {
+                                apor.NombreAportanteString = apor.FuenteFinanciacion.Aportante.MunicipioId == null
+                                ? "" :
+                                "Alcaldía " + _context.Localizacion.Find(apor.FuenteFinanciacion.Aportante.MunicipioId).Descripcion;
+                            }
+                        }
+                        
+                        aportantefuente.Add(apor);
+                    }
+                    proyectoreturn.Add(new ListConcecutivoProyectoAdministrativo
+                    {
+                        ProyectoId = proy.ProyectoAdminstrativoId,
+                        Concecutivo = Helpers.Helpers.Consecutive("D4", proy.ProyectoAdminstrativoId),
+                        AportanteFuenteFinanciacion = _context.AportanteFuenteFinanciacion.Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId).ToList(),
+                        ListaAportantes = _context.Dominio.Find(proy.AportanteId)
+                    });
+                }
+                return proyectoreturn;
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
             }
         }
+
+
 
         public async Task<List<Proyecto>> SearchLlaveMEN(string LlaveMEN)
         {
@@ -1580,6 +1622,7 @@ namespace asivamosffie.services
                     EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal
                                 && r.Codigo == detailDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
                     Plazo = detailDP.PlazoMeses.ToString() + " meses / " + detailDP.PlazoDias.ToString() + " dias",
+                    CuentaCarta = detailDP.CuentaCartaAutorizacion,
 
                     /*//*las modificaciones aun no existen*/
 

@@ -9,7 +9,7 @@ namespace asivamosffie.model.APIModels
     {
         public int ProyectoId { get; set; }
         public string Concecutivo {get; set;}
-        public List<CofinanciacionAportante> ListaAportantes { get; set; }
-
+        public Dominio ListaAportantes { get; set; }
+        public List<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
     }
 }

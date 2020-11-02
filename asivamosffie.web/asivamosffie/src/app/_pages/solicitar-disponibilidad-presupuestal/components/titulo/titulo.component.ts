@@ -36,7 +36,7 @@ export class TituloComponent implements OnInit {
 
     this.declararSelect();
     
-    this.commonService.listaTipoDisponibilidadPresupuestal().subscribe( respuesta =>  {
+    this.commonService.listaTipoDisponibilidadPresupuestalNotCode("3").subscribe( respuesta =>  {
       this.selectDisponibilidad = respuesta;
     })
 
