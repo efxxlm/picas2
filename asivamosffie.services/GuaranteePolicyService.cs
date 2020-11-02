@@ -364,8 +364,12 @@ namespace asivamosffie.services
                     LimpiarEntradasContratoPoliza(ref contratoPoliza);
 
                     //TipoSolicitudCodigo ="3" //si estado devuelta, correo supervisor
-                    if (contratoPoliza.TipoSolicitudCodigo == "3")
-                        await EnviarCorreoSupervisor(contratoPoliza,  appSettingsService);
+                    //if (contratoPoliza.TipoSolicitudCodigo == "3")
+                    if (contratoPoliza.TipoSolicitudCodigo == ((int)EnumeratorEstadoPoliza.Con_poliza_observada_y_devuelta).ToString())
+                        contratoPoliza.TipoSolicitudCodigo =  ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
+                    //contratoPoliza.TipoSolicitudCodigo = "4";                    
+
+                    await EnviarCorreoSupervisor(contratoPoliza,  appSettingsService);
 
                     //_context.ExecuteStoreCommand("SET IDENTITY_INSERT [dbo].[MyUser] ON");
 
@@ -620,7 +624,7 @@ namespace asivamosffie.services
             Respuesta respuesta = new Respuesta();
             int idAccionEditarContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
             string strCrearEditar = "";
-            strCrearEditar = "EDITAR CONTRATO PÓLIZA";
+            strCrearEditar = "APROBAR CONTRATO PÓLIZA";
 
             string correo = "cdaza@ivolucion.com";
 
@@ -666,7 +670,8 @@ namespace asivamosffie.services
                 if (contratoPoliza != null)
                 {
                     //cambiar a estado Con aprobación de pólizas
-                    contratoPoliza.TipoSolicitudCodigo = "4";
+                    //contratoPoliza.TipoSolicitudCodigo = "4";
+                    contratoPoliza.TipoSolicitudCodigo = EnumeratorEstadoPoliza.Con_aprobacion_de_polizas.ToString();
                     _context.ContratoPoliza.Update(contratoPoliza);
                      
                     fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
@@ -683,7 +688,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Data = contratoPoliza,
-                        Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                        Code = ConstantMessagesContratoPoliza.OperacionExitosa,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccionEditarContratoPoliza, contratoPoliza.UsuarioCreacion, strCrearEditar)
 
                     };
@@ -832,7 +837,7 @@ namespace asivamosffie.services
             catch (Exception ex)
             {
 
-                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContratoPoliza.Error };
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
                 return respuesta;
             }
