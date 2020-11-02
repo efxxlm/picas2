@@ -6,9 +6,9 @@
   <h1 class="title-menu--h1">
     Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}
   </h1>
-  
+
   <p>
-    <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span> 
+    <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span>
     <span class="mx-1em">{{ data.sesionComiteSolicitud.tipoSolicitud }}</span>
   </p>
   <mat-dialog-content>
@@ -21,7 +21,7 @@
                 Miembro participante
               </th>
               <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Aprobó
+                ¿Aprobó?
               </th>
               <!-- <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                 No aprobó
@@ -47,6 +47,7 @@
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
+                <span class="required-form-group">*</span>
               </td>
               <!-- <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="example-section">
@@ -54,24 +55,22 @@
                 </section>
               </td> -->
               <td class="mat-cell cdk-cell ng-star-inserted">
-                <section class="example-section">
+                <section class="w-quill">
                   <div class="d-flex">
-    
-                    <quill-editor class="quill-editor-style card" 
-                      #observaciones 
-                      [styles]="editorStyle" 
+
+                    <quill-editor class="quill-editor-style card"
+                      #observaciones
+                      [styles]="editorStyle"
                       [modules]="config"
-                      required 
-                      (onContentChanged)="maxLength($event, 1000)" 
-                      required
+                      (onContentChanged)="maxLength($event, 1000)"
                       formControlName="observaciones">
                     </quill-editor>
-    
+
                     <div class="d-flex align-items-center">
-                      <!-- <span class="contador miles" *ngIf="observaciones !== null">
-                        {{1000 - textoLimpio(observaciones)}}
-                      </span> -->
-                      <span class="contador miles">
+                      <span class="contador miles" *ngIf="temas.get('observaciones').value !== null">
+                        {{1000 - (textoLimpio(temas.get('observaciones').value)>1000?1000:textoLimpio(temas.get('observaciones').value))}}
+                      </span>
+                      <span class="contador miles" *ngIf="temas.get('observaciones').value === null">
                         1000
                       </span>
                     </div>
@@ -82,10 +81,10 @@
           </tbody>
         </table>
       </div>
-    
+
       <!-- <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
                   (onContentChanged)="maxLength($event, 500)" formControlName="i"></quill-editor> -->
-    
+
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="guardar">
       </button>

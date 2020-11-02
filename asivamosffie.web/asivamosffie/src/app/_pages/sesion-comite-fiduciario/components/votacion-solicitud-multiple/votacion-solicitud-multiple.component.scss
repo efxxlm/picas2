@@ -21,7 +21,7 @@ th.mat-header-cell {
 }
 
 .w-quill {
-    width: 40em;
-    --w-quill: 40em;
+    // width: 40em;
+    max-width: 40em;
     margin: auto;
 }

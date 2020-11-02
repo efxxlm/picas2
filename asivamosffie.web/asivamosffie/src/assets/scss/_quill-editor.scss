@@ -76,7 +76,8 @@
       border-bottom: $fontColor solid 1px;
 
       .w-quill & {
-        max-width: var(--w-quill);
+        max-width: 30em;
+        margin: auto;
       }
     }
   }

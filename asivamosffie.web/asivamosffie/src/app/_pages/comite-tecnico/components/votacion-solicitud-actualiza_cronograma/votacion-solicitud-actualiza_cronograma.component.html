@@ -6,9 +6,9 @@
   <h1 class="title-menu--h1">
     Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}
   </h1>
-  
+
   <p>
-    <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span> 
+    <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span>
     <span class="mx-1em">{{ data.sesionComiteSolicitud.tipoSolicitud }}</span>
   </p>
   <mat-dialog-content>
@@ -21,7 +21,7 @@
                 Miembro participante
               </th>
               <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Aprobó
+                ¿Aprobó?
               </th>
               <!-- <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                 No aprobó
@@ -44,13 +44,14 @@
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
+                <span class="required-form-group">*</span>
               </td>
               <!-- <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="example-section">
                   <mat-checkbox></mat-checkbox>
                 </section>
               </td> -->
-              
+
             </tr>
           </tbody>
         </table>
@@ -80,24 +81,25 @@
                     {{ observacion.value.nombreParticipante }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    <section class="example-section">
+                    <section class="w-quill">
                       <div class="d-flex">
-                        <quill-editor 
-                            class="quill-editor-style card" 
-                            #observaciones 
+                        <quill-editor
+                            class="quill-editor-style card"
+                            #observaciones
                             [styles]="editorStyle"
-                            [modules]="config" 
-                            required 
-                            (onContentChanged)="maxLength($event, 1000)" 
-                            formControlName="observacion"
-                            required>
+                            [modules]="config"
+                            (onContentChanged)="maxLength($event, 1000)"
+                            formControlName="observacion">
                           <input type="hidden" formControlName="sesionSolicitudObservacionActualizacionCronogramaId">
                           <input type="hidden" formControlName="sesionComiteSolicitudId">
                           <input type="hidden" formControlName="sesionParticipanteId">
                           <input type="hidden" formControlName="procesoSeleccionCronogramaMonitoreoId">
                         </quill-editor>
                         <div class="d-flex align-items-center">
-                          <span class="contador miles">
+                          <span class="contador miles" *ngIf="observacion.get('observacion').value !== null">
+                            {{1000 - (textoLimpio(observacion.get('observacion').value)>1000?1000:textoLimpio(observacion.get('observacion').value))}}
+                          </span>
+                          <span class="contador miles" *ngIf="observacion.get('observacion').value === null">
                             1000
                           </span>
                         </div>
@@ -110,7 +112,7 @@
           </div>
         </mat-expansion-panel>
       </mat-accordion>
-    
+
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="guardar">
       </button>

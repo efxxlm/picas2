@@ -17,10 +17,10 @@
         <thead>
           <tr class="mat-header-row cdk-header-row ng-star-inserted">
             <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-              Miembro participante 
+              Miembro participante
             </th>
             <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-              Aprobó
+              ¿Aprobó?
             </th>
             <th class="mat-header-cell cdk-header-cell ng-star-inserted">
               Observaciones
@@ -43,6 +43,7 @@
                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                 <mat-radio-button [value]="false">No</mat-radio-button>
               </mat-radio-group>
+              <span class="required-form-group">*</span>
             </td>
             <!-- <td class="mat-cell cdk-cell ng-star-inserted">
               <section class="example-section">
@@ -52,22 +53,20 @@
             <td class="mat-cell cdk-cell ng-star-inserted">
               <section class="example-section">
                 <div class="d-flex">
-  
-                  <quill-editor class="quill-editor-style card" 
-                    #observaciones 
-                    [styles]="editorStyle" 
+
+                  <quill-editor class="quill-editor-style card"
+                    #observaciones
+                    [styles]="editorStyle"
                     [modules]="config"
-                    required 
-                    (onContentChanged)="maxLength($event, 1000)" 
-                    required
+                    (onContentChanged)="maxLength($event, 1000)"
                     formControlName="observaciones">
                   </quill-editor>
-  
+
                   <div class="d-flex align-items-center">
-                    <!-- <span class="contador miles" *ngIf="observaciones !== null">
-                      {{1000 - textoLimpio(observaciones)}}
-                    </span> -->
-                    <span class="contador miles">
+                    <span class="contador miles" *ngIf="temas.get('observaciones').value !== null">
+                      {{1000 - (textoLimpio(temas.get('observaciones').value)>1000?1000:textoLimpio(temas.get('observaciones').value))}}
+                    </span>
+                    <span class="contador miles"  *ngIf="temas.get('observaciones').value === null">
                       1000
                     </span>
                   </div>
@@ -78,10 +77,10 @@
         </tbody>
       </table>
     </div>
-  
+
     <!-- <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
                 (onContentChanged)="maxLength($event, 500)" formControlName="i"></quill-editor> -->
-  
+
     <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="guardar">
     </button>

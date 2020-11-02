@@ -21,7 +21,7 @@
                 Miembro participante
               </th>
               <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Aprobó
+                ¿Aprobó?
               </th>
               <!-- <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                 No aprobó
@@ -95,9 +95,9 @@
                           <input type="hidden" formControlName="sesionParticipanteId">
                           <input type="hidden" formControlName="contratacionProyectoId">
                         </quill-editor>
-                        <div class="d-flex align-items-center"> 
+                        <div class="d-flex align-items-center">
                           <span class="contador miles" *ngIf="observacion.get('observacion').value !== null">
-                            {{1000 - textoLimpio(observacion.get('observacion').value)}}
+                            {{1000 - (textoLimpio(observacion.get('observacion').value)>1000?1000:textoLimpio(observacion.get('observacion').value))}}
                           </span>
                           <span class="contador miles" *ngIf="observacion.get('observacion').value === null">
                             1000
