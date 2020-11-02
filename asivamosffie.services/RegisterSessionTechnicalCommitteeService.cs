@@ -3146,7 +3146,7 @@ namespace asivamosffie.services
                         Eliminado = false,
 
                         SesionParticipanteId = pObservacionComentario.UsuarioId,
-                        SesionComiteTecnicoCompromisoId = (int)pObservacionComentario.SesionSolicitudCompromisoId,
+                        SesionSolicitudCompromisoId = (int)pObservacionComentario.SesionSolicitudCompromisoId,
                         EstadoCompromisoCodigo = ConstantCodigoCompromisos.En_proceso,
                         DescripcionSeguimiento = pObservacionComentario.Observacion
                     };
