@@ -1893,17 +1893,17 @@ namespace asivamosffie.services
                                                          .Include(r => r.SesionComiteTema)
                                                         .FirstOrDefault();
 
-            comite.SesionComiteSolicitudComiteTecnico.Where( t => t.Eliminado != true ).ToList().ForEach(cs =>
-            {
-                if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
-                    estaCompleto = false;
-            });
+            comite.SesionComiteSolicitudComiteTecnico.Where(t => t.Eliminado != true).ToList().ForEach(cs =>
+          {
+              if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
+                  estaCompleto = false;
+          });
 
-            comite.SesionComiteTema.Where( t => t.Eliminado != true).ToList().ForEach(ct =>
-            {
-                if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
-                    estaCompleto = false;
-            });
+            comite.SesionComiteTema.Where(t => t.Eliminado != true).ToList().ForEach(ct =>
+           {
+               if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
+                   estaCompleto = false;
+           });
 
             if (estaCompleto)
             {
@@ -4428,11 +4428,11 @@ namespace asivamosffie.services
                     }
                 }
             }
-            List<dynamic> ListGrilla = new List<dynamic>(); 
+            List<dynamic> ListGrilla = new List<dynamic>();
             foreach (var item in ListCompromisos)
             {
                 if (ListGrilla.Where(t => t.ComiteTecnicoId == item.ComiteTecnicoId).Count() == 0)
-                { 
+                {
                     ListGrilla.Add(new
                     {
                         FechaOrdenDia = item.FechaComite,
@@ -4442,10 +4442,8 @@ namespace asivamosffie.services
                         item.ComiteTecnicoId
                     });
                 }
-            } 
-            return ListGrilla; 
-        }
-
-
-}
+            }
+            return ListGrilla;
+        } 
+    }
 }

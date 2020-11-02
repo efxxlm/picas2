@@ -22,6 +22,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public string EstadoCodigo { get; set; }
+        public bool? EsCumplido { get; set; }
 
         public virtual SesionParticipante ResponsableNavigation { get; set; }
         public virtual SesionComiteTema SesionTema { get; set; }
