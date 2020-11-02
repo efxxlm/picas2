@@ -172,9 +172,9 @@ namespace asivamosffie.services
             string strCrearEditar;
             try
             {
+                polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
                 if (polizaObservacion != null)
-                {
-                    polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
+                {                    
 
                     if (polizaObservacion.PolizaObservacionId == 0)
                     {
@@ -187,7 +187,17 @@ namespace asivamosffie.services
                     else
                     {
                         strCrearEditar = "EDIT POLIZA OBSERVACION";
-                        _context.PolizaObservacion.Update(polizaObservacion);
+                        PolizaObservacion polizaObservacionBD = null;
+
+                        polizaObservacionBD = _context.PolizaObservacion.Where(r => r.PolizaObservacionId == polizaObservacion.PolizaObservacionId).FirstOrDefault();
+                        if (polizaObservacion != null)
+                        {
+                            polizaObservacionBD.Observacion = polizaObservacion.Observacion;
+                            polizaObservacionBD.FechaRevision = polizaObservacion.FechaRevision;
+                            polizaObservacionBD.EstadoRevisionCodigo = polizaObservacion.EstadoRevisionCodigo;
+                            _context.PolizaObservacion.Update(polizaObservacionBD);
+
+                        }                            
 
                         //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
                     }
@@ -671,7 +681,7 @@ namespace asivamosffie.services
                 {
                     //cambiar a estado Con aprobación de pólizas
                     //contratoPoliza.TipoSolicitudCodigo = "4";
-                    contratoPoliza.TipoSolicitudCodigo = EnumeratorEstadoPoliza.Con_aprobacion_de_polizas.ToString();
+                    contratoPoliza.TipoSolicitudCodigo = ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
                     _context.ContratoPoliza.Update(contratoPoliza);
                      
                     fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
@@ -877,11 +887,11 @@ namespace asivamosffie.services
 
                     if (contratoPoliza != null) { 
                         //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-                        TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                        TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
                         if (TipoSolicitudCodigoContratoPoliza != null)
                             strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
 
-                        EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                        EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         if (EstadoSolicitudCodigoContratoPoliza != null)
                             strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
@@ -981,9 +991,25 @@ namespace asivamosffie.services
                 try
                 {
                     ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
+                    Contratacion contratacion = null;
+                    contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
 
-                    Contratista contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+                    string strContratistaNombre = string.Empty;
+                    string strContratistaNumeroIdentificacion = string.Empty;                
+
+                    Contratista contratista;
+                    if (contratacion != null)
+                    {
+                        contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+
+                        if (contratista != null)
+                        {
+                            strContratistaNombre = contratista.Nombre;
+                            //Nit  
+                            strContratistaNumeroIdentificacion = contratista.NumeroIdentificacion.ToString();
+                        }                    
+
+                    }
 
                     //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
 
@@ -992,50 +1018,46 @@ namespace asivamosffie.services
                     //25meses / 04 días
 
                     if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionDias.ToString()))
-
                         plazoDias = Convert.ToInt32( contrato.PlazoFase1PreDias);
 
                     else
                         plazoDias = Convert.ToInt32( contrato.PlazoFase2ConstruccionDias);
 
                     if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionMeses.ToString()))
-
                         plazoMeses = Convert.ToInt32(contrato.PlazoFase1PreMeses);
-
                     else
                         plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
 
                     string PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
-
+                               
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
 
+                    string strTipoContratoCodigoContratoNombre = string.Empty;
+
+                    if (TipoContratoCodigoContrato != null)
+                        strTipoContratoCodigoContratoNombre = TipoContratoCodigoContrato.Nombre;
 
                     //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
                     {
                         IdContrato= contrato.ContratoId,
-                        TipoContrato = TipoContratoCodigoContrato.Nombre,
+                        TipoContrato = strTipoContratoCodigoContratoNombre,
                         NumeroContrato = contrato.NumeroContrato,
                         ObjetoContrato = contrato.Objeto,
-                        NombreContratista = contratista.Nombre,
+                        NombreContratista = strContratistaNombre,
 
                         //Nit  
-                        NumeroIdentificacion = contratista.NumeroIdentificacion.ToString(),
+                        NumeroIdentificacion = strContratistaNumeroIdentificacion,                                
 
-        
-
-         ValorContrato = contrato.Valor.ToString(),
+                         ValorContrato = contrato.Valor.ToString(),
 
                         PlazoContrato = PlazoContratoFormat,
 
-         //EstadoRegistro 
+                       //EstadoRegistro 
+                        //public bool? RegistroCompleto { get; set; }                         
 
-                        //public bool? RegistroCompleto { get; set; } 
-
-                        
-
-         DescripcionModificacion ="resumen", // resumen   TEMPORAL REV
+                        DescripcionModificacion ="resumen", // resumen   TEMPORAL REV
 
                         //TipoModificacion = TipoModificacionCodigoContratoPoliza.Nombre
                         TipoModificacion = "Tipo modificacion"
