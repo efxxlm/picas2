@@ -143,5 +143,9 @@ export class TechnicalCommitteSessionService {
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EliminarCompromisosTema?pSesionTemaId=${ id }`);
    }
 
+   observacionesCompromisos ( pObservacionComentario ) {
+     return this.http.post<Respuesta>( `${environment.apiUrl}/RegisterSessionTechnicalCommittee/ObservacionesCompromisos`, pObservacionComentario );
+   };
+
   
 }

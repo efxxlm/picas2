@@ -10,6 +10,7 @@ import { Dominio, CommonService } from 'src/app/core/_services/common/common.ser
 import { forkJoin } from 'rxjs';
 import { ComiteTecnico, SesionComiteTema, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ObservacionSecretarioComponent } from '../observacion-secretario/observacion-secretario.component';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     'id'
   ];
   dataSource = new MatTableDataSource();
+  estaCumplido: any[] = [ 'Cumplido', 'No Cumplido' ];
 
   estadosArray: Dominio[] = []
 
@@ -70,6 +72,8 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
             tc.estadoCodigo = null;
             tc['temaCompromisoSeguimiento'] = tc['temaCompromisoSeguimiento'];
             tc[ 'tieneCompromisos' ] = tc['temaCompromisoSeguimiento'].length > 0 ? true : false;
+            tc[ 'compromisoSeleccionado' ] = tc[ 'esCumplido' ] !== undefined ? ( tc[ 'esCumplido' ] === true ? 'Cumplido' : 'No Cumplido' ) : null;
+            tc[ 'esCumplido' ] = tc[ 'esCumplido' ] !== undefined ? tc[ 'esCumplido' ] : null;
           });
           this.listaCompromisos = this.listaCompromisos.concat(tem.temaCompromiso);
         })
@@ -81,6 +85,8 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
               sc.nombreEstado = sc.estadoCodigo;
               sc.estadoCodigo = null;
               sc[ 'tieneCompromisos' ] = sc[ 'compromisoSeguimiento' ].length > 0 ? true : false;
+              sc[ 'compromisoSeleccionado' ] = sc[ 'esCumplido' ] !== undefined ? ( sc[ 'esCumplido' ] === true ? 'Cumplido' : 'No Cumplido' ) : null
+              sc[ 'esCumplido' ] = sc[ 'esCumplido' ] !== undefined ? sc[ 'esCumplido' ] : null;
             });
             this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
           })
@@ -112,9 +118,16 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     };
   }
 
-  onChange(id: number, valor: any) {
-
-  }
+  onChange ( compromiso: any, compromisoSeleccionado: string ) {
+    this.listaCompromisos.forEach( value => {
+      if ( value.sesionSolicitudCompromisoId === compromiso.sesionSolicitudCompromisoId ) {
+        value[ 'esCumplido' ] = !compromisoSeleccionado.includes( 'No' );
+      };
+    } );
+    if ( ( compromiso.nombreEstado === 'En proceso'  || compromiso.nombreEstado === 'Finalizado' ) && compromisoSeleccionado === 'No Cumplido' ) {
+      this.openObservacionSecretario( compromiso );
+    };
+  };
 
   openVerDetalle( compromisoSeguimiento: any[] ) {
     this.dialog.open(DialogVerDetalleComponent, {
@@ -128,27 +141,46 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
-  }
+  };
+
+  openObservacionSecretario( compromisoSeguimiento: any[] ) {
+    this.dialog.open( ObservacionSecretarioComponent, {
+      width: '70em',
+      data: { compromisos: compromisoSeguimiento }
+    });
+  };
 
   onSave() {
 
+    const compromisosIncompletos = this.listaCompromisos.filter( value => value[ 'esCumplido' ] === null );
+    console.log( compromisosIncompletos, this.listaCompromisos );
+    if ( compromisosIncompletos.length > 0 ) {
+      this.openDialog( '', '<b>Falta registrar información</b>' )
+      return;
+    };
     let comite: ComiteTecnico = {
-      sesionComiteTema: [],
-      sesionComiteSolicitudComiteTecnico: []
-    }
+      sesionComiteTema: [
+        {
+          temaCompromiso: []
+        }
+      ],
+      sesionComiteSolicitudComiteTecnico: [
+        {
+          sesionSolicitudCompromiso: []
+        }
+      ]
+    };
 
-    let tema: SesionComiteTema = {
-      temaCompromiso: this.listaCompromisos.filter(c => c.temaCompromisoId > 0 && c.estadoCodigo)
-    }
-    if (tema.temaCompromiso.length > 0)
-      comite.sesionComiteTema.push(tema);
+    this.listaCompromisos.forEach( compromiso => {
+      if ( compromiso.sesionSolicitudCompromisoId !== undefined ) {
+        comite.sesionComiteSolicitudComiteTecnico[0].sesionSolicitudCompromiso.push( compromiso );
+      };
+      if ( compromiso.temaCompromisoId !== undefined ) {
+        comite.sesionComiteTema[0].temaCompromiso.push( compromiso );
+      };
+    } );
 
-    let solicitud: SesionComiteSolicitud = {
-      sesionSolicitudCompromiso: this.listaCompromisos.filter(c => c.sesionSolicitudCompromisoId > 0 && c.estadoCodigo)
-    }
-    if (solicitud.sesionSolicitudCompromiso.length > 0)
-      comite.sesionComiteSolicitudComiteTecnico.push(solicitud);
-
+    console.log( comite );
     this.technicalCommitteeSessionService.verificarTemasCompromisos(comite)
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`)
@@ -156,7 +188,6 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
           this.listaCompromisos = [];
           this.ngOnInit();
         }
-
       })
 
   }
