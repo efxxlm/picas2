@@ -2180,6 +2180,7 @@ namespace asivamosffie.services
         public string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
             pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where( r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
+            pProcesoSeleccion.ProcesoSeleccionCotizacion = _context.ProcesoSeleccionCotizacion.Where( r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
 
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
             List<Usuario> listaUsuarios = _context.Usuario.ToList();
@@ -2259,7 +2260,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.FECHA_CRONOGRAMA_PS:
                             RegistrosCronogramas = RegistrosCronogramas.Replace(placeholderDominio.Nombre,
-                             ProcesoSeleccionCronograma.FechaCreacion.ToString("dd-MM-yyyy"));
+                             ProcesoSeleccionCronograma.FechaMaxima.Value.ToString("dd-MM-yyyy"));
                             break;
                     }
                 }
@@ -2297,12 +2298,19 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_ABIERTA_PS:
                                 string NombresPreponente = "";
-                                foreach (var ProcesoSeleccionProponente in pProcesoSeleccion.ProcesoSeleccionProponente)
-                                {
-                                    NombresPreponente += ProcesoSeleccionProponente.NombreProponente + " - ";
-                                }
+
+                                Usuario responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId );
+
+                                if ( responsable != null )
+                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+
+                                responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid );
+
+                                if ( responsable != null )
+                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
-                                  Replace(placeholderDominio.Nombre, NombresPreponente);
+                                Replace(placeholderDominio.Nombre, NombresPreponente);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.EVALUACION_DESCRIPCION_ABIERTA_PS:
@@ -2346,15 +2354,22 @@ namespace asivamosffie.services
                             //    [4:04 PM, 8 / 26 / 2020] JULIÁN MARTÍNEZ C: y el VALOR_CONTIZACION_CERRADA
                             //        [4:12 PM, 8 / 26 / 2020] Faber Ivolucion: Tampoco aparece en CU
 
-                            //case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
-                            //    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                            //      Replace(placeholderDominio.Nombre, pProcesoSeleccion.);
-                            //    break; 
+                            case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
 
-                            //case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
-                            //    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                            //      Replace(placeholderDominio.Nombre, pProcesoSeleccion.);
-                            //    break;
+                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
+                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                  Replace(placeholderDominio.Nombre, c.NombreOrganizacion);                
+                                });
+
+                                break; 
+
+                            case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
+                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
+                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                  Replace(placeholderDominio.Nombre,"$" + String.Format("{0:n0}", c.ValorCotizacion) );                
+                                });
+
+                               break;
 
                             case ConstanCodigoVariablesPlaceHolders.EVALUACION_DESCRIPCION_CERRADA_PS:
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
