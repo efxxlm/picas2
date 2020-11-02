@@ -57,13 +57,13 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     };
   }
 
-  verSoporte(pTablaId: string, pRegistroId: number) {
+  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
 
     //console.log(pTablaId, pRegistroId)
     this.fiduciaryCommitteeSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
-      .subscribe(resp => {
+      .subscribe(resp => { 
         console.log(resp);
-        const documento = `FichaSolicitud ${pRegistroId}.pdf`;
+        const documento = `FichaSolicitud ${numeroSolicitud}.pdf`;
         const text = documento,
           blob = new Blob([resp], { type: 'application/pdf' }),
           anchor = document.createElement('a');
