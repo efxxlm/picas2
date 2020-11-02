@@ -2179,7 +2179,10 @@ namespace asivamosffie.services
 
         public string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
+            pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where( r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
+
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+            List<Usuario> listaUsuarios = _context.Usuario.ToList();
 
             string TipoPlantillaRegistrosGruposProcesoSeleccion = ((int)ConstanCodigoPlantillas.Registros_Grupos_Proceso_Seleccion).ToString();
             string DetalleGrupoProcesosSeleccion = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaRegistrosGruposProcesoSeleccion).Select(r => r.Contenido).FirstOrDefault();
@@ -2323,10 +2326,17 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_CERRADA_PS:
                                 string NombresPreponente = "";
-                                foreach (var ProcesoSeleccionProponente in pProcesoSeleccion.ProcesoSeleccionProponente)
-                                {
-                                    NombresPreponente += ProcesoSeleccionProponente.NombreProponente + " - ";
-                                }
+
+                                Usuario responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId );
+
+                                if ( responsable != null )
+                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+
+                                responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid );
+
+                                if ( responsable != null )
+                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
                                 break;
@@ -2362,7 +2372,7 @@ namespace asivamosffie.services
                         {
                             case ConstanCodigoVariablesPlaceHolders.TIPO_PROPONENTE_PRIVADA_PS:
 
-                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
                                   Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0) ? ListaParametricas
                                   .Where(r => r.Codigo == pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo
                                   && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Proponente
@@ -2371,20 +2381,27 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_PRIVADA_PS:
 
-                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
                                   Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0) ? pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreProponente : "");
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_DOCUMENTO_PRIVADA_PS:
-                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                if ( pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo != null )
+                                {
+                                    ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
                                 Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
                                 ? ListaParametricas.Where(r => r.Codigo == pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo
                                 && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
-                                ).FirstOrDefault().Nombre : " ");
+                                ).FirstOrDefault().Nombre : " ");    
+                                }else {
+                                    ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
+                                    Replace(placeholderDominio.Nombre, "");
+                                }
+                                
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_REPRESENTANTE_LEGAL_PRIVADA_PS:
-                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
                                Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0) ? pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().NombreRepresentanteLegal : "");
 
                                 break;
