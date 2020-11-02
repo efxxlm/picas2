@@ -3063,32 +3063,56 @@ namespace asivamosffie.services
 
             try
             {
-
                 foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
                 {
-
                     foreach (var temaCompromiso in SesionComiteTema.TemaCompromiso)
                     {
                         TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(temaCompromiso.TemaCompromisoId);
                         temaCompromisoOld.FechaModificacion = DateTime.Now;
                         temaCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
-                        temaCompromisoOld.EsCumplido =  temaCompromiso.EsCumplido;
+                        temaCompromisoOld.EsCumplido = temaCompromiso.EsCumplido;
                         if (!(bool)temaCompromiso.EsCumplido)
-                            temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso; 
+                        {
+                            temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                            TemaCompromisoSeguimiento temaCompromisoSeguimiento = new TemaCompromisoSeguimiento
+                            {
+                                UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                                FechaCreacion = DateTime.Now,
+
+                                EstadoCodigo = ConstantCodigoCompromisos.En_proceso,
+                                Tarea = temaCompromiso.Observacion,
+                                TemaCompromisoId = temaCompromiso.TemaCompromisoId
+                            };
+                            _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento);
+                        }
+
                     }
                 }
 
                 foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
-                {
-
+                { 
                     foreach (var pSesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                     {
                         SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
-                        SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now; 
+                        SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
                         SesionSolicitudCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                         SesionSolicitudCompromisoOld.EsCumplido = pSesionSolicitudCompromiso.EsCumplido;
                         if (!(bool)SesionSolicitudCompromisoOld.EsCumplido)
-                            SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso; 
+                        {
+                            SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                            CompromisoSeguimiento compromisoSeguimiento = new CompromisoSeguimiento
+                            {
+                                UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                                FechaCreacion = DateTime.Now,
+                                Eliminado = false,
+
+                                SesionParticipanteId = pComiteTecnico.UsuarioId,
+                                SesionComiteTecnicoCompromisoId = pSesionSolicitudCompromiso.SesionSolicitudCompromisoId,
+                                EstadoCompromisoCodigo = ConstantCodigoCompromisos.En_proceso,
+                                DescripcionSeguimiento = SesionSolicitudCompromisoOld.Observacion 
+                            };
+                            _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
+                        } 
                     }
                 }
 
@@ -4448,6 +4472,6 @@ namespace asivamosffie.services
                 }
             }
             return ListGrilla;
-        } 
+        }
     }
 }

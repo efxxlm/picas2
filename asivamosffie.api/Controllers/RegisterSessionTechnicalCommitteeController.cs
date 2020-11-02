@@ -316,6 +316,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pComiteTecnico.UsuarioId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
                 respuesta = await _registerSessionTechnicalCommitteeService.VerificarTemasCompromisos(pComiteTecnico);
                 return Ok(respuesta);
             }

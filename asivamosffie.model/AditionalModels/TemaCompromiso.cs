@@ -5,16 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace asivamosffie.model.Models
 {
-    public partial class SesionSolicitudCompromiso
+    public partial class TemaCompromiso
     {
         [NotMapped]
-        public string GestionRealizada { get; set; }
-
-        [NotMapped]
-        public string TipoCompromiso { get; set; }
-
-        [NotMapped]
         public string Observacion { get; set; }
+         
     }
 
 }
