@@ -3074,23 +3074,12 @@ namespace asivamosffie.services
                         if (!(bool)temaCompromiso.EsCumplido)
                         {
                             temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
-                            TemaCompromisoSeguimiento temaCompromisoSeguimiento = new TemaCompromisoSeguimiento
-                            {
-                                UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
-                                FechaCreacion = DateTime.Now,
-
-                                EstadoCodigo = ConstantCodigoCompromisos.En_proceso,
-                                Tarea = temaCompromiso.Observacion,
-                                TemaCompromisoId = temaCompromiso.TemaCompromisoId
-                            };
-                            _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento);
                         }
-
                     }
                 }
 
                 foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
-                { 
+                {
                     foreach (var pSesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                     {
                         SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
@@ -3100,19 +3089,7 @@ namespace asivamosffie.services
                         if (!(bool)SesionSolicitudCompromisoOld.EsCumplido)
                         {
                             SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
-                            CompromisoSeguimiento compromisoSeguimiento = new CompromisoSeguimiento
-                            {
-                                UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
-                                FechaCreacion = DateTime.Now,
-                                Eliminado = false,
-
-                                SesionParticipanteId = pComiteTecnico.UsuarioId,
-                                SesionComiteTecnicoCompromisoId = pSesionSolicitudCompromiso.SesionSolicitudCompromisoId,
-                                EstadoCompromisoCodigo = ConstantCodigoCompromisos.En_proceso,
-                                DescripcionSeguimiento = SesionSolicitudCompromisoOld.Observacion 
-                            };
-                            _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
-                        } 
+                        }
                     }
                 }
 
@@ -3139,6 +3116,65 @@ namespace asivamosffie.services
                        Code = ConstantSesionComiteTecnico.Error,
                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
                    };
+            }
+        }
+
+        public async Task<Respuesta> ObservacionesCompromisos(ObservacionComentario pObservacionComentario)
+        {
+            int idAccionEliminarSesionComiteTema = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Observacion_Compromisos, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                if (pObservacionComentario.TemaCompromisoId != null)
+                {
+                    TemaCompromisoSeguimiento temaCompromisoSeguimiento = new TemaCompromisoSeguimiento
+                    {
+                        UsuarioCreacion = pObservacionComentario.Usuario,
+                        FechaCreacion = DateTime.Now,
+
+                        TemaCompromisoId = (int)pObservacionComentario.TemaCompromisoId,
+                        EstadoCodigo = ConstantCodigoCompromisos.En_proceso,
+                        Tarea = pObservacionComentario.Observacion 
+                    };
+                    _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento);
+                }
+                else
+                {
+                    CompromisoSeguimiento compromisoSeguimiento = new CompromisoSeguimiento
+                    {
+                        UsuarioCreacion = pObservacionComentario.Usuario,
+                        FechaCreacion = DateTime.Now,
+                        Eliminado = false,
+
+                        SesionParticipanteId = pObservacionComentario.UsuarioId,
+                        SesionComiteTecnicoCompromisoId = (int)pObservacionComentario.SesionSolicitudCompromisoId,
+                        EstadoCompromisoCodigo = ConstantCodigoCompromisos.En_proceso,
+                        DescripcionSeguimiento = pObservacionComentario.Observacion
+                    };
+                    _context.CompromisoSeguimiento.Add(compromisoSeguimiento);
+                }
+                await _context.SaveChangesAsync();
+
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pObservacionComentario.Usuario, "OBSERVACION SEGUIMIENTO COMPROMISO")
+                  };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pObservacionComentario.Usuario, ex.InnerException.ToString().Substring(0, 500))
+                  };
             }
         }
 

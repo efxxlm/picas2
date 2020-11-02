@@ -328,6 +328,25 @@ namespace asivamosffie.api.Controllers
         }
          
         [HttpPost]
+        [Route("ObservacionesCompromisos")]
+        public async Task<IActionResult> ObservacionesCompromisos([FromBody] ObservacionComentario pObservacionComentario)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pObservacionComentario.Usuario = HttpContext.User.FindFirst("User").Value;
+                pObservacionComentario.UsuarioId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+                respuesta = await _registerSessionTechnicalCommitteeService.ObservacionesCompromisos(pObservacionComentario);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+         
+        [HttpPost]
         [Route("CreateEditSesionComiteTema")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)
         {

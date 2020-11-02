@@ -28,7 +28,7 @@
         public const string Crear_Editar_Recursos_Control = "25";
         public const string Eliminar_Editar_Recursos_Control = "26";
 
-        public const string Crear_Proceso_Seleccion = "27";         
+        public const string Crear_Proceso_Seleccion = "27";
         public const string Crear_Editar_ProcesoSeleccion_Cronograma = "28";
         public const string Crear_Editar_ProcesoSeleccion_Grupo = "29";
         public const string Crear_Editar_ProcesoSeleccion_Cotizacion = "30";
@@ -44,7 +44,7 @@
 
         //gestion polizas y garantias
         public const string Crear_Contrato_Poliza = "85";
-        public const string Editar_Contrato_Poliza  = "86";
+        public const string Editar_Contrato_Poliza = "86";
         public const string Crear_Poliza_Garantia = "87";
         public const string Crear_Poliza_Observacion = "89";
         public const string Notificacion_Gestion_Poliza = "90";
@@ -107,5 +107,7 @@
         public const string Eliminar_Compromisos_Tema = "126";
 
         public const string Crear_Editar_DDP = "127";
+
+        public const string Observacion_Compromisos = "132";
     }
 }
