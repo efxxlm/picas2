@@ -41,9 +41,9 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
                                             .Include(r => r.ProcesoSeleccionProponente)
-                                            .Include(r => r.ProcesoSeleccionCotizacion)
-                                            .Include(r => r.ProcesoSeleccionCronograma)
-                                            .Include(r => r.ProcesoSeleccionGrupo)
+                                            .Include(r => r.ProcesoSeleccionCotizacion).Where(r => !(bool)r.Eliminado)
+                                            .Include(r => r.ProcesoSeleccionCronograma).Where(r => !(bool)r.Eliminado)
+                                            .Include(r => r.ProcesoSeleccionGrupo).Where(r => !(bool)r.Eliminado)
                                             .OrderByDescending(x=>x.FechaCreacion)
                                             .ToListAsync();
                 foreach(var proceso in procesosSeleccion)
@@ -68,9 +68,9 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
                                             .Include(r => r.ProcesoSeleccionProponente)
-                                            .Include(r => r.ProcesoSeleccionCotizacion)
-                                            .Include(r => r.ProcesoSeleccionCronograma)
-                                            .Include(r => r.ProcesoSeleccionGrupo)
+                                            .IncludeFilter(r => r.ProcesoSeleccionCotizacion.Where(r => !(bool)r.Eliminado))
+                                            .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
+                                            .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
                                             .FirstOrDefaultAsync( proceso => proceso.ProcesoSeleccionId == id );
                 procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
                 return procesoSeleccion;
@@ -220,7 +220,7 @@ namespace asivamosffie.services
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
-                    strCrearEditar = "ELIMINAR PROCESO CELECCION";
+                    strCrearEditar = "ELIMINAR PROCESO SELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find( pId );
                     //Auditoria
                     //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
@@ -256,7 +256,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender )
+        public async Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender )
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
@@ -275,13 +275,14 @@ namespace asivamosffie.services
 
                 //_context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 //si el estado es apertura tramite se debe enviar un mensaje a la secretaria de comite jflorez
-                if(pCodigoEstado== ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite)
+                if(pCodigoEstado== ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite ||
+                    pCodigoEstado == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite)
                 {
                     var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
                     foreach(var usuario in usuariosecretario)
                     {
-                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
-                        string template = TemplateRecoveryPassword.Contenido;
+                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
+                        string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_",pDominioFront).Replace("[NumeroSol]",ProcesoSeleccionAntiguo.NumeroProceso).Replace("[FechaSol]", ProcesoSeleccionAntiguo.FechaCreacion.ToString("dd/MM/yy"));
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Proceso de selección en tramite", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                     
@@ -389,7 +390,7 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION CRONOGRAMA";
                     procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
                     procesoSeleccionCronograma.Eliminado = false;
-                    procesoSeleccionCronograma.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                   // procesoSeleccionCronograma.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
 
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
@@ -903,6 +904,7 @@ namespace asivamosffie.services
                     contratista.NumeroIdentificacion =  string.IsNullOrEmpty( p.NumeroIdentificacion ) ? "0" : p.NumeroIdentificacion;
                     contratista.Nombre = p.NombreProponente;
                     contratista.RepresentanteLegal = string.IsNullOrEmpty( p.NombreRepresentanteLegal ) ? p.NombreProponente : p.NombreRepresentanteLegal;
+                    contratista.RepresentanteLegalNumeroIdentificacion= string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
                     contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
                     //contratista.EsConsorcio = p.TipoProponenteCodigo == "4" ? true : false;
                     contratista.Activo = true;
@@ -1492,6 +1494,129 @@ namespace asivamosffie.services
 
         }
 
+        /*autor: jflorez
+            descripción: borra las cotizacines en editar
+            impacto: CU 3.1.3*/
+        public async Task<Respuesta> deleteProcesoSeleccionCotizacionByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {            
+                var procesoSeleccionCot = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacionId);
+                procesoSeleccionCot.Eliminado = true;
+                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                _context.Update(procesoSeleccionCot);
+                _context.SaveChanges();
+                return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION GRUPO")
+                    };
+        
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueElegibilidad.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int) enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int) enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
+                    };
+            }
+        }
 
+        /*autor: jflorez
+            descripción: borra lOS GRUPOS en editar
+            impacto: CU 3.1.3*/
+        public async Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                var procesoSeleccionCot = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionCotizacionId);
+                procesoSeleccionCot.Eliminado = true;
+                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                _context.Update(procesoSeleccionCot);
+                _context.SaveChanges();
+                return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION GRUPO")
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueElegibilidad.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        /*autor: jflorez
+            descripción: borra las actividades en editar
+            impacto: CU 3.1.3*/
+        public async Task<Respuesta> deleteProcesoSeleccionActividadesByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                var procesoSeleccionCot = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCotizacionId);
+                procesoSeleccionCot.Eliminado = true;
+                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                _context.Update(procesoSeleccionCot);
+                _context.SaveChanges();
+                return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION CRONOGRAMA")
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return respuesta =
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesCargueElegibilidad.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        /*jflorez
+         impacto: 3.1.3
+         resumen: trae listado de  observaciones*/
+        public async Task<List<ProcesoSeleccionObservacion>> getObservacionesProcesoSeleccionProponentes(int id)
+        {
+            return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
+        }
     }
 }

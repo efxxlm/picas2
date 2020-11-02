@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Respuesta } from '../autenticacion/autenticacion.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DisponibilidadPresupuestalService {
+  
+  
 
   constructor( private http: HttpClient ) {}
 
@@ -13,6 +16,10 @@ export class DisponibilidadPresupuestalService {
   GetListGenerarDisponibilidadPresupuestal()
   {
     return this.http.get<any[]>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarDisponibilidadPresupuestal`);
+  }
+
+  GetListGenerarRegistroPresupuestal() {
+    return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarRegistroPresupuestal`);
   }
 
   
@@ -35,8 +42,14 @@ export class DisponibilidadPresupuestalService {
   }
   CreateDDP(id)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/CreateDDP?id=${id}`,null);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/CreateDDP?id=${id}`,null);
   }
+
+  CreateDRP(id: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/CreateDRP?id=${id}`,null);
+  }
+
+
   SetReturnDDP(DisponibilidadPresupuestalObservacion:any)
   {
     return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetReturnDDP`,DisponibilidadPresupuestalObservacion);
@@ -57,11 +70,15 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetReturnValidacionDDP`,DisponibilidadPresupuestalObservacion);
   }
+  SetCancelDDR(DisponibilidadPresupuestalObservacion:any)
+  {
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetCancelDDR`,DisponibilidadPresupuestalObservacion);
+  }
 
   //gestionar fuentes de financiacion
   CreateFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/CreateFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/CreateFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
   }
   DeleteFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
   {

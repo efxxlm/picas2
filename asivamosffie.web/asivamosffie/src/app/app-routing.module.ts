@@ -80,6 +80,11 @@ const routes: Routes = [
           .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
+        path: 'generarRegistroPresupuestal',
+        loadChildren: () => import('./_pages/generar-registro-presupuestal/generar-registro-presupuestal.module')
+        .then(m => m.GenerarRegistroPresupuestalModule)
+      },
+      {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
       },
@@ -101,12 +106,45 @@ const routes: Routes = [
         path: 'seleccion',
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
         .then(m => m.GestionarProcesosDeSeleccionModule)
+
+      },
+      {
+        path: 'contratosModificacionesContractuales',
+        loadChildren: () => import( './_pages/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.module' )
+          .then( module => module.ContratosModificacionesContractualesModule )
       },
       {
         path: 'generarPolizasYGarantias',
         loadChildren: () => import('./_pages/generar-polizas-y-garantias/generar-polizas-y-garantias.module')
           .then(m => m.GenerarPolizasYGarantiasModule)
       },
+      {
+        path: 'comiteFiduciario',
+        loadChildren: () => import( './_pages/sesion-comite-fiduciario/comite-fiduciario.module' )
+          .then( module => module.ComiteFiduciarioModule )
+      },
+      {
+ 
+        path: 'procesosContractuales',
+        loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
+          .then( module => module.GestionarProcesosContractualesModule )
+      },
+      {
+ 
+        path: 'solicitarContratacion',
+        loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
+        .then(m => m.SolicitarContratacionModule)
+      },
+      {
+        path: 'generarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'compromisosActasComite',
+        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
+          .then( module => module.CompromisosActasComiteModule )
+      }
     ]
 
   },

@@ -66,9 +66,9 @@
         &::after {
             content: "*";
             position: absolute;
-            right: .8em;
+            right: .9em;
             font-weight: 600;
-            top: 50%;
+            top: calc(50% + 1.5em);
             transform: translateY(-50%);
         }
     }

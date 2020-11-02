@@ -65,6 +65,20 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   {
 
   }
+
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+  validaMinimo3()
+  {
+    if(this.addressForm.get("cuantosProponentes").value!="" && this.addressForm.get("cuantosProponentes").value!=null &&
+    this.addressForm.get("cuantosProponentes").value!= undefined && this.addressForm.get("cuantosProponentes").value<3)
+    {
+      this.openDialog("","<b>La cantidad de proponentes debe ser mayor o igual al 3</b>");
+    }
+  }
   ngOnInit(){
     return new Promise( resolve => {
 

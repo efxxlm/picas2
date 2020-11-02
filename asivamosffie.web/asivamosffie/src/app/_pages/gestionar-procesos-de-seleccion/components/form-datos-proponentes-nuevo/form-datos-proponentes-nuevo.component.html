@@ -1,169 +1,400 @@
-
 <div class="pt-1em">
   <mat-card-title class="header-card--text">
     Proponente Nuevo
   </mat-card-title>
   <div class="row">
     <div class="pr-1">
-        <label class="label-left">Tipos de proponente nuevo</label>
+      <label class="label-left">Tipos de proponente nuevo</label>
     </div>
     <div class="col-md-3">
-        <mat-form-field class="select-width">
-            <mat-select [formControl]="tipoProponente"  (selectionChange)="limpiarForms()" required>
-                <mat-option *ngFor="let proponente of listaProponentes" [value]="proponente">
-                    {{ proponente.nombre }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+      <mat-form-field class="select-width">
+        <mat-select [formControl]="tipoProponente" (selectionChange)="limpiarForms()" required>
+          <mat-option *ngFor="let proponente of listaProponentes" [value]="proponente">
+            {{ proponente.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
-  <form *ngIf="tipoProponente.value.codigo == 1"
-  [formGroup]="personaNaturalForm" novalidate (ngSubmit)="onSubmitPersonaNatural()">
+  <form *ngIf="tipoProponente.value.codigo == 1" [formGroup]="personaNaturalForm" novalidate
+    (ngSubmit)="onSubmitPersonaNatural()">
 
-      <div class="row">
-        <div class="pr-1">
-          <label for="nombre" class="label-left">Nombre del proponente</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #nombre type="text" maxlength="100" [formControl]="myControl" required [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredName  | async" [value]="nombres">
-                {{nombres}}
-              </mat-option>
-            </mat-autocomplete>
-            <input type="hidden" formControlName="procesoSeleccionProponenteId" >
-          </mat-form-field>
-          <span class="contador">{{100 - nombre.value.length}}</span>
-        </div>
+    <div class="row">
+      <div class="pr-1">
+        <label for="nombre" class="label-left">Nombre del proponente</label>
       </div>
-      
-      <div class="row">
-        <div class="pr-1">
-          <label for="numeroIdentificacion" class="label-left">Número de identificación del proponente</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #numeroIdentificacion type="number" maxlength="12" formControlName="numeroIdentificacion" required>
-          </mat-form-field>
-          <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
-        </div>          
+      <div class="col d-flex">
+        <mat-form-field class="full-width">
+          <input matInput #nombre type="text" maxlength="100" [formControl]="myControl" required
+            [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredName  | async"
+              [value]="nombres">
+              {{nombres}}
+            </mat-option>
+          </mat-autocomplete>
+          <input type="hidden" formControlName="procesoSeleccionProponenteId">
+        </mat-form-field>
+        <span class="contador">{{100 - nombre.value.length}}</span>
       </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="pr-1">
-              <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
-            </div>
-            <div class="col">
-              <mat-form-field class="select-width capitalize">
-                <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                  <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
-                    {{ departamento.descripcion }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+    </div>
+
+    <div class="row">
+      <div class="pr-1">
+        <label for="numeroIdentificacion" class="label-left">Número de identificación del proponente</label>
+      </div>
+      <div class="col d-flex">
+        <mat-form-field class="full-width">
+          <input matInput #numeroIdentificacion type="number" maxlength="12" formControlName="numeroIdentificacion"
+            required>
+        </mat-form-field>
+        <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width capitalize">
+              <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
+                <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
+                  {{ departamento.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="pr-1">
-              <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
-            </div>
-            <div class="col">
-              <mat-form-field class="select-width capitalize">
-                <mat-select formControlName="municipio" required>
-                  <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
-                    {{ municipio.descripcion }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width capitalize">
+              <mat-select formControlName="municipio" required>
+                <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
+                  {{ municipio.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="pr-1">
-          <label for="direccion" class="label-left">Dirección del proponente</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #direccion type="text" maxlength="100" formControlName="direccion" required>
-          </mat-form-field>
-          <span class="contador">{{100 - direccion.value.length}}</span>
+    </div>
+    <div class="row">
+      <div class="pr-1">
+        <label for="direccion" class="label-left">Dirección del proponente</label>
+      </div>
+      <div class="col d-flex">
+        <mat-form-field class="full-width">
+          <input matInput #direccion type="text" maxlength="100" formControlName="direccion"
+            (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+            required>
+        </mat-form-field>
+        <span class="contador">{{100 - direccion.value.length}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="telefono" class="label-left">Teléfono del proponente</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #telefono type="number" maxlength="10" formControlName="telefono" required>
+            </mat-form-field>
+            <span class="contador">{{10 - telefono.value.length}}</span>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="row">
+      <div class="pr-1">
+        <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
+      </div>
+      <div class="col d-flex">
+        <mat-form-field class="full-width">
+          <input matInput #correoElectronico type="email" maxlength="100" formControlName="correoElectronico" required>
+        </mat-form-field>
+        <span class="contador">{{100 - correoElectronico.value.length}}</span>
+      </div>
+    </div>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
+
+  <form *ngIf="tipoProponente.value.codigo == 2" [formGroup]="personaJuridicaIndividualForm" novalidate
+    (ngSubmit)="onSubmitPersonaJuridicaIndividual()">
+
+    <div class="row">
+      <div class="pr-1">
+        <label for="nombre" class="label-left">Nombre</label>
+      </div>
+      <div class="col d-flex">
+        <mat-form-field class="full-width">
+          <input matInput #nombre2 type="text" maxlength="100" [formControl]="myJuridica" required
+            [matAutocomplete]="auto2">
+          <mat-autocomplete #auto2="matAutocomplete">
+            <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredNameJuridica  | async"
+              [value]="nombres">
+              {{nombres}}
+            </mat-option>
+          </mat-autocomplete>
+          <input type="hidden" formControlName="procesoSeleccionProponenteId">
+        </mat-form-field>
+        <span class="contador">{{100 - nombre2.value.length}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="numeroIdentificacion" class="label-left">Número de identificación tributaria (NIT)</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #numeroIdentificacion2 type="number" maxlength="12" formControlName="numeroIdentificacion"
+                required>
+            </mat-form-field>
+            <span class="contador">{{12 - numeroIdentificacion2.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="pr-1">
+            <label for="representanteLegal" class="label-left">Representante legal</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #representanteLegal2 type="text" maxlength="100" formControlName="representanteLegal"
+                required>
+            </mat-form-field>
+            <span class="contador">{{100 - representanteLegal2.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="cedulaRepresentanteLegal" class="label-left">Cédula del representante legal</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #cedulaRepresentanteLegal2 type="number" maxlength="12"
+                formControlName="cedulaRepresentanteLegal" required>
+            </mat-form-field>
+            <span class="contador">{{12 - cedulaRepresentanteLegal2.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width capitalize">
+              <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
+                <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
+                  {{ departamento.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width capitalize">
+              <mat-select formControlName="municipio" required>
+                <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
+                  {{ municipio.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="pr-1">
+            <label for="direccion" class="label-left">Dirección del proponente</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #direccion2 type="text" maxlength="100" formControlName="direccion"
+                (keypress)="validateNumberKeypress($event)"
+                onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
+            </mat-form-field>
+            <span class="contador">{{100 - direccion2.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="telefono" class="label-left">Teléfono del proponente</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #telefono2 type="number" maxlength="10" formControlName="telefono" required>
+            </mat-form-field>
+            <span class="contador">{{10 - telefono2.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="pr-1">
+            <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #correoElectronico2 type="email" maxlength="100" formControlName="correoElectronico"
+                required>
+            </mat-form-field>
+            <span class="contador">{{100 - correoElectronico2.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
+
+  <form *ngIf="tipoProponente.value.codigo == 4" [formGroup]="unionTemporalForm" novalidate
+    (ngSubmit)="onSubmitUnionTemporal()">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="numeroIdentificacion" class="label-left">¿Cuántas entidades integran la unión temporal?</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput #cuantasEntidades type="number" min="1" max="99" formControlName="cuantasEntidades"
+                (keyup)="CambioNumeroCotizantes()" maxlength="2" (keypress)="validateNumberKeypress($event)"
+                onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
+              <input type="hidden" formControlName="procesoSeleccionProponenteId">
+            </mat-form-field>
+            <span class="contador">{{2 - cuantasEntidades.value.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="unionTemporalForm.controls.cuantasEntidades.value > 0 && unionTemporalForm.controls.cuantasEntidades.value < 100">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label for="telefono" class="label-left">Teléfono del proponente</label>
+              <label for="nombreConsorcio" class="label-left">Nombre de la UT o Consorcio</label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #telefono type="number" maxlength="10" formControlName="telefono" required>
+                <input matInput #nombre3 type="text" maxlength="100" formControlName="nombreConsorcio" required>
               </mat-form-field>
-              <span class="contador">{{10 - telefono.value.length}}</span>
+              <span class="contador">{{100 - nombre3.value.length}}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="pr-1">
-          <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #correoElectronico type="text" maxlength="100" formControlName="correoElectronico" required>
-          </mat-form-field>
-          <span class="contador">{{100 - correoElectronico.value.length}}</span>
-        </div>
-      </div>
-  <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
-    </button>
-  </div>
-</form>
-
-<form *ngIf="tipoProponente.value.codigo == 2"
-  [formGroup]="personaJuridicaIndividualForm" novalidate (ngSubmit)="onSubmitPersonaJuridicaIndividual()">
-
-      <div class="row">
-        <div class="pr-1">
-          <label for="nombre" class="label-left">Nombre</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #nombre2 type="text" maxlength="100" [formControl]="myJuridica" required [matAutocomplete]="auto2">
-            <mat-autocomplete #auto2="matAutocomplete">
-              <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredNameJuridica  | async" [value]="nombres">
-                {{nombres}}
-              </mat-option>
-            </mat-autocomplete>
-            <input type="hidden" formControlName="procesoSeleccionProponenteId" >
-          </mat-form-field>
-          <span class="contador">{{100 - nombre2.value.length}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="pr-1">
-              <label for="numeroIdentificacion" class="label-left">Número de identificación tributaria (NIT)</label>
+      <h2 class="card-subTitle">Integrantes</h2>
+      <div formGroupName="entidades">
+        <div *ngFor="let entidad of entidades.controls; let i = index">
+          <div [formGroupName]="i">
+            <mat-card-title class="header-card--text sub-text">
+              Integrante {{ i + 1 }}
+            </mat-card-title>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="nombre" class="label-left">Nombre</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required>
+                    </mat-form-field>
+                    <span class="contador">{{100 - nombre3.value.length}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input matInput #numeroIdentificacion2 type="number" maxlength="12" formControlName="numeroIdentificacion" required>
-              </mat-form-field>
-              <span class="contador">{{12 - numeroIdentificacion2.value.length}}</span>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="porcentaje" class="label-left">Porcentaje de participación</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput #porcentaje type="number" min="1" max="100" formControlName="porcentaje" required>
+                      <input type="hidden" formControlName="procesoSeleccionIntegranteId">
+                    </mat-form-field>
+                    <span class="contador">%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 text-right" *ngIf="unionTemporalForm.value.entidades.length > 1">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(entidades, i)">
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar integrante">
+                  Eliminar integrante
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <h2 class="card-subTitle">Datos del representante legal</h2>
+      <!--no se ve en el ultimo diseño, lo vuelo jflorez
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label for="numeroIdentificacion" class="label-left">Número de identificación tributaria (NIT)</label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #numeroIdentificacion3 type="number" maxlength="12" formControlName="numeroIdentificacion" required>
+                </mat-form-field>
+                <span class="contador">{{12 - numeroIdentificacion3.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>-->
       <div class="row">
         <div class="col-md-12">
           <div class="row">
@@ -172,9 +403,16 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #representanteLegal2 type="text" maxlength="100" formControlName="representanteLegal" required>
+                <input matInput #nombre type="text" maxlength="100" [formControl]="myJuridica2" required
+                  [matAutocomplete]="auto3">
+                <mat-autocomplete #auto3="matAutocomplete">
+                  <mat-option (click)="seleccionAutocomplete2(nombres)"
+                    *ngFor="let nombres of filteredNameJuridica2  | async" [value]="nombres">
+                    {{nombres}}
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
-              <span class="contador">{{100 - representanteLegal2.value.length}}</span>
+              <span class="contador">{{100 - nombre.value.length}}</span>
             </div>
           </div>
         </div>
@@ -187,9 +425,10 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cedulaRepresentanteLegal2 type="number" maxlength="12" formControlName="cedulaRepresentanteLegal" required>
+                <input matInput #numeroIdentificacion type="number" maxlength="12"
+                  formControlName="cedulaRepresentanteLegal" required>
               </mat-form-field>
-              <span class="contador">{{12 - cedulaRepresentanteLegal2.value.length}}</span>
+              <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
             </div>
           </div>
         </div>
@@ -238,9 +477,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #direccion2 type="text" maxlength="100" formControlName="direccion" required>
+                <input matInput #direccion3 type="text" maxlength="100" formControlName="direccion" required>
               </mat-form-field>
-              <span class="contador">{{100 - direccion2.value.length}}</span>
+              <span class="contador">{{100 - direccion3.value.length}}</span>
             </div>
           </div>
         </div>
@@ -253,9 +492,11 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #telefono2 type="number" maxlength="10" formControlName="telefono" required>
+                <input matInput #telefono3 type="number" maxlength="10" formControlName="telefono"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{10 - telefono2.value.length}}</span>
+              <span class="contador">{{10 - telefono3.value.length}}</span>
             </div>
           </div>
         </div>
@@ -268,247 +509,21 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #correoElectronico2 type="text" maxlength="100" formControlName="correoElectronico" required>
+                <input matInput #correoElectronico3 type="email" maxlength="100" formControlName="correoElectronico"
+                  required>
               </mat-form-field>
-              <span class="contador">{{100 - correoElectronico2.value.length}}</span>
-            </div>
-          </div>
-        </div>
-      </div>    
-  <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
-    </button>
-  </div>
-</form>
-
-<form *ngIf="tipoProponente.value.codigo == 4"
-  [formGroup]="unionTemporalForm" novalidate (ngSubmit)="onSubmitUnionTemporal()">        
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="pr-1">
-              <label for="numeroIdentificacion" class="label-left">¿Cuántas entidades integran la unión temporal?</label>
-            </div>
-            <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input matInput #cuantasEntidades type="number" min="1" max="99" formControlName="cuantasEntidades" (keyup)="CambioNumeroCotizantes()"
-                maxlength="2" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                 required>
-                <input type="hidden" formControlName="procesoSeleccionProponenteId" >
-              </mat-form-field>
-              <span class="contador">{{2 - cuantasEntidades.value.length}}</span>
+              <span class="contador">{{100 - correoElectronico3.value.length}}</span>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="unionTemporalForm.controls.cuantasEntidades.value > 0 && unionTemporalForm.controls.cuantasEntidades.value < 100">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="pr-1">
-                <label for="nombreConsorcio" class="label-left">Nombre de la UT o Consorcio</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #nombre3 type="text" maxlength="100" formControlName="nombreConsorcio" required>
-                </mat-form-field>
-                <span class="contador">{{100 - nombre3.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <h2 class="card-subTitle">Integrantes</h2>
-        <div formGroupName="entidades">
-          <div *ngFor="let entidad of entidades.controls; let i = index">
-            <div [formGroupName]="i">
-              <mat-card-title class="header-card--text sub-text">
-                Integrante {{ i + 1 }}
-              </mat-card-title>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="row">
-                    <div class="pr-1">
-                      <label for="nombre" class="label-left">Nombre</label>
-                    </div>
-                    <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                        <input matInput #nombre3 type="text" maxlength="100"  formControlName="nombre" required>
-                      </mat-form-field>
-                      <span class="contador">{{100 - nombre3.value.length}}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="row">
-                    <div class="pr-1">
-                      <label for="porcentaje" class="label-left">Porcentaje de participación</label>
-                    </div>
-                    <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                        <input matInput #porcentaje type="number" min="1" max="100" formControlName="porcentaje" required>
-                        <input type="hidden" formControlName="procesoSeleccionIntegranteId">
-                      </mat-form-field>
-                      <span class="contador">%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 text-right" *ngIf="unionTemporalForm.value.entidades.length > 1">
-                  <button mat-button color="warn" type="button" class="btn-eliminar"
-                    (click)="borrarArray(entidades, i)">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar integrante">
-                    Eliminar integrante
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <h2 class="card-subTitle">Datos del representante legal</h2>
-        <!--no se ve en el ultimo diseño, lo vuelo jflorez
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label for="numeroIdentificacion" class="label-left">Número de identificación tributaria (NIT)</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #numeroIdentificacion3 type="number" maxlength="12" formControlName="numeroIdentificacion" required>
-                </mat-form-field>
-                <span class="contador">{{12 - numeroIdentificacion3.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>-->
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="pr-1">
-                <label for="representanteLegal" class="label-left">Representante legal</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #nombre type="text" maxlength="100" [formControl]="myJuridica2" required [matAutocomplete]="auto3">
-                  <mat-autocomplete #auto3="matAutocomplete">
-                    <mat-option (click)="seleccionAutocomplete2(nombres)" *ngFor="let nombres of filteredNameJuridica2  | async" [value]="nombres">
-                      {{nombres}}
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-                <span class="contador">{{100 - nombre.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label for="cedulaRepresentanteLegal" class="label-left">Cédula del representante legal</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #numeroIdentificacion type="number" maxlength="12" formControlName="cedulaRepresentanteLegal" required>
-                </mat-form-field>
-                <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label for="depaetamento" class="label-left">Departamento del domicilio del proponente</label>
-              </div>
-              <div class="col">
-                <mat-form-field class="select-width capitalize">
-                  <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                    <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
-                      {{ departamento.descripcion }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label for="municipio" class="label-left">Municipio del domicilio del proponente</label>
-              </div>
-              <div class="col">
-                <mat-form-field class="select-width capitalize">
-                  <mat-select formControlName="municipio" required>
-                    <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
-                      {{ municipio.descripcion }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="pr-1">
-                <label for="direccion" class="label-left">Dirección del proponente</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #direccion3 type="text" maxlength="100" formControlName="direccion" required>
-                </mat-form-field>
-                <span class="contador">{{100 - direccion3.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label for="telefono" class="label-left">Teléfono del proponente</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #telefono3 type="number" maxlength="10" formControlName="telefono" required>
-                </mat-form-field>
-                <span class="contador">{{10 - telefono3.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="pr-1">
-                <label for="correoElectronico" class="label-left">Correo electrónico del proponente</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #correoElectronico3 type="text" maxlength="100" formControlName="correoElectronico" required>
-                </mat-form-field>
-                <span class="contador">{{100 - correoElectronico3.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>    
-  <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
-    </button>
-  </div>
-</form>
+    </div>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      </button>
+    </div>
+  </form>
 
 
 </div>
-
-
-

@@ -35,6 +35,7 @@ import { MatCardModule } from '@angular/material/card';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormDatosProponentesNuevoComponent } from './components/form-datos-proponentes-nuevo/form-datos-proponentes-nuevo.component';
+import { VerObservacionesComponent } from './components/ver-observaciones/ver-observaciones.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { FormDatosProponentesNuevoComponent } from './components/form-datos-prop
     CargarOrdenDeElegibilidadComponent,
     TablaOrdenDeElegibilidadComponent,
     VerDetalleTablaProcesosComponent,
+    VerObservacionesComponent,
     MonitorearCronogramaComponent,
     TablaCronogramaComponent,
     TablaDetalleCronogramaComponent,

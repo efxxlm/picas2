@@ -61,10 +61,12 @@ export class TablaProcesosComponent implements OnInit {
         if (nombreEstado) proceso.estadoProcesoSeleccionNombre = nombreEstado.nombre;
         if (nombreEtapa)  proceso.etapaProcesoSeleccionNombre = nombreEtapa.nombre;
         
-        if(proceso.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario)
+        if(proceso.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
         {
           //valido si esta incompleto si no tiene datos de evaluacion y proponentes seleccionados
-          if(proceso.evaluacionDescripcion!="" && proceso.urlSoporteEvaluacion!="" && proceso.listaContratistas?.length>0)
+          if(proceso.evaluacionDescripcion!="" 
+          && proceso.urlSoporteEvaluacion!=""
+           && proceso.listaContratistas?.length>0)
           {
             proceso.esCompleto=true;
           }

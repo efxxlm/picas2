@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
             DisponibilidadPresupuestalProyecto = new HashSet<DisponibilidadPresupuestalProyecto>();
             InfraestructuraIntervenirProyecto = new HashSet<InfraestructuraIntervenirProyecto>();
             ProyectoAportante = new HashSet<ProyectoAportante>();
+            ProyectoMonitoreoWeb = new HashSet<ProyectoMonitoreoWeb>();
             ProyectoPredio = new HashSet<ProyectoPredio>();
             ProyectoRequisitoTecnico = new HashSet<ProyectoRequisitoTecnico>();
         }
@@ -41,6 +42,9 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public string EstadoJuridicoCodigo { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public bool? TieneEstadoFase1EyD { get; set; }
+        public bool? TieneEstadoFase1Diagnostico { get; set; }
+        public string UrlMonitoreo { get; set; }
 
         public virtual InstitucionEducativaSede InstitucionEducativa { get; set; }
         public virtual Localizacion LocalizacionIdMunicipioNavigation { get; set; }
@@ -52,6 +56,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
         public virtual ICollection<InfraestructuraIntervenirProyecto> InfraestructuraIntervenirProyecto { get; set; }
         public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }
+        public virtual ICollection<ProyectoMonitoreoWeb> ProyectoMonitoreoWeb { get; set; }
         public virtual ICollection<ProyectoPredio> ProyectoPredio { get; set; }
         public virtual ICollection<ProyectoRequisitoTecnico> ProyectoRequisitoTecnico { get; set; }
     }

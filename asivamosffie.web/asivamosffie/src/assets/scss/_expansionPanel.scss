@@ -1,11 +1,20 @@
 .sin-diligenciar {
-    --color-info: #D21E17;
+  --color-info: #D21E17;
+  &::before {
+    background-color: #D21E17;
+  }
 }
 .en-proceso {
-    --color-info: #FCC101;
+  --color-info: #FCC101;
+  &::before {
+    background-color: #FCC101;
+  }
 }
 .completo {
-    --color-info: #06B935;
+  --color-info: #06B935;
+  &::before {
+    background-color: #06B935;
+  }
 }
 
 %ayuda-color {
@@ -123,19 +132,18 @@ div.mat-expansion-panel-body {
     padding-left: 0;
     padding-right: 0;
 }
-/*jflorez, lo siento no lo he terminado*/
+
 .en-alertaLibre::before {
     @extend %ayuda-color;
-    /*position: absolute;
-    right: 1.2em;
-    top: 50%;*/
-    transform: translateY(-50%);
+    transform: translateY(-4px);
     content: '!';
     background-color: #fff;
-    color: $mainColor;
-    display: flex;
+    color: #174193;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    border: 1px;
-    border-radius: 25%;
+    border: solid 1.5px;
+    border-radius: 50%;
+    padding: 1px;
+    font-weight: 500;
 }

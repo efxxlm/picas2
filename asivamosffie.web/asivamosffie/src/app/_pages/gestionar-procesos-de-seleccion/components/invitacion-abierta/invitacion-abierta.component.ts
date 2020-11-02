@@ -72,11 +72,17 @@ export class InvitacionAbiertaComponent implements OnInit {
 
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string,id:number) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(["/seleccion/invitacionAbierta", id]);
+        setTimeout(() => {
+          location.reload();  
+        }, 1000);
+    });
   }
 
   async editMode(){
@@ -100,11 +106,8 @@ export class InvitacionAbiertaComponent implements OnInit {
       // {
       //   this.router.navigate([`/seleccion/seccionPrivada/${ this.procesoSeleccion.tipoProcesoCodigo }/${ this.procesoSeleccion.procesoSeleccionId }`])
       // }
-      this.openDialog( "", respuesta.message );
-      this.router.navigate(["/seleccion/invitacionAbierta", respuesta.data.procesoSeleccionId]);
-      setTimeout(() => {
-        location.reload();  
-      }, 1000);
+      this.openDialog( "", respuesta.message,respuesta.data.procesoSeleccionId );
+      
       console.log('respuesta',  respuesta );
     })
   }

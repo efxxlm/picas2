@@ -2,6 +2,11 @@ th.mat-header-cell {
     background-color: $mainColor;
     color: #fff;
     text-align: center;
+    padding: 0 .6em 0 calc(.6em + 18px) !important;
+}
+
+td.mat-cell {
+    padding: 0 .6em !important;
 }
 
 .mat-sort-header-container {
@@ -18,12 +23,10 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 
 th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
     border-left: solid 1px $mainColor;
-    padding: 0 .8em !important;
 }
 
 th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
     border-right: solid 1px $mainColor;
-    padding: 0 .8em !important;
 }
 
 .mat-cell, .mat-footer-cell {
@@ -75,6 +78,11 @@ div.mat-paginator {
     &-range-actions {
         order: 1;
         margin: auto;
+        @media screen and (min-width: 0\0) {
+          margin: 0;
+          margin-right: 20%;
+          padding: 0;
+        }
         @media only screen and (min-width: 48em) {
             padding-left: 9.6em;
         }

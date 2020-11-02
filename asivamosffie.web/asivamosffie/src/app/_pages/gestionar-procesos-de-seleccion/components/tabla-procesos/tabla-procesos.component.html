@@ -58,8 +58,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table"
-                        (click)="verMas(element.procesoSeleccionId)"
-                        [disabled]="element.estadoProcesoSeleccionCodigo=='2'"
+                        (click)="verMas(element.procesoSeleccionId)"                        
                         >Ver detalle</button>
                 </td>
             </ng-container>

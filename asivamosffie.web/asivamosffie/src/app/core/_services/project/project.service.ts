@@ -10,6 +10,7 @@ import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-
   providedIn: 'root'
 })
 export class ProjectService {
+  
 
   constructor(private http: HttpClient) {  }
 
@@ -96,7 +97,19 @@ export class ProjectService {
     return this.http.get<ProyectoGrilla>(`${environment.apiUrl}/Project/getProyectoGrillaByProyectoId?idProyecto=${ id }`);
    }
 
-   
+   deleteProyectoInfraestructura(infraestrucutraIntervenirProyectoId: number) {
+    return this.http.post<any>(`${environment.apiUrl}/Project/deleteInfraestructuraByID?pId=${infraestrucutraIntervenirProyectoId}`,null);
+    }
+    deleteProyectoAportante(proyectoAportanteId: number) {
+      return this.http.post<any>(`${environment.apiUrl}/Project/deleteAportantesByID?pId=${proyectoAportanteId}`,null);
+    }
+    deleteProyectoPredio(ProyectoPredioId: number) {
+      return this.http.post<any>(`${environment.apiUrl}/Project/deletePredioByID?pId=${ProyectoPredioId}`,null);
+    } 
+
+    deleteProyectoFont(ProyectoPredioId: number) {
+      return this.http.post<any>(`${environment.apiUrl}/Project/deleteFontByID?pId=${ProyectoPredioId}`,null);
+    } 
 
 }
 export interface RespuestaProyecto{
@@ -269,14 +282,14 @@ export interface ProyectoAportante{
   cofinanciacionDocumento?:CofinanciacionDocumento
 }
 export interface ProyectoPredio{  
-  ProyectoPredioId:number ,
-  ProyectoId?:number ,
-  PredioId? :number,
+  proyectoPredioId:number ,
+  proyectoId?:number ,
+  predioId? :number,
   //EstadoJuridicoCodigo :string,
-  Activo?:boolean ,
-  FechaCreacion?:Date ,
-  UsuarioCreacion:string ,
-  Predio:Predio
+  activo?:boolean ,
+  fechaCreacion?:Date ,
+  usuarioCreacion:string ,
+  predio:Predio
 }
 
 export interface ProyectoGrilla{

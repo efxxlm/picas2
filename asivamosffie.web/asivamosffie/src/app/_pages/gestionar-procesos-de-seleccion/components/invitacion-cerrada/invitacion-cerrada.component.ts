@@ -61,11 +61,17 @@ export class InvitacionCerradaComponent implements OnInit {
 
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string,id:number) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(["/seleccion/invitacionCerrada", id]);
+      setTimeout(() => {
+        location.reload();  
+      }, 1000);
+    });
   }
 
   async cargarRegistro(){
@@ -115,11 +121,8 @@ export class InvitacionCerradaComponent implements OnInit {
       // {
       //   this.router.navigate([`/seleccion/seccionPrivada/${ this.procesoSeleccion.tipoProcesoCodigo }/${ this.procesoSeleccion.procesoSeleccionId }`])
       // }
-      this.openDialog( "", respuesta.message )
-      this.router.navigate(["/seleccion/invitacionCerrada", respuesta.data.procesoSeleccionId]);
-      setTimeout(() => {
-        location.reload();  
-      }, 1000);
+      this.openDialog( "", respuesta.message,respuesta.data.procesoSeleccionId )
+      
       console.log('respuesta',  respuesta );
     })
   }
@@ -184,14 +187,18 @@ export class InvitacionCerradaComponent implements OnInit {
 
   estaIncompletoDatos(pProceso:any):number{
     let retorno=0;
+    console.log("vantidad propo"+pProceso.procesoSeleccionProponente.length);
     
-      if(pProceso.procesoSeleccionProponente.length>0)
+      if(pProceso.procesoSeleccionProponente.length>=3)
       {
         retorno=2;
       }
       else
       {
-        retorno=1;
+        if(pProceso.procesoSeleccionProponente.length>0 &&pProceso.procesoSeleccionProponente.length<3 )
+        {
+         retorno=1;
+        }      
       }
     
     return retorno;
@@ -205,16 +212,20 @@ export class InvitacionCerradaComponent implements OnInit {
     }
     else
     {
-     if(pProceso.evaluacionDescripcion!="" || pProceso.urlSoporteEvaluacion!="")
-     {
-      if(pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="")
+      if(pProceso.evaluacionDescripcion)
       {
-        retorno=2;
-      }  
-      else{
-        retorno=1;
+        if(pProceso.evaluacionDescripcion!="" || pProceso.urlSoporteEvaluacion!="")
+        {
+         if(pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="")
+         {
+           retorno=2;
+         }  
+         else{
+           retorno=1;
+         }
+        }
       }
-     } 
+      
     }
     return retorno;
   }
