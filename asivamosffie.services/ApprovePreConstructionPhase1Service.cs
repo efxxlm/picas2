@@ -36,7 +36,14 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDDP IS NOT NULL " +
-                "AND cp.FechaAprobacion is not null")
+                "AND cp.FechaAprobacion IS NOT NULL" +
+                "OR  c.EstadoVerificacionCodigo = 6" +  //Enviado al supervisor
+                "OR  c.EstadoVerificacionCodigo = 7" +  //En proceso de validación de requisitos técnicos
+                "OR  c.EstadoVerificacionCodigo = 8" +  //Con requisitos técnicos validados
+                "OR  c.EstadoVerificacionCodigo = 9" +  //Con requisitos técnicos aprobados por supervisor
+                "OR  c.EstadoVerificacionCodigo = 10" + //Enviado al interventor
+                "OR  c.EstadoVerificacionCodigo = 11" + //Enviado al apoyo
+                "")
                 .Include(r => r.ContratoPoliza)
                 .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)

@@ -40,7 +40,12 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDDP IS NOT NULL " +
                 "AND cp.FechaAprobacion is not null " +
-                "AND ctr.TipoSolicitudCodigo = 1")
+                "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Obra
+                "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
+                "OR  c.EstadoVerificacionCodigo = 2" +  //En proceso de aprobación de requisitos técnicos
+                "OR  c.EstadoVerificacionCodigo = 3"+  //Con requisitos técnicos aprobados
+                "OR  c.EstadoVerificacionCodigo = 10")   //Enviado al interventor -- Enviado por el supervisor
+
                 .Include(r => r.ContratoPoliza)
                 .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
@@ -156,15 +161,15 @@ namespace asivamosffie.services
                 foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto)
                 {
                     //Guardar estado de la fase 1 preConstruccion 
-                    if (ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico != null  || ContratacionProyecto.Proyecto.TieneEstadoFase1EyD != null)
+                    if (ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico != null || ContratacionProyecto.Proyecto.TieneEstadoFase1EyD != null)
                     {
-                        Proyecto proyectoOld = _context.Proyecto.Find(ContratacionProyecto.Proyecto.ProyectoId); 
+                        Proyecto proyectoOld = _context.Proyecto.Find(ContratacionProyecto.Proyecto.ProyectoId);
                         proyectoOld.TieneEstadoFase1Diagnostico = ContratacionProyecto.Proyecto.TieneEstadoFase1Diagnostico;
                         proyectoOld.TieneEstadoFase1EyD = ContratacionProyecto.Proyecto.TieneEstadoFase1EyD;
                         proyectoOld.FechaModificacion = DateTime.Now;
                         proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     }
-                     
+
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
                         if (ContratoPerfil.ContratoPerfilId > 0)
@@ -267,16 +272,16 @@ namespace asivamosffie.services
                                 }
                             }
                         }
-                    } 
+                    }
                 }
 
                 //Cambiar Estado Contrato 
                 Contrato contratoOld = _context.Contrato.
                     Where(r => r.ContratoId == pContrato.ContratoId)
                     .Include(r => r.Contratacion)
-                    .Include(r=> r.ContratoPerfil)
+                    .Include(r => r.ContratoPerfil)
                     .FirstOrDefault();
-                 
+
                 if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
                 {
                     if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)

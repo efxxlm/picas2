@@ -23,6 +23,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+
         public async Task<dynamic> GetListContratacion()
         {
             List<dynamic> listaContrats = new List<dynamic>();
@@ -33,7 +34,12 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDDP IS NOT NULL " +
-                "AND cp.FechaAprobacion is not null")
+                "AND cp.FechaAprobacion is not null " +
+                "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Interventoria
+                "OR  c.EstadoVerificacionCodigo = 3" +  //Sin aprobación de requisitos técnicos
+                "OR  c.EstadoVerificacionCodigo = 4" +  //En proceso de verificación de requisitos técnicos
+                "OR  c.EstadoVerificacionCodigo = 5" +  //Con requisitos técnicos verificados
+                "OR  c.EstadoVerificacionCodigo = 6")   //Enviado al supervisor
                 .Include(r => r.ContratoPoliza)
                 .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
@@ -51,7 +57,7 @@ namespace asivamosffie.services
                 if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
                     EstaDevuelto = true;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
-                { 
+                {
                     bool RegistroCompletoObservaciones = true;
                     foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                     {
@@ -67,7 +73,7 @@ namespace asivamosffie.services
                     if (RegistroCompletoObservaciones)
                         CantidadProyectosConPerfilesAprobados++;
                     else
-                        CantidadProyectosConPerfilesPendientes++; 
+                        CantidadProyectosConPerfilesPendientes++;
                 }
 
                 if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
@@ -102,7 +108,12 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDDP IS NOT NULL " +
                 "AND cp.FechaAprobacion is not null " +
-                "AND ctr.TipoSolicitudCodigo = 2")
+                "AND ctr.TipoSolicitudCodigo = 2" +     //Solo contratos Tipo Interventoria
+                "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
+                "OR  c.EstadoVerificacionCodigo = 4" +  //En proceso de verificación de requisitos técnicos
+                "OR  c.EstadoVerificacionCodigo = 5" +  //Con requisitos técnicos verificados
+                "OR  c.EstadoVerificacionCodigo = 6" +  //Enviado al supervisor
+                "OR  c.EstadoVerificacionCodigo = 11")  //Enviado al apoyo
                 .Include(r => r.ContratoPoliza)
                 .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
@@ -434,7 +445,7 @@ namespace asivamosffie.services
                 Contrato contrato = _context.Contrato
                     .Where(r => r.ContratoId == contratoPerfilOld.ContratoId)
                     .Include(r => r.Contratacion)
-                    .Include(r => r.ContratoPerfil) 
+                    .Include(r => r.ContratoPerfil)
                     .ThenInclude(r => r.ContratoPerfilObservacion).FirstOrDefault();
                 contrato.EstaDevuelto = false;
                 bool RegistroCompleto = true;
@@ -449,7 +460,7 @@ namespace asivamosffie.services
                         && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                         && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
                         RegistroCompleto = false;
-           
+
                 }
 
                 if (RegistroCompleto)
