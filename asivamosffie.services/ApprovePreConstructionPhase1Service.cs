@@ -110,7 +110,7 @@ namespace asivamosffie.services
                     EstadoCodigo = c.EstadoVerificacionCodigo,
                     EstaDevuelto,
                     RegistroCompleto,
-                    TieneObservacionSupervisor
+                    TieneObservacionSupervisor = !(bool)TieneObservacionSupervisor ? true : TieneObservacionSupervisor
                 });
             }
 
