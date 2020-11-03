@@ -43,7 +43,7 @@ namespace asivamosffie.services
                 "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Obra
                 "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
                 "OR  c.EstadoVerificacionCodigo = 2" +  //En proceso de aprobación de requisitos técnicos
-                "OR  c.EstadoVerificacionCodigo = 3"+   //Con requisitos técnicos aprobados
+                "OR  c.EstadoVerificacionCodigo = 3" +   //Con requisitos técnicos aprobados
                 "OR  c.EstadoVerificacionCodigo = 10")  //Enviado al interventor -- Enviado por el supervisor
 
                 .Include(r => r.ContratoPoliza)
@@ -186,10 +186,12 @@ namespace asivamosffie.services
 
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
-                            if (contratoPerfilOld.RegistroCompleto) {
-                                if (contratoPerfilOld.TieneObservacionSupervisor.HasValue) {
+                            if (contratoPerfilOld.RegistroCompleto)
+                            {
+                                if (contratoPerfilOld.TieneObservacionSupervisor.HasValue)
+                                {
                                     contratoPerfilOld.TieneObservacionSupervisor = false;
-                                } 
+                                }
                             }
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
@@ -289,23 +291,9 @@ namespace asivamosffie.services
 
                 if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
                 {
-                    if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
-                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados;
-                    else
-                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
-
+                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                    contratoOld.FechaModificacion = DateTime.Now;
-                }
-                else
-                {
-                    if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
-                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-                    else
-                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
-
-                    contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                    contratoOld.FechaModificacion = DateTime.Now;
+                    contratoOld.FechaModificacion = DateTime.Now; 
                 }
                 _context.SaveChanges();
                 return
