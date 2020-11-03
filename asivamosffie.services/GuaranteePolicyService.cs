@@ -1013,10 +1013,13 @@ namespace asivamosffie.services
                 {
                     ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     Contratacion contratacion = null;
-                    contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
+                    contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratacionId);
 
                     string strContratistaNombre = string.Empty;
                     string strContratistaNumeroIdentificacion = string.Empty;
+
+                    Dominio TipoDocumentoCodigoContratista;
+                    string strTipoDocumentoContratista = string.Empty;
 
                     Contratista contratista;
                     if (contratacion != null)
@@ -1028,8 +1031,12 @@ namespace asivamosffie.services
                             strContratistaNombre = contratista.Nombre;
                             //Nit  
                             strContratistaNumeroIdentificacion = contratista.NumeroIdentificacion.ToString();
-                        }
 
+                             TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+
+                            if (TipoDocumentoCodigoContratista != null)
+                                strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
+                        }
                     }
 
                     //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
@@ -1053,7 +1060,7 @@ namespace asivamosffie.services
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
-
+                                                                                
                     string strTipoContratoCodigoContratoNombre = string.Empty;
 
                     if (TipoContratoCodigoContrato != null)
@@ -1067,6 +1074,7 @@ namespace asivamosffie.services
                         NumeroContrato = contrato.NumeroContrato,
                         ObjetoContrato = contrato.Objeto,
                         NombreContratista = strContratistaNombre,
+                        TipoDocumento= strTipoDocumentoContratista,
 
                         //Nit  
                         NumeroIdentificacion = strContratistaNumeroIdentificacion,
@@ -1112,18 +1120,15 @@ namespace asivamosffie.services
                         //Nit  
                         NumeroIdentificacion = "ERROR",
                         ValorContrato = "ERROR",
-
                         PlazoContrato = "ERROR",
 
                         //EstadoRegistro 
-
                         //public bool? RegistroCompleto { get; set; } 
-
                         //TipoSolicitud = contratoPoliza.EstadoPolizaCodigo
 
                         DescripcionModificacion = "ERROR",
-
-                        TipoModificacion = "ERROR"
+                        TipoModificacion = "ERROR", 
+                        TipoDocumento="ERROR"
 
                     };
                     ListContratoGrilla.Add(proyectoGrilla);

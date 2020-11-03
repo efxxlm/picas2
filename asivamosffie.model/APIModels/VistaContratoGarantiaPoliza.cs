@@ -18,6 +18,8 @@ namespace asivamosffie.model.APIModels
         
         public string NumeroIdentificacion { get; set; }
 
+        public string TipoDocumento { get; set; }
+
         //Nit  ????
 
         public string ValorContrato { get; set; }
