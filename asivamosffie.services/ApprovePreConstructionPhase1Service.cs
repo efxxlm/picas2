@@ -35,8 +35,8 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-                "WHERE dp.NumeroDDP IS NOT NULL " +
-                "AND cp.FechaAprobacion IS NOT NULL" +
+                "WHERE dp.NumeroDRP IS NOT NULL " + //Documento Registro Presupuestal
+                "AND cp.FechaAprobacion IS NOT NULL" +  //Fecha Aprobacion Poliza
                 "OR  c.EstadoVerificacionCodigo = 6" +  //Enviado al supervisor
                 "OR  c.EstadoVerificacionCodigo = 7" +  //En proceso de validación de requisitos técnicos
                 "OR  c.EstadoVerificacionCodigo = 8" +  //Con requisitos técnicos validados
@@ -111,7 +111,7 @@ namespace asivamosffie.services
                 contratoPerfilOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
                 contratoPerfilOld.FechaModificacion = DateTime.Now;
                 contratoPerfilOld.TieneObservacionSupervisor = pContratoPerfilObservacion.TieneObservacionSupervisor;
-        
+
                 if (pContratoPerfilObservacion.ContratoPerfilObservacionId == 0)
                 {
                     pContratoPerfilObservacion.FechaCreacion = DateTime.Now;
@@ -137,11 +137,16 @@ namespace asivamosffie.services
                     .Include(r => r.Contratacion)
                     .Include(r => r.ContratoPerfil)
                     .ThenInclude(r => r.ContratoPerfilObservacion).FirstOrDefault();
-           
-                bool RegistroCompleto = true;
 
+                bool RegistroCompleto = true;
+                bool TieneObservacionSupervisor = true;
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
+                    if ((bool)ContratoPerfil.TieneObservacionSupervisor)
+                    {
+                        TieneObservacionSupervisor = false;
+                    }
+
                     if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
                         RegistroCompleto = false;
                     else if ((ContratoPerfil.TieneObservacionSupervisor == null)
@@ -153,9 +158,30 @@ namespace asivamosffie.services
                 }
 
                 if (RegistroCompleto)
-                    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor;
+                {
+                    if (contrato.Contratacion.TipoContratacionCodigo == ConstanCodigoTipoContrato.Obra)
+                    {
+                        contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor;
+
+                        if ((bool)TieneObservacionSupervisor)
+                        {
+                            contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
+                        }
+                    }
+                    else
+                    {
+                        contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor;
+
+                        if ((bool)TieneObservacionSupervisor)
+                        {
+                            contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
+                        }
+                    }
+                }
                 else
-                    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
+                { 
+                    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_validacion_de_requisitos_tecnicos; 
+                }
 
                 return
                     new Respuesta

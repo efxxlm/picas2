@@ -33,8 +33,8 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-                "WHERE dp.NumeroDDP IS NOT NULL " +
-                "AND cp.FechaAprobacion is not null " +
+                "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
+                "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
                 "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Interventoria
                 "OR  c.EstadoVerificacionCodigo = 3" +  //Sin aprobación de requisitos técnicos
                 "OR  c.EstadoVerificacionCodigo = 4" +  //En proceso de verificación de requisitos técnicos
@@ -106,8 +106,8 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-                "WHERE dp.NumeroDDP IS NOT NULL " +
-                "AND cp.FechaAprobacion is not null " +
+                "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
+                "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
                 "AND ctr.TipoSolicitudCodigo = 2" +     //Solo contratos Tipo Interventoria
                 "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
                 "OR  c.EstadoVerificacionCodigo = 4" +  //En proceso de verificación de requisitos técnicos
