@@ -21,7 +21,8 @@ export interface DisponibilidadPresupuestal{
     
     disponibilidadPresupuestalId?: number,
     fechaSolicitud?: Date,
-    tipoSolicitudCodigo?: string,
+    tipoSolicitudCodigo?: string,//tradicional, especial o administrativo
+    tipoSolicitudEspecialCodigo?:string,//si es especial puede ser expensas o otros costos
     numeroSolicitud?: string,
     opcionContratarCodigo?: string,
     valorSolicitud?: number,

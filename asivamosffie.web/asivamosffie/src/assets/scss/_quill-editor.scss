@@ -43,6 +43,11 @@
   .ql-editor {
     color: $mainColor !important;
     padding: 0 1em;
+
+    * {
+      color: $mainColor !important;
+    }
+
     &::before {
       content: "";
     }

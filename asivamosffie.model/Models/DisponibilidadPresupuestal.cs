@@ -40,6 +40,7 @@ namespace asivamosffie.model.Models
         public string NumeroRadicadoSolicitud { get; set; }
         public DateTime? FechaDrp { get; set; }
         public string UrlSoporte { get; set; }
+        public string TipoSolicitudEspecialCodigo { get; set; }
 
         public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual Contratacion Contratacion { get; set; }

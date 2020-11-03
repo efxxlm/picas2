@@ -43,6 +43,9 @@ export class PolizaGarantiaService implements OnInit {
   AprobarContratoByIdContrato(pContratoPolizaId:number){
     return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pContratoPolizaId=${pContratoPolizaId}`,pContratoPolizaId);
   }
+  CambiarEstadoPoliza(pContratoPolizaId:number,pCodigoNuevoEstadoPoliza:string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPoliza?pContratoPolizaId=${pContratoPolizaId}&pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}`,null);
+  }
 }
 
 export interface CreatePolizaObservacion {

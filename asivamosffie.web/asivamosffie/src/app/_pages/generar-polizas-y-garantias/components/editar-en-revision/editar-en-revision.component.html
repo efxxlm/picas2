@@ -177,9 +177,10 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="polizasYSeguros" multiple required (selectionChange)="getvalues($event.value)">
+              <mat-select formControlName="polizasYSeguros" multiple required
+                (selectionChange)="getvalues($event.value)">
                 <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
-                  {{ polizasYSeguros }}
+                  {{ polizasYSeguros.nombre }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -187,7 +188,7 @@
         </div>
         <div *ngIf="this.obj1==true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-            Pólizas y seguros interventoría
+            Buen manejo y correcta inversión del anticipo
           </mat-card-title>
           <div class="row">
             <div class="col-md-8">
@@ -209,7 +210,7 @@
         </div>
         <div *ngIf="this.obj2==true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-            Pólizas y seguros de póliza obra
+            Garantía de estabilidad y calidad de la obra
           </mat-card-title>
           <div class="row">
             <div class="col-md-8">
@@ -220,6 +221,50 @@
                 </div>
                 <div class="col">
                   <mat-radio-group class="radioInput" formControlName="estabilidadYCalidad" required>
+                    <mat-radio-button [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <span class="required-form-group">*</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="this.obj3==true">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            Póliza de cumplimiento
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="polizaYCoumplimiento">¿Está incluida en la póliza
+                    presentada?</label>
+                </div>
+                <div class="col">
+                  <mat-radio-group class="radioInput" formControlName="polizaYCoumplimiento" required>
+                    <mat-radio-button [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <span class="required-form-group">*</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="this.obj4==true">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            Pólizas y seguros
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="polizasYSegurosCompleto">¿Está incluida en la póliza
+                    presentada?</label>
+                </div>
+                <div class="col">
+                  <mat-radio-group class="radioInput" formControlName="polizasYSegurosCompleto" required>
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>

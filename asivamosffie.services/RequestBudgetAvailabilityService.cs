@@ -455,6 +455,7 @@ namespace asivamosffie.services
                                                 .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
                                                    .ThenInclude(r => r.Proyecto)
+                                                   .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)
                                                 .Include(r => r.Aportante)
                                                    .ThenInclude(r => r.NombreAportante)
                                                 .Include(r => r.Aportante)
