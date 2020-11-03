@@ -3926,11 +3926,9 @@ namespace asivamosffie.services
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_CONTRATO_CONTRATACION:
                                         string StrTipoContrato = string.Empty;
 
-                                        if (contratacion.Contrato.Count() > 0)
-                                        {
-                                            StrTipoContrato = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
-                                           && r.Codigo == contratacion.Contrato.FirstOrDefault().TipoContratoCodigo).FirstOrDefault().Nombre;
-                                        }
+                                        StrTipoContrato = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
+                                       && r.Codigo == contratacion.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+
                                         registrosContratacion = registrosContratacion
                                             .Replace(placeholderDominio.Nombre, StrTipoContrato
                                            );
@@ -4077,6 +4075,27 @@ namespace asivamosffie.services
                                 {
                                     case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
                                         registrosProcesosSelecccion = registrosProcesosSelecccion
+                                            .Replace(placeholderDominio.Nombre, enumOrdenDelDia++.ToString());
+                                        break;
+
+                                    case ConstanCodigoVariablesPlaceHolders.TIPO_SOLICITUD:
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                            .Replace(placeholderDominio.Nombre,
+                                            ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                            && r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre);
+                                        break;
+
+                                    case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD:
+                                        string FechaSolicitud = string.Empty;
+                                            FechaSolicitud = procesoSeleccion.FechaCreacion.ToString("dd-MM-yyyy");
+                                        
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                            .Replace(placeholderDominio.Nombre, FechaSolicitud);
+                                        break;
+
+
+                                    case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD_PROCESO:
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.NumeroProceso);
                                         break;
 
@@ -4102,7 +4121,8 @@ namespace asivamosffie.services
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.Justificacion);
                                         break;
 
-                                    case ConstanCodigoVariablesPlaceHolders.TIPO_INTERVENCION:
+                                    case ConstanCodigoVariablesPlaceHolders.TIPO_INTERVENCION_PROCESO:
+
                                         registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre,
                                         ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion
