@@ -163,7 +163,7 @@ namespace asivamosffie.services
                     {
                         contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor;
 
-                        if ((bool)TieneObservacionSupervisor)
+                        if (!(bool)TieneObservacionSupervisor)
                         {
                             contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
                         }
@@ -172,7 +172,7 @@ namespace asivamosffie.services
                     {
                         contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor;
 
-                        if ((bool)TieneObservacionSupervisor)
+                        if (!(bool)TieneObservacionSupervisor)
                         {
                             contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
                         }
