@@ -180,7 +180,7 @@
               <mat-select formControlName="polizasYSeguros" multiple required
                 (selectionChange)="getvalues($event.value)">
                 <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
-                  {{ polizasYSeguros }}
+                  {{ polizasYSeguros.nombre }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

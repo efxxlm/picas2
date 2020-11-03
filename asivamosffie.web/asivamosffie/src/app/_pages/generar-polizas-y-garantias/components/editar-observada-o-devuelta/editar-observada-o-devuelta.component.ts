@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CreatePolizaGarantia, CreatePolizaObservacion, EditPoliza, InsertPoliza, PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 @Component({
   selector: 'app-editar-observada-o-devuelta',
   templateUrl: './editar-observada-o-devuelta.component.html',
@@ -42,7 +43,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     observacionesGenerales: [null, Validators.required],
   });
 
-  polizasYSegurosArray = ['Pólizas y seguros interventoría','Pólizas y seguros de póliza obra'];
+  polizasYSegurosArray: Dominio[] = [];
   estadoArray = [
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
@@ -81,13 +82,16 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   selected: any;
   obj1: boolean;
   obj2: boolean;
+  obj3: boolean;
+  obj4: boolean;
 
   constructor(
     private router: Router,
     private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private common: CommonService
   ) {
     this.minDate = new Date();
   }
@@ -98,9 +102,18 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.loadObservations(param.id);
     });
   }
-  getvalues( values: any[]){
-    this.obj1 = values.includes('Pólizas y seguros interventoría');
-    this.obj2 = values.includes('Pólizas y seguros de póliza obra');
+  getvalues(values: Dominio[]) {
+    console.log(values);
+    const buenManejo = values.find(value => value.codigo == "1");
+    const garantiaObra = values.find(value => value.codigo == "2");
+    const pCumplimiento = values.find(value => value.codigo == "3");
+    const polizasYSeguros = values.find(value => value.codigo == "4");
+
+    buenManejo ? this.obj1 = true : this.obj1 = false;
+    garantiaObra ? this.obj2 = true : this.obj2 = false;
+    pCumplimiento ? this.obj3 = true : this.obj3 = false;
+    polizasYSeguros ? this.obj4 = true : this.obj4 = false;
+
   }
   loadContrato(id){
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data=>{
@@ -112,6 +125,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.valorContrato = data[0].valorContrato;
       this.plazoContrato = data[0].plazoContrato;
       this.numContrato = data[0].numeroContrato;
+    });
+    this.common.listaGarantiasPolizas().subscribe(data0 => {
+      this.polizasYSegurosArray = data0;
     });
   }
   loadData(id){

@@ -5,7 +5,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { PolizaGarantiaService, ContratoPoliza, InsertPoliza } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Dominio } from 'src/app/core/_services/common/common.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 @Component({
   selector: 'app-gestionar-polizas',
   templateUrl: './gestionar-polizas.component.html',
@@ -31,6 +32,8 @@ export class GestionarPolizasComponent implements OnInit {
     polizasYSeguros: [null, Validators.required],
     buenManejoCorrectaInversionAnticipo: [null, Validators.required],
     estabilidadYCalidad: [null, Validators.required],
+    polizaYCoumplimiento: [null, Validators.required],
+    polizasYSegurosCompleto: [null, Validators.required],
     cumpleAsegurado: [null, Validators.required],
     cumpleBeneficiario: [null, Validators.required],
     cumpleAfianzado: [null, Validators.required],
@@ -43,7 +46,7 @@ export class GestionarPolizasComponent implements OnInit {
     observacionesGenerales: [null, Validators.required]
   });
 
-  polizasYSegurosArray = ['Pólizas y seguros interventoría','Pólizas y seguros de póliza obra'];
+  polizasYSegurosArray: Dominio[] = [];
   estadoArray = [
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
@@ -78,13 +81,15 @@ export class GestionarPolizasComponent implements OnInit {
   public idContrato;
   obj1: boolean;
   obj2: boolean;
-
+  obj3: boolean;
+  obj4: boolean;
   constructor(
     private router: Router,
     private polizaService: PolizaGarantiaService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
+    private common: CommonService
   ) {
     this.minDate = new Date();
   }
@@ -103,6 +108,9 @@ export class GestionarPolizasComponent implements OnInit {
       this.valorContrato = data[0].valorContrato;
       this.plazoContrato = data[0].plazoContrato;
       this.numContrato = data[0].numeroContrato;
+    });
+    this.common.listaGarantiasPolizas().subscribe(data0 => {
+      this.polizasYSegurosArray = data0;
     });
     this.idContrato = id;
   }
@@ -123,9 +131,18 @@ export class GestionarPolizasComponent implements OnInit {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
   }
-  getvalues(values: any[]) {
-    this.obj1 = values.includes('Pólizas y seguros interventoría');
-    this.obj2 = values.includes('Pólizas y seguros de póliza obra');
+  getvalues(values: Dominio[]) {
+    console.log(values);
+    const buenManejo = values.find(value => value.codigo == "1");
+    const garantiaObra = values.find(value => value.codigo == "2");
+    const pCumplimiento = values.find(value => value.codigo == "3");
+    const polizasYSeguros = values.find(value => value.codigo == "4");
+
+    buenManejo ? this.obj1 = true : this.obj1 = false;
+    garantiaObra ? this.obj2 = true : this.obj2 = false;
+    pCumplimiento ? this.obj3 = true : this.obj3 = false;
+    polizasYSeguros ? this.obj4 = true : this.obj4 = false;
+
   }
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -135,7 +152,7 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
-    const contratoArray: InsertPoliza = {
+    /*const contratoArray: InsertPoliza = {
       contratoId: this.idContrato.toString(),
       nombreAseguradora: this.addressForm.value.nombre,
       numeroPoliza: this.addressForm.value.numeroPoliza,
@@ -153,7 +170,7 @@ export class GestionarPolizasComponent implements OnInit {
       else {
         this.openDialog('', `<b>${data.message}</b>`);
       }
-    });
+    });*/
     console.log(this.addressForm.value);
   }
 }
