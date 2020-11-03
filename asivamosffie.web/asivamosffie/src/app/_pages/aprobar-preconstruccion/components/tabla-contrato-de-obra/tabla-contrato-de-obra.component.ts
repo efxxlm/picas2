@@ -102,7 +102,7 @@ export class TablaContratoDeObraComponent implements OnInit {
         );
       },
       err => this.openDialog( '', err.message )
-    )
+    );
   };
 
   enviarInterventor ( contratoId: number ) {
@@ -115,7 +115,7 @@ export class TablaContratoDeObraComponent implements OnInit {
           );
         },
         err => this.openDialog( '', err.message )
-      )
+      );
   };
 
 };

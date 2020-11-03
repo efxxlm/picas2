@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { TituloComponent } from './components/titulo/titulo.component';
 import { ExpansionValidarRequisitosComponent } from './components/expansion-validar-requisitos/expansion-validar-requisitos.component';
 import { ExpansionInterValidarRequisitosComponent } from './components/expansion-inter-validar-requisitos/expansion-inter-validar-requisitos.component';
+import { VerDetalleAprobarPreconstruccionComponent } from './components/ver-detalle-aprobar-preconstruccion/ver-detalle-aprobar-preconstruccion.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'interventoriaValidarRequisitos/:id',
     component: ExpansionInterValidarRequisitosComponent
+  },
+  {
+    path: 'verDetalle/:id',
+    component: VerDetalleAprobarPreconstruccionComponent
   }
 ];
 

@@ -13,6 +13,7 @@ import { TablaContratoDeObraComponent } from './components/tabla-contrato-de-obr
 import { TablaContratoDeInterventoriaComponent } from './components/tabla-contrato-de-interventoria/tabla-contrato-de-interventoria.component';
 import { ExpansionValidarRequisitosComponent } from './components/expansion-validar-requisitos/expansion-validar-requisitos.component';
 import { ExpansionInterValidarRequisitosComponent } from './components/expansion-inter-validar-requisitos/expansion-inter-validar-requisitos.component';
+import { VerDetalleAprobarPreconstruccionComponent } from './components/ver-detalle-aprobar-preconstruccion/ver-detalle-aprobar-preconstruccion.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { ExpansionInterValidarRequisitosComponent } from './components/expansion
     TablaContratoDeObraComponent,
     TablaContratoDeInterventoriaComponent,
     ExpansionValidarRequisitosComponent,
-    ExpansionInterValidarRequisitosComponent
+    ExpansionInterValidarRequisitosComponent,
+    VerDetalleAprobarPreconstruccionComponent
   ],
   imports: [
     CommonModule,
