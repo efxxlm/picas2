@@ -54,16 +54,19 @@ namespace asivamosffie.services
 
             foreach (var c in listContratos)
             {
+                bool TieneObservacionSupervisor = false;
                 int CantidadProyectosConPerfilesAprobados = 0;
                 int CantidadProyectosConPerfilesPendientes = 0;
                 bool RegistroCompleto = false;
                 bool EstaDevuelto = false;
-                bool TieneObservacionSupervisor = true;
+     
                 if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
                     EstaDevuelto = true;
                 foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                 {
-                    bool RegistroCompletoObservaciones = true;
+                 
+                    bool RegistroCompletoObservaciones = false;
+
                     foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                     {
                         if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).Count() == 0)
@@ -77,7 +80,7 @@ namespace asivamosffie.services
 
                         if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
                         {
-                            TieneObservacionSupervisor = false;
+                            TieneObservacionSupervisor = true;
                         }
 
                         if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
@@ -110,7 +113,7 @@ namespace asivamosffie.services
                     EstadoCodigo = c.EstadoVerificacionCodigo,
                     EstaDevuelto,
                     RegistroCompleto,
-                    TieneObservacionSupervisor = !(bool)TieneObservacionSupervisor ? true : TieneObservacionSupervisor
+                    TieneObservacionSupervisor 
                 });
             }
 
