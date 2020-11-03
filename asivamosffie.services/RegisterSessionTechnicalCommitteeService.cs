@@ -1578,7 +1578,8 @@ namespace asivamosffie.services
 
             try
             {
-                if ( pCompromisoId == 0 ){
+                if (pCompromisoId == 0)
+                {
                     return
                  new Respuesta
                  {
@@ -1587,7 +1588,7 @@ namespace asivamosffie.services
                      IsValidation = false,
                      Code = ConstantSesionComiteTecnico.OperacionExitosa,
                      //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SESIÓN COMITE COMPROMISO")
-                 };    
+                 };
                 }
 
                 SesionSolicitudCompromiso sesionSolicitudCompromiso = await _context.SesionSolicitudCompromiso
@@ -1610,17 +1611,17 @@ namespace asivamosffie.services
                 sesionSolicitudCompromiso.Eliminado = true;
                 sesionSolicitudCompromiso.FechaModificacion = DateTime.Now;
                 sesionSolicitudCompromiso.UsuarioCreacion = pUsuarioModificacion;
-                
+
                 SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
-                                                                            .Where( r => r.SesionComiteSolicitudId == sesionSolicitudCompromiso.SesionComiteSolicitudId )
-                                                                            .Include( r => r.SesionSolicitudCompromiso )
+                                                                            .Where(r => r.SesionComiteSolicitudId == sesionSolicitudCompromiso.SesionComiteSolicitudId)
+                                                                            .Include(r => r.SesionSolicitudCompromiso)
                                                                             .FirstOrDefault();
 
                 sesionComiteSolicitud.CantCompromisos = sesionComiteSolicitud.SesionSolicitudCompromiso
-                                                                                .Where( r => r.Eliminado != true && r.EsFiduciario != true ).Count(); 
+                                                                                .Where(r => r.Eliminado != true && r.EsFiduciario != true).Count();
 
                 sesionComiteSolicitud.CantCompromisosFiduciario = sesionComiteSolicitud.SesionSolicitudCompromiso
-                                                                                            .Where( r => r.Eliminado != true && r.EsFiduciario == true ).Count(); 
+                                                                                            .Where(r => r.Eliminado != true && r.EsFiduciario == true).Count();
 
                 _context.SaveChanges();
 
@@ -1655,7 +1656,8 @@ namespace asivamosffie.services
 
             try
             {
-                if ( pCompromisoTemaId == 0 ){
+                if (pCompromisoTemaId == 0)
+                {
                     return
                  new Respuesta
                  {
@@ -1664,11 +1666,11 @@ namespace asivamosffie.services
                      IsValidation = false,
                      Code = ConstantSesionComiteTecnico.OperacionExitosa,
                      //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SESIÓN COMITE COMPROMISO")
-                 };    
+                 };
                 }
 
                 TemaCompromiso temaCompromiso = await _context.TemaCompromiso
-                                                                    .Where(r => r.TemaCompromisoId== pCompromisoTemaId)
+                                                                    .Where(r => r.TemaCompromisoId == pCompromisoTemaId)
                                                                     .FirstOrDefaultAsync();
 
                 if (temaCompromiso == null)
@@ -1687,15 +1689,15 @@ namespace asivamosffie.services
                 temaCompromiso.Eliminado = true;
                 temaCompromiso.FechaModificacion = DateTime.Now;
                 temaCompromiso.UsuarioCreacion = pUsuarioModificacion;
-                
+
                 SesionComiteTema sesionComiteTema = _context.SesionComiteTema
-                                                                            .Where( r => r.SesionTemaId == temaCompromiso.SesionTemaId )
-                                                                            .Include( r => r.TemaCompromiso )
+                                                                            .Where(r => r.SesionTemaId == temaCompromiso.SesionTemaId)
+                                                                            .Include(r => r.TemaCompromiso)
                                                                             .FirstOrDefault();
 
                 sesionComiteTema.CantCompromisos = sesionComiteTema.TemaCompromiso
-                                                                                .Where( r => r.Eliminado != true ).Count(); 
-                                                                                
+                                                                                .Where(r => r.Eliminado != true).Count();
+
 
                 _context.SaveChanges();
 
@@ -2331,8 +2333,8 @@ namespace asivamosffie.services
 
         public string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
-            pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where( r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
-            pProcesoSeleccion.ProcesoSeleccionCotizacion = _context.ProcesoSeleccionCotizacion.Where( r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
+            pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
+            pProcesoSeleccion.ProcesoSeleccionCotizacion = _context.ProcesoSeleccionCotizacion.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
 
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
             List<Usuario> listaUsuarios = _context.Usuario.ToList();
@@ -2451,15 +2453,15 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_ABIERTA_PS:
                                 string NombresPreponente = "";
 
-                                Usuario responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId );
+                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
-                                if ( responsable != null )
-                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
-                                responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid );
+                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
-                                if ( responsable != null )
-                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -2487,15 +2489,15 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_CERRADA_PS:
                                 string NombresPreponente = "";
 
-                                Usuario responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId );
+                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
-                                if ( responsable != null )
-                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
-                                responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid );
+                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
-                                if ( responsable != null )
-                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -2508,20 +2510,22 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
 
-                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
+                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(c =>
+                                {
                                     ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre, c.NombreOrganizacion);                
+                                  Replace(placeholderDominio.Nombre, c.NombreOrganizacion);
                                 });
 
-                                break; 
+                                break;
 
                             case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
-                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
+                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(c =>
+                                {
                                     ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre,"$" + String.Format("{0:n0}", c.ValorCotizacion) );                
+                                  Replace(placeholderDominio.Nombre, "$" + String.Format("{0:n0}", c.ValorCotizacion));
                                 });
 
-                               break;
+                                break;
 
                             case ConstanCodigoVariablesPlaceHolders.EVALUACION_DESCRIPCION_CERRADA_PS:
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
@@ -2553,18 +2557,20 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_DOCUMENTO_PRIVADA_PS:
-                                if ( pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo != null )
+                                if (pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo != null)
                                 {
                                     ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
                                 Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
                                 ? ListaParametricas.Where(r => r.Codigo == pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo
                                 && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
-                                ).FirstOrDefault().Nombre : " ");    
-                                }else {
+                                ).FirstOrDefault().Nombre : " ");
+                                }
+                                else
+                                {
                                     ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
                                     Replace(placeholderDominio.Nombre, "");
                                 }
-                                
+
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_REPRESENTANTE_LEGAL_PRIVADA_PS:
@@ -3322,7 +3328,7 @@ namespace asivamosffie.services
 
                         TemaCompromisoId = (int)pObservacionComentario.TemaCompromisoId,
                         EstadoCodigo = ConstantCodigoCompromisos.En_proceso,
-                        Tarea = pObservacionComentario.Observacion 
+                        Tarea = pObservacionComentario.Observacion
                     };
                     _context.TemaCompromisoSeguimiento.Add(temaCompromisoSeguimiento);
 
@@ -3334,7 +3340,7 @@ namespace asivamosffie.services
                     SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
                     SesionSolicitudCompromisoOld.UsuarioModificacion = pObservacionComentario.Usuario;
                     SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
-                     
+
                     CompromisoSeguimiento compromisoSeguimiento = new CompromisoSeguimiento
                     {
                         UsuarioCreacion = pObservacionComentario.Usuario,
@@ -4648,6 +4654,24 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.SesionSolicitudCompromiso)
                 .Include(r => r.SesionComiteTema)
                     .ThenInclude(r => r.TemaCompromiso).ToListAsync();
+             
+            foreach (var comite in comiteTecnicos)
+            {
+                foreach (var SesionComiteSolicitudComiteTecnico in comite.SesionComiteSolicitudComiteTecnico)
+                {
+                    if (EsFiduciario)
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => (bool)r.EsFiduciario.HasValue).ToList();
+                    else
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.EsFiduciario.HasValue).ToList();
+                }
+                foreach (var SesionComiteSolicitudComiteTecnico in comite.SesionComiteSolicitudComiteTecnicoFiduciario)
+                {
+                    if (EsFiduciario)
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => (bool)r.EsFiduciario.HasValue).ToList();
+                    else
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.EsFiduciario.HasValue).ToList();
+                }
+            } 
 
             List<ListCompromisos> ListCompromisos = new List<ListCompromisos>();
 
