@@ -642,7 +642,7 @@ namespace asivamosffie.services
             objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
 
             List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
-            ListVista = await ListVistaContratoGarantiaPoliza();
+            ListVista = await ListVistaContratoGarantiaPoliza(pIdContrato);
 
             objVistaContratoGarantiaPoliza = ListVista.Where(x => x.IdContrato == pIdContrato).FirstOrDefault();
 
@@ -959,7 +959,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza()
+        public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId=0)
         {
             List<VistaContratoGarantiaPoliza> ListContratoGrilla = new List<VistaContratoGarantiaPoliza>();
             //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
@@ -976,9 +976,20 @@ namespace asivamosffie.services
 
             //item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
 
-            ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct()
-
+            if (pContratoId == 0)
+            {
+                ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct()
             .ToListAsync();
+
+            }
+            else
+            {
+                ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado && r.ContratoId == pContratoId).Distinct()
+          .ToListAsync();
+
+            }     
+
+         
 
             //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado)               
 

@@ -200,11 +200,11 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListVistaContratoGarantiaPoliza")]
-        public async Task<ActionResult<List<VistaContratoGarantiaPoliza>>> GetListVistaContratoGarantiaPoliza()
+        public async Task<ActionResult<List<VistaContratoGarantiaPoliza>>> GetListVistaContratoGarantiaPoliza(int pContratoId)
         {
             try
             {
-                return await _guaranteePolicy.ListVistaContratoGarantiaPoliza();
+                return await _guaranteePolicy.ListVistaContratoGarantiaPoliza(pContratoId);
             }
             catch (Exception ex)
             {

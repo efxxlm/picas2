@@ -17,7 +17,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza);                
 
-        Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza();
+        Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId);
 
         Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza();
 
