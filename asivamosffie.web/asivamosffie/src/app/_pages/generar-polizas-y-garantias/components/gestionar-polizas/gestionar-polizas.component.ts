@@ -135,7 +135,7 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
-   /* const contratoArray: InsertPoliza = {
+    const contratoArray: InsertPoliza = {
       contratoId: this.idContrato.toString(),
       nombreAseguradora: this.addressForm.value.nombre,
       numeroPoliza: this.addressForm.value.numeroPoliza,
@@ -153,7 +153,7 @@ export class GestionarPolizasComponent implements OnInit {
       else {
         this.openDialog('', `<b>${data.message}</b>`);
       }
-    });*/
+    });
     console.log(this.addressForm.value);
   }
 }

@@ -161,11 +161,11 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorAmparo maxlength="3" type="number" required formControlName="valorAmparo"
+                    <input matInput #valorAmparo maxlength="20" type="number" required formControlName="valorAmparo"
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - valorAmparo.value.length}}</span>
+                  <span class="contador">{{20 - valorAmparo.value.length}}</span>
                 </div>
               </div>
             </div>
