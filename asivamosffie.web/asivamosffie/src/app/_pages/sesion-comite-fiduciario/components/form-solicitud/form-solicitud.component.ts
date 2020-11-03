@@ -112,6 +112,23 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     borrarForm.removeAt(i);
   }
 
+  eliminarCompromiso(i: number) {
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este compromiso?</b>', i);
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.eliminarCompromisos(e);
+      }
+    });
+  }
+
   agregaCompromiso() {
     this.compromisos.push(this.crearCompromiso());
   }
@@ -142,6 +159,20 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     }
   }
 
+  eliminarCompromisos(i) {
+
+    let compromiso = this.compromisos.controls[i];
+
+    this.technicalCommitteSessionService.deleteSesionComiteCompromiso(compromiso.get('sesionSolicitudCompromisoId').value)
+      .subscribe(respuesta => {
+        if (respuesta.code == "200") {
+          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          this.compromisos.removeAt(i)
+          this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
+        }
+      })
+  }
+  
 
   validarCompromisosDiligenciados(): boolean {
     let vacio = true;

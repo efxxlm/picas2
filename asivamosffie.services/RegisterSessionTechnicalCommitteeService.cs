@@ -1572,6 +1572,158 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> EliminarCompromisoSolicitud(int pCompromisoId, string pUsuarioModificacion)
+        {
+            int idAccionEliminarSesionComiteTema = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Compromiso_Solicitud, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if ( pCompromisoId == 0 ){
+                    return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                     //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SESIÓN COMITE COMPROMISO")
+                 };    
+                }
+
+                SesionSolicitudCompromiso sesionSolicitudCompromiso = await _context.SesionSolicitudCompromiso
+                                                                                        .Where(r => r.SesionSolicitudCompromisoId == pCompromisoId)
+                                                                                        .FirstOrDefaultAsync();
+
+                if (sesionSolicitudCompromiso == null)
+                {
+                    return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "NO SE ENCONTRO REGISTRO")
+                    };
+                }
+
+                sesionSolicitudCompromiso.Eliminado = true;
+                sesionSolicitudCompromiso.FechaModificacion = DateTime.Now;
+                sesionSolicitudCompromiso.UsuarioCreacion = pUsuarioModificacion;
+                
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                                                                            .Where( r => r.SesionComiteSolicitudId == sesionSolicitudCompromiso.SesionComiteSolicitudId )
+                                                                            .Include( r => r.SesionSolicitudCompromiso )
+                                                                            .FirstOrDefault();
+
+                sesionComiteSolicitud.CantCompromisos = sesionComiteSolicitud.SesionSolicitudCompromiso
+                                                                                .Where( r => r.Eliminado != true && r.EsFiduciario != true ).Count(); 
+
+                sesionComiteSolicitud.CantCompromisosFiduciario = sesionComiteSolicitud.SesionSolicitudCompromiso
+                                                                                            .Where( r => r.Eliminado != true && r.EsFiduciario == true ).Count(); 
+
+                _context.SaveChanges();
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SESIÓN COMITE COMPROMISO")
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                    };
+            }
+
+        }
+
+        public async Task<Respuesta> EliminarCompromisoTema(int pCompromisoTemaId, string pUsuarioModificacion)
+        {
+            int idAccionEliminarSesionComiteTema = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Compromiso_Tema, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if ( pCompromisoTemaId == 0 ){
+                    return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                     //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SESIÓN COMITE COMPROMISO")
+                 };    
+                }
+
+                TemaCompromiso temaCompromiso = await _context.TemaCompromiso
+                                                                    .Where(r => r.TemaCompromisoId== pCompromisoTemaId)
+                                                                    .FirstOrDefaultAsync();
+
+                if (temaCompromiso == null)
+                {
+                    return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "NO SE ENCONTRO REGISTRO")
+                    };
+                }
+
+                temaCompromiso.Eliminado = true;
+                temaCompromiso.FechaModificacion = DateTime.Now;
+                temaCompromiso.UsuarioCreacion = pUsuarioModificacion;
+                
+                SesionComiteTema sesionComiteTema = _context.SesionComiteTema
+                                                                            .Where( r => r.SesionTemaId == temaCompromiso.SesionTemaId )
+                                                                            .Include( r => r.TemaCompromiso )
+                                                                            .FirstOrDefault();
+
+                sesionComiteTema.CantCompromisos = sesionComiteTema.TemaCompromiso
+                                                                                .Where( r => r.Eliminado != true ).Count(); 
+                                                                                
+
+                _context.SaveChanges();
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccionEliminarSesionComiteTema, pUsuarioModificacion, "ELIMINAR SESIÓN COMITE TEMA")
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstantSesionComiteTecnico.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccionEliminarSesionComiteTema, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                    };
+            }
+
+        }
+
 
 
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)

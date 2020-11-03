@@ -231,7 +231,7 @@
             <div class="col md-4">
               <div class="text-right" *ngIf="2 > 1">
                 <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(compromisos, i)"
-                  *ngIf="compromisos.controls.length > 1">
+                  *ngIf="compromisos.controls.length > 0">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                   Eliminar compromiso
                 </button>
