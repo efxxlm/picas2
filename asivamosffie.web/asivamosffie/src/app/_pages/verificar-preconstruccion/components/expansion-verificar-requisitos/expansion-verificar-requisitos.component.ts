@@ -26,7 +26,6 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
   });
   proyectosForm: any[] = [];
   perfilesCv: Dominio[] = [];
-
   editorStyle = {
     height: '45px'
   };
@@ -73,12 +72,12 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
             for ( let contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
   
               let sinDiligenciar = 0;
-              let enProceso = 0;
               let completo = 0;
   
               for ( let perfil of contratacionProyecto.proyecto.contratoPerfil ) {
                 perfil[ 'tieneObservaciones' ] = null;
                 perfil[ 'verificarObservacion' ] = '';
+
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
                 perfil[ 'nombre' ] = tipoPerfil[0].nombre;
                 if ( perfil[ 'tieneObservacionApoyo' ] === undefined ) {
@@ -100,7 +99,6 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                     perfil[ 'estadoSemaforo' ] = 'en-proceso';
                     perfil[ 'tieneObservaciones' ] = true;
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo2[ observacionTipo2.length -1 ].contratoPerfilObservacionId;
-                    enProceso++;
                   };
                   if ( perfil[ 'tieneObservacionApoyo' ] === true && observacionTipo2[ observacionTipo2.length -1 ].observacion !== undefined ) {
                     perfil[ 'estadoSemaforo' ] = 'completo';

@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { estadosPreconstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { FaseUnoAprobarPreconstruccionService } from '../../../../core/_services/faseUnoAprobarPreconstruccion/fase-uno-aprobar-preconstruccion.service';
 
 @Component({
@@ -12,6 +13,9 @@ import { FaseUnoAprobarPreconstruccionService } from '../../../../core/_services
 })
 export class TablaContratoDeObraComponent implements OnInit {
 
+  estadosPreconstruccionObra: estadosPreconstruccion;
+  tipoSolicitudCodigoObra: string = '1';
+  dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
     'fechaAprobacion',
     'numeroContrato',
@@ -21,7 +25,6 @@ export class TablaContratoDeObraComponent implements OnInit {
     'estadoNombre',
     'gestion'
   ];
-  dataSource = new MatTableDataSource();
 
   @ViewChild( MatPaginator, {static: true} ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort        : MatSort;
@@ -35,30 +38,54 @@ export class TablaContratoDeObraComponent implements OnInit {
                 private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService ) 
   {
     this.faseUnoAprobarPreconstruccionSvc.listaEstadosAprobarContrato( 'obra' )
-      .subscribe( console.log );
-    this.faseUnoPreconstruccionSvc.getListContratacion()
-      .subscribe( listas => {
-        console.log( listas );
-        this.dataSource = new MatTableDataSource( listas );
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-          if (length === 0 || pageSize === 0) {
-            return '0 de ' + length;
-          }
-          length = Math.max(length, 0);
-          const startIndex = page * pageSize;
-          // If the start index exceeds the list length, do not try and fix the end index to the end.
-          const endIndex = startIndex < length ?
-            Math.min(startIndex + pageSize, length) :
-            startIndex + pageSize;
-          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-        };
-      } );
+      .subscribe(
+        response => {
+          this.estadosPreconstruccionObra = response;
+          this.faseUnoAprobarPreconstruccionSvc.getListContratacion()
+          .subscribe( listas => {
+            console.log( this.estadosPreconstruccionObra, listas );
+            const dataTable = [];
+            listas.forEach( lista => {
+              if (  ( lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo
+                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.codigo
+                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosValidados.codigo
+                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo
+                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enviadoAlInterventor.codigo )
+                    && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
+              {
+                dataTable.push( lista );
+              };
+            } )
+            this.dataSource = new MatTableDataSource( dataTable );
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+            this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+              if (length === 0 || pageSize === 0) {
+                return '0 de ' + length;
+              }
+              length = Math.max(length, 0);
+              const startIndex = page * pageSize;
+              // If the start index exceeds the list length, do not try and fix the end index to the end.
+              const endIndex = startIndex < length ?
+                Math.min(startIndex + pageSize, length) :
+                startIndex + pageSize;
+              return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+            };
+          } );
+        }
+      );
   }
 
   ngOnInit(): void {
-  }
+  };
 
-}
+  aprobarInicio () {
+    console.log( 'Aprobar inicio' );
+  };
+
+  enviarInterventor () {
+    console.log( 'Enviar al interventor' );
+  };
+
+};

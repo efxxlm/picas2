@@ -142,7 +142,7 @@ namespace asivamosffie.services
                 bool TieneObservacionSupervisor = true;
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
-                    if ((bool)ContratoPerfil.TieneObservacionSupervisor)
+                    if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
                     {
                         TieneObservacionSupervisor = false;
                     }

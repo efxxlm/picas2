@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { ObservacionPerfil } from 'src/app/_interfaces/faseUnoVerificarPreconstruccion.interface';
-import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
+import { estadosPreconstruccion, GrillaFaseUnoPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 import { Dominio } from '../common/common.service';
 import { map } from 'rxjs/operators';
 
@@ -18,6 +18,10 @@ export class FaseUnoAprobarPreconstruccionService {
   };
 
   constructor ( private http: HttpClient ) { }
+
+  getListContratacion () {
+    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.paramUrl( '/ApprovePreConstructionPhase1/GetListContratacion' ) }` );
+  };
 
   aprobarCrearContratoPerfilObservacion ( pContratoPerfilObservacion: ObservacionPerfil ) {
     return this.http.post<Respuesta>( `${ this.paramUrl( '/ApprovePreConstructionPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );

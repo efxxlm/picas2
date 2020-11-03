@@ -37,13 +37,67 @@
 
     <ng-container matColumnDef="estadoNombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de requisitos </th>
-        <td mat-cell *matCellDef="let element"> {{element.estadoNombre}} </td>
+        <td mat-cell *matCellDef="let element">
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.enviadoAlSupervisor.codigo">
+                {{ estadosPreconstruccionObra.enviadoAlSupervisor.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.codigo">
+                {{ estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosValidados.codigo">
+                {{ estadosPreconstruccionObra.conReqTecnicosValidados.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
+                {{ estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.enviadoAlInterventor.codigo">
+                {{ estadosPreconstruccionObra.enviadoAlInterventor.nombre }}
+            </section>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="gestion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
-            <a [routerLink]="['obraValidarRequisitos', element.contratoId]" mat-raised-button color="accent" class="btn-table">Validar requisitos de inicio</a>
+            <a  [routerLink]="['obraValidarRequisitos', element.contratoId]"
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                *ngIf="element.estadoCodigo === estadosPreconstruccionObra.enviadoAlSupervisor.codigo">
+                Validar requisitos de inicio
+            </a>
+            <a  [routerLink]="['obraValidarRequisitos', element.contratoId]"
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosValidados.codigo
+                        || element.estadoCodigo === estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.codigo">
+                Ver detalle/Editar
+            </a>
+            <a  [routerLink]="['obraValidarRequisitos', element.contratoId]"
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.enviadoAlInterventor.codigo
+                        || element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
+                Ver detalle
+            </a>
+            <a  (click)="enviarInterventor()"
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosValidados.codigo
+                        && element.registroCompleto === false">
+                Enviar al interventor
+            </a>
+            <a  (click)="aprobarInicio()"
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosValidados.codigo
+                && element.registroCompleto === true">
+                Aprobar inicio
+            </a>
         </td>
     </ng-container>
 

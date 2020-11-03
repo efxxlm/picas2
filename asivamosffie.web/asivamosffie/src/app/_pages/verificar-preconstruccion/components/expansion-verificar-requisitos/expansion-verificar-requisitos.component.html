@@ -133,10 +133,10 @@
                 (onContentChanged)="maxLength($event, 1000)" [(ngModel)]="perfil['verificarObservacion']" required>
               </quill-editor>
             </div>
-            <span class="contador" *ngIf="perfil['verificarObservacion'].length > 0">
+            <span class="contador" *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0">
               {{1000 - textoLimpio(perfil['verificarObservacion'])}}
             </span>
-            <span class="contador" *ngIf="perfil['verificarObservacion'].length === 0">
+            <span class="contador" *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0">
               1000
             </span>
           </div>
