@@ -63,10 +63,10 @@
                   </quill-editor>
 
                   <div class="d-flex align-items-center">
-                    <span class="contador miles" *ngIf="temas.get('observaciones').value !== null">
+                    <span class="contador miles" *ngIf="temas.get('observaciones').value">
                       {{1000 - (textoLimpio(temas.get('observaciones').value)>1000?1000:textoLimpio(temas.get('observaciones').value))}}
                     </span>
-                    <span class="contador miles"  *ngIf="temas.get('observaciones').value === null">
+                    <span class="contador miles"  *ngIf="!temas.get('observaciones').value">
                       1000
                     </span>
                   </div>

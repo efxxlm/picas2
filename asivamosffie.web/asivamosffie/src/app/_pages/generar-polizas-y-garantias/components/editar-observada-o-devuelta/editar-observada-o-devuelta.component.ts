@@ -42,10 +42,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     observacionesGenerales: [null, Validators.required],
   });
 
-  polizasYSegurosArray = [
-    { name: 'Pólizas y seguros interventoría', value: '1' },
-    { name: 'Pólizas y seguros de póliza obra', value: '2' }
-  ];
+  polizasYSegurosArray = ['Pólizas y seguros interventoría','Pólizas y seguros de póliza obra'];
   estadoArray = [
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
@@ -82,6 +79,8 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   public idPoliza;
   public idObservacion;
   selected: any;
+  obj1: boolean;
+  obj2: boolean;
 
   constructor(
     private router: Router,
@@ -99,19 +98,20 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.loadObservations(param.id);
     });
   }
-  moduleChange(){
-    console.log(this.selected);
+  getvalues( values: any[]){
+    this.obj1 = values.includes('Pólizas y seguros interventoría');
+    this.obj2 = values.includes('Pólizas y seguros de póliza obra');
   }
   loadContrato(id){
-    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
-      this.tipoContrato=data[id-1].tipoContrato;
-      this.objeto=data[id-1].descripcionModificacion;
-      this.nombreContratista = data[id-1].nombreContratista;
+    this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data=>{
+      this.tipoContrato=data[0].tipoContrato;
+      this.objeto=data[0].descripcionModificacion;
+      this.nombreContratista = data[0].nombreContratista;
       this.tipoIdentificacion = "NIT"  // quemado 
-      this.numeroIdentificacion = data[id-1].numeroIdentificacion;
-      this.valorContrato = data[id-1].valorContrato;
-      this.plazoContrato = data[id-1].plazoContrato;
-      this.numContrato = data[id-1].numeroContrato;
+      this.numeroIdentificacion = data[0].numeroIdentificacion;
+      this.valorContrato = data[0].valorContrato;
+      this.plazoContrato = data[0].plazoContrato;
+      this.numContrato = data[0].numeroContrato;
     });
   }
   loadData(id){
@@ -144,7 +144,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
 
   loadGarantia(id){
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_B=>{
-      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.value == data_B[0].tipoGarantiaCodigo);
+      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t == data_B[0].tipoGarantiaCodigo);
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
     });

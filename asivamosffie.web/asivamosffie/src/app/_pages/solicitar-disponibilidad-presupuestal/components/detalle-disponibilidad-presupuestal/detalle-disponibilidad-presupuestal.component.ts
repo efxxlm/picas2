@@ -43,6 +43,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       this.objeto = data0.objeto;
       this.plazoDias = data0.plazoDias;
       this.plazoMeses = data0.plazoMeses;
+      this.fechaComite =data0.contratacionId&&data0.fechaComiteTecnicoNotMapped!='0001-01-01T00:00:00'?data0.fechaComiteTecnicoNotMapped:"";
       //this.fechaComite = data0.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'];
       this.cargarServicio2(data0.disponibilidadPresupuestalProyecto[0].proyectoId);
     });

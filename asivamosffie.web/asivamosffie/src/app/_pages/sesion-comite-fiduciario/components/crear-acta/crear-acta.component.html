@@ -64,6 +64,7 @@
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante"
                         [fechaMaxima]="objetoComiteTecnico.fechaOrdenDia"
                         (validar)="habilitar($event)"
+                        [style.pointer-events]="getStyle()"
                     >
 
                     </app-form-solicitud>
@@ -96,7 +97,7 @@
                         style="display: none;"
                         id="btnOtros"
                         name="btnOtros"
-
+                        
                     >
                     </button>
 
@@ -105,6 +106,7 @@
                         [sesionComiteTema]="tema"
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante"
                         (validar)="habilitar($event)"
+                        [style.pointer-events]="getStyle()"
                     >
                 </app-form-otros-temas>
                 </mat-expansion-panel>
@@ -145,6 +147,7 @@
                         [sesionComiteTema]="tema"
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante"
                         (validar)="habilitar($event)"
+                        [style.pointer-events]="getStyle()"
                     >
                      </app-form-otros-temas>
                 </mat-expansion-panel>

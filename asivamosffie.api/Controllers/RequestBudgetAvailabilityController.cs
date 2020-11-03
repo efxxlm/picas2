@@ -268,7 +268,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 string user = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId);
+                respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
 
             }

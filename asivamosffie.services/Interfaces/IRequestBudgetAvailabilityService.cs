@@ -29,7 +29,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<GrillaValidarDisponibilidadPresupuesal>>> GetBudgetavailabilityRequests();
         Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId);
         Task<List<ListConcecutivoProyectoAdministrativo>> GetListCocecutivoProyecto();
-        Task<Respuesta> SendRequest(int disponibilidadPresupuestalId);
+        Task<Respuesta> SendRequest(int disponibilidadPresupuestalId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId);
         Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad);
         Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa();

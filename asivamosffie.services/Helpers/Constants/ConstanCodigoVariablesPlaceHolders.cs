@@ -216,7 +216,7 @@
         //public const string   MUNICIPIO ="142";
         //public const string   INSTITUCION_EDUCATIVA ="143";
         //public const string   SEDE ="144";
-        //public const string   NUMERO_SOLICITUD ="145";
+        public const string   NUMERO_SOLICITUD_PROCESO ="145";
         public const string TIPO_PROCESO = "146";
         public const string OBJETO_PROCESO = "147";
         public const string ALCANCE_PARTICULAR_PROCESO = "148";

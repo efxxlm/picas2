@@ -177,9 +177,9 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="polizasYSeguros" multiple required>
-                  <mat-option *ngFor="let polizaYSeguro of polizasYSegurosArray" [value]="polizaYSeguro.value">
-                    {{ polizaYSeguro.name }}
+                <mat-select formControlName="polizasYSeguros" multiple required  (selectionChange)="getvalues($event.value)">
+                  <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
+                    {{ polizasYSeguros }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -354,7 +354,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="estadoRevision" required [(ngModel)]="selected" (change)="this.moduleChange()">
+                    <mat-select formControlName="estadoRevision" required>
                       <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
                         {{ estadoRevision.name }}
                       </mat-option>
@@ -393,9 +393,9 @@
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
-                      <mat-select formControlName="responsableAprob" required (change)="this.moduleChange()">
-                        <mat-option *ngFor="let aprob of aprobadosArray" [value]="aprob.value">
-                          {{ aprob.name }}
+                      <mat-select formControlName="responsableAprob" required>
+                        <mat-option *ngFor="let responsableAprob of aprobadosArray" [value]="responsableAprob">
+                          {{ responsableAprob.name }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>

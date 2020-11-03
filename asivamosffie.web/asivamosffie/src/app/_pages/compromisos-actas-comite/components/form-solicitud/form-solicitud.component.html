@@ -43,10 +43,10 @@
       </div>
       <div class="row" style="margin-top: .6em;">
         <div class="col" *ngIf="solicitudes.desarrolloSolicitud">
-          <section [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitud )"></section>
+          <section class="color-blue" [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitud )"></section>
         </div>
         <div class="col" *ngIf="solicitudes.desarrolloSolicitudFiduciario">
-          <section [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitudFiduciario )"></section>
+          <section class="color-blue" [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitudFiduciario )"></section>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>
@@ -94,7 +94,7 @@
           <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.observacionesFiduciario )"></div>
         </section>
       </div>
-      <div class="row" *ngIf="esComiteFiduciario === false">
+      <div class="row" *ngIf="solicitudes.rutaSoporteVotacion && esComiteFiduciario === false">
         <div class="pr-1">
           <label><b>URL con soporte de votación</b></label>
         </div>
@@ -102,7 +102,7 @@
           <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacion }}</b> </span>
         </div>
       </div>
-      <div class="row" *ngIf="esComiteFiduciario === true">
+      <div class="row" *ngIf="solicitudes.rutaSoporteVotacionFiduciario && esComiteFiduciario === true">
         <div class="pr-1">
           <label><b>URL con soporte de votación</b></label>
         </div>
@@ -127,9 +127,9 @@
               <div *ngFor="let sesionCompromiso of solicitudes.sesionSolicitudCompromiso;let j = index" style="margin-top: 2em;">
                 <section>
                   <h3><b>Compromiso {{ j+1 }} </b></h3>
-                  <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
-                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </p>
-                  <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                  <p><b>Tarea</b>: <span class="color-blue">{{ sesionCompromiso.tarea }}</span> </p>
+                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </span> </p>
+                  <p><b>Fecha de cumplimiento</b>: <span class="color-blue"> {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
                 </section>
               </div>
             </div>
@@ -137,9 +137,9 @@
               <div *ngFor="let sesionCompromiso of compromisosFiduciario( solicitudes.sesionSolicitudCompromiso );let j = index" style="margin-top: 2em;">
                 <section *ngIf="sesionCompromiso.esFiduciario === true">
                   <h3><b>Compromiso {{ j+1 }} </b></h3>
-                  <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
-                  <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </p>
-                  <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                  <p><b>Tarea</b>: <span class="color-blue"> {{ sesionCompromiso.tarea }} </span> </p>
+                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </span> </p>
+                  <p><b>Fecha de cumplimiento</b>: <span class="color-blue"> {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
                 </section>
               </div>
             </div>

@@ -1577,13 +1577,25 @@ namespace asivamosffie.services
                     ProyectoAportante.NombreAportante = ProyectoAportante.Aportante.Departamento.Descripcion;
                     ProyectoAportante.TipoAportanteNombre = ConstanStringTipoAportanteNombre.Departamento;
                 }
-
-
-                if (ProyectoAportante.Aportante.NombreAportante != null)
+                /*
+                 jflorez, ajussto esto, si tiene nombre de aportante realmente es un tercero, pero lo valido sería tener en cuenta el tipo de aportante
+                 if (ProyectoAportante.Aportante.NombreAportante != null)
                 {
                     ProyectoAportante.NombreAportante = ProyectoAportante.Aportante.NombreAportante.Nombre;
                     ProyectoAportante.TipoAportanteNombre = ConstanStringTipoAportanteNombre.Ffie;
+                }*/
+                if(ProyectoAportante.Aportante.TipoAportanteId==ConstanTipoAportante.Ffie)
+                {
+                    ProyectoAportante.NombreAportante = ConstanStringTipoAportante.Ffie;
+                    ProyectoAportante.TipoAportanteNombre = ConstanStringTipoAportanteNombre.Ffie;
                 }
+                else if(ProyectoAportante.Aportante.TipoAportanteId==ConstanTipoAportante.Tercero)
+                {
+                    ProyectoAportante.NombreAportante = ProyectoAportante.Aportante.NombreAportante.Nombre;
+                    ProyectoAportante.TipoAportanteNombre = ConstanStringTipoAportanteNombre.Tercero;
+                }
+                //el else son las entidades territoriales que ya se tuvieron en cuenta con el municipio y depto id
+                
 
             }
 
