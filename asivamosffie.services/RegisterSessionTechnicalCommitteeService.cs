@@ -4137,7 +4137,7 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
-                                        registrosContratacion = registrosContratacion
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                             .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitud);
                                         break;
 
@@ -4148,12 +4148,12 @@ namespace asivamosffie.services
                                         {
                                             strRequiereVotacion = "No fue requerida";
                                         }
-                                        registrosContratacion = registrosContratacion
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
-                                        registrosContratacion = registrosContratacion
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
                                         break;
 
@@ -4168,7 +4168,7 @@ namespace asivamosffie.services
                                         {
                                             TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_Unanime).ToString()).FirstOrDefault().Nombre;
                                         }
-                                        registrosContratacion = registrosContratacion
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                         break;
 
@@ -4185,24 +4185,24 @@ namespace asivamosffie.services
                                                 {
                                                     case ConstanCodigoVariablesPlaceHolders.TAREA_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio.Nombre, compromiso.Tarea);
+                                                            .Replace(placeholderDominio3.Nombre, compromiso.Tarea);
                                                         break;
 
                                                     case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio.Nombre, compromiso.ResponsableSesionParticipante.Usuario.Nombres
+                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.Nombres
                                                             + " " + compromiso.ResponsableSesionParticipante.Usuario.Apellidos);
                                                         break;
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio.Nombre, compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy"));
+                                                            .Replace(placeholderDominio3.Nombre, compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy"));
                                                         break;
                                                 }
                                             }
                                         }
 
-                                        registrosContratacion = registrosContratacion
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
                                         break;
 
