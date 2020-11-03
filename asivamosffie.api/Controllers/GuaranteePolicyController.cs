@@ -12,11 +12,13 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
     public class GuaranteePolicyController : ControllerBase
     {
         public readonly IGuaranteePolicyService _guaranteePolicy;
@@ -198,6 +200,25 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
+        
+
+        [HttpPut]
+        [Route("CambiarEstadoPoliza")]
+        public async Task<IActionResult> CambiarEstadoPoliza([FromQuery]  int pContratoPolizaId, string pCodigoNuevoEstadoPoliza)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _guaranteePolicy.CambiarEstadoPoliza( pContratoPolizaId,  pCodigoNuevoEstadoPoliza,  HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+        
         [HttpGet]
         [Route("GetListVistaContratoGarantiaPoliza")]
         public async Task<ActionResult<List<VistaContratoGarantiaPoliza>>> GetListVistaContratoGarantiaPoliza(int pContratoId)
