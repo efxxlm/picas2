@@ -141,6 +141,7 @@ namespace asivamosffie.services
                     }
                 }
 
+
                 foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionTemaId))
                 {
                     foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.TemaCompromisoId))
@@ -685,19 +686,9 @@ namespace asivamosffie.services
                 {
                     SesionSolicitudCompromiso sesionSolicitudCompromisoOld = await _context.SesionSolicitudCompromiso.FindAsync(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
                     sesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
-                    sesionSolicitudCompromisoOld.UsuarioCreacion = pSesionSolicitudCompromiso.UsuarioCreacion;
+                    sesionSolicitudCompromisoOld.UsuarioCreacion = pSesionSolicitudCompromiso.UsuarioCreacion; 
+                    sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
 
-
-                    switch (pSesionSolicitudCompromiso.EstadoCodigo)
-                    {
-                        case ConstantCodigoCompromisos.Finalizado:
-                            sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
-                            break;
-
-                        case ConstantCodigoCompromisos.En_proceso:
-                            sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
-                            break;
-                    }
 
                     CompromisoSeguimiento compromisoSeguimiento = new CompromisoSeguimiento
                     {
