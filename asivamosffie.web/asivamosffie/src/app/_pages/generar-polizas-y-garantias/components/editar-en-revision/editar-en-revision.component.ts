@@ -98,14 +98,14 @@ export class EditarEnRevisionComponent implements OnInit {
 
   loadContrato(id){
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data=>{
-      this.tipoContrato=data[id-1].tipoContrato;
-      this.objeto=data[id-1].descripcionModificacion;
-      this.nombreContratista = data[id-1].nombreContratista;
+      this.tipoContrato=data[0].tipoContrato;
+      this.objeto=data[0].descripcionModificacion;
+      this.nombreContratista = data[0].nombreContratista;
       this.tipoIdentificacion = "NIT"  // quemado 
-      this.numeroIdentificacion = data[id-1].numeroIdentificacion;
-      this.valorContrato = data[id-1].valorContrato;
-      this.plazoContrato = data[id-1].plazoContrato;
-      this.numContrato = data[id-1].numeroContrato;
+      this.numeroIdentificacion = data[0].numeroIdentificacion;
+      this.valorContrato = data[0].valorContrato;
+      this.plazoContrato = data[0].plazoContrato;
+      this.numContrato = data[0].numeroContrato;
     });
   }
   loadData(id){

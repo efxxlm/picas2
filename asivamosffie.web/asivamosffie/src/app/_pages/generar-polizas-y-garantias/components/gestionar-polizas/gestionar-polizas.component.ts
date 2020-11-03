@@ -38,18 +38,20 @@ export class GestionarPolizasComponent implements OnInit {
     condicionesGenerales: [null, Validators.required],
     fechaRevision: [null, Validators.required],
     estadoRevision: [null, Validators.required],
-    observacionesGenerales: [null, Validators.required],
+    fechaAprob: [null, Validators.required],
+    responsableAprob: [null, Validators.required],
+    observacionesGenerales: [null, Validators.required]
   });
 
-  polizasYSegurosArray = [
-    { name: 'Pólizas y seguros interventoría', value: '1' },
-    { name: 'Pólizas y seguros de póliza obra', value: '2' }
-  ];
+  polizasYSegurosArray = ['Pólizas y seguros interventoría','Pólizas y seguros de póliza obra'];
   estadoArray = [
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
   ];
-
+  aprobadosArray = [
+    { name: 'Andres Montealegre', value: '1' },
+    { name: 'David Benitez', value: '2' }
+  ];
   minDate: Date;
 
   editorStyle = {
@@ -74,6 +76,8 @@ export class GestionarPolizasComponent implements OnInit {
   public plazoContrato;
   public numContrato;
   public idContrato;
+  obj1: boolean;
+  obj2: boolean;
 
   constructor(
     private router: Router,
@@ -85,23 +89,20 @@ export class GestionarPolizasComponent implements OnInit {
     this.minDate = new Date();
   }
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe( param => {
+    this.activatedRoute.params.subscribe(param => {
       this.cargarDatos(param.id);
     });
-    
-    
   }
   cargarDatos(id) {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
-      //la posicion 0 es una posicion quemada 
-      this.tipoContrato = data[id-1].tipoContrato;
-      this.objeto = data[id-1].descripcionModificacion;
-      this.nombreContratista = data[id-1].nombreContratista;
+      this.tipoContrato = data[0].tipoContrato;
+      this.objeto = data[0].descripcionModificacion;
+      this.nombreContratista = data[0].nombreContratista;
       this.tipoIdentificacion = "NIT"  // quemado 
-      this.numeroIdentificacion = data[id-1].numeroIdentificacion;
-      this.valorContrato = data[id-1].valorContrato;
-      this.plazoContrato = data[id-1].plazoContrato;
-      this.numContrato = data[id-1].numeroContrato;
+      this.numeroIdentificacion = data[0].numeroIdentificacion;
+      this.valorContrato = data[0].valorContrato;
+      this.plazoContrato = data[0].plazoContrato;
+      this.numContrato = data[0].numeroContrato;
     });
     this.idContrato = id;
   }
@@ -122,7 +123,10 @@ export class GestionarPolizasComponent implements OnInit {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
   }
-
+  getvalues(values: any[]) {
+    this.obj1 = values.includes('Pólizas y seguros interventoría');
+    this.obj2 = values.includes('Pólizas y seguros de póliza obra');
+  }
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -131,25 +135,25 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
-    const contratoArray :InsertPoliza ={
+   /* const contratoArray: InsertPoliza = {
       contratoId: this.idContrato.toString(),
       nombreAseguradora: this.addressForm.value.nombre,
-      numeroPoliza:this.addressForm.value.numeroPoliza,
+      numeroPoliza: this.addressForm.value.numeroPoliza,
       numeroCertificado: this.addressForm.value.numeroCertificado,
-      fechaExpedicion:this.addressForm.value.fecha,
+      fechaExpedicion: this.addressForm.value.fecha,
       vigencia: this.addressForm.value.vigenciaPoliza,
       vigenciaAmparo: this.addressForm.value.vigenciaAmparo,
       valorAmparo: this.addressForm.value.valorAmparo
     };
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
-      if(data.isSuccessful==true){
+      if (data.isSuccessful == true) {
         this.openDialog('', `<b>${data.message}</b>`);
         this.router.navigate(['/generarPolizasYGarantias']);
       }
-      else{
+      else {
         this.openDialog('', `<b>${data.message}</b>`);
       }
-    });
+    });*/
     console.log(this.addressForm.value);
   }
 }
