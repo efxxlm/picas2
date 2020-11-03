@@ -182,21 +182,21 @@ namespace asivamosffie.services
                 {
                     if (contrato.Contratacion.TipoContratacionCodigo == ConstanCodigoTipoContrato.Obra)
                     {
-                        contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor;
+                        contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
 
-                        if (!(bool)TieneObservacionSupervisor)
-                        {
-                            contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
-                        }
+                        //if (!(bool)TieneObservacionSupervisor)
+                        //{
+                        //    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
+                        //}
                     }
                     else
                     {
-                        contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor;
+                        contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
 
-                        if (!(bool)TieneObservacionSupervisor)
-                        {
-                            contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
-                        }
+                        //if (!(bool)TieneObservacionSupervisor)
+                        //{
+                        //    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_validados;
+                        //}
                     }
                 }
                 else
