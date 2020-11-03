@@ -100,10 +100,13 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     };
   };
 
-  textoLimpio(texto: string) {
-    if ( texto ){
+  textoLimpio ( texto: string, maxLength: number ) {
+    if (texto !== undefined) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      console.log( textolimpio.length );
+      return textolimpio.length > maxLength ? maxLength : textolimpio.length;
+    } else {
+      return 0;
     };
   };
 
@@ -137,7 +140,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   onSubmit () {
 
     if ( this.form.invalid ) {
-      this.openDialog('', '<b>Falta registrar información</b>');
+      this.openDialog('', '<b>Falta registrar información.</b>');
       return;
     };
 
@@ -154,6 +157,13 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         this.routes.navigate( ['/compromisosActasComite'] );
       } );
 
+  };
+
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return `<b>${ observacionHtml }</b>`;
+    };
   };
   //Aprobar acta
   aprobarActa ( comiteTecnicoId ) {

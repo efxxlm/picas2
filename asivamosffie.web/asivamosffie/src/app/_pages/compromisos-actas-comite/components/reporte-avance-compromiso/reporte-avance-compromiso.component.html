@@ -5,7 +5,7 @@
     </a>
   </div>
 
-  <div *ngIf="comite.estadoCodigo === '1'">
+  <div *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1'">
     <div class="text-center">
       <h1 class="title-menu--h1">
         Reportar avance compromiso {{ comite.numeroComite }}
@@ -44,10 +44,10 @@
     </div>
   </div>
 
-  <app-tabla-detalle-compromiso *ngIf="comite.estadoCodigo === '3' || comite.estadoCodigo === '2'"
+  <app-tabla-detalle-compromiso *ngIf="comite.estadoCodigo === '3' || comite.estadoCodigo === '2' || comite.estadoCodigo === '1'"
     [compromisoId]="comite.compromisoId" [tipoCompromiso]="comite.tipoSolicitud"></app-tabla-detalle-compromiso>
 
-  <div class="text-center flex mb-2em" *ngIf="comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
+  <div class="text-center flex mb-2em" *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
 
     <div class="mr-right-1">
       <label>Estado del compromiso</label>
@@ -65,7 +65,7 @@
 
   </div>
 
-  <div *ngIf="comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
+  <div *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
     <form autocomplete="off" [formGroup]="reporte" (ngSubmit)="onSubmit()">
 
       <div class="d-flex align-items-center">
@@ -75,13 +75,12 @@
             (onContentChanged)="maxLength($event, 500)" formControlName="reporteEstado" required></quill-editor>
         </div>
         <span class="contador miles" *ngIf="reporte.get('reporteEstado').value !== null">
-          {{500 - textoLimpio(reporte.get('reporteEstado').value)}}
+          {{500 - textoLimpio(reporte.get('reporteEstado').value, 500)}}
         </span>
         <span class="contador miles" *ngIf="reporte.get('reporteEstado').value === null">
           500
         </span>
       </div>
-
       <div class="text-center">
 
         <button mat-button color="warn" class="btn-guardar mr-bottom-2" type="submit">

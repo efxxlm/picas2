@@ -50,9 +50,11 @@ export class FormSolicitudComponent implements OnInit {
   };
 
   innerObservacion ( observacion: string ) {
-    const observacionHtml = observacion.replace( '"', '' );
-    return observacionHtml;
-  }
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return `<b>${ observacionHtml }</b>`;
+    };
+  };
 
   resultadosVotaciones ( solicitud: any ) {
     solicitud.sesionSolicitudVoto.forEach( sv => {

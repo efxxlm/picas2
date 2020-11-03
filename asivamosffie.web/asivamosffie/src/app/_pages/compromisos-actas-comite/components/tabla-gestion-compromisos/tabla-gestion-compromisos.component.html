@@ -29,7 +29,8 @@
     <ng-container matColumnDef="estadoCompromiso">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del compromiso </th>
       <td mat-cell *matCellDef="let element" align="center">
-        <span *ngIf="element.estadoCodigo === '1'">Sin avance</span>
+        <span *ngIf="element.estadoCodigo === undefined">Sin avance</span>
+        <span *ngIf="element.estadoCodigo === '1'">Sin iniciar</span>
         <span *ngIf="element.estadoCodigo === '2'">En proceso</span>
         <span *ngIf="element.estadoCodigo === '3'">Finalizada</span>
       </td>
@@ -42,7 +43,7 @@
         <button mat-raised-button 
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoCodigo === '1'"
+                *ngIf="element.estadoCodigo === undefined"
                 (click)="reportProgress( element.compromisoId, element )">
           Reportar avance
         </button>
@@ -50,7 +51,7 @@
         <button mat-raised-button 
               color="accent" 
               class="btn-table"
-              *ngIf="element.estadoCodigo === '2'"
+              *ngIf="element.estadoCodigo === '1' || element.estadoCodigo === '2'"
               (click)="reportProgress( element.compromisoId, element )">
               Ver detalle/Editar
         </button>
