@@ -479,6 +479,40 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("DeleteSesionComiteCompromiso")]
+        public async Task<IActionResult> DeleteSesionComiteCompromiso([FromQuery] int pSesionComiteTemaId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerSessionTechnicalCommitteeService.EliminarCompromisoSolicitud(pSesionComiteTemaId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteTemaCompromiso")]
+        public async Task<IActionResult> DeleteTemaCompromiso([FromQuery] int pTemaCompromisoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerSessionTechnicalCommitteeService.EliminarCompromisoTema(pTemaCompromisoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpGet]
         [Route("GetPlantillaByTablaIdRegistroId")]
         public async Task<FileResult> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId)

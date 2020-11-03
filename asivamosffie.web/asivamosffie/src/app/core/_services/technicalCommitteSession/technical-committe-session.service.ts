@@ -147,5 +147,12 @@ export class TechnicalCommitteSessionService {
      return this.http.post<Respuesta>( `${environment.apiUrl}/RegisterSessionTechnicalCommittee/ObservacionesCompromisos`, pObservacionComentario );
    };
 
+   deleteSesionComiteCompromiso( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/DeleteSesionComiteCompromiso?pSesionComiteTemaId=${ id }`);
+   }
+
+   deleteTemaCompromiso( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteTemaCompromiso?pTemaCompromisoId=${ id }`);
+   }
   
 }

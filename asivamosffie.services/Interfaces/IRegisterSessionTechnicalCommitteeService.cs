@@ -78,6 +78,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarCompromisosTema(int pSesionTemaId, string pUsuarioModificacion);
        
         Task<Respuesta> EnviarComiteParaAprobacion(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
+        Task<Respuesta> EliminarCompromisoSolicitud(int pCompromisoId, string pUsuarioModificacion);
+        Task<Respuesta> EliminarCompromisoTema(int pCompromisoTemaId, string pUsuarioModificacion);
 
     }
 }

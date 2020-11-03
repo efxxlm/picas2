@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
 import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { opendir } from 'fs';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -127,10 +128,10 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   borrarArray(borrarForm: any, i: number) {
-    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este compromiso?</b>', i, borrarForm);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este compromiso?</b>', i);
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string, e: number, grupo: any) {
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
@@ -138,7 +139,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if (result === true) {
-        grupo.removeAt(e);
+        this.eliminarCompromisos(e);
       }
     });
   }
@@ -162,9 +163,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   validarCompromisosDiligenciados(): boolean {
     let vacio = true;
     this.compromisos.controls.forEach(control => {
-      if (  control.value.tarea || 
-            control.value.responsable ||
-            control.value.fecha
+      if (control.value.tarea ||
+        control.value.responsable ||
+        control.value.fecha
       )
         vacio = false;
     })
@@ -191,9 +192,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
       }
       else {
-        
+
         this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
-        this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
+        this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length);
 
       }
     }
@@ -222,6 +223,20 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
           }
         })
     }
+  }
+
+  eliminarCompromisos(i) {
+
+    let compromiso = this.compromisos.controls[i];
+
+    this.technicalCommitteSessionService.deleteSesionComiteCompromiso(compromiso.get('sesionSolicitudCompromisoId').value)
+      .subscribe(respuesta => {
+        if (respuesta.code == "200") {
+          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          this.compromisos.removeAt(i)
+          this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
+        }
+      })
   }
 
   onSubmit() {
