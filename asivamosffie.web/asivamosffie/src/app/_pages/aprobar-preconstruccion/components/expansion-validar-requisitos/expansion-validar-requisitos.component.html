@@ -114,7 +114,7 @@
           </mat-card>
 
           <section *ngFor="let obs of perfil.contratoPerfilObservacion">
-            <mat-card class="shipping-card var-main-gris" *ngIf="obs.tipoObservacionCodigo === '2'">
+            <mat-card class="shipping-card var-main-gris" *ngIf="obs.tipoObservacionCodigo === '2' && perfil['tieneObservacionApoyo'] === true">
               <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
                   Verificación del apoyo a la supervisión

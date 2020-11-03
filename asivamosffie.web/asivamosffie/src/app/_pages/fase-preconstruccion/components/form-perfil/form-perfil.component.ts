@@ -66,6 +66,8 @@ export class FormPerfilComponent implements OnInit {
   };
 
   perfilesProyecto () {
+    let observacionSupervisorSemaforo = null;
+    let semaforoSupervisor = 0;
     if ( this.perfilProyecto.length === 0 ) {
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
       .subscribe( value => {
@@ -99,11 +101,13 @@ export class FormPerfilComponent implements OnInit {
           this.cantidadPerfiles.nativeElement.value = String( this.perfilProyecto.length );
         } );
       for ( let perfil of this.perfilProyecto ) {
+        const observacionTipo3 = [];
         let numeroRadicados = [];
         let observaciones = null;
         let fechaObservacion = null;
         let observacionSupervisor = null;
         let semaforo;
+        observacionSupervisorSemaforo = null;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push( 
             this.fb.group(
@@ -129,14 +133,15 @@ export class FormPerfilComponent implements OnInit {
 
         if ( perfil.contratoPerfilObservacion.length > 0 ) {
           for ( let obs of perfil.contratoPerfilObservacion ) {
-            if ( obs.tipoObservacionCodigo === '1' ) {
-              observaciones = obs.observacion;
-            } else if ( obs.tipoObservacionCodigo === '3' ) {
-              fechaObservacion = obs.fechaCreacion;
-              observacionSupervisor = obs.observacion;
-            }
+            if ( obs.tipoObservacionCodigo === '1' ) observaciones = obs.observacion;
+            if ( obs.tipoObservacionCodigo === '3' && perfil.tieneObservacionSupervisor === true ) observacionTipo3.push( obs );
           }
-        }
+        };
+        if ( observacionTipo3.length > 0 ) {
+          fechaObservacion = observacionTipo3[ observacionTipo3.length -1 ].fechaCreacion;
+          observacionSupervisor = observacionTipo3[ observacionTipo3.length -1 ].observacion;
+          observacionSupervisorSemaforo = true;
+        };
         if ( perfil.registroCompleto === true ) {
           this.perfilesCompletos++;
           semaforo = 'completo';
@@ -144,11 +149,11 @@ export class FormPerfilComponent implements OnInit {
         if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
           semaforo = 'en-proceso';
           this.perfilesEnProceso++;
-        }
+        };
         this.perfiles.push(
           this.fb.group(
             {
-              estadoSemaforo              : [ semaforo || 'sin-diligenciar' ],
+              estadoSemaforo              : [ observacionSupervisorSemaforo === true ? 'en-proceso' : ( semaforo ? semaforo : 'sin-diligenciar' ) ],
               contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
               perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
               perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],

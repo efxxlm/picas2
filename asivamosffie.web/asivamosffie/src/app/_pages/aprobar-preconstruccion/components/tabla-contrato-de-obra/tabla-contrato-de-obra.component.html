@@ -82,20 +82,20 @@
                         || element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
                 Ver detalle
             </a>
-            <a  (click)="enviarInterventor()"
+            <a  (click)="enviarInterventor( element.contratoId )"
                 mat-raised-button
                 color="accent"
                 class="btn-table"
                 *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosValidados.codigo
-                        && element.registroCompleto === false">
+                        && element.tieneObservacionSupervisor === true">
                 Enviar al interventor
             </a>
-            <a  (click)="aprobarInicio()"
+            <a  (click)="aprobarInicio( element.contratoId )"
                 mat-raised-button
                 color="accent"
                 class="btn-table"
                 *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosValidados.codigo
-                && element.registroCompleto === true">
+                && element.tieneObservacionSupervisor === false">
                 Aprobar inicio
             </a>
         </td>

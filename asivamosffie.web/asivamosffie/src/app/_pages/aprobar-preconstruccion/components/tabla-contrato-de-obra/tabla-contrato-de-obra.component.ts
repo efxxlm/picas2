@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { estadosPreconstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { FaseUnoAprobarPreconstruccionService } from '../../../../core/_services/faseUnoAprobarPreconstruccion/fase-uno-aprobar-preconstruccion.service';
 
@@ -35,7 +38,9 @@ export class TablaContratoDeObraComponent implements OnInit {
   }
 
   constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService ) 
+                private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService,
+                private dialog: MatDialog,
+                private routes: Router ) 
   {
     this.faseUnoAprobarPreconstruccionSvc.listaEstadosAprobarContrato( 'obra' )
       .subscribe(
@@ -80,12 +85,37 @@ export class TablaContratoDeObraComponent implements OnInit {
   ngOnInit(): void {
   };
 
-  aprobarInicio () {
-    console.log( 'Aprobar inicio' );
+  openDialog ( modalTitle: string, modalText: string ) {
+    let dialogRef =this.dialog.open( ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
   };
 
-  enviarInterventor () {
-    console.log( 'Enviar al interventor' );
+  aprobarInicio ( contratoId: number ) {
+    this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo )
+    .subscribe(
+      response => {
+        this.openDialog( '', response.message );
+        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+          () => this.routes.navigate( [ '/aprobarPreconstruccion' ] )
+        );
+      },
+      err => this.openDialog( '', err.message )
+    )
+  };
+
+  enviarInterventor ( contratoId: number ) {
+    this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionObra.enviadoAlInterventor.codigo )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/aprobarPreconstruccion' ] )
+          );
+        },
+        err => this.openDialog( '', err.message )
+      )
   };
 
 };

@@ -122,8 +122,10 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
   };
 
   innerObservacion ( observacion: string ) {
-    const observacionHtml = observacion.replace( '"', '' );
-    return observacionHtml;
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return observacionHtml;
+    };
   };
 
   maxLength(e: any, n: number) {

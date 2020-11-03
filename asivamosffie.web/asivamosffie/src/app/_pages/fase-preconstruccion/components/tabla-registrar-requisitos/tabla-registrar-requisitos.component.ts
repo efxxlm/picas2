@@ -69,6 +69,7 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
                 dataTable.push( value );
               };
             } );
+            console.log( dataTable, this.estadosPreconstruccion );
             this.dataSource = new MatTableDataSource( dataTable );
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
