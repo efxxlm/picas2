@@ -174,6 +174,6 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
         },
         err => this.openDialog( '', err.message )
       );
-  }
+  };
 
-}
+};
