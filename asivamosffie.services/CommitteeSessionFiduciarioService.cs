@@ -2858,10 +2858,14 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.TemaCompromiso)
                                .ThenInclude(r => r.ResponsableNavigation)
                                  .ThenInclude(r => r.Usuario)
+                    .Include(r => r.SesionComiteTema)
+                        .ThenInclude( r => r.SesionTemaVoto )
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                        .ThenInclude(r => r.SesionSolicitudCompromiso)
                            .ThenInclude(r => r.ResponsableSesionParticipante)
                               .ThenInclude(r => r.Usuario)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                        .ThenInclude( r => r.SesionSolicitudVoto )
                     .FirstOrDefaultAsync();
 
             if (comiteTecnico == null)
@@ -3244,8 +3248,21 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
-                                        string strRequiereVotacion = "Sí fue requerida";
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        string strRequiereVotacion = "";
+                                        int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId == null).Count();
+                                        int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
+                                        if (SesionComiteSolicitud.RequiereVotacion == true)
+                                        {
+                                            if (cantidadAprobadas > cantidadNoAprobadas)
+                                            {
+                                                strRequiereVotacion = "Aprobada";
+                                            }
+                                            else
+                                            {
+                                                strRequiereVotacion = "No Aprobada";
+                                            }
+                                        }
+                                        else
                                         {
                                             strRequiereVotacion = "No fue requerida";
                                         }
@@ -3390,8 +3407,21 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
-                                        string strRequiereVotacion = "Sí fue requerida";
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        string strRequiereVotacion = "";
+                                        int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId != null).Count();
+                                        int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null).Count();
+                                        if (SesionComiteSolicitud.RequiereVotacion == true)
+                                        {
+                                            if (cantidadAprobadas > cantidadNoAprobadas)
+                                            {
+                                                strRequiereVotacion = "Aprobada";
+                                            }
+                                            else
+                                            {
+                                                strRequiereVotacion = "No Aprobada";
+                                            }
+                                        }
+                                        else
                                         {
                                             strRequiereVotacion = "No fue requerida";
                                         }
@@ -3501,8 +3531,21 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
 
-                                string strRequiereVotacion = "Sí fue requerida";
-                                if (Tema.RequiereVotacion == null || !(bool)Tema.RequiereVotacion)
+                                string strRequiereVotacion = "";
+                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
+                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                if (Tema.RequiereVotacion == true)
+                                {
+                                    if (cantidadAprobadas > cantidadNoAprobadas)
+                                    {
+                                        strRequiereVotacion = "Aprobada";
+                                    }
+                                    else
+                                    {
+                                        strRequiereVotacion = "No Aprobada";
+                                    }
+                                }
+                                else
                                 {
                                     strRequiereVotacion = "No fue requerida";
                                 }
@@ -3680,8 +3723,21 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
 
-                                string strRequiereVotacion = "Sí fue requerida";
-                                if (Tema.RequiereVotacion == null || !(bool)Tema.RequiereVotacion)
+                                string strRequiereVotacion = "";
+                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
+                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                if (Tema.RequiereVotacion == true)
+                                {
+                                    if (cantidadAprobadas > cantidadNoAprobadas)
+                                    {
+                                        strRequiereVotacion = "Aprobada";
+                                    }
+                                    else
+                                    {
+                                        strRequiereVotacion = "No Aprobada";
+                                    }
+                                }
+                                else
                                 {
                                     strRequiereVotacion = "No fue requerida";
                                 }
