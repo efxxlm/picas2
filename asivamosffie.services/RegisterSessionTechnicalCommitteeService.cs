@@ -442,9 +442,32 @@ namespace asivamosffie.services
             List<SesionParticipante> ListSesionParticipantes = _context.SesionParticipante.Where(r => !(bool)r.Eliminado).Include(r => r.Usuario).ToList();
 
             comiteTecnico.NumeroCompromisos = 0;
-            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
+
+
+            //Sacar los Eliminados
+            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList())
             {
-                foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso)
+                SesionComiteTema.TemaCompromiso = SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+            }
+            if (comiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado).Count() > 0)
+                comiteTecnico.SesionComiteSolicitudComiteTecnico = comiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado).ToList();
+            if (comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado).Count() > 0)
+                comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario = comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado).ToList();
+
+
+
+            foreach (var SesionComiteSolicitudComiteTecnico in comiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado))
+            {
+                SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+            }
+            foreach (var SesionComiteSolicitudComiteTecnicoFiduciario in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado))
+            {
+                SesionComiteSolicitudComiteTecnicoFiduciario.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnicoFiduciario.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+            }
+
+            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado))
+            {
+                foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado))
                 {
 
                     TemaCompromiso.EstadoCodigo = string.IsNullOrEmpty(TemaCompromiso.EstadoCodigo) ? ConstantStringCompromisos.Sin_Iniciar : ListEstadoReportado.Where(r => r.Codigo == TemaCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
@@ -459,9 +482,25 @@ namespace asivamosffie.services
                 }
             }
 
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado))
             {
-                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado))
+                {
+                    SesionSolicitudCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstantStringCompromisos.Sin_Iniciar : ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
+
+                    if (SesionSolicitudCompromiso.ResponsableSesionParticipanteId > 0)
+                    {
+                        SesionSolicitudCompromiso.ResponsableSesionParticipante = ListSesionParticipantes.Where(r => r.SesionParticipanteId == SesionSolicitudCompromiso.ResponsableSesionParticipanteId).FirstOrDefault();
+                    }
+                    if (SesionSolicitudCompromiso.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
+                        comiteTecnico.NumeroCompromisosCumplidos++;
+                    comiteTecnico.NumeroCompromisos++;
+                }
+            }
+
+            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado))
+            {
+                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado))
                 {
 
                     SesionSolicitudCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstantStringCompromisos.Sin_Iniciar : ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
@@ -475,25 +514,6 @@ namespace asivamosffie.services
                     comiteTecnico.NumeroCompromisos++;
                 }
             }
-
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
-            {
-                foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
-                {
-
-                    SesionSolicitudCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstantStringCompromisos.Sin_Iniciar : ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
-
-                    if (SesionSolicitudCompromiso.ResponsableSesionParticipanteId > 0)
-                    {
-                        SesionSolicitudCompromiso.ResponsableSesionParticipante = ListSesionParticipantes.Where(r => r.SesionParticipanteId == SesionSolicitudCompromiso.ResponsableSesionParticipanteId).FirstOrDefault();
-                    }
-                    if (SesionSolicitudCompromiso.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
-                        comiteTecnico.NumeroCompromisosCumplidos++;
-                    comiteTecnico.NumeroCompromisos++;
-                }
-            }
-
-
 
             return comiteTecnico;
         }
@@ -885,6 +905,7 @@ namespace asivamosffie.services
 
             return procesoSeleccionMonitoreo;
         }
+
         public async Task<List<dynamic>> GetListSesionComiteSolicitudByFechaOrdenDelDia(DateTime pFechaOrdenDelDia)
         {
             List<dynamic> ListValidacionSolicitudesContractualesGrilla = new List<dynamic>();
@@ -1725,8 +1746,6 @@ namespace asivamosffie.services
             }
 
         }
-
-
 
         public static bool ValidarCamposSesionComiteTema(SesionComiteTema pSesionComiteTema)
         {
@@ -4654,32 +4673,33 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.SesionSolicitudCompromiso)
                 .Include(r => r.SesionComiteTema)
                     .ThenInclude(r => r.TemaCompromiso).ToListAsync();
-             
-            foreach (var comite in comiteTecnicos)
+
+            foreach (var comite in comiteTecnicos.Where(r => !(bool)r.Eliminado))
             {
-                foreach (var SesionComiteSolicitudComiteTecnico in comite.SesionComiteSolicitudComiteTecnico)
+                foreach (var SesionComiteSolicitudComiteTecnico in comite.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado))
                 {
                     if (EsFiduciario)
-                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => (bool)r.EsFiduciario.HasValue).ToList();
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => (bool)r.EsFiduciario.HasValue && !(bool)r.Eliminado
+                        ).ToList();
                     else
-                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.EsFiduciario.HasValue).ToList();
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.EsFiduciario.HasValue && !(bool)r.Eliminado).ToList();
                 }
-                foreach (var SesionComiteSolicitudComiteTecnico in comite.SesionComiteSolicitudComiteTecnicoFiduciario)
+                foreach (var SesionComiteSolicitudComiteTecnico in comite.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado))
                 {
                     if (EsFiduciario)
-                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => (bool)r.EsFiduciario.HasValue).ToList();
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => (bool)r.EsFiduciario.HasValue && !(bool)r.Eliminado).ToList();
                     else
-                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.EsFiduciario.HasValue).ToList();
+                        SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.EsFiduciario.HasValue && !(bool)r.Eliminado).ToList();
                 }
-            } 
+            }
 
             List<ListCompromisos> ListCompromisos = new List<ListCompromisos>();
 
-            foreach (var ComiteTecnico in comiteTecnicos.OrderByDescending(r => r.ComiteTecnicoId))
+            foreach (var ComiteTecnico in comiteTecnicos.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.ComiteTecnicoId))
             {
-                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico.OrderByDescending(r => r.SesionComiteSolicitudId))
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r => r.SesionSolicitudCompromisoId))
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
                         ListCompromisos.Add(new ListCompromisos
                         {
@@ -4694,9 +4714,13 @@ namespace asivamosffie.services
                         });
                     }
                 }
-                foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.OrderByDescending(r => r.SesionTemaId))
+                foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.SesionTemaId))
                 {
-                    foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso.OrderByDescending(r => r.TemaCompromisoId))
+                    SesionComiteTema.TemaCompromiso = SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+                }
+                foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.SesionTemaId))
+                {
+                    foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.TemaCompromisoId))
                     {
                         ListCompromisos.Add(new ListCompromisos
                         {
