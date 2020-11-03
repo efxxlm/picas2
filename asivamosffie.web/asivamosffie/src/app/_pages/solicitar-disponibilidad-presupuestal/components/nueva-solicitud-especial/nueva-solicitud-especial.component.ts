@@ -75,6 +75,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   configLimiteEspecial = {
     toolbar: []
   };
+  disponibilidadaeditar: DisponibilidadPresupuestal;
 
   constructor(  private fb: FormBuilder,
                 private commonService: CommonService,
@@ -153,11 +154,11 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   getRegistro ( id: number ) {
     this.budgetAvailabilityService.getDetailInfoAdditionalById( id )
       .subscribe( disponibilidad => {
-        this.tipoSeleccionado = this.tipoSolicitudArray.find( t => t.codigo == disponibilidad.tipoSolicitudCodigo );
-
+        this.tipoSeleccionado = this.tipoSolicitudArray.find( t => t.codigo == disponibilidad.tipoSolicitudEspecialCodigo );
+      this.disponibilidadaeditar=disponibilidad;
         console.log( disponibilidad );
 
-        if ( disponibilidad.tipoSolicitudCodigo === this.tipoSolicitudCodigos.solicitudExpensas ) {
+        if ( disponibilidad.tipoSolicitudEspecialCodigo === this.tipoSolicitudCodigos.solicitudExpensas ) {
           this.addressForm.get( 'disponibilidadPresupuestalId' ).setValue(disponibilidad.disponibilidadPresupuestalId);
           this.addressForm.get( 'tipo' ).setValue( this.tipoSeleccionado );
           this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto );
@@ -165,13 +166,30 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           this.addressForm.get( 'cartaAutorizacionET' ).setValue( disponibilidad.cuentaCartaAutorizacion );
   
           if (disponibilidad.disponibilidadPresupuestalProyecto.length > 0){
-            this.addressForm.get( 'departemento' ).setValue( disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'departamentoObj' ] );
-            this.addressForm.get( 'municipio' ).setValue( disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'municipioObj' ] );
+            console.log(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'departamentoObj' ].localizacionId);
+            let depto=this.listaDepartamento.filter(x=>x.localizacionId==disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'departamentoObj' ].localizacionId);
+            if (depto[0]) {
+              this.commonService.listaMunicipiosByIdDepartamento(depto[0].localizacionId)
+                .subscribe(listaMunicipios => {
+                  this.listaMunicipio = listaMunicipios;
+                  let muni=this.listaMunicipio.filter(x=>x.localizacionId==disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'municipioObj' ].localizacionId);
+                  this.addressForm.get( 'municipio' ).setValue( muni[0]);
+                })
+            };
+            
+            this.addressForm.get( 'departemento' ).setValue( depto[0] );
+            
             this.addressForm.get( 'disponibilidadPresupuestalProyectoId' ).setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId);
             this.addressForm.get( 'llaveMEN' ).setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen);
+            //
+            
+            let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);
+            this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);
+            this.addressForm.get( 'valor' ).setValue( disponibilidad.valorAportante ? disponibilidad.valorAportante : 0 );
+            this.addressForm.get( 'url' ).setValue( disponibilidad.urlSoporte ? disponibilidad.urlSoporte : null );
           }
         };
-        if ( disponibilidad.tipoSolicitudCodigo === this.tipoSolicitudCodigos.solicitudOtrosCostos ) {
+        if ( disponibilidad.tipoSolicitudEspecialCodigo === this.tipoSolicitudCodigos.solicitudOtrosCostos ) {
           this.addressForm.get( 'disponibilidadPresupuestalId' ).setValue( disponibilidad.disponibilidadPresupuestalId );
           this.addressForm.get( 'tipo' ).setValue( this.tipoSeleccionado );
           this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto );
@@ -220,7 +238,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                       this.seRecibioAportante = false;
                       return;
                     };
-                    console.log( aportante );
+                    
                     if ( aportante[0].departamento !== undefined && aportante[0].municipio !== undefined ) {
                       this.nombreAportantes.push(
                         { 
@@ -239,7 +257,14 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                         }
                       );
                     };
+
                     this.seRecibioAportante = true;
+                    if ( this.activatedRoute.snapshot.params.id !== '0' ) {
+                      let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==this.disponibilidadaeditar.aportanteId);
+                      this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);
+                      this.addressForm.get( 'valor' ).setValue( this.disponibilidadaeditar.valorAportante ? this.disponibilidadaeditar.valorAportante : 0 );
+                      this.addressForm.get( 'url' ).setValue( this.disponibilidadaeditar.urlSoporte ? this.disponibilidadaeditar.urlSoporte : null );
+                    }
                   },
                   err => this.openDialog( '', `<b>${err.message}</b>` )
                 );
@@ -288,15 +313,15 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
       if (tipoDDP) {
 
         switch (tipoDDP.codigo) {
-          case "1":
+          case "1": //expensas
 
             let disponibilidad: DisponibilidadPresupuestal = {
               disponibilidadPresupuestalId: this.addressForm.get('disponibilidadPresupuestalId').value,
-              tipoSolicitudCodigo: tipoDDP.codigo,
+              tipoSolicitudCodigo: "2", //especial
+              tipoSolicitudEspecialCodigo: tipoDDP.codigo,
               objeto: this.addressForm.get('objeto').value,
               numeroRadicadoSolicitud: this.addressForm.get('numeroRadicado').value,
-              aportanteId: this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.aportanteId : null,
-              //valorSolicitud: this.addressForm.get('valor').value,
+              aportanteId: this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.aportanteId : null,              
               valorAportante: this.addressForm.get('valor').value,
               cuentaCartaAutorizacion: this.addressForm.get('cartaAutorizacionET').value,
               urlSoporte: this.addressForm.get('url').value,
@@ -317,7 +342,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           case "2":
 
             let disponibilidadPresupuestal: DisponibilidadPresupuestal = {
-              tipoSolicitudCodigo: tipoDDP.codigo,
+              tipoSolicitudCodigo: "2", //especial
+              tipoSolicitudEspecialCodigo: tipoDDP.codigo,
               objeto: this.addressForm.get('objeto').value,
               numeroContrato: this.contrato.numeroContrato,
               numeroRadicadoSolicitud: this.addressForm.get('numeroRadicado').value,
