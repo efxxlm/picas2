@@ -42,8 +42,8 @@ export class GestionarPolizasComponent implements OnInit {
     fechaRevision: [null, Validators.required],
     estadoRevision: [null, Validators.required],
     fechaAprob: [null, Validators.required],
-    responsableAprob: [null, Validators.required],
-    observacionesGenerales: [null, Validators.required]
+    responsableAprob: ['', Validators.required],
+    observacionesGenerales: ['', Validators.required]
   });
 
   polizasYSegurosArray: Dominio[] = [];
@@ -153,15 +153,20 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
-    /*const contratoArray: InsertPoliza = {
-      contratoId: this.idContrato.toString(),
-      nombreAseguradora: this.addressForm.value.nombre,
-      numeroPoliza: this.addressForm.value.numeroPoliza,
-      numeroCertificado: this.addressForm.value.numeroCertificado,
-      fechaExpedicion: this.addressForm.value.fecha,
-      vigencia: this.addressForm.value.vigenciaPoliza,
-      vigenciaAmparo: this.addressForm.value.vigenciaAmparo,
-      valorAmparo: this.addressForm.value.valorAmparo
+    const contratoArray: InsertPoliza = {
+      contratoId:this.idContrato,  
+      TipoSolicitudCodigo: "",
+      TipoModificacionCodigo:"",
+      DescripcionModificacion:"",
+      NombreAseguradora:this.addressForm.value.nombre,
+      NumeroPoliza:this.addressForm.value.numeroPoliza,
+      NumeroCertificado:this.addressForm.value.numeroCertificado,
+      Observaciones:"",
+      ObservacionesRevisionGeneral:this.addressForm.value.observacionesGenerales,
+      ResponsableAprobacion:this.addressForm.value.responsableAprob,
+      EstadoPolizaCodigo:"2",
+      UsuarioCreacion:"usr1",
+      UsuarioModificacion:"usr1"
     };
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
@@ -171,7 +176,7 @@ export class GestionarPolizasComponent implements OnInit {
       else {
         this.openDialog('', `<b>${data.message}</b>`);
       }
-    });*/
+    });
     console.log(this.addressForm.value);
   }
 }
