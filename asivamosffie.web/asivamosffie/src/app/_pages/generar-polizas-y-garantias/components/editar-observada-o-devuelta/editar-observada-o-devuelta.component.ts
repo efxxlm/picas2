@@ -31,6 +31,8 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     polizasYSeguros: [null, Validators.required],
     buenManejoCorrectaInversionAnticipo: [null, Validators.required],
     estabilidadYCalidad: [null, Validators.required],
+    polizaYCoumplimiento: [null, Validators.required],
+    polizasYSegurosCompleto: [null, Validators.required],
     cumpleAsegurado: [null, Validators.required],
     cumpleBeneficiario: [null, Validators.required],
     cumpleAfianzado: [null, Validators.required],
@@ -38,9 +40,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     condicionesGenerales: [null, Validators.required],
     fechaRevision: [null, Validators.required],
     estadoRevision: [null, Validators.required],
-    fechaAprob:[null, Validators.required],
-    responsableAprob:[null, Validators.required],
-    observacionesGenerales: [null, Validators.required],
+    fechaAprob: [null, Validators.required],
+    responsableAprob: [null, Validators.required],
+    observacionesGenerales: [null, Validators.required]
   });
 
   polizasYSegurosArray: Dominio[] = [];
