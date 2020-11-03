@@ -23,14 +23,18 @@
         </div>
       </div>
       <div class="row">
+        <div class="pr-1">
+          <span class="label-left">Desarrollo</span>
+        </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 5000)" formControlName="observaciones" required></quill-editor>
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+            required (onContentChanged)="maxLength($event, 5000)" formControlName="observaciones" required>
+          </quill-editor>
           <div class="d-flex align-items-center">
-            <span class="contador miles mt-3em" *ngIf="addressForm.get('observaciones').value !== null">
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('observaciones').value">
               {{5000 - (textoLimpio(addressForm.get('observaciones').value)>5000?5000:textoLimpio(addressForm.get('observaciones').value))}}
             </span>
-            <span class="contador miles mt-3em" *ngIf="addressForm.get('observaciones').value === null">
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('observaciones').value">
               5000
             </span>
           </div>
@@ -99,8 +103,8 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosGrupos type="number" min="1" max="99" formControlName="cuantosCompromisos"
-                  (keyup)="CambioCantidadCompromisos()">
+                <input matInput #cuantosGrupos type="number" min="1" max="10" formControlName="cuantosCompromisos"
+                  (keyup)="CambioCantidadCompromisos()" onkeyup="if(this.value>10) this.value = 10;">
               </mat-form-field>
               <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
             </div>
@@ -122,11 +126,11 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
+                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea">
                   <input type="hidden" formControlName="temaCompromisoId">
                   <input type="hidden" formControlName="sesionTemaId">
                 </mat-form-field>
-                <span class="contador">{{100 - tarea.value.length}}</span>
+                <span class="contador">{{500 - tarea.value.length}}</span>
               </div>
             </div>
           </div>
@@ -148,7 +152,7 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" class="fecha">Fecha compromiso</label>
+                  <label class="label-left">Fecha de consignación</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">

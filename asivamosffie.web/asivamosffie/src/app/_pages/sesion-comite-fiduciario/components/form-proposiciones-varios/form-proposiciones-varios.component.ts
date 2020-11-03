@@ -14,8 +14,8 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
   styleUrls: ['./form-proposiciones-varios.component.scss']
 })
 export class FormProposicionesVariosComponent {
-  
-  @Input() objetoComiteTecnico: ComiteTecnico 
+
+  @Input() objetoComiteTecnico: ComiteTecnico
   @Output() semaforo: EventEmitter<string> = new EventEmitter();
   listaMiembros: Dominio[] = [];
 
@@ -38,7 +38,7 @@ export class FormProposicionesVariosComponent {
               private router: Router,
               private techicalCommitteeSessionService: TechnicalCommitteSessionService,
 
-             ) 
+             )
   {
 
   }
@@ -80,7 +80,7 @@ export class FormProposicionesVariosComponent {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(1000)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([
@@ -108,7 +108,7 @@ export class FormProposicionesVariosComponent {
           esProposicionesVarios: true,
 
         }
-  
+
         temas.push( sesionComiteTema );
       });
 

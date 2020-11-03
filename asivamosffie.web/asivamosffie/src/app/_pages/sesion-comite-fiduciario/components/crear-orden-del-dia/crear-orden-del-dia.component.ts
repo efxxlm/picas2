@@ -337,7 +337,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   eliminarTema(i) {
     let tema = this.addressForm.get('tema');
-    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, tema);
   }
 
   agregaTema() {
@@ -348,7 +348,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(1000)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([

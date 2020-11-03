@@ -42,8 +42,8 @@ export class TablaGestionActasComponent implements OnInit {
   constructor(
                 private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
                 public dialog: MatDialog,
-                
-             ) 
+
+             )
   {
 
   }
@@ -52,27 +52,31 @@ export class TablaGestionActasComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.getCommitteeSession()
       .subscribe( response => {
-        let lista: ComiteGrilla[] = response.filter( c => [EstadosComite.desarrolladaSinActa, 
+        let lista: ComiteGrilla[] = response.filter( c => [EstadosComite.desarrolladaSinActa,
                                                           EstadosComite.conActaDeSesionEnviada,
                                                           EstadosComite.conActaDeSesionAprobada].includes( c.estadoComiteCodigo ) )
         this.dataSource = new MatTableDataSource( lista );
-      })
+        this.initPaginator();
+      });
 
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-        if (length === 0 || pageSize === 0) {
-          return '0 de ' + length;
-        }
-        length = Math.max(length, 0);
-        const startIndex = page * pageSize;
-        // If the start index exceeds the list length, do not try and fix the end index to the end.
-        const endIndex = startIndex < length ?
-          Math.min(startIndex + pageSize, length) :
-          startIndex + pageSize;
-        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-      };
+  }
+
+  initPaginator() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+      if (length === 0 || pageSize === 0) {
+        return '0 de ' + length;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+    };
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -86,13 +90,13 @@ export class TablaGestionActasComponent implements OnInit {
     let comite: ComiteTecnico = {
       comiteTecnicoId: id,
       estadoComiteCodigo: EstadosComite.conActaDeSesionEnviada,sesionComiteSolicitudComiteTecnicoFiduciario:null
- 
+
     }
     this.fiduciaryCommitteeSessionService.enviarComiteParaAprobacion( comite )
     .subscribe( respuesta => {
       this.openDialog( '', `<b>${respuesta.message}</b>`);
       if ( respuesta.code == "200" )
-        this.ngOnInit();  
+        this.ngOnInit();
     })
   }
 

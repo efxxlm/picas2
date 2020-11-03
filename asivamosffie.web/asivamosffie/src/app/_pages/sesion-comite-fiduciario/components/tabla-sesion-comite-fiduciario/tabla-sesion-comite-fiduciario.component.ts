@@ -28,9 +28,9 @@ export class TablaSesionComiteFiduciarioComponent implements OnInit {
   constructor(
                 private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
 
-             ) 
+             )
   {
-  
+
   }
 
   ngOnInit(): void {
@@ -40,8 +40,11 @@ export class TablaSesionComiteFiduciarioComponent implements OnInit {
         let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.convocada ||
                                                           c.estadoComiteCodigo == this.estadosComite.aplazada )
         this.dataSource = new MatTableDataSource( lista );
-      })
+        this.initPaginator();
+      });
+  }
 
+  initPaginator() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

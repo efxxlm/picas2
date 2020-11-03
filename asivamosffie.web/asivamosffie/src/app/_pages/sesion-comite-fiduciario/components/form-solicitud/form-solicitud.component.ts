@@ -121,7 +121,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       sesionSolicitudCompromisoId: [],
       sesionComiteSolicitudId: [],
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(500)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]
@@ -141,12 +141,12 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         })
     }
   }
-  
+
 
   validarCompromisosDiligenciados(): boolean {
     let vacio = true;
     this.compromisos.controls.forEach(control => {
-      if (  control.value.tarea || 
+      if (  control.value.tarea ||
             control.value.responsable ||
             control.value.fecha
       )
@@ -171,7 +171,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
       }
       else {
-        
+
         this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
         this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
 
