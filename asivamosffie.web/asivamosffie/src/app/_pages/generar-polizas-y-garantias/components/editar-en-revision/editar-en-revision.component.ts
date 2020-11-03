@@ -41,10 +41,7 @@ export class EditarEnRevisionComponent implements OnInit {
     observacionesGenerales: [null, Validators.required],
   });
 
-  polizasYSegurosArray = [
-    { name: 'Pólizas y seguros interventoría', value: '1' },
-    { name: 'Pólizas y seguros de póliza obra', value: '2' }
-  ];
+  polizasYSegurosArray = ['Pólizas y seguros interventoría','Pólizas y seguros de póliza obra'];
   estadoArray = [
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
@@ -79,6 +76,8 @@ export class EditarEnRevisionComponent implements OnInit {
   public idPoliza2;
   public idObservacion;
   public selected = [];
+  public obj1;
+  public obj2;
 
   constructor(
     private router: Router,
@@ -98,7 +97,7 @@ export class EditarEnRevisionComponent implements OnInit {
   }
 
   loadContrato(id){
-    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
+    this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data=>{
       this.tipoContrato=data[id-1].tipoContrato;
       this.objeto=data[id-1].descripcionModificacion;
       this.nombreContratista = data[id-1].nombreContratista;
@@ -141,10 +140,15 @@ export class EditarEnRevisionComponent implements OnInit {
   loadGarantia(id){
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_B=>{
       this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
-      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.value == data_B[0].tipoGarantiaCodigo);
+      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t == data_B[0].tipoGarantiaCodigo);
       this.addressForm.get('polizasYSeguros').setValue([tipoGarantiaCodigo]);
       this.loadGrantiaID(data_B[0].polizaGarantiaId);
     });
+  }
+
+  getvalues( values: any[]){
+    this.obj1 = values.includes('Pólizas y seguros interventoría');
+    this.obj2 = values.includes('Pólizas y seguros de póliza obra');
   }
   dataLoad2(data){
     this.idContrato = data.contratoId;

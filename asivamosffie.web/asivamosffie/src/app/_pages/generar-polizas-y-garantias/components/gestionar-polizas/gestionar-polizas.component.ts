@@ -92,7 +92,7 @@ export class GestionarPolizasComponent implements OnInit {
     
   }
   cargarDatos(id) {
-    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data => {
+    this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
       //la posicion 0 es una posicion quemada 
       this.tipoContrato = data[id-1].tipoContrato;
       this.objeto = data[id-1].descripcionModificacion;

@@ -103,7 +103,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     console.log(this.selected);
   }
   loadContrato(id){
-    this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
+    this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data=>{
       this.tipoContrato=data[id-1].tipoContrato;
       this.objeto=data[id-1].descripcionModificacion;
       this.nombreContratista = data[id-1].nombreContratista;
