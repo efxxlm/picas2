@@ -116,10 +116,11 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosGrupos type="number" min="1" max="99" formControlName="cuantosCompromisos"
-                  (keyup)="CambioCantidadCompromisos()">
+                <input matInput #cuantosGrupos type="number" min="1" max="10" formControlName="cuantosCompromisos" required
+                  (keyup)="CambioCantidadCompromisos()" onkeyup="if(this.value>10) this.value = 10;">
               </mat-form-field>
-              <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Ingrese un número de 1 a 10"
+              matTooltipClass="info-tooltip">{{2 - cuantosGrupos.value.length}}</span>
             </div>
           </div>
         </div>
@@ -165,7 +166,7 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" class="fecha">Fecha de consignación</label>
+                  <label class="label-left" class="fecha">Fecha de cumplimiento</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
